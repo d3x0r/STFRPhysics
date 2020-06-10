@@ -7,7 +7,7 @@ I wrote a few pages, and lost it all :(  Lost some references from page too
 (Space-Time Field Reactor ?STFR? )
 
 
-## Rotation Using Quaternions
+## Frame Computation Using Dual Log-Quaternions
 
 I've come to relearn much about the quatnerions and complex numbers especially with applications to rotation.
 Quaternions have a natrual logarithm function, and a exp.  So many places stress so very much that the order
@@ -94,6 +94,14 @@ all of these operations can be done in sets of 4 registers.
 
 
 ```
+
+## Implementation
+
+For implmeentation, existing `Quaternion.log()` function should return a new type 'LogQuaternion' which has different operator to apply and apply-inverse to vectors.
+
+`LogQuaternion.exp()` should result with a 'Quaternion' type.
+
+They are mappings in different projections, and should be considered as a different type of units.
 
 
 ## Rotation limits
