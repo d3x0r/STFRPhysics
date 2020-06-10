@@ -17,11 +17,11 @@ is just a matter of applying a negative sign.  Even in the non-logarithmic form,
 for a calculation and involves cross products, such that `A x B  !=  B x A` which is true, but `A x B == -B X A`.  This helps
 identify how order remains in the log-quatnerion space.  
 
-Given two logrithmic quaternions(LQ) `lP` and `lQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
-`lP + lQ` OR `lQ + lP` because addition is communitive;  However the multiplication of `Q * P` is also `Q / P` (since the conjugate is also the reciprocol), 
+Given two logrithmic quaternions(LQ) `LP` and `LQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
+`LP + LQ` OR `LQ + LP` because addition is commutative;  However the multiplication of `Q * P` is also `Q / P` (since the conjugate is also the recipricol), 
 so this is a subtraction of logs `lQ - lP`.  If the multiplication terms are switched, the same order 
 of operations is preserved in addition of LQ by flipping the sign appropriately.  Probably the above is better expressed
-if the parital -- and ---- signs were shown...  Addition is probably `--lP -  -lQ` and subtraction just reverses the A and B... `-lQ - --lP`.
+if the parital -- and ---- signs were shown...  Addition is probably `(--lP) - (-lQ)`... (which doesn't reverse ... just becomes -lp - lq which isn't right either.
 
 `PQ = e^lP * e^lQ = e^(lP+lQ)`
 
