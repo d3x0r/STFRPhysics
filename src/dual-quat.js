@@ -1,4 +1,6 @@
 
+
+
 /*
 transforming a point
 
@@ -140,14 +142,12 @@ var exp = function (q) {
 
 
 lnQuat.prototype.exp = function() {
-
 	const q = this;
 	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
 	const et = Math.exp(q.w);
 	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
 
 	return new Quat( et*Math.cos(r), q.x * s, q.y * s, q.z * s );
-	
 }
 
 
@@ -168,7 +168,7 @@ lnQuat.prototype.expApply = function( v ) {
 
         if( !r ) {
 		// v is unmodified.	
-		return; // 1.0
+		return {x:v.x, y:v.y; z:v.z }; // 1.0
 	}
 	// 9+3
 	const tx = 2 * (qy * v.z - qz * v.x);
@@ -180,11 +180,10 @@ lnQuat.prototype.expApply = function( v ) {
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
-
-
 	// total 
 	// 27+14 +sqrt+exp+sin+cos
 }
+
 
 lnQuat.prototype.add = function( q ) {
 	this.w += q.w;
@@ -193,8 +192,14 @@ lnQuat.prototype.add = function( q ) {
 	this.z += q.z;
 }
 
+// rotate the passed lnQuat by the amount specified.
 lnQuat.prototype.addNew = function( q ) {
 	return new lnQuat( this.w + q.w, this.x + q.x, this.y + q.y, this.z + q.z );
+}
+
+// rotate the passed vector 'from' this space
+lnQuat.prototype.subNew = function( q ) {
+	return new lnQuat( q.w - this.w, q.x - this.x, q.y - this.y, q.z - this.z );
 }
 
 lnQuat.prototype.addConj = function( q ) {
@@ -204,6 +209,79 @@ lnQuat.prototype.addConj = function( q ) {
 	this.z -= q.z;
 }
 
+function dQuat( x, y z ) {
+	this.w = 1.0;
+	this.x = x;
+	this.y = y;
+	this.z = z;
+}
+
+dQuat.prototype.add = function( q ) {
+	return new dQuat( this.w+q.w, this.x+q.x, this.y + q.y, this.z + q.z );
+}
+
+// dual log-quat
+//   log qaut keeps the orientation of the frame
+//   dual of the quat keeps the offset of the origin of that quat.
+//   it forms the orgin of a set of basis vectors describing the x-y-z space.
+
+function dlnQuat( lnQ, dQ ) {
+	this.lnQ = lnQ;
+	this.dQ = dQ;
+}
+
+// Apply just the rotation to a point.
+dlnQuat.prototype.applyRotation( v ) {
+	return this.lnq.expApply( v );
+}
+
+// Apply just the rotation to a point.
+dlnQuat.prototype.applyInvRotation( v ) {
+	
+	return this.lnq.expApply( v );
+}
+
+// Apply just the rotation to a point.
+dlnQuat.prototype.applyRotationQ( q ) {
+	if( !q instance of lnQuat ) throw( new Error( "invalid parameter passed to applyRotationQ" ) );
+	return this.lnQ.addNew( q );
+}
+
+dlnQuat.prototype.applyTransform( v ) {
+	const rV = this.lnq.expApply( v );
+	//const rO = this.lnQ.expApply( this.dQ );
+	rV.x += this.dQ.x;
+	rV.y += this.dQ.y;
+	rV.z += this.dQ.z;
+	return 
+}
+
+// V is in the space of the dual rotated around 0.
+dlnQuat.prototype.applyArmTransform( v ) {
+	const rV = this.lnq.expApply( v );
+	const rO = this.lnQ.expApply( this.dQ );
+	rV.x += r0.x;
+	rV.y += r0.y;
+	rV.z += r0.z;
+	return 
+}
+
+
+dlnQuat.prototype.applyArmTransformQ( q ) {
+	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
+}
+
+
+dlnQuat.prototype.applyArmTransformQ( q ) {
+	// 
+	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
+}
+
+
+dlnQuat.prototype.applyArmTransformQ( q ) {
+	// 
+	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
+}
 
 
 /*
