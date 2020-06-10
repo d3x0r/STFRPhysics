@@ -36,6 +36,64 @@ Log quaternions are the input angle to the sin/cos functions that limit the boun
 and be simply manipulated with addition and subtraction.  (721 degrees is the same sin as 1 degree, but obviously the net motion of 720 is much greater than 1).
 
 
+## Computation overhead introduced vs matricii
+
+The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space.   This is 	// 27+14 +sqrt+exp+sin+cos
+
+```
+ 27 mul  14 adds  +1 sqrt + 1 exp + 1 sin  +( 1 cos or  
+	sin/cos value are for the same angle, so it can be calated at the same time)
+-or-
+ 21 mul  4        +1 sqrt + 1 exp + 1 sin  +( 1 cos or 
+	sin/cos value are for the same angle, so it can be calated at the same time) (parallel-ish)
+
+
+ + 1 4 value add.
+ + 1 4 value add for origin adjust from basis origin
+
+ storage 8 values  (4 + 4)
+```
+
+operation counts for applying a matrix to another matrix.
+
+```
+
+
+  matrix * dual part 
+ 18 mul 6 adds
+
+  matrix * matrix part
+ 18 mul 6 adds
+
+ 1 add for origin adjust from basis origin
+
+36 multiply and 15 adds
+(vs 27 and 14)
+
+ storage 16(12) values (9 + 3)   usually sent as 4x4 or 3x3 and 3.
+
+```
+
+
+overhead compared to dual-quaterion
+
+```
+  origin apply is still
+   18 multiply and 12 adds
+
+  quat * quat is 
+    32 multiply and 12 adds 
+
+
+50 vs 27 multiplies  and   24 vs 14 adds (nearly half the work)
+  
+although there are SIMD 'broadcast' things that make matrix multiply more efficient, it still takes more data to load....
+all of these operations can be done in sets of 4 registers.
+
+
+```
+
+
 ## Rotation limits
 
 If we consider the speed of light achievable, 1 half rotation per nano second is a reasonable maximum.  

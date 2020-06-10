@@ -161,6 +161,7 @@ lnQuat.prototype.expApply = function( v ) {
 	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
 
 	// 4+0 +cos
+	// 2+0 +cos
 	const qw = et*Math.cos(r);
 	const qx = q.x * s;
 	const qy = q.y * s;
@@ -171,17 +172,20 @@ lnQuat.prototype.expApply = function( v ) {
 		return {x:v.x, y:v.y; z:v.z }; // 1.0
 	}
 	// 9+3
+	// 7+1
 	const tx = 2 * (qy * v.z - qz * v.x);
 	const ty = 2 * (qy * v.x - qx * v.y);
 	const tz = 2 * (qz * v.y - qy * v.z);
 
 	// 9+9
+	// 7+1
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
 	// 27+14 +sqrt+exp+sin+cos
+	// 21+4 +sqrt+exp+sin+cos (parallel-ish)
 }
 
 
