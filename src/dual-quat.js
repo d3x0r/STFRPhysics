@@ -56,11 +56,11 @@ function Quat( theta,d, a, b ) {
 
 Quat.prototype.apply = function( v ) {
         const q = this;
-	const tx = 2 * (q.y * v.z - q.z * v.x);
-	const ty = 2 * (q.y * v.x - q.x * v.y);
-	const tz = 2 * (q.z * v.y - q.y * v.z);
+	const tx = 2 * (q.y * v.z - q.z * v.y);
+	const ty = 2 * (q.z * v.x - q.x * v.z);
+	const tz = 2 * (q.x * v.y - q.y * v.x);
 
-	return {  x: v.x + q.w * tx + ( q.y * tz - ty * q.z )
+	return {  x : v.x + q.w * tx + ( q.y * tz - ty * q.z )
 		, y : v.y + q.w * ty + ( q.z * tx - tz * q.x )
 		, z : v.z + q.w * tz + ( q.x * ty - tx * q.y ) };
 }
@@ -70,9 +70,9 @@ Quat.prototype.getBasis = function() {
 
 	const q = this;
 
-	const basis = { forward:this.apply( {x:0, y:0, z: 1 } )
-		, right:this.apply( {x:1, y:0, z: 0 })
-	        , up:this.apply( {x:0, y:1, z: 0 }) }; // 1.0
+	const basis = { right  : this.apply( { x:1, y:0, z:0 })
+	              , up     : this.apply( { x:0, y:1, z:0 }) 
+	              , forward: this.apply( { x:0, y:0, z:1 }) }; // 1.0
 	return basis;
 
 }
@@ -179,80 +179,80 @@ function lnQuat( theta, d, a, b ){
 }
 
 
-var exp = function (q) {
-    // assert q[0] === 0
-    var a = distance(q);
-    if (a === 0) return unit;
-    var sin = Math.sin(a);
-    var t = sin / a;
-    return [Math.cos(a), t * q[1], t * q[2], t * q[3]];
-};
-
-
 lnQuat.prototype.exp = function() {
 	const q = this;
 	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-	const et = Math.exp(q.w);
-	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
-
-	return new Quat( et*Math.cos(r), q.x * s, q.y * s, q.z * s );
-}
-
-// returns the number of rotations truncated.
-lnQuat.prototype.norm = function() {
-	const q = this;
-	const r  = Math.mod( Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z), (2*Math.PI) );
-	this.x *= r;
-	this.y *= r;
-	this.z *= r;
-	return 1/r;
-}
-
-lnQuat.prototype.getBasis = function() {
-// basis = { forward : ttbcT.apply( {x:0,y:0,z:1} )
-//         , right : ttbcT.apply( {x:1,y:0,z:0} )
-//         , up : ttbcT.apply( {x:0,y:1,z:0} )
-
-	const q = this;
-
-const basis = { forward:null
-		, right:null
-	        , up:null }; // 1.0
-	if( q.w ) console.log( "0 +/- 0 is not 0?" );
-	// 3+2 +sqrt+exp+sin
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-        if( !r ) {
-		// v is unmodified.	
-		return basis; // 1.0
-	}
 	const et = 1;//Math.exp(q.w);
 	const s  = r>=0.00001? /* et* */Math.sin(r)/r: 0;
 
-	const qw = /*et* */Math.cos(r);
-	const qx = q.x * s;
-	const qy = q.y * s;
-	const qz = q.z * s;
-	
+	return new Quat( /*et**/Math.cos(r), q.x * s, q.y * s, q.z * s );
+}
+
+// returns the number of rotations truncated.
+lnQuat.prototype.truncate = function() {
+	const q = this;
+	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z);
+	const rMod  = Math.mod( r, (2*Math.PI) );
+	const rDrop = r - rMod;
+	if( ( rDrop / (Math.PI*2) ) > 1 )
 	{
-		const tx = 2 * (qy);
-		const tz = 2 * (-qy);
-	 	basis.forward = { x : 0 + qw * tx + ( qy * tz - 0 )
-		                , y : 0 + 0       + ( qz * tx - tz * qx )
-		                , z : 1 + qw * tz + ( 0       - tx * qy ) };
+		const rDiv = rMod/r;
+		this.x *= rDiv;
+		this.y *= rDiv;
+		this.z *= rDiv;
 	}
-	{
-		const tx = 2 * (-qz);
-		const ty = 2 * (qy);
-	 	basis.right = { x : 1 + qw * tx + ( 0       - ty * qz )
-		              , y : 0 + qw * ty + ( qz * tx - 0 )
-		              , z : 0 + 0       + ( qx * ty - tx * qy ) };
-	}
-	{
-		const ty = 2 * (-qx);
-		const tz = 2 * (qz);
-	 	basis.up = { x : 0 + 0       + ( qy * tz - ty * qz )
-		           , y : 1 + qw * ty + ( 0       - tz * qx )
-		           , z : 0 + qw * tz + ( qx * ty - 0       ) };
+	return rDrop;
+}
+
+lnQuat.prototype.getBasis = function() {
+	const q = this;
+
+	const basis = { forward:null
+	              , right:null
+	              , up:null
+	              , origin: { x:0, y:0; z:0 } };
+	if( q.w ) console.log( "0 +/- 0 is not 0?" );
+
+	// 6+2 +sqrt+cos+sin
+	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
+	const et = 1;//Math.exp(q.w);
+	if( r >= 0.00001 ) {
+		const s  = /* et* */Math.sin(r)/r;
+	        
+		const qw = /*et* */Math.cos(r);
+		const qx = q.x * s;
+		const qy = q.y * s;
+		const qz = q.z * s;
+		
+		// 24+6
+		{
+			const ty = 2 * (qz);
+			const tz = 2 * (-qy);
+
+		 	basis.right = { x : 1 + 0       + ( qy * tz - ty * qz )
+			              , y : 0 + qw * ty + ( 0       - tz * qx )
+			              , z : 0 + qw * tz + ( qx * ty - 0 ) };
+		}
+		{
+			const tx = 2 * ( -qz );
+			const tz = 2 * (qx );
+
+		 	basis.up = { x : 0 + qw * tx + ( qy * tz - 0 )
+			           , y : 1 + 0       + ( qz * tx - tz * qx )
+			           , z : 0 + qw * tz + ( 0       - tx * qy ) };
+		}
+		{
+			const tx = 2 * (qy  );
+			const ty = 2 * (- qx);
+
+		 	basis.forward = { x : 0 + qw * tx + ( 0 - ty * qz )
+			                , y : 0 + qw * ty + ( qz * tx - 0 )
+			                , z : 1 + 0       + ( qx * ty - tx * qy ) };
+		}
+	} else {
+		basis.right   = { x:1, y:0, z:0 };
+		basis.up      = { x:0, y:1, z:0 }
+		basis.forward = { x:0, y:0; z:1 };
 	}
 	return basis;	
 }
@@ -275,9 +275,11 @@ lnQuat.prototype.expApply = function( v ) {
 	const qy = q.y * s;
 	const qz = q.z * s;
 
-	const tx = 2 * (qy * v.z - qz * v.x);
-	const ty = 2 * (qy * v.x - qx * v.y);
-	const tz = 2 * (qz * v.y - qy * v.z);
+//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+
+	const tx = 2 * (qy * v.z - qz * v.y);
+	const ty = 2 * (qz * v.x - qx * v.z);
+	const tz = 2 * (qx * v.y - qy * v.x);
 
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
@@ -307,9 +309,9 @@ lnQuat.prototype.expApplyInv = function( v ) {
 	const qy = -q.y * s;
 	const qz = -q.z * s;
 
-	const tx = 2 * (qy * v.z - qz * v.x);
-	const ty = 2 * (qy * v.x - qx * v.y);
-	const tz = 2 * (qz * v.y - qy * v.z);
+	const tx = 2 * (qy * v.z - qz * v.y);
+	const ty = 2 * (qz * v.x - qx * v.z);
+	const tz = 2 * (qx * v.y - qy * v.x);
 
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
@@ -450,14 +452,10 @@ x = -x;
 y = -y;
 z = -z;
 
-
 q1 q2 =  w1 w2   - v1 dot v2, w1 v2 + w2 v1 + v1 cross v2 
-
 
 pq = ... well pq
 qp = (pq)*
-
-
 
 {\displaystyle {\begin{alignedat}{4}&a_{1}a_{2}&&+a_{1}b_{2}i&&+a_{1}c_{2}j&&+a_{1}d_{2}k\\{}+{}&b_{1}a_{2}i&&+b_{1}b_{2}i^{2}&&+b_{1}c_{2}ij&&+b_{1}d_{2}ik\\{}+{}&c_{1}a_{2}j&&+c_{1}b_{2}ji&&+c_{1}c_{2}j^{2}&&+c_{1}d_{2}jk\\{}+{}&d_{1}a_{2}k&&+d_{1}b_{2}ki&&+d_{1}c_{2}kj&&+d_{1}d_{2}k^{2}\end{alignedat}}}
 
