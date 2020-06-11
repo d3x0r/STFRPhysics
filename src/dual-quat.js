@@ -1,17 +1,28 @@
 
+// Object relative orientation and position is represented with a dualLnQuat with( angleUp, lookAtNormal ), (my position within parent)
+
+/* The 'world' would be started with a dual-quat */
 
 
-/*
-transforming a point
+const world = new dlnQuat( new lnQuat(), new dQuat() );
+// add 0, rotation 0.
 
- t = 2 * cross(q.xyz, v) ;  v' = v + q.w * t + cross(q.xyz, t)  <-- actull application of quat to vector to get resulting rotated v' ...    t, v are 3vectors and q is a quaternion
-[09:57:47] <d3x0r> vsqr = pow(q.xyz,2.0); vlen = vsqr.x+vsqr.y+vsqr.z;
+const someObject = new dlnQuat( new lnQuat( 0, {x:0, y:0, z:1} ), new dQuat(0, 0, 10) );
+const Tree = new dlnQuat( new lnQuat( 0, {x:0, y:1, z:0} ), new dQuat(5, 0, -2) );
+const treeTop = new dlnQuat( new lnQuat( 0, { x:0, y:1, z:0} ), new dQuat( 0, 0, 0 ) );
+const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} ), new dQuat( 5, 0, 0 ) );
 
+// world is 0, 0, 0, 0, 0, 0, 0.
+// first object            cT   = is ( world.addNew(someObject.lnQ), world.lnQ.applyExp( someObject.dQ ) )
+// first tree              tT   = is ( world.addNew(Tree.lnQ)      , world.lnQ.applyExp( Tree.dQ ) )
+// first tree's top        ttT  = is ( tT.addNew(treeTop.lnQ)      , tT.lnQ.applyExp( treeTop.dQ ) )
+// first tree's top branch ttbT = is ( ttT.addNew(branch1.lnQ)     , ttT.lnQ.applyExp( branch1.dQ ) )
 
-
- vsqr = pow(q.xyz,2.0); vlen = vsqr.x+vsqr.y+vsqr.z; q' = exp(q.w) * ( cos(vlen) + q.xyz/vlen*sin(vlen) )  
-[09:58:17] <d3x0r> is sort of simple enough - but actually the vlen factor can be kept as a scalar so the lnq is actual
-*/
+// ttbcT = ttbT -> cT = ( cttbT.lnQ=(ttbT.lnQ - CT.lnQ), cttbT.lnQ.applyExpInv(ttbT.dQ - cT.dq) )
+// basis = { forward : ttbcT.apply( {x:0,y:0,z:1} )
+//         , right : ttbcT.apply( {x:1,y:0,z:0} )
+//         , up : ttbcT.apply( {x:0,y:1,z:0} )
+// 
 
 const test = true;
 
@@ -20,7 +31,7 @@ const test = true;
 //   x y z w -> i j k R
 
 function Quat( theta,d, a, b ) {
-	if( theta ) {
+	if( "undefined" !== typeof theta ) {
 		if( "undefined" !== typeof a ) {
 			// create with 4 raw coordinates
 			this.w = theta;
@@ -54,6 +65,17 @@ Quat.prototype.apply = function( v ) {
 		, z : v.z + q.w * tz + ( q.x * ty - tx * q.y ) };
 }
 
+
+Quat.prototype.getBasis = function() {
+
+	const q = this;
+
+	const basis = { forward:this.apply( {x:0, y:0, z: 1 } )
+		, right:this.apply( {x:1, y:0, z: 0 })
+	        , up:this.apply( {x:0, y:1, z: 0 }) }; // 1.0
+	return basis;
+
+}
 
 Quat.prototype.mul = function( q ) {
 
@@ -102,14 +124,14 @@ Quat.prototype.log = function( ) {
 	const xt = this.x * t;
 	const yt = this.y * t;
 	const zt = this.z * t;
-
+	//console.log( "Calculate log:", 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
 	return new lnQuat( 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
 }
 
 
 
 function lnQuat( theta, d, a, b ){
-	if( theta ) {
+	if( "undefined" !== typeof theta ) {
 		if( "undefined" !== typeof a ) {
 			// create with 4 raw coordinates
 			this.w = theta;
@@ -117,10 +139,30 @@ function lnQuat( theta, d, a, b ){
 			this.y = a;
 			this.z = b;
 		}else {
-			this.w = Math.log(theta);
-			this.x = d.x * theta;
-			this.y = d.y * theta;
-			this.z = d.z * theta;
+			// if no rotation, then nothing.
+			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
+
+			const t  = theta/2;
+			const ct2 = Math.cos( t );  // sqrt( 1/2(1 + cos theta))
+			const st2 = Math.sin( t );  // sqrt( 1/2(1 - cos theta))
+			const w = ct2;          // sqrt( 1/2(1 + cos theta))
+			const x = dl * d.x * st2;    //  sqrt( 1/2(1 - cos theta))
+			const y = dl * d.y * st2;    // 
+			const z = dl * d.z * st2;
+			// sqrt( 1/2(1 + cos theta)) * sqrt( 1/2(1 + cos theta))  + sqrt( 1/2(1 - cos theta))*sqrt( 1/2(1 - cos theta)) * ( x*x+y*y+z*z )
+
+			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * ( x*x+y*y+z*z )
+			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * (1)
+			// 1/2 ( 1 + cos theta + 1 - cos theta)
+			// 1
+			const r  = w*w + x*x+y*y+z*z ;
+
+			//console.log( "Calculate log:", theta, "R=", r, "D=",d, "DL=", (x*x+y*y+z*z), st2*st2, "W=", 0.5* Math.log(r), Math.log(dl) )
+
+			this.w = 0.5* Math.log(r);
+			this.x = dl*d.x * t;
+			this.y = dl*d.y * t;
+			this.z = dl*d.z * t;
 		}
 	} else {
 		this.w = 1;
@@ -150,6 +192,63 @@ lnQuat.prototype.exp = function() {
 	return new Quat( et*Math.cos(r), q.x * s, q.y * s, q.z * s );
 }
 
+lnQuat.prototype.getBasis = function() {
+// basis = { forward : ttbcT.apply( {x:0,y:0,z:1} )
+//         , right : ttbcT.apply( {x:1,y:0,z:0} )
+//         , up : ttbcT.apply( {x:0,y:1,z:0} )
+
+	const q = this;
+
+const basis = { forward:{x:0, y:0, z: 1 }
+		, right:{x:1, y:0, z: 0 }
+	        , up:{x:0, y:1, z: 0 } }; // 1.0
+
+	// 3+2 +sqrt+exp+sin
+	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
+        if( !r ) {
+		// v is unmodified.	
+		return basis; // 1.0
+	}
+	const et = Math.exp(q.w);
+	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
+
+	const qw = et*Math.cos(r);
+	const qx = q.x * s;
+	const qy = q.y * s;
+	const qz = q.z * s;
+	
+	{
+		const v = basis.forward;
+		const tx = 2 * (qy * v.z - qz * v.x);
+		const ty = 2 * (qy * v.x - qx * v.y);
+		const tz = 2 * (qz * v.y - qy * v.z);
+
+	 	basis.forward = { x : v.x + qw * tx + ( qy * tz - ty * qz )
+		                , y : v.y + qw * ty + ( qz * tx - tz * qx )
+		                , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	}
+	{
+		const v = basis.right;
+		const tx = 2 * (qy * v.z - qz * v.x);
+		const ty = 2 * (qy * v.x - qx * v.y);
+		const tz = 2 * (qz * v.y - qy * v.z);
+
+	 	basis.right = { x : v.x + qw * tx + ( qy * tz - ty * qz )
+		              , y : v.y + qw * ty + ( qz * tx - tz * qx )
+		              , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	}
+	{
+		const v = basis.up;
+		const tx = 2 * (qy * v.z - qz * v.x);
+		const ty = 2 * (qy * v.x - qx * v.y);
+		const tz = 2 * (qz * v.y - qy * v.z);
+
+	 	basis.up = { x : v.x + qw * tx + ( qy * tz - ty * qz )
+		           , y : v.y + qw * ty + ( qz * tx - tz * qx )
+		           , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	}
+	return basis;	
+}
 
 lnQuat.prototype.expApply = function( v ) {
 	//x y z w l
@@ -157,28 +256,22 @@ lnQuat.prototype.expApply = function( v ) {
 
 	// 3+2 +sqrt+exp+sin
 	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
+        if( !r ) {
+		// v is unmodified.	
+		return {x:v.x, y:v.y, z:v.z }; // 1.0
+	}
 	const et = Math.exp(q.w);
 	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
 
-	// 4+0 +cos
-	// 2+0 +cos
 	const qw = et*Math.cos(r);
 	const qx = q.x * s;
 	const qy = q.y * s;
 	const qz = q.z * s;
 
-        if( !r ) {
-		// v is unmodified.	
-		return {x:v.x, y:v.y; z:v.z }; // 1.0
-	}
-	// 9+3
-	// 7+1
 	const tx = 2 * (qy * v.z - qz * v.x);
 	const ty = 2 * (qy * v.x - qx * v.y);
 	const tz = 2 * (qz * v.y - qy * v.z);
 
-	// 9+9
-	// 7+1
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
@@ -188,6 +281,37 @@ lnQuat.prototype.expApply = function( v ) {
 	// 21+4 +sqrt+exp+sin+cos (parallel-ish)
 }
 
+
+lnQuat.prototype.expApplyInv = function( v ) {
+	//x y z w l
+	const q = this;
+
+	// 3+2 +sqrt+exp+sin
+	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
+        if( !r ) {
+		// v is unmodified.	
+		return {x:v.x, y:v.y, z:v.z }; // 1.0
+	}
+	const et = Math.exp(q.w);
+	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
+
+	const qw = et*Math.cos(r);
+	const qx = -q.x * s;
+	const qy = -q.y * s;
+	const qz = -q.z * s;
+
+	const tx = 2 * (qy * v.z - qz * v.x);
+	const ty = 2 * (qy * v.x - qx * v.y);
+	const tz = 2 * (qz * v.y - qy * v.z);
+
+	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
+		, y : v.y + qw * ty + ( qz * tx - tz * qx )
+		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+
+	// total 
+	// 27+14 +sqrt+exp+sin+cos
+	// 21+4 +sqrt+exp+sin+cos (parallel-ish)
+}
 
 lnQuat.prototype.add = function( q ) {
 	this.w += q.w;
@@ -213,7 +337,7 @@ lnQuat.prototype.addConj = function( q ) {
 	this.z -= q.z;
 }
 
-function dQuat( x, y z ) {
+function dQuat( x, y, z ) {
 	this.w = 1.0;
 	this.x = x;
 	this.y = y;
@@ -235,33 +359,37 @@ function dlnQuat( lnQ, dQ ) {
 }
 
 // Apply just the rotation to a point.
-dlnQuat.prototype.applyRotation( v ) {
+dlnQuat.prototype.applyRotation = function( v ) {
 	return this.lnq.expApply( v );
 }
 
 // Apply just the rotation to a point.
-dlnQuat.prototype.applyInvRotation( v ) {
-	
+dlnQuat.prototype.applyInvRotation = function( v ) {
 	return this.lnq.expApply( v );
 }
 
-// Apply just the rotation to a point.
-dlnQuat.prototype.applyRotationQ( q ) {
-	if( !q instance of lnQuat ) throw( new Error( "invalid parameter passed to applyRotationQ" ) );
+// Apply just the rotation to a rotation
+// returns a new vector (usually the partial is saved for further use).
+dlnQuat.prototype.applyRotationQ = function( q ) {
+	if( !(q instanceof lnQuat) ) throw( new Error( "invalid parameter passed to applyRotationQ" ) );
 	return this.lnQ.addNew( q );
 }
 
-dlnQuat.prototype.applyTransform( v ) {
+// Apply the rotation to a rotation
+// Apply the origin offset from the dual
+// returns a new vector (usually the partial is saved for further use).
+
+dlnQuat.prototype.applyTransform = function( v ) {
 	const rV = this.lnq.expApply( v );
 	//const rO = this.lnQ.expApply( this.dQ );
 	rV.x += this.dQ.x;
 	rV.y += this.dQ.y;
 	rV.z += this.dQ.z;
-	return 
+	return rv;
 }
 
 // V is in the space of the dual rotated around 0.
-dlnQuat.prototype.applyArmTransform( v ) {
+dlnQuat.prototype.applyArmTransform = function( v ) {
 	const rV = this.lnq.expApply( v );
 	const rO = this.lnQ.expApply( this.dQ );
 	rV.x += r0.x;
@@ -271,18 +399,18 @@ dlnQuat.prototype.applyArmTransform( v ) {
 }
 
 
-dlnQuat.prototype.applyArmTransformQ( q ) {
+dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
 
 
-dlnQuat.prototype.applyArmTransformQ( q ) {
+dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	// 
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
 
 
-dlnQuat.prototype.applyArmTransformQ( q ) {
+dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	// 
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
@@ -368,26 +496,51 @@ if( test )       {
 		const q1 = new Quat( 30/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
 		const q2 = new Quat( 17/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
 
+		//const q1 = new Quat( 0, {x:1, y:0, z:0 } );
+		//const q2 = new Quat( 90/ 180 * Math.PI, {x:0, y:1, z:0 } );
+
+		const rlnq1 = new lnQuat( 30/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
+		const rlnq2 = new lnQuat( 17/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
+		//const rlnq1 = new lnQuat( 0, {x:1, y:0, z:0 } );
+	//	const rlnq2 = new lnQuat( 90/ 180 * Math.PI, {x:0, y:1, z:0 } );
+
 		const lnq1 = q1.log();
 		const lnq2 = q2.log();
 		console.log( "q1:", q1, "q2:", q2 );
+		console.log( "lnq1:", lnq1, "lnq2:", lnq2 );
+		console.log( "rlnq1:", rlnq1, "rlnq2:", rlnq2 );
 		const q1q2a = q1.mul( q2 );
 		const q1q2b = q1.mulLong( q2 );
 		console.log( "a:", q1q2a, "b:", q1q2b );
 
 		const v = { x:2, y:5, z:-3};
+
 		console.log( "q1 v : ", q1.apply(v) );	
 		console.log( "q2 v : ", q2.apply(v) );	
-		console.log( "lnq1 exp v : ", lnq1.exp().apply(v) );	
-		console.log( "lnq2 exp v : ", lnq2.exp().apply(v) );	
-		console.log( "lnq1 v : ", lnq1.expApply(v) );	
-		console.log( "lnq2 v : ", lnq2.expApply(v) );	
+		console.log( "lnq1 exp v : ", rlnq1.exp().apply(v) );	
+		console.log( "lnq2 exp v : ", rlnq2.exp().apply(v) );	
+		console.log( "lnq1 v : ", rlnq1.expApply(v) );	
+		console.log( "lnq2 v : ", rlnq2.expApply(v) );	
 
-		const lnq1q2 = lnq1.addNew( lnq2 ); // changes 
+		const lnq1q2 = rlnq1.addNew( rlnq2 ); // changes 
 		console.log( "q1q2 v", q1q2a.apply( v ) );
 
 		console.log( "lnq1q2 v", lnq1q2.expApply( v ) );
 		
+
+		console.log( "  q1 basis?", q1.getBasis() );
+
+		console.log( "  q2 basis?", q2.getBasis() );
+
+		console.log( " lq1 basis?", lnq1.getBasis() );
+
+		console.log( " lq2 basis?", lnq2.getBasis() );
+
+		console.log( "rlq1 basis?", rlnq1.getBasis() );
+
+		console.log( "rlq2 basis?", rlnq2.getBasis() );
+
+		console.log( "lq1q2 basis?", lnq1q2.getBasis() );
 
 	}
 }
