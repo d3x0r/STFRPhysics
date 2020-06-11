@@ -142,6 +142,7 @@ They are mappings in different projections, and should be considered as a differ
 | applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space.
 | log | () | return this quaternion as the natural log of this quaternion.  Returns a new lnQuat().
 | getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
+| normalize | (q) | make sure this is a unit quaternion (only the axis direction? not including w?)
 
 
 | lnQuat Methods | Parameters | Description |
@@ -152,6 +153,8 @@ They are mappings in different projections, and should be considered as a differ
 | applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space.
 | exp | () | return this log-quaternion as the natural map of this quaternion.  Returns a new Quat().
 | getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
+| truncate | () | wrap this within a 'normalized' range of -2pi to 2pi.  Returns the number of wraps truncated.
+
 
 | dlnQuat Methods | Parameters | Description |
 |---|---|---|

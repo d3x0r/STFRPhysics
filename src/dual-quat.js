@@ -259,7 +259,7 @@ lnQuat.prototype.getBasis = function() {
 	return basis;	
 }
 
-lnQuat.prototype.expApply = function( v ) {
+lnQuat.prototype.apply = function( v ) {
 	//x y z w l
 	const q = this;
 
@@ -293,7 +293,7 @@ lnQuat.prototype.expApply = function( v ) {
 }
 
 
-lnQuat.prototype.expApplyInv = function( v ) {
+lnQuat.prototype.applyInv = function( v ) {
 	//x y z w l
 	const q = this;
 
@@ -371,12 +371,12 @@ function dlnQuat( lnQ, dQ ) {
 
 // Apply just the rotation to a point.
 dlnQuat.prototype.applyRotation = function( v ) {
-	return this.lnq.expApply( v );
+	return this.lnq.apply( v );
 }
 
 // Apply just the rotation to a point.
 dlnQuat.prototype.applyInvRotation = function( v ) {
-	return this.lnq.expApply( v );
+	return this.lnq.apply( v );
 }
 
 // Apply just the rotation to a rotation
@@ -391,8 +391,8 @@ dlnQuat.prototype.applyRotationQ = function( q ) {
 // returns a new vector (usually the partial is saved for further use).
 
 dlnQuat.prototype.applyTransform = function( v ) {
-	const rV = this.lnq.expApply( v );
-	//const rO = this.lnQ.expApply( this.dQ );
+	const rV = this.lnq.apply( v );
+	//const rO = this.lnQ.apply( this.dQ );
 	rV.x += this.dQ.x;
 	rV.y += this.dQ.y;
 	rV.z += this.dQ.z;
@@ -401,8 +401,8 @@ dlnQuat.prototype.applyTransform = function( v ) {
 
 // V is in the space of the dual rotated around 0.
 dlnQuat.prototype.applyArmTransform = function( v ) {
-	const rV = this.lnq.expApply( v );
-	const rO = this.lnQ.expApply( this.dQ );
+	const rV = this.lnq.apply( v );
+	const rO = this.lnQ.apply( this.dQ );
 	rV.x += r0.x;
 	rV.y += r0.y;
 	rV.z += r0.z;
@@ -458,13 +458,13 @@ if( test )       {
 		console.log( "q2 v : ", JSON.stringify( q2.apply(v) ) );	
 		console.log( "lnq1 exp v : ", JSON.stringify( rlnq1.exp().apply(v) ) );	
 		console.log( "lnq2 exp v : ", JSON.stringify( rlnq2.exp().apply(v) ) );	
-		console.log( "lnq1 v : ", JSON.stringify( rlnq1.expApply(v) ) );	
-		console.log( "lnq2 v : ", JSON.stringify( rlnq2.expApply(v) ) );	
+		console.log( "lnq1 v : ", JSON.stringify( rlnq1.apply(v) ) );	
+		console.log( "lnq2 v : ", JSON.stringify( rlnq2.apply(v) ) );	
 
 		const lnq1q2 = rlnq1.addNew( rlnq2 ); // changes 
 		console.log( "q1q2 v", JSON.stringify( q1q2a.apply( v ) ) );
 
-		console.log( "lnq1q2 v", JSON.stringify( lnq1q2.expApply( v ) ) );
+		console.log( "lnq1q2 v", JSON.stringify( lnq1q2.apply( v ) ) );
 		
 
 		console.log( "  q1 basis?", q1.getBasis() );
