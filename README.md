@@ -50,26 +50,49 @@ and be simply manipulated with addition and subtraction.  (721 degrees is the sa
 This engine will use lnQuats as the native computation; this lets the engine always directly linearly scale in a spherical path and then expoenentiate
 only when applied; in comparison SLERP does `lnQuat.exp( Quat.log() + delta )`, where the same SLERP on lnQuat is just `lnQuat + delta`.
 
+Well... it's almost that easy; if the chain is calculated from a fixed point, it would be best to direct subtract; 
+
+The prinicpal angle form of lnQuat should be used.  The `principal()` utility function updates the quaternion to its princpal angle values, and returns the number of wraps removed.
+
+Free Bodies may run a long accumulation of rotation to get the orientation; application of 
+a quaternion with many turns still results in a minimal unit-quaternion representation; although if the accumulator gets too big, loss of precision may 
+cause erratic results after a long time.  Free bodies should 'relax' their spin count as required by updating to the principal rotation (except if the value is a angular velocity or acceleration).
+Also bodies, that spin very slowly don't need to apply corrections very often. (Should probobably implement a `getSpinCount()`).
+
+However, computing a chain from a fixed point like the base of a robot arm it will be more proper to maintain the full spin count (to prevent the robot manipulator from spinning 3 times just because; say on a 
+long chain of actuators; but this scenario is also likely to not overflow rotation accumulation.
+
+Folding of lnQuats can be done with `lnQuat.exp().log()` or `const turns = lnQuat.principal() + `.
+
+
+## Log Quaternion Nature
+
+
 
 ## Computation overhead introduced vs matricii
 
-The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space.   This is 
+The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space; that origin and the basis vectors can be retrieved to apply scalar x,y,z and get the resulting translated x,y,z 'world' coordinates.
+lnQuat has a conditioning operation `update()` which updates the `exp()` calculation part, which is computation of the length of the point, and using that to lookup sin/cos values; this is the 'costly' part, subsequent application
+to points/frames is as expensive as the matrix it replaces.
 
 ```
-	(translation update)
- 24 mul  14 adds  +1 sqrt  + 1 sin  +( 1 cos or  
+  (translation precompute exp() ) 
+  1 sqrt, 3 mul 2 add 1 div 1 sin 1 cos
 	sin/cos value are for the same angle, so it can be calated at the same time)
--or-
- 18 mul  4        +1 sqrt  + 1 sin  +( 1 cos or 
-	sin/cos value are for the same angle, so it can be calated at the same time) (parallel-ish)
 
+  lnQuat.apply(vector) //  aka mul(vec3)
+ 18 mul + 9 add  (translation update)
 
- + 1 4 value add for application of rotation  (orientation update) 
+  lnQuat + lnQuat
+ + 3 add   (orientation update) 
 
-// (in a chain, one additional calculation)
-// + 1 4 value add for origin adjust from basis origin
+ 18 mul + 12 add   total 
 
- storage 8 values  (4 + 4)  (can truncate to 3 and 3; w is always 0; in both vectors)
+ storage 6 values  (can abbreviate to 3 and 3; w is always 0)
+  note:  exp(0)=1 , 1 is the radius of the output quaternion,
+     resulting that any lnQuat absolutely a normalized Quat
+
+all of these operations can be done in sets of no more than registers; although it is 2 cross products
 
 ```
 
@@ -83,13 +106,9 @@ operation counts for applying a matrix to another matrix.
  18 mul 6 adds
 
 
-// 1 add for origin adjust from basis origin
-
 36 multiply and 12 adds
-(vs 27 and 14)
 
  storage 16(12) values (9 + 3)   usually sent as 4x4 or 3x3 and 3.
-
 ```
 
 
@@ -102,8 +121,7 @@ overhead compared to dual-quaterion
   quat * quat   (orienatation)
     32 multiply and 12 adds 
 
-
-50 vs 27 multiplies  and   24 vs 14 adds (nearly half the work)
+50 multiplies and 24 adds
   
 although there are SIMD 'broadcast' things that make matrix multiply more efficient, it still takes more data to load....
 all of these operations can be done in sets of 4 registers.
@@ -153,7 +171,7 @@ They are mappings in different projections, and should be considered as a differ
 | applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space.
 | exp | () | return this log-quaternion as the natural map of this quaternion.  Returns a new Quat().
 | getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
-| truncate | () | wrap this within a 'normalized' range of -2pi to 2pi.  Returns the number of wraps truncated.
+| prinicpal | () | removes excessive 'wrapping' and results with this lnQuat in its principal angle.  (N % 2PI).
 
 
 | dlnQuat Methods | Parameters | Description |
@@ -181,8 +199,8 @@ add vectors instead of multiply.
 
 ## References
 
-quaternion expoentiation mapping
-https://www.youtube.com/watch?v=UHzAY5Q7ji0
+[Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), this is actually sort of the inverse way of looking at this; it doesn't
+matter so much what the shape of the projection is...
 
 https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html
 

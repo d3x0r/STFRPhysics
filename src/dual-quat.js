@@ -5,14 +5,20 @@
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
+// how much of an angle is required before a thing is 'turning'
+// this is like in radians per tick... 
+// tick = (1000/1) ticks/second
+// 1/10,000th of 1/2pi (so like * 6.2)
+const NO_TURN_ANGLE = 0.000_000_01;  
+const SIN_R_OVER_R_MIN = 0.00001;
 
-const world = new dlnQuat( new lnQuat(), new dQuat() );
+const world = new dlnQuat( new lnQuat(), new dualQuat() );
 // add 0, rotation 0.
 
-const someObject = new dlnQuat( new lnQuat( 0, {x:0, y:0, z:1} ), new dQuat(0, 0, 10) );
-const Tree = new dlnQuat( new lnQuat( 0, {x:0, y:1, z:0} ), new dQuat(5, 0, -2) );
-const treeTop = new dlnQuat( new lnQuat( 0, { x:0, y:1, z:0} ), new dQuat( 0, 0, 0 ) );
-const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} ), new dQuat( 5, 0, 0 ) );
+const someObject = new dlnQuat( new lnQuat( 0, {x:0, y:0, z:1} ), new dualQuat(0, 0, 10) );
+const Tree = new dlnQuat( new lnQuat( 0, {x:0, y:1, z:0} ), new dualQuat(5, 0, -2) );
+const treeTop = new dlnQuat( new lnQuat( 0, { x:0, y:1, z:0} ), new dualQuat( 0, 0, 0 ) );
+const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} ), new dualQuat( 5, 0, 0 ) );
 
 // world is 0, 0, 0, 0, 0, 0, 0.
 // first object            cT   = is ( world.addNew(someObject.lnQ), world.lnQ.applyExp( someObject.dQ ) )
@@ -125,79 +131,119 @@ Quat.prototype.log = function( ) {
 	const w = this.w;
 
 	const r  = Math.sqrt(x*x+y*y+z*z);
-	const t  = r>0.00001? Math.atan2(r,w)/r: 0;
+	const t  = r>SIN_R_OVER_R_MIN? Math.atan2(r,w)/r: 0;
 
 	const xt = x * t;
 	const yt = y * t;
 	const zt = z * t;
 	//console.log( "Calculate log:", 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
-	return new lnQuat( 0/*0.5* Math.log(w*w+x*x+y*y+z*z)*/, xt, yt, zt )
+	return new lnQuat( 0, xt, yt, zt )
 }
 
 
 function lnQuat( theta, d, a, b ){
+	this.w = 0;
 	if( "undefined" !== typeof theta ) {
 		if( "undefined" !== typeof a ) {
+			if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
-			this.w = theta;
+			this.w = theta; // 0
 			this.x = d;
 			this.y = a;
 			this.z = b;
+			this.r = Math.sqrt( d*d + a*a + b*b );
+			// initial creation will allow more 'accuracy' than application...
+			if( this.r > SIN_R_OVER_R_MIN ) {
+				this.s  = Math.sin(this.r)/this.r;
+				this.qw = Math.cos(this.r);
+			} else {
+				this.s  = 0;
+				this.qw = 1;
+			}
 		}else {
-			// if no rotation, then nothing.
 			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
 
-			const t  = theta/2;
-			//const ct2 = Math.cos( t );  // sqrt( 1/2(1 + cos theta))  // half angle subst
-			const st2 = Math.sin( t );  // sqrt( 1/2(1 - cos theta))  // half angle subst
-			//const w = ct2;               // sqrt( 1/2(1 + cos theta))
-			const x = dl * d.x * st2;    // sqrt( 1/2(1 - cos theta))
-			const y = dl * d.y * st2;    // sqrt( 1/2(1 - cos theta))
-			const z = dl * d.z * st2;    // sqrt( 1/2(1 - cos theta))
-			//const r  = w*w + x*x+y*y+z*z ;
-			//console.log( "D PART:", dl*dl*d.x*d.x, dl*dl*d.y*d.y, dl*dl*d.z*d.z, dl*dl*d.x*d.x+dl*dl*d.y*d.y+dl*dl*d.z*d.z );
-			//console.log( "CTST PART:", ct2*ct2 + st2*st2 );
-			//  w                        * w                          +  st2*st2                                     
-			//               *  ( dl*dx * dl*dx + dl*dy * dl*dy + dl*dz * dl*dz )
-			// sqrt( 1/2(1 + cos theta)) * sqrt( 1/2(1 + cos theta))  + sqrt( 1/2(1 - cos theta))*sqrt( 1/2(1 - cos theta)) 
-			//               * ( x*x+y*y+z*z )
-			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * ( x*x+y*y+z*z )
-			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * (1)
-			// 1/2 ( 1 + cos theta + 1 - cos theta)
-			// 1
-			//console.log( "Calculate log:", theta, "R=", r, "D=",d, "DL=", (x*x+y*y+z*z), st2*st2, "W=", 0.5* Math.log(r), Math.log(dl) )
+			const t  = dl*theta/2;
+			// if no rotation, then nothing.
+			if( t > NO_TURN_ANGLE ) {
+				// 'proper' initialization would compute the quaternion, and take the log of it.
+				// computation of the quaterion is just to fill in the 'w' part; which is (properly) 0.
+				//  -- So this is (make a (normalized)quaternion)
+				//const ct2 = Math.cos( t );  // sqrt( 1/2(1 + cos theta))  // half angle subst
+				//const st2 = Math.sin( t );  // sqrt( 1/2(1 - cos theta))  // half angle subst
+				//const w = ct2;               // sqrt( 1/2(1 + cos theta))
+				//const x = dl * d.x * st2;    // sqrt( 1/2(1 - cos theta))
+				//const y = dl * d.y * st2;    // sqrt( 1/2(1 - cos theta))
+				//const z = dl * d.z * st2;    // sqrt( 1/2(1 - cos theta))
+				//const r  = w*w + x*x+y*y+z*z ;
+				//console.log( "D PART:", dl*dl*d.x*d.x, dl*dl*d.y*d.y, dl*dl*d.z*d.z, dl*dl*d.x*d.x+dl*dl*d.y*d.y+dl*dl*d.z*d.z );
+				//console.log( "CTST PART:", ct2*ct2 + st2*st2 );
+				//  w                        * w                          +  st2*st2                                     
+				//               *  ( dl*dx * dl*dx + dl*dy * dl*dy + dl*dz * dl*dz )
+				// sqrt( 1/2(1 + cos theta)) * sqrt( 1/2(1 + cos theta))  + sqrt( 1/2(1 - cos theta))*sqrt( 1/2(1 - cos theta)) 
+				//               * ( x*x+y*y+z*z )
+				// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * ( x*x+y*y+z*z )
+				// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * (1)
+				// 1/2 ( 1 + cos theta + 1 - cos theta)
+				// 1
+				//console.log( "Calculate log:", theta, "R=", r, "D=",d, "DL=", (x*x+y*y+z*z), st2*st2, "W=", 0.5* Math.log(r), Math.log(dl) )
 
-			this.w = 0; // r is always 1.  0.5* Math.log(r);    // 0.5 is sqrt() moved outside
-			this.x = dl*d.x * t;
-			this.y = dl*d.y * t;
-			this.z = dl*d.z * t;
+				this.w = 0; // r is always 1.  0.5* Math.log(r);    // 0.5 is sqrt() moved outside
+				this.x = d.x * t;
+				this.y = d.y * t;
+				this.z = d.z * t;
+				this.r = t/dl;
+				// initial creation will allow more 'accuracy' than application...
+				this.s  = Math.sin(this.r)/this.r;
+				this.qw = Math.cos(this.r);
+			}else {
+				this.x = 0;
+				this.y = 0;
+				this.z = 0;
+				this.r = 0;
+				this.s  = 0;
+				this.qw = 1;
+			}
 		}
 	} else {
-		this.w = 1;
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
+		this.r = 0;
+		this.s  = 0;
+		this.qw = 1;
 	}
 }
 
+lnQuat.prototype.update = function() {
+	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
+	if( (this.r  = Math.sqrt( this.x*this.x + this.y*this.y + this.z*this.z ) ) > SIN_R_OVER_R_MIN ) {
+		this.s  = Math.sin(this.r)/this.r;
+		this.qw = Math.cos(this.r);
+	} else {
+		this.s = 0;
+		this.qw = 1;
+	}
+	return this;
+}
 
 lnQuat.prototype.exp = function() {
 	const q = this;
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-	const et = 1;//Math.exp(q.w);
-	const s  = r>=0.00001? /* et* */Math.sin(r)/r: 0;
-
-	return new Quat( /*et**/Math.cos(r), q.x * s, q.y * s, q.z * s );
+	//const r  = this.r;//Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
+	//const et = 1;//Math.exp(q.w);
+	const s  = this.s;//r>=SIN_R_OVER_R_MIN? /* et* */Math.sin(r)/r: 0;
+	return new Quat( this.qw, q.x * s, q.y * s, q.z * s );
 }
 
-// returns the number of rotations truncated.
-lnQuat.prototype.truncate = function() {
+// returns the number of complete rotations removed; updates this to principal angle values.
+lnQuat.prototype.prinicpal = function() {
 	const q = this;
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z);
+	const r  = q.r;
 	const rMod  = Math.mod( r, (2*Math.PI) );
 	const rDrop = r - rMod;
-	if( ( rDrop / (Math.PI*2) ) > 1 )
+	if( ( rDrop / (Math.PI*2) ) > 0.5 )
 	{
+		// has a wrap; so update to principle angle values
 		const rDiv = rMod/r;
 		this.x *= rDiv;
 		this.y *= rDiv;
@@ -212,16 +258,16 @@ lnQuat.prototype.getBasis = function() {
 	const basis = { forward:null
 	              , right:null
 	              , up:null
-	              , origin: { x:0, y:0; z:0 } };
+	              , origin: { x:0, y:0, z:0 } };
 	if( q.w ) console.log( "0 +/- 0 is not 0?" );
 
 	// 6+2 +sqrt+cos+sin
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-	const et = 1;//Math.exp(q.w);
-	if( r >= 0.00001 ) {
-		const s  = /* et* */Math.sin(r)/r;
+	const r  = this.r;
+	//const et = 1;//Math.exp(q.w);
+	if( r >= SIN_R_OVER_R_MIN ) {
+		const s  = q.s;
 	        
-		const qw = /*et* */Math.cos(r);
+		const qw = q.qw;
 		const qx = q.x * s;
 		const qy = q.y * s;
 		const qz = q.z * s;
@@ -253,43 +299,37 @@ lnQuat.prototype.getBasis = function() {
 		}
 	} else {
 		basis.right   = { x:1, y:0, z:0 };
-		basis.up      = { x:0, y:1, z:0 }
-		basis.forward = { x:0, y:0; z:1 };
+		basis.up      = { x:0, y:1, z:0 };
+		basis.forward = { x:0, y:0, z:1 };
 	}
 	return basis;	
 }
 
 lnQuat.prototype.apply = function( v ) {
-	//x y z w l
 	const q = this;
 
 	// 3+2 +sqrt+exp+sin
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-        if( !r ) {
+        if( !q.r ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const et = 1;//Math.exp(q.w);
-	const s  = r>=0.00001? /*et**/ Math.sin(r)/r: 0;
+	const s  = q.s;
+	const qw = q.qw;
 
-	const qw = /* et* */Math.cos(r);
 	const qx = q.x * s;
 	const qy = q.y * s;
 	const qz = q.z * s;
 
-//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
-
+	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 	const tx = 2 * (qy * v.z - qz * v.y);
 	const ty = 2 * (qz * v.x - qx * v.z);
 	const tz = 2 * (qx * v.y - qy * v.x);
-
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 		, y : v.y + qw * ty + ( qz * tx - tz * qx )
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 27+14 +sqrt+sin+cos
-	// 21+4 +sqrt+sin+cos (parallel-ish)
+	// 18 mul + 9 add
 }
 
 
@@ -297,16 +337,13 @@ lnQuat.prototype.applyInv = function( v ) {
 	//x y z w l
 	const q = this;
 
-	// 3+2 +sqrt+exp+sin
-	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
-        if( !r ) {
+        if( !q.r ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const et = 1;// Math.exp(q.w);
-	const s  = r>=0.00001? /* et* */Math.sin(r)/r: 0;
+	const s  = q.s;
+	const qw = q.qw;
 
-	const qw = /* et*  */Math.cos(r);
 	const qx = -q.x * s;
 	const qy = -q.y * s;
 	const qz = -q.z * s;
@@ -316,48 +353,62 @@ lnQuat.prototype.applyInv = function( v ) {
 	const tz = 2 * (qx * v.y - qy * v.x);
 
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		, y : v.y + qw * ty + ( qz * tx - tz * qx )
-		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	       , y : v.y + qw * ty + ( qz * tx - tz * qx )
+	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 27+14 +sqrt+sin+cos
-	// 21+4 +sqrt+sin+cos (parallel-ish)
+	// 18 mul + 9 add
 }
 
 lnQuat.prototype.add = function( q ) {
-	this.w += q.w;
+	//this.w += q.w;
 	this.x += q.x;
 	this.y += q.y;
 	this.z += q.z;
+	// 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
+	return this;
 }
 
 // rotate the passed lnQuat by the amount specified.
 lnQuat.prototype.addNew = function( q ) {
-	return new lnQuat( this.w + q.w, this.x + q.x, this.y + q.y, this.z + q.z );
+	return new lnQuat().add(this).add(q).update();
 }
 
 // rotate the passed vector 'from' this space
 lnQuat.prototype.subNew = function( q ) {
-	return new lnQuat( q.w - this.w, q.x - this.x, q.y - this.y, q.z - this.z );
+	const qRes = new lnQuat().add( this ).addConj( q );
+	return qRes.update();
 }
 
 lnQuat.prototype.addConj = function( q ) {
-	this.w += q.w;
+	//this.w += q.w;
 	this.x -= q.x;
 	this.y -= q.y;
 	this.z -= q.z;
+	return this.update();
 }
 
-function dQuat( x, y, z ) {
-	this.w = 1.0;
+
+// offset coordinate
+function dualQuat( x, y, z ) {
+	this.w = -1.0; // mark it's a dual.
 	this.x = x;
 	this.y = y;
 	this.z = z;
 }
 
-dQuat.prototype.add = function( q ) {
-	return new dQuat( this.w+q.w, this.x+q.x, this.y + q.y, this.z + q.z );
+dualQuat.prototype.add = function( q ) {
+	this.w += q.w;
+	this.x += q.x;
+	this.y += q.y;
+	this.z += q.z;
+	return this;
 }
+
+dualQuat.prototype.addNew = function( q ) {
+	return new dualQuat().add(this).add(q);
+}
+
 
 // dual log-quat
 //   log qaut keeps the orientation of the frame
