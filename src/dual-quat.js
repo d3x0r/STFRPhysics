@@ -108,7 +108,7 @@ Quat.prototype.mulLong = function( q ) {
 	const lnQ = q.log();
 	lnThis.add( lnQ );
 	const r = lnThis.exp();
-	console.log( "?", r, lnThis, lnQ );
+	//console.log( "?", r, lnThis, lnQ );
 	return r;
 }
 
@@ -116,16 +116,19 @@ Quat.prototype.log = function( ) {
 	const x = this.x;
 	const y = this.y;
 	const z = this.z;
+	const l = 1/Math.sqrt(x*x + y*y + z*z );
+	//if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
+
 	const w = this.w;
 
 	const r  = Math.sqrt(x*x+y*y+z*z);
 	const t  = r>0.00001? Math.atan2(r,w)/r: 0;
 
-	const xt = this.x * t;
-	const yt = this.y * t;
-	const zt = this.z * t;
+	const xt = x * t;
+	const yt = y * t;
+	const zt = z * t;
 	//console.log( "Calculate log:", 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
-	return new lnQuat( 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
+	return new lnQuat( 0/*0.5* Math.log(w*w+x*x+y*y+z*z)*/, xt, yt, zt )
 }
 
 
@@ -143,23 +146,26 @@ function lnQuat( theta, d, a, b ){
 			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
 
 			const t  = theta/2;
-			const ct2 = Math.cos( t );  // sqrt( 1/2(1 + cos theta))
-			const st2 = Math.sin( t );  // sqrt( 1/2(1 - cos theta))
-			const w = ct2;          // sqrt( 1/2(1 + cos theta))
-			const x = dl * d.x * st2;    //  sqrt( 1/2(1 - cos theta))
-			const y = dl * d.y * st2;    // 
-			const z = dl * d.z * st2;
-			// sqrt( 1/2(1 + cos theta)) * sqrt( 1/2(1 + cos theta))  + sqrt( 1/2(1 - cos theta))*sqrt( 1/2(1 - cos theta)) * ( x*x+y*y+z*z )
-
+			//const ct2 = Math.cos( t );  // sqrt( 1/2(1 + cos theta))  // half angle subst
+			const st2 = Math.sin( t );  // sqrt( 1/2(1 - cos theta))  // half angle subst
+			//const w = ct2;               // sqrt( 1/2(1 + cos theta))
+			const x = dl * d.x * st2;    // sqrt( 1/2(1 - cos theta))
+			const y = dl * d.y * st2;    // sqrt( 1/2(1 - cos theta))
+			const z = dl * d.z * st2;    // sqrt( 1/2(1 - cos theta))
+			//const r  = w*w + x*x+y*y+z*z ;
+			//console.log( "D PART:", dl*dl*d.x*d.x, dl*dl*d.y*d.y, dl*dl*d.z*d.z, dl*dl*d.x*d.x+dl*dl*d.y*d.y+dl*dl*d.z*d.z );
+			//console.log( "CTST PART:", ct2*ct2 + st2*st2 );
+			//  w                        * w                          +  st2*st2                                     
+			//               *  ( dl*dx * dl*dx + dl*dy * dl*dy + dl*dz * dl*dz )
+			// sqrt( 1/2(1 + cos theta)) * sqrt( 1/2(1 + cos theta))  + sqrt( 1/2(1 - cos theta))*sqrt( 1/2(1 - cos theta)) 
+			//               * ( x*x+y*y+z*z )
 			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * ( x*x+y*y+z*z )
 			// 1/2(1 + cos theta)  + 1/2(1 - cos theta) * (1)
 			// 1/2 ( 1 + cos theta + 1 - cos theta)
 			// 1
-			const r  = w*w + x*x+y*y+z*z ;
-
 			//console.log( "Calculate log:", theta, "R=", r, "D=",d, "DL=", (x*x+y*y+z*z), st2*st2, "W=", 0.5* Math.log(r), Math.log(dl) )
 
-			this.w = 0.5* Math.log(r);
+			this.w = 0; // r is always 1.  0.5* Math.log(r);    // 0.5 is sqrt() moved outside
 			this.x = dl*d.x * t;
 			this.y = dl*d.y * t;
 			this.z = dl*d.z * t;
@@ -192,6 +198,16 @@ lnQuat.prototype.exp = function() {
 	return new Quat( et*Math.cos(r), q.x * s, q.y * s, q.z * s );
 }
 
+// returns the number of rotations truncated.
+lnQuat.prototype.norm = function() {
+	const q = this;
+	const r  = Math.mod( Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z), (2*Math.PI) );
+	this.x *= r;
+	this.y *= r;
+	this.z *= r;
+	return 1/r;
+}
+
 lnQuat.prototype.getBasis = function() {
 // basis = { forward : ttbcT.apply( {x:0,y:0,z:1} )
 //         , right : ttbcT.apply( {x:1,y:0,z:0} )
@@ -199,53 +215,44 @@ lnQuat.prototype.getBasis = function() {
 
 	const q = this;
 
-const basis = { forward:{x:0, y:0, z: 1 }
-		, right:{x:1, y:0, z: 0 }
-	        , up:{x:0, y:1, z: 0 } }; // 1.0
-
+const basis = { forward:null
+		, right:null
+	        , up:null }; // 1.0
+	if( q.w ) console.log( "0 +/- 0 is not 0?" );
 	// 3+2 +sqrt+exp+sin
 	const r  = Math.sqrt( q.x*q.x + q.y*q.y + q.z*q.z) ;
         if( !r ) {
 		// v is unmodified.	
 		return basis; // 1.0
 	}
-	const et = Math.exp(q.w);
-	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
+	const et = 1;//Math.exp(q.w);
+	const s  = r>=0.00001? /* et* */Math.sin(r)/r: 0;
 
-	const qw = et*Math.cos(r);
+	const qw = /*et* */Math.cos(r);
 	const qx = q.x * s;
 	const qy = q.y * s;
 	const qz = q.z * s;
 	
 	{
-		const v = basis.forward;
-		const tx = 2 * (qy * v.z - qz * v.x);
-		const ty = 2 * (qy * v.x - qx * v.y);
-		const tz = 2 * (qz * v.y - qy * v.z);
-
-	 	basis.forward = { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		                , y : v.y + qw * ty + ( qz * tx - tz * qx )
-		                , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		const tx = 2 * (qy);
+		const tz = 2 * (-qy);
+	 	basis.forward = { x : 0 + qw * tx + ( qy * tz - 0 )
+		                , y : 0 + 0       + ( qz * tx - tz * qx )
+		                , z : 1 + qw * tz + ( 0       - tx * qy ) };
 	}
 	{
-		const v = basis.right;
-		const tx = 2 * (qy * v.z - qz * v.x);
-		const ty = 2 * (qy * v.x - qx * v.y);
-		const tz = 2 * (qz * v.y - qy * v.z);
-
-	 	basis.right = { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		              , y : v.y + qw * ty + ( qz * tx - tz * qx )
-		              , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		const tx = 2 * (-qz);
+		const ty = 2 * (qy);
+	 	basis.right = { x : 1 + qw * tx + ( 0       - ty * qz )
+		              , y : 0 + qw * ty + ( qz * tx - 0 )
+		              , z : 0 + 0       + ( qx * ty - tx * qy ) };
 	}
 	{
-		const v = basis.up;
-		const tx = 2 * (qy * v.z - qz * v.x);
-		const ty = 2 * (qy * v.x - qx * v.y);
-		const tz = 2 * (qz * v.y - qy * v.z);
-
-	 	basis.up = { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		           , y : v.y + qw * ty + ( qz * tx - tz * qx )
-		           , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		const ty = 2 * (-qx);
+		const tz = 2 * (qz);
+	 	basis.up = { x : 0 + 0       + ( qy * tz - ty * qz )
+		           , y : 1 + qw * ty + ( 0       - tz * qx )
+		           , z : 0 + qw * tz + ( qx * ty - 0       ) };
 	}
 	return basis;	
 }
@@ -260,10 +267,10 @@ lnQuat.prototype.expApply = function( v ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const et = Math.exp(q.w);
-	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
+	const et = 1;//Math.exp(q.w);
+	const s  = r>=0.00001? /*et**/ Math.sin(r)/r: 0;
 
-	const qw = et*Math.cos(r);
+	const qw = /* et* */Math.cos(r);
 	const qx = q.x * s;
 	const qy = q.y * s;
 	const qz = q.z * s;
@@ -277,8 +284,8 @@ lnQuat.prototype.expApply = function( v ) {
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 27+14 +sqrt+exp+sin+cos
-	// 21+4 +sqrt+exp+sin+cos (parallel-ish)
+	// 27+14 +sqrt+sin+cos
+	// 21+4 +sqrt+sin+cos (parallel-ish)
 }
 
 
@@ -292,10 +299,10 @@ lnQuat.prototype.expApplyInv = function( v ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const et = Math.exp(q.w);
-	const s  = r>=0.00001? et*Math.sin(r)/r: 0;
+	const et = 1;// Math.exp(q.w);
+	const s  = r>=0.00001? /* et* */Math.sin(r)/r: 0;
 
-	const qw = et*Math.cos(r);
+	const qw = /* et*  */Math.cos(r);
 	const qx = -q.x * s;
 	const qy = -q.y * s;
 	const qz = -q.z * s;
@@ -309,8 +316,8 @@ lnQuat.prototype.expApplyInv = function( v ) {
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 27+14 +sqrt+exp+sin+cos
-	// 21+4 +sqrt+exp+sin+cos (parallel-ish)
+	// 27+14 +sqrt+sin+cos
+	// 21+4 +sqrt+sin+cos (parallel-ish)
 }
 
 lnQuat.prototype.add = function( q ) {
@@ -506,26 +513,26 @@ if( test )       {
 
 		const lnq1 = q1.log();
 		const lnq2 = q2.log();
-		console.log( "q1:", q1, "q2:", q2 );
-		console.log( "lnq1:", lnq1, "lnq2:", lnq2 );
-		console.log( "rlnq1:", rlnq1, "rlnq2:", rlnq2 );
+		console.log( "q1:", JSON.stringify( q1 ), "q2:", JSON.stringify( q2  ));
+		console.log( "lnq1:", JSON.stringify( lnq1 ), "lnq2:", JSON.stringify( lnq2  ));
+		console.log( "rlnq1:", JSON.stringify( rlnq1 ), "rlnq2:", JSON.stringify( rlnq2  ));
 		const q1q2a = q1.mul( q2 );
 		const q1q2b = q1.mulLong( q2 );
-		console.log( "a:", q1q2a, "b:", q1q2b );
+		console.log( "a:", JSON.stringify( q1q2a ), "b:", JSON.stringify( q1q2b  ));
 
 		const v = { x:2, y:5, z:-3};
 
-		console.log( "q1 v : ", q1.apply(v) );	
-		console.log( "q2 v : ", q2.apply(v) );	
-		console.log( "lnq1 exp v : ", rlnq1.exp().apply(v) );	
-		console.log( "lnq2 exp v : ", rlnq2.exp().apply(v) );	
-		console.log( "lnq1 v : ", rlnq1.expApply(v) );	
-		console.log( "lnq2 v : ", rlnq2.expApply(v) );	
+		console.log( "q1 v : ", JSON.stringify( q1.apply(v) ) );	
+		console.log( "q2 v : ", JSON.stringify( q2.apply(v) ) );	
+		console.log( "lnq1 exp v : ", JSON.stringify( rlnq1.exp().apply(v) ) );	
+		console.log( "lnq2 exp v : ", JSON.stringify( rlnq2.exp().apply(v) ) );	
+		console.log( "lnq1 v : ", JSON.stringify( rlnq1.expApply(v) ) );	
+		console.log( "lnq2 v : ", JSON.stringify( rlnq2.expApply(v) ) );	
 
 		const lnq1q2 = rlnq1.addNew( rlnq2 ); // changes 
-		console.log( "q1q2 v", q1q2a.apply( v ) );
+		console.log( "q1q2 v", JSON.stringify( q1q2a.apply( v ) ) );
 
-		console.log( "lnq1q2 v", lnq1q2.expApply( v ) );
+		console.log( "lnq1q2 v", JSON.stringify( lnq1q2.expApply( v ) ) );
 		
 
 		console.log( "  q1 basis?", q1.getBasis() );
@@ -534,13 +541,13 @@ if( test )       {
 
 		console.log( " lq1 basis?", lnq1.getBasis() );
 
-		console.log( " lq2 basis?", lnq2.getBasis() );
+		console.log( " lq2 basis?", lnq2.getBasis()  );
 
 		console.log( "rlq1 basis?", rlnq1.getBasis() );
 
 		console.log( "rlq2 basis?", rlnq2.getBasis() );
 
-		console.log( "lq1q2 basis?", lnq1q2.getBasis() );
+		console.log( "lq1q2 basis?", lnq1q2.getBasis()  );
 
 	}
 }
