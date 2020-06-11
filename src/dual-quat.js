@@ -3,6 +3,8 @@
 
 /* The 'world' would be started with a dual-quat */
 
+// control whether type and normalization (sanity) checks are done..
+const ASSERT = false;
 
 const world = new dlnQuat( new lnQuat(), new dQuat() );
 // add 0, rotation 0.
@@ -54,6 +56,8 @@ function Quat( theta,d, a, b ) {
 	}
 }
 
+//https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+//https://www.html5gamedevs.com/topic/32934-multiply-a-vector3-times-a-quaternion/  (code; credits above)
 Quat.prototype.apply = function( v ) {
         const q = this;
 	const tx = 2 * (q.y * v.z - q.z * v.y);
@@ -67,14 +71,11 @@ Quat.prototype.apply = function( v ) {
 
 
 Quat.prototype.getBasis = function() {
-
 	const q = this;
-
 	const basis = { right  : this.apply( { x:1, y:0, z:0 })
 	              , up     : this.apply( { x:0, y:1, z:0 }) 
 	              , forward: this.apply( { x:0, y:0, z:1 }) }; // 1.0
 	return basis;
-
 }
 
 Quat.prototype.mul = function( q ) {
@@ -116,8 +117,10 @@ Quat.prototype.log = function( ) {
 	const x = this.x;
 	const y = this.y;
 	const z = this.z;
-	const l = 1/Math.sqrt(x*x + y*y + z*z );
-	//if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
+	if( ASSERT ) {
+		const l = 1/Math.sqrt(x*x + y*y + z*z );
+		if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
+	}
 
 	const w = this.w;
 
@@ -130,7 +133,6 @@ Quat.prototype.log = function( ) {
 	//console.log( "Calculate log:", 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
 	return new lnQuat( 0/*0.5* Math.log(w*w+x*x+y*y+z*z)*/, xt, yt, zt )
 }
-
 
 
 function lnQuat( theta, d, a, b ){
@@ -425,74 +427,6 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 }
 
 
-/*
-
-
-
-// http://www.neil.dantam.name/papers/dantam2018practical.pdf
-
-// https://maxime-tournier.github.io/notes/quaternions.html#exponential-map-second-derivative
-
-qAC = qAB (cr) qBC
-
-PQ = pq = -p . q + p x q;
-  (dot) (cross)
-  
-
-QP = 
-
-xy=x×y-xTy
-
-xy =cross(x,y) - xT * y;
-
-conjugate
-
-w = w;
-x = -x;
-y = -y;
-z = -z;
-
-q1 q2 =  w1 w2   - v1 dot v2, w1 v2 + w2 v1 + v1 cross v2 
-
-pq = ... well pq
-qp = (pq)*
-
-{\displaystyle {\begin{alignedat}{4}&a_{1}a_{2}&&+a_{1}b_{2}i&&+a_{1}c_{2}j&&+a_{1}d_{2}k\\{}+{}&b_{1}a_{2}i&&+b_{1}b_{2}i^{2}&&+b_{1}c_{2}ij&&+b_{1}d_{2}ik\\{}+{}&c_{1}a_{2}j&&+c_{1}b_{2}ji&&+c_{1}c_{2}j^{2}&&+c_{1}d_{2}jk\\{}+{}&d_{1}a_{2}k&&+d_{1}b_{2}ki&&+d_{1}c_{2}kj&&+d_{1}d_{2}k^{2}\end{alignedat}}}
-
-
-	 The conjugate of a product of two quaternions is the product of the conjugates in the reverse order. That is, if p and q are quaternions, then (pq)* = q*p*, not p*q*.   qp = 
-	 
-	 q* = -1/2 ( q + iqi + jqj + kqk )
-	 
-
-The conjugation of a quaternion, in stark contrast to the complex setting, can be expressed with multiplication and addition of quaternions:
-http://graphics.stanford.edu/courses/cs348a-17-winter/Papers/quaternion.pdf
-
-, Q¯0 = Q00 + Q01i and  Q¯1 = Q10 + Q11i,
-
-
-Q = Q¯0 + Q¯1j (18)
-= (Q00 + Q01i)+(Q10 + Q11i)j (19)
-= Q00 + Q01i + Q10j + Q11k
-
-
-
-log(theta,n)=theta n
-Thus, when defined, the derivative of the logarithm satisfies:
-
-dlog(theta,n)=dtheta n+ thetadn
-
-
-
-q* = -1/2 ( q + iqi + jqj + kqk )
-
-q*.x = -1/2 ( q.x + (-q.x + q.yji + q.zki) + (q.xji -q.y + q.zjk ) + ( q.xki + q.ykj - q.z ) )
-
-                 q.xji + q.yji   
-		 q.zki + q.xki
-		 q.yjk + q.zjk
-
-*/
 
 
 if( test )       {
