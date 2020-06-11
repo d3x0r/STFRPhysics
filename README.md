@@ -1,3 +1,5 @@
+# Space-Time Field Reactor Physics
+
 # Fast Faraday Force Flux Field Reactor (FFFFFR)
 
 I wrote a few pages, and lost it all :(  Lost some references from page too
@@ -5,7 +7,7 @@ I wrote a few pages, and lost it all :(  Lost some references from page too
 (Space-Time Field Reactor ?STFR? )
 
 
-## Rotation Using Quaternions
+## Frame Computation Using Dual Log-Quaternions
 
 I've come to relearn much about the quatnerions and complex numbers especially with applications to rotation.
 Quaternions have a natrual logarithm function, and a exp.  So many places stress so very much that the order
@@ -15,11 +17,11 @@ is just a matter of applying a negative sign.  Even in the non-logarithmic form,
 for a calculation and involves cross products, such that `A x B  !=  B x A` which is true, but `A x B == -B X A`.  This helps
 identify how order remains in the log-quatnerion space.  
 
-Given two logrithmic quaternions(LQ) `lP` and `lQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
-`lP + lQ` OR `lQ + lP` because addition is communitive;  However the multiplication of `Q * P` is also `Q / P` (since the conjugate is also the reciprocol), 
+Given two logrithmic quaternions(LQ) `LP` and `LQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
+`LP + LQ` OR `LQ + LP` because addition is commutative;  However the multiplication of `Q * P` is also `Q / P` (since the conjugate is also the recipricol), 
 so this is a subtraction of logs `lQ - lP`.  If the multiplication terms are switched, the same order 
 of operations is preserved in addition of LQ by flipping the sign appropriately.  Probably the above is better expressed
-if the parital -- and ---- signs were shown...  Addition is probably `--lP -  -lQ` and subtraction just reverses the A and B... `-lQ - --lP`.
+if the parital -- and ---- signs were shown...  Addition is probably `(--lP) - (-lQ)`... (which doesn't reverse ... just becomes -lp - lq which isn't right either.
 
 `PQ = e^lP * e^lQ = e^(lP+lQ)`
 
@@ -92,6 +94,14 @@ all of these operations can be done in sets of 4 registers.
 
 
 ```
+
+## Implementation
+
+For implmeentation, existing `Quaternion.log()` function should return a new type 'LogQuaternion' which has different operator to apply and apply-inverse to vectors.
+
+`LogQuaternion.exp()` should result with a 'Quaternion' type.
+
+They are mappings in different projections, and should be considered as a different type of units.
 
 
 ## Rotation limits
