@@ -521,7 +521,7 @@ function ReView( lnQ1 ) {
 	// normal of great circle in question. (is normalized)
 	const nCB = { x : sin_C, y:0, z:cos_C };
 	// angle to cover on that circle /2
-	const theta = (Math.asin( sin_a ))/2;
+	const theta = (Math.asin( sin_c ))/2;
 	console.log( "theta:", nCB, theta, cos_C*cos_C+sin_C*sin_C, Math.acos(cos_C),Math.asin(sin_C) );
 	return new lnQuat( 0, nCB.x * theta, nCB.y * theta, nCB.z * theta );
 }
