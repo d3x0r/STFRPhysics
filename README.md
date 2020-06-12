@@ -38,8 +38,8 @@ if the parital -- and ---- signs were shown...  Addition is probably `(--lP) - (
 
 
 On Reflection; it should follow if `Q * P` is  also `P / Q` then `P * Q` is also `Q / P`, No, that doesn't clarify anything, and just muddies the waters.  Adding an Angle `A + B`
-, it's the same as `A - (360-B)`  or `A + B - 360`.... Let's just go ahead and blame it on the 2PI Modulous.  The point really is, we shouldn't be doing our quaternion math
-in the projection of the thing.  It's like always computing things about the cube on the screen from the pixels on the screen - they make AI's to do that, not formulas.
+, it's the same as `A - (360-B)`  or `A + B - 360`.... Let's just go ahead and blame it on the 2PI modulus.  The point really is, we shouldn't be doing our quaternion math
+in the projection of the value;  It's like always computing things about the cube on the screen from the pixels on the screen - they make AI's to do that, not formulas.
 
 
 ### Hypothetical failure case
