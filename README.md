@@ -14,26 +14,32 @@ I wrote a few pages, and lost it all :(  Lost some references from page too
  - lnQuat - short for 'quaternion in natural log mapping'  (lnQuats for plural); may also be said as 'log-quaternion' or 'Log Quat'.
  - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later).
  - Quat - the type `class Quat`.
+ - principalling - the updating of a lnQuaternion to its prinicpal angles and the associated rate. There is a method `principle()` which sets a lnQuaternion to its principal angles.
 
 ## Frame Computation Using Dual Log-Quaternions
 
 I've come to relearn much about the quatnerions and complex numbers especially with applications to rotation.
-Quaternions have a natrual logarithm function, and a exp.  So many places stress so very much that the order
-of multiplication matter; however, there's a note that the quaternions are also unit-quaternion or normalized in
+Quaternions have a natural logarithm function, and a exp.  Many places stress so very much that the order
+of multiplication matters; however, there's a note that the quaternions which are also unit-quaternion or normalized in
 the process of calculation.  So the reciprical of a unit-quaternion is also the conjugate; so the order or multiplying `pq` vs `qp` 
 is just a matter of applying a negative sign.  Even in the non-logarithmic form, the calculation to apply a quaternion
 for a calculation and involves cross products, such that `A x B  !=  B x A` which is true, but `A x B == -B X A`.  This helps
-identify how order remains in the log-quatnerion space.  
+identify how order remains in the log-quaternion space.  
 
 Given two logrithmic quaternions(LQ) `LP` and `LQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
-`LP + LQ` OR `LQ + LP` because addition is commutative;  However the multiplication of `Q * P` is also `Q / P` (since the conjugate is also the recipricol), 
-so this is a subtraction of logs `lQ - lP`.  If the multiplication terms are switched, the same order 
+`LP + LQ` OR `LQ + LP` because addition is commutative;  However the multiplication of `Q * P` is also `P / Q` (since the conjugate is also the recipricol), 
+so this is a subtraction of logs `lP - lQ`.  If the multiplication terms are switched, the same order 
 of operations is preserved in addition of LQ by flipping the sign appropriately.  Probably the above is better expressed
 if the parital -- and ---- signs were shown...  Addition is probably `(--lP) - (-lQ)`... (which doesn't reverse ... just becomes -lp - lq which isn't right either.
 
 `PQ = e^lP * e^lQ = e^(lP+lQ)`
 
 `QP = e^lQ * e^lP = e^(lQ-lP)`
+
+
+On Reflection; it should follow if `Q * P` is  also `P / Q` then `P * Q` is also `Q / P`, No, that doesn't clarify anything, and just muddies the waters.  Adding an Angle `A + B`
+, it's the same as `A - (360-B)`  or `A + B - 360`.... Let's just go ahead and blame it on the 2PI Modulous.  The point really is, we shouldn't be doing our quaternion math
+in the projection of the thing.  It's like always computing things about the cube on the screen from the pixels on the screen - they make AI's to do that, not formulas.
 
 
 ### Hypothetical failure case
@@ -57,17 +63,22 @@ The prinicpal angle form of lnQuat should be used.  The `principal()` utility fu
 Free Bodies may run a long accumulation of rotation to get the orientation; application of 
 a quaternion with many turns still results in a minimal unit-quaternion representation; although if the accumulator gets too big, loss of precision may 
 cause erratic results after a long time.  Free bodies should 'relax' their spin count as required by updating to the principal rotation (except if the value is a angular velocity or acceleration).
-Also bodies, that spin very slowly don't need to apply corrections very often. (Should probobably implement a `getSpinCount()`).
+Also bodies, that spin very slowly don't need to apply corrections very often.
 
 However, computing a chain from a fixed point like the base of a robot arm it will be more proper to maintain the full spin count (to prevent the robot manipulator from spinning 3 times just because; say on a 
 long chain of actuators; but this scenario is also likely to not overflow rotation accumulation.
 
-Folding of lnQuats can be done with `lnQuat.exp().log()` or `const turns = lnQuat.principal() + `.
+Principalling of lnQuats can be done with `lnQuat.exp().log()` or `const principal = lnQuat.principal();`.
 
 
 ## Log Quaternion Nature
 
+## Inertial Frame Relavence.
 
+Addition of impulse is the cross product between the vector to the point of impact from the mass' center of gravity and the force of impact. (maybe one of those is negative?)
+Addition of translation is the remaining force applied to the dualQuat.
+The cross of two nearly parallel vectors is nearly 0; so dead on collisions result in translation.
+(The angle is also the arc length, so units of space translate to angle directly).
 
 ## Computation overhead introduced vs matricii
 
@@ -149,36 +160,39 @@ They are mappings in different projections, and should be considered as a differ
 
 | Vector Methods | Parameters | Description |
 |---|---|---|
-| add | (v) | add a vector to this one; update in-place.
+| add | (v) | add a vector to this one; update in-place. |
 
 | Quat Methods | Parameters | Description |
 |---|---|---|
-| mul | (q) | multiply this quaternion with another quaternion; result with a new Quat().
-| add | (q) | add passed quaternion to this quaternion.
-| addNew | (q) | add passed quaternion to this quaternion, return a new Quat().
-| apply | (v) | apply rotation to vector parameter, result with a new vector.
-| applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space.
-| log | () | return this quaternion as the natural log of this quaternion.  Returns a new lnQuat().
-| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
-| normalize | (q) | make sure this is a unit quaternion (only the axis direction? not including w?)
+| mul | (q) | multiply this quaternion with another quaternion; result with a new Quat(). |
+| add | (q) | add passed quaternion to this quaternion. |
+| addNew | (q) | add passed quaternion to this quaternion, return a new Quat(). |
+| apply | (v) | apply rotation to vector parameter, result with a new vector. |
+| applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space. |
+| log | () | return this quaternion as the natural log of this quaternion.  Returns a new lnQuat(). |
+| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix) |
+| normalize | (q) | make sure this is a unit quaternion (only the axis direction? not including w?) |
 
 
 | lnQuat Methods | Parameters | Description |
 |---|---|---|
-| add | (q) | add passed quaternion to this quaternion.
-| addNew | (q) | add passed quaternion to this quaternion, return a new lnQuat().
-| apply | (v) | apply rotation to vector parameter, result with a new vector.
-| applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space.
-| exp | () | return this log-quaternion as the natural map of this quaternion.  Returns a new Quat().
-| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
-| prinicpal | () | removes excessive 'wrapping' and results with this lnQuat in its principal angle.  (N % 2PI).
+| add | (q) | add passed quaternion to this quaternion. |
+| addNew | (q) | add passed quaternion to this quaternion, return a new lnQuat(). |
+| apply | (v) | apply rotation to vector parameter, result with a new vector. |
+| applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space. |
+| exp | () | return this log-quaternion as the natural map of this quaternion.  Returns a new Quat(). |
+| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix) |
+| prinicpal | () | Removes excessive turns and results with new lnQuat in its principal angle.  Returns a new lnQuat() that is at the prinicpal angle of this lnQuat. (may be 0).  |
+| turn | (turns ) | add a certain number of turns to the current rotation.  ( this += turns * PI, in the current direction (if any) ); If the principle() is 0, cannot re-turn it. (Deprecated before release; except in the case you know your thrust is always on the same twist) |
+| torque | ( angles, turns ) | apply a torque to this quaternion.  (this += a * t ). |
+
 
 
 | dlnQuat Methods | Parameters | Description |
 |---|---|---|
-| apply | (v) | apply rotation and offset to vector parameter, result with a new vector.
-| applyInv | (v) | 'unapply' or apply the dual-log-quaternion inversed to translate point from quaternion space.
-| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix)
+| apply | (v) | apply rotation and offset to vector parameter, result with a new vector. |
+| applyInv | (v) | 'unapply' or apply the dual-log-quaternion inversed to translate point from quaternion space. |
+| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix) |
 
 
 ## Rotation limits
@@ -199,10 +213,9 @@ add vectors instead of multiply.
 
 ## References
 
-[Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), this is actually sort of the inverse way of looking at this; it doesn't
-matter so much what the shape of the projection is...
+[Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
+matter so much what the shape of the projection is, but what the source data projects into.
 
-https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html
 
 
 [(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf) // logrithm quaternion adoptations.
@@ -212,16 +225,17 @@ https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html
 [Quaternions  (long list of general formulas gathered)](https://maxime-tournier.github.io/notes/quaternions.html#interpolation)
 
 
-https://en.wikipedia.org/wiki/Quaternion (especially exponentiation)
+[Wikipedia Quaternion(of course)](https://en.wikipedia.org/wiki/Quaternion) (especially exponentiation)
+
+[Wikipedia Natural Logarithms](https://en.wikipedia.org/wiki/Natural_logarithm) (bottom of page, 'Plots of the natural logarithm function on the complex plane (principal branch)' complex number extension, graph of abs(ln(x+yi)) = high speed break of record hydraulic press channel. (30,000 RPM!)
 
 
 https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf  (dual quatnerions; recommend calculation of separate things)
 
-https://en.wikipedia.org/wiki/Natural_logarithm (bottom of page, complex number extension, graph of abs(ln(x+yi)) = high speed break of record hydraulic press channel. (30,000 RPM!)
 
-https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm (only exp)
+[Maths - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm) (only dual number exp, no ln)
 
-http://new.math.uiuc.edu/math198/MA198-2014/rgandre2/seminar.pdf (exp and ln)
+[Meta-Complex Numbers](http://new.math.uiuc.edu/math198/MA198-2014/rgandre2/seminar.pdf) (exp and ln; same old stuff, just a nice layout worth the credit)
 
 ```
 // dual exp and ln
@@ -236,9 +250,10 @@ log(a+be) = log(a) + ( b / a ) e
 
 [Pose consensus based on dual quaternion algebra with application to decentralized formation control of mobile manipulators (Log- dual-quaternion)](https://arxiv.org/pdf/1810.08871.pdf)
 
+[https://reader.elsevier.com/reader/sd/pii/S0022247X12000327?token=C2A88F2FE30E44EC9A7E1439E715AFAE52DDAC7E05FCCB26B5353C6F6EFEE671588329FD76F673D41FAC945FD9B7CAF4](https://reader.elsevier.com/reader/sd/pii/S0022247X12000327?token=C2A88F2FE30E44EC9A7E1439E715AFAE52DDAC7E05FCCB26B5353C6F6EFEE671588329FD76F673D41FAC945FD9B7CAF4)
 
-https://pdf.sciencedirectassets.com/272578/1-s2.0-S0022247X12X00039/1-s2.0-S0022247X12000327/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjELT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIFXsRUeP8AoqeUAwYp36FLtfbjOv%2B0FKRO%2BYkTD4VRTwAiEA2viZWfw5uLjaDhvrrM8ghkviwL8FYvWUm%2Fb4nLXn7HQqtAMILRADGgwwNTkwMDM1NDY4NjUiDO46yavyZj6sONraryqRA9btRhy55GL%2FSZPlQcXnt3WhdYfbKLGxOElO50AWJSe65MPtTkwm63s%2Fg7RM5pKoTibzoR2KmWhrkI%2Fc4oISa03Z66sZ8%2FmywOya4heVoj%2BG4hmmvy8XisIWdPheDjmcCBxlnDzq72nzNN9ZyzXQGU73ngc8wZ8uv6xD7XUhd%2BgiDoOEPd9Mw8lZUIZoDDYtdcu6ILBsAJOTdVK5NsVCiKwLUOfSdE0wUWSa7tHn0GYbpku26szG5mQjgaSaNA%2Fsy1Dkb6Vt0G%2B634udep0sasmsp7I%2FBUcgDUngbM%2Fm6RtBC8EL7YNb8AlFpWtsXi%2F452NCjEdhT3vmJFYEXAyyjODDsb2MmitjiS5FxGXsODqhgS96BOwqJY%2BuUsZZUDC3Z2CYwWPGrKgAnIo4wu9svpELg%2BAMJ0XtMgVu3LPtlZ0J9L9oit6ncp2HM088NTlVw3sxIk%2FkQhd6SOgqpZZJW95QGB5t2ckZu43lnIQuDlQfKB4L4I4fWM3Qenb%2FaG4BtZs4nV6y8YcxOh%2B2W8ZT0dukMJuPg%2FcFOusBLrVCipWtDgP8EOJewmZBG%2FQg3J3FDbG%2BgeC9%2B7t3PNqx7KXb2%2Fw57FSZNW4C9uATQC%2FVYndMK5IKBKJLt7m1oYbR9BYnLuiRkOFctLmDRfHOdShER0J78CepTtob8Y%2BrtyvLEDffUiZLqwHRQfqWVhHGq03sLYqFPUSzVsKhJZMgzmG9p2aHO0lmhRCY7qd5%2FMKQ4cJhIJSaPHoYUFNG1zacEIyxd8Xz5hPynHbmFM02raSqY6pGUtirCka5HuKUhFDn2aHd3YCJrig7zjf6ipC0iaQyT%2FRXlqbTRKHu4scqxobX6pYkGk5WNw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200610T123533Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYZP7ZFTOH%2F20200610%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=360a699df9819bf6d1ece33ec01ad9bd9b094733a05269aa3610f20e21e79999&hash=1251a1a2cc47f4217eee1b412fc936866c56342193e6eaeb1939c124af64b815&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0022247X12000327&tid=spdf-0f31c464-c476-4d00-88aa-a2ca3b588b01&sid=c16a6b152ec8a14cce585b23aa95383e709dgxrqa&type=client
 
+```
 ln dq = 
 
 dual O   Oe + e0e   O^ = O  *O^ = Oe
@@ -248,16 +263,19 @@ O^ unchanged  real O part
 
 V is angle of rotation total 
 thetaHat = v + de;
+```
 
-
+// tangent topic, about parititioning space; delenay separation provides networks where
+// local clusters can be evaulated without searching the whole avaiable space; even if said 
+// search is 'fast enough'; in practice objects interact simultaneously with very few other objects
+// and those relations are __temporally coherant__.
+https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html
 
 --
 
 ### Internal source notes
 
 ```
-
-
 
 qAC = qAB (cr) qBC
 

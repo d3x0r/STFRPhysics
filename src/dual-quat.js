@@ -237,20 +237,62 @@ lnQuat.prototype.exp = function() {
 
 // returns the number of complete rotations removed; updates this to principal angle values.
 lnQuat.prototype.prinicpal = function() {
-	const q = this;
-	const r  = q.r;
+	const q = new lnQuat();
+	const r = this.r;
 	const rMod  = Math.mod( r, (2*Math.PI) );
 	const rDrop = r - rMod;
+	
 	if( ( rDrop / (Math.PI*2) ) > 0.5 )
 	{
 		// has a wrap; so update to principle angle values
 		const rDiv = rMod/r;
-		this.x *= rDiv;
-		this.y *= rDiv;
-		this.z *= rDiv;
+		q.x = this.x * rDiv;
+		q.y = this.y * rDiv;
+		q.z = this.z * rDiv;
 	}
+	return q; // return removed part in 'turns' units
+}
+
+lnQuat.prototype.getTurns =  function() {
+	const q = new lnQuat();
+	const r = this.r;
+	const rMod  = Math.mod( r, (2*Math.PI) );
+	const rDrop = ( r - rMod ) / (2*Math.PI);
+	
 	return rDrop;
 }
+
+// this applies turns passed as if turns is a fraction of the current rate.
+// this scales the rate of the turn... adding 0.1 turns adds 36 degrees.
+// adding 3 turns adds 1920 degrees.
+// turns is 0-1 for 0 to 100% turn.
+// turns is from 0 to 1 turn; most turns should be between -0.5 and 0.5.
+lnQuat.prototype.turn = function( turns ) {
+	const q = this;
+	const r  = q.r;
+	
+	const rDiv = (q.r+(turns*2*Math.PI))/r;
+	this.x *= rDiv;
+	this.y *= rDiv;
+	this.z *= rDiv;
+	return this;
+}
+
+
+// this increases the rotation, by an amount in a certain direction
+// by euler angles even!
+// turns is from 0 to 1 turn; most turns should be between -0.5 and 0.5.
+lnQuat.prototype.torque = function( direction, turns ) {
+	const q = this;
+	const r  = direction.r;
+
+	const rDiv = (turns*2*Math.PI)/r;
+	this.x += direction.x*rDiv;
+	this.y += direction.y*rDiv;
+	this.z += direction.z*rDiv;
+	return this;
+}
+
 
 lnQuat.prototype.getBasis = function() {
 	const q = this;
