@@ -464,6 +464,58 @@ lnQuat.prototype.apply = function( v ) {
 }
 
 
+function ReView( lnQ1 ) {
+	const lnAux = { x:-Math.PI/4, y:0, z:0, r : Math.PI/4, s:Math.sin(Math.PI/2)/(Math.PI/4) };
+
+//   cross nac, nab
+	const cross1 = { x : ( lnQ1.y * lnAux.z - lnQ1.z * lnAux.y )
+                  , y : ( lnQ1.z * lnAux.x - lnQ1.x * lnAux.z )
+                  , z : ( lnQ1.x * lnAux.y - lnQ1.y * lnAux.x )
+					}
+	console.log( "cross:", lnQ1, lnAux, cross1 );
+	const sin2_A = cross1.x*cross1.x + cross1.y*cross1.y + cross1.z*cross1.z ;
+	//const cos_A = Math.sqrt( 1-sin2_A );
+
+	const sin_b = 1;
+	const sin_B = 1;
+	// 1 should be (sin_B/sin_b)
+
+
+	const sin_A = Math.sqrt( sin2_A);
+	const sin_a = sin_A;
+	const sin_c = lnQ1.s*lnQ1.r;
+	const sin_C = sin_c;
+	
+	console.log( "sinA = ", sin_A, Math.asin(sin_A));
+	console.log( "sina = ", sin_a, Math.asin(sin_a));
+
+	console.log( "sinB = ", sin_B, Math.asin(sin_B));
+	console.log( "sinb = ", sin_b, Math.asin(sin_b));
+
+	console.log( "sinC = ", sin_C, Math.asin(sin_C));
+	console.log( "sinc = ", sin_c, Math.asin(sin_c));
+
+	// 
+	//const cos_a = sin_c * cos_A;  // angle of rotation to use.
+	//const sin_a = Math.sqrt(1 - cos_a*cos_a);
+
+//	console.log( "sin_b, cos_a:", sin_a*sin_c, sin_A, (sin_a*sin_c)/sin_A, sin_b, Math.asin(sin_b), cos_a, Math.acos(cos_a) );
+
+//	const sin_C = ( sin_a * sin_c ) / sin_;
+	const cos_C = Math.sqrt(1 - (sin_C*sin_C));
+
+//	console.log( "sin_a, sin_C:", Math.asin( (lnQ1.s * lnQ1.r)) , sin_a, Math.asin(sin_a), sin_C, Math.asin(sin_C) );
+//	console.log( "cos_C:", cos_C, Math.acos(cos_C), Math.asin( sin_C ) );
+
+	//   so the rotation then is like 
+	//  (spin around Y, x->Z)
+	
+	const nCB = { x : cos_C, y:0, z:-sin_C };
+	const theta = Math.asin( sin_a );
+	console.log( "theta:", nCB, theta, cos_C*cos_C+sin_C+sin_C, Math.acos(cos_C),Math.asin(sin_C) );
+	return new lnQuat( theta, nCB );
+}
+
 lnQuat.prototype.applyInv = function( v ) {
 	//x y z w l
 	const q = this;
@@ -635,6 +687,8 @@ if( test )       {
 
 		const lnQ_n1 = new lnQuat( { x:5, y:2, z:1 } );
 		const lnQ_n2 = new lnQuat( { x:5, y:2, z:1 }, true );
+		const lnQ_n3 = ReView( lnQ_n2 );
+	/*
 		const lnQ_n3 = new lnQuat();
 		
 		const lnQ_n2_to_n1 = new lnQuat( -Math.PI/2, { x:1, y:0, z:0 } );   // z -> Y
@@ -643,6 +697,7 @@ if( test )       {
 
 		// target minus Z plus z->Y
 		console.log( "Conversion:", lnQ_n2_to_n1, lnQ_n2 );
+	*/
 		console.log( "Converted:", lnQ_n3 );
 
 		console.log( "Normal1 (5,2,1):", lnQ_n1, lnQ_n1.apply( {x:0,y:1,z:0} ) );
