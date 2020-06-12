@@ -34,19 +34,51 @@ const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} 
 
 const test = true;
 
+// -------------------------------------------------------------------------------
+//  Quaternion (offset part)
+// -------------------------------------------------------------------------------
 
 // 
 //   x y z w -> i j k R
 
 function Quat( theta,d, a, b ) {
 	if( "undefined" !== typeof theta ) {
-		if( "undefined" !== typeof a ) {
-			// create with 4 raw coordinates
-			this.w = theta;
-			this.x = d;
-			this.y = a;
-			this.z = b;
-			return;
+		if( "object" === typeof theta ) {
+			// normal-up 
+			const axis_vector = theta;
+			const aL = 1/Math.sqrt(axis_vector.x*axis_vector.x + axis_vector.y*axis_vector.y + axis_vector.z*axis_vector.z );
+			axis_vector.x *= aL;
+			axis_vector.y *= aL;
+			axis_vector.z *= aL;
+			const up_vector = {x:0,y:1,z:0};
+			const right_vector = { x: axis_vector.y * up_vector.z - up_vector.y * axis_vector.z
+					,  y : axis_vector.z * up_vector.x - up_vector.z * axis_vector.x
+					, z : axis_vector.x * up_vector.y - up_vector.x * axis_vector.y
+					}
+			// make sure to normalize the 'right'
+			const lR = Math.sqrt( right_vector.x*right_vector.x + right_vector.y*right_vector.y + right_vector.z*right_vector.z );
+			if( lR < 0.00001 ) {
+				// no certain direction for this normal, but it's gotta be normal to the up.
+				right_vector.x = 1;
+				right_vector.y = 0;
+				right_vector.z = 0;				
+			}else {
+				const dR = 1/lR;
+				right_vector.x *= dR;
+				right_vector.y *= dR;
+				right_vector.z *= dR;
+			}
+			theta = -1.0*Math.acos( axis_vector.x*up_vector.x + axis_vector.y*up_vector.y + axis_vector.z*up_vector.z );
+			d = right_vector;
+		} else {
+			if( "undefined" !== typeof a ) {
+				// create with 4 raw coordinates
+				this.w = theta;
+				this.x = d;
+				this.y = a;
+				this.z = b;
+				return;
+			}
 		}
 		const ct2 = Math.cos( theta/2 );
 		const st2 = Math.sin( theta/2 );
@@ -109,13 +141,13 @@ Quat.prototype.mul = function( q ) {
 	// 16+12
 }
 
-
+// multiply the long way; take the logs, add them and reverse the exp().
+// validation that P*Q = exp(P.log()+Q.log())
 Quat.prototype.mulLong = function( q ) {
 	const lnThis = this.log();
 	const lnQ = q.log();
 	lnThis.add( lnQ );
 	const r = lnThis.exp();
-	//console.log( "?", r, lnThis, lnQ );
 	return r;
 }
 
@@ -136,9 +168,12 @@ Quat.prototype.log = function( ) {
 	const xt = x * t;
 	const yt = y * t;
 	const zt = z * t;
-	//console.log( "Calculate log:", 0.5* Math.log(w*w+x*x+y*y+z*z), xt, yt, zt )
 	return new lnQuat( 0, xt, yt, zt )
 }
+
+// -------------------------------------------------------------------------------
+//  Log Quaternion (offset part)
+// -------------------------------------------------------------------------------
 
 
 function lnQuat( theta, d, a, b ){
@@ -157,15 +192,68 @@ function lnQuat( theta, d, a, b ){
 				this.s  = Math.sin(this.r)/this.r;
 				this.qw = Math.cos(this.r);
 			} else {
-				this.s  = 0;
+				this.s  = 1;
 				this.qw = 1;
 			}
 		}else {
+			if( "object" === typeof theta ) {
+
+				const axis_vector = theta;
+				const aL = 1/Math.sqrt(axis_vector.x*axis_vector.x + axis_vector.y*axis_vector.y + axis_vector.z*axis_vector.z );
+				axis_vector.x *= aL;
+				axis_vector.y *= aL;
+				axis_vector.z *= aL;
+				const up_vector = {x:0,y:1,z:0};
+				const right_vector = { x:  -axis_vector.z
+				                     , y : 0
+				                     , z : axis_vector.x
+				                     }
+			        const lR = Math.sqrt( right_vector.x*right_vector.x + right_vector.z*right_vector.z );
+				if( !d && lR > 0.0001 ) {
+					const dR = 1/lR;
+					right_vector.x *= dR;
+					//right_vector.y *= dR;
+					right_vector.z *= dR;
+					const t = -0.5*Math.acos( axis_vector.y );
+	                        
+					this.x = right_vector.x * t;
+					this.y = 0;//right_vector.y * t;
+					this.z = right_vector.z * t;
+				}else {
+					const up_vector2 = {x:0,y:0,z:1};
+					right_vector.x = axis_vector.y;
+					right_vector.y = -axis_vector.x;
+					right_vector.z = 0;
+				        const lR2 = Math.sqrt( right_vector.x*right_vector.x + right_vector.y*right_vector.y );
+					if( lR2 < 0.0001 ) {
+						// the normal can't be much of a normal afterall... if it's not pointing anywhere I can't figure out where it is pointing.
+						throw new Error( "If it's pointing up, any other axis should perpendicular; otherwise bad normal" );
+					}
+					const dR = 1/lR2;
+					//t -= Math.PI/2;  // +/-
+					right_vector.x *= dR;
+					right_vector.y *= dR;
+					//right_vector.z *= dR;
+
+					const t = -0.5*Math.acos( axis_vector.z );
+	                        
+					this.x = right_vector.x * t;
+					this.y = right_vector.y * t;
+					this.z = 0;//right_vector.z * t;
+					// all we know is the normal is up or down.... but not it's direction.
+				}
+
+				this.r = 0;
+				this.s = 0;
+				this.qw = 0;
+				this.update();
+				return;
+			}
 			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
 
 			const t  = dl*theta/2;
 			// if no rotation, then nothing.
-			if( t > NO_TURN_ANGLE ) {
+			if( Math.abs(t) > NO_TURN_ANGLE ) {
 				// 'proper' initialization would compute the quaternion, and take the log of it.
 				// computation of the quaterion is just to fill in the 'w' part; which is (properly) 0.
 				//  -- So this is (make a (normalized)quaternion)
@@ -188,7 +276,7 @@ function lnQuat( theta, d, a, b ){
 				// 1
 				//console.log( "Calculate log:", theta, "R=", r, "D=",d, "DL=", (x*x+y*y+z*z), st2*st2, "W=", 0.5* Math.log(r), Math.log(dl) )
 
-				this.w = 0; // r is always 1.  0.5* Math.log(r);    // 0.5 is sqrt() moved outside
+				//this.w = 0; // r is always 1.  0.5* Math.log(r);    // 0.5 is sqrt() moved outside
 				this.x = d.x * t;
 				this.y = d.y * t;
 				this.z = d.z * t;
@@ -196,12 +284,13 @@ function lnQuat( theta, d, a, b ){
 				// initial creation will allow more 'accuracy' than application...
 				this.s  = Math.sin(this.r)/this.r;
 				this.qw = Math.cos(this.r);
+				console.log( "??", this );
 			}else {
 				this.x = 0;
 				this.y = 0;
 				this.z = 0;
 				this.r = 0;
-				this.s  = 0;
+				this.s  = 1; // sin(r)/r -> 1
 				this.qw = 1;
 			}
 		}
@@ -210,7 +299,7 @@ function lnQuat( theta, d, a, b ){
 		this.y = 0;
 		this.z = 0;
 		this.r = 0;
-		this.s  = 0;
+		this.s  = 1;
 		this.qw = 1;
 	}
 }
@@ -371,7 +460,7 @@ lnQuat.prototype.apply = function( v ) {
 		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 18 mul + 9 add
+	// 21 mul + 9 add
 }
 
 
@@ -399,7 +488,7 @@ lnQuat.prototype.applyInv = function( v ) {
 	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 
 	// total 
-	// 18 mul + 9 add
+	// 21 mul + 9 add
 }
 
 lnQuat.prototype.add = function( q ) {
@@ -408,7 +497,7 @@ lnQuat.prototype.add = function( q ) {
 	this.y += q.y;
 	this.z += q.z;
 	// 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	return this;
+	return this.update();
 }
 
 // rotate the passed lnQuat by the amount specified.
@@ -430,6 +519,9 @@ lnQuat.prototype.addConj = function( q ) {
 	return this.update();
 }
 
+// -------------------------------------------------------------------------------
+//  Dual Quaternion (offset part)
+// -------------------------------------------------------------------------------
 
 // offset coordinate
 function dualQuat( x, y, z ) {
@@ -451,6 +543,10 @@ dualQuat.prototype.addNew = function( q ) {
 	return new dualQuat().add(this).add(q);
 }
 
+
+// -------------------------------------------------------------------------------
+//  Dual Log Quaternion
+// -------------------------------------------------------------------------------
 
 // dual log-quat
 //   log qaut keeps the orientation of the frame
@@ -519,12 +615,44 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
 
-
+// -------------------------------------------------------------------------------
+//  Testing Apparatii
+// -------------------------------------------------------------------------------
 
 
 if( test )       {
 	test1();
 	function test1() {
+
+		console.log( "Normal x:", new Quat( 1, { x:1, y:0, z:0 } ).log() );
+		console.log( "Normal y:", new Quat( 1, { x:0, y:1, z:0 } ).log() );
+		console.log( "Normal z:", new Quat( 1, { x:0, y:0, z:1 } ).log() );
+		console.log( "Normal (5,2,0):", new Quat( { x:5, y:2, z:0 } ).log() );
+		console.log( "Normal (5,2,0):", new lnQuat( { x:5, y:2, z:0 } ) );
+		const Q_n1 = new Quat( { x:5, y:2, z:1 } );
+		const p1 = Q_n1.apply( {x:0,y:1,z:0} );
+		console.log( "Normal (5,2,1):", Q_n1.log(), Q_n1.apply( {x:0,y:1,z:0} ), {x:p1.x*5,y:p1.y*5,z:p1.z*5} ) ;
+
+		const lnQ_n1 = new lnQuat( { x:5, y:2, z:1 } );
+		const lnQ_n2 = new lnQuat( { x:5, y:2, z:1 }, true );
+		const lnQ_n3 = new lnQuat();
+		
+		const lnQ_n2_to_n1 = new lnQuat( -Math.PI/2, { x:1, y:0, z:0 } );   // z -> Y
+		lnQ_n3.add( lnQ_n2_to_n1 );
+		lnQ_n3.add( lnQ_n2 );
+
+		// target minus Z plus z->Y
+		console.log( "Conversion:", lnQ_n2_to_n1, lnQ_n2 );
+		console.log( "Converted:", lnQ_n3 );
+
+		console.log( "Normal1 (5,2,1):", lnQ_n1, lnQ_n1.apply( {x:0,y:1,z:0} ) );
+		console.log( "Normal2 (5,2,1):", lnQ_n2, lnQ_n2.apply( {x:0,y:1,z:0} ), lnQ_n2.apply( {x:0,y:0,z:1} ) );
+		console.log( "Normal3 (5,2,1):", lnQ_n3, lnQ_n3.apply( {x:0,y:1,z:0} ), lnQ_n3.apply( {x:0,y:0,z:1} ) );
+
+		console.log( "Basis 1 (5,2,1):", lnQ_n1.getBasis() );
+		console.log( "Basis 2 (5,2,1):", lnQ_n2.getBasis() );
+
+		// just two rotations in a non zero direction
 		const q1 = new Quat( 30/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
 		const q2 = new Quat( 17/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
 
@@ -559,20 +687,12 @@ if( test )       {
 
 		console.log( "lnq1q2 v", JSON.stringify( lnq1q2.apply( v ) ) );
 		
-
 		console.log( "  q1 basis?", q1.getBasis() );
-
 		console.log( "  q2 basis?", q2.getBasis() );
-
 		console.log( " lq1 basis?", lnq1.getBasis() );
-
 		console.log( " lq2 basis?", lnq2.getBasis()  );
-
 		console.log( "rlq1 basis?", rlnq1.getBasis() );
-
 		console.log( "rlq2 basis?", rlnq2.getBasis() );
-
 		console.log( "lq1q2 basis?", lnq1q2.getBasis()  );
-
 	}
 }
