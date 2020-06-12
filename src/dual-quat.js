@@ -465,24 +465,32 @@ lnQuat.prototype.apply = function( v ) {
 
 
 function ReView( lnQ1 ) {
-	const lnAux = { x:-Math.PI/4, y:0, z:0, r : Math.PI/4, s:Math.sin(Math.PI/2)/(Math.PI/4) };
+	const lnAux = { x:Math.PI/4, y:0, z:0, r : Math.PI/4, s:Math.sin(Math.PI/2)/(Math.PI/4) };
+	const lnReal = { x:0, y:1, z:0, r : 1, s:1 };
+
+	// lnQ1.y * lnReal.z - lnQ1.z * lnReal.y
+	// lnQ1.z * lnReal.x - lnQ1.x * lnreal.z
+	// lnQ1.x * lnReal.y - lnQ1.y * lnReal.x
+
+	// lnQ1.y * 0 - 0/*lnQ1.z*/ * 1
+	// lnQ1.z * 0 - lnQ1.x * 0
+	// lnQ1.x * 1 - lnQ1.y * 0
+
 
 //   cross nac, nab
-	const cross1 = { x : ( lnQ1.y * lnAux.z - lnQ1.z * lnAux.y )
-                  , y : ( lnQ1.z * lnAux.x - lnQ1.x * lnAux.z )
-                  , z : ( lnQ1.x * lnAux.y - lnQ1.y * lnAux.x )
-					}
-	console.log( "cross:", lnQ1, lnAux, cross1 );
-	const sin2_A = cross1.x*cross1.x + cross1.y*cross1.y + cross1.z*cross1.z ;
-	//const cos_A = Math.sqrt( 1-sin2_A );
+	const cross1 = { x : 0
+                  , y : 0
+                  , z : lnQ1.x
+		}
+	console.log( "cross:", lnQ1, lnAux, cross1, Math.sqrt( lnQ1.x*lnQ1.x + lnQ1.z*lnQ1.z ) );
 
+	// 1 should be (sin_B/sin_b)
 	const sin_b = 1;
 	const sin_B = 1;
-	// 1 should be (sin_B/sin_b)
 
-
-	const sin_A = Math.sqrt( sin2_A);
+	const sin_A = lnQ1.x;
 	const sin_a = sin_A;
+
 	const sin_c = lnQ1.s*lnQ1.r;
 	const sin_C = sin_c;
 	
@@ -510,10 +518,12 @@ function ReView( lnQ1 ) {
 	//   so the rotation then is like 
 	//  (spin around Y, x->Z)
 	
-	const nCB = { x : cos_C, y:0, z:-sin_C };
-	const theta = Math.asin( sin_a );
-	console.log( "theta:", nCB, theta, cos_C*cos_C+sin_C+sin_C, Math.acos(cos_C),Math.asin(sin_C) );
-	return new lnQuat( theta, nCB );
+	// normal of great circle in question. (is normalized)
+	const nCB = { x : sin_C, y:0, z:cos_C };
+	// angle to cover on that circle /2
+	const theta = (Math.asin( sin_a ))/2;
+	console.log( "theta:", nCB, theta, cos_C*cos_C+sin_C*sin_C, Math.acos(cos_C),Math.asin(sin_C) );
+	return new lnQuat( 0, nCB.x * theta, nCB.y * theta, nCB.z * theta );
 }
 
 lnQuat.prototype.applyInv = function( v ) {
