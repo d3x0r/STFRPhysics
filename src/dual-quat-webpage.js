@@ -383,9 +383,10 @@ lnQuat.prototype.torque = function( direction, turns ) {
 }
 
 
-lnQuat.prototype.getBasis = function() {
+lnQuat.prototype.getBasis = function(del) {
 	const q = this;
 
+	if( !del ) del = 1.0;
 	const basis = { forward:null
 	              , right:null
 	              , up:null
@@ -396,12 +397,13 @@ lnQuat.prototype.getBasis = function() {
 	const r  = this.r;
 	//const et = 1;//Math.exp(q.w);
 	if( r >= SIN_R_OVER_R_MIN ) {
-		const s  = q.s;
+		
+		const s  = Math.sin( del* Math.asin(q.s*q.r) );
 	        
-		const qw = q.qw;
-		const qx = q.x * s;
-		const qy = q.y * s;
-		const qz = q.z * s;
+		const qw = Math.cos( Math.acos(q.qw) * del );
+		const qx = q.x * s /q.r;
+		const qy = q.y * s /q.r;
+		const qz = q.z * s /q.r;
 		
 		// 24+6
 		{
@@ -436,20 +438,20 @@ lnQuat.prototype.getBasis = function() {
 	return basis;	
 }
 
-lnQuat.prototype.apply = function( v ) {
+lnQuat.prototype.apply = function( v, del ) {
 	const q = this;
-
+	if( 'undefined' === typeof del ) del = 1.0;
 	// 3+2 +sqrt+exp+sin
         if( !q.r ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const s  = q.s;
-	const qw = q.qw;
+	const s  = (del==1)?q.s:(del ===0 )?1:Math.sin(del*Math.asin(q.s*q.r))/(q.r*del);
+	const qw = (del==1)?q.qw:Math.cos(del*Math.acos(q.qw));
 
-	const qx = q.x * s;
-	const qy = q.y * s;
-	const qz = q.z * s;
+	const qx = q.x * s * del;
+	const qy = q.y * s * del;
+	const qz = q.z * s * del;
 
 	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 	const tx = 2 * (qy * v.z - qz * v.y);
@@ -463,17 +465,6 @@ lnQuat.prototype.apply = function( v ) {
 	// 21 mul + 9 add
 }
 
-
-function zzz() {
-	const norm = { x,y,z };
-	if( ( Math.abs(norm.x) > 0.5 ) || ( Math.abs(norm.y) > 0.5 ) ) {  // sin of angle
-		// normal is far away from 'z', so, consider from 'z'
-		
-	} else /*if( Math.abs( norm.x ) > 0.5 ) */ {
-		// normal is kinda close to z, so it's far from X... 
-		
-	}
-}
 
 function ReView( lnQ1 ) {
 	const lnAux = { x:Math.PI/4, y:0, z:0, r : Math.PI/4, s:Math.sin(Math.PI/2)/(Math.PI/4) };

@@ -164,6 +164,9 @@ They are mappings in different projections, and should be considered as a differ
 
 | Quat Methods | Parameters | Description |
 |---|---|---|
+| new | ( theta, direction ) | (constructor) Takes theta angle in radians and direction normal around which the theta angle rotates |
+|  "  | ( a,b,c,d ) | (constructor)set literal parameters w,x,y,z respectively |
+|  "  | ( normal ) | (constructor)Use normal and create a quaternion pointing in that direction |
 | mul | (q) | multiply this quaternion with another quaternion; result with a new Quat(). |
 | add | (q) | add passed quaternion to this quaternion. |
 | addNew | (q) | add passed quaternion to this quaternion, return a new Quat(). |
@@ -176,6 +179,9 @@ They are mappings in different projections, and should be considered as a differ
 
 | lnQuat Methods | Parameters | Description |
 |---|---|---|
+| new | ( theta, direction ) | (constructor) Takes theta angle in radians and direction normal around which the theta angle rotates |
+|  "  | ( a,b,c,d ) | (constructor)set literal parameters w,x,y,z respectively |
+|  "  | ( normal ) | (constructor)Use normal and create a quaternion pointing in that direction |
 | add | (q) | add passed quaternion to this quaternion. |
 | addNew | (q) | add passed quaternion to this quaternion, return a new lnQuat(). |
 | apply | (v) | apply rotation to vector parameter, result with a new vector. |
@@ -341,3 +347,15 @@ q*.x = -1/2 ( q.x + (-q.x + q.yji + q.zki) + (q.xji -q.y + q.zjk ) + ( q.xki + q
 
 
 ```
+
+
+
+## Spherical Trigonometry in Log Rotation Space
+
+[Wikipedia Spherical Trigonometry](https://en.wikipedia.org/wiki/Spherical_trigonometry)
+
+cos a= cos b cos c + sin b sin c cos A, \!
+cos b= cos c cos a + sin c sin a cos B,\!}\cos b= \cos c \cos a + \sin c \sin a \cos B, \!
+cos c= cos a cos b + sin a sin b cos C,\!}\cos c= \cos a \cos b + \sin a \sin b \cos C, \!
+
+
