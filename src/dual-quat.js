@@ -399,18 +399,21 @@ lnQuat.prototype.getBasis = function() {
 		const s  = q.s;
 	        
 		const qw = q.qw;
-		const qx = q.x * s;
-		const qy = q.y * s;
-		const qz = q.z * s;
-		
+		const qx = q.x * s; // normalizes the imaginary parts
+		const qy = q.y * s; // set the sin of their composite angle as their total
+		const qz = q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
+		// only a valid shortcut for 1 tick.
+
 		// 24+6
 		{
+			// for apply, this is cross(q,some point)
+			const tx = 0; // (right so that multiplication gives 2*N)
 			const ty = 2 * (qz);
 			const tz = 2 * (-qy);
 
-		 	basis.right = { x : 1 + 0       + ( qy * tz - ty * qz )
-			              , y : 0 + qw * ty + ( 0       - tz * qx )
-			              , z : 0 + qw * tz + ( qx * ty - 0 ) };
+		 	basis.right = { x : 1 + 0       + ( qy * tz - 2*(qz) * qz )
+			              , y : 0 + qw * 2*(qz) + ( 0       - 2*(qz) * qx )
+			              , z : 0 + qw * tz + ( qx * 2*(qz) - 0 ) };
 		}
 		{
 			const tx = 2 * ( -qz );
@@ -451,13 +454,17 @@ lnQuat.prototype.apply = function( v ) {
 	const qy = q.y * s;
 	const qz = q.z * s;
 
+// qx = qZRoll of greate circle normal (around Z axis)
+// qy = qZPitch of great circle normal (around X axis)
+// qz = qZYaw of greater cirlce normal (around Y axis)
+
 	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
-	const tx = 2 * (qy * v.z - qz * v.y);
-	const ty = 2 * (qz * v.x - qx * v.z);
-	const tz = 2 * (qx * v.y - qy * v.x);
-	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		, y : v.y + qw * ty + ( qz * tx - tz * qx )
-		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	const tx = 2 * (qy * v.z - qz * v.y);  
+	const ty = 2 * (qz * v.x - qx * v.z);  // qx vz
+	const tz = 2 * (qx * v.y - qy * v.x);  // qx vy
+	return { x : v.x + qw * tx + ( qy * tz - ty * qz )   // 
+	       , y : v.y + qw * ty + ( qz * tx - tz * qx )   // qx tz(qx vy)
+	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };// qx ty(qx vz)
 
 	// total 
 	// 21 mul + 9 add

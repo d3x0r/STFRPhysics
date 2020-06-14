@@ -359,3 +359,154 @@ cos b= cos c cos a + sin c sin a cos B,\!}\cos b= \cos c \cos a + \sin c \sin a 
 cos c= cos a cos b + sin a sin b cos C,\!}\cos c= \cos a \cos b + \sin a \sin b \cos C, \!
 
 
+## So quaternions To Matrix Vs Complex
+
+2.5 dimensional space?  What does a partial matrix look like?
+
+
+2x2 matrix is a rotation with a complex ... and is
+
+```
+a c
+b d
+```
+
+(sin/cos or exp(complex) )
+
+which takes 1 real, and project and unprojects its rotation.
+
+( real * i ) = - ( i * real )  = real * (-i)
+
+
+```
+real*real  real*i
+i*real     i*i
+
+real*Real  real*I
+i*Real     i*I
+
+
+ri + RI
+
+
+```
+
+
+with a minus on the b-c
+
+only 0 is 0; c and b are projections and anti-projection of d on a
+
+
+and a 3x3 matrix needs 3 inputs 
+
+```
+a d g
+b e h
+c f i
+
+```
+which when 'multiplied'  or crossed with itself
+
+
+```
+aa dd gg   Aa Dd Gg
+bb ee hh   Bb Ee Hh
+cc ff ii   Cc Ff Ii
+
+aA dD gG   AA DD GG
+bB eE hH   BB EE HH
+cC fF iI   CC FF II
+```
+
+
+
+
+where det 'aa' = 1     (a*a = 1)  (ln a + ln a = 1)
+
+
+which is 3 ln because of spin freedom ?
+
+```
+
+1 is xy 
+1 is yz
+1 is xz
+
+but only as projection much like 1 is xy
+
+1 is xx   1 is xy   1 is xz  1 is xz
+
+1 is yx   1 is yy   1 is yz  1 is yz
+
+
+1 is zx   1 is zx   1 is zz  1 is zz
+
+1 is zy   1 is zy   1 is zz  1 is zz
+
+
+                                      ... ww
+
+
+
+sin(t) cos(t)
+
+                   1 is 
+
+
+
+1 is xy
+1 is yz
+1 is xz
+
+1 is xw
+1 is yw
+1 is zw
+
+1 is wx
+1 is wy
+1 is wz
+
+1 is 
+   
+```  
+
+
+## Observations of the current system
+
+
+```
+
+qx qy qz is crossed and dotted with  vx vy vz in conventional way.
+
+// viewed as it translates a point on the z axis. (should be the same other than the specific path of any point)
+(with Y dominant)
+q.x ->  x/y rotation
+q.y ->  z/y rotation
+q.z ->  x/z rotation
+
+// qx = qZRoll of greate circle normal (around Z axis)
+// qy = qZPitch of great circle normal (around X axis) (formation of great circle)
+// qz = qZYaw of greater cirlce normal (around Y axis)
+
+
+q.x increase rotates counter clockwise(?)
+q.y increase increases the forward pitch applied... 
+
+
+(with X dominant)
+
+q.x -> z/x rotation   ( yaw - primary formation of circle)
+q.y -> x/y rotation   ( roll )
+q.z -> z/y rotation   ( pitch )
+
+
+(with z dominant)
+
+q.x -> z/y pitch
+q.y -> x/z yaw
+q.z -> x/y formation of circle -  roll - x/y
+
+
+```
+
+
