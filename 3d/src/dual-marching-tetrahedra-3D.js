@@ -868,7 +868,113 @@ function QuatPathing(q, v, c) {
 }
 
 
+function DrawQuatNormals() {
+	const v = { x:0,y:1,z:0};
+	const spaceScale = 5;
+	const normal_del = 1;
+
+	if(0)
+	for( let x = -1; x < 1; x+= 0.05 ){
+		for( let y = -1; y < 1; y+= 0.05 ) {
+			
+		}
+	}
+	if(0)
+	for( let t = 0; t < 1.1*Math.PI; t+= 0.05 ){
+			const x = Math.sin(t );
+			const z = -Math.cos(t);
+			const lnQ = new lnQuat( {x:x, y:0, z:z } );
+
+			const new_v = lnQ.apply( v );
+
+			const basis = lnQ.getBasis( );
+
+			normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                        ,new_v.y*spaceScale                        , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
+
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,255,255))
+			normalColors.push( new THREE.Color( 0,0,255,255 ))
+			
+	
+	}
+	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
+	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
+
+	for( let h = -1; h <= 1; h+= 0.1/3 ) {
+		for( let t = 3*-Math.PI/3; t < 3*Math.PI/3; t+= 0.25/3 ){
+			let x = Math.sin(t );
+			const z = Math.cos(t);
+			let norm ;
+			const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+		drawN( lnQ, norm );
+	}
+	}
+
+	if(0)
+	for( let h = -1; h <= 1; h+= 0.25 ) {
+		if( h < 0.6 ) continue;
+	for( let t = Math.PI; t < Math.PI*3/2; t+= 0.25 ){
+			let x = Math.sin(t );
+			const z = Math.cos(t);
+			let norm ;
+			const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+		drawN( lnQ, norm );
+	}
+	}
+	function drawN( lnQ, n )
+	{
+			let x = n.x;
+			let y = n.y;
+			let z = n.z;
+			let l = 1/Math.sqrt(x*x+y*y+z*z);
+			const new_v = lnQ.apply( v );
+
+			const basis = lnQ.getBasis( );
+
+
+			normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                        ,new_v.y*spaceScale                        , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
+
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,255,255))
+			normalColors.push( new THREE.Color( 0,0,255,255 ))
+			
+	
+	}
+
+
+}
 function DrawQuatPaths(q) {
+                        DrawQuatNormals();
 
 			let lnQX = document.getElementById( "lnQX" ).value;
 			let lnQY = document.getElementById( "lnQY" ).value;

@@ -424,7 +424,7 @@ cC fF iI   CC FF II
 where det 'aa' = 1     (a*a = 1)  (ln a + ln a = 1)
 
 
-which is 3 ln because of spin freedom ?
+which is 3 ln 
 
 ```
 
@@ -508,5 +508,16 @@ q.z -> x/y formation of circle -  roll - x/y
 
 
 ```
+
+
+bool reach( A, C, length ) { 
+	if length == 0 return true 
+	else if length == 1 return isEdge( A, C ) 
+	else { 
+		for( B = 1 to n ) 
+			if( reach( A, B, length/2 ) && reach( B, C, length/2 ) ) 
+				return true; 
+	} 
+}
 
 
