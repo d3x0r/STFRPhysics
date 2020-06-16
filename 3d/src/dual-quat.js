@@ -340,6 +340,30 @@ lnQuat.prototype.addNormal = function( q2 ) {
 	return lnQuatAdd( this, q2, 1 );
 }
 
+function lnQuatSub( q, q2, s ) {
+	/*
+	n.xyz = q.xyz * q.w + q2.xyz * q2.w;
+	n.w = length(n.xyz);
+	n.xyz *= 1/n.w;
+	*/
+	if( !s ) s = 1;
+	const nqx = q.x * q.w - q2.x * q2.w * s;
+	const nqy = q.y * q.w - q2.y * q2.w * s;
+	const nqz = q.z * q.w - q2.z * q2.w * s;
+	
+	const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	
+	q.w = nt; 
+	if( nt > 0.0001 ) {
+		// otherwise don't bother bumping the axis.
+		const t = 1/nt;
+		q.x = nqx * t;
+		q.y = nqy * t;
+		q.z = nqz * t;
+	}
+	return q;
+}
+
 function lnQuatAdd( q, q2, s ) {
 	/*
 	n.xyz = q.xyz * q.w + q2.xyz * q2.w;
@@ -416,122 +440,141 @@ lnQuat.prototype.torque = function( direction, turns ) {
 }
 
 lnQuat.prototype.getBasisT = function(del) {
+	// this is terse; for more documentation see getBasis Method.
 	const q = this;
 
 	if( !del ) del = 1.0;
-	const basis = { forward:null
-	              , right:null
-	              , up:null
-	              , origin: { x:0, y:0, z:0 } };
+	const s  = Math.sin( del* q.w );
+	const qw = Math.cos( del* q.w );
 
-	// 6+2 +sqrt+cos+sin
-	//const et = 1;//Math.exp(q.w);
-	if( this.w >= SIN_R_OVER_R_MIN ) {
-		
-		const s  = Math.sin( del* q.w );
-	        
-		const qw = Math.cos( del* q.w );
-		const qx = q.x * s ;
-		const qy = q.y * s ;
-		const qz = q.z * s ;
-		
-		// 24+6
-		{
-			const ty = 2 * (qz);
-			const tz = 2 * (-qy);
-
-		 	basis.right = { x : 1 + 0       + ( qy * tz - ty * qz )
-			              , y : 0 + qw * ty + ( 0       - tz * qx )
-			              , z : 0 + qw * tz + ( qx * ty - 0 ) };
-		}
-		{
-			const tx = 2 * ( -qz );
-			const tz = 2 * (qx );
-
-		 	basis.up = { x : 0 + qw * tx + ( qy * tz - 0 )
-			           , y : 1 + 0       + ( qz * tx - tz * qx )
-			           , z : 0 + qw * tz + ( 0       - tx * qy ) };
-		}
-		{
-			const tx = 2 * (qy  );
-			const ty = 2 * (- qx);
-
-		 	basis.forward = { x : 0 + qw * tx + ( 0 - ty * qz )
-			                , y : 0 + qw * ty + ( qz * tx - 0 )
-			                , z : 1 + 0       + ( qx * ty - tx * qy ) };
-		}
-	} else {
-		basis.right   = { x:1, y:0, z:0 };
-		basis.up      = { x:0, y:1, z:0 };
-		basis.forward = { x:0, y:0, z:1 };
-	}
-	return basis;	
-}
-
-
-lnQuat.prototype.getBasis = function() {
-	const q = this;
-
-	const s  = q.s;
-	const qw = q.qw;
-
-	const basis = { forward:null
-	              , right:null
-	              , up:null
-	              , origin: { x:0, y:0, z:0 } };
+	const ds = qw;
+	const dqw = -s;
 
 	const qx = q.x * s; // normalizes the imaginary parts
 	const qy = q.y * s; // set the sin of their composite angle as their total
 	const qz = q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
-	if(0)
-	{
-		if( this.y === 0 )  {
-		/*
-			the way this was specifally constructed....
-			Rotate Y to proper place.
-				X normal to the plane of rotation
-				z is the tangent to the plane of rotation.
-				y is the normal at the point 
-		*/
-			const tx = 2 * ( -qz );
-			const tz = 2 * (qx );
-		
-		 	basis.up = { x : qw * tx + qy * tz
-			           , y : 1 + qz * tx - tz * qx
-			           , z : qw * tz - tx * qy };
 
-			const sR = 1/Math.sqrt(qx*qx+qz*qz);
-			basis.forward = { x : qx*sR, y : 0, z : qz*sR }; 
-			
-			const cURx = -basis.up.y * basis.forward.z;
-			const cURy = basis.up.x * basis.forward.z - basis.up.z * basis.forward.x;
-			const cURz = basis.up.y * basis.forward.x;
+	const dqx = q.x * ds; // normalizes the imaginary parts
+	const dqy = q.y * ds; // set the sin of their composite angle as their total
+	const dqz = q.z * ds; // output = 1(unit vector) * sin  in  x,y,z parts.
 
-			basis.right = { x : cURx, y : cURy, z : cURz };
-		}
-		return basis;			
-	}
-	
-	// 6+2 +sqrt+cos+sin
-	//const et = 1;//Math.exp(q.w);
-	{
-		const tx = 2 * ( -qz );
-		const tz = 2 * (qx );
-		// up is 0,1,0 applied with quaternion.
-		basis.up = { x :     qw * tx + qy * tz
-		           , y : 1 + qz * tx - tz * qx
-		           , z :     qw * tz - tx * qy };
-		// forward is always the circle's normal, (not sure how to describe the 'positive' rotates 
-		basis.forward = {x:qx, y:qy, z:qz};
-		
-		const cURx = basis.up.z * basis.forward.y - basis.up.y * basis.forward.z;
+	const basis = { forward:null
+	              , right:null
+	              , up:null
+	              , origin: { x:0, y:0, z:0 } };
+
+	const tx = 2 * ( -qz );
+	const tz = 2 * (qx );
+	if( q.y === 0 )  {
+	 	basis.up = { x :     qw * tx
+		           , y : 1 +         qz * tx - tz * qx
+		           , z :     qw * tz };
+		basis.forward = { x : q.x, y : 0, z : q.z }; 
+		const cURx =                              - basis.up.y * basis.forward.z;
 		const cURy = basis.up.x * basis.forward.z - basis.up.z * basis.forward.x;
-		const cURz = basis.up.y * basis.forward.x - basis.up.x * basis.forward.y;
+		const cURz = basis.up.y * basis.forward.x;
 
 		basis.right = { x : cURx, y : cURy, z : cURz };
-		return basis;	
+		return basis;			
 	}
 
+	basis.up = { x :     qw * tx + qy * tz
+	           , y : 1           + qz * tx - tz * qx
+	           , z :     qw * tz           - tx * qy };
+
+	// tangent to the above is at dx dy dz in the direction of the angle
+	// dertivitive of cos(angle) * normal...
+	//basis.right = {x:q.x*ds, y:q.y*ds, z:q.z*ds};
+	const cUNx = basis.up.z * q.y - basis.up.y * q.z;
+	const cUNy = basis.up.x * q.z - basis.up.z * q.x;
+	const cUNz = basis.up.y * q.x - basis.up.x * q.y;
+	// cross of quat circle-normal and the up vector.
+	basis.right = { x:cUNx, y:cUNy, z:cUNz };
+
+	// cross of up and right is forward.
+	const cURx = basis.up.z * basis.right.y - basis.up.y * basis.right.z;
+	const cURy = basis.up.x * basis.right.z - basis.up.z * basis.right.x;
+	const cURz = basis.up.y * basis.right.x - basis.up.x * basis.right.y;
+	basis.forward = { x : cURx, y : cURy, z : cURz };
+	return basis;	
+}
+
+
+lnQuat.prototype.getRelativeBasis = function( q2 ) {
+	const q = this;
+	const dq = lnSubQuat( {w:q2.w, x:q2.x, y:q2.y, z:q2.z}, this );
+
+	return getBasis( dq );
+}
+
+
+lnQuat.prototype.getBasis = function(){return getBasis(this) };
+
+function getBasis(q) {
+	const s  = Math.sin( q.w );
+	const qw = Math.cos( q.w );
+
+	const qx = q.x * s; // normalizes the imaginary parts
+	const qy = q.y * s; // set the sin of their composite angle as their total
+	const qz = q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	const basis = { forward:null
+	              , right:null
+	              , up:null
+	              , origin: { x:0, y:0, z:0 } };
+	
+	// up is 0,1,0 applied with quaternion.
+	const tx = 2 * ( -qz );// y = 1, z = 0
+	const ty = 0;          // the cross part zeros here x=0, z=0
+	const tz = 2 * (qx );  // x = 0, y = 1
+
+	// 6+2 +sqrt+cos+sin
+	//const et = 1;//Math.exp(q.w);
+	if( q.y === 0 )  {
+		/*
+		 * the way 'normal' quaternions are specifically constructed....
+		 * Rotate Y to proper place.
+		 *    Z (forward) is the tangent to the plane of rotation.
+		 *    X (right) normal of the circle of rotation
+		 *    y (up) is the normal at the point to the circle
+		*/		
+		// up is 0,1,0 applied with quaternion.
+		basis.up = { x :     qw * tx + 0/*qy * tz*/
+		           , y : 1           + qz * tx - tz * qx
+		           , z :     qw * tz - 0/*tx * qy*/ };
+
+		basis.forward = { x : q.x, y : 0, z : q.z }; 
+	        // from a quaternion... (somethinig like)
+		//basis.forward = {x:qx/Math.asin(Math.PI/2-qw), y:0, z:qz/Math.asin(MATH.PI/2-qw)};
+		
+		const cURx =                              - basis.up.y * basis.forward.z;
+		const cURy = basis.up.x * basis.forward.z - basis.up.z * basis.forward.x;
+		const cURz = basis.up.y * basis.forward.x;
+
+		basis.right = { x : cURx, y : cURy, z : cURz };
+		return basis;			
+	}
+
+	basis.up = { x :    qw * tx + qy * tz
+	           , y : 1          + qz * tx - tz * qx
+	           , z :    qw * tz           - tx * qy };
+	// forward is always the circle's normal, (not sure how to describe the 'positive' rotates 
+	basis.forward = {x:q.x, y:q.y, z:q.z};
+        // from a quaternion... (somethinig like)
+	//basis.forward = {x:qx/Math.acos(qw), y:qy/Math.acos(qw), z:qz/Math.acos(qw)};
+	
+	// cross up with foward to get right; this can probably be a calculation?
+	const cURx = basis.up.z * basis.forward.y - basis.up.y * basis.forward.z;
+	const cURy = basis.up.x * basis.forward.z - basis.up.z * basis.forward.x;
+	const cURz = basis.up.y * basis.forward.x - basis.up.x * basis.forward.y;
+
+	basis.right = { x : cURx, y : cURy, z : cURz };
+	return basis;	
+
+	// ---------------------- UNREACHABLE CODE - Historical Purpsoses Only ----------------------------------
+	// This is the orginal, rotate x-axis, y-axis and z-axis by the quaternion 
+	// each applied independantly.   This 'spins' the basis progressively towards
+	// 0,-1,0  (+/- Math.PI)
 	if( this.w >= SIN_R_OVER_R_MIN ) {
 		// this method gets cardioid
 		// only a valid shortcut for 1 tick.
@@ -599,6 +642,7 @@ lnQuat.prototype.apply = function( v ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
+	// q.s and q.qw are set in update(); they are constants for a quat in a location.
 	const s  = q.s;
 	const qw = q.qw;
 	const qx = q.x * s;
@@ -625,8 +669,9 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const s  = (del==1)?q.s: Math.sin(del*q.w);
-	const qw = (del==1)?q.qw:Math.cos(del*q.w);
+	// Apply the rotation scaled; 1.0 is normal... 
+	const s  = (del==1) ? q.s  : Math.sin(del*q.w);
+	const qw = (del==1) ? q.qw : Math.cos(del*q.w);
 	const qx = q.x * s;
 	const qy = q.y * s;
 	const qz = q.z * s;
@@ -641,77 +686,67 @@ lnQuat.prototype.applyDel = function( v, del ) {
 	// 21 mul + 9 add
 }
 
+function twist( q, angle, zero_angle ) {
+	// rebase a quaternion; but given that the need to be relative to the
+	// same 'basis' zero of 'Y' as 'up'
+	// otherwise I don't know the angle around the new circle to end up at.
 
+/*
+	// P defines an axis around which the rotation portion of the matrix
+	// is rotated by an amount.
+	// coded from http://www.mines.edu/~gmurray/ArbitraryAxisRotation/ArbitraryAxisRotation.html
+	// and http://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/3drota.htm
+   	// and http://astronomy.swin.edu.au/~pbourke/geometry/rotate/
+	TRANSFORM t;
+	PTRANSFORM T = pt;
+	RCOORD Len = //EXTERNAL_NAME(Length)( p );
+	RCOORD Cos = COS(amount);
+	RCOORD Sin = SIN(amount);
+	RCOORD normal;
 
-function ReView( lnQ1 ) {
-	const lnAux = { x:Math.PI/4, y:0, z:0, r : Math.PI/4, s:Math.sin(Math.PI/2)/(Math.PI/4) };
-	const lnReal = { x:0, y:1, z:0, r : 1, s:1 };
+	// actually the only parts of the matrix resulting
+	// will only be the rotation matrix, for which we are
+	// building an absolute translation... which may be saved by
+	// passing an identity filled transform... but anyhow...
+	// the noise in the speed, accel, etc resulting from uninitialized
+	// stack space being used for the transform this is building, matters
+   // not at all.
+	pt = &t;
+	//SetPoint( _v, p );
+	//normalize( _v );
+	const u = q.x;
+	const v = q.z;
+	const up = q.y;
+	// okay this is rude and ugly, and could be optimized a bit
+	// but we do have a short stack and 3 are already gone.
+	normal = u*u+v*v+up*up;
+	pt->m[0][0] = u * u + ( v * v + up * up ) * Cos
+	      ;
+	pt->m[0][1] = u*v * ( 1-Cos ) - up * Len * Sin
+	      ;
+	pt->m[0][2] = u*up*(1-Cos) + v*Len * Sin
+	      ;
+	pt->m[1][0] = u*v*(1-Cos) + up*Len * Sin
+	      ;
+	pt->m[1][1] = v*v + (u*u+up*up)*Cos
+	      ;
+	pt->m[1][2] = v*up*(1-Cos)-u*Len*Sin
+	      ;
+	pt->m[2][0] = u*up*(1-Cos)-v*Len*Sin
+	      ;
+	pt->m[2][1] = v*up*(1-Cos)+u*Len*Sin
+	      ;
+	pt->m[2][2] = up*up+(u*u + v*v)*Cos
+	      ;
+	// oh yeah , be nice, and release these symbols...
+	// V is such a common vector variable :)
+#undef u
+#undef v
+#undef up
 
-	// lnQ1.y * lnReal.z - lnQ1.z * lnReal.y
-	// lnQ1.z * lnReal.x - lnQ1.x * lnreal.z
-	// lnQ1.x * lnReal.y - lnQ1.y * lnReal.x
+	EXTERNAL_NAME(ApplyRotationT)( pt, T, T );
+*/
 
-	// lnQ1.y * 0 - 0/*lnQ1.z*/ * 1
-	// lnQ1.z * 0 - lnQ1.x * 0
-	// lnQ1.x * 1 - lnQ1.y * 0
-
-
-//   cross nac, nab
-	const cross1 = { x : 0
-                  , y : 0
-                  , z : lnQ1.x
-		}
-	console.log( "cross:", lnQ1, lnAux, cross1, Math.sqrt( lnQ1.x*lnQ1.x + lnQ1.z*lnQ1.z ), lnQ1.s*lnQ1.r, Math.sqrt(lnQ1.x*lnQ1.x+lnQ1.y*lnQ1.y+lnQ1.z*lnQ1.z) );
-
-	// 1 should be (sin_B/sin_b)
-	const sin_b = 1;
-	const sin_B = 1;
-
-	const sin_A = lnQ1.y;  // sin is the Y, 90 degrees, this is 1; at 0 degrees, this is 0
-	const sin_a = sin_A;
-
-	const sin_c = lnQ1.s*lnQ1.r;
-	const sin_C = sin_c;
-	
-	const sin_GC_new = sin_A * sin_C;
-
-	console.log( "sinA = ", sin_A, Math.asin(sin_A));
-	console.log( "sina = ", sin_a, Math.asin(sin_a));
-
-	console.log( "sinB = ", sin_B, Math.asin(sin_B));
-	console.log( "sinb = ", sin_b, Math.asin(sin_b));
-
-	console.log( "sinC = ", sin_C, Math.asin(sin_C));
-	console.log( "sinc = ", sin_c, Math.asin(sin_c));
-
-	// angle is Math.acos( lnQ1.y );
-
-	// 
-	//const cos_a = sin_c * cos_A;  // angle of rotation to use.
-	//const sin_a = Math.sqrt(1 - cos_a*cos_a);
-
-//	console.log( "sin_b, cos_a:", sin_a*sin_c, sin_A, (sin_a*sin_c)/sin_A, sin_b, Math.asin(sin_b), cos_a, Math.acos(cos_a) );
-
-//	const sin_C = ( sin_a * sin_c ) / sin_;
-	const cos_C = Math.sqrt(1 - (sin_GC_new*sin_GC_new));
-
-//	console.log( "sin_a, sin_C:", Math.asin( (lnQ1.s * lnQ1.r)) , sin_a, Math.asin(sin_a), sin_C, Math.asin(sin_C) );
-//	console.log( "cos_C:", cos_C, Math.acos(cos_C), Math.asin( sin_C ) );
-
-	//   so the rotation then is like 
-	//  (spin around Y, x->Z)
-	
-	// normal of great circle in question. (is normalized)
-	const nCB = { x :cos_C, y:0, z:-sin_GC_new };  // don't know what the shift is here... 
-	// angle to cover on that circle /2
-	const theta =  lnQ1.y;//-Math.PI/2;//sin_a;
-
-	const dist = lnQ1.z;
-	const dist2 = Math.PI/2-lnQ1.y;
-	
-	console.log( "theta:", nCB, theta );
-	
-	return new lnQuat( 0, nCB.x * theta, nCB.y * theta, nCB.z * theta );
 }
 
 lnQuat.prototype.applyInv = function( v ) {

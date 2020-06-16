@@ -873,13 +873,6 @@ function DrawQuatNormals() {
 	const spaceScale = 5;
 	const normal_del = 1;
 
-	if(0)
-	for( let x = -1; x < 1; x+= 0.05 ){
-		for( let y = -1; y < 1; y+= 0.05 ) {
-			
-		}
-	}
-	if(0)
 	for( let t = 0; t < 1.1*Math.PI; t+= 0.05 ){
 			const x = Math.sin(t );
 			const z = -Math.cos(t);
@@ -989,9 +982,9 @@ function DrawQuatPaths(q) {
 	const cx = new THREE.Color( 192,192,0,255 );
 	const cy = new THREE.Color( 128,128,128,255 );
 	const cz = new THREE.Color( 0,192,192,255 );
-	QuatPathing( lnQ, xAxis, cx );
+	//QuatPathing( lnQ, xAxis, cx );
 	QuatPathing( lnQ, yAxis, cy );
-	QuatPathing( lnQ, zAxis, cz );
+	//QuatPathing( lnQ, zAxis, cz );
 }
 
 
