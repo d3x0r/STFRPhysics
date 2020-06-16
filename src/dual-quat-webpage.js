@@ -446,7 +446,7 @@ lnQuat.prototype.apply = function( v, del ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-	const s  = (del==1)?q.s:(del ===0 )?1:Math.sin(del*Math.asin(q.s*q.r))/(q.r*del);
+	const s  = (del==1)?q.s:(del ===0 )?1:Math.sin(del*Math.asin(q.s*q.r))/q.r;
 	const qw = (del==1)?q.qw:Math.cos(del*Math.acos(q.qw));
 
 	const qx = q.x * s * del;
