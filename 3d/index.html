@@ -67,7 +67,7 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p>Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
-		<p>X:<input type="range" id="lnQX" value="50"> Y:<input type="range" id="lnQY" value="50"> Z:<input type="range" id="lnQZ" value="50"> T:<input type="range" id="lnQT" value="50"> </p>
+		<p>X:<input type="range" id="lnQX" value=50> Y:<input type="range" id="lnQY" value=50> Z:<input type="range" id="lnQZ" value=50> T:<input type="range" id="lnQT" value=2 range=20> </p>
 
 	  </div>
 	</div>
@@ -581,18 +581,21 @@
 			var is;
 			is = document.getElementById("showNormals");
 			is.onchange = updateMesh;
-			is.checked  = false;
+			is.checked  = true;
 
 
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
+			is.value = 50;
 			is = document.getElementById( "lnQY" );
 			is.oninput = updateMesh;
+			is.value = 50;
 			is = document.getElementById( "lnQZ" );
 			is.oninput = updateMesh;
+			is.value = 50;
 			is = document.getElementById( "lnQT" );
 			is.oninput = updateMesh;
-
+			is.value = 2;
 
 
 			is = document.getElementById( "inflation" );

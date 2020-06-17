@@ -478,24 +478,72 @@ lnQuat.prototype.getBasisT = function(del) {
 		return basis;			
 	}
 
-	basis.up = { x :     qw * tx + qy * tz
+	basis.up = { x : 0 + qw * tx + qy * tz
 	           , y : 1           + qz * tx - tz * qx
-	           , z :     qw * tz           - tx * qy };
+	           , z : 0 + qw * tz           - tx * qy };
 
+	/*
+	const sa2 = Math.sin(del*q.w*2);
+	const qw2 = Math.sin(del*q.w*2 - Math.PI/2)+1; // sina*sina
+	basis.up = { x :   -  sa2* q.z  + q.y * q.x * (qw2)
+	           , y : 1 - ( q.z * q.z + q.x * q.x ) * (qw2)  
+	           , z :       sa2*q.x  + q.z * q.y * (qw2)
+			};
+	*/
+
+	//L = r x p 
+	// this.w * this.w = Centripetal force basis
+	// 	
+
+	const upL = basis.up.x*basis.up.x+basis.up.y*basis.up.y+basis.up.z*basis.up.z;
+
+	if( Math.abs( 1 - upL ) > 0.001 ) {
+		if( upL > 0.001 ){
+			console.log( "Renormalizing: ", upL, Math.asin(upL), Math.acos(upL), Math.sin( upL ), Math.cos( upL ), 1/upL );
+			const upN = 1/Math.sqrt(upL);
+			basis.up.x *= upN;
+			basis.up.y *= upN;
+			basis.up.z *= upN;
+			//console.log( "RENORMALIZED" );
+		}else {
+			basis.up.x = 0;
+			basis.up.y = 1;
+			basis.up.z = 0;
+		}
+	}
+		
+	//console.log( "UP length:", basis.up.x*basis.up.x + basis.up.y*basis.up.y +basis.up.z*basis.up.z );
 	// tangent to the above is at dx dy dz in the direction of the angle
 	// dertivitive of cos(angle) * normal...
 	//basis.right = {x:q.x*ds, y:q.y*ds, z:q.z*ds};
+	//console.log( "RIGHT1:", basis.right );
 	const cUNx = basis.up.z * q.y - basis.up.y * q.z;
 	const cUNy = basis.up.x * q.z - basis.up.z * q.x;
 	const cUNz = basis.up.y * q.x - basis.up.x * q.y;
-	// cross of quat circle-normal and the up vector.
-	basis.right = { x:cUNx, y:cUNy, z:cUNz };
+	const cUNl = cUNx*cUNx+cUNy*cUNy+cUNz*cUNz;
+	//console.log( "L now?", cUNl, s, ds );
+	if( Math.abs( 1-cUNl ) > 0.001 ) {
+		console.log( "Normalizing 'right' (circle tangent)", cUNx );
+		if( cUNl > 0.001 ) {
+			const cUNn = 1/Math.sqrt(cUNl);
+			// cross of quat circle-normal and the up vector.
+			basis.right = { x:cUNx*cUNn, y:cUNy*cUNn, z:cUNz*cUNn };
+		} else {
+			basis.right = { x:0, y:0, z:1 };
+		}
+	}
+	else
+		basis.right = { x:cUNx, y:cUNy, z:cUNz };
+	//console.log( "right length:",cUNl, basis.right.x*basis.right.x + basis.right.y*basis.right.y +basis.right.z*basis.right.z );
 
 	// cross of up and right is forward.
-	const cURx = basis.up.z * basis.right.y - basis.up.y * basis.right.z;
-	const cURy = basis.up.x * basis.right.z - basis.up.z * basis.right.x;
-	const cURz = basis.up.y * basis.right.x - basis.up.x * basis.right.y;
+	const cURx = basis.right.z * basis.up.y - basis.right.y * basis.up.z;
+	const cURy = basis.right.x * basis.up.z - basis.right.z * basis.up.x;
+	const cURz = basis.right.y * basis.up.x - basis.right.x * basis.up.y;
 	basis.forward = { x : cURx, y : cURy, z : cURz };
+
+	// V = v eHat_r + r dTh/dT * eHat_t + r * dphi/Dt * sinT * eHat_phi
+
 	return basis;	
 }
 
