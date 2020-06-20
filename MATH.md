@@ -205,6 +205,8 @@ this is only a valid operation within the mandelbrot boundary region of -2 ->1.
 
     arccos( cos(Pw)+cos(Qw) ) + sin(Pw)*PN + sin(Qw)*QN 
 
+	
+
        arccos( cos(Pw)+cos(Qw) ) + ( sin(Pw)*PN + sin(Qw)*QN ) / arcsin( sin( Pw ) + sin( Qw ) )
     if( cos(Pw) + cos(Qw) > 1 )  NaN
     else
@@ -255,3 +257,167 @@ if ( multiply two quaternions... )
 
 ```
 
+
+## Complex number reduction and testing
+
+### Mandelbrot groundword
+
+[3D Graph of equations](https://www.geogebra.org/3d/a5dauj6s)    `cos^(-1)(cos(x) + cos(y)) = π/2 -cos(x) -cos(y);`; The graph is composed of several layers;  (quick summary, red-error, blue - composite of green, purple proposed solution, green - actual computations)
+  1) Red - this is the error layer; or the difference between
+  2) Blue - A composite of 'valid' ranges of `arccos(cos(a)+cos(b)`; uses `useA()`, `useR2`, `vz()` , and `mod2()` to compute domains to select from the Green layers.
+  3) Green - 3 Layers; this is `arccos(cos(a)+cos(b))` shifted to cover the full range of possible values; cos(a)+cos(b) can be greater than 1 and less than -1, so arccos faults and returns NaN.
+  4) Purple - Hypothetical equal graph.
+
+A mandelbrot is a recursive application of a complex number plus a second, constant complex number.  A Quaternion or Log Quaternion can represent a complex number with `y` and `z`
+corrdinates set to 0.  Axis normal is `x=1`.
+
+```
+F(0) = 0 + 0i;
+F(X) = F(x-1)*F(x-1) + C;
+```
+
+This breaks down to the following sequence of operations...
+
+``` 
+// values of a, b, c, and d are expected to be valid raw coordinates
+// for the complex function.
+
+A = (a+bi);
+B = (c+di);
+
+r = A * A + B;
+
+r = a^2 - b^2 + 2abi + (c+di);
+
+r = a^2 - b^2 + ( 2ab + c + d )i;
+
+
+
+
+R = ln( exp(A + A) + exp(B) )
+
+R = ln( exp(2A)+exp(B) )
+
+// convert into exp space for the '+'
+
+E2A = exp(Aw*2) * cos(2A) + sin(2A)*S*i;
+EB =  exp(Bw) * cos(B) + sin(B)*S*i;
+
+    ( exp(Aw*2) * cos(2A) + exp(Bw) * cos(B) ) + ( sin(2A)+sin(B) )*S i
+
+# figure cross product
+#    eA*cA+eB*cB =0
+#	eA*cA=-eB*cB eA/eB + cB/CA
+	
+    ( exp(2*Aw)/exp(Bw)  + cos(B) / cos(2A) ) + ( sin(2A)+sin(B) )*S i
+
+    ( exp(2*Aw-Bw)  + cos(B) / cos(2A) ) + ( sin(2A)+sin(B) )*S i
+
+     	
+     
+
+
+  ln( cos(x)+sin(x)i ) = xi
+
+    
+     (X+eX+Y+eY)i = ln( cos(X+eX+Y+eY)+sin(X+eX+Y+eY)i )
+
+
+	e^(2a+c+d)i = cos(2a+c+d)
+
+
+
+```
+
+Angle-Axis ( semi-log-complex/log-quat )
+
+```
+a = 1 * cos(angle)
+b = 1 * sin(angle)
+
+# cos/sin is tangent...
+
+Angle = atan2( a, b );
+Scalar = b;
+Axis = 1;
+
+Qw = angle; (not a real log-quaternion)
+QN = axis;
+QS = Scalar;
+
+
+
+```
+
+	// e ^ (xi) = cos(x) + sin(x)i(jk)
+	// e ^ i*pi  = 1
+	// ix = ln(cos(x) + sin(x)i )
+
+	// 1 / ( 1 + x^2 ) = 1/2( 1/(1-ix) + 1/ (1+ix) )
+	// integral( dx/1+ax) = 1/a * ln(1+ax) + C
+
+	a = cos(x), c = (cos(y), c = sin(x), d = sin(y);  
+	(a+bi) + (c+di) = (a+c) + (b+d)i;  
+	
+	(a+c) = cos-1( cos(a) + cos(b) );  
+	(a+c) =  π/2 -cos(a) -cos(b);
+	
+	ln(a+bi) = ln( a/cos(x) ) + (b/sin(x))i*(x/2); 
+	ln(c+di) = ln( c/cos(y) ) + (d/sin(y))i*(y/2); 
+	
+
+    ln( (a+c) + (b+d)i ) ~  arccos(a+c) (angle); 
+            ln( (a+c)/cos(a+c) ) + ( (b+d)/sin(a+c) * (a+c)/2)i
+
+
+
+
+
+
+```	
+	
+
+
+
+
+
+## Complex Add (take 2)
+
+
+```
+
+
+R = ln( exp(A) + exp(B) )
+
+// convert into exp space for the '+'
+
+E2A = exp(Aw) * cos(A) + sin(A)*S*i;
+EB =  exp(Bw) * cos(B) + sin(B)*S*i;
+
+    ( exp(Aw) * cos(A) + exp(Bw) * cos(B) ) + ( sin(A)+sin(B) )*S i
+
+# figure cross product
+#    eA*cA+eB*cB =0
+#	eA*cA=-eB*cB eA/eB + cB/CA
+	
+    ( exp(Aw)/exp(Bw)  + cos(B) / cos(A) ) + ( sin(A)+sin(B) )*S i
+
+    ( exp(Aw-Bw)  + cos(B) / cos(A) ) + ( sin(A)+sin(B) )*S i
+
+	
+
+
+   = a + ln(1+exp(b-a)) =      a + log1p(exp(b-a))   , which, if a >= b,
+     
+
+
+  ln( cos(x)+sin(x)i ) = xi
+
+    
+     (X+eX+Y+eY)i = ln( cos(X+eX+Y+eY)+sin(X+eX+Y+eY)i )
+
+
+	e^(2a+c+d)i = cos(2a+c+d)
+
+
+```

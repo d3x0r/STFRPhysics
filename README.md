@@ -16,6 +16,20 @@ I wrote a few pages, and lost it all :(  Lost some references from page too
  - Quat - the type `class Quat`.
  - principalling - the updating of a lnQuaternion to its prinicpal angles and the associated rate. There is a method `principle()` which sets a lnQuaternion to its principal angles.
 
+## Preface
+
+All the roads I go down lead back to 'use a matrix!'; yes, I will, but sin() and cos() are single clock lookupss; so can't I just save that loikup 
+until later?  Why do I have to cary the important numbers in normalized coordinates?  
+
+`A x B != B X A` except in a very small region.  But that's no different than saying `arcsin(sin(A+B)) != A+B` which is true (and untrue) exactly where the first expression is true.
+We forget in the process that we've lost the original information, and are working with a modulated value.   And certainly everywhere I've gone, it's very hard to 
+not find a cross or dot product to represent a rotation, when in reality it's just a simple addition of angle, and a lookup to get the modulated value for the 
+quaternion.  If you apply inverse `A X -B` in certain conditions, that's the same as `B*A` or `A/B` , but then again; that's all in a multiplicative space; it's simpler to just say `A + B - C = D` instead of `C X A X B X -A X - C`  (4 multiplies instead of 2 adds).
+
+Quaternions, kepd as `cos(theta) + sin(theta)N` where `N` is the axis of rotation; end up re-normalized when mlutiplied so that they stay within bounds; they 
+can apply a smooth correction... but basically this calculator 
+
+
 ## Frame Computation Using Dual Log-Quaternions
 
 I've come to relearn much about the quatnerions and complex numbers especially with applications to rotation.
@@ -214,10 +228,63 @@ This is 3B RPM is the maximum rotation rate.  This turns out to be a 1 rotation 
 
 add vectors instead of multiply.
 
+## Gyroscopic Precession
+
+```
+
+(eulers identity?!)
+e^i*pi = -1  = ijk
+
+e^i*pi/4 = sqrt(i)
+
+https://159729576968930170.weebly.com/unification.html
+// there this whol chain of operations.... 
+[q^2 * k * h / o * me^2
+
+-1 [ q^2 * k & h / alpha m_e^2 c^3 r_p ]
+
+-1[ q^2 k   / alpha * m_e^2 * G
+
+-1[ 4 gamma^2 k  / alpha G )
+
+-1[4/ alpha sigma]
+
+-1[1] = -1
+
+
+E = ( i^2/r^2 ) X ( v/ B )
+E = q^2 / r^3 X (v^2 / m )
+F = [ (m/r^3) & r^3/t)]v
+
+
+-E( o dot infinity ) = E
+
+```
+
+Probably this just requires a second quat to track the precession; I tried the skew minor axis variations, but that's just tilt and (of course)spin.
+although - this is probably just a base of this quat such that we are no longer based at the origin; but instead have a base rotation plus their
+rotation.  (mx+b).  where m is simply the corresponding axis coordinate.
+Probably also want another factor in time..  (mP(x)x + b )
+
+S = P*n + Q*m
+
+cos(w*N) + c
+
+Pv*n + Qv*m
 
 
 
 ## References
+
+
+[!Spinning T Handle](https://www.youtube.com/watch?v=1n-HMSCDYtM)
+[!Kerbal space program - spinning T handle Simulation](https://www.youtube.com/watch?v=WPRFerc4zqw)
+[!The Bizarre Behavior of Rotating Bodies, Explained](https://www.youtube.com/watch?v=1VPfZ_XzisU)  (reiterates on first... 
+
+
+[especially the 3d particle motion](https://en.wikipedia.org/wiki/Angular_velocity)
+
+[quantum spin modelling](http://bohr.physics.berkeley.edu/classes/221/1011/notes/spinrot.pdf) [by Robert Littlejohn](https://physics.berkeley.edu/people/faculty/robert-littlejohn)
 
 [Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
 matter so much what the shape of the projection is, but what the source data projects into.
@@ -520,4 +587,9 @@ bool reach( A, C, length ) {
 	} 
 }
 
+
+
+## Kerbal space program - spinning T handle Simulation
+
+Noted - 6 rotation period.  (in most of these; though apparently it has to do with inertia distribution)
 
