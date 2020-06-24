@@ -827,6 +827,7 @@ function ScaleNormalsByAngle( n, fnorm, v1, v2, v3 ) {
 }
 
 
+/*
 function QuatPathing(q, v, c) {
 	const spaceScale = 5;
 	const normal_del = 1;
@@ -843,7 +844,7 @@ function QuatPathing(q, v, c) {
 				normalColors.push( c)
 			}
 			prior_v = new_v;
-		if( t % 0.125  <= 0.01 ) {
+		if( t % 0.250  <= 0.01 ) {
 			const basis = q.getBasisT( t );
 
 
@@ -973,7 +974,7 @@ function DrawQuatPaths(q) {
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
-			let lnQ = new lnQuat( 5*Math.PI*(lnQT/100), { x:lnQX/10-5, y:lnQY/10-5, z:lnQZ/10-5 } );
+			let lnQ = new lnQuat(  { x:lnQX/10-5, y:lnQY/10-5, z:lnQZ/10-5 } );
 
 
 	const xAxis = {x:1,y:0,z:0};
@@ -986,12 +987,13 @@ function DrawQuatPaths(q) {
 	QuatPathing( lnQ, yAxis, cy );
 	//QuatPathing( lnQ, zAxis, cz );
 }
-
+*/
 
 function meshCloud(data, dims) {
 
-	if( normalVertices ) 
-		DrawQuatPaths();
+	//if( normalVertices ) 
+	//	DrawQuatPaths();
+
 	// values input to this are in 2 planes for lower and upper values
 	const dataOffset = [ 0, 1, dim0, 1+dim0, 0 + dim0*dim1,1 + dim0*dim1,dim0 + dim0*dim1, 1+dim0 + dim0*dim1] ;
 

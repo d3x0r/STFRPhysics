@@ -421,3 +421,190 @@ EB =  exp(Bw) * cos(B) + sin(B)*S*i;
 
 
 ```
+
+## `Sine Waves` Demo...
+
+49+49+(49*4 -(2*49)*4 -47 ) (rotations)
+
+https://d3x0r.github.io/
+
+I already did that demo; one could say 'been there, done that, got the shirt, burned it...' they don't have an asymtoptic intersection even, there's no collision mechanics on rotation - so to speak.
+
+Axis-Angle Representation (raw?)...
+
+In reality, the rotation vector is x+y+z normalized to squares (because they're rotating squares; matrix application is applied to a sum of squares. )
+
+See... sphereical barycentric mapping.
+
+http://domino.mpi-inf.mpg.de/intranet/ag4/ag4publ.nsf/3561a79a83e6557ac1256b91004f4bdd/9144c5ff262d3f9cc12571be00348ddf/$FILE/paper.pdf
+
+
+The normal length is the sum of the axels of rotation. ( ratio of rotation vs normal?  (least spin energy?)
+
+
+```
+
+The shape of the paramters to actually track matters.
+A quaternion is itself a second order polynomial that acts on its prior state.
+Every state between before and now is a single state based on the direction, 
+so both forward and backward time is continuous; the previous state can always be considered as a delta from 'before' to here and from here into the future.
+
+This is a linear feeling to the rotation itself....
+
+f(x)=sin(x)
+
+g(x,del) = f(x)-f(x-del)+f(x+del)
+
+
+ sin(x/2)+sin(y/2)+2 sin(x) sin(y)e
+
+which leads to dual sin numbers....
+
+
+  
+q = a+(bn + b0e)i
+
+Q = ln(q) = ln(a) + arccos(a)/2 * (bn+b0e)i
+
+A = ln(q) = ( S, arcsin( |bn| ); a/cos(arcsin(|bn|)), bn, b0e )
+A = exp(Q) = (S=w, |bn|, bn/|bn|, b0e 
+
+q0 = exp(Q) = exp(a) * cos( arccos(a)/2 * bn ) + sin( arccos(a)/2 * bn ) * (bn+b0e)i
+q0a = exp(A) = S*cos(a) + sin(a)(bn+b0)i
+
+Q0a = ln(A) = ln(S) + (a/2 * bn + a/2*b0)i;
+
+
+```
+
+## Mandelbrot
+
+The mandelbrot/julia set are a study in modulation of a constant spinning body with an acceleration applied.
+In complex number representation, this is a truncated rotation space applying only the principle angle of the current velocity with a principle angle acceleration.
+This set will require special modulo operations in order to 'properly' compute.
+
+```
+A = a + bi;
+f(0) = 0 + 0i; // zero initial velocity; julia set updates the initial principle angle velocity.
+f(x) = f(x-1) + A;
+
+
+A = theta, R; // acceleration angle + R * wraps
+F(0) = 0, 0; // julia updates this value.
+F(0) = F(x-1) * 2 + aln( velocity angle )
+```
+
+aln(velocity angle) is the equivalent of taking a `ln(N)`, but is the base of `ln(Angle)`
+
+
+Complex log = (theta,R,W) where theta = arctan(a,b), R = ln( sqrt(a*a+b*b) ) and W = 0;
+
+Complex natural = (a,b) where a = exp(R)*cos(theta) + sin(theta);  // loses information.
+
+add complex from log back to log
+
+```
+   ec1 = exp(c1);
+   ec2 = exp(c2);
+
+   (t,r,W) = ln(ec1+ec2);
+```
+
+```
+// unit scaled rotations... (R=0)
+   c1 = 0,0,0
+   c2 = T,0,0
+
+   ec1 = 1+0i;
+   ec2 = 1 * cos(T) + sin(T)i;
+   ecT  = 1+cos(T) + sin(T)i;
+
+   ct  = T,ln(1),0
+
+
+   // half of the applied rotation...
+   c2a = T,-0.693,0
+   
+   // double?
+   c2b = T,0.693,0
+```
+
+
+```
+   c1 = T1, R1, 0 
+   c2 = T2, R2, 0
+
+   ec1 = exp(R1)*cos(T1)+sin(T1)i
+   ec2 = exp(R2)*cos(T2)+sin(T2)i
+   ecT = exp(R1)/exp(R2)-cos(T2)/cos(T1) ,  sin(T1)+sin(T2)
+
+   ct = R1-R2 - arccos(cos(T2)/cos(T1)) , arcsin( sin(T1)+sin(T2) )
+         // really arctan( cos(T1)/cos(T2), sin(T1)+sin(T2) )
+	// R = ln( sqrt(  exp(R1)/exp(R2)-cos(T2)/cos(T1) *  exp(R1)/exp(R2)-cos(T2)/cos(T1) +  sin(T1)+sin(T2) * sin(T1)+sin(T2) ) )
+
+
+       R -= c1  // should give me a general calculation given the start and next positions for adding.
+
+	// R = ln( sqrt(  exp(R1)/exp(R2)-cos(T2)/cos(T1) *  exp(R1)/exp(R2)-cos(T2)/cos(T1) +  sin(T1)+sin(T2) * sin(T1)+sin(T2) ) )
+
+
+        	   
+        	           ( (R1-R2)-cos(T2)/cos(T1) )^1 + 1/2(cos(T1+T2)-cos(T1-T2))
+
+
+	// R = ln( sqrt(  (exp(R1)*cos(T1) -cos(T2)*exp(R2)) * )exp(R1)*cos(T1) -cos(T2)*exp(R2)) +  ((sin(T1)+sin(T2)) * (sin(T1)+sin(T2)) ) )
+
+	                                                                                   sin(T1)sin(T1) + sin(T2)sin(T2) + cos(T1+T2)-cos(T1-T2)
+
+	                                                                                   -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+
+                                
+
+
+	// R = ln( sqrt(  (1*cos(T1) -cos(T2)*1) * (1*cos(T1) -cos(T2))  -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+
+
+	                                                                                   
+
+	// R = ln( sqrt(  ( cos(T1) -cos(T2) ) * (cos(T1) - cos(T2) )  
+                     cos(T1)cos(T1) +cos(T2)cos(T2) - 2cos(T1)cos(T2)              -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+                     (cos(2T1)  +1 )/2  (cos(2T2)  +1 )/2   cos(T1+T2)+cos(T1-T2)  -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+
+                     (cos(2T1)/2  +1 /2  (cos(2T2)/2  +1 /2   cos(T1+T2)  -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)
+
+
+                     (            +1 /2                +1 /2 +  cos(T1+T2)   + cos(T1+T2) )
+
+                        1 + cos2(T1+T2)
+                        
+                        ln( sqrt( 1 + cos2(T1+T2) ) )
+	
+
+          delC =  ln( 1 + cos2(T1+T2) )/2  - R1/*0*/ , +T2, 0 
+
+
+
+
+	// R = ln( sqrt(  (exp(R1)*cos(T1) -cos(T2)*exp(R2)) * )exp(R1)*cos(T1) -cos(T2)*exp(R2)) +  ((sin(T1)+sin(T2)) * (sin(T1)+sin(T2)) ) )
+
+	                                                                                   sin(T1)sin(T1) + sin(T2)sin(T2) + cos(T1+T2)-cos(T1-T2)
+
+	                                                                                   -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+
+
+			
+
+2 cos2(T1) -1 = (cos(2T1)  +1 )/2
+
+
+cos(2a) = 2cos2(A)-1
+cos(2a) = 1-2sin2(A)
+
+cos2(A) = (cos(2A)+1)/2
+cos2(a) = ((1-2sin2(A))+1)/2
+cos2(A) = 1-sin2(A)
+
+
+```
+
+

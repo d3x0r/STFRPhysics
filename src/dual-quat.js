@@ -116,6 +116,8 @@ Quat.prototype.getBasis = function() {
 	return basis;
 }
 
+
+
 Quat.prototype.mul = function( q ) {
       //parse(P, w, x, y, z);
       // Q1 * Q2 = [w1 * w2 - dot(v1, v2), w1 * v2 + w2 * v1 + cross(v1, v2)]
@@ -149,6 +151,11 @@ Quat.prototype.mulLong = function( q ) {
 	return r;
 }
 
+const mod = (x,y)=>y * (x / y - Math.floor(x / y)) ;
+const plusminus = (x)=>mod( x+1,2)-1;
+ 
+const trunc = (x,y)=>x-mod(x,y);
+
 Quat.prototype.log = function( ) {
 	const x = this.x;
 	const y = this.y;
@@ -161,12 +168,17 @@ Quat.prototype.log = function( ) {
 	const w = this.w;
 
 	const r  = Math.sqrt(x*x+y*y+z*z);
-	const t  = r>SIN_R_OVER_R_MIN? Math.atan2(r,w)/r: 0;
+	const ang = Math.atan2(r,w);
+	if( r < SIN_R_OVER_R_MIN ) {
+		// cannot know the direction.
+		return new lnQuat( ang, 0, 1, 0 )
+	}
+	const t  = 1/r;
 
 	const xt = x * t;
 	const yt = y * t;
 	const zt = z * t;
-	return new lnQuat( 0, xt, yt, zt )
+	return new lnQuat( ang, xt, yt, zt )
 }
 
 // -------------------------------------------------------------------------------

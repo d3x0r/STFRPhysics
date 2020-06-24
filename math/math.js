@@ -42,14 +42,15 @@ myForm.sliderC.oninput = readValues;
 myForm.sliderD.oninput = readValues;
 
 function readValues()  {
-	values.A = Number(myForm.sliderA.value)/100.0;
-	values.B = Number(myForm.sliderB.value)/100.0;
-	values.C = Number(myForm.sliderC.value)/100.0;
-	values.D = Number(myForm.sliderD.value)/100.0;
+	values.A = (Number(myForm.sliderA.value)/10.0)-5;
+	values.B = (Number(myForm.sliderB.value)/10.0)-5;
+	values.C = (Number(myForm.sliderC.value)/10.0)-5;
+	values.D = (Number(myForm.sliderD.value)/10.0)-5;
 	myForm.sliderValA.textContent = values.A;
 	myForm.sliderValB.textContent = values.B;
 	myForm.sliderValC.textContent = values.C;
 	myForm.sliderValD.textContent = values.D;
+	drawsomething();
 }
 
 
@@ -139,16 +140,16 @@ function acos(cos, zero) {
 	//newArccos(x)=cos^(-1)(md(x+1,2)-1)+(-x-1+md(x+1,2)) 
 	if( "number" === typeof cos ) {
 		//if( cos < 0 ) 
-			//console.log( "MOD:", cos%2, cos, "SPIN:", (cos-((cos+1)%2))*Math.PI/2  );
-		return new complexNumber(  Math.acos(plusminus(cos)), -(trunc((cos+1),2)+0) );
+		//console.log( "MOD:", cos%2, cos, "SPIN:", (cos-((cos+1)%2))*Math.PI/2  );
+		return new complexNumber(  Math.acos(plusminus(cos)), -(trunc((cos+1),2)+0), zero );
 	} else if( cos instanceof baseNumber ) {
-		return new complexNumber( Math.acos( ((cos.r+1)%2-1) +(-cos.r-1+md(cos.r+1,2)) ), zero||0 ) ;
+		return new complexNumber( Math.acos( ((cos.r+1)%2-1), (-cos.r-1+md(cos.r+1,2)) ), zero ) ;
 	} else if( cos instanceof vecA ) {
 		return cos;
 	//} else if( cos instancof ln ) {
 	//	return cos;
 	}else{
-		throw new Error( util.format( "arcsin doesn't know how to handle:", sin ) );
+		throw new Error(  "arccos doesn't know how to handle:"+ cos  );
 	}
 }
 
@@ -165,15 +166,15 @@ function gamma( a, b ) {
 
 function asin(sin, i) {
 	if( "number" === typeof sin ) {
-		return new complexNumber( Math.asin(plusminus(sin)), (trunc((sin+1),2)+0) );;
+		return new complexNumber( Math.asin(plusminus(sin)), (trunc((sin+1),2)+0), i );;
 	} else if( sin instanceof baseNumber ) {
-		return new complexNumber( Math.asin((sin.r+1)%2-1), a.r/2 );
+		return new complexNumber( Math.asin((sin.r+1)%2-1), a.r/2, i );
 	//} else if( sin instanceof vecA ) {
 	//	return cos;             
 	//} else if( sin instancof ln ) {
 	//	return cos;
 	}else{
-		throw new Error( util.format( "arcsin doesn't know how to handle:", sin ) );
+		throw new Error(  "arcsin doesn't know how to handle:" + sin );
 	}
 }
 
@@ -305,7 +306,6 @@ class  logComplex { // not really, just this is what we're really working in.
 
 function drawsomething() {
 	let x, y, z, w, X, Y, Z, W;
-
 	const squareSize = 1024;
 	const minScale = -5;
 	const maxScale = 5;
@@ -317,6 +317,7 @@ function drawsomething() {
 	const range = maxScale-minScale;
 	const zero = -minScale;
 
+	ctx.clearRect(0,0,squareSize,squareSize );
 	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
 	var output = _output.data;
 
@@ -335,14 +336,14 @@ function drawsomething() {
 
 
 
-		function plot( x_, y_, c ) {
-			const x = unit(x_);
-			const y = unit(-y_);
-			output[((x+y*squareSize)<<2)+0] = c[0];
-			output[((x+y*squareSize)<<2)+1] = c[1];
-			output[((x+y*squareSize)<<2)+2] = c[2];
-			output[((x+y*squareSize)<<2)+3] = c[3];
-		}
+	function plot( x_, y_, c ) {
+		const x = unit(x_);
+		const y = unit(-y_);
+		output[((x+y*squareSize)<<2)+0] = c[0];
+		output[((x+y*squareSize)<<2)+1] = c[1];
+		output[((x+y*squareSize)<<2)+2] = c[2];
+		output[((x+y*squareSize)<<2)+3] = c[3];
+	}
 		
 	for( x = minScale; x < maxScale; x+= step(1000) ) {
 		plot( x, plusminus(x), pens[2] );
@@ -350,49 +351,85 @@ function drawsomething() {
 		//plot( x, Math.floor(x), pens[1] );
 		const ac = acos(x);
 		plot( x, ac.i.r, pens[1] );
-		plot( x, ac.r.r + ac.i.r*Math.PI/2, pens[0] );
+		plot( x,  + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
 
+		plot( x, Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
+		plot(  Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, -x,pens[0] );
+
+		plot( -x, Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, pens[2] );
+		plot(  Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, x,pens[2] );
+
+
+		plot( x, Math.cos(x*Math.PI), pens[3] );
 		const as = asin(x);
 		plot( x, as.i.r, pens[1] );
 		plot( x, as.r.r, pens[0] );
+
+		plot( x, Math.sqrt(ac.r.r*ac.r.r + as.r.r*as.r.r ), pens[1] );
+		plot( x, ac.r.r*as.r.r , pens[1] );
 		//plot( x,x%2, pens[2] );
 	}
-	 {
+
 	for( x = minScale; x < maxScale; x+= step(1000) ) {
-		plot( x, 0, pens[0] );
+		plot( x, plusminus(x), pens[2] );
+//		plot( x, Math.acos(plusminus(x)), pens[1] );
+		//plot( x, Math.floor(x), pens[1] );
+		const ac = acos(x+values.A);
+		plot( x, ac.i.r, pens[1] );
+		plot( x,  + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
+
+		plot( x, Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
+		plot(  Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, -x,pens[0] );
+
+		plot( -x, Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, pens[2] );
+		plot(  Math.PI*(x-1)/2     + ac.r.r + ac.i.r*Math.PI/2, x,pens[2] );
+
+
+		plot( x, Math.cos(x*Math.PI), pens[3] );
+		const as = asin(x+values.A);
+		plot( x, as.i.r, pens[1] );
+		plot( x, as.r.r, pens[0] );
+
+		plot( x, ac.i.r*ac.i.r + as.i.r*as.i.r, pens[1] );
+
+		//plot( x,x%2, pens[2] );
 	}
-	for( x = Math.ceil(minScale); x <= Math.floor(maxScale); x++ ) {
-		for( y = -0.5; y < 0.5; y += delStep(-0.5,0.5,50 ) )  {
-			plot( x, y, pens[0] );
-			plot( y, x, pens[1] );
-			plot( x*Math.PI/2, y, pens[6] );
-			plot( y, x*Math.PI/2, pens[7] );
+
+
+	{
+		for( x = minScale; x < maxScale; x+= step(1000) ) {
+			plot( x, 0, pens[0] );
+		}
+		for( x = Math.ceil(minScale); x <= Math.floor(maxScale); x++ ) {
+			for( y = -0.5; y < 0.5; y += delStep(-0.5,0.5,50 ) )  {
+				plot( x, y, pens[0] );
+				plot( y, x, pens[1] );
+				plot( x*Math.PI/2, y, pens[6] );
+				plot( y, x*Math.PI/2, pens[7] );
+			}
+		}
+	        
+		for( x = minScale; x < maxScale; x+= step(1000) ) {
+			if( Math.abs( ( x % 0.5 ) - 0.25 ) < 0.1 ){
+				for( y = -0.5; y < 0.5; y += step(20 ) ) 
+					plot( 0, x, pens[1] );
+			}
+			plot( 0, x, pens[1] );
+		}
+		for( x = minScale; x < maxScale; x+= step(1000) ) {
+			plot( x, x, ColorAverage( pens[2], BASE_COLOR_WHITE, x+zero, range) );
 		}
 	}
 
-	for( x = minScale; x < maxScale; x+= step(1000) ) {
-		if( Math.abs( ( x % 0.5 ) - 0.25 ) < 0.1 ){
-			for( y = -0.5; y < 0.5; y += step(20 ) ) 
-				plot( 0, x, pens[1] );
+	if(0)
+		for( x = minScale; x < maxScale; x+= step(1000) ) {
+			const ac = acos(x);
+			if( x < -2 ) 
+			console.log( "??", x, ac );
+			plot( x, x-((x+1)%2), pens[4]);
+			plot( x, ac.r.r+ac.i.r, pens[3] );
 		}
-		plot( 0, x, pens[1] );
-	}
-	for( x = minScale; x < maxScale; x+= step(1000) ) {
-		plot( x, x, ColorAverage( pens[2], BASE_COLOR_WHITE, x+zero, range) );
-	}
-	}
-if(0)
-	for( x = minScale; x < maxScale; x+= step(1000) ) {
-		const ac = acos(x);
-		if( x < -2 ) 
-		console.log( "??", x, ac );
-		plot( x, x-((x+1)%2), pens[4]);
-		plot( x, ac.r.r+ac.i.r, pens[3] );
-	}
 
-		//document.body.appendChild( canvas );
-		//document.body.style.overflow="";
-	
 	ctx.putImageData(_output, 0,0);
 
 }

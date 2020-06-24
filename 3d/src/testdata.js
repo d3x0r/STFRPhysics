@@ -74,6 +74,16 @@ function createTestData() {
 		});
 	}
 
+	result['Sine Waves'] = makeVolume(
+		[[-Math.PI*2, Math.PI*2, Math.PI/8],
+		 [-Math.PI*2, Math.PI*2, Math.PI/8],
+		 [-Math.PI*2, Math.PI*2, Math.PI/8]],
+		function(x,y,z) {
+			return Math.sin(x) + Math.sin(y) + Math.sin(z);
+		}
+	);
+	
+	
 	result['Sphere'] = makeVolume(
 		[[-1.0, 1.0, 0.25],
 		 [-1.0, 1.0, 0.25],
@@ -82,6 +92,39 @@ function createTestData() {
 			return x*x + y*y + z*z - 1.0;
 		}
 	);
+/*
+	result['rain1 Test'] = makeVolume(
+		[[-1, 1, 0.08],
+		 [-1, 1, 0.08],
+		 [-1, 1, 0.08]],
+		function(x,y,z) {
+                        // Let e(z)=exp(2 pi i z)
+			// e(b) = 1 then f(a+b)=e(2ab/n)e(b^2/n)f(a)         f(z) = exp(2 pi i z^2 / n)/(exp(2 pi i z) - 1)
+                        
+                        // exp( 2ab / n + b^2 / n +  z^2/n - (z) - 1 )
+                        // exp( 2ab / n + b^2 / n )    *    z^2/n - (z) - 1 
+                        
+                        
+                	const Q = lnQuat( z*2*Math.pi, {x:1,y:0,z:0} );//.exp();
+			const N = 1;
+                        
+                        const e =  (x) =>{ return  };
+                        const f =  (z) = exp(2 pi i z^2 / n)/(exp(2 pi i z) - 1)
+                        
+                        
+	                //Let eZs=( sin(2*Math. pi * z) );
+	                //Let eZc=/*exp(0)=1 * * /( cos(2*Math. pi * z) );
+                 
+	                if( eZ==1 ) { 
+                        	//const f = (x+y)=>{
+		                        return e( 2*x*y/n ) * e (y^2/n) * f(x);
+                                //}
+                        }
+                        return -1.0;
+                 }
+                 //if( eZ = 
+			//[02:23:27] <rain1> I find that if e(b) = 1 then f(a+b)=e(2ab/n)e(b^2/n)f(a)
+*/
 
 	result['Asteroid'] = makeVolume(
 		[[-1, 1, 0.08],
@@ -184,15 +227,6 @@ function createTestData() {
 				125 * (x*x*y*z + y*y*x*z+z*z*x*y) +
 				60*x*y*z -
 				4*(x*y+x*z+y*z);
-		}
-	);
-	
-	result['Sine Waves'] = makeVolume(
-		[[-Math.PI*2, Math.PI*2, Math.PI/8],
-		 [-Math.PI*2, Math.PI*2, Math.PI/8],
-		 [-Math.PI*2, Math.PI*2, Math.PI/8]],
-		function(x,y,z) {
-			return Math.sin(x) + Math.sin(y) + Math.sin(z);
 		}
 	);
 	

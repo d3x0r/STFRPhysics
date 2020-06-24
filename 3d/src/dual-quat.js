@@ -80,6 +80,7 @@ function Quat( theta,d, a, b ) {
 				return;
 			}
 		}
+		// normal theta,d initialization 
 		const ct2 = Math.cos( theta/2 );
 		const st2 = Math.sin( theta/2 );
 		this.w = ct2;
@@ -159,14 +160,19 @@ Quat.prototype.log = function( ) {
 	}
 
 	const w = this.w;
-
+	const a = acos()
 	const r  = Math.sqrt(x*x+y*y+z*z);
-	const t  = r>SIN_R_OVER_R_MIN? Math.atan2(r,w)/r: 0;
+	const ang = Math.atan2(r,w);
+	if( r < SIN_R_OVER_R_MIN ) {
+		// cannot know the direction.
+		return new lnQuat( ang, 0, 1, 0 )
+	}
+	const t  = 1/r;
 
-	const xt = x * t;
-	const yt = y * t;
-	const zt = z * t;
-	return new lnQuat( 0, xt, yt, zt )
+	const xt = Math.sqrt(x /r);
+	const yt = Math.sqrt(y /r);
+	const zt = Math.sqrt(z /r);
+	return new lnQuat( Math.atan2(r,w), xt, yt, zt )
 }
 
 // -------------------------------------------------------------------------------
@@ -200,7 +206,7 @@ function lnQuat( theta, d, a, b ){
 				{
 					//if( theta.y > 0.6 ) console.log ( "TICK?", theta );
 					const l2 = theta.x*theta.x+theta.y*theta.y+theta.z*theta.z;
-					if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
+					//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 
 					const r = 1/l2;
 					const tx = theta.x*r, ty = theta.y* r, tz = theta.z* r;
@@ -219,6 +225,13 @@ function lnQuat( theta, d, a, b ){
 					this.x = r2x;
 					this.y = 0;
 					this.z = r2z;
+					this.s = 0;
+					this.qw = 0;
+
+					this.w = Math.acos( r )/2; // 1 right now 0 = 0;
+					this.x = theta.x;
+					this.y = theta.y
+					this.z = theta.z;
 					this.s = 0;
 					this.qw = 0;
 
@@ -270,7 +283,10 @@ function lnQuat( theta, d, a, b ){
 					return;
 				}
 			}
-			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
+
+			
+			//const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
+			const dl = 1/(d.x + d.y+d.z );
 
 			const t  = theta;
 			// if no rotation, then nothing.
@@ -303,8 +319,8 @@ function lnQuat( theta, d, a, b ){
 				this.z = d.z * dl;
 				this.w = t;
 				// initial creation will allow more 'accuracy' than application...
-				this.s  = Math.sin(theta);
-				this.qw = Math.cos(theta);
+				this.s  = Math.sin(theta/2);
+				this.qw = Math.cos(theta/2);
 				//console.log( "??", this );
 			}else {
 				this.x = 0;
@@ -325,15 +341,15 @@ function lnQuat( theta, d, a, b ){
 
 lnQuat.prototype.update = function() {
 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	this.s  = Math.sin(this.w);
-	this.qw = Math.cos(this.w);
+	this.s  = Math.sin(this.w/2);
+	this.qw = Math.cos(this.w/2);
 	return this;
 }
 
 lnQuat.prototype.exp = function() {
 	const q = this;
 	const s  = this.s;
-	return new Quat( this.qw, q.x * s, q.y * s, q.z * s );
+	return new Quat( this.qw, q.x *q.x* s, q.y *q.y* s, q.z *q.z * s );
 }
 
 lnQuat.prototype.addNormal = function( q2 ) {
@@ -351,7 +367,8 @@ function lnQuatSub( q, q2, s ) {
 	const nqy = q.y * q.w - q2.y * q2.w * s;
 	const nqz = q.z * q.w - q2.z * q2.w * s;
 	
-	const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	const nt = nqx + nqy + nqz;
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -375,7 +392,8 @@ function lnQuatAdd( q, q2, s ) {
 	const nqy = q.y * q.w + q2.y * q2.w * s;
 	const nqz = q.z * q.w + q2.z * q2.w * s;
 	
-	const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	const nt = nqx + nqy + nqz;
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -409,7 +427,6 @@ lnQuat.prototype.getTurns =  function() {
 	const r = this.w;
 	const rMod  = Math.mod( r, (2*Math.PI) );
 	const rDrop = ( r - rMod ) / (2*Math.PI);
-
 	return rDrop;
 }
 
@@ -470,6 +487,7 @@ lnQuat.prototype.getBasisT = function(del) {
 		           , y : 1 +         qz * tx - tz * qx
 		           , z :     qw * tz };
 		basis.forward = { x : q.x, y : 0, z : q.z }; 
+
 		const cURx =                              - basis.up.y * basis.forward.z;
 		const cURy = basis.up.x * basis.forward.z - basis.up.z * basis.forward.x;
 		const cURz = basis.up.y * basis.forward.x;
@@ -477,17 +495,44 @@ lnQuat.prototype.getBasisT = function(del) {
 		basis.right = { x : cURx, y : cURy, z : cURz };
 		return basis;			
 	}
-
+		
 	basis.up = { x : 0 + qw * tx + qy * tz
 	           , y : 1           + qz * tx - tz * qx
 	           , z : 0 + qw * tz           - tx * qy };
 
 	/*
+		this does cross of 'up' and the axis, but that is not a right angle...
+		so there has to be a normalization, and I don't know what the 'normal' value actually IS.		
+		const cUNx = basis.up.z * q.y - basis.up.y * q.z;
+		const cUNy = basis.up.x * q.z - basis.up.z * q.x;
+		const cUNz = basis.up.y * q.x - basis.up.x * q.y;
+	
+		const cUNl = cUNx*cUNx+cUNy*cUNy+cUNz*cUNz;
+		//console.log( "L now?", cUNl, s, ds );
+		if( Math.abs( 1-cUNl ) > 0.001 ) {
+			console.log( "Normalizing 'right' (circle tangent)", cUNx );
+			if( cUNl > 0.001 ) {
+				const cUNn = 1/Math.sqrt(cUNl);
+				// cross of quat circle-normal and the up vector.
+				basis.right = { x:cUNx*cUNn, y:cUNy*cUNn, z:cUNz*cUNn };
+			} else {
+				basis.right = { x:0, y:0, z:1 };
+			}
+		}
+		else
+			basis.right = { x:cUNx, y:cUNy, z:cUNz };
+	*/
+
+
 	const sa2 = Math.sin(del*q.w*2);
 	const qw2 = Math.sin(del*q.w*2 - Math.PI/2)+1; // sina*sina
-	basis.up = { x :   -  sa2* q.z  + q.y * q.x * (qw2)
-	           , y : 1 - ( q.z * q.z + q.x * q.x ) * (qw2)  
-	           , z :       sa2*q.x  + q.z * q.y * (qw2)
+	/*
+	// this works on the raw inputs. (does work)
+	const sa2 = Math.sin(del*q.w*2);
+	const qw2 = Math.sin(del*q.w*2 - Math.PI/2)+1; // sina*sina
+	basis.up = { x :  - sa2 * q.z + q.y * q.x * (qw2)
+	           , y : 1            - ( q.z * q.z + q.x * q.x ) * (qw2)  
+	           , z :    sa2 * q.x + q.z * q.y * (qw2)
 			};
 	*/
 
@@ -495,52 +540,51 @@ lnQuat.prototype.getBasisT = function(del) {
 	// this.w * this.w = Centripetal force basis
 	// 	
 
-	const upL = basis.up.x*basis.up.x+basis.up.y*basis.up.y+basis.up.z*basis.up.z;
+	const cAUx = basis.up.z * q.y - basis.up.y * q.z 
 
-	if( Math.abs( 1 - upL ) > 0.001 ) {
-		if( upL > 0.001 ){
-			console.log( "Renormalizing: ", upL, Math.asin(upL), Math.acos(upL), Math.sin( upL ), Math.cos( upL ), 1/upL );
-			const upN = 1/Math.sqrt(upL);
-			basis.up.x *= upN;
-			basis.up.y *= upN;
-			basis.up.z *= upN;
-			//console.log( "RENORMALIZED" );
-		}else {
-			basis.up.x = 0;
-			basis.up.y = 1;
-			basis.up.z = 0;
-		}
-	}
-		
-	//console.log( "UP length:", basis.up.x*basis.up.x + basis.up.y*basis.up.y +basis.up.z*basis.up.z );
-	// tangent to the above is at dx dy dz in the direction of the angle
-	// dertivitive of cos(angle) * normal...
-	//basis.right = {x:q.x*ds, y:q.y*ds, z:q.z*ds};
-	//console.log( "RIGHT1:", basis.right );
-	const cUNx = basis.up.z * q.y - basis.up.y * q.z;
-	const cUNy = basis.up.x * q.z - basis.up.z * q.x;
-	const cUNz = basis.up.y * q.x - basis.up.x * q.y;
-	const cUNl = cUNx*cUNx+cUNy*cUNy+cUNz*cUNz;
-	//console.log( "L now?", cUNl, s, ds );
-	if( Math.abs( 1-cUNl ) > 0.001 ) {
-		console.log( "Normalizing 'right' (circle tangent)", cUNx );
-		if( cUNl > 0.001 ) {
-			const cUNn = 1/Math.sqrt(cUNl);
-			// cross of quat circle-normal and the up vector.
-			basis.right = { x:cUNx*cUNn, y:cUNy*cUNn, z:cUNz*cUNn };
-		} else {
-			basis.right = { x:0, y:0, z:1 };
-		}
-	}
-	else
-		basis.right = { x:cUNx, y:cUNy, z:cUNz };
+	const upL = basis.up.x*basis.up.x+basis.up.y*basis.up.y+basis.up.z*basis.up.z;
 	//console.log( "right length:",cUNl, basis.right.x*basis.right.x + basis.right.y*basis.right.y +basis.right.z*basis.right.z );
 
-	// cross of up and right is forward.
-	const cURx = basis.right.z * basis.up.y - basis.right.y * basis.up.z;
-	const cURy = basis.right.x * basis.up.z - basis.right.z * basis.up.x;
-	const cURz = basis.right.y * basis.up.x - basis.right.x * basis.up.y;
-	basis.forward = { x : cURx, y : cURy, z : cURz };
+	{
+		
+		// for apply, this is cross(q,some point)
+		const tx = 0; // (right so that multiplication gives 2*N)
+		const ty = 2 * (qz);
+		const tz = 2 * (-qy);
+	 	basis.right = { x : 1 + 0       + ( qy * tz - ty * qz )
+		              , y : 0 + qw * ty + ( 0       - tz * qx )
+		              , z : 0 + qw * tz + ( qx * ty - 0 ) };
+	}
+
+
+	{
+		
+		// for apply, this is cross(q,some point)
+	 	//basis.right = { x : 1 + 0       + ( sin(q.w)*q.y * 2 * (sin(q.w)-q.y) - 2 * (sin(q.w)*q.z) * sin(q.w)*qz )
+		//              , y : 0 + cos(q.w) * 2 * (sin(q.w)*q.z) + ( 0       - 2 * (sin(q.w)-q.y) * sin(q.w)*q.x )
+		//              , z : 0 + cos(q.w) * 2 * (sin(q.w)-q.y) + ( qx * 2 * (sin(q.w)*q.z) - 0 ) };
+
+	 	//basis.right = { x : 1 + 0       - sin(q.w)*sin(q.w) * 2 * ( q.y * (q.y)   * (q.z) * q.z )
+		 //             , y : 0 + cos(q.w) * 2 * sin(q.w)*(q.z) + ( 0       - 2 * (sin(q.w)-q.y) * sin(q.w)*q.x )
+		 //             , z : 0 + cos(q.w) * 2 * (sin(q.w)-q.y) + ( qx * 2 * (sin(q.w)*q.z) - 0 ) };
+	}
+
+	/*
+		// cross of up and right is forward.
+		const cURx = basis.right.z * basis.up.y - basis.right.y * basis.up.z;
+		const cURy = basis.right.x * basis.up.z - basis.right.z * basis.up.x;
+		const cURz = basis.right.y * basis.up.x - basis.right.x * basis.up.y;
+		basis.forward = { x : cURx, y : cURy, z : cURz };
+	*/
+	{
+		// direct calculation of 'z' rotated by the vector.
+		const tx = 2 * ( qy );
+		const ty = 2 * (-qx);
+	 	basis.forward = { x : 0 + qw * tx + ( 0 - ty * qz )
+		                , y : 0 + qw * ty + ( qz * tx - 0 )
+		                , z : 1 + 0       + ( qx * ty - tx * qy ) };
+	}
+
 
 	// V = v eHat_r + r dTh/dT * eHat_t + r * dphi/Dt * sinT * eHat_phi
 
@@ -953,9 +997,33 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 // -------------------------------------------------------------------------------
 
 
-if( 0 && test )       {
-	test1();
+if( ("undefined" == typeof window ) && test )       {
+
+	if( test2() )
+		test1();
+
+	function test2() {
+		const rvecQ = new Quat( 0.1, {x:1,y:1,z:1} );
+		const rvecLnQ = new lnQuat( 0.1, { x:1, y:0, z:1 } );
+		console.log( "Q:", rvecQ );
+		console.log( "lnQ:", rvecLnQ );
+
+		console.log( "lnQ:", rvecQ.log() );
+		console.log( "expLnQ:", rvecLnQ.exp() );
+
+		const p = {x : 0.3, y: 0.4, z:0.5 };
+		console.log( "App1:", rvecQ.apply( p ) );
+		console.log( "Inplace?", p );
+		console.log( "App2:", rvecLnQ.apply( p ) );
+	
+
+		return false; // claim fail, to stop test chain.
+	}
+	
 	function test1() {
+
+		console.log( "Normal x,y,z:", new Quat( 1, { x:1, y:1, z:1 } ) );
+		console.log( "lNormal x,y,z:", new lnQuat( 1, { x:1, y:1, z:1 } ).exp() );
 
 		console.log( "Normal x:", new Quat( 1, { x:1, y:0, z:0 } ).log() );
 		console.log( "Normal y:", new Quat( 1, { x:0, y:1, z:0 } ).log() );
@@ -968,7 +1036,7 @@ if( 0 && test )       {
 
 		const lnQ_n1 = new lnQuat( { x:2, y:5, z:1 } );
 		const lnQ_n2 = new lnQuat( { x:2, y:5, z:1 }, true );
-		const lnQ_n3 = ReView( lnQ_n2 );
+		//const lnQ_n3 = ReView( lnQ_n2 );
 	/*
 		const lnQ_n3 = new lnQuat();
 		
@@ -983,10 +1051,11 @@ if( 0 && test )       {
 
 		console.log( "Normal1 (5,2,1):", lnQ_n1, lnQ_n1.apply( {x:0,y:1,z:0} ) );
 		console.log( "Normal2 (5,2,1):", lnQ_n2, lnQ_n2.apply( {x:0,y:1,z:0} ), lnQ_n2.apply( {x:0,y:0,z:1} ) );
-const stmpz = lnQ_n3.apply( {x:0,y:1,z:0} );
-stmpz.x *= 5.2;
-stmpz.y *= 5.2;
-stmpz.z *= 5.2;
+		const stmpz = lnQ_n3.apply( {x:0,y:1,z:0} );
+		stmpz.x *= 5.2;
+		stmpz.y *= 5.2;
+		stmpz.z *= 5.2;
+
 		console.log( "Normal3 (5,2,1):", lnQ_n3, lnQ_n3.apply( {x:0,y:1,z:0} ), lnQ_n3.apply( {x:0,y:0,z:1} ), stmpz );
 
 		console.log( "Basis 1 (5,2,1):", lnQ_n1.getBasis() );
