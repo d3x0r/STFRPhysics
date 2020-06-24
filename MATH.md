@@ -180,6 +180,7 @@ All rotation math written everywhere right now, is all based on a
 concept of multiplication and matric representation with cross
 and dot products representing a subset of multiplicative operations.
 
+
 ```
 a * b = exp( ln(a) + ln(b) )   
 
@@ -344,8 +345,10 @@ Axis = 1;
 Qw = angle; (not a real log-quaternion)
 QN = axis;
 QS = Scalar;
+```
 
 
+## complex Add
 
 ```
 
@@ -383,10 +386,9 @@ QS = Scalar;
 
 ## Complex Add (take 2)
 
+Attempting to compute addition in exp space for ln natural...
 
 ```
-
-
 R = ln( exp(A) + exp(B) )
 
 // convert into exp space for the '+'
@@ -396,21 +398,16 @@ EB =  exp(Bw) * cos(B) + sin(B)*S*i;
 
     ( exp(Aw) * cos(A) + exp(Bw) * cos(B) ) + ( sin(A)+sin(B) )*S i
 
-# figure cross product
-#    eA*cA+eB*cB =0
-#	eA*cA=-eB*cB eA/eB + cB/CA
+ # figure cross product
+ #    eA*cA+eB*cB =0
+ #	eA*cA=-eB*cB eA/eB + cB/CA
 	
     ( exp(Aw)/exp(Bw)  + cos(B) / cos(A) ) + ( sin(A)+sin(B) )*S i
 
     ( exp(Aw-Bw)  + cos(B) / cos(A) ) + ( sin(A)+sin(B) )*S i
 
-	
-
-
    = a + ln(1+exp(b-a)) =      a + log1p(exp(b-a))   , which, if a >= b,
      
-
-
   ln( cos(x)+sin(x)i ) = xi
 
     
