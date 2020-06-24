@@ -975,8 +975,7 @@ function DrawQuatPaths(q) {
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
-	console.log( "T?", lnQT );
-			let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/25 , b:(lnQT/100+1)*(lnQY/10-5)/25 , c: (lnQT/100+1)*(lnQZ/10-5)/25  } );
+			let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(lnQY/10-5)/20 , c: (lnQT/100+1)*(lnQZ/10-5)/20  } );
 
 
 	const xAxis = {x:1,y:0,z:0};
