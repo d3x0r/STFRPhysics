@@ -872,7 +872,7 @@ function DrawQuatNormals() {
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 5;
 	const normal_del = 1;
-
+	if(0)
 	for( let t = 0.1; t < 1.1*Math.PI; t+= 0.05 ){
 			const x = Math.sin(t );
 			const z = -Math.cos(t);
@@ -909,8 +909,8 @@ function DrawQuatNormals() {
 	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
 
-	for( let h = -1; h <= 1; h+= 0.1/3 ) {
-		for( let t = 3*-Math.PI/3; t < 3*Math.PI/3; t+= 0.25/3 ){
+	for( let h = -1; h <= 1; h+= 0.1/2 ) {
+		for( let t = -Math.PI; t < Math.PI; t+= 0.25/2 ){
 			let x = Math.sin(t );
 			const z = Math.cos(t);
 			let norm ;
@@ -942,10 +942,10 @@ function DrawQuatNormals() {
 
 
 			// the original normal direction; projected offset of sphere (linear scaled)
-			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
-			//normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
-			//normalColors.push( new THREE.Color( 255,0,255,255 ))
-			//normalColors.push( new THREE.Color( 255,0,255,255 ))
+			normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			normalColors.push( new THREE.Color( 255,0,255,255 ))
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))

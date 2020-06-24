@@ -219,12 +219,13 @@ function lnQuat( theta, d, a, b ){
 				{
 					// normal conversion is linear.
 					const l2 = (Math.abs(theta.x)+Math.abs(theta.y)+Math.abs(theta.z));
+					const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
 					//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 
 					const r = 3/l2;
-					let tx = theta.x*r, ty = theta.y* r, tz = theta.z* r;
+					let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
 
-					const r2_ = 2/(Math.abs(tx)+Math.abs(tz)); // poles = 0
+					const r2_ = 1/(2*(Math.abs(tx)+Math.abs(tz))); // poles = 0
 					const r2x = r2_>0.001 ? tz*r2_  : 0; // this is actually hard to reach witout being absolutely in this direction.
 					const r2z = r2_>0.001 ? -tx*r2_  : 1; // or exactly opposite of the Y polar axis
 					// primary circle.
@@ -234,54 +235,18 @@ function lnQuat( theta, d, a, b ){
 					// y == 1 : acos = 0;  y == 0 :acos = Pi/2;  Y = -1 : acos = PI
 					if( ty < -1 ) ty = -1; if ( ty > 1 ) ty = 1;
 					this.w = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
-					this.x = r2x*this.w/4;
+					this.x = r2x*this.w;
 					this.y = 0;
-					this.z = r2z*this.w/4;
+					this.z = r2z*this.w;
 					this.s = 0;
 					this.qw = 0;
 					if( Number.isNaN(this.w)) debugger;
 					this.update();
 					return;
 				}
-
-				/* this was an original method; the above was built on more of an experimental basis... and the result is about the same. */
-				{
-					// from normal.
-					const axis_vector = theta;
-					const aL = 1/Math.sqrt(axis_vector.x*axis_vector.x + axis_vector.y*axis_vector.y + axis_vector.z*axis_vector.z );
-					axis_vector.x *= aL;
-					axis_vector.y *= aL;
-					axis_vector.z *= aL;
-					const right_vector = { x:  axis_vector.z
-					                     , y : 0
-					                     , z : -axis_vector.x
-					                     }
-			                const lR = Math.sqrt( right_vector.x*right_vector.x + right_vector.z*right_vector.z );
-					if( !d && lR > 0.0001 ) {
-						const dR = 1/lR;
-						right_vector.x *= dR;
-						//right_vector.y *= dR; // 0
-						right_vector.z *= dR;
-						this.w = Math.acos( axis_vector.y )/2;
-	                                
-						this.x = right_vector.x;
-						this.y = 0;//right_vector.y * t;
-						this.z = right_vector.z;
-					}else {
-						this.x = 1; // not zero.
-						this.y = 0; 
-						this.z = 0;
-					}
-					this.s = 0;
-					this.qw = 0;
-					this.update();
-					return;
-				}
 			}
 
-			
 			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
-
 			const t  = theta;
 			// if no rotation, then nothing.
 			if( Math.abs(t) > NO_TURN_ANGLE ) {
@@ -351,67 +316,28 @@ lnQuat.prototype.addNormal = function( q2 ) {
 }
 
 function lnQuatSub( q, q2, s ) {
-	/*
-	n.xyz = q.xyz * q.w + q2.xyz * q2.w;
-	n.w = length(n.xyz);
-	n.xyz *= 1/n.w;
-	*/
 	if( !s ) s = 1;
-	const nqx = q.x * q.w - q2.x * q2.w * s;
-	const nqy = q.y * q.w - q2.y * q2.w * s;
-	const nqz = q.z * q.w - q2.z * q2.w * s;
-	
-	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
-	const nt = Math.abs(nqx) + Math.abs(nqy) + Math.abs(nqz);
-	
-	q.w = nt; 
-	if( nt > 0.0001 ) {
-		// otherwise don't bother bumping the axis.
-		const t = 1/nt;
-		q.x = nqx * t;
-		q.y = nqy * t;
-		q.z = nqz * t;
-	}
+	q.x = q.x - q2.x * s;
+	q.y = q.y - q2.y * s;
+	q.z = q.z - q2.z * s;
 	return q;
 }
 
 function lnQuatAdd( q, q2, s ) {
-	/*
-	n.xyz = q.xyz * q.w + q2.xyz * q2.w;
-	n.w = length(n.xyz);
-	n.xyz *= 1/n.w;
-	*/
 	if( !s ) s = 1;
-	const nqx = q.x + q2.x * s;
-	const nqy = q.y + q2.y * s;
-	const nqz = q.z + q2.z * s;
-	const nt = Math.abs(nqx) + Math.abs(nqy) + Math.abs(nqz);
-	
-	q.w = nt; 
-	if( nt > 0.0001 ) {
-		// otherwise don't bother bumping the axis.
-		const t = 1/nt;
-		q.x = nqx * t;
-		q.y = nqy * t;
-		q.z = nqz * t;
-	}
+	q.x = q.x + q2.x * s;
+	q.x = q.y + q2.y * s;
+	q.x = q.z + q2.z * s;
+	q.w = Math.abs(nqx) + Math.abs(nqy) + Math.abs(nqz);
 	return q;
 }
 
 
 // returns the number of complete rotations removed; updates this to principal angle values.
 lnQuat.prototype.prinicpal = function() {
-	const a = this.w;
-	const rMod  = Math.mod( a, (Math.PI) );
-	const q = new lnQuat(q.w%(Math.PI*2),this.x,this.y,this.z);
-	const rDrop = a - rMod;
-	
-	if( ( rDrop / (Math.PI*2) ) > 0.5 )
-	{
-		// has a wrap; so update to principle angle values
-		q.w = rMod;
-	}
-	return q; // return removed part in 'turns' units
+	return new lnQuat( { a:( (this.x + Math.PI) % (Math.PI*2) ) - Math.PI*2
+	                   , b:( (this.y + Math.PI) % (Math.PI*2) ) - Math.PI*2
+	                   , c:( (this.z + Math.PI) % (Math.PI*2) ) - Math.PI*2} );
 }
 
 lnQuat.prototype.getTurns =  function() {
