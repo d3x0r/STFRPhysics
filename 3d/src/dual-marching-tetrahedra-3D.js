@@ -847,7 +847,6 @@ function QuatPathing(q, v, c) {
 		if( t % 0.250  <= 0.01 ) {
 			const basis = q.getBasisT( t );
 
-
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
 
@@ -874,7 +873,7 @@ function DrawQuatNormals() {
 	const spaceScale = 5;
 	const normal_del = 1;
 
-	for( let t = 0; t < 1.1*Math.PI; t+= 0.05 ){
+	for( let t = 0.1; t < 1.1*Math.PI; t+= 0.05 ){
 			const x = Math.sin(t );
 			const z = -Math.cos(t);
 			const lnQ = new lnQuat( {x:x, y:0, z:z } );
@@ -883,10 +882,11 @@ function DrawQuatNormals() {
 
 			const basis = lnQ.getBasis( );
 
-			normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			// the original normal direction; projected offset of sphere (linear scaled)
+			//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
+			//normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
@@ -941,10 +941,11 @@ function DrawQuatNormals() {
 			const basis = lnQ.getBasis( );
 
 
-			normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			// the original normal direction; projected offset of sphere (linear scaled)
+			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
+			//normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
@@ -974,7 +975,8 @@ function DrawQuatPaths(q) {
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
-			let lnQ = new lnQuat(  lnQT, { x:lnQX/10-5, y:lnQY/10-5, z:lnQZ/10-5 } );
+	console.log( "T?", lnQT );
+			let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/25 , b:(lnQT/100+1)*(lnQY/10-5)/25 , c: (lnQT/100+1)*(lnQZ/10-5)/25  } );
 
 
 	const xAxis = {x:1,y:0,z:0};
