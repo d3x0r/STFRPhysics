@@ -12,6 +12,8 @@ const ASSERT = false;
 const NO_TURN_ANGLE = 0.000_000_01;  
 const SIN_R_OVER_R_MIN = 0.00001;
 
+const SQ = false; // square normal to apply.... normal won't be a normal
+
 const world = new dlnQuat( new lnQuat(), new dualQuat() );
 // add 0, rotation 0.
 
@@ -19,6 +21,14 @@ const someObject = new dlnQuat( new lnQuat( 0, {x:0, y:0, z:1} ), new dualQuat(0
 const Tree = new dlnQuat( new lnQuat( 0, {x:0, y:1, z:0} ), new dualQuat(5, 0, -2) );
 const treeTop = new dlnQuat( new lnQuat( 0, { x:0, y:1, z:0} ), new dualQuat( 0, 0, 0 ) );
 const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} ), new dualQuat( 5, 0, 0 ) );
+
+	function acos(x) {
+		const mod = (x,y)=>y * (x / y - Math.floor(x / y)) ;
+		const plusminus = (x)=>mod( x+1,2)-1;
+ 
+		const trunc = (x,y)=>x-mod(x,y);
+		return Math.acos(plusminus(x));
+	}
 
 // world is 0, 0, 0, 0, 0, 0, 0.
 // first object            cT   = is ( world.addNew(someObject.lnQ), world.lnQ.applyExp( someObject.dQ ) )
@@ -160,7 +170,6 @@ Quat.prototype.log = function( ) {
 	}
 
 	const w = this.w;
-	const a = acos()
 	const r  = Math.sqrt(x*x+y*y+z*z);
 	const ang = Math.atan2(r,w);
 	if( r < SIN_R_OVER_R_MIN ) {
@@ -169,9 +178,9 @@ Quat.prototype.log = function( ) {
 	}
 	const t  = 1/r;
 
-	const xt = Math.sqrt(x /r);
-	const yt = Math.sqrt(y /r);
-	const zt = Math.sqrt(z /r);
+	const xt = x /r;
+	const yt = y /r;
+	const zt = z /r;
 	return new lnQuat( Math.atan2(r,w), xt, yt, zt )
 }
 
@@ -184,32 +193,30 @@ function lnQuat( theta, d, a, b ){
 	this.w = 0;
 	if( "undefined" !== typeof theta ) {
 		if( "undefined" !== typeof a ) {
-			if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
+			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
-			const r = 1/Math.sqrt( d*d + a*a + b*b );
-			this.w = theta + r;
-			this.x = d*r;
-			this.y = a*r;
-			this.z = b*r;
-			// initial creation will allow more 'accuracy' than application...
-			if( this.r > SIN_R_OVER_R_MIN ) {
-				this.s  = Math.sin(this.w);
-				this.qw = Math.cos(this.w);
-			} else {
-				this.s  = 0;
-				this.qw = 1;
-			}
+			this.w = theta;
+			
+			this.x = d;
+			this.y = a;
+			this.z = b;
+			this.s  = Math.sin(this.w/2);
+			this.qw = Math.cos(this.w/2);
 		}else {
 			if( "object" === typeof theta ) {
 	
 				if(1)
 				{
+					//console.log( "NORMAL", theta );
 					//if( theta.y > 0.6 ) console.log ( "TICK?", theta );
+
+					// square normal length
 					const l2 = theta.x*theta.x+theta.y*theta.y+theta.z*theta.z;
+					
 					//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 
 					const r = 1/l2;
-					const tx = theta.x*r, ty = theta.y* r, tz = theta.z* r;
+					let tx = theta.x*r, ty = theta.y* r, tz = theta.z* r;
 
 					const r2_ = Math.sqrt( tx*tx+tz*tz ); // poles = 0
 					const r2x = r2_>0.001 ? tz/r2_  : 0; // this is actually hard to reach witout being absolutely in this direction.
@@ -221,30 +228,14 @@ function lnQuat( theta, d, a, b ){
 					// this is the great circle through the Y axis turned by the angle of the normal
 					// the arc around the circle is the acos(Y) of the normal
 					// y == 1 : acos = 0;  y == 0 :acos = Pi/2;  Y = -1 : acos = PI
-					this.w = Math.acos( ty )/2; // 1 right now 0 = 0;
+					if( ty < -1 ) ty = -1; if ( ty > 1 ) ty = 1;
+					this.w = Math.acos( ty ); // 1 right now 0 = 0;
 					this.x = r2x;
 					this.y = 0;
 					this.z = r2z;
 					this.s = 0;
 					this.qw = 0;
-
-					this.w = Math.acos( r )/2; // 1 right now 0 = 0;
-					this.x = theta.x;
-					this.y = theta.y
-					this.z = theta.z;
-					this.s = 0;
-					this.qw = 0;
-
-					// turn around y axis
-					// normal - the direction we want to twist by
-					if(0) {
-						const nt = { w : Math.PI/3
-							, x : theta.x // normalized, great circle perpendicular to normal.
-							, y : theta.y
-							, z : theta.z
-						};
-						lnQuatAdd( this, nt );
-					}
+					if( Number.isNaN(this.w)) debugger;
 					this.update();
 					return;
 				}
@@ -285,8 +276,7 @@ function lnQuat( theta, d, a, b ){
 			}
 
 			
-			//const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
-			const dl = 1/(d.x + d.y+d.z );
+			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
 
 			const t  = theta;
 			// if no rotation, then nothing.
@@ -368,7 +358,7 @@ function lnQuatSub( q, q2, s ) {
 	const nqz = q.z * q.w - q2.z * q2.w * s;
 	
 	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
-	const nt = nqx + nqy + nqz;
+	const nt = Math.abs(nqx + nqy + nqz);
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -393,7 +383,7 @@ function lnQuatAdd( q, q2, s ) {
 	const nqz = q.z * q.w + q2.z * q2.w * s;
 	
 	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
-	const nt = nqx + nqy + nqz;
+	const nt = Math.abs(nqx + nqy + nqz);
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -411,7 +401,7 @@ function lnQuatAdd( q, q2, s ) {
 lnQuat.prototype.prinicpal = function() {
 	const a = this.w;
 	const rMod  = Math.mod( a, (Math.PI) );
-	const q = new lnQuat(rMod*2,{x:this.x,y:this.y,z:this.z});
+	const q = new lnQuat(q.w%(Math.PI*2),this.x,this.y,this.z);
 	const rDrop = a - rMod;
 	
 	if( ( rDrop / (Math.PI*2) ) > 0.5 )
@@ -461,19 +451,15 @@ lnQuat.prototype.getBasisT = function(del) {
 	const q = this;
 
 	if( !del ) del = 1.0;
-	const s  = Math.sin( del* q.w );
-	const qw = Math.cos( del* q.w );
+	const s  = Math.sin( del* q.w/2 );
+	const qw = Math.cos( del* q.w/2 );
 
 	const ds = qw;
 	const dqw = -s;
 
-	const qx = q.x * s; // normalizes the imaginary parts
-	const qy = q.y * s; // set the sin of their composite angle as their total
-	const qz = q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-	const dqx = q.x * ds; // normalizes the imaginary parts
-	const dqy = q.y * ds; // set the sin of their composite angle as their total
-	const dqz = q.z * ds; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const qx = (SQ?(q.x<0?-1:1)*q.x:1)*q.x * s; // normalizes the imaginary parts
+	const qy = (SQ?(q.y<0?-1:1)*q.y:1)*q.y * s; // set the sin of their composite angle as their total
+	const qz = (SQ?(q.z<0?-1:1)*q.z:1)*q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
 
 	const basis = { forward:null
 	              , right:null
@@ -524,8 +510,8 @@ lnQuat.prototype.getBasisT = function(del) {
 	*/
 
 
-	const sa2 = Math.sin(del*q.w*2);
-	const qw2 = Math.sin(del*q.w*2 - Math.PI/2)+1; // sina*sina
+	const sa2 = Math.sin(del*q.w);
+	const qw2 = Math.sin(del*q.w - Math.PI/2)+1; // sina*sina
 	/*
 	// this works on the raw inputs. (does work)
 	const sa2 = Math.sin(del*q.w*2);
@@ -556,26 +542,6 @@ lnQuat.prototype.getBasisT = function(del) {
 		              , z : 0 + qw * tz + ( qx * ty - 0 ) };
 	}
 
-
-	{
-		
-		// for apply, this is cross(q,some point)
-	 	//basis.right = { x : 1 + 0       + ( sin(q.w)*q.y * 2 * (sin(q.w)-q.y) - 2 * (sin(q.w)*q.z) * sin(q.w)*qz )
-		//              , y : 0 + cos(q.w) * 2 * (sin(q.w)*q.z) + ( 0       - 2 * (sin(q.w)-q.y) * sin(q.w)*q.x )
-		//              , z : 0 + cos(q.w) * 2 * (sin(q.w)-q.y) + ( qx * 2 * (sin(q.w)*q.z) - 0 ) };
-
-	 	//basis.right = { x : 1 + 0       - sin(q.w)*sin(q.w) * 2 * ( q.y * (q.y)   * (q.z) * q.z )
-		 //             , y : 0 + cos(q.w) * 2 * sin(q.w)*(q.z) + ( 0       - 2 * (sin(q.w)-q.y) * sin(q.w)*q.x )
-		 //             , z : 0 + cos(q.w) * 2 * (sin(q.w)-q.y) + ( qx * 2 * (sin(q.w)*q.z) - 0 ) };
-	}
-
-	/*
-		// cross of up and right is forward.
-		const cURx = basis.right.z * basis.up.y - basis.right.y * basis.up.z;
-		const cURy = basis.right.x * basis.up.z - basis.right.z * basis.up.x;
-		const cURz = basis.right.y * basis.up.x - basis.right.x * basis.up.y;
-		basis.forward = { x : cURx, y : cURy, z : cURz };
-	*/
 	{
 		// direct calculation of 'z' rotated by the vector.
 		const tx = 2 * ( qy );
@@ -603,12 +569,12 @@ lnQuat.prototype.getRelativeBasis = function( q2 ) {
 lnQuat.prototype.getBasis = function(){return getBasis(this) };
 
 function getBasis(q) {
-	const s  = Math.sin( q.w );
-	const qw = Math.cos( q.w );
+	const s  = Math.sin(q.w/2);//q.s;
+	const qw = Math.cos(q.w/2);//q.qw;
 
-	const qx = q.x * s; // normalizes the imaginary parts
-	const qy = q.y * s; // set the sin of their composite angle as their total
-	const qz = q.z * s; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const qx = ((SQ?(q.x<0?-1:1)*q.x:1) *q.x * s); // normalizes the imaginary parts
+	const qy = ((SQ?(q.y<0?-1:1)*q.y:1) *q.y * s); // set the sin of their composite angle as their total
+	const qz = ((SQ?(q.z<0?-1:1)*q.z:1) *q.z * s); // output = 1(unit vector) * sin  in  x,y,z parts.
 
 	const basis = { forward:null
 	              , right:null
@@ -662,68 +628,6 @@ function getBasis(q) {
 
 	basis.right = { x : cURx, y : cURy, z : cURz };
 	return basis;	
-
-	// ---------------------- UNREACHABLE CODE - Historical Purpsoses Only ----------------------------------
-	// This is the orginal, rotate x-axis, y-axis and z-axis by the quaternion 
-	// each applied independantly.   This 'spins' the basis progressively towards
-	// 0,-1,0  (+/- Math.PI)
-	if( this.w >= SIN_R_OVER_R_MIN ) {
-		// this method gets cardioid
-		// only a valid shortcut for 1 tick.
-		/*
-			// apply method; a lot disappears applied to constants...
-			/// reference code for application below.
-			{
-				const s  = q.s;
-				const qw = q.qw;
-				const qx = q.x * s;
-				const qy = q.y * s;
-				const qz = q.z * s;
-				//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
-				const tx = 2 * (qy * v.z - qz * v.y);  
-				const ty = 2 * (qz * v.x - qx * v.z);  // qx vz
-				const tz = 2 * (qx * v.y - qy * v.x);  // qx vy
-				return { x : v.x + qw * tx + ( qy * tz - ty * qz )   // 
-				       , y : v.y + qw * ty + ( qz * tx - tz * qx )   // qx tz(qx vy)
-				       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };// qx ty(qx vz)
-			}        
-			// total 
-			// 21 mul + 9 add
-	        */        
-
-		// 24+6
-		{
-			// for apply, this is cross(q,some point)
-			const tx = 0; // (right so that multiplication gives 2*N)
-			const ty = 2 * (qz);
-			const tz = 2 * (-qy);
-
-		 	basis.right = { x : 1 + 0       + ( qy * tz - ty * qz )
-			              , y : 0 + qw * ty + ( 0       - tz * qx )
-			              , z : 0 + qw * tz + ( qx * ty - 0 ) };
-		}
-		{
-			const tx = 2 * ( -qz );
-			const tz = 2 * (qx );
-
-		 	basis.up = { x : 0 + qw * tx + ( qy * tz - 0 )
-			           , y : 1 + 0       + ( qz * tx - tz * qx )
-			           , z : 0 + qw * tz + ( 0       - tx * qy ) };
-		}
-		{
-			const tx = 2 * (qy  );
-			const ty = 2 * (- qx);
-
-		 	basis.forward = { x : 0 + qw * tx + ( 0 - ty * qz )
-			                , y : 0 + qw * ty + ( qz * tx - 0 )
-			                , z : 1 + 0       + ( qx * ty - tx * qy ) };
-		}
-	} else {
-		basis.right   = { x:1, y:0, z:0 };
-		basis.up      = { x:0, y:1, z:0 };
-		basis.forward = { x:0, y:0, z:1 };
-	}
-	return basis;	
 }
 
 lnQuat.prototype.apply = function( v ) {
@@ -735,11 +639,11 @@ lnQuat.prototype.apply = function( v ) {
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
 	// q.s and q.qw are set in update(); they are constants for a quat in a location.
-	const s  = q.s;
+	const s  = SQ?(q.s / Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z)):q.s;
 	const qw = q.qw;
-	const qx = q.x * s;
-	const qy = q.y * s;
-	const qz = q.z * s;
+	const qx = (SQ?(q.x<0?-1:1)*q.x:1)*q.x * s;
+	const qy = (SQ?(q.y<0?-1:1)*q.y:1)*q.y * s;
+	const qz = (SQ?(q.z<0?-1:1)*q.z:1)*q.z * s;
 
 	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 	const tx = 2 * (qy * v.z - qz * v.y);  
@@ -764,9 +668,9 @@ lnQuat.prototype.applyDel = function( v, del ) {
 	// Apply the rotation scaled; 1.0 is normal... 
 	const s  = (del==1) ? q.s  : Math.sin(del*q.w);
 	const qw = (del==1) ? q.qw : Math.cos(del*q.w);
-	const qx = q.x * s;
-	const qy = q.y * s;
-	const qz = q.z * s;
+	const qx = (SQ?(q.x<0?-1:1):q.x)*q.x * s;
+	const qy = (SQ?(q.y<0?-1:1):q.y)*q.y * s;
+	const qz = (SQ?(q.z<0?-1:1):q.z)*q.z * s;
 	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 	const tx = 2 * (qy * v.z - qz * v.y);
 	const ty = 2 * (qz * v.x - qx * v.z);

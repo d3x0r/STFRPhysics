@@ -74,14 +74,6 @@ function createTestData() {
 		});
 	}
 
-	result['Sine Waves'] = makeVolume(
-		[[-Math.PI*2, Math.PI*2, Math.PI/8],
-		 [-Math.PI*2, Math.PI*2, Math.PI/8],
-		 [-Math.PI*2, Math.PI*2, Math.PI/8]],
-		function(x,y,z) {
-			return Math.sin(x) + Math.sin(y) + Math.sin(z);
-		}
-	);
 	
 	
 	result['Sphere'] = makeVolume(
@@ -90,6 +82,15 @@ function createTestData() {
 		 [-1.0, 1.0, 0.25]],
 		function(x,y,z) {
 			return x*x + y*y + z*z - 1.0;
+		}
+	);
+
+	result['Sine Waves'] = makeVolume(
+		[[-Math.PI*2, Math.PI*2, Math.PI/8],
+		 [-Math.PI*2, Math.PI*2, Math.PI/8],
+		 [-Math.PI*2, Math.PI*2, Math.PI/8]],
+		function(x,y,z) {
+			return Math.sin(x) + Math.sin(y) + Math.sin(z);
 		}
 	);
 /*
