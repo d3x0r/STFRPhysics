@@ -180,7 +180,7 @@ function lnQuat( theta, d, a, b ){
 		if( "undefined" !== typeof a ) {
 			if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
-			const r = 1/Math.sqrt( d*d + a*a + b*b );
+			const r = 1/(d+a+b);//Math.sqrt( d*d + a*a + b*b );
 			this.w = theta + r;
 			this.x = d*r;
 			this.y = a*r;
@@ -270,7 +270,8 @@ function lnQuat( theta, d, a, b ){
 					return;
 				}
 			}
-			const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
+			//const dl = 1/Math.sqrt( d.x*d.x + d.y*d.y + d.z*d.z );
+			const dl = 1/( d.x + d.y + d.z );
 
 			const t  = theta;
 			// if no rotation, then nothing.
@@ -303,8 +304,8 @@ function lnQuat( theta, d, a, b ){
 				this.z = d.z * dl;
 				this.w = t;
 				// initial creation will allow more 'accuracy' than application...
-				this.s  = Math.sin(theta);
-				this.qw = Math.cos(theta);
+				this.s  = Math.sin(t/2);
+				this.qw = Math.cos(t/2);
 				//console.log( "??", this );
 			}else {
 				this.x = 0;
@@ -325,8 +326,8 @@ function lnQuat( theta, d, a, b ){
 
 lnQuat.prototype.update = function() {
 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	this.s  = Math.sin(this.w);
-	this.qw = Math.cos(this.w);
+	this.s  = Math.sin(this.w/2);
+	this.qw = Math.cos(this.w/2);
 	return this;
 }
 
@@ -351,7 +352,8 @@ function lnQuatSub( q, q2, s ) {
 	const nqy = q.y * q.w - q2.y * q2.w * s;
 	const nqz = q.z * q.w - q2.z * q2.w * s;
 	
-	const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	const nt = nqx + nqy + nqz;
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -375,7 +377,8 @@ function lnQuatAdd( q, q2, s ) {
 	const nqy = q.y * q.w + q2.y * q2.w * s;
 	const nqz = q.z * q.w + q2.z * q2.w * s;
 	
-	const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	//const nt = Math.sqrt(nqx * nqx + nqy * nqy + nqz * nqz);
+	const nt = nqx + nqy + nqz;
 	
 	q.w = nt; 
 	if( nt > 0.0001 ) {
@@ -905,7 +908,7 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 // -------------------------------------------------------------------------------
 
 
-if( 0 && test )       {
+if( ("undefined" == typeof window ) && test )       {
 	test1();
 	function test1() {
 
@@ -920,7 +923,7 @@ if( 0 && test )       {
 
 		const lnQ_n1 = new lnQuat( { x:2, y:5, z:1 } );
 		const lnQ_n2 = new lnQuat( { x:2, y:5, z:1 }, true );
-		const lnQ_n3 = ReView( lnQ_n2 );
+		const lnQ_n3 = lnQ_n2;//ReView( lnQ_n2 );
 	/*
 		const lnQ_n3 = new lnQuat();
 		
@@ -931,7 +934,7 @@ if( 0 && test )       {
 		// target minus Z plus z->Y
 		console.log( "Conversion:", lnQ_n2_to_n1, lnQ_n2 );
 	*/
-		console.log( "Converted:", lnQ_n3 );
+		//console.log( "Converted:", lnQ_n3 );
 
 		console.log( "Normal1 (5,2,1):", lnQ_n1, lnQ_n1.apply( {x:0,y:1,z:0} ) );
 		console.log( "Normal2 (5,2,1):", lnQ_n2, lnQ_n2.apply( {x:0,y:1,z:0} ), lnQ_n2.apply( {x:0,y:0,z:1} ) );
