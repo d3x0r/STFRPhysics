@@ -50,7 +50,7 @@ const test = true;
 //  Log Quaternion (Rotation part)
 // -------------------------------------------------------------------------------
 
-
+let twisting = false;
 function lnQuat( theta, d, a, b ){
 	this.w = 0;
 	if( "undefined" !== typeof theta ) {
@@ -97,30 +97,21 @@ function lnQuat( theta, d, a, b ){
 					// the arc around the circle is the acos(Y) of the normal
 					// y == 1 : acos = 0;  y == 0 :acos = Pi/2;  Y = -1 : acos = PI
 					if( ty < -1 ) ty = -1; if ( ty > 1 ) ty = 1;
-					this.w = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
-					this.x = r2x*this.w;
-					this.y = 0;//0.1*this.w;
-					this.z = r2z*this.w;
+
+					const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
+					this.x = r2x*qw;
+					this.y = 0;
+					this.z = r2z*qw;
+
 					this.s = 0;
 					this.qw = 0;
-					if( Number.isNaN(this.w)) debugger;
 					this.update();
-
-					if(0) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
+					if(0)
+					if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
+						twisting = true;
 						const norm = this.apply( {x:0,y:1,z:0} );
-						
-						//const nl = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-						if(  1 ) {
-							const del = Math.asin(1-norm.y);
-							
-							//const nx = this.x/nl;
-							//const ny = this.y/nl;
-							//const nz = this.z/nl;
-							this.x += (this.x<0?-1:1)*del;
-							this.y += (this.y<0?-1:1)*del;
-							this.z += (this.z<0?-1:1)*del;
-							this.update();
-						}
+						twist( this, Math.PI/18, norm );
+						twisting = false;
 					}
 					return;
 				}
@@ -199,6 +190,9 @@ lnQuat.prototype.exp = function() {
 lnQuat.prototype.addNormal = function( q2 ) {
 	return lnQuatAdd( this, q2, 1 );
 }
+lnQuat.prototype.addNormal2 = function( q2 ) {
+	return new lnQuat( this.x, this.y, this.z, this.w ).addNormal( q2, 1 );
+}
 
 function lnQuatSub( q, q2, s ) {
 	if( !s ) s = 1;
@@ -213,7 +207,6 @@ function lnQuatAdd( q, q2, s ) {
 	q.x = q.x + q2.x * s;
 	q.x = q.y + q2.y * s;
 	q.x = q.z + q2.z * s;
-	q.w = Math.abs(nqx) + Math.abs(nqy) + Math.abs(nqz);
 	return q;
 }
 
@@ -347,34 +340,29 @@ lnQuat.prototype.apply = function( v ) {
 	const py = (q.y % (Math.PI));
 	const pz = (q.z % (Math.PI));
 	const pl = (Math.abs(px)+Math.abs(py)+Math.abs(pz) );
-	const p2l = 3/(pl);
-	const nst = 1/Math.sqrt(px*px+py*py+pz*pz);
-	const s  = Math.sin( pl );//q.s;
-	const qw = Math.cos( pl );
-
-	// sin(theta)/r
-	const dqw = s;
-	const p2x = px*nst;
-	const p2y = py*nst;
-	const p2z = pz*nst;
-	//console.log( "L:", p2x, p2y, p2z, p2x*p2x+p2y*p2y+p2z*p2z);
-
-	const qx = p2x*s;//q.x * dqw;
-	const qy = p2y*s;//q.y * dqw;
-	const qz = p2z*s;//q.z * dqw;
-
-	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
-	const tx = 2 * (qy * v.z - qz * v.y);  
-	const ty = 2 * (qz * v.x - qx * v.z);  // qx vz
-	const tz = 2 * (qx * v.y - qy * v.x);  // qx vy
-	return { x : v.x + qw * tx + ( qy * tz - ty * qz )   // 
-	       , y : v.y + qw * ty + ( qz * tx - tz * qx )   // qx tz(qx vy)
-	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };// qx ty(qx vz)
-	//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
-	// 18+12 (30)   12(2)+(3) (17 parallel)
-
-	// total 
-	// 21 mul + 9 add  (+ some; not updated)
+	if( pl ) {
+		const s  = Math.sin( pl );// sin(theta)/r
+		const nst = s/Math.sqrt(px*px+py*py+pz*pz);
+		const qw = Math.cos( pl );
+	        
+		const qx = px*nst;
+		const qy = py*nst;
+		const qz = pz*nst;
+	        
+		//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+		const tx = 2 * (qy * v.z - qz * v.y);  
+		const ty = 2 * (qz * v.x - qx * v.z);  // qx vz
+		const tz = 2 * (qx * v.y - qy * v.x);  // qx vy
+		return { x : v.x + qw * tx + ( qy * tz - ty * qz )   // 
+		       , y : v.y + qw * ty + ( qz * tx - tz * qx )   // qx tz(qx vy)
+		       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };// qx ty(qx vz)
+		//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
+		// 18+12 (30)   12(2)+(3) (17 parallel)
+	        
+		// total 
+		// 21 mul + 9 add  (+ some; not updated)
+	} 
+	else return {x:v.x,y:v.y,z:v.z};
 }
 
 //------------------ What If ---------------
@@ -433,7 +421,7 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
-
+/*
 	const nst = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 	const s  = Math.sin( del * nt );
 	const qw = Math.cos( del * nt );
@@ -444,16 +432,30 @@ lnQuat.prototype.applyDel = function( v, del ) {
 	const qx = q.x * dqw; // normalizes the imaginary parts
 	const qy = q.y * dqw; // set the sin of their composite angle as their total
 	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-	const tx = 2 * (qy * v.z - qz * v.y);
-	const ty = 2 * (qz * v.x - qx * v.z);
-	const tz = 2 * (qx * v.y - qy * v.x);
-	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		, y : v.y + qw * ty + ( qz * tx - tz * qx )
-		, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
-	//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
-	// 18+12 (30)   12(2)+(3) (17 parallel)
-
+*/
+	const px = (q.x % (Math.PI));
+	const py = (q.y % (Math.PI));
+	const pz = (q.z % (Math.PI));
+	const pl = (Math.abs(px)+Math.abs(py)+Math.abs(pz) );
+	if( pl ) {
+		const s  = Math.sin( pl*del );//q.s;
+		const nst = s/Math.sqrt(px*px+py*py+pz*pz); // sin(theta)/r
+		const qw = Math.cos( pl*del );
+	        
+		const qx = px*nst;
+		const qy = py*nst;
+		const qz = pz*nst;
+		//console.log( "L:", p2x, p2y, p2z, p2x*p2x+p2y*p2y+p2z*p2z);
+	        
+		const tx = 2 * (qy * v.z - qz * v.y);
+		const ty = 2 * (qz * v.x - qx * v.z);
+		const tz = 2 * (qx * v.y - qy * v.x);
+		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
+			, y : v.y + qw * ty + ( qz * tx - tz * qx )
+			, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
+		// 18+12 (30)   12(2)+(3) (17 parallel)
+	}else return {x:v.x, y:v.y, z:v.z };        
 
 	// total 
 	// 21 mul + 9 add  (+ some; not updated)
@@ -492,12 +494,34 @@ lnQuat.prototype.applyInv = function( v ) {
 	// 21 mul + 9 add
 }
 
-
-
-function twist( q, angle, zero_angle ) {
+function twist( q, th, n ) {
 	// rebase a quaternion; but given that the need to be relative to the
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
+	const D = new lnQuat( th, n );
+	const CpD = q.addNormal2( D );
+	const E = CpD.apply( {x:0,y:1,z:0} );
+	const F = new lnQuat( E );
+// A + B = C
+// C + D = E		
+// A + F = E
+// A + (D - F) = E ?
+//
+// 
+//  C + D = A + F
+//  A - C = F - D
+//  -B = F-D
+//  B = D-F
+
+	//console.log( " input:", q, th, n, D, CpD, E, F );
+	q.x = F.x;
+	q.y = F.y;
+	q.z = F.z;
+	q.update();
+	//console.log( "output:", q );
+	return q;
+	// v is now the total rotation
+
 /*
 	// P defines an axis around which the rotation portion of the matrix
 	// is rotated by an amount.
