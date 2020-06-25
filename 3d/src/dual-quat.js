@@ -49,19 +49,20 @@ const test = true;
 
 let twisting = false;
 function lnQuat( theta, d, a, b ){
-	this.w = 0;
-	this.x = 0;
-	this.y = 0;
+	this.w = 0; // unused, was angle of axis-angle, then was length of angles(nL)...
+	this.x = 0;  // these could become wrap counters....
+	this.y = 0;  // total rotation each x,y,z axis.
 	this.z = 0;
 	// principal x,y,z (removes excessive 2pi rotations)
-	this.px = 0;
-	this.py = 0;
-	this.pz = 0;
+	this.px = 0; // prinicpal angles
+	this.py = 0; // prinicpal angles
+	this.pz = 0; // prinicpal angles
 	// temporary sign/cos/normalizers
-	this.s = 0;
-	this.qw = 1;
-	this.nL = 1;
-	this.nR = 1;
+	this.s = 0;  // sin(composite theta)
+	this.qw = 1; // cos(composite theta)
+	this.nL = 1; // normal Linear
+	this.nR = 1; // normal Rectangular
+	this.dirty = true; // whether update() has to do work.
 
 	if( "undefined" !== typeof theta ) {
 		if( "undefined" !== typeof a ) {
@@ -78,7 +79,6 @@ function lnQuat( theta, d, a, b ){
 			if( "object" === typeof theta ) {
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
-					this.w = (Math.abs(theta.a)+Math.abs(theta.b)+Math.abs(theta.c));
 					this.x = theta.a;
 					this.y = theta.b;
 					this.z = theta.c;
@@ -107,7 +107,7 @@ function lnQuat( theta, d, a, b ){
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							twisting = true;
 							const norm = this.apply( {x:0,y:1,z:0} );
-							twist( this, Math.PI/18, norm );
+							twist( this, 2*Math.PI, norm );
 							twisting = false;
 						}
 						return;
@@ -119,7 +119,7 @@ function lnQuat( theta, d, a, b ){
 			const dl = 1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			const t  = theta;
 			// if no rotation, then nothing.
-			if( Math.abs(t) > NO_TURN_ANGLE ) {
+			if( Math.abs(t) > 0.000001 ) {
 				this.x = (d.x * dl) * theta/(Math.PI*2);
 				this.y = (d.y * dl) * theta/(Math.PI*2);
 				this.z = (d.z * dl) * theta/(Math.PI*2);
@@ -130,38 +130,27 @@ function lnQuat( theta, d, a, b ){
 	} 
 }
 
-lnQuat.prototype.update = function() {
-	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	this.w = (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
-	this.s  = Math.sin(this.w);
-	this.qw = Math.cos(this.w);
-	// principle x/y/z rotations.  (from -pi to pi)
-	this.px = ( (this.x + Math.PI) % (Math.PI*2) ) - Math.PI;
-	this.py = ( (this.y + Math.PI) % (Math.PI*2) ) - Math.PI;
-	this.pz = ( (this.z + Math.PI) % (Math.PI*2) ) - Math.PI;
-	// norm-linear
-	this.nL = Math.abs(this.px)+Math.abs(this.py)+Math.abs(this.pz);
-	// norm-rect
-	this.nR = Math.sqrt(this.px*this.px + this.py*this.py + this.pz*this.pz);
-	return this;
-}
-
 lnQuat.prototype.exp = function() {
 	const q = this;
 	const s  = this.s;
-	console.log( "lnQuat ln() is disabled until integrated with a quaternion library." );
+	console.log( "lnQuat exp() is disabled until integrated with a quaternion library." );
 	return null;//new Quat( this.qw, q.x *q.x* s, q.y *q.y* s, q.z *q.z * s );
 }
 
-lnQuat.prototype.addNormal = function( q2 ) {
+lnQuat.prototype.spinDiff = function( q ) {
+	return Math.abs(this.px - q.px) + Math.abs(this.py - q.py) + Math.abs(this.pz - q.pz);
+}
+
+lnQuat.prototype.add = function( q2 ) {
 	return lnQuatAdd( this, q2, 1 );
 }
-lnQuat.prototype.addNormal2 = function( q2 ) {
-	return new lnQuat( this.w, this.x, this.y, this.z ).addNormal( q2, 1 );
+lnQuat.prototype.add2 = function( q2 ) {
+	return new lnQuat( this.w, this.x, this.y, this.z ).add( q2 );
 }
 
 function lnQuatSub( q, q2, s ) {
-	if( !s ) s = 1;
+	if( "undefined" == typeof s ) s = 1;
+	q.dirty = true;
 	q.x = q.x - q2.x * s;
 	q.y = q.y - q2.y * s;
 	q.z = q.z - q2.z * s;
@@ -169,7 +158,8 @@ function lnQuatSub( q, q2, s ) {
 }
 
 function lnQuatAdd( q, q2, s ) {
-	if( !s ) s = 1;
+	if( "undefined" == typeof s ) s = 1;
+	q.dirty = true;
 	q.x = q.x + q2.x * s;
 	q.y = q.y + q2.y * s;
 	q.z = q.z + q2.z * s;
@@ -187,7 +177,7 @@ lnQuat.prototype.prinicpal = function() {
 
 lnQuat.prototype.getTurns =  function() {
 	const q = new lnQuat();
-	const r = this.w;
+	const r = this.nL;
 	const rMod  = Math.mod( r, (2*Math.PI) );
 	const rDrop = ( r - rMod ) / (2*Math.PI);
 	return rDrop;
@@ -199,8 +189,12 @@ lnQuat.prototype.getTurns =  function() {
 // turns is 0-1 for 0 to 100% turn.
 // turns is from 0 to 1 turn; most turns should be between -0.5 and 0.5.
 lnQuat.prototype.turn = function( turns ) {
+	console.log( "This will have to figure out the normal, and apply turns factionally to each axis..." );
 	const q = this;
-	this.w += (turns*2*Math.PI);
+	// proper would, again, to use the current values to scale how much gets inceased...
+	this.x += (turns*2*Math.PI) /3;
+	this.y += (turns*2*Math.PI) /3;
+	this.z += (turns*2*Math.PI) /3;
 	return this;
 }
 
@@ -233,7 +227,7 @@ lnQuat.prototype.getBasisT = function(del) {
 	const qw = Math.cos( del * nt ); // sin/cos are the function of exp()
 
 	//L = r x p 
-	// this.w * this.w = Centripetal force basis
+	// this.nL * this.nL = Centripetal force basis
 	// 	
 	const dqw = s/nst;
 
@@ -286,10 +280,30 @@ lnQuat.prototype.getRelativeBasis = function( q2 ) {
 
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 
+lnQuat.prototype.update = function() {
+	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
+	if( !this.dirty ) return;
+	//this.dirty = false;
+	// norm-linear    this is / 3 usually, but the sine lookup would 
+	//    adds a /3 back in which reverses it.
+	this.nL = Math.abs(this.px)+Math.abs(this.py)+Math.abs(this.pz);
+	// norm-rect
+	this.nR = Math.sqrt(this.px*this.px + this.py*this.py + this.pz*this.pz);
+
+	this.s  = Math.sin(this.nL);
+	this.qw = Math.cos(this.nL);
+	// principle x/y/z rotations.  (from -pi to pi)
+	this.px = ( (this.x + Math.PI) % (Math.PI*2) ) - Math.PI;
+	this.py = ( (this.y + Math.PI) % (Math.PI*2) ) - Math.PI;
+	this.pz = ( (this.z + Math.PI) % (Math.PI*2) ) - Math.PI;
+	return this;
+}
+
+
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
 	const q = this;
-
+	this.update();
 	// 3+2 +sqrt+exp+sin
         if( !q.nL ) {
 		// v is unmodified.	
@@ -429,14 +443,13 @@ lnQuat.prototype.applyInv = function( v ) {
 	// 21 mul + 9 add
 }
 
-function twist( q, th, n ) {
+function twist( C, th, n ) {
 	// rebase a quaternion; but given that the need to be relative to the
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
 	const D = new lnQuat( th, n );
-	const CpD = q.addNormal2( D );
-	const E = CpD.apply( {x:0,y:1,z:0} );
-	const F = new lnQuat( E );
+	const CpD = C.add2( D );
+	const F = new lnQuat( n );
 // A + B = C
 // C + D = E		
 // A + F = E
@@ -449,12 +462,12 @@ function twist( q, th, n ) {
 //  B = D-F
 
 	//console.log( " input:", q, th, n, D, CpD, E, F );
-	q.x = F.x;
-	q.y = F.y;
-	q.z = F.z;
-	q.update();
+	C.x = D.x - F.x;
+	C.y = D.y - F.y;
+	C.z = D.z - F.z;
+	C.update();
 	//console.log( "output:", q );
-	return q;
+	return C;
 	// v is now the total rotation
 }
 
@@ -487,7 +500,9 @@ lnQuat.prototype.addConj = function( q ) {
 }
 
 // -------------------------------------------------------------------------------
-//  Dual Quaternion (offset part)
+//  Dual Quaternion (offset part) (will be unused
+//     This is just the point offset associated with a rotation
+//     .. either a rotation at a point, or a rotation before a point...
 // -------------------------------------------------------------------------------
 
 // offset coordinate
