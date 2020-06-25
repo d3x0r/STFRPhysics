@@ -942,10 +942,10 @@ function DrawQuatNormals() {
 
 
 			// the original normal direction; projected offset of sphere (linear scaled)
-			normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
-			normalColors.push( new THREE.Color( 255,0,255,255 ))
+			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
+			//normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
+			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
