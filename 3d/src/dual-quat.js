@@ -54,9 +54,10 @@ function lnQuat( theta, d, a, b ){
 	this.y = 0;  // total rotation each x,y,z axis.
 	this.z = 0;
 	// principal x,y,z (removes excessive 2pi rotations)
-	this.px = 0; // prinicpal angles
-	this.py = 0; // prinicpal angles
-	this.pz = 0; // prinicpal angles
+	// early truncations can cause bad wraps at large axis-angle inputs.
+	//this.px = 0; // prinicpal angles
+	//this.py = 0; // prinicpal angles
+	//this.pz = 0; // prinicpal angles
 	// temporary sign/cos/normalizers
 	this.s = 0;  // sin(composite theta)
 	this.qw = 1; // cos(composite theta)
@@ -242,9 +243,9 @@ lnQuat.prototype.getBasisT = function(del) {
 	// 	
 	const dqw = s/nst;
 
-	const qx = q.px * dqw; // normalizes the imaginary parts
-	const qy = q.py * dqw; // set the sin of their composite angle as their total
-	const qz = q.pz * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const qx = q.x * dqw; // normalizes the imaginary parts
+	const qy = q.y * dqw; // set the sin of their composite angle as their total
+	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
 
 	// V = v eHat_r + r dTh/dT * eHat_t + r * dphi/Dt * sinT * eHat_phi
 	const basis = { forward:null
@@ -298,20 +299,10 @@ lnQuat.prototype.update = function() {
 	// norm-linear    this is / 3 usually, but the sine lookup would 
 	//    adds a /3 back in which reverses it.
 	// norm-rect
-	this.px = this.x;
-	this.py = this.y;
-	this.pz = this.z;
-	while( ( Math.abs(this.px) > Math.PI * 2 )
-	     && ( Math.abs(this.py) > Math.PI * 2 )
-	     && ( Math.abs(this.pz) > Math.PI * 2 ) ) {
-		if( this.px > 0 ) this.px -= Math.PI*2; else this.px += Math.PI*2;
-		if( this.py > 0 ) this.py -= Math.PI*2; else this.py += Math.PI*2;
-		if( this.pz > 0 ) this.pz -= Math.PI*2; else this.pz += Math.PI*2;
-	}
 
-	this.nR = Math.sqrt(this.px*this.px + this.py*this.py + this.pz*this.pz);
+	this.nR = Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
 
-	this.nL = (Math.abs(this.px)+Math.abs(this.py)+Math.abs(this.pz))/2;///(2*Math.PI); // average of total
+	this.nL = (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z))/2;///(2*Math.PI); // average of total
 
 	this.s  = Math.sin(this.nL); // only want one half wave...  0-pi total.
 	this.qw = Math.cos(this.nL);
@@ -336,9 +327,9 @@ lnQuat.prototype.apply = function( v ) {
 		const nst = q.s/this.nR;
 		const qw = q.qw;//Math.cos( pl );
 	        
-		const qx = q.px*nst;
-		const qy = q.py*nst;
-		const qz = q.pz*nst;
+		const qx = q.x*nst;
+		const qy = q.y*nst;
+		const qz = q.z*nst;
 	        
 		//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 		const tx = 2 * (qy * v.z - qz * v.y);  
@@ -417,9 +408,9 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		const nst = s/q.nR; // sin(theta)/r
 		const qw = Math.cos( (q.nL)*del );
 	        //console.log( "TICK:", q.nL/(3*Math.PI), del );
-		const qx = q.px*nst;
-		const qy = q.py*nst;
-		const qz = q.pz*nst;
+		const qx = q.x*nst;
+		const qy = q.y*nst;
+		const qz = q.z*nst;
 		//console.log( "L:", p2x, p2y, p2z, p2x*p2x+p2y*p2y+p2z*p2z);
 	        
 		const tx = 2 * (qy * v.z - qz * v.y);
@@ -448,9 +439,9 @@ lnQuat.prototype.applyInv = function( v ) {
 	
 	const dqw = s/q.nR; // sin(theta)/r
 
-	const qx = -q.px * dqw;
-	const qy = -q.py * dqw;
-	const qz = -q.pz * dqw;
+	const qx = -q.x * dqw;
+	const qy = -q.y * dqw;
+	const qz = -q.z * dqw;
 
 	const tx = 2 * (qy * v.z - qz * v.y);
 	const ty = 2 * (qz * v.x - qx * v.z);
