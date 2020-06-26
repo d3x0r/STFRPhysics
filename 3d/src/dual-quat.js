@@ -121,6 +121,12 @@ function lnQuat( theta, d, a, b ){
 				}
 			}
 // angle - normal (angle, {x:,y:,z:} )
+			//theta %= 2*Math.PI;
+			//if( theta > Math.PI *2 )
+			//	console.log( "...", Math.floor( theta / (Math.PI*2) ) )
+
+			// very long ranges of multiples of turns around the axis is ... bad.
+			// the scalar for calculating the axis normal back from the 
 			const dl = 1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			const t  = theta;
 			// if no rotation, then nothing.
