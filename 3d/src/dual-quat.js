@@ -94,19 +94,24 @@ function lnQuat( theta, d, a, b ){
 						const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
 						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 					        
-						const r = 1/(2*l2);
+						const r = 1/(l2);
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
 						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
 
-						this.x = tz*(Math.PI*2+qw);
-						this.y = Math.PI*2;
-						this.z = -tx*(Math.PI*2+qw);
+						//this.x = tz*(Math.PI*2+qw);
+						//this.y = Math.PI*2;
+						//this.z = -tx*(Math.PI*2+qw);
+
+						this.x = tz*(0+qw);
+						this.y = 0;
+						this.z = -tx*(0+qw);
 					        
 						this.update();
 						if(0)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							twisting = true;
 							const norm = this.apply( {x:0,y:1,z:0} );
+							norm[1] += 1;
 							twist( this, Math.PI, norm );
 							twisting = false;
 						}
@@ -120,9 +125,9 @@ function lnQuat( theta, d, a, b ){
 			const t  = theta;
 			// if no rotation, then nothing.
 			if( Math.abs(t) > 0.000001 ) {
-				this.x = (d.x * dl) * theta/(Math.PI*2);
-				this.y = (d.y * dl) * theta/(Math.PI*2);
-				this.z = (d.z * dl) * theta/(Math.PI*2);
+				this.x = (d.x * dl) * theta;
+				this.y = (d.y * dl) * theta;
+				this.z = (d.z * dl) * theta;
 				this.update();
 				return;
 			}
@@ -286,16 +291,25 @@ lnQuat.prototype.update = function() {
 	//this.dirty = false;
 	// norm-linear    this is / 3 usually, but the sine lookup would 
 	//    adds a /3 back in which reverses it.
-	this.nL = Math.abs(this.px)+Math.abs(this.py)+Math.abs(this.pz);
 	// norm-rect
+	this.px = this.x;
+	this.py = this.y;
+	this.pz = this.z;
+	while( ( Math.abs(this.px) > Math.PI * 2 )
+	     && ( Math.abs(this.py) > Math.PI * 2 )
+	     && ( Math.abs(this.pz) > Math.PI * 2 ) ) {
+		if( this.px > 0 ) this.px -= Math.PI*2; else this.px += Math.PI*2;
+		if( this.py > 0 ) this.py -= Math.PI*2; else this.py += Math.PI*2;
+		if( this.pz > 0 ) this.pz -= Math.PI*2; else this.pz += Math.PI*2;
+	}
+
 	this.nR = Math.sqrt(this.px*this.px + this.py*this.py + this.pz*this.pz);
 
-	this.s  = Math.sin(this.nL);
+	this.nL = (Math.abs(this.px)+Math.abs(this.py)+Math.abs(this.pz))/2;///(2*Math.PI); // average of total
+
+	this.s  = Math.sin(this.nL); // only want one half wave...  0-pi total.
 	this.qw = Math.cos(this.nL);
 	// principle x/y/z rotations.  (from -pi to pi)
-	this.px = ( (this.x) % (Math.PI*2) );
-	this.py = ( (this.y) % (Math.PI*2) );
-	this.pz = ( (this.z) % (Math.PI*2) );
 	return this;
 }
 
@@ -393,10 +407,10 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	}
 	if( this.nL ) {
-		const s  = Math.sin( q.nL*del );//q.s;
+		const s  = Math.sin( (q.nL)*del );//q.s;
 		const nst = s/q.nR; // sin(theta)/r
-		const qw = Math.cos( q.nL*del );
-	        
+		const qw = Math.cos( (q.nL)*del );
+	        //console.log( "TICK:", q.nL/(3*Math.PI), del );
 		const qx = q.px*nst;
 		const qy = q.py*nst;
 		const qz = q.pz*nst;
@@ -439,7 +453,6 @@ lnQuat.prototype.applyInv = function( v ) {
 	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 	       , y : v.y + qw * ty + ( qz * tx - tz * qx )
 	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
-
 	// total 
 	// 21 mul + 9 add
 }
@@ -449,7 +462,15 @@ function twist( C, th, n ) {
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
 	const D = new lnQuat( th, n );
-
+	C.add(D);
+	return C.update();
+	const twist = D.apply( {x:0,y:0,z:0} );
+	
+	C.x = twist.x;
+	C.y = twist.y;
+	C.z = twist.z;
+	C.update();
+	return C;
 	//C.x = D.x; C.y=D.y; C.z=D.z; C.update(); return C;
 	const CpD = C.add2( D );
 	//C.x = CpD.x; C.y=CpD.y; C.z=CpD.z; C.update(); return C;
