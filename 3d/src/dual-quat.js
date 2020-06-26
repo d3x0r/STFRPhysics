@@ -96,18 +96,18 @@ function lnQuat( theta, d, a, b ){
 					        
 						const r = 1/(2*l2);
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
-					        
 						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
-						this.x = tz*qw;
-						this.y = 0;
-						this.z = -tx*qw;
+
+						this.x = tz*(Math.PI*2+qw);
+						this.y = Math.PI*2;
+						this.z = -tx*(Math.PI*2+qw);
 					        
 						this.update();
 						if(0)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							twisting = true;
 							const norm = this.apply( {x:0,y:1,z:0} );
-							twist( this, 2*Math.PI, norm );
+							twist( this, Math.PI, norm );
 							twisting = false;
 						}
 						return;
@@ -293,9 +293,9 @@ lnQuat.prototype.update = function() {
 	this.s  = Math.sin(this.nL);
 	this.qw = Math.cos(this.nL);
 	// principle x/y/z rotations.  (from -pi to pi)
-	this.px = ( (this.x + Math.PI) % (Math.PI*2) ) - Math.PI;
-	this.py = ( (this.y + Math.PI) % (Math.PI*2) ) - Math.PI;
-	this.pz = ( (this.z + Math.PI) % (Math.PI*2) ) - Math.PI;
+	this.px = ( (this.x) % (Math.PI*2) );
+	this.py = ( (this.y) % (Math.PI*2) );
+	this.pz = ( (this.z) % (Math.PI*2) );
 	return this;
 }
 
@@ -386,6 +386,7 @@ public final void rotate(double heading, double attitude, double bank) {
 lnQuat.prototype.applyDel = function( v, del ) {
 	const q = this;
 	if( 'undefined' === typeof del ) del = 1.0;
+	this.update();
 	// 3+2 +sqrt+exp+sin
         if( !q.nL ) {
 		// v is unmodified.	
@@ -448,8 +449,15 @@ function twist( C, th, n ) {
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
 	const D = new lnQuat( th, n );
+
+	//C.x = D.x; C.y=D.y; C.z=D.z; C.update(); return C;
 	const CpD = C.add2( D );
+	//C.x = CpD.x; C.y=CpD.y; C.z=CpD.z; C.update(); return C;
+
+	// this is basically C again, anyway...
 	const F = new lnQuat( n );
+
+	//C.x = F.x; C.y=F.y; C.z=F.z; C.update(); return C;
 // A + B = C
 // C + D = E		
 // A + F = E
