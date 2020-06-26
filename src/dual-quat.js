@@ -454,6 +454,7 @@ lnQuat.prototype.torque = function( direction, turns ) {
 	return this;
 }
 
+// this is 'apply' to the constant x/y/z directional vectors...
 lnQuat.prototype.getBasisT = function(del) {
 	// this is terse; for more documentation see getBasis Method.
 	const q = this;
@@ -649,6 +650,9 @@ function getBasis(q) {
 	return basis;	
 }
 
+
+//https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+//https://www.html5gamedevs.com/topic/32934-multiply-a-vector3-times-a-quaternion/  (code; credits above)
 lnQuat.prototype.apply = function( v ) {
 	const q = this;
 
