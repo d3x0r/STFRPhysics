@@ -198,6 +198,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 			A = (lnQX/10-5)/20;
 
+twistDelta = A;
 			//let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(B=(lnQY/10-5)/20) , c: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
 			let lnQ = new lnQuat(  Math.PI * (lnQT/3), { x:(lnQT/100+1)*(lnQX/10-5)/20 , y:(lnQT/100+1)*(B=(lnQY/10-5)/20) , z: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
 
