@@ -67,9 +67,9 @@ function lnQuat( theta, d, a, b ){
 				const spin = (Math.abs(d)+Math.abs(a)+Math.abs(b));
 				if( spin ) {
 					const nSpin = (theta)/spin;
-					this.x = d*nSpin;
-					this.y = a*nSpin;
-					this.z = b*nSpin;
+					this.x = d?d*nSpin:Math.PI*2;
+					this.y = a?a*nSpin:Math.PI*2;
+					this.z = b?b*nSpin:Math.PI*2;
 				} else {
 					this.x = 0;
 					this.y = 0;
@@ -118,7 +118,7 @@ function lnQuat( theta, d, a, b ){
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							twisting = true;
 							const norm = this.apply( {x:0,y:1,z:0} );
-							norm[1] += 1;
+							//norm[1] += 1;
 							twist( this, qw /*angle*/, norm );
 							twisting = false;
 						}
@@ -317,6 +317,8 @@ lnQuat.prototype.update = function() {
 }
 
 
+// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+// 
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
 	const q = this;
@@ -465,10 +467,39 @@ function twist( C, th, n ) {
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
 	const D = new lnQuat( Math.PI/2, n.x,n.y,n.z );
+	const r = D.applyDel( C, -th/2+twistDelta*3 );
 //console.log( "Twist:", twistDelta, D );
-	C.add(D,-th/2+(twistDelta)*3);
+	const del = (th/2+twistDelta*3);
+	if( del ) {
+		if( Math.abs(C.x)<Math.abs(C.z) ) {
+			C.y = +(C.z<0?-1:1)* C.x*del;
+			//C.z = C.z *(1-del);// - C.x;
+			C.x = C.x - C.x*del;
+			C.dirty = true;
+			return C;
+			
+		}
+
+		if( Math.abs(C.z)<Math.abs(C.x) ) {
+			C.y = +(C.x<0?-1:1)*C.z*del;
+			//C.x = del*C.x;
+			C.z = C.z-C.z*del;
+			C.dirty = true;
+			return C;
+			
+		}
+		C.dirty = true;
+		//(C.x<0?1:-1)*
+		C.x = C.x +  (C.x<0?1:-1)*del*(C.nL-C.x);
+		C.y = -del*2*C.nL;
+		C.z = C.z +  (C.z<0?1:-1)*del*(C.nL-C.z);
+	} else {
+		// no twist.
+		return C;
+	}
+//	C.add(D,th/2+(twistDelta)*3);
 	return C.update();
-	const twist = D.apply( {x:0,y:0,z:0} );
+	const twist = D.apply( {x:0,y:1,z:0} );
 	
 	C.x = twist.x;
 	C.y = twist.y;
