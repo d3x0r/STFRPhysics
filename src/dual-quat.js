@@ -649,6 +649,8 @@ function getBasis(q) {
 	return basis;	
 }
 
+// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+// 
 lnQuat.prototype.apply = function( v ) {
 	const q = this;
 
