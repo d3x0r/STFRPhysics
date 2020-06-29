@@ -542,9 +542,9 @@ function twistNormal( C, th, n ) {
 	}
 	
 	if( adel < 0.5 ) {
-		C.x = C.x - del*xMax;
-		C.z = C.z - del*zMax;
-		C.y = -(del*2) * yMid;
+		C.x = C.x + xMid * Math.sin(del);
+		C.z = C.z + zMid * Math.sin(del); // 1->-1
+		C.y = yMid*Math.sin(del);
 	} else {
 		C.y = (1-del)*del;
 		C.x = C.x - xMax * ((del-0.5)*2);

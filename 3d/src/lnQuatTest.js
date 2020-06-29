@@ -5,15 +5,93 @@ let A,B,C,D;  // slider values
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const spaceScale = 5;
 	const normal_del = 1;
+	const o = [6/spaceScale,+6/spaceScale,+6/spaceScale];
+
+	const ax = Math.abs(A);
+	const ay = Math.abs(B);
+	const az = Math.abs(C);
+	const angleSum = ax+ay+az;    // max x/y/z
 
 	//const lnQ = new lnQuat( {a:2*Math.PI/3,b:2*Math.PI/3,c:2*Math.PI/3} );
-	const lnQ = new lnQuat( {a:1.999*Math.PI,b:0,c:0} );
+	let lnQ = new lnQuat( {a:A,b:B,c:C} );
 	const n = lnQ.apply( {x:0,y:1,z:0} );
 
+	drawBasis( lnQ, 1.0 );
+
+	if(0) // this ends up rotated 180 degrees.
+	if( angleSum < Math.PI/2 ) {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:-C,b:Math.PI-Math.abs(C),c:0+B/2} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:0+B/2,b:Math.PI-Math.abs(A),c:A} );
+		drawBasis( lnQ, 1.0 );
+	} else {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:C,b:-Math.PI+Math.abs(C),c:0+B/2} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:0+B/2,b:-Math.PI+Math.abs(A),c:-A} );
+		drawBasis( lnQ, 1.0 );
+	}
+
+	if(0) // this ends up rotated 90 degrees...
+	if( angleSum < Math.PI/2 ) {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:-C/2,b:Math.PI/2-Math.abs(C),c:C/2+B/2} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:A/2+B/2,b:Math.PI/2-Math.abs(A),c:A/2} );
+		drawBasis( lnQ, 1.0 );
+	} else {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:C/2,b:-Math.PI/2+Math.abs(C),c:C/2+B/2} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:A/2+B/2,b:-Math.PI/2+Math.abs(A),c:-A/2} );
+		drawBasis( lnQ, 1.0 );
+	}
+
+	// this is rotated 45 degrees....
+	if( angleSum < Math.PI/2 ) {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:-C/4,b:Math.PI/4-Math.abs(C),c:C/4+B/4} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:A/4+B/2,b:Math.PI/4-Math.abs(A),c:A/4} );
+		drawBasis( lnQ, 1.0 );
+	} else {
+		// this is good up to half a circle...
+		lnQ = new lnQuat( {a:C/4,b:-Math.PI/4+Math.abs(C),c:C/2+B/4} );
+		drawBasis( lnQ, 1.0 );
+
+		// this is good up to half a circle... (needs linearization)
+		lnQ = new lnQuat( {a:A/4+B/2,b:-Math.PI/4+Math.abs(A),c:-A/4} );
+		drawBasis( lnQ, 1.0 );
+	}
+
+
+	//lnQ = new lnQuat( {a:A,b:B,C:C} );
+	//drawBasis( lnQ, 1.0 );
+
+	//lnQ = new lnQuat( {a:Math.PI-A,b:B,c:-C} );
+	//drawBasis( lnQ, 1.0 );
+
+	//lnQ = new lnQuat( {a:-A,b:-B,c:-C} );
+	//drawBasis( lnQ, 1.0 );
 	//const q2 = q.add2( lnQ2 );
 	//const lnQ = new lnQuat( {a:Math.PI*1.899,b:0,c:0});//b:Math.PI*1.899,c:Math.PI*1.899} );
+	return;
 
-	const o = [6/spaceScale,+6/spaceScale,+6/spaceScale];
+		function drawBasis( lnQ,T )
+		{
+			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, t );
+
 	let prior_v = null;
 	for( var t = 0; t< 1; t+=0.05 ) {
 		const new_v = lnQ.applyDel( v, t );
@@ -26,9 +104,11 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				normalColors.push( c)
 			}
 			prior_v = new_v;
-		if( t > 0.98 ) 
-		{
-			const basis = lnQ.getBasisT( t );
+
+	};
+		
+			new_v.x += o[0];new_v.y += o[1];new_v.z += o[2];
+			const basis = lnQ.getBasisT( T );
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                           ,new_v.y*spaceScale                           , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del, new_v.z*spaceScale + basis.right.z*normal_del ))
@@ -47,7 +127,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalColors.push( new THREE.Color( 0,0,255,255 ))
 
 		}
-	};
 }
 
 
