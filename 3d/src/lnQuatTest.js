@@ -8,32 +8,52 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const o = [6/spaceScale,+6/spaceScale,+6/spaceScale];
 
 	const ax = Math.abs(A);
-	const ay = Math.abs(B);
+	const ay = 0;//Math.abs(B);
 	const az = Math.abs(C);
 	const angleSum = ax+ay+az;    // max x/y/z
 
 	//const lnQ = new lnQuat( {a:2*Math.PI/3,b:2*Math.PI/3,c:2*Math.PI/3} );
-	let lnQ = new lnQuat( {a:A,b:B,c:C} );
-	const n = lnQ.apply( {x:0,y:1,z:0} );
+	let lnQ = new lnQuat( {a:A,b:0*B,c:C} );
 
+		
 	drawBasis( lnQ, 1.0 );
+        lnQ.x /= 2;
+	lnQ.z /= 2;
+	let lnQP = null;
+	const n = lnQ.apply( {x:0,y:1,z:0} );
+	
+	if(1){ // this ends up rotated 180 degrees.
+		lnQP = new lnQuat( Math.PI, n );
+		drawBasis( lnQP, 1.0 );
+	}
+	if(1){ // this ends up rotated 180 degrees.
+		let lnQZ = new lnQuat( {a:Math.PI/2,b:0*B,c:0} );
+		let zNorm = lnQZ.apply( {x:0,y:0,z:az} );
+		let zNorm2 = lnQ.applyDel( zNorm, 0.5 );
 
-	if(0) // this ends up rotated 180 degrees.
-	if( angleSum < Math.PI/2 ) {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:-C,b:Math.PI-Math.abs(C),c:0+B/2} );
-		drawBasis( lnQ, 1.0 );
+		//lnQ = new lnQuat( {a:-zNorm2.z*angleSum,b:-(Math.PI/2-angleSum)*zNorm2.y,c:-zNorm2.x*angleSum} );
+			
+		let lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.1, b:lnQ.y+(lnQP.y-lnQ.y)*0.1, c:lnQ.z+(lnQP.z-lnQ.z)*0.1} );
+		drawBasis( lnQz, 1.0 );
 
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:0+B/2,b:Math.PI-Math.abs(A),c:A} );
-		drawBasis( lnQ, 1.0 );
-	} else {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:C,b:-Math.PI+Math.abs(C),c:0+B/2} );
-		drawBasis( lnQ, 1.0 );
+		 lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.4, b:lnQ.y+(lnQP.y-lnQ.y)*0.4, c:lnQ.z+(lnQP.z-lnQ.z)*0.4} );
+		drawBasis( lnQz, 1.0 );
 
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:0+B/2,b:-Math.PI+Math.abs(A),c:-A} );
+		 lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.9, b:lnQ.y+(lnQP.y-lnQ.y)*0.9, c:lnQ.z+(lnQP.z-lnQ.z)*0.9} );
+		drawBasis( lnQz, 1.0 );
+
+		//drawBasis( lnQ, 1.0 );
+
+	}
+
+	if(0){ // this ends up rotated 180 degrees.
+		let lnQZ = new lnQuat( {a:Math.PI/4,b:0*B,c:0} );
+		let zNorm = lnQZ.apply( {x:0,y:0,z:1} );
+		let zNorm2 = lnQ.applyDel( zNorm, 0.5 );
+
+		lnQ = new lnQuat( {a:-zNorm2.z*angleSum,b:-(Math.PI/4-angleSum)*zNorm2.y,c:-zNorm2.x*angleSum} );
+		
+		//lnQ = new lnQuat( Math.PI/2, n );
 		drawBasis( lnQ, 1.0 );
 	}
 
@@ -56,7 +76,8 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		drawBasis( lnQ, 1.0 );
 	}
 
-	// this is rotated 45 degrees....
+	// this is rotated 45 degrees.... (not correct enough)
+	if(0)
 	if( angleSum < Math.PI/2 ) {
 		// this is good up to half a circle...
 		lnQ = new lnQuat( {a:-C/4,b:Math.PI/4-Math.abs(C),c:C/4+B/4} );
@@ -90,10 +111,10 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 		function drawBasis( lnQ,T )
 		{
-			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, t );
+			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, T );
 
 	let prior_v = null;
-	for( var t = 0; t< 1; t+=0.05 ) {
+	for( var t = 0; t<= 1; t+=0.05 ) {
 		const new_v = lnQ.applyDel( v, t );
 
 		new_v.x += o[0];new_v.y += o[1];new_v.z += o[2];
@@ -106,7 +127,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			prior_v = new_v;
 
 	};
-		
+			
 			new_v.x += o[0];new_v.y += o[1];new_v.z += o[2];
 			const basis = lnQ.getBasisT( T );
 
@@ -305,9 +326,9 @@ twistDelta = A;
 	const cz = new THREE.Color( 0,192,192,255 );
 	QuatPathing2( lnQ, yAxis, cy,normalVertices,normalColors );
 
-	QuatPathing( lnQ, xAxis, cx,normalVertices,normalColors );
-	QuatPathing( lnQ, yAxis, cy,normalVertices,normalColors );
-	QuatPathing( lnQ, zAxis, cz,normalVertices,normalColors );
+	//QuatPathing( lnQ, xAxis, cx,normalVertices,normalColors );
+	//QuatPathing( lnQ, yAxis, cy,normalVertices,normalColors );
+	//QuatPathing( lnQ, zAxis, cz,normalVertices,normalColors );
 }
 
 
