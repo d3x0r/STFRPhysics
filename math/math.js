@@ -50,7 +50,8 @@ function readValues()  {
 	myForm.sliderValB.textContent = values.B;
 	myForm.sliderValC.textContent = values.C;
 	myForm.sliderValD.textContent = values.D;
-	drawsomething();
+	//drawsomething();
+	drawQuatTwist();
 }
 
 
@@ -504,9 +505,73 @@ function testComplex() {
 
 }
 
-testComplex();
+//testComplex();
 
 
 
 
+
+
+function drawQuatTwist() {
+	let x, y, z, w, X, Y, Z, W;
+	const squareSize = 1024;
+	const minScaleX = 0;
+	const maxScaleX = Math.PI*2;
+
+	const minScaleY = -3;
+	const maxScaleY = 3;
+
+	const delStep = (min,max,x)=>( (max-min)/x );
+	const stepX = (x)=>( (maxScaleX-minScaleX)/x );
+	const stepY = (x)=>( (maxScaleY-minScaleY)/x );
+	const unitX = (x)=>Math.floor( (x * squareSize/(maxScaleX-minScaleX) ) );
+	const unitY = (x)=>Math.floor( squareSize/2 + (x * squareSize/(maxScaleY-minScaleY) ) );
+	const unit2 = (x)=>x;
+	const rangeX = maxScaleX-minScaleX;
+	const rangeY = maxScaleY-minScaleY;
+
+	ctx.clearRect(0,0,squareSize,squareSize );
+	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
+	var output = _output.data;
+
+	const pens = [ ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 0,9)
+			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 0,9) 
+			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 0,9) 
+
+	                ,ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 3,9)
+			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 3,9) 
+			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 3,9) 
+
+			, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 6,9)
+			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 6,9) 
+			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 6,9) 
+		];
+
+
+
+	function plot( x_, y_, c ) {
+		const x = unitX(x_);
+		const y = unitY(-y_);
+		output[((x+y*squareSize)<<2)+0] = c[0];
+		output[((x+y*squareSize)<<2)+1] = c[1];
+		output[((x+y*squareSize)<<2)+2] = c[2];
+		output[((x+y*squareSize)<<2)+3] = c[3];
+	}
+		
+	const lnQ = new lnQuat( {a:0,b:0,c:Math.PI/4} );
+	for( x = minScaleY; x < maxScaleY; x+= stepY(100 ) ) {
+		plot( 0, x, pens[6]);
+	}
+
+	for( x = minScaleX; x < maxScaleX; x+= stepX(1000 ) ) {
+		const lnQc = new lnQuat( {a:values.A,b:values.B,c:values.C} );
+		lnQc.twist( x );
+		plot( x, lnQc.x, pens[0] );
+		plot( x, lnQc.y, pens[1] );
+		plot( x, lnQc.z, pens[2] );
+	}	
+
+	ctx.putImageData(_output, 0,0);
+
+}
 
