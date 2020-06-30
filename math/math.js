@@ -119,7 +119,7 @@ class vecA {
 
 	ln(a) {
 		if( a instanceof vecA ) {
-        		const angle = acos( a.cos );
+        		const angle = z_acos( a.cos );
         	        const angle2 = asin( a.sin );
 	                const axis = 1;
         		return new lnC( angle, axis );
@@ -136,7 +136,7 @@ class vecA {
 
 // g_{1}(x)=cos^(-1)(B-cos(x))
 // 
-function acos(cos, zero) {
+function z_acos(cos, zero) {
 
 	//newArccos(x)=cos^(-1)(md(x+1,2)-1)+(-x-1+md(x+1,2)) 
 	if( "number" === typeof cos ) {
@@ -350,7 +350,7 @@ function drawsomething() {
 		plot( x, plusminus(x), pens[2] );
 //		plot( x, Math.acos(plusminus(x)), pens[1] );
 		//plot( x, Math.floor(x), pens[1] );
-		const ac = acos(x);
+		const ac = z_acos(x);
 		plot( x, ac.i.r, pens[1] );
 		plot( x,  + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
 
@@ -375,7 +375,7 @@ function drawsomething() {
 		plot( x, plusminus(x), pens[2] );
 //		plot( x, Math.acos(plusminus(x)), pens[1] );
 		//plot( x, Math.floor(x), pens[1] );
-		const ac = acos(x+values.A);
+		const ac = z_acos(x+values.A);
 		plot( x, ac.i.r, pens[1] );
 		plot( x,  + ac.r.r + ac.i.r*Math.PI/2, pens[0] );
 
@@ -424,7 +424,7 @@ function drawsomething() {
 
 	if(0)
 		for( x = minScale; x < maxScale; x+= step(1000) ) {
-			const ac = acos(x);
+			const ac = z_acos(x);
 			if( x < -2 ) 
 			console.log( "??", x, ac );
 			plot( x, x-((x+1)%2), pens[4]);
@@ -516,16 +516,16 @@ function drawQuatTwist() {
 	const histories = {x:[],y:[],z:[] };
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
-	const minScaleX = 0;
+	const minScaleX = -Math.PI*2.1;
 	const maxScaleX = Math.PI*2.1;
 
-	const minScaleY = -4;
-	const maxScaleY = 4;
+	const minScaleY = -8;
+	const maxScaleY = 8;
 
 	const delStep = (min,max,x)=>( (max-min)/x );
 	const stepX = (x)=>( (maxScaleX-minScaleX)/x );
 	const stepY = (x)=>( (maxScaleY-minScaleY)/x );
-	const unitX = (x)=>Math.floor( (x * squareSize/(maxScaleX-minScaleX) ) );
+	const unitX = (x)=>Math.floor( squareSize/2 + (x * squareSize/(maxScaleX-minScaleX) ) );
 	const unitY = (x)=>Math.floor( squareSize/2 + (x * squareSize/(maxScaleY-minScaleY) ) );
 	const unit2 = (x)=>x;
 	const rangeX = maxScaleX-minScaleX;
@@ -549,7 +549,7 @@ function drawQuatTwist() {
 		];
 
 
-
+	let prior = null;
 	function plot( x_, y_, c ) {
 		const x = unitX(x_);
 		const y = unitY(-y_);
@@ -561,7 +561,7 @@ function drawQuatTwist() {
 		
 	const lnQ = new lnQuat( {a:0,b:0,c:Math.PI/4} );
 	for( x = minScaleY; x < maxScaleY; x+= stepY(100 ) ) {
-		for( y = 0; y < 2; y++ ) {
+		for( y = -2; y < 2; y++ ) {
 			plot( y*Math.PI, x, pens[6]);
 		}
 	}
@@ -580,7 +580,6 @@ function drawQuatTwist() {
 			if( Math.abs( histories.x[W] - lnQc.x ) < 0.005 ) {
 			if( Math.abs( histories.y[W] - lnQc.y ) < 0.005 ) {
 			if( Math.abs( histories.z[W] - lnQc.z ) < 0.005 ) {
-			console.log( "TICK", x );
 				for( y = minScaleY; y < maxScaleY; y += stepY(500 ) ) {
 					plot( x, y, pens[0]);
 				}
@@ -597,14 +596,59 @@ function drawQuatTwist() {
 		//histories.x.push(lnQc.x);
 		//histories.y.push(lnQc.y);
 		//histories.z.push(lnQc.z);
+/*
+		if( prior ) {
+			if( (prior.x*lnQc.x)<0 )
+				if( lnQc.x < 0 )
+					lnQc.x = -2*Math.PI - lnQc.x;
+				else
+					lnQc.x = 2*Math.PI + lnQc.x;
+			if( (prior.y*lnQc.y)<0 )
+				if( lnQc.y < 0 )
+					lnQc.y = -2*Math.PI - lnQc.y;
+				else
+					lnQc.y = 2*Math.PI + lnQc.y;
+			if( (prior.z*lnQc.z)<0 )
+				if( lnQc.z < 0 )
+					lnQc.z = -2*Math.PI - lnQc.z;
+				else
+					lnQc.z = 2*Math.PI + lnQc.z;
+		}
+		prior = lnQc;
+*/
+	const q = this;
 
-		const t = Math.abs(lnQc.x)+Math.abs(lnQc.y)+Math.abs(lnQc.z);
-	
+//	if( !del ) del = 1.0;
+	/*
+	const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+	const nst = this.nR;//Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+	const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+	const qw = Math.cos( del * nt ); // sin/cos are the function of exp()
+	const dqw = s/nst;
+	const qx = q.x * dqw; // normalizes the imaginary parts
+	const qy = q.y * dqw; // set the sin of their composite angle as their total
+	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
+	  */
+
+		const t = lnQc.nL;
+		const xx = lnQc.x / lnQc.nR;	
+		const yy = lnQc.y / lnQc.nR;	
+		const zz = lnQc.z / lnQc.nR;	
+
+	//	plot( x, xx*t, pens[0] );
+	//	plot( x, yy*t, pens[1] );
+		//plot( x, zz*t, pens[2] );
+
+
 		plot( x, t, pens[7] );
-		//plot( x, acos, pens[7] );
+		
 		plot( x, lnQc.x, pens[0] );
 		plot( x, lnQc.y, pens[1] );
 		plot( x, lnQc.z, pens[2] );
+		
+		plot( x, -lnQc.x, pens[3] );
+		plot( x, -lnQc.y, pens[4] );
+		plot( x, -lnQc.z, pens[5] );
 
 		if( Math.abs(x-Math.PI -values.A) < 0.01  )
 				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
