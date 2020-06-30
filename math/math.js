@@ -516,7 +516,7 @@ function drawQuatTwist() {
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
 	const minScaleX = 0;
-	const maxScaleX = Math.PI*2;
+	const maxScaleX = Math.PI*4;
 
 	const minScaleY = -3;
 	const maxScaleY = 3;
