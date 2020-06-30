@@ -69,6 +69,10 @@ function lnQuat( theta, d, a, b ){
 	this.x = 0;  // these could become wrap counters....
 	this.y = 0;  // total rotation each x,y,z axis.
 	this.z = 0;
+
+	this.nx = 0;  // these could become wrap counters....
+	this.ny = 0;  // total rotation each x,y,z axis.
+	this.nz = 0;
 	// temporary sign/cos/normalizers
 	this.s = 0;  // sin(composite theta)
 	this.qw = 1; // cos(composite theta)
@@ -127,6 +131,10 @@ function lnQuat( theta, d, a, b ){
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
 						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
 
+						this.nx = theta.z/l3  * qw;
+						this.ny = theta.y/l3  * qw;
+						this.nz = theta.z/l3  * qw;
+
 						this.x = tz*qw;
 						this.y = 0;
 						this.z = -tx*qw;
@@ -169,13 +177,17 @@ function lnQuat( theta, d, a, b ){
 			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			// if no rotation, then nothing.
 			if( Math.abs(t) > 0.000001 ) {
-				this.x = (d.x * dl);
-				this.y = (d.y * dl);
-				this.z = (d.z * dl);
-				const lNorm = theta/(Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
-				this.x *= lNorm;
-				this.y *= lNorm;
-				this.z *= lNorm;
+				this.nx = (d.x * dl);
+				this.ny = (d.y * dl);
+				this.nz = (d.z * dl);
+				const lNorm = theta/(Math.abs(this.nx)+Math.abs(this.ny)+Math.abs(this.nz));
+				
+				this.x = this.nx * lNorm;
+				this.y = this.ny * lNorm;
+				this.z = this.nz * lNorm;
+				this.nx *= theta;
+				this.ny *= theta;
+				this.nz *= theta;
 				this.update();
 				return;
 			}
@@ -199,13 +211,16 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
 	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
 
-	this.x = (basis.up.z      -basis.forward.y) *tmp;
-	this.y = (basis.forward.x -basis.right.z  ) *tmp;
-	this.z = (basis.right.y   -basis.up.x     ) *tmp;
-	const lNorm = angle / (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
-	this.x *= lNorm;
-	this.y *= lNorm;
-	this.z *= lNorm;
+	this.nx = (basis.up.z      -basis.forward.y) *tmp;
+	this.ny = (basis.forward.x -basis.right.z  ) *tmp;
+	this.nz = (basis.right.y   -basis.up.x     ) *tmp;
+	const lNorm = angle / (Math.abs(this.nx)+Math.abs(this.ny)+Math.abs(this.nz));
+	this.x = this.nx * lNorm;
+	this.y = this.ny * lNorm;
+	this.z = this.nz * lNorm;
+	this.nx *= angle;
+	this.ny *= angle;
+	this.nz *= angle;
 	this.dirty = true;
 	return this;
 }
@@ -310,7 +325,7 @@ lnQuat.prototype.getBasisT = function(del) {
 	// this.nL * this.nL = Centripetal force basis
 	// 	
 	const dqw = s/nst;
-
+	// some of these might be q.nx... 
 	const qx = q.x * dqw; // normalizes the imaginary parts
 	const qy = q.y * dqw; // set the sin of their composite angle as their total
 	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.

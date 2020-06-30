@@ -642,13 +642,22 @@ function drawQuatTwist() {
 
 		plot( x, t, pens[7] );
 		
-		plot( x, lnQc.x, pens[0] );
-		plot( x, lnQc.y, pens[1] );
-		plot( x, lnQc.z, pens[2] );
+		plot( x, lnQc.nx, pens[0] );
+		plot( x, lnQc.ny, pens[1] );
+		plot( x, lnQc.nz, pens[2] );
 		
-		plot( x, -lnQc.x, pens[3] );
-		plot( x, -lnQc.y, pens[4] );
-		plot( x, -lnQc.z, pens[5] );
+		plot( x, -lnQc.nx, pens[3] );
+		plot( x, -lnQc.ny, pens[4] );
+		plot( x, -lnQc.nz, pens[5] );
+
+		plot( x, lnQc.x, pens[6] );
+		plot( x, lnQc.y, pens[7] );
+		plot( x, lnQc.z, pens[8] );
+		
+		plot( x, -lnQc.x, pens[6] );
+		plot( x, -lnQc.y, pens[7] );
+		plot( x, -lnQc.z, pens[8] );
+
 
 		if( Math.abs(x-Math.PI -values.A) < 0.01  )
 				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
