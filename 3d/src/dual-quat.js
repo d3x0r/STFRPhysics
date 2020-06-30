@@ -171,82 +171,29 @@ function lnQuat( theta, d, a, b ){
 }
 
 lnQuat.prototype.fromBasis = function( basis ) {
-//r = sqrt(1+t)
-//w = 0.5*r
-//x = copysign(0.5*sqrt(1+Qxx-Qyy-Qzz), Qzy-Qyz)
-//y = copysign(0.5*sqrt(1-Qxx+Qyy-Qzz), Qxz-Qzx)
-//z = copysign(0.5*sqrt(1-Qxx-Qyy+Qzz), Qyx-Qxy)
-	/*
-	where copysign(x,y) is x with the sign of y:
-	copysign(x,y) = sign(y) |x|;
+	// tr(M)=2cos(theta)+1 .
 
-	*/
-	/*
-	t = Qxx+Qyy+Qzz
-r = sqrt(1+t)
-s = 0.5/r
-w = 0.5*r
-x = (Qzy-Qyz)*s
-y = (Qxz-Qzx)*s
-z = (Qyx-Qxy)*s
+	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
+	const angle = acos(t);
+	//const zz1 = {x:basis.right.x, y: basis.up.y, z: basis.forward.z };
+/*
+x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+
+y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+
+z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */
-	const quat = { x:0,y:0,z:0,w:0};
-	//let zz;
-	//zz = basis.forward;
-	//basis.forward = basis.up;
-	//basis.up = zz;
-	const t = basis.right.x + basis.up.y + basis.forward.z;
-	if( t > 0 )
-	{
-		const r = Math.sqrt((1+t)/2);
-		const s = r*0.6383;
-		quat.w = r;
-		quat.x = -(basis.forward.y-basis.up.z)*s;
-		quat.y = (basis.right.z-basis.forward.x)*s;
-		quat.z = -(basis.up.x-basis.right.y)*s;
-	}
-	else if ((basis.right.x > basis.up.y)&&(basis.right.x > basis.forward.z)) { 
-		const S = Math.sqrt(1.0 + basis.right.x - basis.up.y - basis.forward.z) * (2); // S=4*qx 
-		quat.x = (basis.forward.y - basis.up.z) / S;
-		quat.y = (0.25) * S;
-		quat.z = (basis.right.y + basis.up.x) / S; 
-		quat.w = (basis.right.z + basis.forward.x) / S; 
-	} else if (basis.up.y > basis.forward.z) { 
-		const S = Math.sqrt(1.0 + basis.up.y - basis.right.x - basis.forward.z) * (2); // S=4*qy
-		quat.x = (basis.right.z - basis.forward.x) / S;
-		quat.y = (basis.right.y + basis.up.x) / S; 
-		quat.z = (0.25) * S;
-		quat.w = (basis.up.z + basis.forward.y) / S; 
-	} else { 
-		const S = Math.sqrt(1.0 + basis.forward.z - basis.right.x - basis.up.y) * (2); // S=4*qz
-		quat.x = (basis.up.x - basis.right.y) / S;
-		quat.y = (basis.right.z + basis.forward.x) / S;
-		quat.z = (basis.up.z + basis.forward.y) / S;
-		quat.w = (0.25) * S;
-	}
 
-	const x = quat.x;
-	const y = quat.y;
-	const z = quat.z;
-	if( ASSERT ) {
-		const l = 1/Math.sqrt(x*x + y*y + z*z );
-		if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
-	}
-
-	const w = quat.w;
-	const r  = Math.sqrt(x*x+y*y+z*z);
-	const ang = Math.atan2(r,w);
-	if( r < 0.001 ) {
-		// cannot know the direction.
-		return new lnQuat( ang, 0, 1, 0 )
-	}
-	const n  = ang/r;
-
-	this.x = x *n ;
-	this.y = y *n ;
-	this.z = z *n ;
+	const tmp = (basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y);
+	this.x = (basis.up.z      -basis.forward.y)     /Math.sqrt( tmp );
+	this.y = (basis.forward.x -basis.right.z  )/Math.sqrt( tmp );
+	this.z = (basis.right.y   -basis.up.x     )  /Math.sqrt( tmp );
+	const normAngle = angle / (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
+	this.x *= normAngle;
+	this.y *= normAngle;
+	this.z *= normAngle;
 	this.dirty = true;
-	return this;	
+	return this;
 }
 
 lnQuat.prototype.exp = function() {
@@ -568,315 +515,17 @@ lnQuat.prototype.applyInv = function( v ) {
 //    if ( x < 0 )
 
 lnQuat.prototype.twist = function(c){
-	return twist( this, c, this );
+	return twist( this, c );
 }
 
 
-// this specific case, the input is just a 'normal'
-// so not only do we 'twist', but we also need to 
-// bias to the same rotation point.
-function twistNormal( C, th, n ) {
-	const del = delwrap( (th+twistDelta/4) );
-	const adel = Math.abs( del );
-	const sdel = (del<0)?-1:1;
-
-//	console.log( "This is the one I really care about anyway...", del, th );
-	const sx = C.x<0?-1:1;
-	const sy = C.y<0?-1:1;
-	const sz = C.z<0?-1:1;
-
-	const ax = Math.abs(C.x);
-	const ay = Math.abs(C.y);
-	const az = Math.abs(C.z);
-	const angleSum = ax+ay+az;    // max x/y/z
-
-	let zMin,zMid,zMax;
-	let yMin,yMid,yMax;
-	let xMin,xMid,xMax;
-
-	if( az > ax ) {
-		// z is max rotation - principle change.
-		// x is mid
-		// y is min
-		// ** normal case 2
-
-		// N = A+B;
-		// 2PI-N= (A'+B');
-		// PI-N= (A'' + B'' );
-		// M = A/B; 
-		zMax = sz*(Math.PI-ax);
-		xMax = sx*(Math.PI-az);
-		zMid = zMax/2; 
-		xMid = xMax/2;
-		//zMid = ax;
-		yMax = 0;
-		yMid = 2*Math.PI - sz*(ax);
-		//xMid = 0;
-	}else {
-		zMax = sz*(Math.PI-ax);
-		xMax = sx*(Math.PI-az);
-		zMid = zMax/2; 
-		xMid = xMax/2;
-
-		
-		yMax = Math.PI-(ay - (ax) );
-		yMid = 2*Math.PI-ax;
-
-	}
-	
-	if( adel < 0.5 ) {
-		C.x = C.x + xMid * Math.sin(del);
-		C.z = C.z + zMid * Math.sin(del); // 1->-1
-		C.y = yMid*Math.sin(del);
-	} else {
-		C.y = (1-del)*del;
-		C.x = C.x - xMax * ((del-0.5)*2);
-		C.z = C.z - zMax * ((del-0.5)*2);
-	}
-	C.dirty = true;
-	return C;
-}
-
-function twist( C, th, n ) {
-	// rebase a quaternion; but given that the need to be relative to the
-	// same 'basis' zero of 'Y' as 'up'
-	// otherwise I don't know the angle around the new circle to end up at.
-	//if( C.y === 0 ) return twistNormal( C, th, n );
-
+function twist( C, th ) {
 	const basis = C.getBasis();
 	const twistor = new lnQuat( th, basis.up );
 	basis.up = twistor.apply(basis.up);
 	basis.right = twistor.apply(basis.right);
 	basis.forward = twistor.apply(basis.forward);
-//	t = Qxx+Qyy+Qzz (trace of Q)
-
 	return C.fromBasis( basis );
-
-
-	const ax = Math.abs(C.x);
-	const ay = Math.abs(C.y);
-	const az = Math.abs(C.z);
-	const angleSum = ax+ay+az;
-
-	if( ax > ay ) {
-		if( az > ax ) {
-			// z is max rotation - principle change.
-			// x is mid
-			// y is min
-			// ** normal case 2
-			zMax = Math.PI-az;
-			zMid = ax;
-			yMax = Math.PI-(ay - (ax) );
-			yMid = 
-			xMax = Math.PI-ax;
-			xMid = 0;
-			
-		} else {
-			// x is main rotation 
-			if( az > ay ) {
-				// z is mid
-				// y is min
-				// ** normal case 1
-			} else {
-				// y is mid
-				// z is min
-			}
-		}
-	} else {
-		if( az > ay ) {
-			// az is max
-			// ay is mid
-			// ax is min
-		} else {
-			if( az > ax ) {
-				// y is max
-				// z is mid
-				// x is min
-			}else {
-				// y is max
-				// z is mid
-				// x is min
-			}
-		}
-	}
-
-
-	// x/z are sin/cos of angle, times 1 normal length to each... 
-	// so square of sum = 1, sqrt = 1 * currentAngle.
-	const minAngle = Math.sqrt( C.x*C.x +C.y*C.y +C.z*C.z );
-	
-	const normal = C.apply( {x:0,y:1,z:0} );
-	const CnQ = new lnQuat( th, normal );
-	const Crot = CnQ.apply( C );
-	console.log( "calc:", th, C, CnQ, Crot );
-	C.x += CnQ.x;
-	C.y += CnQ.y;
-	C.z += CnQ.z;
-	C.dirty = true;
-	return C;
-	//const D = new lnQuat( Math.PI/2, n.x,n.y,n.z );
-	//const r = D.applyDel( C, -th/2+twistDelta*3 );
-//console.log( "Twist:", twistDelta, D );
-	const del = delwrap( (th+twistDelta/4) );
-		
-	if( del ) {
-		if( del < 0 ) {
-			maxY = Math.PI-angleSum;
-		} else {
-			maxY = -Math.PI-angleSum;
-		}
-		if( angleSum < Math.PI/2 )  {
-			if( ( del > 0.5 ) || (del < 0 && del < -0.5 ) ) {
-				// outside; past the 'mid point'
-			} else {
-				// before the 'mid point' (up to +/- 90 degrees)
-				// A = A + angleSum * del*A/B
-				// B = B + angleSUm * del*B/A
-				// BMin = A
-		        
-				if( ax < az ) { // z is the 'main' axis of rotation.
-					//const nx = C.x - C.x * del/2;
-					const zdel=(C.z<0?-1:1)*(az-ax+B/10) * (del);
-					const nx = C.x + Math.PI*(C.z<0?-1:1)* zdel/2;
-					const nz = C.z - Math.PI/angleSum*zdel//(C.z<0?-1:1)*(az-ax+B/10) * (del);
-					const ny = C.y - zdel/2 * 2*Math.PI;//- del*(Math.PI-(az+ax))/2;
-					C.x = nx; C.y = ny; C.z = nz; C.dirty = true; 
-				} else { // x is the 'main' axis of rotation.
-					// the min is the cz... 
-					const zdel=(C.x<0?-1:1)*(ax-az+B/10) * (del);
-					const nx = C.x - zdel;
-					const nz = C.z + (C.x<0?1:-1)*zdel/2;
-					const ny = C.y - zdel/2 * Math.PI/angleSum;
-					C.x = nx; C.y = ny; C.z = nz; C.dirty = true; 
-				}
-				return C;
-			}
-                } else {
-			if( ( del > 0.5 ) || (del < 0 && del < -0.5 ) ) {
-				// outside; past the 'mid point'
-			} else {
-				// before the 'mid point' (up to +/- 90 degrees)
-				// A = A + angleSum * del*A/B
-				// B = B + angleSUm * del*B/A
-				// BMin = A
-				const ax = Math.abs(C.x);
-				const az = Math.abs(C.z);
-		        
-				if( ax < az ) { // z is the 'main' axis of rotation.
-					const nx = C.x - C.x * del/2;
-					const nz = C.z - (C.z<0?-1:1)*(ax) * (del)+B/10;
-					const ny = -del*(3*Math.PI-(ax+az));
-					C.x = nx; C.y = ny; C.z = nz; C.dirty = true; 
-				} else { // x is the 'main' axis of rotation.
-					// the min is the cz... 
-					const nx = C.x - (C.x<0?-1:1)*(az) * del;
-					const nz = C.z - (C.z) * (del);
-					const ny = -del*(3*Math.PI-(ax+az));
-					C.x = nx; C.y = ny; C.z = nz; C.dirty = true; 
-				}
-				return C;
-			}
-		}
-		// throw out any unmodified ones.
-		//C.z = angleSum;
-		//C.x = 0;
-		//C.dirty= true;
-		return C;
-		// del = (del+1)%2-1;
-		// A = 0 + (del*2)*A/B*angleSum
-
-		// B = 0 + (del*2)*A/B*angleSum
-
-		if(1)
-		{       // max angle = Math.PI at +/- 90 degrees
-			// max angle = 2*Math.PI - maxAngle    at 180 degrees...
-
-			// at first 'right' triangle (90 degrees left/right)
-			angle = angleSum - (Math.PI-angleSum)*del; // 180 degrees.
-			
-
-			C.y = angle;// maxAngle -(C.z<0?-1:1)* C.x*del*2;
-			//C.z = C.z -  del*angleSum;// - C.x;
-			//C.x = C.x -  del*angleSum;
-			C.dirty = true;
-			return C;
-			
-		}
-
-		// the closest axis leaves the remainder in the longest
-		// and the vertical scales by the missing short part... 
-
-		if( Math.abs(C.x)<Math.abs(C.z) ) 
-		{       // max angle = Math.PI at +/- 90 degrees
-			// max angle = 2*Math.PI - maxAngle    at 180 degrees...
-
-			// at first 'right' triangle (90 degrees left/right)
-			angle = Math.PI; // 180 degrees.
-			
-
-			C.y = maxAngle -(C.z<0?-1:1)* C.x*del*2;
-			C.z = C.z - C.x*del;// - C.x;
-			C.x = C.x - C.x*del;
-			C.dirty = true;
-			return C;
-			
-		}
-
-		if( Math.abs(C.z)<Math.abs(C.x) ) 
-		//if(1)
-		{
-			C.y = +(C.x<0?-1:1)*C.z*del;
-			//C.x = del*C.x;
-			C.z = C.z-C.z*del;
-			C.dirty = true;
-			return C;
-			
-		}
-		C.dirty = true;
-		//(C.x<0?1:-1)*
-		C.x = C.x +  (C.x<0?1:-1)*del*(C.nL-C.x);
-		C.y = -del*2*C.nL;
-		C.z = C.z +  (C.z<0?1:-1)*del*(C.nL-C.z);
-	} else {
-		// no twist.
-		return C;
-	}
-//	C.add(D,th/2+(twistDelta)*3);
-	return C.update();
-	const twist = D.apply( {x:0,y:1,z:0} );
-	
-	C.x = twist.x;
-	C.y = twist.y;
-	C.z = twist.z;
-	C.update();
-	return C;
-	//C.x = D.x; C.y=D.y; C.z=D.z; C.update(); return C;
-	const CpD = C.add2( D );
-	//C.x = CpD.x; C.y=CpD.y; C.z=CpD.z; C.update(); return C;
-
-	// this is basically C again, anyway...
-	const F = new lnQuat( n );
-
-	//C.x = F.x; C.y=F.y; C.z=F.z; C.update(); return C;
-// A + B = C
-// C + D = E		
-// A + F = E
-// A + (D - F) = E ?
-//
-// 
-//  C + D = A + F
-//  A - C = F - D
-//  -B = F-D
-//  B = D-F
-
-	//console.log( " input:", q, th, n, D, CpD, E, F );
-	C.x = D.x - F.x;
-	C.y = D.y - F.y;
-	C.z = D.z - F.z;
-	C.update();
-	//console.log( "output:", q );
-	return C;
-	// v is now the total rotation
 }
 
 // rotate the passed vector 'from' this space

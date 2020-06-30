@@ -16,9 +16,9 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	let lnQ = new lnQuat( {a:A,b:0*B,c:C} );
 	//0.53118619792
 		
-	drawBasis( lnQ, 1.0 );
-
-	lnQt = new lnQuat( lnQ.getBasis() );
+//	drawBasis( lnQ, 1.0 );
+	let qBasis;
+	lnQt = new lnQuat( qBasis = lnQ.getBasis() );
 	drawBasis( lnQt, 1.0 );
 
         //lnQ.x /= 2;
@@ -26,105 +26,12 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	let lnQP = null;
 	const n = lnQ.apply( {x:0,y:1,z:0} );
 	
-	if(0){ // this ends up rotated 180 degrees.
-		//lnQP = new lnQuat( Math.PI, n );
-		// 0.39
-		lnQP = new lnQuat( {a:-Math.sin(q.z),b:Math.PI-Math.sin(az),c:0} );
-		drawBasis( lnQP, 1.0 );
-	}
 	if(1){ // this ends up rotated 180 degrees.
-		//lnQP = new lnQuat( Math.PI, n );
-		// 0.39
 		let lnQtmp = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 		lnQtmp.twist( B*Math.PI/2);
-		//lnQtmp.x += q.x;
-		//lnQtmp.y += q.y;
-		//lnQtmp.z += q.z;
-		//lnQtmp.dirty = true;
 		drawBasis( lnQtmp, 1.0 );
-		//drawBasis( lnQtmp2, 1.0 );
-	}
-	if(0){ // this ends up rotated 180 degrees.
-		let lnQZ = new lnQuat( {a:Math.PI/2,b:0*B,c:0} );
-		let zNorm = lnQZ.apply( {x:0,y:0,z:az} );
-		let zNorm2 = lnQ.applyDel( zNorm, 0.5 );
-
-		//lnQ = new lnQuat( {a:-zNorm2.z*angleSum,b:-(Math.PI/2-angleSum)*zNorm2.y,c:-zNorm2.x*angleSum} );
-			
-		let lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.1, b:lnQ.y+(lnQP.y-lnQ.y)*0.1, c:lnQ.z+(lnQP.z-lnQ.z)*0.1} );
-		drawBasis( lnQz, 1.0 );
-
-		 lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.4, b:lnQ.y+(lnQP.y-lnQ.y)*0.4, c:lnQ.z+(lnQP.z-lnQ.z)*0.4} );
-		drawBasis( lnQz, 1.0 );
-
-		 lnQz = new lnQuat( {a:lnQ.x+(lnQP.x-lnQ.x)*0.9, b:lnQ.y+(lnQP.y-lnQ.y)*0.9, c:lnQ.z+(lnQP.z-lnQ.z)*0.9} );
-		drawBasis( lnQz, 1.0 );
-
-		//drawBasis( lnQ, 1.0 );
-
 	}
 
-	if(0){ // this ends up rotated 180 degrees.
-		let lnQZ = new lnQuat( {a:Math.PI/4,b:0*B,c:0} );
-		let zNorm = lnQZ.apply( {x:0,y:0,z:1} );
-		let zNorm2 = lnQ.applyDel( zNorm, 0.5 );
-
-		lnQ = new lnQuat( {a:-zNorm2.z*angleSum,b:-(Math.PI/4-angleSum)*zNorm2.y,c:-zNorm2.x*angleSum} );
-		
-		//lnQ = new lnQuat( Math.PI/2, n );
-		drawBasis( lnQ, 1.0 );
-	}
-
-	if(0) // this ends up rotated 90 degrees...
-	if( angleSum < Math.PI/2 ) {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:-C/2,b:Math.PI/2-Math.abs(C),c:C/2+B/2} );
-		drawBasis( lnQ, 1.0 );
-
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:A/2+B/2,b:Math.PI/2-Math.abs(A),c:A/2} );
-		drawBasis( lnQ, 1.0 );
-	} else {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:C/2,b:-Math.PI/2+Math.abs(C),c:C/2+B/2} );
-		drawBasis( lnQ, 1.0 );
-
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:A/2+B/2,b:-Math.PI/2+Math.abs(A),c:-A/2} );
-		drawBasis( lnQ, 1.0 );
-	}
-
-	// this is rotated 45 degrees.... (not correct enough)
-	if(0)
-	if( angleSum < Math.PI/2 ) {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:-C/4,b:Math.PI/4-Math.abs(C),c:C/4+B/4} );
-		drawBasis( lnQ, 1.0 );
-
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:A/4+B/2,b:Math.PI/4-Math.abs(A),c:A/4} );
-		drawBasis( lnQ, 1.0 );
-	} else {
-		// this is good up to half a circle...
-		lnQ = new lnQuat( {a:C/4,b:-Math.PI/4+Math.abs(C),c:C/2+B/4} );
-		drawBasis( lnQ, 1.0 );
-
-		// this is good up to half a circle... (needs linearization)
-		lnQ = new lnQuat( {a:A/4+B/2,b:-Math.PI/4+Math.abs(A),c:-A/4} );
-		drawBasis( lnQ, 1.0 );
-	}
-
-
-	//lnQ = new lnQuat( {a:A,b:B,C:C} );
-	//drawBasis( lnQ, 1.0 );
-
-	//lnQ = new lnQuat( {a:Math.PI-A,b:B,c:-C} );
-	//drawBasis( lnQ, 1.0 );
-
-	//lnQ = new lnQuat( {a:-A,b:-B,c:-C} );
-	//drawBasis( lnQ, 1.0 );
-	//const q2 = q.add2( lnQ2 );
-	//const lnQ = new lnQuat( {a:Math.PI*1.899,b:0,c:0});//b:Math.PI*1.899,c:Math.PI*1.899} );
 	return;
 
 		function drawBasis( lnQ,T )
@@ -148,7 +55,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			};
 			
 			new_v.x += o[0];new_v.y += o[1];new_v.z += o[2];
-			const basis = { up:lnQ.applyDel( {x:0,y:1,z:0} ),right:lnQ.applyDel( {x:1,y:0,z:0} ),forward:lnQ.applyDel( {x:0,y:0,z:1} )};
+			const basis = lnQ.getBasis();//{ up:lnQ.applyDel( {x:0,y:1,z:0} ),right:lnQ.applyDel( {x:1,y:0,z:0} ),forward:lnQ.applyDel( {x:0,y:0,z:1} )};
 			
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                           ,new_v.y*spaceScale                           , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del, new_v.z*spaceScale + basis.right.z*normal_del ))
@@ -165,27 +72,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalColors.push( new THREE.Color( 0,255,0,255 ))
 			normalColors.push( new THREE.Color( 0,0,255,255))
 			normalColors.push( new THREE.Color( 0,0,255,255 ))
-
-			const lnQTwist = new lnQuat( Math.PI/2*B, basis.up );
-			basis.up = lnQTwist.apply( basis.up );
-			basis.right = lnQTwist.apply( basis.right );
-			basis.forward = lnQTwist.apply( basis.forward );
-			
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                           ,new_v.y*spaceScale                           , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del, new_v.z*spaceScale + basis.right.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                        ,new_v.y*spaceScale                        , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
-
-			normalColors.push( new THREE.Color( 127,0,0,255 ))
-			normalColors.push( new THREE.Color( 127,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,127,0,255 ))
-			normalColors.push( new THREE.Color( 0,127,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,127,255))
-			normalColors.push( new THREE.Color( 0,0,127,255 ))
 
 		}
 }
@@ -345,9 +231,9 @@ function DrawQuatPaths(normalVertices,normalColors) {
 			//let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(B=(lnQY/10-5)/20) , c: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
 			T = ((lnQT+1)/21);
 			let lnQ = new lnQuat(  { a:T*(A=lnQX/10-5) , b:T*(B=lnQY/10-5) , c:T*(C=lnQZ/10-5)  } );
-	A = A/3;
-	B = B/3;
-	C = C/3;
+	A = A;
+	B = B;
+	C = C;
 	D = T;
 twistDelta = A;
 
