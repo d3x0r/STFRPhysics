@@ -595,6 +595,7 @@ function drawQuatTwist() {
 		histories.y.push(lnQc.y);
 		histories.z.push(lnQc.z);
 
+		plot( x, Math.abs(lnQc.x)+Math.abs(lnQc.y)+Math.abs(lnQc.z), pens[7] );
 		plot( x, lnQc.x, pens[0] );
 		plot( x, lnQc.y, pens[1] );
 		plot( x, lnQc.z, pens[2] );
