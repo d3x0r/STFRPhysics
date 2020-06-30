@@ -199,8 +199,8 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
 	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
 
-	this.x = (basis.up.z      -basis.forward.y)   *tmp;
-	this.y = (basis.forward.x -basis.right.z  )*tmp;
+	this.x = (basis.up.z      -basis.forward.y) *tmp;
+	this.y = (basis.forward.x -basis.right.z  ) *tmp;
 	this.z = (basis.right.y   -basis.up.x     ) *tmp;
 	const lNorm = angle / (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
 	this.x *= lNorm;
