@@ -513,13 +513,14 @@ function testComplex() {
 
 
 function drawQuatTwist() {
+	const histories = {x:[],y:[],z:[] };
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
 	const minScaleX = 0;
-	const maxScaleX = Math.PI*4;
+	const maxScaleX = Math.PI*6;
 
-	const minScaleY = -3;
-	const maxScaleY = 3;
+	const minScaleY = -4;
+	const maxScaleY = 4;
 
 	const delStep = (min,max,x)=>( (max-min)/x );
 	const stepX = (x)=>( (maxScaleX-minScaleX)/x );
@@ -560,12 +561,40 @@ function drawQuatTwist() {
 		
 	const lnQ = new lnQuat( {a:0,b:0,c:Math.PI/4} );
 	for( x = minScaleY; x < maxScaleY; x+= stepY(100 ) ) {
-		plot( 0, x, pens[6]);
+		for( y = 0; y < 6; y++ ) {
+			plot( y*Math.PI, x, pens[6]);
+		}
 	}
-
+	let drewBar = minScaleX;
 	for( x = minScaleX; x < maxScaleX; x+= stepX(1000 ) ) {
+		plot( x, 0, pens[5] );
+		plot( x, Math.PI/2, pens[4] );
+		plot( x, -Math.PI/2, pens[4] );
+		plot( x, Math.PI, pens[7] );
+		plot( x, -Math.PI, pens[7] );
 		const lnQc = new lnQuat( {a:values.A,b:values.B,c:values.C} );
 		lnQc.twist( x );
+
+		if( ( x - drewBar ) > 2 ) {
+		for( W = 0; W < histories.x.length; W++ ) {
+			if( Math.abs( histories.x[W] - lnQc.x ) < 0.005 ) {
+			if( Math.abs( histories.y[W] - lnQc.y ) < 0.005 ) {
+			if( Math.abs( histories.z[W] - lnQc.z ) < 0.005 ) {
+			console.log( "TICK", x );
+				for( y = minScaleY; y < maxScaleY; y += stepY(500 ) ) {
+					plot( x, y, pens[0]);
+				}
+				drewBar = x;
+				break;
+			}
+			}
+			}
+		}
+		}
+		histories.x.push(lnQc.x);
+		histories.y.push(lnQc.y);
+		histories.z.push(lnQc.z);
+
 		plot( x, lnQc.x, pens[0] );
 		plot( x, lnQc.y, pens[1] );
 		plot( x, lnQc.z, pens[2] );
