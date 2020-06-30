@@ -517,7 +517,7 @@ function drawQuatTwist() {
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
 	const minScaleX = 0;
-	const maxScaleX = Math.PI*6;
+	const maxScaleX = Math.PI*2.1;
 
 	const minScaleY = -4;
 	const maxScaleY = 4;
@@ -561,7 +561,7 @@ function drawQuatTwist() {
 		
 	const lnQ = new lnQuat( {a:0,b:0,c:Math.PI/4} );
 	for( x = minScaleY; x < maxScaleY; x+= stepY(100 ) ) {
-		for( y = 0; y < 6; y++ ) {
+		for( y = 0; y < 2; y++ ) {
 			plot( y*Math.PI, x, pens[6]);
 		}
 	}
@@ -594,8 +594,10 @@ function drawQuatTwist() {
 		histories.x.push(lnQc.x);
 		histories.y.push(lnQc.y);
 		histories.z.push(lnQc.z);
-
-		plot( x, Math.abs(lnQc.x)+Math.abs(lnQc.y)+Math.abs(lnQc.z), pens[7] );
+		const t = Math.abs(lnQc.x)+Math.abs(lnQc.y)+Math.abs(lnQc.z);
+	
+		plot( x, t, pens[7] );
+		//plot( x, acos, pens[7] );
 		plot( x, lnQc.x, pens[0] );
 		plot( x, lnQc.y, pens[1] );
 		plot( x, lnQc.z, pens[2] );
