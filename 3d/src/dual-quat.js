@@ -169,9 +169,13 @@ function lnQuat( theta, d, a, b ){
 			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			// if no rotation, then nothing.
 			if( Math.abs(t) > 0.000001 ) {
-				this.x = (d.x * dl) * theta/2;
-				this.y = (d.y * dl) * theta/2;
-				this.z = (d.z * dl) * theta/2;
+				this.x = (d.x * dl);
+				this.y = (d.y * dl);
+				this.z = (d.z * dl);
+				const lNorm = theta/(Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
+				this.x *= lNorm;
+				this.y *= lNorm;
+				this.z *= lNorm;
 				this.update();
 				return;
 			}
