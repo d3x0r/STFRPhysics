@@ -630,7 +630,7 @@ function drawQuatTwist() {
 	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
 	  */
 
-		const t = lnQc.nL;
+		const t = lnQc.x +lnQc.y +lnQc.z;
 		const xx = lnQc.x / lnQc.nR;	
 		const yy = lnQc.y / lnQc.nR;	
 		const zz = lnQc.z / lnQc.nR;	
@@ -641,6 +641,8 @@ function drawQuatTwist() {
 
 
 		plot( x, t, pens[7] );
+		const t2 = lnQc.nx +lnQc.ny +lnQc.nz;
+		plot( x, t2, pens[7] );
 		
 		plot( x, lnQc.nx, pens[0] );
 		plot( x, lnQc.ny, pens[1] );
@@ -659,15 +661,15 @@ function drawQuatTwist() {
 		plot( x, -lnQc.z, pens[8] );
 
 
-		if( Math.abs(x-Math.PI -values.A) < 0.01  )
+		if( Math.abs(x -values.A) < 0.01  )
 				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
 					plot( x, y, pens[0]);
 				}
-		if( Math.abs(x-Math.PI -values.B) < 0.01  )
+		if( Math.abs(x -values.B) < 0.01  )
 				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
 					plot( x, y, pens[1]);
 				}
-		if( Math.abs(x-Math.PI -values.C) < 0.01  )
+		if( Math.abs(x -values.C) < 0.01  )
 				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
 					plot( x, y, pens[2]);
 				}
