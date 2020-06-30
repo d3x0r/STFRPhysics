@@ -102,6 +102,9 @@ function lnQuat( theta, d, a, b ){
 			this.qw = Math.cos(this.w/2);
 		}else {
 			if( "object" === typeof theta ) {
+				if( "up" in theta ) {
+					return this.fromBasis( theta );
+				}
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
 					this.x = theta.a;
@@ -152,18 +155,98 @@ function lnQuat( theta, d, a, b ){
 
 			// very long ranges of multiples of turns around the axis is ... bad.
 			// the scalar for calculating the axis normal back from the 
-			const dl = 1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
+			const dl = 1/( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
 			const t  = theta;
+			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			// if no rotation, then nothing.
 			if( Math.abs(t) > 0.000001 ) {
-				this.x = (d.x * dl) * theta;
-				this.y = (d.y * dl) * theta;
-				this.z = (d.z * dl) * theta;
+				this.x = (d.x * dl) * theta/2;
+				this.y = (d.y * dl) * theta/2;
+				this.z = (d.z * dl) * theta/2;
 				this.update();
 				return;
 			}
 		}
 	} 
+}
+
+lnQuat.prototype.fromBasis = function( basis ) {
+//r = sqrt(1+t)
+//w = 0.5*r
+//x = copysign(0.5*sqrt(1+Qxx-Qyy-Qzz), Qzy-Qyz)
+//y = copysign(0.5*sqrt(1-Qxx+Qyy-Qzz), Qxz-Qzx)
+//z = copysign(0.5*sqrt(1-Qxx-Qyy+Qzz), Qyx-Qxy)
+	/*
+	where copysign(x,y) is x with the sign of y:
+	copysign(x,y) = sign(y) |x|;
+
+	*/
+	/*
+	t = Qxx+Qyy+Qzz
+r = sqrt(1+t)
+s = 0.5/r
+w = 0.5*r
+x = (Qzy-Qyz)*s
+y = (Qxz-Qzx)*s
+z = (Qyx-Qxy)*s
+*/
+	const quat = { x:0,y:0,z:0,w:0};
+	//let zz;
+	//zz = basis.forward;
+	//basis.forward = basis.up;
+	//basis.up = zz;
+	const t = basis.right.x + basis.up.y + basis.forward.z;
+	if( t > 0 )
+	{
+		const r = Math.sqrt((1+t)/2);
+		const s = r*0.6383;
+		quat.w = r;
+		quat.x = -(basis.forward.y-basis.up.z)*s;
+		quat.y = (basis.right.z-basis.forward.x)*s;
+		quat.z = -(basis.up.x-basis.right.y)*s;
+	}
+	else if ((basis.right.x > basis.up.y)&&(basis.right.x > basis.forward.z)) { 
+		const S = Math.sqrt(1.0 + basis.right.x - basis.up.y - basis.forward.z) * (2); // S=4*qx 
+		quat.x = (basis.forward.y - basis.up.z) / S;
+		quat.y = (0.25) * S;
+		quat.z = (basis.right.y + basis.up.x) / S; 
+		quat.w = (basis.right.z + basis.forward.x) / S; 
+	} else if (basis.up.y > basis.forward.z) { 
+		const S = Math.sqrt(1.0 + basis.up.y - basis.right.x - basis.forward.z) * (2); // S=4*qy
+		quat.x = (basis.right.z - basis.forward.x) / S;
+		quat.y = (basis.right.y + basis.up.x) / S; 
+		quat.z = (0.25) * S;
+		quat.w = (basis.up.z + basis.forward.y) / S; 
+	} else { 
+		const S = Math.sqrt(1.0 + basis.forward.z - basis.right.x - basis.up.y) * (2); // S=4*qz
+		quat.x = (basis.up.x - basis.right.y) / S;
+		quat.y = (basis.right.z + basis.forward.x) / S;
+		quat.z = (basis.up.z + basis.forward.y) / S;
+		quat.w = (0.25) * S;
+	}
+
+	const x = quat.x;
+	const y = quat.y;
+	const z = quat.z;
+	if( ASSERT ) {
+		const l = 1/Math.sqrt(x*x + y*y + z*z );
+		if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
+	}
+
+	const w = quat.w;
+	const r  = Math.sqrt(x*x+y*y+z*z);
+	const ang = Math.atan2(r,w);
+	if( r < 0.001 ) {
+		// cannot know the direction.
+		return new lnQuat( ang, 0, 1, 0 )
+	}
+	const n  = ang/r;
+
+	this.x = x *n ;
+	this.y = y *n ;
+	this.z = z *n ;
+	this.dirty = true;
+	return this;	
 }
 
 lnQuat.prototype.exp = function() {
@@ -548,7 +631,7 @@ function twistNormal( C, th, n ) {
 	} else {
 		C.y = (1-del)*del;
 		C.x = C.x - xMax * ((del-0.5)*2);
-		c.z = C.z - zMax * ((del-0.5)*2);
+		C.z = C.z - zMax * ((del-0.5)*2);
 	}
 	C.dirty = true;
 	return C;
@@ -558,7 +641,18 @@ function twist( C, th, n ) {
 	// rebase a quaternion; but given that the need to be relative to the
 	// same 'basis' zero of 'Y' as 'up'
 	// otherwise I don't know the angle around the new circle to end up at.
-	if( C.y === 0 ) return twistNormal( C, th, n );
+	//if( C.y === 0 ) return twistNormal( C, th, n );
+
+	const basis = C.getBasis();
+	const twistor = new lnQuat( th, basis.up );
+	basis.up = twistor.apply(basis.up);
+	basis.right = twistor.apply(basis.right);
+	basis.forward = twistor.apply(basis.forward);
+//	t = Qxx+Qyy+Qzz (trace of Q)
+
+	return C.fromBasis( basis );
+
+
 	const ax = Math.abs(C.x);
 	const ay = Math.abs(C.y);
 	const az = Math.abs(C.z);
