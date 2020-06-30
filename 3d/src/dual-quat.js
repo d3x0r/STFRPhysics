@@ -103,6 +103,7 @@ function lnQuat( theta, d, a, b ){
 		}else {
 			if( "object" === typeof theta ) {
 				if( "up" in theta ) {
+// basis object {forward:,right:,up:}
 					return this.fromBasis( theta );
 				}
 				if( "a" in theta ) {
@@ -126,22 +127,30 @@ function lnQuat( theta, d, a, b ){
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
 						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
 
-						//this.x = tz*(Math.PI*2+qw);
-						//this.y = Math.PI*2;
-						//this.z = -tx*(Math.PI*2+qw);
-
-						this.x = tz*(0+qw);
+						this.x = tz*qw;
 						this.y = 0;
-						this.z = -tx*(0+qw);
+						this.z = -tx*qw;
 					        
 						this.update();
 						if(1)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
-							twisting = true;
-							const norm = this.apply( {x:0,y:1,z:0} );
-							//norm[1] += 1;
-							twist( this, 0*qw /*angle*/, norm );
-							twisting = false;
+							const trst = this.getBasis();
+							const fN = 1/Math.sqrt( tz*tz+tx*tx );
+
+							trst.forward.x = tz*fN;
+							trst.forward.y = 0;
+							trst.forward.z = -tx*fN;
+							trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
+							trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
+							trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
+
+							this.fromBasis( trst );
+							this.update();
+							if( twistDelta ) {
+								twisting = true;
+								twist( this, twistDelta /*+ angle*/ );
+								twisting = false;
+							}
 						}
 						return;
 					}
@@ -510,14 +519,9 @@ lnQuat.prototype.applyInv = function( v ) {
 	// 21 mul + 9 add
 }
 
-// if ( x < z ) 
-//    if ( x > 0 )
-//    if ( x < 0 )
-
 lnQuat.prototype.twist = function(c){
 	return twist( this, c );
 }
-
 
 function twist( C, th ) {
 	const basis = C.getBasis();
