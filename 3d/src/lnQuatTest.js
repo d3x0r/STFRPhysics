@@ -164,9 +164,9 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	}
 	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
-if(0)
+if(1)
 	for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
-		for( let t = 1*-Math.PI; t < Math.PI; t+= 0.25/2 ){
+		for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			let x = Math.sin(t );
 			const z = Math.cos(t);
 			let norm ;
