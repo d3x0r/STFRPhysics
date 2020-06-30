@@ -197,14 +197,11 @@ y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */
 
-	const tmp = (basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y);
-	this.x = (basis.up.z      -basis.forward.y)     /Math.sqrt( tmp );
-	this.y = (basis.forward.x -basis.right.z  )/Math.sqrt( tmp );
-	this.z = (basis.right.y   -basis.up.x     )  /Math.sqrt( tmp );
-	const normAngle = angle / (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
-	this.x *= normAngle;
-	this.y *= normAngle;
-	this.z *= normAngle;
+	const tmp = angle /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
+
+	this.x = (basis.up.z      -basis.forward.y)   *tmp;
+	this.y = (basis.forward.x -basis.right.z  )*tmp;
+	this.z = (basis.right.y   -basis.up.x     ) *tmp;
 	this.dirty = true;
 	return this;
 }
