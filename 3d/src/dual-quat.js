@@ -183,7 +183,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
-	const angle = acos(t);
+	const angle = Math.acos(t);
 	//const zz1 = {x:basis.right.x, y: basis.up.y, z: basis.forward.z };
 /*
 x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
