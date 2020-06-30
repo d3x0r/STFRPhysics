@@ -591,9 +591,13 @@ function drawQuatTwist() {
 			}
 		}
 		}
-		histories.x.push(lnQc.x);
-		histories.y.push(lnQc.y);
-		histories.z.push(lnQc.z);
+
+
+		
+		//histories.x.push(lnQc.x);
+		//histories.y.push(lnQc.y);
+		//histories.z.push(lnQc.z);
+
 		const t = Math.abs(lnQc.x)+Math.abs(lnQc.y)+Math.abs(lnQc.z);
 	
 		plot( x, t, pens[7] );
@@ -601,6 +605,20 @@ function drawQuatTwist() {
 		plot( x, lnQc.x, pens[0] );
 		plot( x, lnQc.y, pens[1] );
 		plot( x, lnQc.z, pens[2] );
+
+		if( Math.abs(x-Math.PI -values.A) < 0.01  )
+				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
+					plot( x, y, pens[0]);
+				}
+		if( Math.abs(x-Math.PI -values.B) < 0.01  )
+				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
+					plot( x, y, pens[1]);
+				}
+		if( Math.abs(x-Math.PI -values.C) < 0.01  )
+				for( y = -0.25; y < 0.25; y += stepY(500 ) ) {
+					plot( x, y, pens[2]);
+				}
+
 	}	
 
 	ctx.putImageData(_output, 0,0);
