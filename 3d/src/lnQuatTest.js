@@ -31,12 +31,27 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		lnQtmp.twist( B*Math.PI/2);
 		drawBasis( lnQtmp, 1.0 );
 	}
+	                   {
+			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );
+				const twistAxis = { x:lnQ.y * new_v.z - new_v.y * lnQ.z
+			                          , y:lnQ.z * new_v.x - new_v.z * lnQ.x
+			                          , z:lnQ.x * new_v.y - new_v.x * lnQ.y
+
+						};
+			const lnQTwist = new lnQuat( {x:lnQ.y * new_v.z - new_v.y * lnQ.z
+			                             ,y:lnQ.z * new_v.x - new_v.z * lnQ.x
+			                             ,z:lnQ.x * new_v.y - new_v.x * lnQ.y
+
+						} );
+			drawBasis( lnQTwist, 1.0 );
+			}
 
 	return;
 
 		function drawBasis( lnQ,T )
 		{
-			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, T );
+
+			const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 1.0 );
 
 			// draw path leading up to 1.0....
 			let prior_v = null;
@@ -73,6 +88,46 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalColors.push( new THREE.Color( 0,0,255,255))
 			normalColors.push( new THREE.Color( 0,0,255,255 ))
 
+			{
+			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+			for( var t = 0; t<= Math.PI; t+=0.1 ) {
+			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+				lnQ2.twist( 0.1 ).update();
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale - 0.5 * normal_del   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale  , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale + 0.5 * normal_del   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale  , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale ))
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale - 0.5 * normal_del  , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale + 0.5 * normal_del  , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale  ))
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale - 0.5 * normal_del  ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx/lnQ2.nL)*spaceScale   ,(o[1]+lnQ2.ny/lnQ2.nL)*spaceScale , (o[2]+lnQ2.nz/lnQ2.nL)*spaceScale + 0.5 * normal_del  ))
+
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,255,255))
+			normalColors.push( new THREE.Color( 0,0,255,255 ))
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale - 0.5 * normal_del   ,(o[1]+lnQ2.ny)*spaceScale  , (o[2]+lnQ2.nz)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale + 0.5 * normal_del   ,(o[1]+lnQ2.ny)*spaceScale  , (o[2]+lnQ2.nz)*spaceScale ))
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale   ,(o[1]+lnQ2.ny)*spaceScale - 0.5 * normal_del  , (o[2]+lnQ2.nz)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale   ,(o[1]+lnQ2.ny)*spaceScale + 0.5 * normal_del  , (o[2]+lnQ2.nz)*spaceScale  ))
+
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale   ,(o[1]+lnQ2.ny)*spaceScale , (o[2]+lnQ2.nz)*spaceScale - 0.5 * normal_del  ))
+			normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale   ,(o[1]+lnQ2.ny)*spaceScale , (o[2]+lnQ2.nz)*spaceScale + 0.5 * normal_del  ))
+
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 255,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,255,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,255,255))
+			normalColors.push( new THREE.Color( 0,0,255,255 ))
+
+			}
+			}
 		}
 }
 
