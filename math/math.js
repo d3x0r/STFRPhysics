@@ -516,8 +516,8 @@ function drawQuatTwist() {
 	const histories = {x:[],y:[],z:[] };
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
-	const minScaleX = -Math.PI*2.1;
-	const maxScaleX = Math.PI*2.1;
+	const minScaleX = -Math.PI*3.1;
+	const maxScaleX = Math.PI*4.5;
 
 	const minScaleY = -8;
 	const maxScaleY = 8;
@@ -559,7 +559,7 @@ function drawQuatTwist() {
 		output[((x+y*squareSize)<<2)+3] = c[3];
 	}
 		
-	const lnQ = new lnQuat( {a:0,b:0,c:Math.PI/4} );
+	const lnQ = new lnQuat( {a:values.A,b:values.B,c:values.C} );
 	for( x = minScaleY; x < maxScaleY; x+= stepY(100 ) ) {
 		for( y = -2; y < 2; y++ ) {
 			plot( y*Math.PI, x, pens[6]);
@@ -635,9 +635,9 @@ function drawQuatTwist() {
 		const yy = lnQc.y / lnQc.nR;	
 		const zz = lnQc.z / lnQc.nR;	
 
-	//	plot( x, xx*t, pens[0] );
-	//	plot( x, yy*t, pens[1] );
-		//plot( x, zz*t, pens[2] );
+		//plot( x, Math.sqrt(xx), pens[0] );
+		//plot( x, Math.sqrt(yy), pens[1] );
+		//plot( x, Math.sqrt(zz), pens[2] );
 
 
 		//plot( x, acos( Math.cos( (values.C)+Math.cos(values.A) )), pens[0] );
@@ -653,13 +653,27 @@ function drawQuatTwist() {
 		const t2 = Math.abs(lnQc.nx) +Math.abs(lnQc.ny) +Math.abs(lnQc.nz);
 		plot( x, t2, pens[7] );
 		
-		plot( x, lnQc.nx, pens[0] );
-		plot( x, lnQc.ny, pens[1] );
-		plot( x, lnQc.nz, pens[2] );
+		plot( x, lnQc.nx , pens[0] );
+		plot( x, lnQc.ny , pens[1] );
+		plot( x, lnQc.nz , pens[2] );
+
+		if( x >= 0 && x <= Math.PI*3/2 ) {
+		plot( lnQc.nx, lnQc.ny, pens[0] );
+		plot( lnQc.nx, lnQc.nz , pens[1] );
+		plot( lnQc.ny, lnQc.nz , pens[2] );
+		}
+
+		if( x >= 0 && x <= Math.PI*2 ) {
+		plot( lnQc.x / lnQc.nR *lnQc.nL , lnQc.y / lnQc.nR *lnQc.nL , pens[0] );
+		plot( lnQc.x / lnQc.nR *lnQc.nL , lnQc.z / lnQc.nR *lnQc.nL , pens[1] );
+		plot( lnQc.y / lnQc.nR *lnQc.nL , lnQc.z / lnQc.nR *lnQc.nL , pens[2] );
+		}
+
 		
-		plot( x, -lnQc.nx, pens[3] );
-		plot( x, -lnQc.ny, pens[4] );
-		plot( x, -lnQc.nz, pens[5] );
+		//plot( x, -lnQc.nx - lnQ.nx, pens[3] );
+		//plot( x, -lnQc.ny - lnQ.ny, pens[4] );
+		//plot( x, -lnQc.nz - lnQ.nz, pens[5] );
+
 		/*
 		plot( x, lnQc.x, pens[6] );
 		plot( x, lnQc.y, pens[7] );
