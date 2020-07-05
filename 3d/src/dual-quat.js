@@ -119,12 +119,14 @@ function lnQuat( theta, d, a, b ){
 					this.z = theta.c;
 						const l3 = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
-					        
-						const qw = Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z); // 1->-1 (angle from pole around this circle.
+					        if( l3 ) {
+							const qw = Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z); // 1->-1 (angle from pole around this circle.
 
-						this.nx = this.x/l3  * qw;
-						this.ny = this.y/l3  * qw;
-						this.nz = this.z/l3  * qw;
+							this.nx = this.x/l3 /* * qw*/;
+							this.ny = this.y/l3 /* * qw*/;
+							this.nz = this.z/l3 /* * qw*/;
+						}
+						
 					this.update();
 					return;
 				}
@@ -141,16 +143,16 @@ function lnQuat( theta, d, a, b ){
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
 						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
 
-						this.nx = theta.x/l3  * qw;
-						this.ny = theta.y/l3  * qw;
-						this.nz = theta.z/l3  * qw;
+						this.nx = theta.x/l3 /* * qw*/;
+						this.ny = theta.y/l3 /* * qw*/;
+						this.nz = theta.z/l3 /* * qw*/;
 
 						this.x = tz*qw;
 						this.y = 0;
 						this.z = -tx*qw;
 					        
 						this.update();
-						if(1)
+						if(0)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							const trst = this.getBasis();
 							const fN = 1/Math.sqrt( tz*tz+tx*tx );
@@ -166,7 +168,7 @@ function lnQuat( theta, d, a, b ){
 							this.update();
 							if( twistDelta ) {
 								twisting = true;
-								twist( this, twistDelta /*+ angle*/ );
+								yaw( this, twistDelta /*+ angle*/ );
 								twisting = false;
 							}
 						}
@@ -182,7 +184,7 @@ function lnQuat( theta, d, a, b ){
 
 			// very long ranges of multiples of turns around the axis is ... bad.
 			// the scalar for calculating the axis normal back from the 
-			const dl = 1/( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
+			const dl = 1/ /*Math.sqrt*/( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
 			const t  = theta;
 			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			// if no rotation, then nothing.
@@ -195,9 +197,11 @@ function lnQuat( theta, d, a, b ){
 				this.x = this.nx * lNorm;
 				this.y = this.ny * lNorm;
 				this.z = this.nz * lNorm;
+				/*
 				this.nx *= theta;
 				this.ny *= theta;
 				this.nz *= theta;
+				*/
 				this.update();
 				return;
 			}
@@ -205,11 +209,21 @@ function lnQuat( theta, d, a, b ){
 	} 
 }
 
+let tzz = 0;
+
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
-	const angle = Math.acos(t);
+	let angle = acos(t);
+	if( !angle ) {
+		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
+		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.nL = this.nR = 0;
+		this.s = 0;
+		this.qw = 1;
+		this.dirty = false;
+		return this;
+	}
 /*
 x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
@@ -217,7 +231,17 @@ y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
 z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */
-
+	if( tzz == 0 ) {
+	        angle -= 2*Math.PI;
+	}
+	else if( tzz == 1 ) {
+	        angle += 2*Math.PI;
+	}
+	else if( tzz == 2 ) {
+	        angle -= 4*Math.PI;
+	}
+		tzz++;
+		if( tzz >= 4 ) tzz = 0;
 	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
 
 	this.nx = (basis.up.z      -basis.forward.y) *tmp;
@@ -227,9 +251,11 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	this.x = this.nx * lNorm;
 	this.y = this.ny * lNorm;
 	this.z = this.nz * lNorm;
+/*
 	this.nx *= angle;
 	this.ny *= angle;
 	this.nz *= angle;
+*/
 	this.dirty = true;
 	return this;
 }
@@ -321,24 +347,21 @@ lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del) {
 	// this is terse; for more documentation see getBasis Method.
 	const q = this;
-
+	this.update();
 	if( !del ) del = 1.0;
 	const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 	if( !nt ) {
 		return {forward:{x:0,y:0,z:1}, right:{x:1,y:0,z:0}, up:{x:0,y:1,z:0}, origin:{x:0,y:0,z:0 }};
 	}
-	const nst = this.nR;//Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 	const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
 	const qw = Math.cos( del * nt ); // sin/cos are the function of exp()
-
 	//L = r x p 
 	// this.nL * this.nL = Centripetal force basis
 	// 	
-	const dqw = s/nst;
-	// some of these might be q.nx... 
-	const qx = q.x * dqw; // normalizes the imaginary parts
-	const qy = q.y * dqw; // set the sin of their composite angle as their total
-	const qz = q.z * dqw; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const nst = s;//Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+	const qx = q.nx * nst; // normalizes the imaginary parts
+	const qy = q.ny * nst; // set the sin of their composite angle as their total
+	const qz = q.nz * nst; // output = 1(unit vector) * sin  in  x,y,z parts.
 
 	// V = v eHat_r + r dTh/dT * eHat_t + r * dphi/Dt * sinT * eHat_phi
 	const basis = { forward:null
@@ -395,11 +418,15 @@ lnQuat.prototype.update = function() {
 	// norm-linear    this is / 3 usually, but the sine lookup would 
 	//    adds a /3 back in which reverses it.
 	this.nL = (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z))/2;///(2*Math.PI); // average of total
-
-	this.nx = this.x/this.nR  * this.nL;
-	this.ny = this.y/this.nR  * this.nL;
-	this.nz = this.z/this.nR  * this.nL;
-
+	if( this.nR ){
+		this.nx = this.x/this.nR /* * this.nL*/;
+		this.ny = this.y/this.nR /* * this.nL*/;
+		this.nz = this.z/this.nR /* * this.nL*/;
+	}else {
+		this.nx = 0;
+		this.ny = 0;
+		this.nz = 0;
+	}
 	this.s  = Math.sin(this.nL); // only want one half wave...  0-pi total.
 	this.qw = Math.cos(this.nL);
 
@@ -430,7 +457,7 @@ lnQuat.prototype.apply = function( v ) {
 		const qz = q.z*nst;
 	        
 		//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
-		const tx = 2 * (qy * v.z - qz * v.y);
+		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
 		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
@@ -505,12 +532,11 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		const s  = Math.sin( (q.nL)*del );//q.s;
 		const nst = s/q.nR; // sin(theta)/r    normal * sin_theta
 		const qw = Math.cos( (q.nL)*del );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
-	        //console.log( "TICK:", q.nL/(3*Math.PI), del );
+	        
 		const qx = q.x*nst;
 		const qy = q.y*nst;
 		const qz = q.z*nst;
-		//console.log( "L:", p2x, p2y, p2z, p2x*p2x+p2y*p2y+p2z*p2z);
-	        
+		
 		const tx = 2 * (qy * v.z - qz * v.y);
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
@@ -553,91 +579,127 @@ lnQuat.prototype.applyInv = function( v ) {
 }
 
 lnQuat.prototype.twist = function(c){
-	return twist( this, c );
+	return yaw( this, c );
+}
+lnQuat.prototype.pitch = function(c){
+	return pitch( this, c );
+}
+lnQuat.prototype.yaw = function(c){
+	return yaw( this, c );
+}
+lnQuat.prototype.roll = function(c){
+	return roll( this, c );
 }
 
-function twist_bad_1( q, theta ) {
+function twist( q, theta ) {
 	const dsin = Math.sin(theta);
 	const dcos = Math.cos(theta);
+	if( !q.nL ) {
+		q.y = theta;
+		q.dirty = true;
+		return q;
+	}	
 	
-	const cosD2 = Math.cos( q.nL/2 )
-	const sinD2 = Math.sin( q.nL/2 )
-	
-	const angle2 = acos(   dcos - ( sinD2*sinD2 / (q.nR * q.nR )) * ( 
-	                       ( q.z * q.z - q.x * q.x ) * dcos
-	                     - ( q.x * q.z + q.x * q.z ) * dsin
-	                     - ( q.z * q.z + q.x * q.x ) ) 
-	                   );
-	
-	//const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );
-	const new_v = { x :     2 *       (sinD2 / (q.nR * q.nR )) * ( q.y * q.x * sinD2 - cosD2 * q.z * q.nR )
-	              , y : 1 - 2 * sinD2*(sinD2 / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
-	              , z :     2 *       (sinD2 / (q.nR * q.nR )) * ( q.z * q.y * sinD2 + cosD2 * q.x * q.nR ) };
+	const cosQ = q.qw; //Math.sin( q.nL )
+	const sinQ = q.s;  //Math.sin( q.nL )
 
-	const twistAxis = { nx:q.y * new_v.z - new_v.y * q.z
-			  , ny:q.z * new_v.x - new_v.z * q.x
-			  , nz:q.x * new_v.y - new_v.x * q.y
-			  , x : 0
-			  , y: 0
-			  , z: 0
-	};
-	const aNorm = 1/Math.sqrt( twistAxis.nx * twistAxis.nx + twistAxis.ny * twistAxis.ny + twistAxis.nz * twistAxis.nz );
-	twistAxis.x = twistAxis.nx * aNorm * angle2/2;
-	twistAxis.y = twistAxis.ny * aNorm * angle2/2;
-	twistAxis.z = twistAxis.nz * aNorm * angle2/2;
-	twistAxis.nx *= angle2;
-	twistAxis.ny *= angle2;
-	twistAxis.nz *= angle2;
-	q.x += twistAxis.x;
-	q.y += twistAxis.y;
-	q.z += twistAxis.z;
-	q.dirty = true;
-	return q;
-}
+	// this series of transforms... scaled everything by sinQ
+	// which then AGAIN gets scaled by cosQ
+	const qnx = sinQ * q.x / q.nR;
+	const qny = sinQ * q.y / q.nR;
+	const qnz = sinQ * q.z / q.nR;
 
-function twist( C, th ) {
-	const basis = C.getBasis();
-	const twistor = new lnQuat( th, basis.up );
-	basis.up = twistor.apply(basis.up);
-	basis.right = twistor.apply(basis.right);
-	basis.forward = twistor.apply(basis.forward);
-	//return C.fromBasis( basis );
+	const yy = qny * qny;
+	const zz = qnz * qnz;
+	const xx = qnx * qnx;
+	const xy = qnx * qny;
+	const xz = qnx * qnz;
+	const yz = qny * qnz;
 
-	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
-	let angle = Math.acos(t);
-	const baseAngle = C.nL;
-	if( th > 0 ) {
+	const xn = qnx * cosQ;
+	const yn = qny * cosQ;
+	const zn = qnz * cosQ;
+
+	const xtmp =  2 * ( ( yz + zn ) -  ( xn - yz )*dcos + ( xy + zn )*dsin );
+	const ytmp =  2 * ( 1 + 2 * yn *dcos  - ( xx - zz )*dsin );
+	const ztmp =  2 * ( ( xy + zn )*dcos - ( xn - yz )*dsin - ( xy + xn ) );
+
+	const t2 = ( 1 - xx + zz  ) * dcos   
+	         - ( yn + yn  ) * dsin
+	         - ( zz + xx );
+	let angle = acos( t2 );
+
+	const baseAngle = q.nL;
+	if( theta > 0 ) {
 		while( baseAngle > angle ) {
 			angle += Math.PI*2;
 		}
 	}
-	if( th < 0 ) {
+	if( theta < 0 ) {
 		while( baseAngle < angle ) angle -= Math.PI*2;
 	}
-	//const zz1 = {x:basis.right.x, y: basis.up.y, z: basis.forward.z };
+
+
+	q.nR = Math.sqrt(xtmp*xtmp + ytmp*ytmp + ztmp*ztmp);
+	const sqNorm = 1 /q.nR;
+
+	q.nx = xtmp *sqNorm;
+	q.ny = ytmp *sqNorm;
+	q.nz = ztmp *sqNorm;
+
+	q.nL = (Math.abs(q.nx)+Math.abs(q.ny)+Math.abs(q.nz));
+	const angleOverLinNorm = angle / q.nL;
+	q.s  = Math.sin( angle );
+	q.qw = Math.cos( angle );
+	q.x = q.nx * angleOverLinNorm;
+	q.y = q.ny * angleOverLinNorm;
+	q.z = q.nz * angleOverLinNorm;
 /*
-x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
-
-y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
-
-z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+	q.nx *= angle;
+	q.ny *= angle;
+	q.nz *= angle;
 */
+	q.dirty = false;
 
-	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
+	return q;
+}
 
-	C.nx = (basis.up.z      -basis.forward.y) *tmp;
-	C.ny = (basis.forward.x -basis.right.z  ) *tmp;
-	C.nz = (basis.right.y   -basis.up.x     ) *tmp;
-	const lNorm = angle / (Math.abs(C.nx)+Math.abs(C.ny)+Math.abs(C.nz));
-	C.x = C.nx * lNorm;
-	C.y = C.ny * lNorm;
-	C.z = C.nz * lNorm;
-	C.nx *= angle;
-	C.ny *= angle;
-	C.nz *= angle;
-	C.dirty = true;
+function pitch( C, th ) {
+	const basis = C.getBasis();
+	const twistor = new lnQuat( th, basis.right );
+	basis.up = twistor.apply(basis.up);
+	basis.forward = twistor.apply(basis.forward);
+	return C.fromBasis( basis );
+}
+
+function roll( C, th ) {
+	const basis = C.getBasis();
+	const twistor = new lnQuat( th, basis.forward );
+	basis.up = twistor.apply(basis.up);
+	basis.right = twistor.apply(basis.right);
+	return C.fromBasis( basis );
+}
+
+function yaw( C, th ) {
+	const baseAngle = C.nL;
+	if( th > 0 ) {
+		while( baseAngle > th ) {
+			th += Math.PI*2;
+		}
+	}
+	if( th < 0 ) {
+		while( baseAngle < th ) th -= Math.PI*2;
+	}
+
+	const basis = C.getBasis();
+	const twistor = new lnQuat( th, basis.up );
+
+
+	basis.right = twistor.apply(basis.right);
+	basis.forward = twistor.apply(basis.forward);
+	//if( steps) console.log( "C Before:", C );
+	C.fromBasis( basis );
 	return C;
-
 }
 
 // rotate the passed vector 'from' this space

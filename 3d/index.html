@@ -50,8 +50,8 @@
 		<p><select id="mesher"></select></p>
 		<p>Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
 		<p>Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
-		<p>Smooth Shade: <input type="checkbox" id="smoothShade" value="checked">
-		 - Show Grid: <input type="checkbox" id="showGrid" value="0">
+		<p>Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
+		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
 		</p>
 		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
@@ -68,7 +68,8 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p>Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
-		<p>X:<input type="range" id="lnQX" value=50> Y:<input type="range" id="lnQY" value=50> Z:<input type="range" id="lnQZ" value=50> T:<input type="range" id="lnQT" value=10 range=100> </p>
+ type="range" min="1" max="100" 
+		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="500"> Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="500"> </p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN> </p>
 
 	  </div>
@@ -588,16 +589,20 @@
 
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
-			is.value = 50;
+			//is.value = 500;
+			//is.range = 1000;
 			is = document.getElementById( "lnQY" );
 			is.oninput = updateMesh;
-			is.value = 50;
+			//is.value = 500;
+			//is.range = 1000;
 			is = document.getElementById( "lnQZ" );
 			is.oninput = updateMesh;
-			is.value = 50;
+			//is.value = 500;
+			//is.range = 1000;
 			is = document.getElementById( "lnQT" );
 			is.oninput = updateMesh;
-			is.value = 2;
+			//is.value = 500;
+			//is.range = 1000;
 
 
 			is = document.getElementById( "inflation" );
@@ -616,21 +621,16 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "smoothShade" );
 			is.onchange = updateMesh;
-			is.checked = true;
 			is = document.getElementById( "showNormal" );
-			is.checked = true;
 			is.onchange = updateMesh;
 			is = document.getElementById( "showGrid" );
 			is.onchange = updateMesh;
-			is.checked = false;
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
-			is.checked = true;
 
 
 			is = document.getElementById( "fillOutside" );
 			is.onchange = updateTestData;
-			is.checked = true;
 			is = document.getElementById( "fillInside" );
 			is.onchange = updateTestData;
 			is = document.getElementById( "fillOpen" );
