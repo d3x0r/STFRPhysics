@@ -1,0 +1,955 @@
+
+
+function exp( q, theta ) {
+	const q = this;
+	const s  = this.s;
+	console.log( "lnQuat exp() is disabled until integrated with a quaternion library." );
+	return null;//new Quat( this.qw, q.x *q.x* s, q.y *q.y* s, q.z *q.z * s );
+	const cosD = Math.cos( q.nL )
+	const sinD = Math.sin( q.nL )
+	const Q = {
+		w:q.qw,
+		x:sinD * q.x / q.nL,
+		y:sinD * q.y / q.nL,
+		z:sinD * q.z / q.nL
+	}
+	
+		basis.up = { x :     2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )
+		           , y : 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
+		           , z :     2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR ) };
+				   
+	const sinT = Math.sin(theta );
+	const cosT = Math.cos(theta );
+	const Q2 = {
+		w:cosT,
+		x:sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ),
+		y:sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) ),
+		z:sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )
+	}
+	
+	const qQapp = {
+			w: Q2.w * Q.w - Q2.x * Q.x - Q2.y * Q.y - Q2.z * Q.z
+			x: Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y
+			y: Q2.w * Q.z - Q2.x * Q.y - Q2.y * Q.w - Q2.z * Q.x
+			z: Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w
+	}
+
+
+
+	const qQapp = {
+			w: cosT * cosD              
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.x / q.nL 
+			 -  sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )          * sinD * q.y / q.nL
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.z / q.nL
+			x: cosT * sinD * q.x / q.nL 
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * cosD              
+			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * sinD * q.z / q.nL 
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.y / q.nL
+			y: cosT * sinD * q.y / q.nL 
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.z / q.nL 
+			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * cosD              
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.x / q.nL
+			z: cosT * sinD * q.z / q.nL 
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.y / q.nL 
+			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * sinD * q.x / q.nL 
+			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * cosD
+	}
+
+	
+	 ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) * ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) 
+	+( Q2.w * Q.z - Q2.x * Q.y - Q2.y * Q.w - Q2.z * Q.x ) * ( Q2.w * Q.z - Q2.x * Q.y - Q2.y * Q.w - Q2.z * Q.x )
+	+( Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w ) * ( Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w )
+
+	 ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) * ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) 
+
+
+		  Q2.w * Q.x * Q2.w * Q.x
+		- Q2.w * Q.x * Q2.x * Q.w
+		- Q2.w * Q.x * Q2.y * Q.z
+		- Q2.w * Q.x * Q2.z * Q.y
+		
+		- Q2.x * Q.w * Q2.w * Q.x
+		+ Q2.x * Q.w * Q2.x * Q.w
+		+ Q2.x * Q.w * Q2.y * Q.z
+		+ Q2.x * Q.w * Q2.z * Q.y
+
+		- Q2.y * Q.z * Q2.w * Q.x
+		+ Q2.y * Q.z * Q2.x * Q.w
+		+ Q2.y * Q.z * Q2.y * Q.z
+		+ Q2.y * Q.z * Q2.z * Q.y
+
+		- Q2.z * Q.y * Q2.w * Q.x
+		+ Q2.z * Q.y * Q2.x * Q.w
+		+ Q2.z * Q.y * Q2.y * Q.z
+		+ Q2.z * Q.y * Q2.z * Q.y	
+	
+	
+		+ Q2.w * Q.z * Q2.w * Q.z
+		- Q2.w * Q.z * Q2.x * Q.y
+		- Q2.w * Q.z * Q2.y * Q.w
+		- Q2.w * Q.z * Q2.z * Q.x 
+		  
+		- Q2.x * Q.y * Q2.w * Q.z
+		+ Q2.x * Q.y * Q2.x * Q.y
+		+ Q2.x * Q.y * Q2.y * Q.w 
+		+ Q2.x * Q.y * Q2.z * Q.x
+	
+		- Q2.y * Q.w * Q2.w * Q.z
+		+ Q2.y * Q.w * Q2.x * Q.y 
+		+ Q2.y * Q.w * Q2.y * Q.w 
+		+ Q2.y * Q.w * Q2.z * Q.x
+	
+		- Q2.z * Q.x * Q2.w * Q.z 
+		+ Q2.z * Q.x * Q2.x * Q.y 
+		+ Q2.z * Q.x * Q2.y * Q.w 
+		+ Q2.z * Q.x * Q2.z * Q.x 
+	
+	
+		+ Q2.w * Q.x * Q2.w * Q.x
+		- Q2.w * Q.x * Q2.x * Q.w
+		- Q2.w * Q.x * Q2.y * Q.z
+		- Q2.w * Q.x * Q2.z * Q.y	
+		
+		- Q2.x * Q.w * Q2.w * Q.x
+		+ Q2.x * Q.w * Q2.x * Q.w	
+		+ Q2.x * Q.w * Q2.y * Q.z	
+		+ Q2.x * Q.w * Q2.z * Q.y	
+		
+		- Q2.y * Q.w * Q2.w * Q.x
+		+ Q2.y * Q.w * Q2.x * Q.w
+		+ Q2.y * Q.w * Q2.y * Q.z
+		+ Q2.y * Q.w * Q2.z * Q.y
+		
+		- Q2.z * Q.x * Q2.w * Q.x
+		+ Q2.z * Q.x * Q2.x * Q.w
+		+ Q2.z * Q.x * Q2.y * Q.z
+		+ Q2.z * Q.x * Q2.z * Q.y
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	const x = qQapp.x;
+	const y = qQapp.y;
+	const z = qQapp.z;
+	const w = qQapp.w;
+	
+	const r  = Math.sqrt(x*x+y*y+z*z);
+	const ang = Math.atan2(r,w);
+	if( r < SIN_R_OVER_R_MIN ) {
+		// cannot know the direction.
+		return new lnQuat( ang, 0, 1, 0 )
+	}
+	const t  = 1/r;
+
+	const xt = x /r;
+	const yt = y /r;
+	const zt = z /r;
+	const angle = Math.atan2(r,w);
+	const lNorm = Math.abs(xt)+Math.abs(yt)+Math.abs(zt);
+	
+	q.nx = xt * angle;
+	q.ny = xt * angle;
+	q.nz = xt * angle;
+	q.x = xt/lNorm*angle
+	q.y = yt/lNorm*angle
+	q.z = zt/lNorm*angle
+	
+	
+}
+
+
+function twister( theta ) {
+
+	const dsin = Math.sin(theta);
+	const dcos = Math.cos(theta);
+
+	// this is terse; for more documentation see getBasis Method.
+	const q = this;
+
+	const nt = this.nL;
+	if( !nt ) {
+		return {forward:{x:0,y:0,z:1}, right:{x:1,y:0,z:0}, up:{x:0,y:1,z:0}, origin:{x:0,y:0,z:0 }};
+	}
+	const nst = this.nR;
+	const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+	const qw = Math.cos( del * nt ); // sin/cos are the function of exp()
+
+	//L = r x p 
+	// this.nL * this.nL = Centripetal force basis
+	// 	
+	const dqw = s/nst;
+	// some of these might be q.nx... 
+	const qx = q.x * sinT / q.nR; // normalizes the imaginary parts
+	const qy = q.y * sinT / q.nR; // set the sin of their composite angle as their total
+	const qz = q.z * sinT / q.nR; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	{ // this is the math-expanded version of the below; with primary terms instead of meta-constants
+		basis.up = { x :     2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )
+		           , y : 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
+		           , z :     2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR ) };
+				   
+	 	basis.right = { x : 1  - 2 * sinQ *( sinQ / (q.nR * q.nR )) * ( q.y * q.y +  q.z * q.z )
+		              , y :      2 *       ( sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z *q.nR )
+		              , z :      2 *       ( sinQ / (q.nR * q.nR )) * ( q.x * q.z * sinQ - cosQ * q.y *q.nR )  };
+					  
+	 	basis.forward = { x :       2        *(sinQ / (q.nR *q.nR)) * ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )
+		                , y :       2        *(sinQ / (q.nR *q.nR)) * ( q.z * q.y * sinQ - cosQ * q.x * q.nR )
+		                , z : 1   - 2 * sinQ *(sinQ / (q.nR *q.nR)) * ( q.x * q.x  +  q.y * q.y ) };
+	}
+
+	// forward/right transform.
+	const dsin = Math.sin(theta);
+	const dcos = Math.cos(theta);
+	const v1 = { x:basis.right.x*dcos, y:basis.right.y*dcos, z:basis.right.z*dcos};
+	const v2 = { x:basis.forward.x*dsin, y:basis.forward.y*dsin, z: basis.forward.z*dsin };
+	basis.right.x = v1.x - v2.x;
+	basis.right.y = v1.y - v2.y;
+	basis.right.z = v1.z - v2.z; 
+	const v3 = { x:basis.forward.x*dcos, y:basis.forward.y*dcos, z: basis.forward.z*dcos };
+	const v4 = { x:basis.right.x*dsin, y:basis.right.y*dsin, z:basis.right.z*dsin};
+	basis.forward.x = v3.x + v4.x;
+	basis.forward.y = v3.y + v4.y;
+	basis.forward.z = v3.z + v4.z;
+	
+	//const t0r = basis.right.x;
+	//const t1r = v1.x - v2.x;
+	//const t2r = basis.right.x*dcos - basis.forward.x*dsin;
+	const t3r = dcos  - 2 * sinT *( sinT / (q.nR * q.nR )) * ( q.y * q.y +  q.z * q.z ) * dcos 
+	           -(      2        *(sinT / (q.nR *q.nR)) * ( q.x * q.z * sinT + cosT * q.y * q.nR   ) ) * dsin
+			   
+	//const t0u = basis.up.y;
+	const t1u = 1 - 2 *  sinT*(sinT / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x );
+
+	//const t0f = basis.forward.z;
+	//const t1f = v3.z + v4.z;
+	//const t2f =  basis.forward.z*dcos + basis.right.z*dsin;
+	const t3f = dcos   - 2 * sinT *(sinT / (q.nR *q.nR)) * ( q.x * q.x  +  q.y * q.y ) * dcos 
+	           +(       2 *       ( sinT / (q.nR * q.nR )) * ( q.x * q.z * sinT - cosT * q.y *q.nR ) ) * dsin
+
+    // partial (sum of t3r, t3f, t1u )
+	//const t1 = (  2 - 2 * sinT *( sinT / (q.nR * q.nR )) * ( q.y * q.y +  q.z * q.z -  q.x * q.x  -  q.y * q.y   ) * dcos 
+	//          - ( (    2        *( sinT / (q.nR * q.nR )) * ( q.x * q.z * sinT + cosT * q.y * q.nR  +  q.x * q.z * sinT - cosT * q.y *q.nR )  ) ) * dsin
+	//          + ( 1 - 2 *  sinT*(sinT / (q.nR * q.nR ))  * ( q.z * q.z + q.x * q.x ) );
+
+	const t1 = (  1 - sinT *( sinT / (q.nR * q.nR )) * ( q.z * q.z -  q.x * q.x ) ) * dcos 
+	                -       ( sinT / (q.nR * q.nR )) * ( q.x * q.z * sinT  +  q.x * q.z * sinT  ) * dsin
+	          +(    - sinT *( sinT / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) );
+
+    // acos(t1)
+	//const angle1 = acos( (  1 - sinT *( sinT / (q.nR * q.nR )) * ( q.z * q.z -  q.x * q.x ) ) * dcos 
+	//                     -            ( sinT / (q.nR * q.nR )) * ( q.x * q.z * sinT  +  q.x * q.z * sinT  ) * dsin
+	//                          - sinT *( sinT / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) ) 
+	//					 );
+			
+	const angle2 = acos( (  dcos - ( sinT*sinT / (q.nR * q.nR )) * ( 
+	                               ( q.z * q.z -  q.x * q.x )  * dcos
+	                             - ( q.x * q.z +  q.x * q.z ) * dsin
+	                             - ( q.z * q.z + q.x * q.x ) ) 
+						 );
+
+	//const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
+	const t = ((t1r+t1u+t1f)-1)/2;
+	const angle = Math.acos(t);
+
+
+	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
+const xx = q.x * q.x;
+const xy = q.x * q.y;
+const xz = q.x * q.z;
+const xn = q.x / q.nR;
+const yy = q.y * q.y;
+const yz = q.y * q.z;
+const yn = q.y / q.nR;
+const zz = q.z * q.z;
+const zn = q.z / q.nR;
+
+const nr2 = q.nR*q.nR;  // xx+yy+zz 
+//sinQ / (xx+yy+zz)
+
+	
+	//forward.y - up.z 
+	// original, without a rotation included
+	//const rx = (    qw * ty + ( qz * tx ) -qw * tz           - tx * qy);
+	const r1x = v3.y + v4.y -     2 *       (sinT / (q.nR * q.nR )) * ( q.z * q.y * sinT + cosT * q.x * q.nR ) 
+	const r2x = basis.forward.y*dcos + basis.right.y*dsin  -  2 *       (sinT / (q.nR * q.nR )) * ( q.z * q.y * sinT + cosT * q.x * q.nR ) ;
+	
+	const r3x = (  2 *         (sinT / (nr2)) * ( yz * sinT - cosT * xn ) )*dcos 
+			  + (  2 *       ( sinT / (nr2 )) * ( xy * sinT - cosT * zn ) )*dsin  
+			  -     2 *       (sinT / (nr2 )) * ( yz * sinT + cosT * xn ) ;
+
+	const r4x = 2 * sinT/nr2 * (  ( yz * sinT - cosT * xn )*dcos 
+			                   + ( xy * sinT - cosT * zn )*dsin  
+			                   - ( yz * sinT + cosT * xn ) );
+
+	const r4x = 2 * sinT/nr2 * 2 * sinT/nr2 * 
+	                           ( ( yz * sinT - cosT * xn )*dcos 
+			                   + ( xy * sinT - cosT * zn )*dsin  
+			                   - ( yz * sinT + cosT * xn ) )^ 2 
+							   
+			 )
+
+	const r5x = 2 * sinT/nr2 * 2 * sinT/nr2 *  (
+	           (a)   dcos dcos * ( yz * sinT-cosT*xn )^2
+	           (b)   + 2* dcos dsin * ( yz * sinT - cosT * xn ) * ( xy * sinT - cosT * zn )
+              (c)   - 2 * dcos * ( yz * sinT - cosT * xn ) * ( yz * sinT + cosT * xn )
+	          (d)    + dsin * dsin * ( xy * sinT - cosT * zn )^2
+	          (e)    - 2* dsin * ( xy * sinT - cosT * zn ) * ( yz * sinT + cosT * xn )
+             (f)  + ( yz * sinT + cosT * xn ) * ( yz * sinT + cosT * xn )
+                )
+				
+				
+				(a)
+				    ( yz * sinT-cosT*xn ) * ( yz * sinT-cosT*xn )
+					
+					yz * sinT * yz * sinT
+					-2* yz * sinT * cosT*xn
+					+ cosT*xn * cosT*xn
+				   
+
+					(yz * yz - xn*xn) *sinT *  sinT    -2* yz * sinT * cosT*xn  + xn*xn
+			
+				(b) 
+					( yz * sinT - cosT * xn ) * ( xy * sinT - cosT * zn )
+					
+					yz * sinT * xy * sinT 
+					- yz * sinT * cosT * zn
+					-  cosT * xn * xy * sinT 
+					+ cosT * xn * cosT * zn
+					
+					(yz * xy - xn*zn )* sinT  * sinT  - ( yz *zn + xn*xy ) * sinT * cosT    +  xn * zn
+					 
+				(c)
+					( yz * sinT - cosT * xn ) * ( yz * sinT + cosT * xn )
+					
+					(yz*yz - xn*xn)* sinT*sinT + xn*xn
+					
+				(d)
+					( xy * sinT - cosT * zn )
+					
+					(xy* xy - zn*zn) * sinT  sinT - 2* xy*sinT *cosT * zn   + zn * zn 
+					
+             (f)			
+				yz * yz * sinT * sinT 
+				+ 2 * yz * sinT  * cosT * xn
+				cosT * xn * cosT * xn
+				
+//				yz * yz * sinT * sinT  +  xn * xn * cosT * cosT
+//				+ 2 * yz * sinT  * cosT * xn
+
+//				yz * yz * sinT * sinT  +  xn * xn * (1-sinT*sinT )
+//				+ 2 * yz * sinT  * cosT * xn
+				
+//				yz * yz * sinT * sinT  -  xn * xn * sinT*sinT +  xn * xn
+//				+ 2 * yz * sinT  * cosT * xn
+
+								
+				( yz * yz - xn*xn ) * sinT * sinT     + 2 * yz * xn       * sinT * cosT  + xn * xn
+
+
+			(e)
+				- 2* dsin * ( ( xy * sinT - cosT * zn ) * ( yz * sinT + cosT * xn ) )
+						xy*sinT * yz * sinT 
+					+	xy*sinT * xn * cosT
+					-  cosT*zn * yz * sinT
+                    - cosT*cosT *zn*xn					
+
+
+						(xy * yz -zn*xn) * sinT *sinT 	 +	( xy * xn- zn * yz ) * cosT*sinT	    + zn xn
+                    					
+				
+	const r6x = 2 * sinT/nr2 * 2 * sinT/nr2 *  (
+	           (a)         dcos dcos * ( (yz * yz - xn*xn ) * sinT * sinT    - 2* yz * xn          * sinT * cosT      + xn * xn )
+	           (b)   + 2 * dcos dsin * ( (yz * xy - xn*zn ) * sinT * sinT     - ( yz *zn + xn*xy ) * sinT * cosT      + xn * zn )
+              (c)    - 2 * dcos      * ( (yz * yz - xn*xn ) * sinT * sinT                                             + xn * xn )
+	          (d)    +     dsin dsin * ( (xy * xy - zn*zn ) * sinT * sinT    - 2* xy * zn          * sinT * cosT      + zn * zn )
+	          (e)    - 2 * dsin      * ( (xy * yz - zn*xn ) * sinT * sinT    + ( xy * xn- zn * yz )* cosT * sinT      + zn * xn )
+              (f)                    + ( (yz * yz - xn*xn ) * sinT * sinT    + 2 * yz * xn         * sinT * cosT      + xn * xn )
+                )
+				
+
+				
+	//basis.right.z-basis.forward.x
+	const r1y = v1.y - v2.y  -   v3.x + v4.x 
+	const r2y  = basis.right.y*dcos - basis.forward.y*dsin  - ( basis.forward.x*dcos + basis.right.x*dsin );
+	
+	const r3y =   (   2 *       ( sinQ / (nr2 )) * ( q.y * q.x * sinQ - cosQ * q.z *q.nR ))*dcos 
+	            - (       2        *(sinQ / (q.nR *q.nR)) * ( q.z * q.y * sinQ - cosQ * xn ))*dsin  
+				- ( (       2        *(sinQ / (q.nR *q.nR)) * ( q.x * q.z * sinQ + cosQ * yn   ))*dcos 
+				  + ( 1  - 2 * sinQ *( sinQ / (nr2 )) * ( q.y * q.y +  q.z * q.z ))*dsin );
+	              //+ dsin + (   - 2 * sinQ *( sinQ / (nr2 )) * ( q.y * q.y +  q.z * q.z ))*dsin );
+	
+	const r3y =    2* ( sinQ / (nr2 ) ) *( ( dcos * ( ( q.y * q.x * sinQ - cosQ * zn ) - ( q.x * q.z * sinQ + cosQ * yn   )) )
+	                                     - ( dsin * ( ( q.z * q.y * sinQ - cosQ * xn ) - ( q.y * q.y +  q.z * q.z ) ) ) )
+				   - dsin;
+				;
+
+	const r4y =    2* ( sinQ / (nr2 ) *(  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                                   -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) ) ) )
+				- dsin;
+				;
+
+	const r5y =    2* ( sinQ / (nr2 ) *
+	                  (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) ) ) )
+				- dsin;
+				;
+
+				
+	const r6y =	4* ( sinQ / (nr2 ) * ( sinQ / (nr2 ) *( 
+				      (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    )^2						
+			+   2* ( sinQ / (nr2 ) * ( sinQ / (nr2 ) *( 
+				      (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    ) * dsin
+			    + dsin *dsin 
+
+
+	const r7y =	4* ( sinQ / (nr2 ) * ( sinQ / (nr2 ) *( 
+				      (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    )
+              * ( 
+				      (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    )
+											
+			- 2*  dsin * 2* ( sinQ / (nr2 ) *( (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) ) )
+											
+			+dsin *dsin 
+
+
+	                  (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    )
+              * ( 
+				      (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                  -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+			    )
+				
+				
+			dcos * dcos       * ( ( ( xy - xz )  * ( xy - xz ) - (zn-yn)* (zn-yn) ) * sinQ * sinQ     - sinQ * cosQ * ( xy - xz ) * (zn-yn)     + (zn-yn)* (zn-yn) ) 
+			- 2 * dcos * dsin * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn)  )         * ( yz          * sinQ   - cosQ * xn -   yy +  zz )
+			+ dsin * dsin     * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) * ( yz          * sinQ   - cosQ * xn -   yy +  zz )
+
+
+	R8y		dcos * dcos       * ( ( ( xy - xz )  * ( xy - xz ) - (zn-yn)* (zn-yn) ) * sinQ * sinQ     - sinQ * cosQ * ( xy - xz ) * (zn-yn)     + (zn-yn)* (zn-yn) ) 
+			- 2 * dcos * dsin * ( yz * ( xy - xz ) -xn * (zn-yn) )         * sinQ * sinQ 
+				- ( yz  * (zn-yn) + xn * ( xy - xz ) ) * sinQ * cosQ
+				 + ( zz * ( xy - xz ) -  yy * ( xy - xz ) )* sinQ 
+				 + ( yy * (zn-yn) - zz * (zn-yn) ) * cosQ 
+				 + xn * (zn-yn)
+			+ dsin * dsin     * (
+				( yz *yz - xn*xn )         * sinQ  * sinQ 								
+				- ( yz *xn + xn * yz )     * sinQ  * cosQ 
+				+ 2*( yz * zz - yz * yy  ) * sinQ				
+				+ 2*( xn * yy - xn *  zz ) * cosQ
+				+  xn * xn			
+   				
+				+  yy * yy      //(yy+zz)^2
+				-  2* yy * zz 
+				+  zz * zz 
+			    )
+
+
+              ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )   *    ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+
+				yz          * sinQ * ( xy - xz ) * sinQ
+				- yz        * sinQ * cosQ * (zn-yn)
+				 - cosQ * xn * ( xy - xz ) * sinQ
+				 + cosQ * xn * cosQ * (zn-yn) 
+				 -   yy * ( xy - xz ) * sinQ 
+				 + yy * (zn-yn) * cosQ 
+				 +   zz * ( xy - xz ) * sinQ 
+				 - zz * (zn-yn) * cosQ 
+
+				( yz      * sinQ   - cosQ * xn -   yy +  zz ) * ( yz          * sinQ   - cosQ * xn -   yy +  zz )
+				
+				
+				yz *yz    * sinQ  * sinQ 				
+				- yz *xn  * sinQ  * cosQ 
+				- yz      * sinQ * yy
+				+ yz      * sinQ * zz
+				- cosQ * xn * yz          * sinQ
+				+ cosQ * xn *  cosQ * xn
+				+ cosQ * xn *  yy 
+				- cosQ * xn *  zz
+				-   yy *  yz * sinQ
+				+   yy *  xn * cosQ
+				+   yy *  yy
+				-   yy *  zz 
+				+   zz *  yz * sinQ
+				-   zz *  xn * cosQ
+				-   zz *  yy
+				+   zz *  zz 
+
+
+				( yz *yz - xn*xn )         * sinQ  * sinQ 								
+				- ( yz *xn + xn * yz )     * sinQ  * cosQ 
+				+ 2*( yz * zz - yz * yy  ) * sinQ				
+				+ 2*( xn * yy - xn *  zz ) * cosQ
+				+  xn * xn				
+				+  yy * yy
+				-  2* yy * zz 
+				+  zz * zz 
+
+
+	R9y		( ( ( xy - xz )  * ( xy - xz ) - (zn-yn)* (zn-yn) ) * sinQ * sinQ     - sinQ * cosQ * ( xy - xz ) * (zn-yn)     + (zn-yn)* (zn-yn) ) 
+			- sin2T    2 * dcos * dsin * ( yz * ( xy - xz ) -xn * (zn-yn) )         * sinQ * sinQ 
+				- ( yz  * (zn-yn) + xn * ( xy - xz ) ) * sinQ * cosQ
+				 + ( zz * ( xy - xz ) -  yy * ( xy - xz ) )* sinQ 
+				 + ( yy * (zn-yn) - zz * (zn-yn) ) * cosQ 
+				 + xn * (zn-yn)
+			+ dsin * dsin     * (
+				( yz *yz - xn*xn - ( ( xy - xz ) * ( xy - xz ) - (zn-yn)* (zn-yn) ) )   * sinQ  * sinQ 								
+				- ( yz *xn + xn * yz + ( xy - xz ) * (zn-yn) )     * sinQ  * cosQ 
+				+ 2*( yz * zz - yz * yy  ) * sinQ				
+				+ 2*( xn * yy - xn *  zz ) * cosQ
+				
+				+  xn * xn			
+				- zn * zn
+				+ 2 * zn * yn
+				- yn * yn
+				- (zn-yn)* (zn-yn)
+   				
+				+  yy * yy      //(yy+zz)^2
+				-  2* yy * zz 
+				+  zz * zz 
+				
+			    )
+
+	R10y		( ( ( xy - xz )  * ( xy - xz ) - (zn-yn)* (zn-yn) ) * sinQ * sinQ     
+						- sinQ * cosQ * ( xy - xz ) * (zn-yn)     + (zn-yn)* (zn-yn) ) 
+	
+			- 2*cosT*sinT *( ( yz * ( xy - xz ) -xn * (zn-yn) )         * sinQ * sinQ 
+				- ( yz  * (zn-yn) + xn * ( xy - xz ) ) * sinQ * cosQ
+				 + ( zz * ( xy - xz ) -  yy * ( xy - xz ) )* sinQ 
+				 + ( yy * (zn-yn) - zz * (zn-yn) ) * cosQ 
+				 + xn * zn -  xn* yn
+				 )
+			+ sinT*sinT * (
+				( yz *yz - xn*xn - xy * xy - 2 * xy* xz +  xz * xz - zn*zn - 2*zn*yn +yn*yn  ) )   * sinQ  * sinQ 								
+				- ( yz *xn + xn * yz + ( xy - xz ) * (zn-yn) )     * sinQ  * cosQ 
+				+ 2*( yz * zz - yz * yy  ) * sinQ				
+				+ 2*( xn * yy - xn *  zz ) * cosQ
+				
+				+  xn * xn			
+				- zn * zn
+				+ 2 * zn * yn
+				- yn * yn
+				- (zn-yn)* (zn-yn)
+   				
+				+  yy * yy      //(yy+zz)^2
+				-  2* yy * zz 
+				+  zz * zz 
+				
+			    )
+
+
+
+	R8ya     dcos * dcos       * ( ( ( xy - xz )  * ( xy - xz ) - (zn-yn)* (zn-yn) ) * sinQ * sinQ     - sinQ * cosQ * ( xy - xz ) * (zn-yn)     + (zn-yn)* (zn-yn) ) 
+			- 2 * dcos * dsin  *(   ( yz * ( xy - xz ) - xn * ( zn - yn ) ) * sinQ * sinQ 
+				                  - ( yz * ( zn - yn ) + xn * ( xy - xz ) ) * sinQ * cosQ
+								  + ( xn * ( zn - yn ) ) * 1
+				                  + ( zz * ( xy - xz ) - yy * ( xy - xz ) ) * sinQ 
+				                  + ( yy * ( zn - yn ) - zz * ( zn - yn ) ) * cosQ 				                  
+								 )
+			+ dsin * dsin     * (
+				    ( yz * yz )            * sinQ  * sinQ 								
+				 +  ( xn * xn )            * cosQ  * cosQ 								
+				- 2*( yz * xn )            * sinQ  * cosQ 
+				+ 2*( yz * zz - yz * yy )  * sinQ				
+				+ 2*( xn * yy - xn * zz )  * cosQ
+				                           // ( sin  + cos + 1 ) * ( sin + cos + 1 )
+				+  yy * yy      //(yy+zz)^2
+				-  2* yy * zz 
+				+  zz * zz 
+			    )
+
+
+
+//( sin  + cos + 1 ) * ( sin + cos + 1 )
+//sinsin 2sincos 2sin coscos 2cos 1
+
+(r4x)		2 * sinQ/nr2 * 2 * sinQ/nr2 * ( 
+
+				( ( yz * sinQ - cosQ * xn )*dcos 
+			    + ( xy * sinQ - cosQ * zn )*dsin  
+			    - ( yz * sinQ + cosQ * xn ) )^ 2 
+
+(r4z)         + ( ( xy * sinQ - cosQ * zn ) 
+			    - ( xy * sinQ - cosQ * zn )*dcos 
+			    + ( yz * sinQ - cosQ * xn )*dsin  ) ^2
+				
+(r6y)		)
+
+		   + ( dsin +  2 * ( sinQ / (nr2 ) * (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	            -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+          	 )^2 
+
+
+
+
+this.n6y =  4  * (sinQ / (q.nR *q.nR)) * (sinQ / (q.nR *q.nR)) 
+                * ( dcos * (  2  * cosQ * q.y * q.nR  ) + dsin * (  sinQ *( q.x * q.x  -  q.z * q.z ) )
+                  * dcos * (  2  * cosQ * q.y * q.nR  ) + dsin * (  sinQ *( q.x * q.x  -  q.z * q.z ) )
+				) 
+		/
+
+(r4x)		2 * sinQ/nr2 * 2 * sinQ/nr2 * ( 
+
+				( ( yz * sinQ - cosQ * xn )*dcos 
+			    + ( xy * sinQ - cosQ * zn )*dsin  
+			    - ( yz * sinQ + cosQ * xn ) )^ 2 
+
+(r4z)         + ( ( xy * sinQ - cosQ * zn ) 
+			    - ( xy * sinQ - cosQ * zn )*dcos 
+			    + ( yz * sinQ - cosQ * xn )*dsin  ) ^2
+				
+(r6y)		)
+
+		   + ( dsin +  2 * ( sinQ / (nr2 ) * (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	            -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) )
+          	 )^2 
+
+
+
+
+this.n7yb =  sqrt( 
+
+                ( dcos * dcos   * (  4  * cosQ * cosQ * yn         * yn )
+				 + 2*dcos *dsin * (  2  * cosQ * sinQ * yn         *( xx - zz ) )   
+				 + dsin * dsin  * (       sinQ * sinQ * ( xx - zz )*( xx - zz ) )
+                ) 
+		/
+
+(r4x)		( 
+
+				( ( yz * sinQ - cosQ * xn )*dcos 
+			    + ( xy * sinQ - cosQ * zn )*dsin  
+			    - ( yz * sinQ + cosQ * xn ) )^ 2 
+
+(r4z)         + ( ( xy * sinQ - cosQ * zn ) 
+			    - ( xy * sinQ - cosQ * zn )*dcos 
+			    + ( yz * sinQ - cosQ * xn )*dsin  ) ^2
+				
+(r6y)		
+  		     + ( dsin +  2 * ( sinQ / (nr2 ) * (  dcos * ( ( xy - xz ) * sinQ   - cosQ * (zn-yn) ) 
+	                                         -  dsin * ( yz          * sinQ   - cosQ * xn -   yy +  zz ) ) )^2 
+				/ (4*sinQ*sinQ/(nr2*nr2))
+            )
+         )
+
+
+
+
+
+	// up.x - right.y
+	const r1z =   2 *       (sinQ / (nr2 )) * ( q.y * q.x * sinQ - cosQ * zn ) - v1.y - v2.y;
+	const r2z =   2 *       (sinQ / (nr2 )) * ( q.y * q.x * sinQ - cosQ * zn ) - basis.right.y*dcos - basis.forward.y*dsin;
+
+	const r3z =   2 *       (sinQ / (nr2 )) * ( 
+					( q.y * q.x * sinQ - cosQ * zn ) 
+			   -  	( q.y * q.x * sinQ - cosQ * zn ) *dcos 
+			   + 	( q.z * q.y * sinQ - cosQ * xn )*dsin
+			   );
+
+	const r4z =   4 *       (sinQ / (nr2 )) * (sinQ / (nr2 )) * ( 
+					( q.y * q.x * sinQ - cosQ * zn ) 
+			   -  	( q.y * q.x * sinQ - cosQ * zn ) *dcos 
+			   + 	( q.z * q.y * sinQ - cosQ * xn )*dsin
+			  * ( 
+					( q.y * q.x * sinQ - cosQ * zn ) 
+			   -  	( q.y * q.x * sinQ - cosQ * zn ) *dcos 
+			   + 	( q.z * q.y * sinQ - cosQ * xn )*dsin
+			   )
+
+
+
+
+
+
+
+	this.n0x = (basis.up.z      -basis.forward.y) *tmp;
+
+	this.n1x = ((     2 *       (sinQ / (nr2 )) * ( yz * sinQ + cosQ * xn ) )    -(v3.y + v4.y)) *tmp;
+	this.n2x = ((     2 *       (sinQ / (nr2 )) * ( yz * sinQ + cosQ * xn ) )    -(basis.forward.y*dcos + basis.right.y*dsin)) *tmp;
+
+	this.n3x = 2 *       (sinQ / (nr2)) *  ( (     ( yz * sinQ + cosQ * xn ) )    
+                                                     -((   ( yz * sinQ - cosQ * xn ))*dcos 
+                                                     + (   ( xy * sinQ - cosQ * zn ))*dsin)) *tmp;
+
+
+	this.n4x =   (   ( q.z * q.y * sinQ + cosQ * q.x * q.nR )
+                 -   ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dcos 
+                 +   ( q.y * q.x * sinQ - cosQ * q.z * q.nR )*dsin ) 
+				/ 
+			
+	+	4* ( sinQ / (q.nR * q.nR ) * ( sinQ / (q.nR * q.nR ) *( ( 
+				  (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) )
+			    * (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+
+											
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+			+   ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					  * ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					   )
+					 ) )
+											
+			+dsin *dsin 
+
+
+	this.n5x =   ((     ( q.z * q.y * sinQ + cosQ * q.x * q.nR )    
+                     -  ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dcos 
+                     +  ( q.y * q.x * sinQ - cosQ * q.z * q.nR )*dsin ) 
+			/ 
+			
+	+ (	( (  (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) )
+			    * (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+
+											
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+			+   ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					  * ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					   )
+					 ) )
+											
+			+( dsin *dsin / ( 4 * ( sinQ / (q.nR * q.nR ) * ( sinQ / (q.nR * q.nR ) ) ) ) ) 
+	   )
+
+
+	this.n6x =   ((     ( q.z * q.y * sinQ + cosQ * q.x * q.nR )    
+                     -  ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dcos 
+                     +  ( q.y * q.x * sinQ - cosQ * q.z * q.nR )*dsin ) 
+			/ 
+			
+	+ (	( (  (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) )
+			    * (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+
+											
+			+   (     ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+			    - 2 * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+				+ 2 * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) * ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+				+     ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos *dcos
+				- 2 * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) * ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin *dcos
+				+ ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin * ( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+			  ) )
+
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+											
+			+( dsin *dsin / ( 4 * ( sinQ / (q.nR * q.nR ) * ( sinQ / (q.nR * q.nR ) ) ) ) ) 
+	   )
+
+
+	{ // this is the math-expanded version of the below; with primary terms instead of meta-constants
+		basis.up = { x :     2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )
+		           , y : 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
+		           , z :     2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR ) };
+				   
+	 	basis.right = { x : 1  - 2 * sinQ *( sinQ / (q.nR * q.nR )) * ( q.y * q.y +  q.z * q.z )
+		              , y :      2 *       ( sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z *q.nR )
+		              , z :      2 *       ( sinQ / (q.nR * q.nR )) * ( q.x * q.z * sinQ - cosQ * q.y *q.nR )  };
+					  
+	 	basis.forward = { x :       2        *(sinQ / (q.nR *q.nR)) * ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )
+		                , y :       2        *(sinQ / (q.nR *q.nR)) * ( q.z * q.y * sinQ - cosQ * q.x * q.nR )
+		                , z : 1   - 2 * sinQ *(sinQ / (q.nR *q.nR)) * ( q.x * q.x  +  q.y * q.y ) };
+	}
+
+	this.n0y = (basis.forward.x -basis.right.z  ) *tmp;
+	this.n1y =   ( v3.x + v4.x - v1.z - v2.z ) * tmp;
+	this.n2y =   ( basis.forward.x*dcos + asis.right.x*dsin - basis.right.z*dcos - basis.forward.z*dsin ) * tmp;
+	
+	this.n3y =   ( (     2        *(sinQ / (q.nR *q.nR)) * ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ))*dcos 
+	               + (1  - 2 * sinQ *( sinQ / (q.nR * q.nR )) * ( q.y * q.y +  q.z * q.z ))*dsin 
+				   - (  2 *       ( sinQ / (q.nR * q.nR )) * ( q.x * q.z * sinQ - cosQ * q.y *q.nR ))*dcos 
+				   - ( 1   - 2 * sinQ *(sinQ / (q.nR *q.nR)) * ( q.x * q.x  +  q.y * q.y ))*dsin ) * tmp;
+
+	this.n4y =  2  * (sinQ / (q.nR *q.nR)) * ( dcos *( q.x * q.z * sinQ + cosQ * q.y * q.nR
+				                                     - q.x * q.z * sinQ + cosQ * q.y *q.nR ) )
+	               + dsin * (   sinQ *( ( q.x * q.x  +  q.y * q.y ) - ( q.y * q.y +  q.z * q.z ) ) )
+				) * tmp;
+
+	this.n5y =  2  * (sinQ / (q.nR *q.nR)) * ( dcos *(  2  * cosQ * q.y * q.nR  ) )
+	               + dsin * (  sinQ *( q.x * q.x  -  q.z * q.z ) )
+				) * tmp;
+
+this.n6y =  4  * (sinQ / (q.nR *q.nR)) * (sinQ / (q.nR *q.nR)) 
+                * ( dcos *(  2  * cosQ * q.y * q.nR  ) + dsin * (  sinQ *( q.x * q.x  -  q.z * q.z ) )
+                * ( dcos *(  2  * cosQ * q.y * q.nR  ) + dsin * (  sinQ *( q.x * q.x  -  q.z * q.z ) )
+				) 
+		/
+	   ( 4* ( sinQ / (q.nR * q.nR ) * ( sinQ / (q.nR * q.nR ) *( ( 
+				  (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) )
+			    * (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+
+											
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+			+   ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					  * ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					   )
+					 ) )
+											
+			+ ( dsin *dsin ) / (4 * (sinQ/q.nR*q.nR))
+		)
+
+
+this.n7y =  ( dcos *(  2  * cosQ * yn  ) + dsin * (  sinQ *( xx  -  zz ) ) )   // already sqrt() of this ... 
+
+		/
+	   ( ( sinQ / (q.nR * q.nR ) *( ( 
+				  (   dcos * ( ( xy * sinQ - cosQ * zn ) - ( xz * sinQ + cosQ * yn  ) )
+	            - (   dsin * ( ( yz * sinQ - cosQ * xn ) - ( yy +  zz ) ) ) )
+			    * (   dcos * ( ( xy * sinQ - cosQ * zn ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   ) )
+	            - (   dsin * ( ( yz * sinQ - cosQ * xn ) - ( yy +  zz ) ) ) ) ) ) )
+
+											
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+			+   ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					  * ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					   )
+					 ) )
+											
+			+ ( dsin *dsin ) / (4 * (sinQ/q.nR*q.nR)* (sinQ/q.nR*q.nR))
+		)
+
+
+
+
+this.n7y =  ( dcos *(  2  * cosQ * yn  ) + dsin * (  sinQ *( xx  -  zz ) ) )   // already sqrt() of this ... 
+
+		/
+	   ( ( sinQ / (q.nR * q.nR ) *( ( 
+					 dcos * dcos * ( ( xy * sinQ - cosQ * zn ) - ( xz * sinQ + cosQ * yn  ) ) ^ 2
+					-2*  dcos * dsin * ( ( xy * sinQ - cosQ * zn ) - ( xz * sinQ + cosQ * yn  ) )^2   
+					+ dsin * dsin * ( ( yz * sinQ - cosQ * xn ) - ( yy +  zz ) )^2  ) 					 
+					 )
+											
+			- 2*  dsin * 2* ( sinQ / (q.nR * q.nR ) *( (   dcos * ( ( q.y * q.x * sinQ - cosQ * q.z * q.nR ) - ( q.x * q.z * sinQ + cosQ * q.y * q.nR   )) )
+	                                        - (   dsin * ( ( q.z * q.y * sinQ - cosQ * q.x * q.nR ) - ( q.y * q.y +  q.z * q.z ) ) ) ) )
+											
+			+   ( 	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					  * ( 
+							( q.y * q.x * sinQ - cosQ * q.z * q.nR ) 
+					   -  	( q.y * q.x * sinQ - cosQ * q.z * q.nR ) *dcos 
+					   + 	( q.z * q.y * sinQ - cosQ * q.x * q.nR )*dsin
+					   )
+					 ) )
+											
+			+ ( dsin *dsin ) / (4 * (sinQ/q.nR*q.nR)* (sinQ/q.nR*q.nR))
+		)
+
+
+	
+	this.n0z = (basis.right.y   -basis.up.x     ) *tmp;
+
+
+		const dsin = Math.sin(theta);
+		const dcos = Math.cos(theta);
+		
+		const cosD2 = Math.cos( q.nL/2 )
+		const sinD2 = Math.sin( q.nL/2 )
+		
+		const angle2 = acos( (  dcos - ( sinT*sinT / (q.nR * q.nR )) * ( 
+	                               ( q.z * q.z -  q.x * q.x )  * dcos
+	                             - ( q.x * q.z +  q.x * q.z ) * dsin
+	                             - ( q.z * q.z + q.x * q.x ) ) 
+						 );
+		
+		//const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );
+		const new_v = { x :     2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )
+		              , y : 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
+		              , z :     2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR ) };
+
+		const twistAxis = { nx:q.y * new_v.z - new_v.y * q.z
+						  , ny:q.z * new_v.x - new_v.z * q.x
+						  , nz:q.x * new_v.y - new_v.x * q.y
+						, x : 0
+						, y: 0
+						, z: 0
+		};
+		const aNorm = 1/Math.sqrt( twistAxis.x * twistAxis.x + twistAxis.y * twistAxis.y + twistAxis.z * twistAxis.z );
+		twistAxis.x = twistAxis.nx * aNorm * angle2;
+		twistAxis.y = twistAxis.ny * aNorm * angle2;
+		twistAxis.z = twistAxis.nz * aNorm * angle2;
+		twistAxis.nx *= angle2;
+		twistAxis.ny *= angle2;
+		twistAxis.nz *= angle2;
+	q.x += twistAxis.x
+	q.y += twistAxis.y
+	q.z += twistAxis.z
+
+
+	    //right.z   - forward.x
+	const ry =     qw * tz + ( qx * ty ) -     qw * tx + (         - ty * qz );
+		//up.x      - right.y
+	const rz =    qw * tx + qy * tz   -    qw * ty + (         - tz * qx ) ;
+	const rx2 = rx*rx;
+	const ry2 = ry*ry;
+	const rz2 = rz*rz;
+	
+	//const tmp = 1 /Math.sqrt(rx*rx +ry*ry +  rz*rz);
+	const tmp = 1 /Math.sqrt(rx2*rx2 +ry2*ry2 +  rz2*rz2);
+
+	this.nx = (basis.up.z      -basis.forward.y) *tmp;
+	this.ny = (basis.forward.x -basis.right.z  ) *tmp;
+	this.nz = (basis.right.y   -basis.up.x     ) *tmp;
+	
+	const lNorm = angle / (Math.abs(this.nx)+Math.abs(this.ny)+Math.abs(this.nz));
+	this.x = this.nx * lNorm;
+	this.y = this.ny * lNorm;
+	this.z = this.nz * lNorm;
+	this.nx *= angle;
+	this.ny *= angle;
+	this.nz *= angle;
+	this.dirty = true;
+	return this;

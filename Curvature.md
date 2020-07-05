@@ -1,3 +1,170 @@
+# Curvature and Rotations
+
+An angle of a rotation, and the length of the arc on a unit circle (arc-length) are equivalent numerically; and can be converted in a direct 1 to 1 relationship.
+A curvature is a change in arc.  Principle curvature values define the change in a single unit time;  ds/dt.  This is the total angle, or arc length around the circle covered.
+For some fractional amount of time ( `0.01` for instance ) the angle/arc-length is scaled directly according to the time.
+
+## This Project
+
+The test apparatus/framework is fairly complex at first glance; but really, this project is just 1 source file 'dual-quat.js' and the test... '3d/src/lnQuatTest.js' or 'math/main.js'.
+
+https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/dual-quat.js   - where the real work is done
+
+https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/lnQuatTest.js   - displaying the results of the internals...
+ 
+There is a older test project in 'src/dual-quat.js' and a 'index.html' sort of project.
+
+## why? How?
+
+Why ?
+
+This started looking at quaternions as rotation vectors, and attempting to find a computation method of rotations which required less work and worked over longer ranges.
+Matrix multiplication for rotation can only express 1/2 of a rotation, it can go from -1 to 1 but 1 to -1 looks exactly like -1 to 1... so you never get the other half of the rotation.
+Quaternion representation has singulatities at 0 rotation; the axis of rotation becomes unintelligable on (finite math systems). (References can be provided to existing information 
+to review; see Readme.md References title... )
+
+There is an operation that goes from a log-quaternion to a quaternion; Although the math on wikipedia page ends at merely stating this fact.  
+`Exponential, logarithm, and power functions` on https://en.wikipedia.org/wiki/Quaternion 
+This gives me a method to take axis-angle representation and convert to quaternion; which is fairly cheap, and then I can always have the normal
+axis of rotation regardless of a insignificant angle... resulting in a 'high quality' small-rotation quaternion.
+
+`Q(angle,axis) = cos(angle) * 1 + sin(angle) * ( unit vector/ vector length=1)`
+
+Which follows that `1*cos + 1*sin` are also remeniscnet of a unit circle in complex plane.
+
+Log quaternions, quatnerions in the log-space, have 3 `angle`; However, these are more properly arcs over time.  The sum of the angles of a rotation is the sum of the angles.
+And the total sum of the system angles is the total angle of rotation of the system; this is a linear length `linLen = |x| + |y| + |z|` 
+and the normalizing is `x/linLen, y/linLen, z/linLen` to get the total (or average /mean curvature).
+
+ https://en.wikipedia.org/wiki/Curvature
+ https://en.wikipedia.org/wiki/Mean_curvature
+ https://en.wikipedia.org/wiki/Gaussian_curvature
+
+The axis of rotation is the square normalized x y and z curvatures... `squareLength = x*x + y*y + z*z` and normalized coordinates are `x/squareLength, y/squareLength, z/squareLength`;
+This square normal is the axis of rotation to use to convert to a quaternion or matrix.
+
+For a simple IK chain (computer inverse kinetics), the fixed chain of angles on a robot arm are simply the addition of all the angles at each point.   
+The rotation has to be 'applied'/multiplied to offset points to get the positions of the arm in space from the base origin.  [(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf)... logrithm quaternion adoptation.
+But the classical system of quaternions or matrix multiplications requires multiplication with the origin/offset AND the rotation quaternion/matrix; working
+with log-quaternions is, again, a simple matter of scaled(T) addition of N axels of curvature.
+
+
+
+There exists a system 'Frenet Frames' https://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas  which is based on gaussian curvature, but replaces one dimension of curvature with 0,
+because it's used to walk over the surface of a surface (and not both sides at once). ( or rather it follows the tangent and normal along the surface, though the normal does not point along
+the surface.)
+
+Translation from curvature to a rotation can be done by taking the angle-angle-angle (curl-curl-curl) and normalizing it, and converting to a quaternion, then applying the quatnerion in a
+order-free rotation of the points  (1,0,0), (0,1,0) and (0,0,1); which are respectively called 'right' 'up' and 'forward'.    (These points can be weighted in another application like
+computing the oblong rotation by setting the axis points at the min/max/mid mass points of an object....)  
+
+This results in a basis frame that has the tangent as the axis of rotation;  (This is equivalent to the Tangent of a frenet frame, which is a faster method of computation than the above
+applied rotation.)   The forward vector is along the direction of rotation around the axis of rotation at that point.    The up vector is away from the origin  ( '0,0,0' of the above axis points), 
+and is always perpendicular to the surface; the Frenet frame loses this information... in using just the 'right' to compute the 'up' the tip aorund the 'right' is lost.... which will
+also lead to problems figuring out what is 'over' and 'under' another rotation.  The frenet frame only produces coordinates of rotation x/z coordinates, and not Y.
+
+
+---
+
+And here is where it ends... I have this mockup https://d3x0r.github.io/STFRPhysics/3d/  (takes a couple seconds to load because it has textures that are sort of big)
+REquires WebGL2.
+
+The model of the sphere has nothing to do with the line segments that are shown, and because of the framework is a little misaligned with the vector origins. (the framework recomputes the center 
+of the model and the extra data above/around the model confuse the centering).
+
+The initial condition is a little wrong, to start at a valid point, you must move one of the sliders; the sliders have much more range than is available with the mouse; if you click on 
+a slider to select the focus there, then arrow keys will adjust in single increments; updating in smaller increments; using the mouse can be a lot jarring until you get used to it.)
+
+The X,Y,Z,T slider control the curvature of a log-quaternion. (the labels are a little mixed up....)
+X = X curvature from -2pi to 2pi.
+T = Y curvature from -2pi to 2pi.
+Z = Z curvature from -2pi to 2pi.
+Y = the resulting twist at the destination point.
+
+The colors are X/Y/Z = R/G/B.  Right/Up/Forward.
+
+The X/T/Z sliders control the primary curvature.  The point at 0,1,0 is projected through the curved space to a resulting point, which has a normal (green), right (red) and forward(blue).
+The Y slider controls the twist from that base point - it would be the resulting point; it is accurate and spins in place appropriately (even with +/- 2pi added to the projection for fun).
+
+The T slider is the twist around 0,1,0 and really shows up mostly as an offset to the whole rotation... although does change the aspect ratio of the circle of same-normal points...
+
+
+So what is shown
+
+On the ball, are 3 white lines, 1 is from the pole to the rotation represented by x/t/z slider, another is from the pole to that same point, but twisted by the Y slider; (always the same point,
+always has the same 'up'(green) normal, and just turns the basis forward/right vectors).
+
+There is a graph is space at Z=0, X = Angle of Twist, and Y is the total angle of the twist.  0 is the center, where no additional twist to the frame is applied.  (Y slider set to 0).
+
+(Initiallly) There is a long vertical line of Crossed frames, these represent the change in the 'y' coordinate for the twist at the current point.  At 0 of the Y is 0 twist applied, 
+under Y is negative twist and above positive....  As you adjust the x/z curvature, this straight line becomes a closed curve (as a review, a straight line has 
+a curvature of 0, and a circle has a constant postiive or negative curvature.) so for a non-zero z/x curvature, the curve has a curvature, and is closed unto itself.
+
+If you go out to about z = 0.6 Y=0, X=0, T=0   then you can start to see the curves better... at the outside extreme, the curvature is actually very large so a small increment of angle change 
+produces a large change in position.   The cross points are the x/y/z curvatures projected into the x/y/z coordinate system; I added drop-lines from each point to each x/y/z plane... (the lines
+are parallel to the axel of curvature).
+
+There are 2 octaves of curves, and 2 curves in each octave that are related;   The 'curve' that has more linear lines, is the literal value of the curvature;  The smooth closed circle is
+the `(square-normal) * angle` or `axis-normal * angle`.  This Curve resembles the iso-linear (everywhere the same value) curve of magnetic flux around a solenoid coil; up to the point that
+0 curvature is specified, and the line is direction up and down through the coil.  At any slight positive curvature, however, the radius of the solenoid coil is very night, so the one
+edge of the curve is constrained, where the outside is nearly a perfect circle curvature... 
+
+
+The points around the circles are (1) the original point of the x/t/z rotation represented on the ball... This '0' is highlighted slightly.
+(1) another highlighted point indicating where the current 'Y' is set to.  All other points are +/- 2pi twist; (the total twist angle is 4pi where there are 4 values that can be consolidated 
+to a principal value, but are themselves unique vectors.)
+
+I know the normal to this plane of rotation... 
+
+```
+ ... for some lnQ  (log-quaternion)...
+
+	// apply 1/2 the curvature to the normal 'up'  (multiply by 1/2 the angle)
+	const vForward = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );  // forward basis of the twist-rotation plane
+
+	// cross normal axis of rotation with vForward  // bi-tangen
+
+	// vRot is the 'normal to the plane' so it might also be named 'up'
+	let vRot = { x:lnQ.ny * vForward.z - vForward.y * lnQ.nz
+	           , y:lnQ.nz * vForward.x - vForward.z * lnQ.nx
+	           , z:lnQ.nx * vForward.y - vForward.x * lnQ.ny
+			};
+	// normalize vector, those two vectors, while nearly perpendicular are often not .
+	const upSqLen = Math.sqrt(vRot.x*vRot.x + vRot.y*vRot.y + vRot.z*vRot.z );
+	vRot.x /= upSqLen;
+	vRot.y /= upSqLen;
+	vRot.z /= upSqLen;
+
+	// cross 'up' with the 1/2 rotated vector to get the normal of the plane of rotation...
+	// all rotation vectors that have the same normal as this point lie in a plane which has this normal.
+	let vRight = { x: vForward.y * vRot.z - vForward.z * vRot.y 
+	             , y: vForward.z * vRot.x - vForward.x * vRot.z
+	             , z: vForward.x * vRot.y - vForward.y * vRot.x 
+	             };
+	const vRightsqLen = Math.sqrt(vRight.x*vRight.x + vRight.y*vRight.y + vRight.z*vRight.z );
+	vRight.x *= 1/vRightsqLen;
+	vRight.y *= 1/vRightsqLen;
+	vRight.z *= 1/vRightsqLen;
+
+```
+
+
+## Another use for log quaternions
+
+Subtraction of one curvature from another is the change in curvature, and that delta can be used to compute a relative basis frame.
+
+Computing a basis frame is slightly less work than rotating an arbitrary point.
+
+## The original troubling question...
+
+... which I guess I have no better answer for than a cross product.
+
+If I have an axel of rotation, and a point at a unit distance from that, and another point at some angle/arc-length from the 'origin'al point;, then given
+so it's a cross product of the axis of rotation with the 'origin point'... and then scaled by sin/cos of the angle, 
+(projected along the curve) using the new tangent/right and bi-tangent/forward...  
+
+
+
 
 ## What ARE Log Quaternions.
 

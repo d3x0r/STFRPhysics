@@ -394,6 +394,49 @@ lnQuat.prototype.getBasisT = function(del) {
 		                , z : 1 + 0       + ( qx * ty - tx * qy ) };
 	}
 
+	return basis;	
+
+	// this is the Frenet basis; which has a lack of useful information about the curve.
+	// even when corrected a similar normal alignment - the tangentshould be the same...
+	// the initial basis LOOKS the same.
+	
+	const lnQ = this;
+	const tangent = { x: Math.sin(lnQ.x/2), y: Math.sin(lnQ.y/2), z: Math.sin(lnQ.z/2) }
+
+	const dT2 = { x: -Math.cos(lnQ.x/2), y: -Math.cos(lnQ.y/2), z: -Math.cos( lnQ.z /2) };
+//	const kN = { x: -tangent.z * Math.cos(lnQ.y) - tangent.y *Math.cos(lnQ.z), y:tangent.x*Math.cos(lnQ.z)-tangent.z*Math.cos(lnQ.x), z: tangent.y*Math.cos(lnQ.x)-tangent.x*Math.cos( lnQ.y ) };
+	
+	const tangentLen = 1/Math.sqrt( tangent.x*tangent.x + tangent.y*tangent.y + tangent.z*tangent.z );
+	const Tn = {x: tangent.x * tangentLen, y:     tangent.y * tangentLen, z:     tangent.z * tangentLen };
+	
+	let origin = lnQ.applyDel( {x:0,y:1,z:0}, 1.0 );
+
+	
+	 //principle unit normal = 
+	//const kN = { x: Tn.z * dT2.y - Tn.y * dT2.z
+	//           , y: Tn.x * dT2.z - Tn.z * dT2.x
+	//           , z: Tn.y * dT2.x - Tn.x * dT2.y };
+
+	const kN = { x: Tn.z * origin.y - Tn.y * origin.z
+	           , y: Tn.x * origin.z - Tn.z * origin.x
+	           , z: Tn.y * origin.x - Tn.x * origin.y };
+
+	//const kN = { x: -Math.cos(lnQ.x), y: -Math.cos(lnQ.y), z: -Math.cos(lnQ.z) };
+	//const kN = { x: Tn.z, y:-Tn.x, z: -Tn.y };
+	const normalLen = Math.sqrt( kN.x*kN.x+ kN.y*kN.y +kN.z*kN.z);
+	const N = { x:kN.x/normalLen,y:kN.y/normalLen,z:kN.z/normalLen };
+
+	//const Bn = { x: dT2.x 
+	 //          , y: dT2.y
+	 //          , z: dT2.z };
+	const Bn = { x: Tn.y * N.z - Tn.z * N.y 
+	           , y: Tn.z * N.x - Tn.x * N.z 
+	           , z: Tn.x * N.y - Tn.y * N.x };
+
+	basis.up = N;
+	basis.right = tangent;
+	basis.forward = Bn;
+
 
 	return basis;	
 }
