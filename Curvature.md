@@ -35,10 +35,11 @@ then reset the log-quaternion to that basis.  This operation loses information a
 It is possible to also spin the point around the normal, again, getting the basis, rotating 'forward'->'right' by the specified angle and setting the log-quaternion from the resulting matrix;
 this only resolves to 1/2 of the curve possible; for develpoment and testing purposes I keep an internal counter that steps whether to return 0, +2pi, -2pi, etc.  This, with enough steps,
 allows the complete cyles to be shown; what I previously though were circles are only sometimes circle-ish; however, by twisting a point around a normal, I have found there is a continuous
-path ([see Bertrand Curves](https://en.wikipedia.org/wiki/Differentiable_curve#Bertrand_curve)) which contains other curvature vectors which have the same normal, but different rotation around
-that normal.
+path ([see Bertrand Curves](https://www.sciencedirect.com/science/article/pii/S0393044012000940#:~:text=A%20curve%20%CE%B1%20immersed%20in,Bertrand%20curves%20in%20S%203%20.) [wikipedia](https://en.wikipedia.org/wiki/Differentiable_curve#Bertrand_curve)) 
+which contains other curvature vectors which have the same normal, but different rotation around that normal; although the study has previously been against helical fields which have a translation
+asscicated with the curve too.
 
-This curve is produced by having the normalized axis of rotation, and the total angle of rotation multiplied together.  
+This curve is produced by having the normalized axis of rotation, and the total angle of rotation multiplied together.
 
 ```
 // for some curvature vector x,y,z (log-quat)
