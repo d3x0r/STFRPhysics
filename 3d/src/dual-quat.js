@@ -120,8 +120,6 @@ function lnQuat( theta, d, a, b ){
 						const l3 = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 					        if( l3 ) {
-							const qw = Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z); // 1->-1 (angle from pole around this circle.
-
 							this.nx = this.x/l3 /* * qw*/;
 							this.ny = this.y/l3 /* * qw*/;
 							this.nz = this.z/l3 /* * qw*/;
@@ -152,7 +150,7 @@ function lnQuat( theta, d, a, b ){
 						this.z = -tx*qw;
 					        
 						this.update();
-						if(0)
+						if(1)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							const trst = this.getBasis();
 							const fN = 1/Math.sqrt( tz*tz+tx*tx );
@@ -184,7 +182,7 @@ function lnQuat( theta, d, a, b ){
 
 			// very long ranges of multiples of turns around the axis is ... bad.
 			// the scalar for calculating the axis normal back from the 
-			const dl = 1/ /*Math.sqrt*/( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
+			const dl = 1/ Math.sqrt( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
 			const t  = theta;
 			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
 			// if no rotation, then nothing.
@@ -234,14 +232,14 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	if( tzz == 0 ) {
 	        angle -= 2*Math.PI;
 	}
-	else if( tzz == 1 ) {
-	        angle += 2*Math.PI;
-	}
-	else if( tzz == 2 ) {
-	        angle -= 4*Math.PI;
-	}
+	//else if( tzz == 1 ) {
+	//        angle += 10*Math.PI;
+	//}
+	//else if( tzz == 2 ) {
+	//        angle -= 12*Math.PI;
+	//}
 		tzz++;
-		if( tzz >= 4 ) tzz = 0;
+		if( tzz >= 2 ) tzz = 0;
 	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
 
 	this.nx = (basis.up.z      -basis.forward.y) *tmp;
@@ -392,6 +390,7 @@ lnQuat.prototype.getBasisT = function(del) {
 	 	basis.forward = { x :     qw * tx + (         - ty * qz )
 		                , y :     qw * ty + ( qz * tx )
 		                , z : 1 + 0       + ( qx * ty - tx * qy ) };
+
 	}
 
 	return basis;	
