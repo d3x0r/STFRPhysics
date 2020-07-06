@@ -1,12 +1,13 @@
 
 Hm. what do I want it to show...
 I want 
-  1) to present this new system of observing curvatures/rotations.
-    a) the new system is less calculation and has greater accuracy than existing systems.  
-    b) THere was a paper about using log-quaternions in long IK chains, and the superior solve time was shown.
-    c) It has been applied for updating skinning on models, but had some corner cases that were not handled correctly; this provides a correction for that. (Again more FPS, less work)
+  - to present this new system of observing curvatures/rotations.
+    - the new system is less calculation and has greater accuracy than existing systems.
+    - THere was a paper about using log-quaternions in long IK chains, and the superior solve time was shown.
+    - It has been applied for updating skinning on models, but had some corner cases that were not handled correctly; this provides a correction for that. (Again more FPS, less work)
 
-  1.5) How this can be applied in places like differential geometry; rather than the Frenet frame; and complex analysis.
+  - How this can be applied in places like differential geometry; rather than the Frenet frame; and complex analysis.
 
-  2) I want to clearly show what path needs to be filled in next
+  - I want to clearly show what path needs to be filled in next
+    - There is a curvature for the twist of a point at any given sphere... I just don't have specifically what that is.
 
