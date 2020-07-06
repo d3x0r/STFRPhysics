@@ -30,7 +30,7 @@ axis of rotation regardless of a insignificant angle... resulting in a 'high qua
 
 `Q(angle,axis) = cos(angle) * 1 + sin(angle) * ( unit vector/ vector length=1)`
 
-Which follows that `1*cos + 1*sin` are also remeniscnet of a unit circle in complex plane.
+Which follows that `1*cos + 1*sin` are also remeniscent of a unit circle in complex plane.
 
 Log quaternions, quatnerions in the log-space, have 3 `angle`; However, these are more properly arcs over time.  The sum of the angles of a rotation is the sum of the angles.
 And the total sum of the system angles is the total angle of rotation of the system; this is a linear length `linLen = |x| + |y| + |z|` 
@@ -54,9 +54,11 @@ There exists a system 'Frenet Frames' https://en.wikipedia.org/wiki/Frenet%E2%80
 because it's used to walk over the surface of a surface (and not both sides at once). ( or rather it follows the tangent and normal along the surface, though the normal does not point along
 the surface.)
 
-Translation from curvature to a rotation can be done by taking the angle-angle-angle (curl-curl-curl) and normalizing it, and converting to a quaternion, then applying the quatnerion in a
-order-free rotation of the points  (1,0,0), (0,1,0) and (0,0,1); which are respectively called 'right' 'up' and 'forward'.    (These points can be weighted in another application like
-computing the oblong rotation by setting the axis points at the min/max/mid mass points of an object....)  
+Translation from curvature to a rotation can be done by taking the angle-angle-angle (curl-curl-curl) 
+and normalizing it, with a square-normal, and converting to a quaternion, then applying the quatnerion in a
+order-free rotation of the points  (1,0,0), (0,1,0) and (0,0,1); which are respectively called 'right' 'up' and 'forward'.
+(These points can be weighted in another application like
+computing the oblong rotation by setting the axis points at the min/max/mid mass points of an object....) 
 
 This results in a basis frame that has the tangent as the axis of rotation;  (This is equivalent to the Tangent of a frenet frame, which is a faster method of computation than the above
 applied rotation.)   The forward vector is along the direction of rotation around the axis of rotation at that point.    The up vector is away from the origin  ( '0,0,0' of the above axis points), 
@@ -86,12 +88,14 @@ The colors are X/Y/Z = R/G/B.  Right/Up/Forward.
 The X/T/Z sliders control the primary curvature.  The point at 0,1,0 is projected through the curved space to a resulting point, which has a normal (green), right (red) and forward(blue).
 The Y slider controls the twist from that base point - it would be the resulting point; it is accurate and spins in place appropriately (even with +/- 2pi added to the projection for fun).
 
-The T slider is the twist around 0,1,0 and really shows up mostly as an offset to the whole rotation... although does change the aspect ratio of the circle of same-normal points...
+The T slider is the twist around 0,1,0 and really shows up mostly as an offset to the whole rotation... although does change the aspect ratio of the 
+circle of same-normal points...
 
 
 So what is shown
 
-On the ball, are 3 white lines, 1 is from the pole to the rotation represented by x/t/z slider, another is from the pole to that same point, but twisted by the Y slider; (always the same point,
+On the ball, are 3 white lines, 1 is from the pole to the rotation represented by x/t/z slider, another is from the pole to that 
+same point, but twisted by the Y slider; (always the same point,
 always has the same 'up'(green) normal, and just turns the basis forward/right vectors).
 
 There is a graph is space at Z=0, X = Angle of Twist, and Y is the total angle of the twist.  0 is the center, where no additional twist to the frame is applied.  (Y slider set to 0).
@@ -104,7 +108,7 @@ If you go out to about z = 0.6 Y=0, X=0, T=0   then you can start to see the cur
 produces a large change in position.   The cross points are the x/y/z curvatures projected into the x/y/z coordinate system; I added drop-lines from each point to each x/y/z plane... (the lines
 are parallel to the axel of curvature).
 
-There are 2 octaves of curves, and 2 curves in each octave that are related;   The 'curve' that has more linear lines, is the literal value of the curvature;  The smooth closed circle is
+There are ~~2 octaves of curves, and ~~ 2 curves ~~in each octave~~ that are related;   The 'curve' that has more linear lines, is the literal value of the curvature;  The smooth closed circle is
 the `(square-normal) * angle` or `axis-normal * angle`.  This Curve resembles the iso-linear (everywhere the same value) curve of magnetic flux around a solenoid coil; up to the point that
 0 curvature is specified, and the line is direction up and down through the coil.  At any slight positive curvature, however, the radius of the solenoid coil is very night, so the one
 edge of the curve is constrained, where the outside is nearly a perfect circle curvature... 
