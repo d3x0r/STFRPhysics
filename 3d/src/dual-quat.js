@@ -397,7 +397,10 @@ lnQuat.prototype.getBasisT = function(del) {
 
 	// this is the Frenet basis; which has a lack of useful information about the curve.
 	// even when corrected a similar normal alignment - the tangentshould be the same...
-	// the initial basis LOOKS the same.
+	// Correction - the tangent tangent to the great circle it's in, which is not actually 
+	// square with the ball, so the normal is not the normal of the rotation; but instead
+	// is a skew vector which may not cross well with any fixed axis and result with a 
+	// unknowable tangent vector direction.
 	
 	const lnQ = this;
 	const tangent = { x: Math.sin(lnQ.x/2), y: Math.sin(lnQ.y/2), z: Math.sin(lnQ.z/2) }
