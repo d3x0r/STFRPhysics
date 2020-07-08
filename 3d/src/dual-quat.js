@@ -217,6 +217,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	if( !angle ) {
 		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
 		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.nL = this.nR = 0;
+		this.ny = 1; // axis normal.
 		this.s = 0;
 		this.qw = 1;
 		this.dirty = false;
@@ -341,11 +342,12 @@ lnQuat.prototype.torque = function( direction, turns ) {
 	return this;
 }
 
+
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del) {
 	// this is terse; for more documentation see getBasis Method.
 	const q = this;
-	this.update();
+	//this.update();
 	if( !del ) del = 1.0;
 	const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 	if( !nt ) {
@@ -353,46 +355,28 @@ lnQuat.prototype.getBasisT = function(del) {
 	}
 	const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
 	const qw = Math.cos( del * nt ); // sin/cos are the function of exp()
-	//L = r x p 
-	// this.nL * this.nL = Centripetal force basis
-	// 	
-	const nst = s;//Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+
+	const nst = s;
 	const qx = q.nx * nst; // normalizes the imaginary parts
 	const qy = q.ny * nst; // set the sin of their composite angle as their total
 	const qz = q.nz * nst; // output = 1(unit vector) * sin  in  x,y,z parts.
 
-	// V = v eHat_r + r dTh/dT * eHat_t + r * dphi/Dt * sinT * eHat_phi
-	const basis = { forward:null
-	              , right:null
-	              , up:null
+	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
+	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
+	const xz = 2*qx*qz;  // sin(t)*sin(t) * x * z / (xx+yy+zz)
+
+	const wx = 2*qw*qx;  // cos(t)*sin(t) * x / sqrt(xx+yy+zz)
+	const wy = 2*qw*qy;  // cos(t)*sin(t) * y / sqrt(xx+yy+zz)
+	const wz = 2*qw*qz;  // cos(t)*sin(t) * z / sqrt(xx+yy+zz)
+
+	const xx = 2*qx*qx;  // sin(t)*sin(t) * y * y / (xx+yy+zz)
+	const yy = 2*qy*qy;  // sin(t)*sin(t) * x * x / (xx+yy+zz)
+	const zz = 2*qz*qz;  // sin(t)*sin(t) * z * z / (xx+yy+zz)
+
+	const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
+	              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
+	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
 	              , origin: { x:0, y:0, z:0 } };
-	{
-		const tx = 2 * ( -qz );
-		const tz = 2 * (qx );
-		basis.up = { x :     qw * tx + qy * tz
-		           , y : 1           + qz * tx - tz * qx
-		           , z :     qw * tz           - tx * qy };
-	}
-	{
-		
-		// for apply, this is cross(q,some point)
-		const ty = 2 * (qz);
-		const tz = 2 * (-qy);
-	 	basis.right = { x : 1           + ( qy * tz - ty * qz )
-		              , y :     qw * ty + (         - tz * qx )
-		              , z :     qw * tz + ( qx * ty ) };
-	}
-
-	{
-		// direct calculation of 'z' rotated by the vector.
-		const tx = 2 * ( qy );
-		const ty = 2 * (-qx);
-	 	basis.forward = { x :     qw * tx + (         - ty * qz )
-		                , y :     qw * ty + ( qz * tx )
-		                , z : 1 + 0       + ( qx * ty - tx * qy ) };
-
-	}
-
 	return basis;	
 
 	// this is the Frenet basis; which has a lack of useful information about the curve.
@@ -692,7 +676,7 @@ function twist( q, theta ) {
 	q.ny = ytmp *sqNorm;
 	q.nz = ztmp *sqNorm;
 
-	q.nL = (Math.abs(q.nx)+Math.abs(q.ny)+Math.abs(q.nz));
+	q.nL = (Math.abs(q.nx)+Math.abs(q.ny)+Math.abs(q.nz))/2;
 	const angleOverLinNorm = angle / q.nL;
 	q.s  = Math.sin( angle );
 	q.qw = Math.cos( angle );
@@ -726,25 +710,11 @@ function roll( C, th ) {
 }
 
 function yaw( C, th ) {
-	const baseAngle = C.nL;
-	if( th > 0 ) {
-		while( baseAngle > th ) {
-			th += Math.PI*2;
-		}
-	}
-	if( th < 0 ) {
-		while( baseAngle < th ) th -= Math.PI*2;
-	}
-
 	const basis = C.getBasis();
 	const twistor = new lnQuat( th, basis.up );
-
-
 	basis.right = twistor.apply(basis.right);
 	basis.forward = twistor.apply(basis.forward);
-	//if( steps) console.log( "C Before:", C );
-	C.fromBasis( basis );
-	return C;
+	return C.fromBasis( basis );
 }
 
 // rotate the passed vector 'from' this space
