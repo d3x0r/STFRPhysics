@@ -21,6 +21,9 @@ const branch1 = new dlnQuat( new lnQuat( 54/180*Math.PI, { x:0.4, y:0.3, z:0.2} 
 
 // 'fixed' acos for inputs > 1
 function acos(x) {
+	// uncomment this line to cause failure for even 1/2 rotations(at the limit of the other side)
+	// return Math.acos(x); // fails on the south pole, which gets inverted back to 0.
+
 	const mod = (x,y)=>y * (x / y - Math.floor(x / y)) ;
 	const plusminus = (x)=>mod( x+1,2)-1;
 	const trunc = (x,y)=>x-mod(x,y);
@@ -139,7 +142,7 @@ function lnQuat( theta, d, a, b ){
 					        
 						const r = 1/(l2);
 						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
-						const qw = Math.acos( ty ); // 1->-1 (angle from pole around this circle.
+						const qw = acos( ty ); // 1->-1 (angle from pole around this circle.
 
 						this.nx = theta.x/l3 /* * qw*/;
 						this.ny = theta.y/l3 /* * qw*/;
@@ -211,8 +214,14 @@ let tzz = 0;
 
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
-
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
+//	if( t > 1 || t < -1 ) 
+// 1,1,1 -1 = 2;/2 = 1
+// -1-1-1 -1 = -4 /2 = -2;
+/// okay; but a rotation matrix never gets back to the full rotation? so 0-1 is enough?  is that why evertyhing is biased?
+//  I thought it was more that sine() - 0->pi is one full positive wave... where the end is the same as the start
+//  and then pi to 2pi is all negative, so it's like the inverse of the rotation (and is only applied as an inverse? which reverses the negative limit?)
+//  So maybe it seems a lot of this is just biasing math anyway?
 	let angle = acos(t);
 	if( !angle ) {
 		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
@@ -239,22 +248,22 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	//else if( tzz == 2 ) {
 	//        angle -= 12*Math.PI;
 	//}
-		tzz++;
-		if( tzz >= 2 ) tzz = 0;
-	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
+	tzz++;
+	if( tzz >= 2 ) tzz = 0;
 
-	this.nx = (basis.up.z      -basis.forward.y) *tmp;
-	this.ny = (basis.forward.x -basis.right.z  ) *tmp;
-	this.nz = (basis.right.y   -basis.up.x     ) *tmp;
+	const yz = basis.up     .z - basis.forward.y;
+	const xz = basis.forward.x - basis.right  .z;
+	const xy = basis.right  .y - basis.up     .x;
+	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+
+	this.nx = yz *tmp;
+	this.ny = xz *tmp;
+	this.nz = xy *tmp;
 	const lNorm = angle / (Math.abs(this.nx)+Math.abs(this.ny)+Math.abs(this.nz));
 	this.x = this.nx * lNorm;
 	this.y = this.ny * lNorm;
 	this.z = this.nz * lNorm;
-/*
-	this.nx *= angle;
-	this.ny *= angle;
-	this.nz *= angle;
-*/
+
 	this.dirty = true;
 	return this;
 }
@@ -360,6 +369,8 @@ lnQuat.prototype.getBasisT = function(del) {
 	const qx = q.nx * nst; // normalizes the imaginary parts
 	const qy = q.ny * nst; // set the sin of their composite angle as their total
 	const qz = q.nz * nst; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	//sin(t)sin(t) = cos(t) - cos(2t)
 
 	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
 	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
