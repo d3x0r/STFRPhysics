@@ -237,9 +237,9 @@ function twister( theta ) {
 	const sinQ2 = sinQ*sinQ; // sin/cos are the function of exp()
 	const cosQ = Math.cos( this.nL ); // sin/cos are the function of exp()
 
-	const qnx = q.x / q.nR;
-    const qny = q.y / q.nR;
-    const qnz = q.z / q.nR;
+	const qnx = q.x;
+	const qny = q.y;
+	const qnz = q.z;
 
 	const yy = qny * qny;
 	const zz = qnz * qnz;
@@ -266,15 +266,7 @@ function twister( theta ) {
 	const xxzz = sinQ * (zz+xx);
 
 	const nr2 = q.nR*q.nR;  // xx+yy+zz 
-	const scalar =  2 *  (sinQ / nr2);
-
-
-
-	// some of these might be q.nx... 
-	const qx = q.x * sinQ / q.nR; // normalizes the imaginary parts
-	const qy = q.y * sinQ / q.nR; // set the sin of their composite angle as their total
-	const qz = q.z * sinQ / q.nR; // output = 1(unit vector) * sin  in  x,y,z parts.
-
+	const scalar = 2/nr2;
 	{ // this is the math-expanded version of the below; with primary terms instead of meta-constants
 		basis.up = { x :     2 *  ( xy + xn )
 		           , y : 1 - 2 *  ( zz + xx )
