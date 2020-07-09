@@ -1,5 +1,5 @@
 
-let A,B,C,D;  // slider values
+let A,B,C,D,E;  // slider values
 
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
@@ -104,53 +104,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			}
 
 	return;
-function twist_bad2( q, theta ) {
-	
-	const cosD2 = Math.cos( q.nL )
-	const sinD2 = Math.sin( q.nL )
-	
-	//const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );
-	const new_v = { x :     2 *       (sinD2 / (q.nR * q.nR )) * ( q.y * q.x * sinD2 - cosD2 * q.z * q.nR )
-	              , y :-( 1 - 2 * sinD2*(sinD2 / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ))
-	              , z :     2 *       (sinD2 / (q.nR * q.nR )) * ( q.z * q.y * sinD2 + cosD2 * q.x * q.nR ) };
-
-	const twistAxis = { nx:q.y * new_v.z - new_v.y * q.z
-			  , ny:q.z * new_v.x - new_v.z * q.x
-			  , nz:q.x * new_v.y - new_v.x * q.y
-			  , x: 0 + q.y * new_v.z - new_v.y * q.z
-			  , y: 0 + q.z * new_v.x - new_v.z * q.x
-			  , z: 0 + q.x * new_v.y - new_v.x * q.y
-	};
-	const lnTwist = new lnQuat( theta, twistAxis );
-			const lnQTwist = new lnQuat( theta, {x:q.y * new_v.z - new_v.y * q.z
-			                             ,y:q.z * new_v.x - new_v.z * q.x
-			                             ,z:q.x * new_v.y - new_v.x * q.y
-
-						} );
-	return q.add( twistAxis, 0.1 ).update();
-
-	q.nx = rot.x;
-	q.ny = rot.y;
-	q.nz = rot.z;
-	q.x = q.nx * rNorm * theta;
-	q.y = q.ny * rNorm * theta;
-	q.z = q.nz * rNorm * theta;
-	q.dirty = true;
-	return q;
-
-	const aNorm = 1/Math.sqrt( twistAxis.nx * twistAxis.nx + twistAxis.ny * twistAxis.ny + twistAxis.nz * twistAxis.nz );
-	twistAxis.x = twistAxis.nx * aNorm * angle2/2;
-	twistAxis.y = twistAxis.ny * aNorm * angle2/2;
-	twistAxis.z = twistAxis.nz * aNorm * angle2/2;
-	q.nx = twistAxis.nx * angle2;
-	q.ny = twistAxis.ny * angle2;
-	q.nz = twistAxis.nz * angle2;
-	q.x += twistAxis.x;
-	q.y += twistAxis.y;
-	q.z += twistAxis.z;
-	q.dirty = true;
-	return q;
-}
 
 		function drawBasis( lnQ,T, doTwist )
 		{
@@ -320,11 +273,12 @@ function twist_bad2( q, theta ) {
 			                                        ,z:q.x * new_v.y - new_v.x * q.y
 						} );
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+			lnQ2.octive = (E|0)||1;
 			//lnQ2.twist( -Math.PI ).update();
 			let minL = 10;
 			let maxL = -10;
 if(1)
-			for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 ) {
+			for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
 					lnQ2.twist( 0.1 ).update();
@@ -354,7 +308,7 @@ if(1)
 						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
 						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255))
 						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255 ))
-					} else if( Math.abs( t-B) < 0.005 ) {
+					} else if( Math.abs( t-B) < 0.01 ) {
 						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
 						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
 						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
@@ -432,14 +386,14 @@ if(1)
 					                                                                                      
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale                      ,(o[1]+lnQ2.ny)*spaceScale                     , (o[2]+lnQ2.nz)*spaceScale - 0.5 * normal_del  ))
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.nx)*spaceScale                      ,(o[1]+lnQ2.ny)*spaceScale                     , (o[2]+lnQ2.nz)*spaceScale + 0.5 * normal_del  ))
-			                if( t == 0 ) {
+			                if( Math.abs(t) < 0.005 ) {
 						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
 						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
 						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
 						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
 						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255))
 						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255 ))
-					} else if( Math.abs( t-B) < 0.005 ) {
+					} else if( Math.abs( t-B) < 0.01 ) {
 						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
 						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
 						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
@@ -476,7 +430,7 @@ if(1)
 				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
 
 
-			        if( t == 0 ) {
+			        if( Math.abs(t) < 0.05 ) {
 					normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
 					normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
 					normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
@@ -746,16 +700,19 @@ function DrawQuatPaths(normalVertices,normalColors) {
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
+			let lnQA = document.getElementById( "lnQA" ).value;
 
 			//A = (lnQX/10-5)/10;
 
 			//let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(B=(lnQY/10-5)/20) , c: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
 			T = (lnQT/500-1);
+			E=lnQA/100;
 			let lnQ = new lnQuat(  { a:(A=lnQX/500-1) , b:(B=lnQY/500-1) , c:(C=lnQZ/500-1)  } );
 	A = A * Math.PI*4;
 	B = B * Math.PI*2;
 	C = C * Math.PI*4;
 	T = T * Math.PI*4;
+	E = E * 30;
 	D = T ;
 	twistDelta = A;
 
@@ -764,6 +721,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	document.getElementById( "lnQYval").textContent = B;
 	document.getElementById( "lnQZval").textContent = C;
 	document.getElementById( "lnQTval").textContent = T;
+	document.getElementById( "lnQAval").textContent = E;
 
                         DrawQuatNormals(normalVertices,normalColors);
 

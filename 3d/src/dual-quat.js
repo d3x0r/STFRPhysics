@@ -240,7 +240,9 @@ y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */
 	if( tzz == 0 ) {
-	        angle -= 2*Math.PI;
+		angle -= this.octive * 2*Math.PI
+	}else {
+		angle += (this.octive-1) * 2*Math.PI
 	}
 	//else if( tzz == 1 ) {
 	//        angle += 10*Math.PI;
