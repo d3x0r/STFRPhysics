@@ -278,7 +278,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			let minL = 10;
 			let maxL = -10;
 if(1)
-			for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/5)) ) {
+			for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/3)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
 					lnQ2.twist( 0.1 ).update();
