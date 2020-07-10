@@ -238,7 +238,8 @@ x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
 z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
-*/
+*/	
+	if( !this.octive ) this.octive = 1;
 	if( tzz == 0 ) {
 		angle -= this.octive * 2*Math.PI
 	}else {
