@@ -53,6 +53,8 @@
 		<p>Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
+
 		</p>
 		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p>Resolution: <input type="text" id="resolution" value="0"> </p>
@@ -629,7 +631,9 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
-
+			is = document.getElementById( "showCoordinateGrid" );
+			is.onchange = updateMesh;
+                                               
 
 			is = document.getElementById( "fillOutside" );
 			is.onchange = updateTestData;
