@@ -1,6 +1,7 @@
 
 let A,B,C,D,E;  // slider values
 let showCoordinateGrid = false;
+let drawNormalBall = false;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const spaceScale = 5;
@@ -272,7 +273,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			                                        ,z:q.x * new_v.y - new_v.x * q.y
 						} );
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
-			lnQ2.octive = (E|0)||1;
+			lnQ2.octave = (E|0)||1;
 			//lnQ2.twist( -Math.PI ).update();
 			let minL = 10;
 			let maxL = -10;
@@ -480,10 +481,10 @@ if(1)
 			const basis = lnQ2.getBasis( );
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale                             ,((lnQ2.ny*lnQ2.nL))*spaceScale                             , ((lnQ2.nz*lnQ2.nL))*spaceScale ))
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale + basis.right.x*normal_del  ,((lnQ2.ny*lnQ2.nL))*spaceScale + basis.right.y*normal_del  , ((lnQ2.nz*lnQ2.nL))*spaceScale + basis.right.z*normal_del ))
-			                                                                                                                                                                                    
+			                                                                                                                                                                           
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale                             ,((lnQ2.ny*lnQ2.nL))*spaceScale                             , ((lnQ2.nz*lnQ2.nL))*spaceScale ))
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale + basis.up.x*normal_del     ,((lnQ2.ny*lnQ2.nL))*spaceScale + basis.up.y*normal_del     , ((lnQ2.nz*lnQ2.nL))*spaceScale + basis.up.z*normal_del ))
-			                                                                                                                                                                                    
+			                                                                                                                                                                           
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale                             ,((lnQ2.ny*lnQ2.nL))*spaceScale                             , ((lnQ2.nz*lnQ2.nL))*spaceScale ))
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale + basis.forward.x*normal_del,((lnQ2.ny*lnQ2.nL))*spaceScale + basis.forward.y*normal_del, ((lnQ2.nz*lnQ2.nL))*spaceScale + basis.forward.z*normal_del ))
 
@@ -511,9 +512,12 @@ if(1)
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
 				}
+		if( E < 2 )
+			drawRange( lnQ2.x,lnQ2.y,lnQ2.z, Math.PI/64, 5 );
+
 
 		}
-	 if(0) { // drop liens to axiess...
+	 if(1) { // drop liens to axiess...
 			if( lnQ2.nx < 0 ) {
 				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.nx*lnQ2.nL))*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.ny*lnQ2.nL))*spaceScale                     , (o[2]+(lnQ2.nz*lnQ2.nL))*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0])*spaceScale    ,(o[1]+(lnQ2.ny*lnQ2.nL))*spaceScale                     , (o[2]+(lnQ2.nz*lnQ2.nL))*spaceScale ))
@@ -565,12 +569,20 @@ if(1)
 			        }
 			        
 	if( showCoordinateGrid ) {
+		const range = (Math.floor(E) + 2 ) * Math.PI;
+		const minRange = (Math.floor(E) +1 ) * Math.PI;
+		drawRange( 0,0,0, range, 20, minRange );
+	}
 	// graph of location to rotation... 
-	for( let x = 2*-Math.PI; x <= 2*Math.PI;  x += (2*Math.PI)/20 ) {
-		for( let y = 2*-Math.PI; y <= 2*Math.PI;  y += (2*Math.PI)/20 ) {
-			for( let z = 2*-Math.PI; z <= 2*Math.PI; z += (2*Math.PI)/20 ) {
-				const lnQ = new lnQuat( {a:x, b:y, c:z } );
+	function drawRange( cx,cy,cz,range,steps, minr ) {
+		if( !minr ) minr = 0;
+		const normLen = 0.25*(steps/range);
+	for( let x = -range; x <= range;  x += (2*range)/steps ) {
+		for( let y = -range; y <= range;  y += (2*range)/steps ) {
+			for( let z = -range; z <= range; z += (2*range)/steps ) {
+				const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
 			const basis = lnQ.getBasis( );
+			if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
 
 			// the original normal direction; projected offset of sphere (linear scaled)
 			//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
@@ -578,10 +590,11 @@ if(1)
 			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 
-			const n = (Math.abs(x) + Math.abs(y) + Math.abs(z));
-			const ox = n*x / (Math.sqrt(x*x+y*y+z*z)) ;
-			const oy = n*y  / (Math.sqrt(x*x+y*y+z*z)) ;
-			const oz = n*z  / (Math.sqrt(x*x+y*y+z*z)) ;
+			const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
+			//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
+			const ox = lnQ.nL*lnQ.nx;
+			const oy = lnQ.nL*lnQ.ny;
+			const oz = lnQ.nL*lnQ.nz;
 			//const ox = n*x * (Math.sqrt(x*x+y*y+z*z)) ;
 			//const oy = n*y  * (Math.sqrt(x*x+y*y+z*z)) ;
 			//const oz = n*z  *(Math.sqrt(x*x+y*y+z*z)) ;
@@ -590,13 +603,13 @@ if(1)
 			//const oz = z  / (Math.abs(x) + Math.abs(y) + Math.abs(z) );
 	
 			normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/4  ,oy*spaceScale + basis.right.y*normal_del /4 , oz*spaceScale + basis.right.z*normal_del/4 ))
+			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/normLen  ,oy*spaceScale + basis.right.y*normal_del /normLen , oz*spaceScale + basis.right.z*normal_del/normLen ))
 			                                                                                                                                
 			normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.up.x*normal_del/4     ,oy*spaceScale + basis.up.y*normal_del/4     , oz*spaceScale + basis.up.z*normal_del/4 ))
+			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.up.x*normal_del/normLen     ,oy*spaceScale + basis.up.y*normal_del/normLen     , oz*spaceScale + basis.up.z*normal_del/normLen ))
 			                                                                                                                                
 			normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.forward.x*normal_del/4,oy*spaceScale + basis.forward.y*normal_del/4, oz*spaceScale + basis.forward.z*normal_del/4 ))
+			normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.forward.x*normal_del/normLen,oy*spaceScale + basis.forward.y*normal_del/normLen, oz*spaceScale + basis.forward.z*normal_del/normLen ))
 
 			normalColors.push( new THREE.Color( 255,0,0,255 ))
 			normalColors.push( new THREE.Color( 255,0,0,255 ))
@@ -611,6 +624,7 @@ if(1)
 		}
 		
 	}
+	
 	}
 			 console.log( "MINMAX:", minL, maxL, minL+maxL );
 			}
@@ -708,7 +722,7 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	}
 	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
-if(1/*draw normal ball with twist*/)
+if(drawNormalBall/*draw normal ball with twist*/)
 	for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
 		for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			let x = Math.sin(t );
@@ -790,6 +804,10 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	let check = document.getElementById( "showCoordinateGrid" );
 	if( check ) {
 		showCoordinateGrid = check.checked;
+	}
+	check = document.getElementById( "drawNormalBall" );
+	if( check ) {
+		drawNormalBall = check.checked;
 	}
 	document.getElementById( "lnQXval").textContent = A;
 	document.getElementById( "lnQYval").textContent = B;

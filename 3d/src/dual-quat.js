@@ -120,13 +120,13 @@ function lnQuat( theta, d, a, b ){
 					this.x = theta.a;
 					this.y = theta.b;
 					this.z = theta.c;
-						const l3 = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
-					        if( l3 ) {
-							this.nx = this.x/l3 /* * qw*/;
-							this.ny = this.y/l3 /* * qw*/;
-							this.nz = this.z/l3 /* * qw*/;
-						}
+					const l3 = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
+					//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
+					if( l3 ) {
+						this.nx = this.x/l3 /* * qw*/;
+						this.ny = this.y/l3 /* * qw*/;
+						this.nz = this.z/l3 /* * qw*/;
+					}
 						
 					this.update();
 					return;
@@ -239,11 +239,11 @@ y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 
 z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */	
-	if( !this.octive ) this.octive = 1;
+	if( !this.octave ) this.octave = 1;
 	if( tzz == 0 ) {
-		angle -= this.octive * 2*Math.PI
+		angle -= this.octave * 2*Math.PI
 	}else {
-		angle += (this.octive-1) * 2*Math.PI
+		angle += (this.octave-1) * 2*Math.PI
 	}
 	//else if( tzz == 1 ) {
 	//        angle += 10*Math.PI;

@@ -54,6 +54,7 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
 		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
+		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 
 		</p>
 		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
@@ -632,6 +633,8 @@
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showCoordinateGrid" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawNormalBall" );
 			is.onchange = updateMesh;
                                                
 
