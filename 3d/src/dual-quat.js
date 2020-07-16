@@ -61,6 +61,7 @@ function signedMod(x) {
 // 
 
 const test = true;
+let normalizeNormalTangent = false;
 var twistDelta = 0;
 // -------------------------------------------------------------------------------
 //  Log Quaternion (Rotation part)
@@ -145,7 +146,7 @@ function lnQuat( theta, d, a, b ){
 						const qw = acos( ty ); // 1->-1 (angle from pole around this circle.
 
 						this.nx = theta.x/l3 /* * qw*/;
-						this.ny = theta.y/l3 /* * qw*/;
+						this.ny = 0;// theta.y/l3 /* * qw*/;
 						this.nz = theta.z/l3 /* * qw*/;
 
 						this.x = tz*qw;
@@ -153,7 +154,7 @@ function lnQuat( theta, d, a, b ){
 						this.z = -tx*qw;
 					        
 						this.update();
-						if(1)
+						if(normalizeNormalTangent)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							const trst = this.getBasis();
 							const fN = 1/Math.sqrt( tz*tz+tx*tx );

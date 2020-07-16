@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Isosurface Texture Toolbox</title>
+		<title>Rotation Space Explorer</title>
 		
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
@@ -37,40 +37,42 @@
 	<!-- info on screen display -->
 	<div id="info">
 		<div class="top">
-			Isosurface Texture Tester
+			Rotation Space Explorer
 		</div>
 		<div class="bottom" id="inlineDoc">
 			- <i><a href="https://www.github.com/d3x0r/STFRPhysics">https://www.github.com/d3x0r/STFRPhysics</a></i>
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
-		<p>Input Data:</p>
-		<p><select id="datasource"></select></p>
-		<p>Algorithm:</p>
-		<p><select id="mesher"></select></p>
-		<p>Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
-		<p>Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
-		<p>Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
+		<p style="display:none">Input Data:</p>
+		<p style="display:none"><select id="datasource"></select></p>
+		<p style="display:none">Algorithm:</p>
+		<p style="display:none"><select id="mesher"></select></p>
+		<p style="display:none">Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
+		<p style="display:none">Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
+		<p style="display:none">Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
-		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked"><br>
+		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
+		<p>
 		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
+			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
-
+		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" value="unchecked">
 		</p>
 		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
-		<p>Resolution: <input type="text" id="resolution" value="0"> </p>
-		<p>Vertex count: <input type="text" id="vertcount" value="0"> </p>
-		<p>Face count: <input type="text" id="facecount" value="0"> </p>
-		<p>(Approx.) Time:<input type="text" id="meshtime" value="0"> </p>
-		<p>Inflation:<input type="range" id="inflation" value="50"> </p>
-		<p>none: <input type="radio" name="inflationMode" id="noInflation" value="checked"> 
+		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
+		<p style="display:none">Vertex count: <input type="text" id="vertcount" value="0"> </p>
+		<p style="display:none">Face count: <input type="text" id="facecount" value="0"> </p>
+		<p style="display:none">(Approx.) Time:<input type="text" id="meshtime" value="0"> </p>
+		<p style="display:none">Inflation:<input type="range" id="inflation" value="50"> </p>
+		<p style="display:none">none: <input type="radio" name="inflationMode" id="noInflation" value="checked"> 
 			Maximize: <input type="radio" name="inflationMode" id="maximize" > 
 			1:1<input type="radio" name="inflationMode" id="midify" > 
 			10:1<input type="radio" name="inflationMode" id="harden">
 			1:10<input type="radio" name="inflationMode" id="brick">
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
-		<p>Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
+		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
 		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="500"> Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="3"></p>
@@ -640,6 +642,8 @@
 			is.onchange = updateMesh;
 
 			is = document.getElementById( "drawNormalBall" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "normalizeTangents" );
 			is.onchange = updateMesh;
                                                
 

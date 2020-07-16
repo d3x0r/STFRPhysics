@@ -76,6 +76,8 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				normalColors.push( new THREE.Color( 0,0,1,255 ))
 
 
+
+
         //lnQ.x /= 2;
 	//lnQ.z /= 2;
 	let lnQP = null;
@@ -288,11 +290,60 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 if(1)
 			//for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/2)) ) {
 			lnQ2.twist( B-Math.PI/32 ).update();
+			{
+				let xy = lnQTwist.y/(Math.abs( lnQTwist.y)+Math.abs( lnQTwist.z));
+				let xz = lnQTwist.z/(Math.abs( lnQTwist.y)+Math.abs( lnQTwist.z));
+				xy = xy / (Math.abs(xy)+Math.abs(xz));
+				xz = xz / (Math.abs(xy)+Math.abs(xz));
+
+				let yx = lnQTwist.x/(Math.abs( lnQTwist.z)+Math.abs( lnQTwist.x));
+				let yz = lnQTwist.z/(Math.abs( lnQTwist.z)+Math.abs( lnQTwist.x));
+				yx = yx / (Math.abs(yx)+Math.abs(yz));
+				yz = yz / (Math.abs(yz)+Math.abs(yx));
+
+				let zx = lnQTwist.x/(Math.abs( lnQTwist.x)+Math.abs( lnQTwist.y));
+				let zy = lnQTwist.y/(Math.abs( lnQTwist.x)+Math.abs( lnQTwist.y));
+				zx = zx / (Math.abs(zx)+Math.abs(zy));
+				zy = zy / (Math.abs(zx)+Math.abs(zy));
+
+				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+0)*spaceScale  ))
+				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+
+				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+xz)*spaceScale  ))
+				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+
+
+				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+0 )*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale  ))
+				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+
+				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
+				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+
+
+				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale        ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]  )*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale  ))
+				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+
+				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
+				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+			}
+
 
 	document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
 	document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
 	document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
-			for( var t = B-0*Math.PI/16; t<= B+Math.PI/4; t+=0.01 *(1/(E/2)) ) {
+			for( var t = B-0*Math.PI/16; t<= B+Math.PI/4; t+=0.01 *(1/(E/0.5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
 					lnQ2.twist( 0.1 ).update();
@@ -317,6 +368,43 @@ if(1)
 			                                                                                                                                                                  
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale - 0.5 * normal_del  ))
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale + 0.5 * normal_del  ))
+			                if( t == 0 ) {
+						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
+						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
+						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
+						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
+						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255))
+						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255 ))
+					} else if( Math.abs( t-B) < 0.01 ) {
+						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
+						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
+						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
+						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
+						normalColors.push( new THREE.Color( 0.3,0.3,1.0,255))
+						normalColors.push( new THREE.Color( 0.3,0.3,1.0,255 ))
+	                                
+					} else {
+					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,0,0.5,255))
+					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+				        
+					}
+				}
+
+		        
+				if( 1 ) {
+						// this has accelerations, not just ping-ponging limits... (but those walls may be rotation artifacts and reflections)
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale - 0.5 * normal_del   ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale + 0.5 * normal_del   ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale ))
+			                                                                                                                                                                  
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale                      ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale - 0.5 * normal_del  , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale                      ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale + 0.5 * normal_del  , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale  ))
+			                                                                                                                                                                  
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale                      ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale - 0.5 * normal_del  ))
+					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale                      ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale + 0.5 * normal_del  ))
 			                if( t == 0 ) {
 						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
 						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
@@ -478,12 +566,13 @@ if(1)
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
 				}
+		if(0)
 		if( E < 2 )
 			drawRange( lnQ2.x,lnQ2.y,lnQ2.z, Math.PI/32, 5 );
 
 
 		}
-	 if(1) { // drop liens to axiess...
+	 if(0) { // drop liens to axiess...
 			if( lnQ2.nx < 0 ) {
 				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.nx*lnQ2.nL))*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.ny*lnQ2.nL))*spaceScale                     , (o[2]+(lnQ2.nz*lnQ2.nL))*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0])*spaceScale    ,(o[1]+(lnQ2.ny*lnQ2.nL))*spaceScale                     , (o[2]+(lnQ2.nz*lnQ2.nL))*spaceScale ))
@@ -787,8 +876,11 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	document.getElementById( "lnQTval").textContent = T;
 	document.getElementById( "lnQAval").textContent = E;
 
+	check = document.getElementById( "normalizeTangents");
+	if( check )
+		normalizeNormalTangent = check.checked; // global variable from dual-quat.js
 
-                        DrawQuatNormals(normalVertices,normalColors);
+        DrawQuatNormals(normalVertices,normalColors);
 
 	const xAxis = {x:1,y:0,z:0};
 	const yAxis = {x:0,y:1,z:0};
