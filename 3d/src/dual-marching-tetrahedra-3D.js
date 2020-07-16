@@ -584,9 +584,9 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 			// there's barely even a surface here to have a point.
 			// the normals are basically all in the same plane, but not parallel.
 			// plane intersections would result in at most 3 parallel lines between the 3 planes.
-			p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3 - dim0/2;
-			p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3 - dim1/2;
-			p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3 - dim2/2;
+			p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3;
+			p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3;
+			p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3;
 			n[0] = p1.normalBuffer[0];
 			n[1] = p1.normalBuffer[1];
 			n[2] = p1.normalBuffer[2];
@@ -640,9 +640,9 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 			tmp2[1] = use_n1.vertBuffer[1]+use_n1.normalBuffer[1]*t[1];
 			tmp2[3] = use_n1.vertBuffer[2]+use_n1.normalBuffer[2]*t[1];
 			IntersectLineWithPlane( tmp, tmp2, use_n3.normalBuffer, use_n3.vertBuffer, t );
-			p[0] = use_n3.vertBuffer[0]+use_n3.normalBuffer[0]*t[1] - dim0/2;
-			p[1] = use_n3.vertBuffer[1]+use_n3.normalBuffer[1]*t[1] - dim1/2;
-			p[2] = use_n3.vertBuffer[2]+use_n3.normalBuffer[2]*t[1] - dim2/2;
+			p[0] = use_n3.vertBuffer[0]+use_n3.normalBuffer[0]*t[1];
+			p[1] = use_n3.vertBuffer[1]+use_n3.normalBuffer[1]*t[1];
+			p[2] = use_n3.vertBuffer[2]+use_n3.normalBuffer[2]*t[1];
 
 			// scale each normal, by the inner angle of this face's vert...
 			ScaleNormalsByAngle( n, use_n1.normalBuffer, use_n1.vertBuffer, use_n2.vertBuffer, use_n3.vertBuffer );
@@ -679,9 +679,9 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 		// all normals are co-linear.... 
 		// all should also be in the same direction, and normal to the face; it would be hard to imagine computing 
 		// a surface with a skewed/sheared normal.
-		p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3 - (dim0/2);
-		p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3 - (dim1/2);
-		p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3 - (dim2/2);
+		p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3;
+		p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3;
+		p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3;
 		n[0] = p1.normalBuffer[0] + p2.normalBuffer[0] + p3.normalBuffer[0];
 		n[1] = p1.normalBuffer[1] + p2.normalBuffer[1] + p3.normalBuffer[1];
 		n[2] = p1.normalBuffer[2] + p2.normalBuffer[2] + p3.normalBuffer[2];
@@ -913,7 +913,7 @@ function meshCloud(data, dims) {
 	
 		let odd = 0;
 		let zOdd = z & 1;
-		cellOrigin[2] = z-dim2/2;
+		cellOrigin[2] = z-0.5;
 
 		// compute one layer (x by y) intersections (cross from inside to outside).
 		// each cell individually has 16 intersections
@@ -921,11 +921,11 @@ function meshCloud(data, dims) {
 		// 3 intersections per cell after the first layer can be copied; but shift in position (moving from the top to the bottom)
 		// 
 		for( var y = 0; y < dim1-1; y++ ) {
-			cellOrigin[1] = y-dim1/2;
+			cellOrigin[1] = y-0.5;
 			for( var x = 0; x < dim0-1; x++ ) {
 				odd = (( x + y ) &1) ^ zOdd;
 				//if( x > 5 || y > 5 || z > 5 ) continue;
-				cellOrigin[0] = x-dim0/2;
+				cellOrigin[0] = x-0.5;
 	
 				const baseHere = (x+0 + y*dim0 + z*(dim0*dim1))*6;
 				const baseOffset = x+0 + y*dim0 + z * dim0*dim1;
