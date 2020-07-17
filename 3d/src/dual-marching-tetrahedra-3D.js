@@ -1533,7 +1533,6 @@ function meshCloud(data, dims) {
 	}
 
 	function addFace( ai_, bi_, ci_, n ) {
-		return 0;
 		const ai = ai_.id-1;
 		const bi = bi_.id-1;
 		const ci = ci_.id-1;
@@ -1576,6 +1575,7 @@ function meshCloud(data, dims) {
 		if( opts.geometryHelper )	{
 			return opts.geometryHelper.addFace( ai, ci, bi, n, false	);
 		}
+
 		return faces.push( f = new THREE.Face3( ai, ci, bi, n ) );
 
 	}
@@ -1671,7 +1671,6 @@ function meshCloud(data, dims) {
 	}
 
 	function outputFace( inv, n1, n2, n3, n4 ){
-	return;
 		const f = getFold( n1.n, n1.p, n2.p, n3.p, n4.p );
 		if( f >= 0 ) {
 			const p0 = addPoint( n1 );
