@@ -4,7 +4,7 @@ let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 
-let showUnscaledRotation = false;  // just raw x/y/z at x/y/z
+let showUnscaledRotation = true;  // just raw x/y/z at x/y/z
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const spaceScale = 5;
@@ -137,6 +137,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			const basis = lnQ.getBasis();//{ up:lnQ.applyDel( {x:0,y:1,z:0} ),right:lnQ.applyDel( {x:1,y:0,z:0} ),forward:lnQ.applyDel( {x:0,y:0,z:1} )};
 			
 
+			
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                           ,new_v.y*spaceScale                           , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del, new_v.z*spaceScale + basis.right.z*normal_del ))
 
@@ -195,18 +196,19 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				
 			        const forward = new_v_;
 			        const right = new_v_2;
+				const up = new_v;
 
 				
 				normalVertices.push( new THREE.Vector3( (o[0]+0*new_v.x*2)*spaceScale         ,(o[1]+0*new_v.y*2)*spaceScale  ,(o[2]+ 0*new_v.z*2)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
 			        
-				normalColors.push( new THREE.Color( 1,0.25,0.25,255 ))
-				normalColors.push( new THREE.Color( 1,0.25,0.25,255 ))
+				normalColors.push( new THREE.Color( 0.25,1,0.25,255 ))
+				normalColors.push( new THREE.Color( 0.25,1,0.25,255 ))
 				new_v = new_v_;
 				normalVertices.push( new THREE.Vector3( (o[0]+0*new_v.x*2)*spaceScale         ,(o[1]+0*new_v.y*2)*spaceScale  ,(o[2]+ 0*new_v.z*2)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
-				normalColors.push( new THREE.Color( 0,1,0,255 ))
-				normalColors.push( new THREE.Color( 0,1,0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1,255 ))
+				normalColors.push( new THREE.Color( 0,0,1,255 ))
 				new_v = new_v_2;
 				normalVertices.push( new THREE.Vector3( (o[0]+0*new_v.x*2)*spaceScale         ,(o[1]+0*new_v.y*2)*spaceScale  ,(o[2]+ 0*new_v.z*2)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
@@ -237,6 +239,73 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
 				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
 				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
+
+
+				{
+					
+					let xz =2* up.y/(Math.abs( up.y)+Math.abs( up.z));
+					let xy =2* -up.z/(Math.abs( up.y)+Math.abs( up.z));
+
+					let yz =2* -up.x/(Math.abs( up.z)+Math.abs( up.x));
+					let yx =2* up.z/(Math.abs( up.z)+Math.abs( up.x));
+
+					let zy =2* up.x/(Math.abs( up.x)+Math.abs( up.y));
+					let zx =2* -up.y/(Math.abs( up.x)+Math.abs( up.y));
+					
+					// these are the plane crossings - where we need to change the iterator...
+
+
+					/*
+					let xz = up.y;
+					let xy = -up.z;
+					xy = xy / Math.sqrt(xy*xy + xz*xz);
+					xz = xz / Math.sqrt(xy*xy + xz*xz);
+			        
+					let yz = -up.x;
+					let yx = up.z;
+					yx = yx / Math.sqrt(yx*yx + yz*yz);
+					yz = yz / Math.sqrt(yx*yx + yz*yz);
+
+					let zy = up.x;
+					let zx = -up.y;
+					zx = zx / Math.sqrt(zx*zx + zy*zy);
+					zy = zy / Math.sqrt(zx*zx + zy*zy);
+			                */
+
+					normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+0)*spaceScale  ))
+					normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+					normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+			        
+					normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+xz)*spaceScale  ))
+					normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+					normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
+			        
+			        
+					normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+0 )*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale  ))
+					normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+					normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+			        
+					normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
+					normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+					normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
+			        
+			        
+					normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale        ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]  )*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale  ))
+					normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+					normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+			        
+					normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
+					normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+					normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
+				}
+
+
 
 
 				if(0 ) // curvature test...
@@ -290,55 +359,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 if(1)
 			//for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/2)) ) {
 			lnQ2.twist( B-Math.PI/32 ).update();
-			{
-				let xy = lnQTwist.y/(Math.abs( lnQTwist.y)+Math.abs( lnQTwist.z));
-				let xz = lnQTwist.z/(Math.abs( lnQTwist.y)+Math.abs( lnQTwist.z));
-				xy = xy / (Math.abs(xy)+Math.abs(xz));
-				xz = xz / (Math.abs(xy)+Math.abs(xz));
-
-				let yx = lnQTwist.x/(Math.abs( lnQTwist.z)+Math.abs( lnQTwist.x));
-				let yz = lnQTwist.z/(Math.abs( lnQTwist.z)+Math.abs( lnQTwist.x));
-				yx = yx / (Math.abs(yx)+Math.abs(yz));
-				yz = yz / (Math.abs(yz)+Math.abs(yx));
-
-				let zx = lnQTwist.x/(Math.abs( lnQTwist.x)+Math.abs( lnQTwist.y));
-				let zy = lnQTwist.y/(Math.abs( lnQTwist.x)+Math.abs( lnQTwist.y));
-				zx = zx / (Math.abs(zx)+Math.abs(zy));
-				zy = zy / (Math.abs(zx)+Math.abs(zy));
-
-				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+0)*spaceScale  ))
-				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
-				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
-
-				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+xy)*spaceScale  ,(o[2]+xz)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+0)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+xz)*spaceScale  ))
-				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
-				normalColors.push( new THREE.Color( 1,0.5,0.5,255 ))
-
-
-				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+0 )*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale  ))
-				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
-				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
-
-				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+yz)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+yx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
-				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
-				normalColors.push( new THREE.Color( 0.5,1,0.5,255 ))
-
-
-				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale        ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]  )*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale  ))
-				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
-				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
-
-				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+zy)*spaceScale  ,(o[2]+0)*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+zx)*spaceScale         ,(o[1]+0)*spaceScale  ,(o[2]+0)*spaceScale  ))
-				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
-				normalColors.push( new THREE.Color( 0.5,0.5,1,255 ))
-			}
-
 
 	document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
 	document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
@@ -360,38 +380,7 @@ if(1)
 
 				if( showUnscaledRotation ) {
 						// this has accelerations, not just ping-ponging limits... (but those walls may be rotation artifacts and reflections)
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale - 0.5 * normal_del   ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale ))
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale + 0.5 * normal_del   ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale ))
-			                                                                                                                                                                  
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale - 0.5 * normal_del  , (o[2]+lnQ2.z)*spaceScale  ))
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale + 0.5 * normal_del  , (o[2]+lnQ2.z)*spaceScale  ))
-			                                                                                                                                                                  
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale - 0.5 * normal_del  ))
-					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x)*spaceScale                      ,(o[1]+lnQ2.y)*spaceScale                     , (o[2]+lnQ2.z)*spaceScale + 0.5 * normal_del  ))
-			                if( t == 0 ) {
-						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
-						normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
-						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
-						normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
-						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255))
-						normalColors.push( new THREE.Color( 0.6,0.6,1.0,255 ))
-					} else if( Math.abs( t-B) < 0.01 ) {
-						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
-						normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
-						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
-						normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
-						normalColors.push( new THREE.Color( 0.3,0.3,1.0,255))
-						normalColors.push( new THREE.Color( 0.3,0.3,1.0,255 ))
-	                                
-					} else {
-					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
-					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
-					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-					normalColors.push( new THREE.Color( 0,0,0.5,255))
-					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
-				        
-					}
+					doDrawBasis( lnQ2, t, x=>x );
 				}
 
 		        
@@ -459,14 +448,14 @@ if(1)
 		        
 
 		if(1) { // graph of rotations...
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.nL))*spaceScale                     , (o[2]+(0))*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale + 0.5 * normal_del   ,(o[1]+(lnQ2.nL))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale + 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
 				                                                                                                                                             
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
 				                                                                                                                                             
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(t)*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
 
 
 			        if( Math.abs(t) < 0.05 ) {
@@ -531,7 +520,8 @@ if(1)
 
 		}
 		if(1) { // recti-linear scaled points ... 
-
+			doDrawBasis( lnQ2, t, (x)=>x*(lnQ2.nL*2)/lnQ2.nR );
+/*
 			const basis = lnQ2.getBasis( );
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale                             ,((lnQ2.ny*lnQ2.nL))*spaceScale                             , ((lnQ2.nz*lnQ2.nL))*spaceScale ))
 			normalVertices.push( new THREE.Vector3( ((lnQ2.nx*lnQ2.nL))*spaceScale + basis.right.x*normal_del  ,((lnQ2.ny*lnQ2.nL))*spaceScale + basis.right.y*normal_del  , ((lnQ2.nz*lnQ2.nL))*spaceScale + basis.right.z*normal_del ))
@@ -565,13 +555,51 @@ if(1)
 					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
 					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+
 				}
+*/
 		if(0)
 		if( E < 2 )
 			drawRange( lnQ2.x,lnQ2.y,lnQ2.z, Math.PI/32, 5 );
 
 
 		}
+
+function doDrawBasis(lnQ2,t,f,n ) {
+			const basis = lnQ2.getBasis( );
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2.z))*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.right.x*normal_del  ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.right.y*normal_del  , (f(lnQ2.z))*spaceScale + basis.right.z*normal_del ))
+			                                                                                                                                                                   
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2.z))*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.up.x*normal_del     ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.up.y*normal_del     , (f(lnQ2.z))*spaceScale + basis.up.z*normal_del ))
+			                                                                                                                                                                   
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2.z))*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.forward.x*normal_del,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.forward.y*normal_del, (f(lnQ2.z))*spaceScale + basis.forward.z*normal_del ))
+
+			        if( t == 0 ) {
+					normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
+					normalColors.push( new THREE.Color( 1.0,0.6,0.6,255 ))
+					normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
+					normalColors.push( new THREE.Color( 0.6,1.0,0.6,255 ))
+					normalColors.push( new THREE.Color( 0.6,0.6,1.0,255))
+					normalColors.push( new THREE.Color( 0.6,0.6,1.0,255 ))
+				} else if( Math.abs( t-B) < 0.05 ) {
+					normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
+					normalColors.push( new THREE.Color( 1.0,0.3,0.3,255 ))
+					normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
+					normalColors.push( new THREE.Color( 0.3,1.0,0.3,255 ))
+					normalColors.push( new THREE.Color( 0.3,0.3,1.0,255))
+					normalColors.push( new THREE.Color( 0.3,0.3,1.0,255 ))
+	
+				} else {
+					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+					normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+				}
+}
 	 if(0) { // drop liens to axiess...
 			if( lnQ2.nx < 0 ) {
 				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.nx*lnQ2.nL))*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.ny*lnQ2.nL))*spaceScale                     , (o[2]+(lnQ2.nz*lnQ2.nL))*spaceScale ))
