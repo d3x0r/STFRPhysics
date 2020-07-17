@@ -705,7 +705,12 @@ function drawQuatTwist() {
 	drawCurve( { x:0, y:0 }, pens[0], circle, circle_a )
 	drawCurve( { x:0, y:0 }, pens[1], curve, curve_a )
 	drawCurve( { x:1, y:0 }, pens[2], (o,t)=>(values.C+(Math.sin(t*values.D)))/values.B, curve_a )
-	drawCurve( { x:1, y:0 }, pens[3], (o,t)=>(1/(t/3+values.B)), curve_a )
+	
+//	drawCurve( { x:1, y:0 }, pens[3], (o,t)=>(values.A*Math.sin(t/2)*Math.sin(t/2)), curve_a )
+//	drawCurve( { x:1, y:0 }, pens[4], (o,t)=>(values.A*Math.cos(t/2)*Math.cos(t/2)), curve_a )
+//	drawCurve( { x:1, y:0 }, pens[5], (o,t)=>(values.A*Math.sin(t/2)*Math.cos(t/2)), curve_a )
+//	drawCurve( { x:1, y:0 }, pens[5], (o,t)=>(values.A*Math.cos(t/2)/Math.sin(t/2)), curve_a )
+	drawCurve( { x:1, y:0 }, pens[5], (o,t)=>(values.A*Math.cos(t/2)/Math.sin(t/2)), curve_a )
 
 	ctx.putImageData(_output, 0,0);
 
@@ -716,7 +721,7 @@ function drawQuatTwist() {
 
 		const p = 0;  // 'position' offset
 
-		for( t= 0; t < 2	*Math.PI; t += Math.PI*2/500 ) {
+		for( t= 0; t < 2	*Math.PI; t += Math.PI*2/5000 ) {
 			const v = f( o, t );
 			const a = fa( o, t );
 			let rt = -rgt( a * t + p );
@@ -729,9 +734,10 @@ function drawQuatTwist() {
 		}
 	}
 	function curve_a( o, t ) {		
-		return 1+Math.cos(t)/8; // time scalar
+		return 1;//(Math.PI*2);//Math.sin(t/(4)); // time scalar
 	}
 	function curve( o, t ) {
+		return Math.sin(t/2)/ values.A;
 		return Math.cos(t/2)/ values.A;
 	}
 
