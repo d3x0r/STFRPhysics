@@ -574,9 +574,10 @@ void IntersectLineWithPlane( vec3 Slope, vec3 Origin,  // line m, b
 			//cursorRayPosition
 			vec4 this_color = texture2D( cursorIconTex, vec2( rightProjection, upProjection ) );
 		        if( this_color.a > 0.0 ) {
-				gl_FragColor.rgb = ( gl_FragColor.rgb * (1.0-this_color.a)) + ( this_color.rgb * this_color.a );
+				gl_FragColor.rgb = ( gl_FragColor.rgb * (1.0-this_color.a)) + ( this_color.rgb * this_color.a/2.0 );
 			}
 		}
+		gl_FragColor.a *= 0.3;
 	}
 
 

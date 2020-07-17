@@ -371,8 +371,8 @@ function meshCloud(data, dims) {
 									pointOutputHolder[2] = cellOrigin[2]+ geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
 									normal = opts.geometryHelper.addPoint( pointOutputHolder
 										 , null, null // texture, and uv[1,0] 
-										 , [0xA0,0x00,0xA0,255] // edge color
-										 , [0x11, 0x11, 0x11, 255] // face color
+										 , [0xA0,0x00,0xA0,96] // edge color
+										 , [0x11, 0x11, 0x11, 96] // face color
 										 , [0,0,0] // normal *needs to be updated*;
 										 , 100 // pow
 										 , false // use texture
@@ -416,8 +416,8 @@ function meshCloud(data, dims) {
 									pointOutputHolder[2] = cellOrigin[2]+ geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
 									normal = opts.geometryHelper.addPoint( pointOutputHolder
 										 , null, null // texture, and uv[1,0] 
-										 , [0xA0,0x00,0xA0,255] // edge color
-										 , [0x11, 0x11, 0x11, 255] // face color
+										 , [0xA0,0x00,0xA0,96] // edge color
+										 , [0x11, 0x11, 0x11, 96] // face color
 										 , [0,0,0] // normal *needs to be updated*;
 										 , 100 // pow
 										 , false // use texture
