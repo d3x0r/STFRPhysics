@@ -59,7 +59,7 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" value="unchecked">
 		</p>
-		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
+		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
 		<p style="display:none">Vertex count: <input type="text" id="vertcount" value="0"> </p>
 		<p style="display:none">Face count: <input type="text" id="facecount" value="0"> </p>
@@ -73,6 +73,11 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
+		<p>Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
+		   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
+		   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
+		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
+		</p>
 		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="500"> Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="3"></p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
@@ -595,6 +600,14 @@
 			is.onchange = updateMesh;
 			is.checked  = true;
 
+			is = document.getElementById("showRaw");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownRnL");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownR");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownL");
+			is.onchange = updateMesh;
 
 			is = document.getElementById( "lnQA" );
 			is.oninput = updateMesh;

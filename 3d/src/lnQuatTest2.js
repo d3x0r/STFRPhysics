@@ -4,7 +4,11 @@ let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 
-let showUnscaledRotation = true;  // just raw x/y/z at x/y/z
+
+let showRaw = true;  // just raw x/y/z at x/y/z
+let shownRnL = true;  // p * nL / nR
+let shownL = true;  //  p / nL
+let shownR = true;  // p.n(xyz)  p / nR
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var priorHere;
@@ -361,9 +365,10 @@ if(1)
 			//for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/2)) ) {
 			lnQ2.twist( B-Math.PI/32 ).update();
 
-	document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
-	document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
-	document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
+			document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
+			document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
+			document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
+
 			for( var t = B-0*Math.PI/16; t<= B+Math.PI/4; t+=0.01 *(1/(E/0.5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
@@ -379,13 +384,13 @@ if(1)
 				if( lnQ2.nL > maxL ) maxL = lnQ2.nL;
 
 
-				if( showUnscaledRotation ) {
+				if( showRaw  ) {
 						// this has accelerations, not just ping-ponging limits... (but those walls may be rotation artifacts and reflections)
 					doDrawBasis( lnQ2, t, x=>x );
 				}
 
 		        
-				if( 1 ) {
+				if( shownL ) {
 						// this has accelerations, not just ping-ponging limits... (but those walls may be rotation artifacts and reflections)
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale - 0.5 * normal_del   ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale ))
 					normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.x/lnQ2.nL)*spaceScale + 0.5 * normal_del   ,(o[1]+lnQ2.y/lnQ2.nL)*spaceScale                     , (o[2]+lnQ2.z/lnQ2.nL)*spaceScale ))
@@ -422,7 +427,7 @@ if(1)
 				}
 
 		        
-				if(1) {
+				if(shownR) {
 					const sx = 1;//lnQ2.x < 0?-1:1;// 
 					const sy = 1;//lnQ2.y < 0?-1:1;// 
 					const sz = 1;//lnQ2.z < 0?-1:1;// 
@@ -560,7 +565,7 @@ if(1)
 				}
 
 		}
-		if(1) { // recti-linear scaled points ... 
+		if(shownRnL) { // recti-linear scaled points ... 
 			doDrawBasis( lnQ2, t, (x)=>x*(lnQ2.nL*2)/lnQ2.nR );
 /*
 			const basis = lnQ2.getBasis( );
@@ -939,6 +944,25 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	if( check ) {
 		showInvCoordinateGrid = check.checked;
 	}
+
+	check = document.getElementById( "showRaw" );
+	if( check ) {
+		showRaw = check.checked;
+	}
+	check = document.getElementById( "shownRnL" );
+	if( check ) {
+		shownRnL = check.checked;
+	}
+	check = document.getElementById( "shownR" );
+	if( check ) {
+		shownR = check.checked;
+	}
+	check = document.getElementById( "shownL" );
+	if( check ) {
+		shownL = check.checked;
+	}
+
+
 	document.getElementById( "lnQXval").textContent = A;
 	document.getElementById( "lnQYval").textContent = B;
 	document.getElementById( "lnQZval").textContent = C;
