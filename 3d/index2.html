@@ -24,7 +24,6 @@
 	<script src="./src/marchingtetrahedra2.js"></script>
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
-	<script src="./src/dual-marching-tetrahedra-3D.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
 	<script src="./src/perlinnoise.js"></script>
@@ -87,8 +86,7 @@
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Dual Marching Tetrahedra (DCL-volume)' : DualMarchingTetrahedra3
-		  , 'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
+		    'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
 		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
 		 // , 'Marching Cubes': MarchingCubes
@@ -107,6 +105,7 @@
 
 
 		  var mesher = meshers[ document.getElementById("mesher").value ]
+		
 		var field  = testdata[ document.getElementById("datasource").value ]( document.getElementById("fillOutside").checked?-1
 			          :document.getElementById("fillInside").checked?1
 			          :0
@@ -148,6 +147,9 @@
 				inflatVal = ( 10/(60-inflatVal));
 			else 
 				inflatVal = 1+( inflatVal - 50 ) / 5;
+
+	if( geometryNormals  ) 
+		DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 
 
 

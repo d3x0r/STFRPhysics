@@ -299,7 +299,7 @@ function meshCloud(data, dims) {
 	
 		let odd = 0;
 		let zOdd = z & 1;
-		cellOrigin[2] = z-0.5;
+		cellOrigin[2] = z-dim2/2;
 
 		// compute one layer (x by y) intersections (cross from inside to outside).
 		// each cell individually has 16 intersections
@@ -307,11 +307,11 @@ function meshCloud(data, dims) {
 		// 3 intersections per cell after the first layer can be copied; but shift in position (moving from the top to the bottom)
 		// 
 		for( var y = 0; y < dim1-1; y++ ) {
-			cellOrigin[1] = y-0.5;
+			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 				odd = (( x + y ) &1) ^ zOdd;
 	
-				cellOrigin[0] = x-0.5;
+				cellOrigin[0] = x-dim0/2;
 	
 				const baseHere = (x+0 + y*dim0 + z*(dim0*dim1))*6;
 				const baseOffset = x+0 + y*dim0 + z * dim0*dim1;
