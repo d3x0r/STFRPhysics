@@ -1,6 +1,6 @@
 
 
-function exp( q, theta ) {
+function twister2( q, theta ) {
 	const q = this;
 	const s  = this.s;
 	console.log( "lnQuat exp() is disabled until integrated with a quaternion library." );
@@ -9,24 +9,45 @@ function exp( q, theta ) {
 	const sinD = Math.sin( q.nL )
 	const Q = {
 		w:q.qw,
-		x:sinD * q.x / q.nL,
-		y:sinD * q.y / q.nL,
-		z:sinD * q.z / q.nL
+		x:sinD * q.x / q.nR,
+		y:sinD * q.y / q.nR,
+		z:sinD * q.z / q.nR
 	}
 	
-		basis.up = { x :     2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )
-		           , y : 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x )
-		           , z :     2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR ) };
-				   
+
+	const s  = Math.sin( theta ); // sin/cos are the function of exp()
+	const qw = Math.cos( theta ); // sin/cos are the function of exp()
+
+	const nst = s;
+	const qx = q.nx * nst; // normalizes the imaginary parts
+	const qy = q.ny * nst; // set the sin of their composite angle as their total
+	const qz = q.nz * nst; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
+	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
+	//const xz = 2*qx*qz;  // sin(t)*sin(t) * x * z / (xx+yy+zz)
+
+	const wx = 2*qw*qx;  // cos(t)*sin(t) * x / sqrt(xx+yy+zz)
+	//const wy = 2*qw*qy;  // cos(t)*sin(t) * y / sqrt(xx+yy+zz)
+	const wz = 2*qw*qz;  // cos(t)*sin(t) * z / sqrt(xx+yy+zz)
+
+	const xx = 2*qx*qx;  // sin(t)*sin(t) * y * y / (xx+yy+zz)
+	//const yy = 2*qy*qy;  // sin(t)*sin(t) * x * x / (xx+yy+zz)
+	const zz = 2*qz*qz;  // sin(t)*sin(t) * z * z / (xx+yy+zz)
+
+	const Q2Norm = Math.abs( xy - wz ) + Math.abs( 1 - ( zz + xx ) ) + Math.abs( wx + yz );
+	const Q2Norm2 = Math.sqrt( ( xy - wz ) * ( xy - wz ) + ( 1 - ( zz + xx ) )*( 1 - ( zz + xx ) ) + ( wx + yz )* ( wx + yz ) );
+
 	const sinT = Math.sin(theta );
 	const cosT = Math.cos(theta );
 	const Q2 = {
 		w:cosT,
-		x:sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR ),
-		y:sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) ),
-		z:sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )
+		x:q.x + theta * ( xy - wz )/QNorm2 * Q2Norm,
+		y:q.y + theta * ( 1 - ( zz + xx ) )/QNorm2 * Q2Norm,
+		z:q.z + theta * ( wx + yz )/QNorm2 * Q2Norm, 
 	}
 	
+	q.x 
 	const qQapp = {
 			w: Q2.w * Q.w - Q2.x * Q.x - Q2.y * Q.y - Q2.z * Q.z
 			x: Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y
@@ -34,134 +55,30 @@ function exp( q, theta ) {
 			z: Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w
 	}
 
-
-
-	const qQapp = {
-			w: cosT * cosD              
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.x / q.nL 
-			 -  sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )          * sinD * q.y / q.nL
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.z / q.nL
-			x: cosT * sinD * q.x / q.nL 
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * cosD              
-			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * sinD * q.z / q.nL 
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.y / q.nL
-			y: cosT * sinD * q.y / q.nL 
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.z / q.nL 
-			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * cosD              
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * sinD * q.x / q.nL
-			z: cosT * sinD * q.z / q.nL 
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.y * q.x * sinQ - cosQ * q.z * q.nR )) * sinD * q.y / q.nL 
-			 - sinT * ( 1 - 2 *  sinQ*(sinQ / (q.nR * q.nR )) * ( q.z * q.z + q.x * q.x ) )           * sinD * q.x / q.nL 
-			 - (sinT *  2 *       (sinQ / (q.nR * q.nR )) * ( q.z * q.y * sinQ + cosQ * q.x * q.nR )) * cosD
-	}
-
-	
-	 ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) * ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) 
-	+( Q2.w * Q.z - Q2.x * Q.y - Q2.y * Q.w - Q2.z * Q.x ) * ( Q2.w * Q.z - Q2.x * Q.y - Q2.y * Q.w - Q2.z * Q.x )
-	+( Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w ) * ( Q2.w * Q.y - Q2.x * Q.z - Q2.y * Q.x - Q2.z * Q.w )
-
-	 ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) * ( Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y ) 
-
-
-		  Q2.w * Q.x * Q2.w * Q.x
-		- Q2.w * Q.x * Q2.x * Q.w
-		- Q2.w * Q.x * Q2.y * Q.z
-		- Q2.w * Q.x * Q2.z * Q.y
-		
-		- Q2.x * Q.w * Q2.w * Q.x
-		+ Q2.x * Q.w * Q2.x * Q.w
-		+ Q2.x * Q.w * Q2.y * Q.z
-		+ Q2.x * Q.w * Q2.z * Q.y
-
-		- Q2.y * Q.z * Q2.w * Q.x
-		+ Q2.y * Q.z * Q2.x * Q.w
-		+ Q2.y * Q.z * Q2.y * Q.z
-		+ Q2.y * Q.z * Q2.z * Q.y
-
-		- Q2.z * Q.y * Q2.w * Q.x
-		+ Q2.z * Q.y * Q2.x * Q.w
-		+ Q2.z * Q.y * Q2.y * Q.z
-		+ Q2.z * Q.y * Q2.z * Q.y	
-	
-	
-		+ Q2.w * Q.z * Q2.w * Q.z
-		- Q2.w * Q.z * Q2.x * Q.y
-		- Q2.w * Q.z * Q2.y * Q.w
-		- Q2.w * Q.z * Q2.z * Q.x 
-		  
-		- Q2.x * Q.y * Q2.w * Q.z
-		+ Q2.x * Q.y * Q2.x * Q.y
-		+ Q2.x * Q.y * Q2.y * Q.w 
-		+ Q2.x * Q.y * Q2.z * Q.x
-	
-		- Q2.y * Q.w * Q2.w * Q.z
-		+ Q2.y * Q.w * Q2.x * Q.y 
-		+ Q2.y * Q.w * Q2.y * Q.w 
-		+ Q2.y * Q.w * Q2.z * Q.x
-	
-		- Q2.z * Q.x * Q2.w * Q.z 
-		+ Q2.z * Q.x * Q2.x * Q.y 
-		+ Q2.z * Q.x * Q2.y * Q.w 
-		+ Q2.z * Q.x * Q2.z * Q.x 
-	
-	
-		+ Q2.w * Q.x * Q2.w * Q.x
-		- Q2.w * Q.x * Q2.x * Q.w
-		- Q2.w * Q.x * Q2.y * Q.z
-		- Q2.w * Q.x * Q2.z * Q.y	
-		
-		- Q2.x * Q.w * Q2.w * Q.x
-		+ Q2.x * Q.w * Q2.x * Q.w	
-		+ Q2.x * Q.w * Q2.y * Q.z	
-		+ Q2.x * Q.w * Q2.z * Q.y	
-		
-		- Q2.y * Q.w * Q2.w * Q.x
-		+ Q2.y * Q.w * Q2.x * Q.w
-		+ Q2.y * Q.w * Q2.y * Q.z
-		+ Q2.y * Q.w * Q2.z * Q.y
-		
-		- Q2.z * Q.x * Q2.w * Q.x
-		+ Q2.z * Q.x * Q2.x * Q.w
-		+ Q2.z * Q.x * Q2.y * Q.z
-		+ Q2.z * Q.x * Q2.z * Q.y
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	const x = qQapp.x;
 	const y = qQapp.y;
 	const z = qQapp.z;
 	const w = qQapp.w;
 	
 	const r  = Math.sqrt(x*x+y*y+z*z);
-	const ang = Math.atan2(r,w);
 	if( r < SIN_R_OVER_R_MIN ) {
 		// cannot know the direction.
 		return new lnQuat( ang, 0, 1, 0 )
 	}
+	const lNorm = Math.abs(x)+Math.abs(y)+Math.abs(z);
+	const angle = acos(w);//Math.atan2(r,w);
 	const t  = 1/r;
 
-	const xt = x /r;
-	const yt = y /r;
-	const zt = z /r;
-	const angle = Math.atan2(r,w);
-	const lNorm = Math.abs(xt)+Math.abs(yt)+Math.abs(zt);
+	const xt = x*t;
+	const yt = y*t;
+	const zt = z*t;
 	
-	q.nx = xt * angle;
-	q.ny = xt * angle;
-	q.nz = xt * angle;
-	q.x = xt/lNorm*angle
-	q.y = yt/lNorm*angle
-	q.z = zt/lNorm*angle
+	q.nx = xt;
+	q.ny = xt;
+	q.nz = xt;
+	q.x = q.nx*angle
+	q.y = q.ny*angle
+	q.z = q.nz*angle
 	
 	
 }
@@ -236,50 +153,30 @@ function twister( theta ) {
 	const sinQ = Math.sin( this.nL ); // sin/cos are the function of exp()
 	const sinQ2 = sinQ*sinQ; // sin/cos are the function of exp()
 	const cosQ = Math.cos( this.nL ); // sin/cos are the function of exp()
+	const qw = cosQ; // sin/cos are the function of exp()
 
-	const qnx = q.x;
-	const qny = q.y;
-	const qnz = q.z;
+	const qnx = q.nx * sinQ;
+	const qny = q.ny * sinQ;
+	const qnz = q.nz * sinQ;
 
-	const yy = qny * qny;
-	const zz = qnz * qnz;
-	const xx = qnx * qnx;
-	const xy = qnx * qny * sinQ2;
-	const xz = qnx * qnz * sinQ2;
-	const yz = qny * qnz * sinQ2;
+	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
+	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
+	const xz = 2*qx*qz;  // sin(t)*sin(t) * x * z / (xx+yy+zz)
 
-	const xn = qnx * cosQ;
-	const yn = qny * cosQ;
-	const zn = qnz * cosQ;
+	const wx = 2*qw*qx;  // cos(t)*sin(t) * x / sqrt(xx+yy+zz)
+	const wy = 2*qw*qy;  // cos(t)*sin(t) * y / sqrt(xx+yy+zz)
+	const wz = 2*qw*qz;  // cos(t)*sin(t) * z / sqrt(xx+yy+zz)
 
-	const xyzn = ( xy - zn );
-	//const xyzn = ( xy + zn );
-	const xyxn = ( yz + xn );
-	const yz_p_xn = ( yz  + xn ) * dcos;
-	const yz_m_xn = ( yz  - xn ) * dcos;
+	const xx = 2*qx*qx;  // sin(t)*sin(t) * y * y / (xx+yy+zz)
+	const yy = 2*qy*qy;  // sin(t)*sin(t) * x * x / (xx+yy+zz)
+	const zz = 2*qz*qz;  // sin(t)*sin(t) * z * z / (xx+yy+zz)
 
-	const xz_p_yn = xz + yn;
-	const xz_m_yn = xz + yn;
+	const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
+	              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
+	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+	              , origin: { x:0, y:0, z:0 } };
 
-	const yyzz = sinQ * (yy+zz);
-	const xxyy = sinQ * (yy+xx);
-	const xxzz = sinQ * (zz+xx);
-
-	const nr2 = q.nR*q.nR;  // xx+yy+zz 
-	const scalar = 2/nr2;
-	{ // this is the math-expanded version of the below; with primary terms instead of meta-constants
-		basis.up = { x :     2 *  ( xy + xn )
-		           , y : 1 - 2 *  ( zz + xx )
-		           , z :     2 *  ( yz + zn ) };
-				   
-	 	basis.right = { x : 1  - 2 * ( yy + zz )
-		              , y :      2 * ( xy + zn )
-		              , z :      2 * ( xz - yn )  };
-					  
-	 	basis.forward = { x :       2 * ( yn + xz )
-		                , y :       2 * ( xn - yz )
-		                , z : 1   - 2 * ( xx + yy ) };
-	}
+//	return basis;	
 
 	// forward/right transform.
 	const dsin = Math.sin(theta);
@@ -298,58 +195,72 @@ function twister( theta ) {
 	//const t0r = basis.right.x;
 	//const t1r = v1.x - v2.x;
 	//const t2r = basis.right.x*dcos - basis.forward.x*dsin;
-	const t3r =  ( 1  - 2 * ( yy + zz )) * dcos  -    2 * ( yn + xz ) ) * dsin
+	const t3r =  ( 1 - ( yy + zz )) * dcos  -  ( wy + xz )* dsin
 			   
 	//const t0u = basis.up.y;
-	const t1u = 1 - 2 *  ( zz + xx );
+	const t1u = 1 - ( zz + xx );
 
 	//const t0f = basis.forward.z;
 	//const t1f = v3.z + v4.z;
 	//const t2f =  basis.forward.z*dcos + basis.right.z*dsin;
-	const t3f = (  1   - 2 * ( xx + yy ) ) * dcos   +     2 * ( xz - yn ) *dsin
+	const t3f = (  1  - ( xx + yy ) ) * dcos   +   ( xz - wy ) *dsin
 
-    // partial (sum of t3r, t3f, t1u )
-	const t1 = ( 1  - 2 * ( yy + zz )) * dcos  -    2 * ( yn + xz ) ) * dsin
-	         +  1 - 2 *  ( zz + xx )
-	         + (  1   - 2 * ( xx + yy ) ) * dcos   +     2 * ( xz - yn ) *dsin
-	const t1 = 1 + 2* ( 1   - ( xx + yy )- ( yy + zz ) ) * dcos   
-			           +    ( ( xz - yn )   -  ( yn + xz ) ) * dsin
-			           -  *  ( zz + xx ) )
+	// partial (sum of t3r, t3f, t1u )
+	const t1 = ( 1 - ( yy + zz ) ) * dcos  -  ( wy + xz ) * dsin
+	         +   1 - ( zz + xx )
+	         + ( 1 - ( xx + yy ) ) * dcos  +  ( xz - wy ) *dsin
+	const t2 = 1 - ( zz + xx ) 
+		+ ( 2 - yy - yy - zz - xx   ) * dcos   
+		+ ( -  ( wy + xz )  +  ( xz - wy ) ) * dsin
+		 
+	const t3 = 1 - ( zz + xx ) 
+		+ ( 2 - yy - yy - zz - xx   ) * dcos   
+		+ (   - wy - wy - xz + xz  ) * dsin
+		 
+	const t4 = 1 - ( zz + xx ) 
+		+ 2*( ( (1 - yy) - zz - xx ) * dcos 
+		    -  wy * dsin );
 		
-				
-    // acos(t2)
-	const angle2 = acos( (  dcos - ( sinT*sinT / (q.nR * q.nR )) * ( 
-	                               ( q.z * q.z -  q.x * q.x )  * dcos
-	                             - ( q.x * q.z +  q.x * q.z ) * dsin
-	                             - ( q.z * q.z + q.x * q.x ) ) 
-						 );
+	// acos(t2)
+	const angle2 = acos( 1 - ( zz + xx ) 
+	                   + 2*( ( (1 - yy) - zz - xx ) * dcos 
+	                   - wy * dsin ) );
 
 	//const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
 	const t = ((t1r+t1u+t1f)-1)/2;
 	const angle = Math.acos(t);
 
-
 	const tmp = 1 /Math.sqrt((basis.forward.y -basis.up.z)*(basis.forward.y-basis.up.z) + (basis.right.z-basis.forward.x)*(basis.right.z-basis.forward.x) + (basis.up.x-basis.right.y)*(basis.up.x-basis.right.y));
 
-
 	//const xtmp = basis.up.z      -basis.forward.y;
-	const xtmp =  2 *  ( yz + zn )    - (v3.y + v4.y);
-	const xtmp =  2 *  ( yz + zn )    - (basis.forward.y*dcos + basis.right.y*dsin);
-	const xtmp =  2 *  ( ( yz + zn ) - (  ( xn - yz )*dcos + ( xy + zn )*dsin) );
-	
+	const xtmp =  ( wx + yz )  - ( v3.y + v4.y);
+	const xtmp =  ( wx + yz )  - ( basis.forward.y*dcos + basis.right.y*dsin);
+	const xtmp =  ( wx + yz )  - ( yz -wx )*dcos - ( wz+xy )*dsin;
 	
 	
 	//const ytmp = basis.forward.x -basis.right.z;
-						v3.x + v4.x - v1.z + v2.z
-						( basis.forward.x - basis.right.z )*dcos + ( basis.forward.z + basis.right.x )*dsin 
-						(    2 * ( yn + xz ) -   2 * ( xz - yn ) )*dcos + (  1   - 2 * ( xx + yy ) + 1  - 2 * ( yy + zz ) )*dsin 
-						(    2 * ( yn + xz - xz + yn )*dcos + (  1 + 1   - 2 * ( xx + yy  - yy - zz ) )*dsin 
-						(    2 * ( 1 + ( yn + yn )*dcos  - ( xx - zz )*dsin )
+		v3.x + v4.x - v1.z + v2.z
+		( basis.forward.x - basis.right.z )*dcos + ( basis.forward.z + basis.right.x )*dsin 
+		(   ( wy + xz ) - ( xz - wy ) )*dcos + ( 1 - ( xx + yy )  + 1 - ( yy + zz ) )*dsin 
+		(   wy + xz - xz + wy )*dcos + ( 2 - yy  - yy -  xx  - zz )*dsin 
+		(   2 * wy  )*dcos + ( 2*(1 - yy) - xx - zz )*dsin 
 	
 	//const ztmp = basis.right.y   -basis.up.x;
-			 v1.y - v2.y   -   2 *  ( xy + xn )
-			basis.right.y*dcos - basis.forward.y*dsin   -   2 *  ( xy + xn )
+		 v1.y - v2.y   -                 ( xy - wz )
+		basis.right.y*dcos - basis.forward.y*dsin   -    ( xy - wz )
+
+		wz - xy +  ( wz + xy )*dcos -   ( yz - wx )*dsin   
+
+	const ztmp = wz - xy +  ( wz + xy )*dcos +  ( wx - yz )*dsin;
 			
+
+
+
+	const xtmp =  ( wx + yz )  - ( yz -wx )*dcos - ( wz+xy )*dsin;
+	const ytmp =  ( 2 * wy  )*dcos + ( 2*(1 - yy) - xx - zz )*dsin 
+	const ztmp = wz - xy +  ( wz + xy )*dcos +  ( wx - yz )*dsin;
+			
+
 	//const ztmp = ( 2 * ( xy + zn ))*dcos - ( 2 * ( xn - yz ) )*dsin   -   2 *  ( xy + xn )
 	const ztmp = 2 * ( ( xy + zn )*dcos - ( xn - yz )*dsin - ( xy + xn ) );
 	
@@ -382,6 +293,79 @@ function twister( theta ) {
 	this.dirty = false;
 
 
+
+
+
+
+function twister( theta ) {
+
+	const dsin = Math.sin(theta);
+	const dcos = Math.cos(theta);
+
+	// this is terse; for more documentation see getBasis Method.
+	const q = this;
+
+	const nt = this.nL;
+	if( !nt ) {
+		return {forward:{x:0,y:0,z:1}, right:{x:1,y:0,z:0}, up:{x:0,y:1,z:0}, origin:{x:0,y:0,z:0 }};
+	}
+
+	const sinQ = Math.sin( this.nL ); // sin/cos are the function of exp()
+	const sinQ2 = sinQ*sinQ; // sin/cos are the function of exp()
+	const cosQ = Math.cos( this.nL ); // sin/cos are the function of exp()
+	const qw = cosQ; // sin/cos are the function of exp()
+
+	const qnx = q.nx * sinQ;
+	const qny = q.ny * sinQ;
+	const qnz = q.nz * sinQ;
+
+	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
+	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
+	const xz = 2*qx*qz;  // sin(t)*sin(t) * x * z / (xx+yy+zz)
+
+	const wx = 2*qw*qx;  // cos(t)*sin(t) * x / sqrt(xx+yy+zz)
+	const wy = 2*qw*qy;  // cos(t)*sin(t) * y / sqrt(xx+yy+zz)
+	const wz = 2*qw*qz;  // cos(t)*sin(t) * z / sqrt(xx+yy+zz)
+
+	const xx = 2*qx*qx;  // sin(t)*sin(t) * y * y / (xx+yy+zz)
+	const yy = 2*qy*qy;  // sin(t)*sin(t) * x * x / (xx+yy+zz)
+	const zz = 2*qz*qz;  // sin(t)*sin(t) * z * z / (xx+yy+zz)
+
+	const angle = acos( 1 - ( zz + xx ) 
+	                  + 2*( ( (1 - yy) - xx - zz ) * dcos 
+	                  - wy * dsin ) );
+
+	const xtmp = wx + yz + ( wx - yz )*dcos - ( wz + xy )*dsin;
+	const ytmp =         + ( 2*wy    )*dcos + ( 2*(1 - yy) - xx - zz )*dsin 
+	const ztmp = wz - xy + ( wz + xy )*dcos + ( wx - yz )*dsin;
+
+	this.nR = Math.sqrt(xtmp*xtmp + ytmp*ytmp + ztmp*ztmp);
+	const sqNorm = 1 /this.nR;
+
+	this.nx = xtmp *sqNorm;
+	this.ny = ytmp *sqNorm;
+	this.nz = ztmp *sqNorm;
+
+	this.nL = Math.abs( this.nx ) + Math.abs( this.ny ) + Math.abs( this.nz );
+	const angleOverLinNorm = angle / this.nL;
+	this.s  = Math.sin( angle );
+	this.qw = Math.cos( angle );
+	this.x = this.nx * angleOverLinNorm;
+	this.y = this.ny * angleOverLinNorm;
+	this.z = this.nz * angleOverLinNorm;
+	// I keep these as their normal more often.
+	//this.nx *= angle;
+	//this.ny *= angle;
+	//this.nz *= angle;
+	this.nL *= angle;
+	this.dirty = false;
+
+}
+
+
+
+
+--------------------------------------------------
 
 
 
