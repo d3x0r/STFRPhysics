@@ -3,6 +3,7 @@ let A,B,C,D,E;  // slider values
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
+let showRawCoordinateGrid = false;
 
 
 let showRaw = true;  // just raw x/y/z at x/y/z
@@ -697,13 +698,13 @@ function doDrawBasis(lnQ2,t,f,n ) {
 
 			        }
 			        
-	if( showCoordinateGrid || showInvCoordinateGrid ) {
+	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
 		const range = (Math.floor(E) + 2 ) * Math.PI;
 		const minRange = (Math.floor(E) +1 ) * Math.PI;
-		drawRange( 0,0,0, range, 20, minRange, showInvCoordinateGrid );
+		drawRange( 0,0,0, range, 20, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
 	}
 	// graph of location to rotation... 
-	function drawRange( cx,cy,cz,range,steps, minr, invert ) {
+	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
 		const normLen = 0.5*(steps/range);
@@ -722,9 +723,9 @@ function doDrawBasis(lnQ2,t,f,n ) {
 
 			const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
 			//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-			const ox = (invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx);
-			const oy = (invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny);
-			const oz = (invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz);
+			const ox = unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx);
+			const oy = unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny);
+			const oz = unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz);
 			//const ox = n*x * (Math.sqrt(x*x+y*y+z*z)) ;
 			//const oy = n*y  * (Math.sqrt(x*x+y*y+z*z)) ;
 			//const oz = n*z  *(Math.sqrt(x*x+y*y+z*z)) ;
@@ -943,6 +944,10 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	check = document.getElementById( "showInvCoordinateGrid" );
 	if( check ) {
 		showInvCoordinateGrid = check.checked;
+	}
+	check = document.getElementById( "showRawCoordinateGrid" );
+	if( check ) {
+		showRawCoordinateGrid = check.checked;
 	}
 
 	check = document.getElementById( "showRaw" );

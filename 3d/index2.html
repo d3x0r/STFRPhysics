@@ -55,6 +55,7 @@
 		<p>
 		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
+		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" value="unchecked">
@@ -655,6 +656,9 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "showInvCoordinateGrid" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "showRawCoordinateGrid" );
+			is.onchange = updateMesh;
+
 
 			is = document.getElementById( "drawNormalBall" );
 			is.onchange = updateMesh;
