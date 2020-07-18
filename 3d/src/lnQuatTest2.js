@@ -200,8 +200,8 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				// angle 0 = ( 1, 0, 0 )  angle 90 = ( 0, 0, 1 )
 				const lnQr = new lnQuat( { forward: new_v_, right:new_v_2, up: new_v } );
 				
-			        const forward = new_v_;
-			        const right = new_v_2;
+			        const right = new_v_;
+			        const forward = new_v_2;
 				const up = new_v;
 
 				
