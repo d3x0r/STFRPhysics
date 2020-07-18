@@ -68,6 +68,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	//const 
 // dB/ds is parallel to N
 //
+
 				normalVertices.push( new THREE.Vector3( (o[0]+origin.x+Tn.x*3)*spaceScale         ,(o[1]+origin.y+Tn.y*3)*spaceScale  ,(o[2]+origin.z+ Tn.z*3)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+origin.x+0*2*Math.PI)*spaceScale    ,(o[1]+origin.y+0*2)*spaceScale     ,(o[2]+origin.z+0*2)*spaceScale  ))
 				normalColors.push( new THREE.Color( 0,0,0,255 ))
@@ -210,12 +211,12 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			        
 				normalColors.push( new THREE.Color( 0.25,1,0.25,255 ))
 				normalColors.push( new THREE.Color( 0.25,1,0.25,255 ))
-				new_v = new_v_;
+				new_v = forward;
 				normalVertices.push( new THREE.Vector3( (o[0]+0*new_v.x*2)*spaceScale         ,(o[1]+0*new_v.y*2)*spaceScale  ,(o[2]+ 0*new_v.z*2)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
 				normalColors.push( new THREE.Color( 0,0,1,255 ))
 				normalColors.push( new THREE.Color( 0,0,1,255 ))
-				new_v = new_v_2;
+				new_v = right;
 				normalVertices.push( new THREE.Vector3( (o[0]+0*new_v.x*2)*spaceScale         ,(o[1]+0*new_v.y*2)*spaceScale  ,(o[2]+ 0*new_v.z*2)*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+new_v.x*2)*spaceScale           ,(o[1]+new_v.y*2)*spaceScale    ,(o[2]+new_v.z*2)*spaceScale  ))
 			        
