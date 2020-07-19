@@ -88,7 +88,6 @@ function lnQuat( theta, d, a, b ){
 		if( "undefined" !== typeof a ) {
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
-			this.w = theta;
 			if( theta ) {
 				const spin = (Math.abs(d)+Math.abs(a)+Math.abs(b));
 				if( spin ) {
@@ -107,9 +106,6 @@ function lnQuat( theta, d, a, b ){
 				this.z = b;
 			}
 
-
-			this.s  = Math.sin(this.w/2);
-			this.qw = Math.cos(this.w/2);
 		}else {
 			if( "object" === typeof theta ) {
 				if( "up" in theta ) {
@@ -154,20 +150,21 @@ function lnQuat( theta, d, a, b ){
 						this.z = -tx*qw;
 					        
 						this.update();
-						if(normalizeNormalTangent)
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
-							const trst = this.getBasis();
-							const fN = 1/Math.sqrt( tz*tz+tx*tx );
-
-							trst.forward.x = tz*fN;
-							trst.forward.y = 0;
-							trst.forward.z = -tx*fN;
-							trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-							trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-							trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-
-							this.fromBasis( trst );
-							this.update();
+							if(normalizeNormalTangent) {
+								const trst = this.getBasis();
+								const fN = 1/Math.sqrt( tz*tz+tx*tx );
+						        
+								trst.forward.x = tz*fN;
+								trst.forward.y = 0;
+								trst.forward.z = -tx*fN;
+								trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
+								trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
+								trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
+						        
+								this.fromBasis( trst );
+								this.update();
+							}
 							if( twistDelta ) {
 								twisting = true;
 								yaw( this, twistDelta /*+ angle*/ );
@@ -179,31 +176,21 @@ function lnQuat( theta, d, a, b ){
 					else return; // 0 rotation.
 				}
 			}
-// angle - normal (angle, {x:,y:,z:} )
-			//theta %= 2*Math.PI;
-			//if( theta > Math.PI *2 )
-			//	console.log( "...", Math.floor( theta / (Math.PI*2) ) )
 
-			// very long ranges of multiples of turns around the axis is ... bad.
-			// the scalar for calculating the axis normal back from the 
-			const dl = 1/ Math.sqrt( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) );
-			const t  = theta;
-			//console.log( "dl?", dl,  1/( Math.abs(d.x) + Math.abs(d.y) + Math.abs(d.z) );
+
+			const nR = 1/ Math.sqrt( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) ); // make sure to normalize axis.
 			// if no rotation, then nothing.
-			if( Math.abs(t) > 0.000001 ) {
-				this.nx = (d.x * dl);
-				this.ny = (d.y * dl);
-				this.nz = (d.z * dl);
-				const lNorm = theta/(Math.abs(this.nx)+Math.abs(this.ny)+Math.abs(this.nz));
+			if( Math.abs(theta) > 0.000001 ) {
+				this.x = d.x * nR;
+				this.y = d.y * nR;
+				this.z = d.z * nR;
+
+				const nL = theta / (Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z));
 				
-				this.x = this.nx * lNorm;
-				this.y = this.ny * lNorm;
-				this.z = this.nz * lNorm;
-				/*
-				this.nx *= theta;
-				this.ny *= theta;
-				this.nz *= theta;
-				*/
+				this.x *= nL;
+				this.y *= nL;
+				this.z *= nL;
+
 				this.update();
 				return;
 			}
@@ -211,8 +198,8 @@ function lnQuat( theta, d, a, b ){
 	} 
 }
 
-let tzz = 0;
 
+let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
@@ -376,69 +363,22 @@ lnQuat.prototype.getBasisT = function(del) {
 
 	//sin(t)sin(t) = cos(t) - cos(2t)
 
-	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y / (xx+yy+zz)
-	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z / (xx+yy+zz)
-	const xz = 2*qx*qz;  // sin(t)*sin(t) * x * z / (xx+yy+zz)
-
-	const wx = 2*qw*qx;  // cos(t)*sin(t) * x / sqrt(xx+yy+zz)
-	const wy = 2*qw*qy;  // cos(t)*sin(t) * y / sqrt(xx+yy+zz)
-	const wz = 2*qw*qz;  // cos(t)*sin(t) * z / sqrt(xx+yy+zz)
-
-	const xx = 2*qx*qx;  // sin(t)*sin(t) * y * y / (xx+yy+zz)
-	const yy = 2*qy*qy;  // sin(t)*sin(t) * x * x / (xx+yy+zz)
-	const zz = 2*qz*qz;  // sin(t)*sin(t) * z * z / (xx+yy+zz)
+	const xy = 2*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
+	const yz = 2*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
+	const xz = 2*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
+	                          
+	const wx = 2*qw*qx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
+	const wy = 2*qw*qy;  // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
+	const wz = 2*qw*qz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
+	                          
+	const xx = 2*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
+	const yy = 2*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
+	const zz = 2*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
 
 	const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
 	              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
 	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
 	              , origin: { x:0, y:0, z:0 } };
-	return basis;	
-
-	// this is the Frenet basis; which has a lack of useful information about the curve.
-	// even when corrected a similar normal alignment - the tangentshould be the same...
-	// Correction - the tangent tangent to the great circle it's in, which is not actually 
-	// square with the ball, so the normal is not the normal of the rotation; but instead
-	// is a skew vector which may not cross well with any fixed axis and result with a 
-	// unknowable tangent vector direction.
-	
-	const lnQ = this;
-	const tangent = { x: Math.sin(lnQ.x/2), y: Math.sin(lnQ.y/2), z: Math.sin(lnQ.z/2) }
-
-	const dT2 = { x: -Math.cos(lnQ.x/2), y: -Math.cos(lnQ.y/2), z: -Math.cos( lnQ.z /2) };
-//	const kN = { x: -tangent.z * Math.cos(lnQ.y) - tangent.y *Math.cos(lnQ.z), y:tangent.x*Math.cos(lnQ.z)-tangent.z*Math.cos(lnQ.x), z: tangent.y*Math.cos(lnQ.x)-tangent.x*Math.cos( lnQ.y ) };
-	
-	const tangentLen = 1/Math.sqrt( tangent.x*tangent.x + tangent.y*tangent.y + tangent.z*tangent.z );
-	const Tn = {x: tangent.x * tangentLen, y:     tangent.y * tangentLen, z:     tangent.z * tangentLen };
-	
-	let origin = lnQ.applyDel( {x:0,y:1,z:0}, 1.0 );
-
-	
-	 //principle unit normal = 
-	//const kN = { x: Tn.z * dT2.y - Tn.y * dT2.z
-	//           , y: Tn.x * dT2.z - Tn.z * dT2.x
-	//           , z: Tn.y * dT2.x - Tn.x * dT2.y };
-
-	const kN = { x: Tn.z * origin.y - Tn.y * origin.z
-	           , y: Tn.x * origin.z - Tn.z * origin.x
-	           , z: Tn.y * origin.x - Tn.x * origin.y };
-
-	//const kN = { x: -Math.cos(lnQ.x), y: -Math.cos(lnQ.y), z: -Math.cos(lnQ.z) };
-	//const kN = { x: Tn.z, y:-Tn.x, z: -Tn.y };
-	const normalLen = Math.sqrt( kN.x*kN.x+ kN.y*kN.y +kN.z*kN.z);
-	const N = { x:kN.x/normalLen,y:kN.y/normalLen,z:kN.z/normalLen };
-
-	//const Bn = { x: dT2.x 
-	 //          , y: dT2.y
-	 //          , z: dT2.z };
-	const Bn = { x: Tn.y * N.z - Tn.z * N.y 
-	           , y: Tn.z * N.x - Tn.x * N.z 
-	           , z: Tn.x * N.y - Tn.y * N.x };
-
-	basis.up = N;
-	basis.right = tangent;
-	basis.forward = Bn;
-
-
 	return basis;	
 }
 
@@ -516,52 +456,7 @@ lnQuat.prototype.apply = function( v ) {
 	else return {x:v.x,y:v.y,z:v.z};
 }
 
-//------------------ What If ---------------
-
-/**
- *  
-   Was pondering, what if I took euler angles and made a matrix, and then applied that matrix
-   to the point, and how that would simplify.
-   I wonder how the below compares with the above axis-axis-axis rotation. ....
-   well ... someone can consider the below.  
-   (remember then each of those still has to be applied to the point to get a rotation)
- 
-https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToMatrix/index.htm
- */
-
-/** this (JAVA) conversion uses NASA standard aeroplane conventions as described on page:
-*   https://www.euclideanspace.com/maths/geometry/rotations/euler/index.htm
-*   Coordinate System: right hand
-*   Positive angle: right hand
-*   Order of euler angles: heading first, then attitude, then bank
-*   matrix row column ordering:
-*   [m00 m01 m02]
-*   [m10 m11 m12]
-*   [m20 m21 m22]*/
-/**
-public final void rotate(double heading, double attitude, double bank) {
-    // Assuming the angles are in radians.
-    double ch = Math.cos(heading);
-    double sh = Math.sin(heading);
-    double ca = Math.cos(attitude);
-    double sa = Math.sin(attitude);
-    double cb = Math.cos(bank);
-    double sb = Math.sin(bank);
-
-    m00 = ch * ca;
-    m01 = sh*sb - ch*sa*cb;
-    m02 = ch*sa*sb + sh*cb;
-    m10 = sa;
-    m11 = ca*cb;
-    m12 = -ca*sb;
-    m20 = -sh*ca;
-    m21 = sh*sa*cb + ch*sb;
-    m22 = -sh*sa*sb + ch*cb;
-}
-*/
-
 //-------------------------------------------
-
 
 lnQuat.prototype.applyDel = function( v, del ) {
 	const q = this;
@@ -647,8 +542,6 @@ function twist( q, theta ) {
 	const cosQ = q.qw; //Math.sin( q.nL )
 	const sinQ = q.s;  //Math.sin( q.nL )
 
-	// this series of transforms... scaled everything by sinQ
-	// which then AGAIN gets scaled by cosQ
 	const qnx = sinQ * q.x / q.nR;
 	const qny = sinQ * q.y / q.nR;
 	const qnz = sinQ * q.z / q.nR;
