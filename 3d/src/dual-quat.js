@@ -229,10 +229,11 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 */	
 	if( !this.octave ) this.octave = 1;
 	if( tzz == 0 ) {
-		angle -= this.octave * 2*Math.PI
+		this.bias = -this.octave * 2*Math.PI;
 	}else {
-		angle += (this.octave-1) * 2*Math.PI
+		this.bias = (this.octave-1) * 2*Math.PI
 	}
+	angle += this.bias
 	//else if( tzz == 1 ) {
 	//        angle += 10*Math.PI;
 	//}
@@ -240,6 +241,7 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	//        angle -= 12*Math.PI;
 	//}
 	tzz++;
+	this.i = tzz;
 	if( tzz >= 2 ) tzz = 0;
 
 	const yz = basis.up     .z - basis.forward.y;
