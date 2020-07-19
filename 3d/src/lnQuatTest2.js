@@ -348,14 +348,14 @@ if(1)
 			document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
 			document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
 			document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
-			for( var t = B-0*Math.PI/16; t<= B+Math.PI/4; t+=0.01 *(1/(E/0.5)) ) {
+			for( var t = B-0*Math.PI/16; t<= B+2*Math.PI; t+=0.02 *(1/(E/0.5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
-					lnQ2.twist( 0.1 ).update();
+					lnQ2.twist( 0.02*(1/(E/0.5)) ).update();
 				else if( zz == 1 )
-					lnQ2.roll( 0.1 ).update();
+					lnQ2.roll( 0.02*(1/(E/0.5)) ).update();
 				else
-					lnQ2.yaw( 0.1 ).update();
+					lnQ2.yaw( 0.02*(1/(E/0.5)) ).update();
 				//lnQTwist.apply( lnQ2, 0.1 ).update();
 				//twist_bad2( lnQ2, 0.1 ).update();
 				// this shows the normalized path - easier to isolate twist axis....
@@ -434,14 +434,14 @@ if(1)
 
 		if(1) { // graph of rotations...
 				//console.log( "TICK", zz, t, E, lnQ2.i );
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale + 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
-				                                                                                                                                             
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
-				                                                                                                                                             
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale - 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale + 0.5 * normal_del   ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				                                                                                                                           
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				                                                                                                                           
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(lnQ2.nL*2))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
 
 
 			        if( Math.abs(t) < 0.05 ) {
@@ -472,14 +472,14 @@ if(1)
 			if( priorHere ) {
 				const dot = priorHere.x * lnQ2.nx + priorHere.y * lnQ2.ny + priorHere.z * lnQ2.nz;
 				const val = (Math.PI-acos(dot))*100 ;
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale - 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale + 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
-				                                                                                                                                                            
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(val))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(val))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
-				                                                                                                                                                            
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
-				normalVertices.push( new THREE.Vector3( (o[0]+lnQ2.bias+(t*(E*0.5))*2*Math.PI)*spaceScale                      ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale - 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale + 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
+				                                                                                                                                          
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(val))*spaceScale - 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(val))*spaceScale + 0.5 * normal_del  , (o[2]+(0))*spaceScale  ))
+				                                                                                                                                          
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale - 0.5 * normal_del  ))
+				normalVertices.push( new THREE.Vector3( (o[0]+(lnQ2.bias+t))*spaceScale                      ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale + 0.5 * normal_del  ))
 
 
 			        if( Math.abs(t) < 0.05 ) {
