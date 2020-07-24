@@ -13,7 +13,10 @@ function yaw( C, th ) {
 ```
 
 This computes the basis 'up' vector for the current angle-angle-angle rotation.  `nx`, `ny`, `nz` are
-the square normal components.
+the square normal components. These factors are mostly copied from `getBasis()` method, although
+a few operations can be dropped... most of the work still has to be done.  Matrix representation
+would already have these, so rotation one angle to another is approximately the same; but none of this
+is required for the general case of an external axis being specified...
 
 ```js
 
@@ -39,7 +42,7 @@ the square normal components.
 
 
 Here, `ax`, `ay`, and `az` could be filled by any axis, and normalized.
-This completes the computation of the 'up' normal into `ax`, `ay`, and `az`
+This completes the computation of the 'up' normal into `ax`, `ay`, and `az`.  This vector is normalized.
 
 ```js
 	// ax, ay, az could be given; these are computed as the source quaternion normal
@@ -69,26 +72,33 @@ This causes a jump in octives.
 
 ```js
 	let fix = ( ang-(nt+th))
-	if( fix > Math.PI*4 ) {
-		ang -= Math.PI*4;
+	while( fix > Math.PI*2 ) {
+		ang -= Math.PI*2;
+		fix -= Math.PI*2;
 	
-	} else if( fix < -Math.PI*4 ){
+	} while( fix < -Math.PI*4 ){
 		ang += Math.PI*4;
+		fix += Math.PI*2;
 	}
 ```
 
-Compute the output axis of rotation
+
+Compute the output axis of rotation cross product of the axles... and sin(a+b) sort of scalar 
+plus part of cos(a+b)
+
 
 
 ```js
-
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 	const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
 ```
 
+
+
 Use the computed angle and get the sin(a/2) to normalize the vector part...
-this is the same value as `sqrt(Cx*Cx+Cy*Cy+Cz*Cz)`.
+this is the same value as `sqrt(Cx*Cx+Cy*Cy+Cz*Cz)`.  `Clx` is the linear
+sum scalat times the angle to result with the proper angle-angle-angle values.
 
 ```js
 
@@ -103,14 +113,17 @@ finally, update the current quaternion with the computed axis and angle.
 ```js
 
 	C.nL = ang/2;
-	c.nR = sAng*ang;
-	C.qw = Math.cos(C.nL);
-	C.s = Math.sin(C.nL);
+	C.nR = sAng/Clx*ang;
+	// cos() and sin()
+	C.qw = cosCo2;
+	C.s = sAng;
+	// normal - axle of rotation
 	C.nx = Cx/sAng;
 	C.ny = Cy/sAng;
 	C.nz = Cz/sAng;
 	C.dirty = false;
 
+	// angle angle angle
 	C.x = Cx/Clx*ang;
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;

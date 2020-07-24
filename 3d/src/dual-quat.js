@@ -414,7 +414,7 @@ lnQuat.prototype.getRelativeBasis = function( q2 ) {
 
 lnQuat.prototype.update = function() {
 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	if( !this.dirty ) return;
+	if( !this.dirty ) return this;
 	this.dirty = false;
 
 
@@ -553,6 +553,7 @@ lnQuat.prototype.spin = function(th,axis){
 	const ax_ = axis.x;
 	const ay_ = axis.y;
 	const az_ = axis.z;
+	// make sure it's normalized
 	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
 	const ax = ax_/aLen;
 	const ay = ay_/aLen;
@@ -561,16 +562,19 @@ lnQuat.prototype.spin = function(th,axis){
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
-	//const cosCo2 = q.qw*ac - q.s*as*AdB;
+	const cosCo2 = q.qw*ac - q.s*as*AdB;
 
-	let ang = acos( Math.cos(nt)*Math.cos(th/2) - Math.sin(nt)*Math.sin(th/2)* AdB   )*2;
-	if( nt+th > 0 )
-		if( ang < nt+th ) 
-			ang += Math.PI*4;
-	if( nt+th < 0 )
-		if( ang > nt+th ) 
-			ang -= Math.PI*4;
-	//console.log( "Same?", AdB, ang );
+	// this is approximately like cos(a+b), but scales to another diagonal
+	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+	let ang = acos( cosCo2 )*2;
+	let fix = ( ang-(nt+th))
+	//if(0)
+	if( fix > Math.PI*4 ) {
+		ang -= Math.PI*4;
+	
+	} else if( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+	}
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -579,11 +583,19 @@ lnQuat.prototype.spin = function(th,axis){
 	const sAng = Math.sin(ang/2);
 	
 	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+	C.nL = ang/2;
+	C.nR = sAng/Clx*ang;
+	C.qw = cosCo2;
+	C.s = sAng;
+	C.nx = Cx/sAng;
+	C.ny = Cy/sAng;
+	C.nz = Cz/sAng;
+	C.dirty = false;
 	
 	C.x = Cx/Clx*ang;
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
-	C.dirty = true;
 
 	return this.update();
 }
@@ -642,16 +654,19 @@ function pitch( C, th ) {
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
-	//const cosCo2 = q.qw*ac - q.s*as*AdB;
+	const cosCo2 = q.qw*ac - q.s*as*AdB;
 
-	let ang = acos( Math.cos(nt)*Math.cos(th/2) - Math.sin(nt)*Math.sin(th/2)* AdB   )*2;
-	if( nt+th > 0 )
-		if( ang < nt+th ) 
-			ang += Math.PI*4;
-	if( nt+th < 0 )
-		if( ang > nt+th ) 
-			ang -= Math.PI*4;
-	//console.log( "Same?", AdB, ang );
+	// this is approximately like cos(a+b), but scales to another diagonal
+	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+	let ang = acos( cosCo2 )*2;
+	let fix = ( ang-(nt+th))
+	//if(0)
+	if( fix > Math.PI*4 ) {
+		ang -= Math.PI*4;
+	
+	} else if( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+	}
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -660,11 +675,19 @@ function pitch( C, th ) {
 	const sAng = Math.sin(ang/2);
 	
 	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+	C.nL = ang/2;
+	C.nR = sAng/Clx*ang;
+	C.qw = cosCo2;
+	C.s = sAng;
+	C.nx = Cx/sAng;
+	C.ny = Cy/sAng;
+	C.nz = Cz/sAng;
+	C.dirty = false;
 	
 	C.x = Cx/Clx*ang;
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
-	C.dirty = true;
 
 	return C;
 
@@ -713,16 +736,19 @@ function roll( C, th ) {
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
-	//const cosCo2 = q.qw*ac - q.s*as*AdB;
+	const cosCo2 = q.qw*ac - q.s*as*AdB;
 
-	let ang = acos( Math.cos(nt)*Math.cos(th/2) - Math.sin(nt)*Math.sin(th/2)* AdB   )*2;
-	if( nt+th > 0 )
-		if( ang < nt+th ) 
-			ang += Math.PI*4;
-	if( nt+th < 0 )
-		if( ang > nt+th ) 
-			ang -= Math.PI*4;
-	//console.log( "Same?", AdB, ang );
+	// this is approximately like cos(a+b), but scales to another diagonal
+	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+	let ang = acos( cosCo2 )*2;
+	let fix = ( ang-(nt+th))
+	//if(0)
+	if( fix > Math.PI*4 ) {
+		ang -= Math.PI*4;
+	
+	} else if( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+	}
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -731,11 +757,19 @@ function roll( C, th ) {
 	const sAng = Math.sin(ang/2);
 	
 	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+	C.nL = ang/2;
+	C.nR = sAng/Clx*ang;
+	C.qw = cosCo2;
+	C.s = sAng;
+	C.nx = Cx/sAng;
+	C.ny = Cy/sAng;
+	C.nz = Cz/sAng;
+	C.dirty = false;
 	
 	C.x = Cx/Clx*ang;
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
-	C.dirty = true;
 
 	return C;
 
@@ -749,24 +783,20 @@ function yaw( C, th ) {
 	const q = C;
 
 	const nt = q.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-	const s  = Math.sin( 2 * nt ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( 2 * nt ); // sin/cos are the function of exp()
+	const s = Math.sin( 2 * nt ); // double angle sin
+	const c = 1- Math.cos( 2 * nt ); // double angle cos
 
-	const qx = q.nx; // normalizes the imaginary parts
-	const qy = q.ny; // set the sin of their composite angle as their total
-	const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-	const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-	const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
+	const xy = c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
+	const yz = c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
 	//const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
 	                          
-	const wx = s*qx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
+	const wx = s*q.nx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
 	//const wy = s*qy;  // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-	const wz = s*qz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
+	const wz = s*q.nz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
 	                          
-	const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
+	const xx = c*q.nx*q.nx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
 	//const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-	const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
+	const zz = c*q.nz*q.nz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
 
 	// ax, ay, az could be given; these are computed as the source quaternion normal
 	const ax = ( xy - wz );
@@ -776,30 +806,45 @@ function yaw( C, th ) {
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
-	//const cosCo2 = q.qw*ac - q.s*as*AdB;
+	const cosCo2 = q.qw*ac - q.s*as*AdB;
 
-	let ang = acos( Math.cos(nt)*Math.cos(th/2) - Math.sin(nt)*Math.sin(th/2)* AdB   )*2;
-	let fix = Math.abs( ang-(nt+th))
-	if( fix > Math.PI )
-		ang += Math.PI*4;
-	if( fix < 0 )
+	// this is approximately like cos(a+b), but scales to another diagonal
+	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+	let ang = acos( cosCo2 )*2;
+
+	let fix = ( ang-(nt+th))
+	//if(0)
+	while( fix > Math.PI*4 ) {
 		ang -= Math.PI*4;
-	//console.log( "Same?", AdB, ang );
+		fix -= Math.PI*4;
+	
+	} while( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+		fix += Math.PI*4;
+	}
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 	const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
 
-	const sAng = Math.sin(ang/2);
+	const sAng = Math.sin(ang/2); // same as sqrt(xx+yy+zz)
 	
 	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-	
+
+	C.nL = ang/2;
+	C.nR = sAng/Clx*ang;
+	C.qw = cosCo2;
+	C.s = sAng;
+	C.nx = Cx/sAng;
+	C.ny = Cy/sAng;
+	C.nz = Cz/sAng;
+	C.dirty = false;
+
 	C.x = Cx/Clx*ang;
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
-	C.dirty = true;
 
-	return C;
+	return C.update();
 
 }
 
