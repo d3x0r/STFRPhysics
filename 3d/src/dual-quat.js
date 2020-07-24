@@ -611,6 +611,67 @@ lnQuat.prototype.spin = function(th,axis){
 
 	return this;
 }
+
+lnQuat.prototype.freeSpin = function(th,axis){
+	// input angle...
+	const C = this;
+	const ac = Math.cos( th/2 );
+	const as = Math.sin( th/2 );
+
+	const q = C;
+
+	// ax, ay, az could be given; these are computed as the source quaternion normal
+	const ax_ = axis.x;
+	const ay_ = axis.y;
+	const az_ = axis.z;
+	// make sure it's normalized
+	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
+
+	const ax = ax_/aLen;
+	const ay = ay_/aLen;
+	const az = az_/aLen;
+
+	// A dot B   = cos( angle A->B )
+	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
+	// cos( C/2 ) 
+	const cosCo2 = q.qw*ac - q.s*as*AdB;
+
+	// this is approximately like cos(a+b), but scales to another diagonal
+	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+	let ang = acos( cosCo2 )*2;
+	let fix = ( ang-(q.nL+th))
+	//if(0)
+	while( fix > Math.PI*4 ) {
+		ang -= Math.PI*4;
+	        fix -= Math.PI*4;
+	}while( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+	        fix += Math.PI*4;
+	}
+
+	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
+	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
+	const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
+
+	const sAng = Math.sin(ang/2);
+	
+	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+	C.nL = ang/2;
+	C.nR = sAng/Clx*ang;
+	C.qw = cosCo2;
+	C.s = sAng;
+	C.nx = Cx/sAng;
+	C.ny = Cy/sAng;
+	C.nz = Cz/sAng;
+	C.dirty = false;
+	
+	C.x = Cx/Clx*ang;
+	C.y = Cy/Clx*ang;
+	C.z = Cz/Clx*ang;
+
+	return this;
+}
 lnQuat.prototype.twist = function(c){
 	return yaw( this, c );
 }
