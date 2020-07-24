@@ -5,12 +5,17 @@
 
 
 ```js
-// C is some angle-angle-angle quaternion, th is the angle to turn around it's aw...
+// C is some angle-angle-angle quaternion, th is the angle to turn around it's normal(up)...
 function yaw( C, th ) {
 	// input angle...
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
 ```
+
+---
+
+This can be replaced with some other axis; this `yaw()` routine computes the current `normal` from
+the current log-quaternion.
 
 This computes the basis 'up' vector for the current angle-angle-angle rotation.  `nx`, `ny`, `nz` are
 the square normal components. These factors are mostly copied from `getBasis()` method, although
@@ -40,6 +45,7 @@ is required for the general case of an external axis being specified...
 
 ```
 
+---
 
 Here, `ax`, `ay`, and `az` could be filled by any axis, and normalized.
 This completes the computation of the 'up' normal into `ax`, `ay`, and `az`.  This vector is normalized.
