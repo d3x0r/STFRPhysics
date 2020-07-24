@@ -33,30 +33,13 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	let lnQtmp = null;
 	if(1){ // this ends up rotated 180 degrees.
 		lnQtmp = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
-        	lnQtmp.twist( B*Math.PI/2);
+        	//lnQtmp.spin( B*Math.PI/2, {x:xRot, y:yRot, z:zRot });
+        	lnQtmp.yaw( B );
         	drawBasis( lnQtmp, 1.0, false );
 	}
 	drawBasis( lnQ, 1.0, true );
         	let lnQP = null;
 		
-
-			if(0)
-	                   {
-			// this is an attempt to try and find the rotation axis...
-			// this axis is perpendicular to the correct axis - along the line from the pole to the current?
-				const new_v = lnQ.applyDel( {x:0,y:1,z:0}, 0.5 );
-				const twistAxis = { x:lnQ.y * new_v.z - new_v.y * lnQ.z
-			                          , y:lnQ.z * new_v.x - new_v.z * lnQ.x
-			                          , z:lnQ.x * new_v.y - new_v.x * lnQ.y
-
-						};
-			const lnQTwist = new lnQuat( {x:lnQ.y * new_v.z - new_v.y * lnQ.z
-			                             ,y:lnQ.z * new_v.x - new_v.z * lnQ.x
-			                             ,z:lnQ.x * new_v.y - new_v.x * lnQ.y
-
-						} );
-			drawBasis( lnQTwist, 1.0, false );
-			}
 
 	return;
 
@@ -345,13 +328,15 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 if(1)
 			//for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/2)) ) {
-			lnQ2.twist( B-Math.PI/32 ).update();
+			//lnQ2.twist( B-Math.PI/32).update();
 
 			document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
 			document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
 			document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
-			for( var t = B-0*Math.PI/16; t<= B+4*Math.PI; t+=0.08*(1/(E/0.5)) ) {
+			for( var t = 0*Math.PI/16; t<= 4*Math.PI; t+=0.08*(1/(E/0.5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+				let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+
 				if(0)
 				if( zz == 0 ) 
 					lnQ2.twist( 0.08*(1/(E/0.5)) ).update();
@@ -360,9 +345,10 @@ if(1)
 				else
 					lnQ2.yaw( 0.08*(1/(E/0.5)) ).update();
 
-				//lnQ2.yaw( 0.08*(1/(E/0.5)) ).update();
+				
+				lnQ2.yaw( t ).update();
                                 //lnQ2.pitch( 0.08*(1/(E/0.5)) ).update();
-				lnQ2.spin( 0.08*(1/(E/0.5)), {x:xRot, y:yRot, z:zRot } );
+				//lnQ2.spin( t/**0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot } );
 				//lnQTwist.apply( lnQ2, 0.1 ).update();
 				//twist_bad2( lnQ2, 0.1 ).update();
 				// this shows the normalized path - easier to isolate twist axis....
