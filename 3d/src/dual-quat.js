@@ -454,12 +454,12 @@ lnQuat.prototype.apply = function( v ) {
 	// q.s and q.qw are set in update(); they are constants for a quat in a location.
 
 	if( q.nL ) {
-		const nst = q.s/this.nR; // normal * sin_theta
+		const nst = q.s; // normal * sin_theta
 		const qw = q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 	        
-		const qx = q.x*nst;
-		const qy = q.y*nst;
-		const qz = q.z*nst;
+		const qx = q.nx*nst;
+		const qy = q.ny*nst;
+		const qz = q.nz*nst;
 	        
 		//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
 		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
@@ -546,19 +546,31 @@ lnQuat.prototype.spin = function(th,axis){
 
 	const q = C;
 
-	const nt = q.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-
 	// ax, ay, az could be given; these are computed as the source quaternion normal
 	const ax_ = axis.x;
 	const ay_ = axis.y;
 	const az_ = axis.z;
 	// make sure it's normalized
 	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
-	const ax = ax_/aLen;
-	const ay = ay_/aLen;
-	const az = az_/aLen;
 
-	// A dot B   = cos( angle A->B )
+	//-------- apply rotation to the axle... (put axle in this basis)
+	const nst = q.s; // normal * sin_theta
+	const qw = q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+	
+	const qx = C.nx*nst;
+	const qy = C.ny*nst;
+	const qz = C.nz*nst;
+	
+	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+	const tx = 2 * (qy * az_ - qz * ay_); // v.cross(p)*w*2
+	const ty = 2 * (qz * ax_ - qx * az_);
+	const tz = 2 * (qx * ay_ - qy * ax_);
+	const ax = ax_ + qw * tx + ( qy * tz - ty * qz )
+	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
+	const az = az_ + qw * tz + ( qx * ty - tx * qy );
+
+
+		// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
 	const cosCo2 = q.qw*ac - q.s*as*AdB;
@@ -566,13 +578,14 @@ lnQuat.prototype.spin = function(th,axis){
 	// this is approximately like cos(a+b), but scales to another diagonal
 	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
 	let ang = acos( cosCo2 )*2;
-	let fix = ( ang-(nt+th))
+	let fix = ( ang-(q.nL+th))
 	//if(0)
-	if( fix > Math.PI*4 ) {
+	while( fix > Math.PI*4 ) {
 		ang -= Math.PI*4;
-	
-	} else if( fix < -Math.PI*4 ){
+	        fix -= Math.PI*4;
+	}while( fix < -Math.PI*4 ){
 		ang += Math.PI*4;
+	        fix += Math.PI*4;
 	}
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);

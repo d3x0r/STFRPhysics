@@ -307,9 +307,9 @@ if(1)
 				// this version never escapes an octive.
                                 //lnQ2.yaw( 0.08*(1/(E/0.5)) ).update();
 
-                                lnQ2.yaw( t );
+                                //lnQ2.yaw( t );
 				//lnQ2.pitch( 0.08*(1/(E/0.5)) ).update();
-				//lnQ2.spin( t/**0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot } );
+				lnQ2.spin( t/* *0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot } );
 				//lnQTwist.apply( lnQ2, 0.1 ).update();
 				// this shows the normalized path - easier to isolate twist axis....
 				if( lnQ2.nL < minL ) minL = lnQ2.nL;
