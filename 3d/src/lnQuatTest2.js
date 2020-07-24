@@ -343,12 +343,12 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 if(1)
 			//for( var t = -Math.PI/2; t<= Math.PI/2; t+=0.01 *(1/(E/2)) ) {
-			lnQ2.twist( B-Math.PI/32 ).update();
+			lnQ2.twist( B-Math.PI/8 ).update();
 
 			document.getElementById( "lnQ2Xval").textContent = lnQ2.x  / (lnQ2.nR);
 			document.getElementById( "lnQ2Yval").textContent = lnQ2.y  / (lnQ2.nR);
 			document.getElementById( "lnQ2Zval").textContent = lnQ2.z  / (lnQ2.nR);
-			for( var t = B-0*Math.PI/16; t<= B+2*Math.PI; t+=0.02 *(1/(E/0.5)) ) {
+			for( var t = B-1*Math.PI/4; t<= B+1*Math.PI/4; t+=0.02 *(1/(E/0.5)) ) {
 			//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 				if( zz == 0 ) 
 					lnQ2.twist( 0.02*(1/(E/0.5)) ).update();
