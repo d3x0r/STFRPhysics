@@ -443,6 +443,58 @@ lnQuat.prototype.update = function() {
 // 
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
+	if( v instanceof lnQuat ) {
+		const q = v;
+		const as = this.s;
+		const ac = this.qw;
+		const ax = this.nx;
+		const ay = this.ny;
+		const az = this.nz;
+	        
+		// A dot B   = cos( angle A->B )
+		const AdB = q.nx*ax + q.ny*ay + q.nz*az;
+		// cos( C/2 ) 
+		const cosCo2 = q.qw*this.qw - q.s*this.s*AdB;
+	        
+		// this is approximately like cos(a+b), but scales to another diagonal
+		// that's more like cos(a-b) depending on the cos(angle between rotation axles)
+		let ang = acos( cosCo2 )*2;
+		let fix = ( ang-(q.nL+this.nL))
+		//if(0)
+		while( fix > Math.PI*4 ) {
+			ang -= Math.PI*4;
+		        fix -= Math.PI*4;
+		}
+		while( fix < -Math.PI*4 ){
+			ang += Math.PI*4;
+		        fix += Math.PI*4;
+		}
+	        
+		const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
+		const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
+		const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
+	        
+		const sAng = Math.sin(ang/2);
+		
+		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+	        
+		const result = new lnQuat();
+		result.nL = ang/2;
+		result.nR = sAng/Clx*ang;
+		result.qw = cosCo2;
+		result.s = sAng;
+		result.nx = Cx/sAng;
+		result.ny = Cy/sAng;
+		result.nz = Cz/sAng;
+		
+		result.x = Cx/Clx*ang;
+		result.y = Cy/Clx*ang;
+		result.z = Cz/Clx*ang;
+
+		result.dirty = false;
+		return result;
+	}
+
 	const q = this;
 	this.update();
 	// 3+2 +sqrt+exp+sin
