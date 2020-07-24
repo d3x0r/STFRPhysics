@@ -1,4 +1,11 @@
 
+# Twist
+
+This is really a general purpose rotation of a rotation around some axis...
+the axis and be external to the rotation, have the rotation being rotated applied 
+to make the axis local to that rotation first, the rotation's own basis frame can
+be used as `pitch`,`yaw`, `roll` vectors; there are routines with those lookups
+hard coded (simplifies a few of the calculations).
 
 
 ## Yaw around the fixed normal.

@@ -29,6 +29,14 @@ quaternion.  If you apply inverse `A X -B` in certain conditions, that's the sam
 Quaternions, kepd as `cos(theta) + sin(theta)N` where `N` is the axis of rotation; end up re-normalized when mlutiplied so that they stay within bounds; they 
 can apply a smooth correction... but basically this calculator 
 
+## Recent additions
+
+[Twist operation](Twister.md)
+
+[Curvature Notes](Curvature.md)... This is sort of a explanation of the live demos: [first](https://d3x0r.github.io/STFRPhysics/3d/index.html), 
+[second](https://d3x0r.github.io/STFRPhysics/3d/index2.html), and [third](https://d3x0r.github.io/STFRPhysics/3d/index3.html).
+
+
 
 ## Frame Computation Using Dual Log-Quaternions
 

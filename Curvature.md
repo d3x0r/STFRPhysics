@@ -12,7 +12,7 @@ https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/dual-quat.js   - where t
 
 https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/lnQuatTest.js   - displaying the results of the internals...
  
-There is a older test project in 'src/dual-quat.js' and a 'index.html' sort of project.
+There is a older test project in 'src/dual-quat.js' and a 'src/index.html' sort of project; some of the comments there have historical signficance.
 
 ## why? How?
 
@@ -66,21 +66,21 @@ and is always perpendicular to the surface; the Frenet frame loses this informat
 also lead to problems figuring out what is 'over' and 'under' another rotation.  The frenet frame only produces coordinates of rotation x/z coordinates, and not Y.
 
 
----
+## The Demo (HOWTO?)
 
-And here is where it ends... I have this mockup https://d3x0r.github.io/STFRPhysics/3d/  (takes a couple seconds to load because it has textures that are sort of big)
-REquires WebGL2.
+
+I have [this mockup](https://d3x0r.github.io/STFRPhysics/3d/index3.html); REquires WebGL2.
 
 The model of the sphere has nothing to do with the line segments that are shown, and because of the framework is a little misaligned with the vector origins. (the framework recomputes the center 
 of the model and the extra data above/around the model confuse the centering).
 
-The initial condition is a little wrong, to start at a valid point, you must move one of the sliders; the sliders have much more range than is available with the mouse; if you click on 
+The sliders have much more range than is available with the mouse; if you click on 
 a slider to select the focus there, then arrow keys will adjust in single increments; updating in smaller increments; using the mouse can be a lot jarring until you get used to it.)
 
 The X,Y,Z,T slider control the curvature of a log-quaternion. (the labels are a little mixed up....)
-X = X curvature from -2pi to 2pi.
-T = Y curvature from -2pi to 2pi.
-Z = Z curvature from -2pi to 2pi.
+X = X curvature from -4pi to 4pi.
+T = Y curvature from -4pi to 4pi.
+Z = Z curvature from -4pi to 4pi.
 Y = the resulting twist at the destination point.
 
 The colors are X/Y/Z = R/G/B.  Right/Up/Forward.
@@ -90,6 +90,12 @@ The Y slider controls the twist from that base point - it would be the resulting
 
 The T slider is the twist around 0,1,0 and really shows up mostly as an offset to the whole rotation... although does change the aspect ratio of the 
 circle of same-normal points...
+
+There are anothet set of sliders that controls the axis of rotation which the graph shows the plot for...
+
+Added options to `Show Basis Map` which shows the rotation coordinates and the respective frame represented at that point.  `Show Inverse Basis Map` Really unused, but is an interesting direction to look at 
+the rotation basis from.  All rotation paths are the same lengths.  `Show Unscaled Basis Map` shows just the rotations at x/y/z coordinates directly; the graphs of the normal and linear paths
+align on one of these maps...
 
 
 So what is shown
@@ -118,7 +124,10 @@ The points around the circles are (1) the original point of the x/t/z rotation r
 (1) another highlighted point indicating where the current 'Y' is set to.  All other points are +/- 2pi twist; (the total twist angle is 4pi where there are 4 values that can be consolidated 
 to a principal value, but are themselves unique vectors.)
 
-I know the normal to this plane of rotation... 
+I know the normal to this plane of the rotation space coordianates that all share the same 'normal' of rotation.  (hard coded)
+
+Shoudl really redirect your attention to the [Twister.md](Twister.md) which has the full method of rotation; the following works
+through reverse mapping of the basis to a rotation.
 
 ```
  ... for some lnQ  (log-quaternion)...
@@ -158,6 +167,10 @@ I know the normal to this plane of rotation...
 Subtraction of one curvature from another is the change in curvature, and that delta can be used to compute a relative basis frame.
 
 Computing a basis frame is slightly less work than rotating an arbitrary point.
+
+Dual Contouring - https://people.eecs.berkeley.edu/~jrs/meshpapers/SchaeferWarren2.pdf  uses a QEF solver (quadradic error function), to 
+track differences in matrixes that represent the normal of surface, so it can find opposing surfaces and not merge them; maintaining the same
+manifold.  This would be trivally implemented using log-quaternion differentials.
 
 ## The original troubling question...
 
@@ -246,5 +259,4 @@ https://pasteboard.co/Jg7FsIo.png (also kind of circular, the linear lines are x
 # sketch trying to narrow down the path to success
 
 https://pasteboard.co/Jfrl8gq.png
-
 
