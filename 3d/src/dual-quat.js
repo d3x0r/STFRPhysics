@@ -234,7 +234,6 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	}else {
 		this.bias = (this.octave-1) * 2*Math.PI
 	}
-	this.bias = 0;
 	angle += this.bias
 	//else if( tzz == 1 ) {
 	//        angle += 10*Math.PI;
