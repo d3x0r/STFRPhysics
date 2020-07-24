@@ -597,7 +597,7 @@ lnQuat.prototype.spin = function(th,axis){
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
 
-	return this.update();
+	return this;
 }
 lnQuat.prototype.twist = function(c){
 	return yaw( this, c );
@@ -844,7 +844,7 @@ function yaw( C, th ) {
 	C.y = Cy/Clx*ang;
 	C.z = Cz/Clx*ang;
 
-	return C.update();
+	return C;
 
 }
 
