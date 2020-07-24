@@ -42,12 +42,11 @@ function twister2( q, theta ) {
 	const cosT = Math.cos(theta );
 	const Q2 = {
 		w:cosT,
-		x:q.x + theta * ( xy - wz )/QNorm2 * Q2Norm,
-		y:q.y + theta * ( 1 - ( zz + xx ) )/QNorm2 * Q2Norm,
-		z:q.z + theta * ( wx + yz )/QNorm2 * Q2Norm, 
+		x:q.x + sinT * ( xy - wz )/QNorm2 * Q2Norm,
+		y:q.y + sinT * ( 1 - ( zz + xx ) )/QNorm2 * Q2Norm,
+		z:q.z + sinT * ( wx + yz )/QNorm2 * Q2Norm, 
 	}
-	
-	q.x 
+
 	const qQapp = {
 			w: Q2.w * Q.w - Q2.x * Q.x - Q2.y * Q.y - Q2.z * Q.z
 			x: Q2.w * Q.x - Q2.x * Q.w - Q2.y * Q.z - Q2.z * Q.y
@@ -176,11 +175,16 @@ function twister( theta ) {
 	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
 	              , origin: { x:0, y:0, z:0 } };
 
+
+
 //	return basis;	
 
 	// forward/right transform.
 	const dsin = Math.sin(theta);
 	const dcos = Math.cos(theta);
+     up:{ w = dcos, x :   dsin*  ( xy - wz ),  y : dsin*( 1 - ( zz + xx ) ), z :   dsin*  ( wx + yz ) }
+
+
 	const v1 = { x:basis.right.x*dcos, y:basis.right.y*dcos, z:basis.right.z*dcos};
 	const v2 = { x:basis.forward.x*dsin, y:basis.forward.y*dsin, z: basis.forward.z*dsin };
 	basis.right.x = v1.x - v2.x;
@@ -453,3 +457,4 @@ y = cos( K t );
  Bertrand curves that do not lie in the same two-dimensional plane are characterized by the existence of a linear relation aκ + bτ = 1 
 where a and b are real constants and a ≠ 0.[1] 
  Furthermore, the product of torsions of Bertrand pairs of curves are constant.[2]
+
