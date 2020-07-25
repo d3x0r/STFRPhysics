@@ -68,6 +68,9 @@ dot product of the axles of rotation, and compute the new resulting angle; which
 cos(original Quatnerion overall angle + twist angle) ... the dot product on the sin product
 skews the result to the imaginary direction... 
 
+https://www.geogebra.org/3d/pwjdwzrz This graph has `arccos( cos(x)cos(y)-sin(x)sin(y)*B )` where B is a slider
+represending `A dot B` operation below. the result is always within +/-pi;
+
 ```js
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
@@ -85,11 +88,19 @@ This causes a jump in octives.
 
 ```js
 	let fix = ( ang-(nt+th))
+	// nt is alwasy positive
+	// th can be negative, but is often a small adjustment?
+	// ang is -pi to pi... 
+	// so fix will more often be negative than positive
+	// and making the resulting angle larger reinforces that
+	// fix will be more negative next time.
+	/*
 	while( fix > Math.PI*2 ) {
 		ang -= Math.PI*2;
 		fix -= Math.PI*2;
-	
-	} while( fix < -Math.PI*4 ){
+	} 
+	*/
+	while( fix < -Math.PI*4 ){
 		ang += Math.PI*4;
 		fix += Math.PI*2;
 	}
