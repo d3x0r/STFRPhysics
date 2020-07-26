@@ -87,7 +87,7 @@
 
 		<p>Xrot:<input type="range" id="xRot" min="0"  max="1000"  value="900"> Yrot:<input type="range" id="yRot" min="0"  max="1000" value="500"> Zrot:<input type="range" id="zRot" min="0"  max="1000" value="500"> unused:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
 <p><button type="button" id="set1">Preset 1</button> <button type="button" id="set2">Preset 2</button>
-<button type="button" id="set3">Preset 3</button> <button type="button" id="set4">Preset 4</button>
+<button type="button" id="set3">Preset 3</button> <button type="button" id="set4">Preset 4</button>  <button type="button" id="set5">Preset 5</button>
 
 	  </div>
 	</div>
@@ -99,6 +99,7 @@
 			, [471, 648,255, 453, 842, 406, 226 ]	
 			, [462, 452, 500, 488, 470, 494, 836 ]	
 			, [533, 496, 485, 488, 470, 494, 836 ]	
+			, [500, 495, 393, 507, 539, 285, 569 ]	
 			];
 
 		var tmp;
@@ -110,6 +111,8 @@
 		if( tmp ) tmp.onclick = ()=>setPreset(2);
 		tmp = document.getElementById( "set4" );
 		if( tmp ) tmp.onclick = ()=>setPreset(3);
+		tmp = document.getElementById( "set5" );
+		if( tmp ) tmp.onclick = ()=>setPreset(4);
 		//setPreset(0);
 		function setPreset( PRESET ) {
 		for( var p = 0; p < presets[PRESET].length; p++ ) {
