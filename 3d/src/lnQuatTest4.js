@@ -788,7 +788,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	document.getElementById( "lnQYval").textContent = B;
 	document.getElementById( "lnQZval").textContent = C;
 	document.getElementById( "lnQTval").textContent = T;
-	document.getElementById( "lnQAval").textContent = E;
+	document.getElementById( "lnQAval").textContent = ((E/3)|0)-4;
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )

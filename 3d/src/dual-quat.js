@@ -610,15 +610,18 @@ function finishRodrigues( q, oct, th, ac, as, ax, ay, az ) {
 	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
 	let ang = acos( cosCo2 )*2;
 	let fix = ( ang-(q.nL+th))
+	if(0)
 	while( fix > Math.PI*4 ) {
 		ang += Math.PI*4;
 	        fix -= Math.PI*4;
 	} 
+	if(0)
 	while( fix < -Math.PI*4 ){
 		ang -= Math.PI*4;
 	        fix += Math.PI*4;
 	}
-	ang += (oct|0) * (Math.PI*4);
+
+	ang += ((oct|0)-4) * (Math.PI*4);
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -647,6 +650,7 @@ function finishRodrigues( q, oct, th, ac, as, ax, ay, az ) {
 
 lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
+	if( "undefined" === typeof oct ) oct = 4;
 	const C = this;
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
