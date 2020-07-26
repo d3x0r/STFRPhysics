@@ -15,7 +15,7 @@ const whenDone = [];
 
 function on(cb ) {
 	whenDone.push(cb);
-	setTimeout( cb, 0 );
+	//setTimeout( cb, 0 );
 }
 
 
@@ -63,7 +63,7 @@ function loadATexture( n, cb ) {
 		catch( err ) {
 			console.log( "get request ", n );
 	        	console.log( err );
-				cb();
+			cb();
 		}
 	}
 }

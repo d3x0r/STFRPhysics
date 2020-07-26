@@ -621,7 +621,7 @@ function finishRodrigues( q, oct, th, ac, as, ax, ay, az ) {
 	        fix += Math.PI*4;
 	}
 
-	ang += ((oct|0)-4) * (Math.PI*4);
+	ang += ((oct|0)) * (Math.PI*4);
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -680,7 +680,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( C, oct, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, oct-4, th, ac, as, ax, ay, az );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
@@ -702,7 +702,7 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const ay = ay_/aLen;
 	const az = az_/aLen;
 
-	return finishRodrigues( C, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, th, ac, as, ax, ay, az );
 }
 lnQuat.prototype.twist = function(c){
 	return yaw( this, c );
@@ -747,7 +747,7 @@ function pitch( C, th ) {
 	const ax = 1 - ( yy + zz );
 	const ay = ( wz + xy );
 	const az = ( xz - wy );
-	return finishRodrigues( C, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, th, ac, as, ax, ay, az );
 
 }
 
@@ -782,7 +782,7 @@ function roll( C, th ) {
 	const ay = ( yz - wx );
 	const az = 1 - ( xx + yy );
 
-	return finishRodrigues( C, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, th, ac, as, ax, ay, az );
 }
 
 function yaw( C, th ) {
@@ -812,7 +812,7 @@ function yaw( C, th ) {
 	const ay = 1 - ( zz + xx );
 	const az = ( wx + yz );
 
-	return finishRodrigues( C, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, th, ac, as, ax, ay, az );
 }
 
 // rotate the passed vector 'from' this space
