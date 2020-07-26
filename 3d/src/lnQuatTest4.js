@@ -20,14 +20,17 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var fibre;
 	let prior = null;
 	for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) {
+		const v = { x: A, y:T, z:C };
 		
-		let lnQ = new lnQuat( fibre, {x:A,y:T,z:C} );
-		prior = null;
+		let lnQrot = new lnQuat( fibre, {x:1,y:0,z:0} ).update();
+		let lnQRaw = new lnQuat( B, lnQrot.apply(v) ).update();
+		let lnQ = lnQRaw;//lnQrot.apply( lnQRaw ).update();
+		prior = null;              
 		for( var t = -Math.PI*2; t<= Math.PI*2; t+=Math.PI*2/50  ) {
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 			lnQ2.spin( t/* *0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot } );
 			
-			doDrawBasis( lnQ2, t, (x)=>x*lnQ2.nL, true );
+			doDrawBasis( lnQ2, t, (x)=>x*lnQ2.nL/**Math.sin(lnQ2.nL/2	)*/, true );
 
 		}		
 	}
