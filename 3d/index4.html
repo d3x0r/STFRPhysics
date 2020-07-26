@@ -44,7 +44,7 @@
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
 		<p style="display:none">Input Data:</p>
-		<p style="display:unset"><select id="datasource"></select></p>
+		<p style="display:none"><select id="datasource"></select></p>
 		<p style="display:none">Algorithm:</p>
 		<p style="display:none"><select id="mesher"></select></p>
 		<p style="display:none">Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
@@ -79,16 +79,45 @@
 		   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
 		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
 		</p>
-		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="700"> Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
+		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="700"> 
+		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="3"></p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 		<p>Q2X:<SPAN id="lnQ2Xval">-0-</SPAN> Q2Y:<SPAN id="lnQ2Yval">-0-</SPAN> Q2Z:<SPAN id="lnQ2Zval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 
 		<p>Xrot:<input type="range" id="xRot" min="0"  max="1000"  value="900"> Yrot:<input type="range" id="yRot" min="0"  max="1000" value="500"> Zrot:<input type="range" id="zRot" min="0"  max="1000" value="500"> unused:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
+<p><button type="button" id="set1">Preset 1</button> <button type="button" id="set2">Preset 2</button>
+<button type="button" id="set3">Preset 3</button> <button type="button" id="set4">Preset 4</button>
+
 	  </div>
 	</div>
 
 	<script type="text/javascript">
+		var presetFields = [	"lnQX", "lnQY", "lnQZ", "lnQT", "xRot", "yRot", "zRot" ];
+		var presets = [	[500, 700, 500, 750, 900, 500, 500 ]	
+	// X:-0.7288494956328326 Y:-2.7646015351590174 Z:-5.026548245743669 T:-0.0753982236861551 Octive:0.8999999999999999
+			, [471, 648,255, 453, 842, 406, 226 ]	
+			, [462, 452, 500, 488, 470, 494, 836 ]	
+			, [533, 496, 485, 488, 470, 494, 836 ]	
+			];
+
+		var tmp;
+		tmp = document.getElementById( "set1" );
+		if( tmp ) tmp.onclick = ()=>setPreset(0);
+		tmp = document.getElementById( "set2" );
+		if( tmp ) tmp.onclick = ()=>setPreset(1);
+		tmp = document.getElementById( "set3" );
+		if( tmp ) tmp.onclick = ()=>setPreset(2);
+		tmp = document.getElementById( "set4" );
+		if( tmp ) tmp.onclick = ()=>setPreset(3);
+		//setPreset(0);
+		function setPreset( PRESET ) {
+		for( var p = 0; p < presets[PRESET].length; p++ ) {
+			const tmp = document.getElementById( presetFields[p] );
+			if( tmp ) tmp.value = presets[PRESET][p];
+		}
+			updateMesh();
+		}
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
@@ -100,6 +129,9 @@
 		 // , 'Marching Tetraheda' : MarchingTetrahedra
 		//	,  'Naive Surface Nets': SurfaceNets
 		};
+
+		
+
 		var testdata = {};
 		var testelements = {};
 		var material	= null;

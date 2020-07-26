@@ -22,7 +22,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) {
 		const v = { x: A, y:T, z:C };
 		
-		let lnQrot = new lnQuat( fibre, {x:1,y:0,z:0} ).update();
+		let lnQrot = new lnQuat( fibre, {x:0,y:0,z:1} ).update();
 		let lnQRaw = new lnQuat( B, lnQrot.apply(v) ).update();
 		let lnQ = lnQRaw;//lnQrot.apply( lnQRaw ).update();
 		prior = null;              
@@ -705,12 +705,20 @@ if(drawNormalBall/*draw normal ball with twist*/)
 
 }
 function DrawQuatPaths(normalVertices,normalColors) {
-
+        let curSliders = {
+	};
 			let lnQX = document.getElementById( "lnQX" ).value;
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
 			let lnQA = document.getElementById( "lnQA" ).value;
+
+	curSliders.lnQX = lnQX;
+	curSliders.lnQY = lnQY;
+	curSliders.lnQZ = lnQZ;
+	curSliders.lnQT = lnQT;
+	curSliders.lnQA = lnQA;
+
 
 			//A = (lnQX/10-5)/10;
 
@@ -728,12 +736,16 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 	let tmp;
 	tmp = document.getElementById( "xRot" ).value;
+	curSliders.xRot = tmp;	
 	xRot = tmp / 500 - 1;
 	tmp = document.getElementById( "yRot" ).value;
+	curSliders.yRot = tmp;	
 	yRot = tmp / 500 - 1;
 	tmp = document.getElementById( "zRot" ).value;
+	curSliders.zRot = tmp;	
 	zRot = tmp / 500 - 1;
 
+	console.log( "Current Sliders", curSliders );
 
 	let check = document.getElementById( "showCoordinateGrid" );
 	if( check ) {
