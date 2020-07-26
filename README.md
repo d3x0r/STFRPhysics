@@ -33,8 +33,17 @@ can apply a smooth correction... but basically this calculator
 
 [Twist operation](Twister.md)
 
-[Curvature Notes](Curvature.md)... This is sort of a explanation of the live demos: [first](https://d3x0r.github.io/STFRPhysics/3d/index.html), 
-[second](https://d3x0r.github.io/STFRPhysics/3d/index2.html), and [third](https://d3x0r.github.io/STFRPhysics/3d/index3.html).
+
+
+[Curvature Notes](Curvature.md)... This is sort of a explanation of the 
+
+## Live Demos
+ - [Original Math Test](https://d3x0r.github.io/STFRPhysics) Stereographic projection of quaternion... finding 'circles'
+ - ... another 2d graph test of extended arccos test.
+ - [first](https://d3x0r.github.io/STFRPhysics/3d/index.html) Kinda broken; this just shows the minimal quaternion paths now... (To Be Fixed)
+ - [second](https://d3x0r.github.io/STFRPhysics/3d/index2.html) Shows just the sub-arc of interest; this used to show a more sparely scattered arc because of a bad multiplier.
+ - [third](https://d3x0r.github.io/STFRPhysics/3d/index3.html) curvature plots, demonstrate free angle choice, and free 'same normal vector' choice; which doesn't have to be `up`.
+ - [Fourth](https://d3x0r.github.io/STFRPhysics/3d/index4.html) Hopf Fibration generator...
 
 
 
