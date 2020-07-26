@@ -600,7 +600,7 @@ lnQuat.prototype.applyInv = function( v ) {
 	// 21 mul + 9 add
 }
 
-function finishRodrigues( q, th, ac, as, ax, ay, az ) {
+function finishRodrigues( q, oct, th, ac, as, ax, ay, az ) {
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
@@ -618,6 +618,7 @@ function finishRodrigues( q, th, ac, as, ax, ay, az ) {
 		ang -= Math.PI*4;
 	        fix += Math.PI*4;
 	}
+	ang += (oct|0) * (Math.PI*4);
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
@@ -644,7 +645,7 @@ function finishRodrigues( q, th, ac, as, ax, ay, az ) {
 }
 
 
-lnQuat.prototype.spin = function(th,axis){
+lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
 	const C = this;
 	const ac = Math.cos( th/2 );
@@ -675,7 +676,7 @@ lnQuat.prototype.spin = function(th,axis){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( C, th, ac, as, ax, ay, az );
+	return finishRodrigues( C, oct, th, ac, as, ax, ay, az );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
