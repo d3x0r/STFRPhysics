@@ -7,7 +7,7 @@ import "./three.js/personalFill.js"  // adds pools, constants, and some matrix c
 import "./dual-quat.js"
 import "./lnQuatTest.js"
 
-import {Textures,on as TextureDone} from "./textureLoader.js"
+import {Textures,on as TextureDone} from "./textureLoader2.js"
 import {TextureStack} from "./textureStack.canvas.js"
 import {GeometryBuffer} from "./geometrybuffer.js"
 import {GeometryMaterial} from "./geometrymaterial.texture.js"
