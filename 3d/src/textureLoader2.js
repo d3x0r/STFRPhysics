@@ -1,7 +1,7 @@
 
 const root = "./src/images/";
-//const Textures = [];
-const Textures= [
+const Textures = [];
+const realTextures= [
 	root+"texture-layer-1.png", root+"texture-layer-2.png"
         , root+"texture-layer-3.png"
         , root+"texture-layer-4.png"
