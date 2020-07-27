@@ -83,9 +83,15 @@
 		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="40"></p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
-		<p>Q2X:<SPAN id="lnQ2Xval">-0-</SPAN> Q2Y:<SPAN id="lnQ2Yval">-0-</SPAN> Q2Z:<SPAN id="lnQ2Zval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  </p>
 
-		<p>Xrot:<input type="range" id="xRot" min="0"  max="1000"  value="900"> Yrot:<input type="range" id="yRot" min="0"  max="1000" value="500"> Zrot:<input type="range" id="zRot" min="0"  max="1000" value="500"> unused:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
+		<!-- p>Q2X:<SPAN id="lnQ2Xval">-0-</SPAN> Q2Y:<SPAN id="lnQ2Yval">-0-</SPAN> Q2Z:<SPAN id="lnQ2Zval">-0-</SPAN> </p -->
+
+		<p>AX:<SPAN id="AXval">-0-</SPAN> AY:<SPAN id="AYval">-0-</SPAN> AZ:<SPAN id="AZval">-0-</SPAN>  </p>
+		<p>A-Xrot:<input type="range" id="AxRot" min="0"  max="1000"  value="500"> A-Yrot:<input type="range" id="AyRot" min="0"  max="1000" value="500"> A-Zrot:<input type="range" id="AzRot" min="0"  max="1000" value="750"> <br>
+
+		<p>BX:<SPAN id="BXval">-0-</SPAN> BY:<SPAN id="BYval">-0-</SPAN> BZ:<SPAN id="BZval">-0-</SPAN>  </p>
+
+		<p>B-Xrot:<input type="range" id="xRot" min="0"  max="1000"  value="900"> Yrot:<input type="range" id="yRot" min="0"  max="1000" value="500"> Zrot:<input type="range" id="zRot" min="0"  max="1000" value="500"> <br>
 <p><button type="button" id="set1">Preset 1</button> <button type="button" id="set2">Preset 2</button>
 <button type="button" id="set3">Preset 3</button> <button type="button" id="set4">Preset 4</button>  <button type="button" id="set5">Preset 5</button>
 
@@ -670,6 +676,13 @@
 			is = document.getElementById( "yRot" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "zRot" );
+			is.oninput = updateMesh;
+
+			is = document.getElementById( "AxRot" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "AyRot" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "AzRot" );
 			is.oninput = updateMesh;
 
 			is = document.getElementById( "inflation" );
