@@ -20,12 +20,32 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	var fibre;
 	let prior = null;
+	const lATC = Math.sqrt(A*A+T*T+C*C);
+	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
+	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
+	
+			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (A/lATC*2*Math.PI)*spaceScale   ,(T/lATC*2*Math.PI)*spaceScale      , (C/lATC*2*Math.PI)*spaceScale  ))
+			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+
+			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (xRot/lB*2*Math.PI)*spaceScale   ,(yRot/lB*2*Math.PI)*spaceScale      , (zRot/lB*2*Math.PI)*spaceScale  ))
+			normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+			normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+
+			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (AxRot/lB*2*Math.PI)*spaceScale   ,(AyRot/lA*2*Math.PI)*spaceScale      , (AzRot/lA*2*Math.PI)*spaceScale  ))
+			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+
 	for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) {
 		const v = { x: A, y:T, z:C };
 		
-		let lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} ).update();
-		let lnQRaw = new lnQuat( B, lnQrot.apply(v) ).update();
-		let lnQ = lnQRaw;//lnQrot.apply( lnQRaw ).update();
+		let lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
+
+
+		let lnQ = new lnQuat( B, lnQrot.apply(v) );
 		prior = null;              
 		for( var t = -Math.PI*2; t<= Math.PI*2; t+=Math.PI*2/50  ) {
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
