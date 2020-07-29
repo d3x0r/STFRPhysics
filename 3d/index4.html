@@ -82,7 +82,7 @@
 		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="700"> 
 		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="40"></p>
-		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
+		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> twists:<input type="range" id="twistCounter" min="1"  max="128" value="1"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
 		</p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 
@@ -673,6 +673,8 @@
 			is = document.getElementById( "stepCounter" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "turnCounter" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "twistCounter" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
