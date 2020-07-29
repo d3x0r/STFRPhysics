@@ -2,6 +2,8 @@
 let A,B,C,D,E;  // slider values
 let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
+let turnCount = 12;
+let stepCount = 1000;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
@@ -38,22 +40,29 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalVertices.push( new THREE.Vector3( (AxRot/lB*2*Math.PI)*spaceScale   ,(AyRot/lA*2*Math.PI)*spaceScale      , (AzRot/lA*2*Math.PI)*spaceScale  ))
 			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
 			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
-
-	for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) {
+	const steps = stepCount;
+	const subSteps = turnCount;//Math.sqrt(steps);
+		prior = null;              
+	for( nTotal = 0; nTotal < steps; nTotal++ ) {
+		fibre = nTotal * ( ( 2*Math.PI ) / ( steps ) )  - Math.PI;
+		//for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) 
+		{
 		const v = { x: A, y:T, z:C };
 		
 		let lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
 
 
 		let lnQ = new lnQuat( B, lnQrot.apply(v) );
-		prior = null;              
-		for( var t = -Math.PI*2; t<= Math.PI*2; t+=Math.PI*2/50  ) {
+		//for( var t = -Math.PI*2; t<= Math.PI*2; t+=Math.PI*2/50  ) 
+		{
+			const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 			lnQ2.spin( t/* *0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot }, E/3 );
 			
 			doDrawBasis( lnQ2, t, (x)=>x * lnQ2.nL, true );
 
 		}		
+		}	
 	}
 
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
@@ -367,6 +376,11 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	document.getElementById( "lnQZval").textContent = C;
 	document.getElementById( "lnQTval").textContent = T;
 	document.getElementById( "lnQAval").textContent = ((E/3)|0)-4;
+
+	tmp = document.getElementById( "turnCounter" );
+	turnCount = tmp.value;
+	tmp = document.getElementById( "stepCounter" );
+	stepCount = tmp.value * 100 ;
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )

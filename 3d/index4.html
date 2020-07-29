@@ -74,7 +74,7 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
-		<p>Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
+		<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
 		   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
 		   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
 		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
@@ -82,6 +82,8 @@
 		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="700"> 
 		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="40"></p>
+		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
+		</p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 
 		<!-- p>Q2X:<SPAN id="lnQ2Xval">-0-</SPAN> Q2Y:<SPAN id="lnQ2Yval">-0-</SPAN> Q2Z:<SPAN id="lnQ2Zval">-0-</SPAN> </p -->
@@ -667,6 +669,10 @@
 			//is.value = 500;
 			//is.range = 1000;
 			is = document.getElementById( "lnQT" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "stepCounter" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "turnCounter" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
