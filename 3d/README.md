@@ -69,7 +69,7 @@ All triangles are trivially aligned with their proper normals.  The accompanying
 
 The tetrahedral computation (tetCompute) in this code assumes the following.
 
-The triangle mesher, given any input point, the point is either inside, or outside.  
+The triangle mesher, given any input point, the point is either inside, or outside.
   - (If 0 is 'inside') If it is inside, the face generation is inverted, and all values inverted.  In the case of 0 the state does not change from 'outside' to 'inside' so the origin point, which is ALWAYS outside, and is the source of computing the delta from 0 to points 1,2, or 3, then those points could also be 0, resulting in a slope that has no delta; this is forced to 0 as a result, so a 0 'inside' point is as close to itself as it can be.
   - (If 0 is 'outside') then, since the first point must be outside, if it is 0, then no inversion takes place.  If it isn't 0, then the delta computation for the slope will never be 0.
 
