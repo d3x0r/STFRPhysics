@@ -6,7 +6,7 @@ const speedOfLight = 1;
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
 
-const abs = (x)=>Math.abs(x);
+const abs = (x)=>abs(x);
 
 // 'fixed' acos for inputs > 1
 function acos(x) {

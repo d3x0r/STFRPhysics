@@ -316,7 +316,7 @@ lnQuat.prototype.torque = function( direction, turns ) {
 
 	const rDiv = (turns*2*Math.PI)/r;
 	this.x += direction.x*rDiv;
-	this.y += direction.y*rDiv;
+	this.y += direction.y*rDiv;      
 	this.z += direction.z*rDiv;
 	return this;
 }
@@ -325,7 +325,7 @@ lnQuat.prototype.torque = function( direction, turns ) {
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, right) {
 	// this is terse; for more documentation see getBasis Method.
-	if( !right ) {
+	if( right ) {
 		// this basis is not reversable... (well, it might be)
 		const q = this;
 
@@ -661,7 +661,7 @@ lnQuat.prototype.applyDel = function( v, del ) {
 				const ax = q.nx;
 				const ay = q.ny;
 				const az = q.nz;
-	                        return finishRodrigues( q, 0, ac, as, ax, ay, az );
+	                        return finishRodrigues( q, 0, ac, as, ax, ay, az, 0 );
 			}
 		);
 		return result.refresh();
@@ -724,7 +724,7 @@ lnQuat.prototype.applyInv = function( v ) {
 }
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
-function finishRodrigues( q, oct, ac, as, ax, ay, az ) {
+function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
@@ -733,19 +733,7 @@ function finishRodrigues( q, oct, ac, as, ax, ay, az ) {
 	// this is approximately like cos(a+b), but scales to another diagonal
 	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
 	let ang = acos( cosCo2 )*2;
-	/*
-	// 'guess' the range of the result... otherwise use
-	// an octive addition... 
-	let fix = ( ang-(q.nL+th))
-	while( fix > Math.PI*4 ) {
-		ang += Math.PI*4;
-	        fix -= Math.PI*4;
-	} 
-	while( fix < -Math.PI*4 ){
-		ang -= Math.PI*4;
-	        fix += Math.PI*4;
-	}
-	*/
+	
 	ang += ((oct|0)) * (Math.PI*4);
 
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
@@ -805,7 +793,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( C, oct-4, ac, as, ax, ay, az );
+	return finishRodrigues( C, oct-4, ac, as, ax, ay, az, th );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
@@ -825,7 +813,7 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const ay = ay_/aLen;
 	const az = az_/aLen;
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
 }
 lnQuat.prototype.twist = function(c){
 	return yaw( this, c );
@@ -870,7 +858,7 @@ function pitch( C, th ) {
 	const ax = 1 - ( yy + zz );
 	const ay = ( wz + xy );
 	const az = ( xz - wy );
-	return finishRodrigues( C, 0, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
 
 }
 
@@ -905,7 +893,7 @@ function roll( C, th ) {
 	const ay = ( yz - wx );
 	const az = 1 - ( xx + yy );
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
 }
 
 function yaw( C, th ) {
@@ -935,7 +923,7 @@ function yaw( C, th ) {
 	const ay = 1 - ( zz + xx );
 	const az = ( wx + yz );
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az );
+	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
 }
 
 // rotate the passed vector 'from' this space

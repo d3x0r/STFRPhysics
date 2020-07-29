@@ -8,6 +8,7 @@ let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
+let twistCount = 1;
 
 
 let showRaw = true;  // just raw x/y/z at x/y/z
@@ -44,7 +45,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const subSteps = turnCount;//Math.sqrt(steps);
 		prior = null;              
 	for( nTotal = 0; nTotal < steps; nTotal++ ) {
-		fibre = nTotal * ( ( 2*Math.PI ) / ( steps ) )  - Math.PI;
+		fibre = nTotal * ( 1*( 2*Math.PI ) / ( steps ) );//  - 2*Math.PI;
 		//for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) 
 		{
 		const v = { x: A, y:T, z:C };
@@ -59,7 +60,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
 			lnQ2.spin( t/* *0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot }, E/3 );
 			
-			doDrawBasis( lnQ2, t, (x)=>x * lnQ2.nL, true );
+			doDrawBasis( lnQ2, fibre, (x)=>x * lnQ2.nL, true );
 
 		}		
 		}	
@@ -136,7 +137,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 		        {
 				//const s = t / (Math.PI*4);
-				const s = (fibre + (Math.PI)) / (Math.PI*2);
+				const s = (fibre ) / (Math.PI*2);
 				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
@@ -146,7 +147,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			}
 
 		if( prior ) {
-			const s = (fibre + (Math.PI)) / (Math.PI*2);
+			const s = (fibre ) / (Math.PI*2);
 			normalVertices.push( new THREE.Vector3( (f(n?prior.nx:prior.x))*spaceScale ,(f(n?prior.ny:prior.y))*spaceScale    , (f(n?prior.nz:prior.z))*spaceScale ))
 			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale   ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale      , (f(n?lnQ2.nz:lnQ2.z))*spaceScale  ))
 			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
@@ -381,6 +382,8 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	turnCount = tmp.value;
 	tmp = document.getElementById( "stepCounter" );
 	stepCount = tmp.value * 100 ;
+	tmp = document.getElementById( "twistCounter" );
+	twistCount = tmp.value;
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )
