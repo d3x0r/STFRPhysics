@@ -407,7 +407,7 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
 
-dlnQuat.prototype.eqSub( a, b ) {
+dlnQuat.prototype.eqSub = function( a, b ) {
 	this.v.sub2( a.v, b.v );
 	this.v.sub2( a.r, b.r );
 	
