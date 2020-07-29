@@ -15,7 +15,7 @@ function acos(x) {
 	const mod = (x,y)=>y * (x / y - Math.floor(x / y)) ;
 	const plusminus = (x)=>mod( x+1,2)-1;
 	const trunc = (x,y)=>x-mod(x,y);
-	return Math.acos(plusminus(x));
+	return Math.acos(plusminus(x)) - trunc(x+1,2)*Math.PI/2;
 }
 
 // takes an input and returns -1 to 1
@@ -1233,6 +1233,75 @@ dlnQuat.prototype.applyArmTransformQ = function( q ) {
 	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
 }
 
+dlnQuat.prototype.eqSub( a, b ) {
+	this.x = a.x - b.x;
+	this.y = a.y - b.y;
+	this.z = a.z - b.z;
+
+	this.xR = a.xR - b.xR;
+	this.yR = a.yR - b.yR;
+	this.zR = a.zR - b.zR;
+	
+	this.dirty = true;
+	return this;
+}
+
+function motionFrame() {
+	this.relatives = [];
+	const tick = this.tick.bind( this );
+	this.position = new dlnQuat(); // doesn't need dirty update
+	this.velocity = new dlnQuat();
+	this.accel = new dlnQuat();
+}
+
+motionFrame.prototype.on = function() {
+	
+}
+
+motionFrame.prototype.tick = function(del) {
+	this.position.add( this.velocity, this.accel, del );
+	for( let relative of this.relatives ) relative.tick( del, relative.isA )
+}
+
+
+function relativeFrame(aFrame, bFrame ) {
+
+	motionFrame(); // initialize as a motion frame?
+	
+	this.aFrame = aFrame;
+	this.aDirty = false;
+	this.bFrame = bFrame;
+	this.bDirty = false;
+	aFrame.relatives.push( { frame:this, tick:this.tick.bind( this ), isA:true } );
+	bFrame.relatives.push( { frame:this, tick:this.tick.bind( this ), isA:false } );
+}
+
+relativeFrame.prototype.remove = function() {
+	const aId = aFrame.relatives.findIndex( rel=>rel.frame===this );
+	if( aId >= 0 ) aFrame.relatives.splice( aId, 1 );
+	const bId = bFrame.relatives.findIndex( rel=>rel.frame===this );
+	if( bId >= 0 ) aFrame.relatives.splice( bId, 1 );
+}
+
+relativeFrame.prototype.tick = function(del,isA) {
+	if( isA ) {
+		this.aDirty = true;
+	} else {
+		this.bDirty = true;
+	}
+}
+
+relativeFrame.prototype.update = function() {
+	if( this.aDirty || this.bDirty ) {
+		this.aDirty = false;
+		this.bDirty = false;
+		this.position.eqSub( this.bFrame.position, this.aFrame.position );
+		this.velocity.eqSub( this.bFrame.velocity, this.aFrame.velocity );
+		this.accel   .eqSub( this.bFrame.accel   , this.aFrame.accel    );
+	}
+	return this;	
+}
+
 // -------------------------------------------------------------------------------
 //  Testing Apparatii
 // -------------------------------------------------------------------------------
@@ -1244,8 +1313,6 @@ if( ("undefined" == typeof window ) && test )       {
 		test1();
 
 	function test2() {
-		
-
 		return false; // claim fail, to stop test chain.
 	}
 	
