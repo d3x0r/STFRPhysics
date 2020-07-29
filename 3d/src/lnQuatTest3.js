@@ -785,7 +785,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )
-		normalizeNormalTangent = check.checked; // global variable from dual-quat.js
+		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
         DrawQuatNormals(normalVertices,normalColors);
 
