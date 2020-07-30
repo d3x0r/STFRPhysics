@@ -8,7 +8,8 @@ For some fractional amount of time ( `0.01` for instance ) the angle/arc-length 
 
 The test apparatus/framework is fairly complex at first glance; but really, this project is just 1 source file 'dual-quat.js' and the test... '3d/src/lnQuatTest.js' or 'math/main.js'.
 
-https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/dual-quat.js   - where the real work is done
+https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/lnQuat.js   - where the real work is done
+https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/dual-quat.js   - this includes (x,y,z) velocity as well as (xR,yR,zR) rotations... (WIP)
 
 https://github.com/d3x0r/STFRPhysics/blob/master/3d/src/lnQuatTest.js   - displaying the results of the internals...
  
