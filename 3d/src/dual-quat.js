@@ -69,11 +69,16 @@ class v3(a,b,c){
 
 	this.dirty = false;
 
-	constructor(a) {
+	constructor(a,b,c) {
 		if( a instanceof v3 ) {
 			this.x = a.x;
 			this.y = a.y;
 			this.z = a.z;
+			this.dirty = true;
+		} else if( "number" === typeof a ) {
+			this.x = a;
+			this.y = b;
+			this.z = c;
 			this.dirty = true;
 		}
 	}
@@ -134,285 +139,218 @@ class v3(a,b,c){
 	}	
 }
 
-function dlnQuat( del, x, y, z, xR, yR, zR ) {
-	if( "number" === typeof x && "number" === typeof z ) {
-		this.w = -1.0; // mark it's a dual.
+class dlnQuat{
 
-	        this.linearAngualarity = 0;
 
-		this.speed = Math.abs(x)+Math.abs(y)+Math.abs(z);
-		this.nR = sqrt(x*x+y*y+z*z);
-		
-		this.v = new v3(x,y,z);
-	        this.r = new v3(xR,yR,zR);
+	constructor( del, x, y, z, xR, yR, zR ) {
+		if( "number" === typeof x && "number" === typeof z ) {
+			this.w = -1.0; // mark it's a dual.
 	        
-		// w becomes time scale basically... 
-		// unit vectors representing normal things through time...
-	        this.w =  this.r.nL + this.v.nL;
-		//this.w = spinSpeedNormalizer; // also total spin+angle of this system...
-		if( this.w ) {
-			this.angle_normal = this.r.nL / this.w;
-			this.speed_normal = this.v.nL / this.w;
-		}else {
-			// normal matter is basically here...
-			this.angle_normal = 1/2;
-			this.speed_normal = 1/2;
+		        this.linearAngualarity = 0;
+	        
+			this.speed = Math.abs(x)+Math.abs(y)+Math.abs(z);
+			this.nR = sqrt(x*x+y*y+z*z);
+			
+			this.v = new v3(x,y,z);
+		        this.r = new v3(xR,yR,zR);
+		        
+			// w becomes time scale basically... 
+			// unit vectors representing normal things through time...
+		        this.w =  this.r.nL + this.v.nL;
+			//this.w = spinSpeedNormalizer; // also total spin+angle of this system...
+			if( this.w ) {
+				this.angle_normal = this.r.nL / this.w;
+				this.speed_normal = this.v.nL / this.w;
+			}else {
+				// normal matter is basically here...
+				this.angle_normal = 1/2;
+				this.speed_normal = 1/2;
+			}
+	        
+			// /* speed * */ nxyz * cos(theta) + /*spin * */ nxyzR * sin(theta)
+			this.dirty = false;
+	        
+		} else if( x instanceof dlnQuat ) {
+			this.w = x.w;
+	        
+			this.v = new v3( x.v );
+			this.r = new v3( x.r );
+	        
+			this.angle_normal = w.angle_normal;
+			this.speed_normal = w.speed_normal;
+			
+			this.dirty = w.dirty;
+	        
+		} else if( "undefined" === typeof x ) {
+			this.w = speedOfLight;
+			// generate photons by default.
+			this.speed = speedOfLight;
+			// generate black holes by default.
+			//this.speed = 0;
+			this.v = new v3();
+	        
+			// generate black holes by default
+			// this.angle = speedOfLight;
+			this.r = new v3();
+			
+			// standard normal?
+			// all speed, no spin
+			this.angle_normal = 0;
+			this.speed_normal = 1;
+	        
+			// black hole default : all spin, no speed
+			//this.angle_normal = 1;
+			//this.speed_normal = 0;
+	        
+			this.dirty = false;
+		} else {		
+			throw new Error( "Unsupported argument types passed..." );
 		}
-
-		// /* speed * */ nxyz * cos(theta) + /*spin * */ nxyzR * sin(theta)
-		this.dirty = false;
-
-	} else if( x instanceof dlnQuat ) {
-		this.w = x.w;
-
-		this.v = new v3( x.v );
-		this.r = new v3( x.r );
-
-		this.angle_normal = w.angle_normal;
-		this.speed_normal = w.speed_normal;
-		
-		this.dirty = w.dirty;
-
-	} else if( "undefined" === typeof x ) {
-		this.w = speedOfLight;
-		// generate photons by default.
-		this.speed = speedOfLight;
-		// generate black holes by default.
-		//this.speed = 0;
-		this.v = new v3();
-
-		// generate black holes by default
-		// this.angle = speedOfLight;
-		this.r = new v3();
-		
-		// standard normal?
-		// all speed, no spin
-		this.angle_normal = 0;
-		this.speed_normal = 1;
-
-		// black hole default : all spin, no speed
-		//this.angle_normal = 1;
-		//this.speed_normal = 0;
-
-		this.dirty = false;
-	} else {		
-		throw new Error( "Unsupported argument types passed..." );
 	}
-}
 
-dlnQuat.prototype.add = function( q ) {
-	this.v.add(q.v);
-	this.r.add(q.r);
-	return this;
-}
+	add ( q ) {
+		this.v.add(q.v);
+		this.r.add(q.r);
+		return this;
+	}
 
-dlnQuat.prototype.update = function( ) {
-	this.v.update();
-	this.r.update();
-	// speed/angle normalizer constant?
+	addHalf ( q ) {
+		this.v.addDel(q.v,0.5);
+		this.r.addDel(q.r,0.5);
+		return this;
+	}
 
-	return this;
-}
+	sub( q ) {
+		this.v.add(q.v);
+		this.r.add(q.r);
+		return this;
+	}
 
+	update( ) {
+		this.v.update();
+		this.r.update();
+		// speed/angle normalizer constant?
 
-// add Velocity/Acceleration/dTime
-dlnQuat.prototype.addVAT = function( qV, qA, del ) {
-        // (A_1,A_2,B(x,y,z),B_r(x,y,z) ) 
-	// B_r_(f,r) = B_r.basis.forward, B_r.basis.right\n    
-	// A_1 * dT * ( B \dot B_r_f(cos(dT * B_r)) + B \dot B_r_r(sin(dT * B_r)) ) + A_2 * sin(dT * dT * B_r)i
-	const tmpV = new v3(qV.v,del);
-	const tmpR = new v3(qV.r,del);
+		return this;
+	}
 
-	const tmpVA = new v3(qA.v,del*del/2);
-	const tmpRA = new v3(qA.r,del*del/2);
-	
-	const q = qA.r;
-
-	if( !del ) del = 1.0;
-
-	const nt = q.nL; //Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-	const s  = Math.sin( 2*del * qA.r.nL/2 ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( 2*del * qA.r.nL/2 ); // '/2 *2' cancels out because this is double-angle
-	
-	const qx = q.nx; // normalizes the imaginary parts
-	const qy = q.ny; // set the sin of their composite angle as their total
-	const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-	
-	const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-	const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-	const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
-	                          
-	const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-	const wy = s*qy;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-	const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
-	                          
-	const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-	const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-	const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
-	// right is 'forward' in the default frame... or it's the default 'normal' of veocity does that matter?
-
-	const aBasis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
-	               , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
-	               , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
-	               };
-	// 19 mults, 13 adds
-	let accel_vec;
-
-	{
-		const nst = Math.sin( del * qA.r.nL/2 ); // sin/cos are the function of exp()
-		const qw  = Math.cos( del * qA.r.nL/2 ); // '/2 *2' cancels out because this is double-angle
-		
-		const qx = qA.r.x*nst;
-		const qy = qA.r.y*nst;
-		const qz = qA.r.z*nst;
-		
-		const tx = 2 * (qy * qA.v.z - qz * qA.v.y);
-		const ty = 2 * (qz * qA.v.x - qx * qA.v.z);
-		const tz = 2 * (qx * qA.v.y - qy * qA.v.x);
-		accel_vec = { x : qA.v.x + qw * tx + ( qy * tz - ty * qz )
-		            , y : qA.v.y + qw * ty + ( qz * tx - tz * qx )
-		            , z : qA.v.z + qw * tz + ( qx * ty - tx * qy ) };
-		// 22 mults 12 adds
+	apply( v ) {
+		this.update();
+		if( v instanceof v3 ) {
+                        if( !this.r.nL ) {
+				// v is unmodified.	
+				return new vec3( v ); // 1.0
+			} else {
+				const q = this.r;
+				const st = Math.sin( this.r.nL / 2 ); // normal * sin_theta
+				const ct = Math.cos( this.r.nL / 2 );  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+			        
+				const qx = q.nx*st;
+				const qy = q.ny*st;
+				const qz = q.nz*st;
+			        
+				//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+				const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
+				const ty = 2 * (qz * v.x - qx * v.z);
+				const tz = 2 * (qx * v.y - qy * v.x);
+				const v = this.v;
+				return new v3( v.x + ct * tx + ( qy * tz - ty * qz )
+				             , v.y + ct * ty + ( qz * tx - tz * qx )
+				             , v.z + ct * tz + ( qx * ty - tx * qy ) );
+			} 
+		} else if( v instanceof dlnQuat ) {
+			console.log( "Apply to frame?" );
+		}
 	}
 
 
-	const aa =  qA.v.dot( aBasis.up );
-	const bb =  qA.v.dot( aBasis.right );
+	// add Velocity/Acceleration/dTime
+	// qV = dlnQuat - Velocity
+	// qA = dlnQuat - acceleration
+	// del is the amount of time (1.0 default)
+	addVAT( qV, qA, del ) {
+		// other inertial equations are 'p += (Vf+Vi)/2' which adds the delta in velocity over 2...which is (sort of) the 1/2A...
 
-	this.v.add( tmpV );
-	this.r.add( tmpR );
+		qV.r.addDel( qA.r, 0.5*del ); // add 1/2 A T  rotation
+		qV.v.add( qV.apply( qA.v, 0.5*del ) ); // add 1/2 A T  rotation applied to acceleration vector
+
+		q.v.addDel( qV.v, del ); // add inertial velocity  (vt + 1/2At^2)
+		q.r.addDel( qV.r, del ); // add inertial spin      (vt + 1/2At^2)
+	        
+		return this;
+	}
+
+
+	getBasisT( vec, del ) {
+		const q = vec.update();
+	        
+		if( !del ) del = 1.0;
+	        
+		const nt = q.nL; //Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+		const c = 1- Math.cos( del * nt ); // '/2 *2' cancels out because this is double-angle
+		
+		const qx = q.nx; // normalizes the imaginary parts
+		const qy = q.ny; // set the sin of their composite angle as their total
+		const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
+		
+		const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
+		const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
+		const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
+		                          
+		const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
+		const wy = s*qy;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
+		const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
+		                          
+		const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
+		const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
+		const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
+		
+		const basis = { right  :new v3({ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) })
+		              , up     :new v3({ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) })
+		              , forward:new v3({ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) })
+		              };
+	        
+		const nst = Math.sin( del*nt/2);
+		const qsx = q.nx*nst;
+		const qsy = q.ny*nst;
+		const qsz = q.nz*nst;
+		// dualQuat keeps linear normal unscaled by 2...
+		const qw = Math.cos( del * nt / 2 );
+	        const v = this.v;
+		// apply q.r to q.v also... 
+		const tx = 2 * (qsy * v.z - qsz * v.y); // v.cross(p)*w*2
+		const ty = 2 * (qsz * v.x - qsx * v.z);
+		const tz = 2 * (qsx * v.y - qsy * v.x);
+
+		return {
+			// inertia applied with current rotation
+			// 'arm' I suppose?
+			direction : new v3({ x : v.x + qw * tx + ( qsy * tz - ty * qsz )
+		                           , y : v.y + qw * ty + ( qsz * tx - tz * qsx )
+		                           , z : v.z + qw * tz + ( qsx * ty - tx * qsy ) }),
+			forward  : basis.forward,
+			right    : basis.right,
+			up       : basis.up
+		};
+	}
+
 
 	
-	const newX = qV.x*del + 1/2*qA.x*del*del
-	const newY = qV.y*del + 1/2*qA.y*del*del
-	const newZ = qV.z*del + 1/2*qA.z*del*del
 
-	this.x += (newX)/2;
-	this.y += (newY)/2;
-	this.z += (newZ)/2;
+	addNew( q ) {
+		return new dlnQuat().add(this).add(q);
+	}
+
+
+	eqSub( a, b ) {
+		this.v.sub2( a.v, b.v );
+		this.v.sub2( a.r, b.r );
 	
-	this.xR += qV.xR*del + 1/2*qA.xR*del*del;
-	this.yR += qV.yR*del + 1/2*qA.yR*del*del;
-	this.zR += qV.zR*del + 1/2*qA.zR*del*del;
+		this.dirty = true;
+		return this;
+	}
 
-	this.dirty = true;
-	return this;
-}
-
-dlnQuat.prototype.add = function( qV, qA, del ) {
-}
-
-dlnQuat.prototype.getBasisT = function( del ) {
-	const q = this.r;
-
-	if( !del ) del = 1.0;
-
-	const nt = q.nL; //Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-	const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( del * nt ); // '/2 *2' cancels out because this is double-angle
-	
-	const qx = q.nx; // normalizes the imaginary parts
-	const qy = q.ny; // set the sin of their composite angle as their total
-	const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-	
-	const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-	const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-	const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
-	                          
-	const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-	const wy = s*qy;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-	const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
-	                          
-	const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-	const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-	const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
-	
-	const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
-	              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
-	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
-	              };
-
-	return {
-		location : this.position.v,
-		forward  : basis.forward,
-		right    : basis.right,
-		up       : basis.up
-	};
-}
-
-dlnQuat.prototype.addNew = function( q ) {
-	return new dlnQuat().add(this).add(q);
-}
-
-
-// -------------------------------------------------------------------------------
-//  Dual Log Quaternion
-// -------------------------------------------------------------------------------
-
-
-// Apply just the rotation to a point.
-dlnQuat.prototype.applyRotation = function( v ) {
-	return this.lnq.apply( v );
-}
-
-// Apply just the rotation to a point.
-dlnQuat.prototype.applyInvRotation = function( v ) {
-	return this.lnq.apply( v );
-}
-
-// Apply just the rotation to a rotation
-// returns a new vector (usually the partial is saved for further use).
-dlnQuat.prototype.applyRotationQ = function( q ) {
-	if( !(q instanceof lnQuat) ) throw( new Error( "invalid parameter passed to applyRotationQ" ) );
-	return this.lnQ.addNew( q );
-}
-
-// Apply the rotation to a rotation
-// Apply the origin offset from the dual
-// returns a new vector (usually the partial is saved for further use).
-
-dlnQuat.prototype.applyTransform = function( v ) {
-	const rV = this.lnq.apply( v );
-	//const rO = this.lnQ.apply( this.dQ );
-	rV.x += this.dQ.x;
-	rV.y += this.dQ.y;
-	rV.z += this.dQ.z;
-	return rv;
-}
-
-// V is in the space of the dual rotated around 0.
-dlnQuat.prototype.applyArmTransform = function( v ) {
-	const rV = this.lnq.apply( v );
-	const rO = this.lnQ.apply( this.dQ );
-	rV.x += r0.x;
-	rV.y += r0.y;
-	rV.z += r0.z;
-	return 
-}
-
-
-dlnQuat.prototype.applyArmTransformQ = function( q ) {
-	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
-}
-
-
-dlnQuat.prototype.applyArmTransformQ = function( q ) {
-	// 
-	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
-}
-
-
-dlnQuat.prototype.applyArmTransformQ = function( q ) {
-	// 
-	return new dlnQuat( this.lnQ.addNew( q.lnQ ), this.dQ.addNew( q.dQ ) );
-}
-
-dlnQuat.prototype.eqSub = function( a, b ) {
-	this.v.sub2( a.v, b.v );
-	this.v.sub2( a.r, b.r );
-	
-	this.dirty = true;
-	return this;
 }
 
 // -------------------------------------------------------------------------------
@@ -431,52 +369,5 @@ if( ("undefined" == typeof window ) && test )       {
 	
 	function test1() {
 	}
-}
-
-// -------------------------------------------------------------------------------
-//  Quaternion (Rotation part)
-// -------------------------------------------------------------------------------
-//   x y z w -> i j k R
-
-// multiply the long way; take the logs, add them and reverse the exp().
-// validation that P*Q = exp(P.log()+Q.log())
-/*
-  // Quat class no longer exists... this is for later implementation with a standard quat library.
-Quat.prototype.mulLong = function( q ) {
-	const lnThis = this.log();
-	const lnQ = q.log();
-	lnThis.add( lnQ );
-	const r = lnThis.exp();
-	return r;
-}
-
-*/
-
-
-function quatToLogQuat( q ) {
-
-	const w = q.w;
-	const r = 1;//Math.sqrt(x*x+y*y+z*z);
-	const ang = acos(w)*2;
-	const s = Math.sin(ang/2);
-	if( !s ) {
-		const l = Math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z );
-		if( l )
-			return new lnQuat( 0, q.x/l, yt/l, zt/l ).update();	
-		else
-			return new lnQuat( 0, 0,1,0 ).update();	
-	}
-	const x = q.x/s;
-	const y = q.y/s;
-	const z = q.z/s;
-	{
-		const l = Math.sqrt(x*x + y*y + z*z );
-		if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
-	}
-
-	const xt = x;
-	const yt = y;
-	const zt = z;
-	return new lnQuat( ang, xt, yt, zt ).update();
 }
 
