@@ -80,9 +80,9 @@
 		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
 		</p>
 		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="700"> 
-		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="750"><br>
+		Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="501"><br>
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="40"></p>
-		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> twists:<input type="range" id="twistCounter" min="1"  max="128" value="1"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
+		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
 		</p>
 		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 
@@ -102,12 +102,12 @@
 
 	<script type="text/javascript">
 		var presetFields = [	"lnQX", "lnQY", "lnQZ", "lnQT", "xRot", "yRot", "zRot" ];
-		var presets = [	[500, 700, 500, 750, 900, 500, 500 ]	
+		var presets = [	[500, 750, 500, 700, 900, 500, 500 ]	
 	// X:-0.7288494956328326 Y:-2.7646015351590174 Z:-5.026548245743669 T:-0.0753982236861551 Octive:0.8999999999999999
-			, [471, 648,255, 453, 842, 406, 226 ]	
-			, [462, 452, 500, 488, 470, 494, 836 ]	
-			, [533, 496, 485, 488, 470, 494, 836 ]	
-			, [500, 495, 393, 507, 539, 285, 569 ]	
+			, [471, 453, 255, 648, 842, 406, 226 ]	
+			, [462, 488, 500, 452, 470, 494, 836 ]	
+			, [533, 488, 485, 496, 470, 494, 836 ]	
+			, [500, 507, 393, 495, 539, 285, 569 ]	
 			];
 
 		var tmp;
@@ -673,8 +673,6 @@
 			is = document.getElementById( "stepCounter" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "turnCounter" );
-			is.oninput = updateMesh;
-			is = document.getElementById( "twistCounter" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
