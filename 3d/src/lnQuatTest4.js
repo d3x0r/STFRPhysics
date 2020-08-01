@@ -46,24 +46,15 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		prior = null;              
 	for( nTotal = 0; nTotal < steps; nTotal++ ) {
 		fibre = nTotal * ( 1*( 2*Math.PI ) / ( steps ) );//  - 2*Math.PI;
-		//for(  fibre = -Math.PI; fibre < Math.PI; fibre += Math.PI*2 / 50 ) 
-		{
-		const v = { x: A, y:T, z:C };
 		
-		let lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
+		const lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
+		const lnQ    = new lnQuat( T    , lnQrot.apply( { x: A, y:B, z:C } ) );
 
-
-		let lnQ = new lnQuat( B, lnQrot.apply(v) );
-		//for( var t = -Math.PI*2; t<= Math.PI*2; t+=Math.PI*2/50  ) 
-		{
-			const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
-			let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
-			lnQ2.spin( t/* *0.08*(1/(E/0.5))*/, {x:xRot, y:yRot, z:zRot }, E/3 );
-			
-			doDrawBasis( lnQ2, fibre, (x)=>x * lnQ2.nL, true );
-
-		}		
-		}	
+		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
+		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
+		
+		doDrawBasis( lnQ, fibre, (x)=>x * lnQ.nL, true );
+		
 	}
 
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
