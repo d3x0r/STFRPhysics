@@ -476,6 +476,8 @@ Q0a = ln(A) = ln(S) + (a/2 * bn + a/2*b0)i;
 
 ## Mandelbrot
 
+ - see log complex implementation in math/Zeta.js
+
 The mandelbrot/julia set are a study in modulation of a constant spinning body with an acceleration applied.
 In complex number representation, this is a truncated rotation space applying only the principle angle of the current velocity with a principle angle acceleration.
 This set will require special modulo operations in order to 'properly' compute.
@@ -500,108 +502,54 @@ Complex natural = (a,b) where a = exp(R)*cos(theta) + sin(theta);  // loses info
 
 add complex from log back to log
 
-```
-   ec1 = exp(c1);
-   ec2 = exp(c2);
-
-   (t,r,W) = ln(ec1+ec2);
-```
-
-```
-// unit scaled rotations... (R=0)
-   c1 = 0,0,0
-   c2 = T,0,0
-
-   ec1 = 1+0i;
-   ec2 = 1 * cos(T) + sin(T)i;
-   ecT  = 1+cos(T) + sin(T)i;
-
-   ct  = T,ln(1),0
-
-
-   // half of the applied rotation...
-   c2a = T,-0.693,0
-   
-   // double?
-   c2b = T,0.693,0
-```
-
-
-```
-   c1 = T1, R1, 0 
-   c2 = T2, R2, 0
-
-   ec1 = exp(R1)*cos(T1)+sin(T1)i
-   ec2 = exp(R2)*cos(T2)+sin(T2)i
-   ecT = exp(R1)/exp(R2)-cos(T2)/cos(T1) ,  sin(T1)+sin(T2)
-
-   ct = R1-R2 - arccos(cos(T2)/cos(T1)) , arcsin( sin(T1)+sin(T2) )
-         // really arctan( cos(T1)/cos(T2), sin(T1)+sin(T2) )
-	// R = ln( sqrt(  exp(R1)/exp(R2)-cos(T2)/cos(T1) *  exp(R1)/exp(R2)-cos(T2)/cos(T1) +  sin(T1)+sin(T2) * sin(T1)+sin(T2) ) )
-
-
-       R -= c1  // should give me a general calculation given the start and next positions for adding.
-
-	// R = ln( sqrt(  exp(R1)/exp(R2)-cos(T2)/cos(T1) *  exp(R1)/exp(R2)-cos(T2)/cos(T1) +  sin(T1)+sin(T2) * sin(T1)+sin(T2) ) )
-
-
-        	   
-        	           ( (R1-R2)-cos(T2)/cos(T1) )^1 + 1/2(cos(T1+T2)-cos(T1-T2))
-
-
-	// R = ln( sqrt(  (exp(R1)*cos(T1) -cos(T2)*exp(R2)) * )exp(R1)*cos(T1) -cos(T2)*exp(R2)) +  ((sin(T1)+sin(T2)) * (sin(T1)+sin(T2)) ) )
-
-	                                                                                   sin(T1)sin(T1) + sin(T2)sin(T2) + cos(T1+T2)-cos(T1-T2)
-
-	                                                                                   -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
-
-                                
-
-
-	// R = ln( sqrt(  (1*cos(T1) -cos(T2)*1) * (1*cos(T1) -cos(T2))  -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
-
-
-	                                                                                   
-
-	// R = ln( sqrt(  ( cos(T1) -cos(T2) ) * (cos(T1) - cos(T2) )  
-                     cos(T1)cos(T1) +cos(T2)cos(T2) - 2cos(T1)cos(T2)              -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
-                     (cos(2T1)  +1 )/2  (cos(2T2)  +1 )/2   cos(T1+T2)+cos(T1-T2)  -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
-
-                     (cos(2T1)/2  +1 /2  (cos(2T2)/2  +1 /2   cos(T1+T2)  -1/2cos(2T1)   -1/2cos(2T2)   + cos(T1+T2)
-
-
-                     (            +1 /2                +1 /2 +  cos(T1+T2)   + cos(T1+T2) )
-
-                        1 + cos2(T1+T2)
-                        
-                        ln( sqrt( 1 + cos2(T1+T2) ) )
-	
-
-          delC =  ln( 1 + cos2(T1+T2) )/2  - R1/*0*/ , +T2, 0 
 
 
 
+-------
 
-	// R = ln( sqrt(  (exp(R1)*cos(T1) -cos(T2)*exp(R2)) * )exp(R1)*cos(T1) -cos(T2)*exp(R2)) +  ((sin(T1)+sin(T2)) * (sin(T1)+sin(T2)) ) )
+So the full translation from lnComplex to Complex is
 
-	                                                                                   sin(T1)sin(T1) + sin(T2)sin(T2) + cos(T1+T2)-cos(T1-T2)
+exp(A+Bli ) = /* sqrt(AA+BB) */ normAB * cos(B/2) 
+            + /* sqrt(AA+BB) */ normAB * sin(B/2)
+ln(A+Bi) = 
 
-	                                                                                   -1/2cos(2T1)     -1/2cos(2T2)   + cos(T1+T2)-cos(T1-T2)
+	const normR = Math.sqrt(A*A); // get normal of the real - velocity vector
+	const normI = Math.sqrt(B*B /* +C*C+D*D */ ); // get normal of the imaginary - rotation axis
+
+	// normalize real and imaginary parts.
+	const normAB = Math.sign(A)*Math.sqrt(A*A+B*B);
+	const normAB = Math.sign(A)*Math.sqrt( normI * normI + normQ * normQ ); // a square of 1... sin^2+cos^2 so I guess it's square.
+
+	const angle = asin( B / normAB );
+        this.w = normAB;  // A
+        this.wR = normR;  // really I want to keep this
+        this.wI = normI;  // really I want to keep this
+        this.x = angle*2; // B
+        this.y = 0;
+        this.z = 0;
+	return this 
 
 
-			
+--------
 
-2 cos2(T1) -1 = (cos(2T1)  +1 )/2
+Basically the translation space should have free coodinates for the real(velocity)/imaginary(rotation) scalars... instead of a single 'w'
+
+-------
+
+Helical path = screw axis... (an accelaration application changes cuvrature over time; and the forward is helical.
+
+--------
+
+So dual-log-quaternions we get 
+ - acceleration and curvature
+   accel*||directionVector|| + spin*||curvature||
+
+ - velocity and spin
+   speed*||velocity|| * cos + sin * angle*||axis||
+
+ - position and orientation
+   po += po.speed_normal*vs.speed_normal  *vs*t + 1/2 po.angle_normal*vs.angle_normal ac*t^2
 
 
-cos(2a) = 2cos2(A)-1
-cos(2a) = 1-2sin2(A)
-
-cos2(A) = (cos(2A)+1)/2
-cos2(a) = ((1-2sin2(A))+1)/2
-cos2(A) = 1-sin2(A)
-
-
-```
-
+ 
 
