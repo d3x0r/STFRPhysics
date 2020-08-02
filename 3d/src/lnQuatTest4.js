@@ -53,7 +53,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
 		
-		doDrawBasis( lnQ, fibre, (x)=>x * lnQ.nL, true );
+		doDrawBasis( lnQ, fibre, (q,x)=>x * q.nL, true );
 		
 	}
 
@@ -116,14 +116,14 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 	function doDrawBasis(lnQ2,t,f,n ) {
 		const basis = lnQ2.update().getBasis( );
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.right.x*normal_del  ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.right.y*normal_del  , (f(n?lnQ2.nz:lnQ2.z))*spaceScale + basis.right.z*normal_del ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.right.x*normal_del  ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.right.y*normal_del  , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.right.z*normal_del ))
 		                                                                                                                                                                                  
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.up.x*normal_del     ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.up.y*normal_del     , (f(n?lnQ2.nz:lnQ2.z))*spaceScale + basis.up.z*normal_del ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.up.x*normal_del     ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.up.y*normal_del     , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.up.z*normal_del ))
 		                                                                                                                                                                                  
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale + basis.forward.x*normal_del,(f(n?lnQ2.ny:lnQ2.y))*spaceScale + basis.forward.y*normal_del, (f(n?lnQ2.nz:lnQ2.z))*spaceScale + basis.forward.z*normal_del ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.forward.x*normal_del,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.forward.y*normal_del, (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.forward.z*normal_del ))
 
 
 		        {
@@ -139,12 +139,15 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 		if( prior ) {
 			const s = (fibre ) / (Math.PI*2);
-			normalVertices.push( new THREE.Vector3( (f(n?prior.nx:prior.x))*spaceScale ,(f(n?prior.ny:prior.y))*spaceScale    , (f(n?prior.nz:prior.z))*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (f(n?lnQ2.nx:lnQ2.x))*spaceScale   ,(f(n?lnQ2.ny:lnQ2.y))*spaceScale      , (f(n?lnQ2.nz:lnQ2.z))*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (f(prior,n?prior.nx:prior.x))*spaceScale ,(f(prior,n?prior.ny:prior.y))*spaceScale    , (f(prior,n?prior.nz:prior.z))*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale   ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale      , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale  ))
 			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
 			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
-		}
-		prior = lnQ2;
+			prior.nL = lnQ2.nL;
+			prior.nx = lnQ2.nx;
+			prior.ny = lnQ2.ny;
+			prior.nz = lnQ2.nz;
+		}else prior = { nL:lnQ2.nL, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz }
 
 	}
 
