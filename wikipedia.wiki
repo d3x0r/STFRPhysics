@@ -1,0 +1,290 @@
+==Quaternion Natural Log==
+
+The natural log of a quaternion represents curving space by 3 angles around 3 axles of rotation; similar to Euler angles, but order independent<ref>{{cite web|url=https://github.com/d3x0r/STFRPhysics|title=STFRPhysics Repository|author=d3x0r}}</ref>.  The axles of rotation are aligned to the standard cartesian <math>X,Y,Z</math> axii. These rotations may be simply added and subtracted, especially when the frames being rotated are fixed to each other as in IK chains.  Differences between two objects that are in the same reference frame are found by simply subtracting their orientations.  Rotations that are applied from external sources, or are from sources relative to the current rotation still require multiplications, application of the Rodriguez Formula is provided. 
+
+The rotation from each axle coordinate represent rotating the plane perpendicular to the specified axis simultaneously with all other axles.  Although the measures can be considered in angles, the representation is actually the arc-length of the curve; an angle implies a rotation around a point, where a curvature is a delta applied to the current point in an inertial direction.
+
+Just an observational note: log quaternions have rings, or octaves of rotations; that is for rotations greater than 4<math>\pi</math> have related curves.  Curvatures of things that approach this boundary appear to chaotically jump orbits.
+
+:<math>
+\begin{bmatrix}
+ X\\
+ Y\\
+ Z\\
+\end{bmatrix}
+</math>
+Other related values are immediately derivable.
+:<math>
+\begin{matrix}
+normal_{square}= \sqrt(XX+YY+ZZ)\\
+normal_{linear} = |X|+|Y|+|Z|
+\end{matrix}
+</math>
+The total angle of rotation....
+:<math>
+   \theta = normal_{linear} / 2
+</math>
+The axis of rotation...
+:<math>
+Axis(lnQ) = \begin{bmatrix}
+\frac{X}{normal_{square}} \\
+ \frac{Y}{normal_{square}} \\
+ \frac{Z}{normal_{square}}
+\end{bmatrix}
+</math>
+
+===Quaternion Representation===
+:<math>
+Q = \begin{bmatrix}
+\cos\theta \\
+\sin\theta Axis_{X}\\
+\sin\theta Axis_{Y}\\
+\sin\theta Axis_{Z}
+\end{bmatrix}
+</math>
+
+===Basis Matrix Computation===
+
+This was built from rotating the vectors (1,0,0), (0,1,0), (0,0,1), and reducing constants.
+
+:<math>
+\begin{matrix}
+    q_r = \cos\theta \\
+    q_i = \sin\theta \times  \frac{X}{normal_{square}}\\
+    q_j = \sin\theta \times  \frac{Y}{normal_{square}}\\
+    q_k = \sin\theta \times  \frac{Z}{normal_{square}}\end{matrix}
+</math>
+
+Which are used to compute the resulting matrix...
+:<math>
+    
+   \begin{bmatrix}1-2q_{j}^{2}-2q_{k}^{2}&2(q_{i}q_{j}-q_{k}q_{r})&2(q_{i}q_{k}+q_{j}q_{r})\\2(q_{i}q_{j}+q_{k}q_{r})&1-2q_{i}^{2}-2q_{k}^{2}&2(q_{j}q_{k}-q_{i}q_{r})\\2(q_{i}q_{k}-q_{j}q_{r})&2(q_{j}q_{k}+q_{i}q_{r})&1-2q_{i}^{2}-2q_{j}^{2}\end{bmatrix}
+</math>
+
+===Vector Rotation===
+
+This is basically a conversion to quaternion, and then application.  Multiplication is taken from this blog<ref>https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/</ref>.
+
+Rotate this vector...
+:<math>
+    \begin{bmatrix}v_X\\
+       v_Y\\
+       v_Z\\
+      \end{bmatrix}
+</math>
+
+Calculate the <math>sin()</math> and <math>cos()</math> of the total rotation angle...
+:<math>
+		sin{\theta} = sin(\theta)
+</math>        
+:<math>
+		qw = cos({\theta})
+</math>        
+Scale the normal rotation axis by <math>sin_{\theta}</math>...
+:<math>
+	 qx = Axis(q)_X*sin_{\theta}
+</math>        
+:<math>
+	 qy = Axis(q)_Y*sin_{\theta}
+</math>        
+:<math>
+	 qz = Axis(q)_Z*sin_{\theta}
+</math>        
+Some temporary factors....
+:<math>
+		tx =  2(qy * v.z - qz * v.y) 
+</math>        
+:<math>
+		    ty = 2(qz * v.x - qx * v.z) 
+</math>        
+:<math>
+		   tz = 2(qx * v.y - qy * v.x)
+</math>        
+And the final vector curved by these angles is...
+:<math>
+		result = \begin{bmatrix}  v_x + qw \times tx + ( qy \times tz - ty \times qz ) \\
+		        v_y + qw \times ty + ( qz \times tx - tz \times qx ) \\
+		       v_z + qw \times tz + ( qx \times ty - tx \times qy ) 
+               \end{bmatrix}
+</math>        
+
+
+===Rodriguez Rotation===
+
+The input for this is a lnQuat, and an axis to rotate the rotation around and an angle around the axis to rotate.
+
+Normalized axis of rotation...
+
+:<math>
+   \begin{bmatrix} a_X \\a_Y\\ a_Z \end{bmatrix}
+</math>
+Rotation angle
+:<math>
+   \gamma = spin_{angle}
+</math>
+:<math>
+   \theta = (|q_X|+|q_Y|+|q_Z|)/2
+</math>
+:<math>
+sin_{\gamma} = sin(\gamma)
+</math>
+:<math>
+cos_{\gamma} = cos(\gamma)
+</math>
+:<math>
+sin_{\theta} = sin( \theta)
+</math>
+:<math>
+cos_{\theta}=cos(\theta) 
+</math>
+:<math>
+  \cos \frac{\alpha}{2} = cos_{\theta} \times  cos_{\gamma} + sin_{\theta} \times  sin_{\gamma}) \times  (a_X\times basis_{up_x}+a_Y\times basis_{up_y}+a_Z\times basis_{up_y})
+ </math>
+And then compute the result angle...
+:<math>
+result_{angle} = 2 cos^-1( cos \frac {\alpha}{2} )
+</math>
+And the result axis...
+:<math>
+ C = \begin{bmatrix}
+     sin_{\gamma} \times  cos_{\theta} \times  a_X + sin_{\theta} \times  cos_{\gamma} \times q_{nx} + sin_{\theta}\times sin_{\gamma}\times (a_Y\times q_{nz}-a_Z\times q_{ny})\\
+	 sin_{\gamma} \times  cos_{\theta} \times  a_Y + sin_{\theta} \times  cos_{\gamma} \times q_{ny} + sin_{\theta}\times sin_{\gamma}\times (a_Z\times q_{nx}-a_X\times q_{nz})\\
+	 sin_{\gamma} \times  cos_{\theta} \times  a_Z + sin_{\theta} \times  cos_{\gamma} \times q_{nz} + sin_{\theta}\times sin_{\gamma}\times (a_X\times q_{ny}-a_Y\times q_{nx})
+   \end{bmatrix}
+</math>
+Use <math>sin_{\alpha}</math> to normalize the cross product...
+:<math>
+sin_{\alpha} = sin(result_{angle}/2)
+</math>
+Get the total angle to scale the result..
+:<math>
+C_{norm} = sin_{\alpha} \times ( |\frac{C_X}{sin_{\alpha}}| + |\frac{C_Y}{sin_{\alpha}}| + |\frac{C_Z}{sin_{\alpha}}| )
+</math>
+And the final angle-angle-angle result...
+:<math>
+
+ \begin{matrix} 
+result = \begin{bmatrix}
+ Cx/C_{norm} \times  result_{angle}\\
+ Cy/C_{norm} \times  result_{angle}\\
+ Cz/C_{norm} \times  result_{angle}
+\end{bmatrix}
+\end{matrix}  
+</math>
+
+===Conversion from Basis Matrix===
+
+Compute the determinant of the matrix... 
+:<math>
+	det = \frac{ ( basis_{right_X} + basis_{up_Y} + basis_{forward_Z} ) - 1 }{2}
+</math>
+Convert to the angle of rotation...
+:<math>
+    angle = arccos(det);
+</math>
+:<math>
+	yz = basis_{up_Z} - basis_{forward_Y};
+</math>
+:<math>
+	xz = basis_{forward_X} - basis_{right_Z};
+</math>
+:<math>
+	xy = basis_{right_Y} - basis_{up_X};
+</math>
+compute the normal factor...
+:<math>
+	normal = 1 /\sqrt(yz ^2 + xz^2 + xy^2 );
+</math>
+:<math>
+n = \begin{bmatrix}
+	 yz \times normal\\
+     xz \times normal\\
+	 xy \times normal
+\end{bmatrix}
+</math>
+:<math>
+	linear_{normal} = \frac{angle}{|n_X|+|n_Y|+|n_Z|};
+</math>
+
+so finally the resulting log quaternion is...
+:<math>
+lnQ = \begin{bmatrix}
+	 n_X \times linear_{normal}\\
+	 n_Y \times linear_{normal}\\
+	 n_Z \times linear_{normal}
+\end{bmatrix}
+</math>
+
+===Conversion from Normal Vector(Y)===
+
+Representation of a normal as a rotation, this assumes that the vector <math>(0,1,0)</math> is 'up'.  If some other axle is considered primary, the coordinates can be simply swapped.
+
+This assume a normalized input vector in the direction of the normal
+:<math>
+N = \begin{matrix} normal_X\\
+normal_Y\\
+normal_Z
+\end{matrix}
+
+</math>
+The angle is simply the sum of the x/z coordinate(or y,x if Z is 'up', or y,z if X is 'up')...
+:<math>
+    angle = |N_x| + |N_z|
+</math>
+if angle is 0, the job is done, result with <math>(0,0,0)</math>
+:<math>
+		r = 1/(angle)
+</math>
+Some temporary values; these values are just partials referenced later...
+:<math>
+ t = \begin{bmatrix}
+						 N_x \times r\\
+                         N_y\\
+                         N_z \times r
+          \end{bmatrix}
+                        
+</math>
+Use the projected normal on the Y axis as the angle to rotate...
+:<math>
+			target_{angle} = cos^-1( t_Y )
+
+</math>
+:<math>
+			result = \begin{bmatrix}
+                 t_Z \times target_{angle}\\
+						0\\
+				   -t_X \times target_{angle}
+			\end{bmatrix} 
+</math>
+
+The default tangent and bi-tangent of rotations which only have their normal set, results in tangents and bi-tangents that are irregular.  Alternatively build a basis matrix, and convert from basis using the above mentioned method. 
+Compute the normal of the above, and the matrix to convert...
+:<math>
+								normal_{twist} = {\sqrt ( t_z^2+t_x^2 )}
+</math>
+:<math>
+\begin{bmatrix}
+								(N_y \times \frac {-t_X }{ normal_{twist} })&N_x&\frac {t_Z}{normal_{twist}} \\
+								 (N_z \times \frac {t_Z}{normal_{twist}})-(N_x \times \frac {-t_X }{ normal_{twist} } )&N_y&0\\
+								 (-(N_y \times \frac {t_Z}{normal_{twist}} )&N_z&\frac {-t_X }{ normal_{twist} }
+						        \end{bmatrix}
+</math>
+And then use the basis to log quaternion conversion...
+
+===Conversion from axis-angle===
+
+This assumes the input axis is normalized.  If there is 0 rotation, result with <math>(0,0,0)</math>
+
+:<math>
+\begin{matrix}
+\theta = angle\\
+(a_X,a_Y,a_Z)
+\end{matrix}
+</math>
+:<math>
+\begin{matrix}
+       \frac {a_X \times \theta}{|a_X|+|a_Y|+|a_Z|}\\
+       \frac {a_Y \times \theta}{|a_X|+|a_Y|+|a_Z|}\\
+       \frac {a_Z \times \theta}{|a_X|+|a_Y|+|a_Z|}
+       \end{matrix}
+</math>
