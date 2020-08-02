@@ -125,33 +125,72 @@ function lnQuat( theta, d, a, b ){
 						this.nx = theta.x/l3 /* * qw*/;
 						this.ny = 0;// theta.y/l3 /* * qw*/;
 						this.nz = theta.z/l3 /* * qw*/;
+						//this.nL = qw;
 
 						this.x = tz*qw;
 						this.y = 0;
 						this.z = -tx*qw;
 					        
-						this.update();
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
 							if(normalizeNormalTangent) {
-								const trst = this.getBasis();
-								const fN = 1/Math.sqrt( tz*tz+tx*tx );
-						        
-								trst.forward.x = tz*fN;
-								trst.forward.y = 0;
-								trst.forward.z = -tx*fN;
-								trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-								trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-								trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-						        
-								this.fromBasis( trst );
 								this.update();
+								const fN = 1/Math.sqrt( tz*tz+tx*tx );
+								const trst = this.getBasis();
+
+								if(0) {
+									// this should be 'get up' from basis, do dot product
+									// and reverse basis all together... it's really close.
+									const nt = qw;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+									const s  = Math.sin( nt ); // sin/cos are the function of exp()
+									const c = 1- Math.cos( nt ); // sin/cos are the function of exp()
+									//console.log( "After basis:", this.nL, qw, nt );
+	                                                                
+									const qx = this.nx; // normalizes the imaginary parts
+									const qz = this.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
+	                                                                
+									const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
+									const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
+									                          
+									const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
+									const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
+								        
+									const t = (  (  (1 - c*( qz*qz + qx*qx )) * -tx*fN)+ 1-(zz+xx)+ -tx*fN - 1 )/2;
+									let angle = acos(t);
+									const yz = -s*qx*2;
+									const xz = tz*fN + ((1-c*(qx*qx+qz*qz)) * tz*fN );
+									const xy = ((s*qx * tz*fN)  -  ( s*qz * tx*fN )) -2*s*qz;
+									const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+									this.nx = yz *tmp;
+									this.ny = xz *tmp;
+									this.nz = xy *tmp;
+									const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
+									this.x = this.nx * lNorm;
+									this.y = this.ny * lNorm;
+									this.z = this.nz * lNorm;
+									this.dirty = true;
+								}
+
+								if(1) {
+									//const fN = 1/Math.sqrt( tz*tz+tx*tx );
+						        		//	console.log( "Basis:", trst.up );
+									trst.forward.x = tz*fN;
+									trst.forward.y = 0;
+									trst.forward.z = -tx*fN;
+									trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
+									trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
+									trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
+							        
+									this.fromBasis( trst );
+								}
 							}
 							if( twistDelta ) {
+								this.update();
 								twisting = true;
 								yaw( this, twistDelta /*+ angle*/ );
 								twisting = false;
 							}
 						}
+						this.update();
 						return;
 					}
 					else return; // 0 rotation.
@@ -192,6 +231,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	//  and then pi to 2pi is all negative, so it's like the inverse of the rotation (and is only applied as an inverse? which reverses the negative limit?)
 	//  So maybe it seems a lot of this is just biasing math anyway?
 	let angle = acos(t);
+	//console.log( "FB  T", angle, t, basis.right.x, basis.up.y, basis.forward.z );
 	if( !angle ) {
 		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
 		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.nL = this.nR = 0;
@@ -201,17 +241,18 @@ lnQuat.prototype.fromBasis = function( basis ) {
 		this.dirty = false;
 		return this;
 	}
+/*
 	if( !this.octave ) this.octave = 1;
 	if( tzz == 0 ) {
 		this.bias = -this.octave * 2*Math.PI;
 	}else {
 		this.bias = (this.octave-1) * 2*Math.PI
 	}
-	angle += this.bias
+	//angle += this.bias
 	tzz++;
 	this.i = tzz;
 	if( tzz >= 2 ) tzz = 0;
-
+*/
 	/*
 	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
@@ -222,6 +263,11 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	const xy = basis.right  .y - basis.up     .x;
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
 
+	//console.log( "FB angle yz ", basis.up     .z,'-', basis.forward.y );
+	//console.log( "FB angle zx ", basis.forward.x,'-', basis.right.z, '=',xz );
+//	console.log( "FB angle xy ", basis.right  .y,'-', basis.up     .x, '=',xy );
+//	console.log( "FB angle yz xz xy", angle, yz, xz, xy );
+
 	this.nx = yz *tmp;
 	this.ny = xz *tmp;
 	this.nz = xy *tmp;
@@ -229,6 +275,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	this.x = this.nx * lNorm;
 	this.y = this.ny * lNorm;
 	this.z = this.nz * lNorm;
+	//console.log( "frombasis primary values:", this.x, this.y, this.z );
 
 	this.dirty = true;
 	return this;
