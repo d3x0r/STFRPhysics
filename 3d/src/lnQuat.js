@@ -171,7 +171,6 @@ function lnQuat( theta, d, a, b ){
 								twisting = false;
 							}
 						}
-						this.update();
 						return;
 					}
 					else return; // 0 rotation.
@@ -214,7 +213,6 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	//  and then pi to 2pi is all negative, so it's like the inverse of the rotation (and is only applied as an inverse? which reverses the negative limit?)
 	//  So maybe it seems a lot of this is just biasing math anyway?
 	let angle = acos(t);
-	//console.log( "FB  T", angle, t, basis.right.x, basis.up.y, basis.forward.z );
 	if( !angle ) {
 		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
 		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.nL = this.nR = 0;
@@ -245,12 +243,6 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	const xz = basis.forward.x - basis.right  .z;
 	const xy = basis.right  .y - basis.up     .x;
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
-//	console.log( "FB parts are:", yz, xz, xy );
-
-//	console.log( "FB angle yz ", basis.up     .z,'-', basis.forward.y ,'=', yz );
-	//console.log( "FB angle zx ", basis.forward.x,'-', basis.right.z, '=',xz );
-//	console.log( "FB angle xy ", basis.right  .y,'-', basis.up     .x, '=',xy );
-//	console.log( "FB angle yz xz xy", angle, yz, xz, xy );
 
 	this.nx = yz *tmp;
 	this.ny = xz *tmp;
@@ -357,6 +349,9 @@ lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, right) {
 	// this is terse; for more documentation see getBasis Method.
 	if( right ) {
+		// this basis is supposed to be the rotation axis, and the tangent on the 
+		// rotation...., and the normal to the circle (which is not nesscarily normal to the sphere)
+
 		// this basis is not reversable... (well, it might be)
 		const q = this;
 
@@ -375,8 +370,6 @@ lnQuat.prototype.getBasisT = function(del, right) {
 		testUp.x /= nRup;
 		testUp.y /= nRup;
 		testUp.z /= nRup;
-
-		
 
 		//this.update();
 		if( !del ) del = 1.0;
@@ -757,19 +750,22 @@ lnQuat.prototype.applyInv = function( v ) {
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
 function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 	// A dot B   = cos( angle A->B )
-	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
-	const cosCo2 = q.qw*ac - q.s*as*AdB;
+	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
+	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
+	const sc1 = as * q.qw;
+	const sc2 = q.s * ac;
+	const ss = q.s * as;
+	const cc = q.qw * ac;
+	const cosCo2 = cc - ss* (q.nx*ax + q.ny*ay + q.nz*az);
 
-	// this is approximately like cos(a+b), but scales to another diagonal
-	// that's more like cos(a-b) depending on the cos(angle between rotation axles)
 	let ang = acos( cosCo2 )*2;
 	
 	ang += ((oct|0)) * (Math.PI*4);
 
-	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
-	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
-	const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
+	const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
+	const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
+	const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 
 	const sAng = Math.sin(ang/2);
 	
