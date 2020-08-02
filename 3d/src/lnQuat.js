@@ -492,21 +492,21 @@ function getCayleyBasis() {
 		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
 
 		const basis = {
-		forward(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
-			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
-		},
-		right(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
-			return { x : 1 - ( yy() + zz() - xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
-		},
-		up(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
-			return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() - yy() ), z :     ( wx() + yz() ) };
-		}
+			right(t) {
+				s = Math.sin( 2*t*q.nL );
+				c = 1 - Math.cos( 2*t*q.nL );
+				return { x : 1 - ( yy() + zz() - xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
+			},
+			up(t) {
+				s = Math.sin( 2*t*q.nL );
+				c = 1 - Math.cos( 2*t*q.nL );
+				return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() - yy() ), z :     ( wx() + yz() ) };
+			},
+			forward(t) {
+				s = Math.sin( 2*t*q.nL );
+				c = 1 - Math.cos( 2*t*q.nL );
+				return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
+			},
 		}
 		return basis;	
 
