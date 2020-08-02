@@ -50,9 +50,9 @@ This was built from rotating the vectors (1,0,0), (0,1,0), (0,0,1), and reducing
 :<math>
 \begin{matrix}
     q_r = \cos\theta \\
-    q_i = \sin\theta \times  \frac{X}{normal_{square}}\\
-    q_j = \sin\theta \times  \frac{Y}{normal_{square}}\\
-    q_k = \sin\theta \times  \frac{Z}{normal_{square}}\end{matrix}
+    q_i = \sin\theta \cdot  \frac{X}{normal_{square}}\\
+    q_j = \sin\theta \cdot  \frac{Y}{normal_{square}}\\
+    q_k = \sin\theta \cdot  \frac{Z}{normal_{square}}\end{matrix}
 </math>
 
 Which are used to compute the resulting matrix...
@@ -82,29 +82,29 @@ Calculate the <math>sin()</math> and <math>cos()</math> of the total rotation an
 </math>        
 Scale the normal rotation axis by <math>sin_{\theta}</math>...
 :<math>
-	 qx = Axis(q)_X*sin_{\theta}
+	 qx = Axis(q)_X\cdot sin_{\theta}
 </math>        
 :<math>
-	 qy = Axis(q)_Y*sin_{\theta}
+	 qy = Axis(q)_Y\cdot sin_{\theta}
 </math>        
 :<math>
-	 qz = Axis(q)_Z*sin_{\theta}
+	 qz = Axis(q)_Z\cdot sin_{\theta}
 </math>        
 Some temporary factors....
 :<math>
-		tx =  2(qy * v.z - qz * v.y) 
+		tx =  2(qy \cdot v.z - qz \cdot v.y) 
 </math>        
 :<math>
-		    ty = 2(qz * v.x - qx * v.z) 
+		    ty = 2(qz \cdot v.x - qx \cdot v.z) 
 </math>        
 :<math>
-		   tz = 2(qx * v.y - qy * v.x)
+		   tz = 2(qx \cdot v.y - qy \cdot v.x)
 </math>        
 And the final vector curved by these angles is...
 :<math>
-		result = \begin{bmatrix}  v_x + qw \times tx + ( qy \times tz - ty \times qz ) \\
-		        v_y + qw \times ty + ( qz \times tx - tz \times qx ) \\
-		       v_z + qw \times tz + ( qx \times ty - tx \times qy ) 
+		result = \begin{bmatrix}  v_x + qw \cdot tx + ( qy \cdot tz - ty \cdot qz ) \\
+		        v_y + qw \cdot ty + ( qz \cdot tx - tz \cdot qx ) \\
+		       v_z + qw \cdot tz + ( qx \cdot ty - tx \cdot qy ) 
                \end{bmatrix}
 </math>        
 
@@ -138,18 +138,18 @@ sin_{\theta} = sin( \theta)
 cos_{\theta}=cos(\theta) 
 </math>
 :<math>
-  \cos \frac{\alpha}{2} = cos_{\theta} \times  cos_{\gamma} + sin_{\theta} \times  sin_{\gamma}) \times  (a_X\times basis_{up_x}+a_Y\times basis_{up_y}+a_Z\times basis_{up_y})
+  \cos \frac{\alpha}{2} = cos_{\theta} \cdot  cos_{\gamma} + sin_{\theta} \cdot  sin_{\gamma}) \cdot  (a_X\cdot basis_{up_x}+a_Y\cdot basis_{up_y}+a_Z\cdot basis_{up_y})
  </math>
 And then compute the result angle...
 :<math>
-result_{angle} = 2 cos^-1( cos \frac {\alpha}{2} )
+result_{angle} = 2 cos^{-1}( cos \frac {\alpha}{2} )
 </math>
 And the result axis...
 :<math>
  C = \begin{bmatrix}
-     sin_{\gamma} \times  cos_{\theta} \times  a_X + sin_{\theta} \times  cos_{\gamma} \times q_{nx} + sin_{\theta}\times sin_{\gamma}\times (a_Y\times q_{nz}-a_Z\times q_{ny})\\
-	 sin_{\gamma} \times  cos_{\theta} \times  a_Y + sin_{\theta} \times  cos_{\gamma} \times q_{ny} + sin_{\theta}\times sin_{\gamma}\times (a_Z\times q_{nx}-a_X\times q_{nz})\\
-	 sin_{\gamma} \times  cos_{\theta} \times  a_Z + sin_{\theta} \times  cos_{\gamma} \times q_{nz} + sin_{\theta}\times sin_{\gamma}\times (a_X\times q_{ny}-a_Y\times q_{nx})
+     sin_{\gamma} \cdot  cos_{\theta} \cdot  a_X + sin_{\theta} \cdot  cos_{\gamma} \cdot q_{nx} + sin_{\theta}\cdot sin_{\gamma}\cdot (a_Y\cdot q_{nz}-a_Z\cdot q_{ny})\\
+	 sin_{\gamma} \cdot  cos_{\theta} \cdot  a_Y + sin_{\theta} \cdot  cos_{\gamma} \cdot q_{ny} + sin_{\theta}\cdot sin_{\gamma}\cdot (a_Z\cdot q_{nx}-a_X\cdot q_{nz})\\
+	 sin_{\gamma} \cdot  cos_{\theta} \cdot  a_Z + sin_{\theta} \cdot  cos_{\gamma} \cdot q_{nz} + sin_{\theta}\cdot sin_{\gamma}\cdot (a_X\cdot q_{ny}-a_Y\cdot q_{nx})
    \end{bmatrix}
 </math>
 Use <math>sin_{\alpha}</math> to normalize the cross product...
@@ -158,16 +158,16 @@ sin_{\alpha} = sin(result_{angle}/2)
 </math>
 Get the total angle to scale the result..
 :<math>
-C_{norm} = sin_{\alpha} \times ( |\frac{C_X}{sin_{\alpha}}| + |\frac{C_Y}{sin_{\alpha}}| + |\frac{C_Z}{sin_{\alpha}}| )
+C_{norm} = sin_{\alpha} \cdot ( |\frac{C_X}{sin_{\alpha}}| + |\frac{C_Y}{sin_{\alpha}}| + |\frac{C_Z}{sin_{\alpha}}| )
 </math>
 And the final angle-angle-angle result...
 :<math>
 
  \begin{matrix} 
 result = \begin{bmatrix}
- Cx/C_{norm} \times  result_{angle}\\
- Cy/C_{norm} \times  result_{angle}\\
- Cz/C_{norm} \times  result_{angle}
+ Cx/C_{norm} \cdot  result_{angle}\\
+ Cy/C_{norm} \cdot  result_{angle}\\
+ Cz/C_{norm} \cdot  result_{angle}
 \end{bmatrix}
 \end{matrix}  
 </math>
@@ -197,9 +197,9 @@ compute the normal factor...
 </math>
 :<math>
 n = \begin{bmatrix}
-	 yz \times normal\\
-     xz \times normal\\
-	 xy \times normal
+	 yz \cdot normal\\
+     xz \cdot normal\\
+	 xy \cdot normal
 \end{bmatrix}
 </math>
 :<math>
@@ -209,9 +209,9 @@ n = \begin{bmatrix}
 so finally the resulting log quaternion is...
 :<math>
 lnQ = \begin{bmatrix}
-	 n_X \times linear_{normal}\\
-	 n_Y \times linear_{normal}\\
-	 n_Z \times linear_{normal}
+	 n_X \cdot linear_{normal}\\
+	 n_Y \cdot linear_{normal}\\
+	 n_Z \cdot linear_{normal}
 \end{bmatrix}
 </math>
 
@@ -221,10 +221,10 @@ Representation of a normal as a rotation, this assumes that the vector <math>(0,
 
 This assume a normalized input vector in the direction of the normal
 :<math>
-N = \begin{matrix} normal_X\\
+N = \begin{bmatrix} normal_X\\
 normal_Y\\
 normal_Z
-\end{matrix}
+\end{bmatrix}
 
 </math>
 The angle is simply the sum of the x/z coordinate(or y,x if Z is 'up', or y,z if X is 'up')...
@@ -238,53 +238,95 @@ if angle is 0, the job is done, result with <math>(0,0,0)</math>
 Some temporary values; these values are just partials referenced later...
 :<math>
  t = \begin{bmatrix}
-						 N_x \times r\\
+						 N_x \cdot r\\
                          N_y\\
-                         N_z \times r
+                         N_z \cdot r
           \end{bmatrix}
                         
 </math>
 Use the projected normal on the Y axis as the angle to rotate...
 :<math>
-			target_{angle} = cos^-1( t_Y )
+			target_{angle} = cos^{-1}( t_Y )
 
 </math>
 :<math>
 			result = \begin{bmatrix}
-                 t_Z \times target_{angle}\\
+                 t_Z \cdot target_{angle}\\
 						0\\
-				   -t_X \times target_{angle}
+				   -t_X \cdot target_{angle}
 			\end{bmatrix} 
 </math>
 
+====Align Normal using Basis====
 The default tangent and bi-tangent of rotations which only have their normal set, results in tangents and bi-tangents that are irregular.  Alternatively build a basis matrix, and convert from basis using the above mentioned method. 
 Compute the normal of the above, and the matrix to convert...
 :<math>
-								normal_{twist} = {\sqrt ( t_z^2+t_x^2 )}
+								normal_{twist} = {\sqrt ( t_Z^2+t_X^2 )}
 </math>
 :<math>
 \begin{bmatrix}
-								(N_y \times \frac {-t_X }{ normal_{twist} })&N_x&\frac {t_Z}{normal_{twist}} \\
-								 (N_z \times \frac {t_Z}{normal_{twist}})-(N_x \times \frac {-t_X }{ normal_{twist} } )&N_y&0\\
-								 (-(N_y \times \frac {t_Z}{normal_{twist}} )&N_z&\frac {-t_X }{ normal_{twist} }
+								(N_y \cdot \frac {-t_X }{ normal_{twist} })&N_x&\frac {t_Z}{normal_{twist}} \\
+								 (N_z \cdot \frac {t_Z}{normal_{twist}})-(N_x \cdot \frac {-t_X }{ normal_{twist} } )&N_y&0\\
+								 (-(N_y \cdot \frac {t_Z}{normal_{twist}} )&N_z&\frac {-t_X }{ normal_{twist} }
 						        \end{bmatrix}
 </math>
 And then use the basis to log quaternion conversion...
 
+====Align Normal Directly====
+
+Or This is the direct computation to result with a log quaternion; compute the above result vector and then...
+:<math>
+                            \begin{matrix}
+							 t_{X_n} = t_X\cdot normal_{twist} \\
+							 t_{Z_n} = t_Z\cdot normal_{twist} \\
+							s = Math.sin( target_{angle} ) \\
+							c = 1- Math.cos( target_{angle} )
+                            \end{matrix}
+</math>
+This is the angle
+:<math>
+							angle = acos( ( t_Y + 1 ) * ( 1 - t_{X_n} ) / 2 - 1 );
+</math>
+These partial products are used below...
+:<math>
+							\begin{matrix}
+                            yz = s \cdot n_X \\
+							xz = ( 2 - c \cdot (n_X^2 + n_Z^2) ) \cdot t_{Z_n}\\
+							xy = s \cdot n_X * t_{Z_n}   + s \cdot n_Z \cdot (1-t_{X_n})
+                            \end{matrix}
+</math>
+Compute the normalized rotation vector (axle of rotation)...
+:<math>n = \begin{bmatrix}
+                            \frac{yz}{\sqrt(yz^2 + xz^2 + xy^2)}\\
+							\frac{xz}{\sqrt(yz^2 + xz^2 + xy^2)}\\
+							\frac{xy}{\sqrt(yz^2 + xz^2 + xy^2)}
+\end{bmatrix}                            
+</math>
+
+and finally compute the resulting log quaterion.
+:<math>
+                         final_{result} = \begin{bmatrix}
+							  \frac{n_x \cdot angle}{|n_x| + |n_y| + |n_z| }\\
+							  \frac{n_y \cdot angle}{|n_x| + |n_y| + |n_z| }\\
+							  \frac{n_z \cdot angle}{|n_x| + |n_y| + |n_z| }
+                            \end{bmatrix}
+
+</math>
+
 ===Conversion from axis-angle===
 
-This assumes the input axis is normalized.  If there is 0 rotation, result with <math>(0,0,0)</math>
+This assumes the input axis <math>(a_X,a_Y,a_Z)</math> is normalized.  If there is 0 rotation, result with <math>(0,0,0)</math>
 
 :<math>
 \begin{matrix}
 \theta = angle\\
-(a_X,a_Y,a_Z)
+axis = \begin{bmatrix}a_X \\ a_Y\\ a_Z \end{bmatrix}
 \end{matrix}
 </math>
 :<math>
-\begin{matrix}
-       \frac {a_X \times \theta}{|a_X|+|a_Y|+|a_Z|}\\
-       \frac {a_Y \times \theta}{|a_X|+|a_Y|+|a_Z|}\\
-       \frac {a_Z \times \theta}{|a_X|+|a_Y|+|a_Z|}
-       \end{matrix}
+result = \begin{bmatrix}
+       \frac {a_X \cdot \theta}{|a_X|+|a_Y|+|a_Z|}\\
+       \frac {a_Y \cdot \theta}{|a_X|+|a_Y|+|a_Z|}\\
+       \frac {a_Z \cdot \theta}{|a_X|+|a_Y|+|a_Z|}
+       \end{bmatrix}
 </math>
