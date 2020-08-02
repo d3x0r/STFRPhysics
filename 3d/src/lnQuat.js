@@ -48,8 +48,8 @@ function lnQuat( theta, d, a, b ){
 	this.y = 0;  // total rotation each x,y,z axis.
 	this.z = 0;
 
-	this.nx = 0;  // these could become wrap counters....
-	this.ny = 0;  // total rotation each x,y,z axis.
+	this.nx = 0;  // default normal
+	this.ny = 1;  // 
 	this.nz = 0;
 	// temporary sign/cos/normalizers
 	this.s = 0;  // sin(composite theta)
@@ -119,70 +119,57 @@ function lnQuat( theta, d, a, b ){
 						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 					        
 						const r = 1/(l2);
-						let tx = theta.x*r, ty = theta.y/l3, tz = theta.z* r;
-						const qw = acos( ty ); // 1->-1 (angle from pole around this circle.
-
-						this.nx = theta.x/l3 /* * qw*/;
-						this.ny = 0;// theta.y/l3 /* * qw*/;
-						this.nz = theta.z/l3 /* * qw*/;
-						//this.nL = qw;
-
-						this.x = tz*qw;
+						const tx = theta.x * r; // linear normal
+						const ty = theta.y /l3; // square normal
+						const tz = theta.z * r; // linear normal
+						const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
+						this.x = tz*cosTheta; 
 						this.y = 0;
-						this.z = -tx*qw;
+						this.z = -tx*cosTheta;
+						this.nR = Math.sqrt(this.x*this.x+this.z*this.z);
+						this.nx = this.x / this.nR;
+						this.ny = 0;
+						this.nz = this.z / this.nR;
+						this.dirty = true;
 					        
+						if(normalizeNormalTangent) {
+							const fN = 1/Math.sqrt( tz*tz+tx*tx );
+
+							const txn = tx*fN;
+							const tzn = tz*fN;
+
+							const s = Math.sin( cosTheta ); // double angle substituted
+							const c = 1- Math.cos( cosTheta ); // double angle substituted
+
+							const wx = s*this.nx;     //  x / sqrt(xx+yy+zz)  * sin(2t)
+							const wz = s*this.nz;     //  z / sqrt(xx+yy+zz)  * sin(2t)
+							                          
+							const xx = c*this.nx*this.nx;  //  y * y / (xx+yy+zz) * ( 1 - cos(2t) )
+							const zz = c*this.nz*this.nz;  //  z * z / (xx+yy+zz) * ( 1 - cos(2t) )
+
+							// determinant coordinates
+							const angle = acos(( ty -ty*txn - txn - 1 )/2);
+
+							const yz = wx;
+							const xz = (2-(xx+zz)) * tzn;
+							const xy = ((wx * tzn)  +  ( wz * (1-txn) ));
+
+							const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+							this.nx = yz *tmp;
+							this.ny = xz *tmp;
+							this.nz = xy *tmp;
+							const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
+							this.x = this.nx * lNorm;
+							this.y = this.ny * lNorm;
+							this.z = this.nz * lNorm;
+							this.nL = angle/2;
+							this.nR = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
+							this.s = Math.sin( this.nL);
+							this.qw = Math.cos( this.nL);
+							this.dirty = false;
+						}
+
 						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
-							if(normalizeNormalTangent) {
-								this.update();
-								const fN = 1/Math.sqrt( tz*tz+tx*tx );
-								const trst = this.getBasis();
-
-								if(0) {
-									// this should be 'get up' from basis, do dot product
-									// and reverse basis all together... it's really close.
-									const nt = qw;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-									const s  = Math.sin( nt ); // sin/cos are the function of exp()
-									const c = 1- Math.cos( nt ); // sin/cos are the function of exp()
-									//console.log( "After basis:", this.nL, qw, nt );
-	                                                                
-									const qx = this.nx; // normalizes the imaginary parts
-									const qz = this.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-	                                                                
-									const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-									const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
-									                          
-									const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-									const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
-								        
-									const t = (  (  (1 - c*( qz*qz + qx*qx )) * -tx*fN)+ 1-(zz+xx)+ -tx*fN - 1 )/2;
-									let angle = acos(t);
-									const yz = -s*qx*2;
-									const xz = tz*fN + ((1-c*(qx*qx+qz*qz)) * tz*fN );
-									const xy = ((s*qx * tz*fN)  -  ( s*qz * tx*fN )) -2*s*qz;
-									const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
-									this.nx = yz *tmp;
-									this.ny = xz *tmp;
-									this.nz = xy *tmp;
-									const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
-									this.x = this.nx * lNorm;
-									this.y = this.ny * lNorm;
-									this.z = this.nz * lNorm;
-									this.dirty = true;
-								}
-
-								if(1) {
-									//const fN = 1/Math.sqrt( tz*tz+tx*tx );
-						        		//	console.log( "Basis:", trst.up );
-									trst.forward.x = tz*fN;
-									trst.forward.y = 0;
-									trst.forward.z = -tx*fN;
-									trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-									trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-									trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-							        
-									this.fromBasis( trst );
-								}
-							}
 							if( twistDelta ) {
 								this.update();
 								twisting = true;
@@ -223,6 +210,8 @@ let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
+	console.log( "FB t is:", t, basis.right.x, basis.up.y, basis.forward.z );
+
 	//	if( t > 1 || t < -1 ) 
 	// 1,1,1 -1 = 2;/2 = 1
 	// -1-1-1 -1 = -4 /2 = -2;
@@ -262,8 +251,9 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	const xz = basis.forward.x - basis.right  .z;
 	const xy = basis.right  .y - basis.up     .x;
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+//	console.log( "FB parts are:", yz, xz, xy );
 
-	//console.log( "FB angle yz ", basis.up     .z,'-', basis.forward.y );
+//	console.log( "FB angle yz ", basis.up     .z,'-', basis.forward.y ,'=', yz );
 	//console.log( "FB angle zx ", basis.forward.x,'-', basis.right.z, '=',xz );
 //	console.log( "FB angle xy ", basis.right  .y,'-', basis.up     .x, '=',xy );
 //	console.log( "FB angle yz xz xy", angle, yz, xz, xy );
