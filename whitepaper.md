@@ -22,7 +22,9 @@ So the two forms are represented like this.
 
 ## Glossary
 
-axle - an axis of rotation.
+- axle - an axis of curvature.
+- rotation - a point translated to another location referencing a third point.
+- curvature - a point translated to another location by curving its forward motion; does not require a third point.
 
 
 ---
@@ -48,12 +50,15 @@ Exponent of a log complex...
 
 Because `cos(x)=cos(-x)` the absolute value in the `cos()` expression is unneeded.
 Because `B/sqrt(B*B)` keeps the sign, the sign lost in the `sin(|B|/2)` is restored, so the abosolute value isn't needed there either.
-And, because B has a single dimension, this looks like it's equivalent to... so if this 
-was assumed as the conversion, all of this would work for a single dimensional vector as B.
+And, because B has a single dimension, this looks like it's equivalent to... 
 
 ```
     exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
+
+This is exactly (the only) form of this equation known; the previous version with absolute values is never
+presented.
+
 
 Note, for programmatic purposes, unless you are actually adding relative radiuses also, the real part can
 be kept unscaled.
@@ -64,6 +69,10 @@ be kept unscaled.
 
 
 ## Log Quaternion to Quaternion conversion
+
+The sum of the curvatures is the total rotation of the system, or is the angle around the axle to curve all
+other spacial points by.  `|X|+|Y|+|Z|` is the total rotation.  The axis of rotation is the same coordinates
+normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  
 
 Using the same method for `exp(lnC)`
 
@@ -116,7 +125,10 @@ Compute the normal
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
 
    angle = acos(A/normAB)*2
+```
 
+And finally build the log-quaternion...
+```
    ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
 
 ```
