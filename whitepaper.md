@@ -1,8 +1,9 @@
 ﻿
 # Discovery of additive rotations
 
-Rotations are quite linear, and can, in many cases, be simply added and subtracted; there are as
-many times however when a rotation is rotated around an axle external to the frame the rotation is
+Rotations are quite linear, and can, in many cases, be simply added and subtracted, especially when comparing
+the orientations of two free objects in the same frame; there are as
+many times however when a rotation is spun around an axle external to the frame the rotation is
 in.
 
 For complex numbers, the `ln(i)` is `π/2`.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
@@ -22,9 +23,15 @@ So the two forms are represented like this.
 
 ## Glossary
 
+- apply() - in math this is multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
+    in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
+    another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication, but this is 
+    called `apply()` instead.
 - axle - an axis of curvature.
-- rotation - a point translated to another location referencing a third point.
 - curvature - a point translated to another location by curving its forward motion; does not require a third point.
+- frame - the orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
+- rotation - a point translated to another location referencing a third point.
+- spin - basically 'rotation', however, it's not apply by an angle, as rotation, but measured in a curvature.
 
 
 ---
@@ -116,7 +123,7 @@ and `θ` is the angle of rotation around that axle.
 ## Quaternion to Log Quatnerion
 
 ```
-  ln( A+(x,y,z)i ) = ...
+   ...
 ```
 
 Compute the normal
@@ -129,10 +136,43 @@ Compute the normal
 
 And finally build the log-quaternion...
 ```
-   ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
-
+   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
 ```
 
+For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful
+
+```
+   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
+```
+
+The real part, (The A) might instead be represted by a vector `(x,y,z)`, and also may not fully apply to the imaginary part(? Having only
+recently discovered this, I leave that to minds brighter than mine).
+
+
+```
+   exp( A+(x,y,z)ε ) = A * cos( (|x|+|y|+|z|)/2) 
+                     + A * sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + A * sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + A * sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+```
+
+
+Experimentally I was only interested in pure rotations, with 0 real part...  
+The real part is just a scalar of elevetion from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevtation or offset,
+but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
+to the actual acceleration vector, since that vector is actually outside the current rotation.
+
+```
+   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
+                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+```
+
+
+Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
+get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
+but result by curving space, and finding the relative extrernal point.
 
 
 ---
