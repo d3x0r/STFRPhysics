@@ -375,7 +375,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	tmp = document.getElementById( "turnCounter" );
 	turnCount = tmp.value;
 	tmp = document.getElementById( "stepCounter" );
-	stepCount = tmp.value * 100 ;
+	stepCount = tmp.value * 250 ;
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )
