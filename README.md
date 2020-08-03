@@ -234,9 +234,8 @@ They are mappings in different projections, and should be considered as a differ
 
 ## Rotation limits
 
-If we consider the speed of light achievable, 1 half rotation per nano second is a reasonable maximum.  
-
-This is 3B RPM is the maximum rotation rate.  This turns out to be a 1 rotation at 1dm is the speed of light.
+If we consider the speed of light achievable, 1 half rotation per nano second is a reasonable maximum.  This is 3B RPM is the maximum rotation rate.
+This turns out to be a 1 rotation of 0.3m arc-length per nanosecond is the speed of light.
 
 
 ## Quaternion rotation points
@@ -245,104 +244,31 @@ This is 3B RPM is the maximum rotation rate.  This turns out to be a 1 rotation 
 
 add vectors instead of multiply.
 
-## Gyroscopic Precession
-
-```
-
-(eulers identity?!)
-e^i*pi = -1  = ijk
-
-e^i*pi/4 = sqrt(i)
-
-https://159729576968930170.weebly.com/unification.html
-// there this whol chain of operations.... 
-[q^2 * k * h / o * me^2
-
--1 [ q^2 * k & h / alpha m_e^2 c^3 r_p ]
-
--1[ q^2 k   / alpha * m_e^2 * G
-
--1[ 4 gamma^2 k  / alpha G )
-
--1[4/ alpha sigma]
-
--1[1] = -1
-
-
-E = ( i^2/r^2 ) X ( v/ B )
-E = q^2 / r^3 X (v^2 / m )
-F = [ (m/r^3) & r^3/t)]v
-
-
--E( o dot infinity ) = E
-
-```
-
-Probably this just requires a second quat to track the precession; I tried the skew minor axis variations, but that's just tilt and (of course)spin.
-although - this is probably just a base of this quat such that we are no longer based at the origin; but instead have a base rotation plus their
-rotation.  (mx+b).  where m is simply the corresponding axis coordinate.
-Probably also want another factor in time..  (mP(x)x + b )
-
-S = P*n + Q*m
-
-cos(w*N) + c
-
-Pv*n + Qv*m
-
 
 
 ## References
 
-
-[!Spinning T Handle](https://www.youtube.com/watch?v=1n-HMSCDYtM)
-[!Kerbal space program - spinning T handle Simulation](https://www.youtube.com/watch?v=WPRFerc4zqw)
-[!The Bizarre Behavior of Rotating Bodies, Explained](https://www.youtube.com/watch?v=1VPfZ_XzisU)  (reiterates on first... 
-
-
-[especially the 3d particle motion](https://en.wikipedia.org/wiki/Angular_velocity)
-
-[quantum spin modelling](http://bohr.physics.berkeley.edu/classes/221/1011/notes/spinrot.pdf) [by Robert Littlejohn](https://physics.berkeley.edu/people/faculty/robert-littlejohn)
-
 [Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
 matter so much what the shape of the projection is, but what the source data projects into.
 
+[(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf), Implemented quaternion pose tracking as adders in FPGA Robotics controller.
 
-[Quaternions and Exponentials - slides](http://www.cs.jhu.edu/~misha/Fall19/29.pdf)
-
-[(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf) // logrithm quaternion adoptations.
-
-[Practical Exponential Coordinates using Implicit Dual Quaternions (still not a log system)](http://www.neil.dantam.name/papers/dantam2018practical.pdf)
-
-[Quaternions  (long list of general formulas gathered)](https://maxime-tournier.github.io/notes/quaternions.html#interpolation)
-
-
-[Wikipedia Quaternion(of course)](https://en.wikipedia.org/wiki/Quaternion) (especially exponentiation)
-
-[Wikipedia Natural Logarithms](https://en.wikipedia.org/wiki/Natural_logarithm) (bottom of page, 'Plots of the natural logarithm function on the complex plane (principal branch)' complex number extension, graph of abs(ln(x+yi)) = high speed break of record hydraulic press channel. (30,000 RPM!)
-
-
-https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf  (dual quatnerions; recommend calculation of separate things)
-
-
-[Maths - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm) (only dual number exp, no ln)
-
-[Meta-Complex Numbers](http://new.math.uiuc.edu/math198/MA198-2014/rgandre2/seminar.pdf) (exp and ln; same old stuff, just a nice layout worth the credit)
-
-```
-// dual exp and ln
-a+be.. exp(a+be) = exp(a) + exp(a)* b * e
-
-log(a+be) = log(a) + ( b / a ) e
-
-```
-
-[Example Java Code](https://math.stackexchange.com/questions/939229/unit-quaternion-to-a-scalar-power)
-
+['Practical Exponential Coordinates using Implicit Dual Quaternions'](http://www.neil.dantam.name/papers/dantam2018practical.pdf) (still not a log system)
 
 [Pose consensus based on dual quaternion algebra with application to decentralized formation control of mobile manipulators (Log- dual-quaternion)](https://arxiv.org/pdf/1810.08871.pdf)
 
-[Dual quaternions (euler number)](https://reader.elsevier.com/reader/sd/pii/S0022247X12000327?token=C2A88F2FE30E44EC9A7E1439E715AFAE52DDAC7E05FCCB26B5353C6F6EFEE671588329FD76F673D41FAC945FD9B7CAF4)
+[kinatimatic control with dual quaternions (euler number)](https://reader.elsevier.com/reader/sd/pii/S0022247X12000327?token=C2A88F2FE30E44EC9A7E1439E715AFAE52DDAC7E05FCCB26B5353C6F6EFEE671588329FD76F673D41FAC945FD9B7CAF4)
 
+[Scaling a quaternion to a power through exp() and log(); Example Java Code](https://math.stackexchange.com/questions/939229/unit-quaternion-to-a-scalar-power)
+
+
+### Applications of Dual Numbers
+
+[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, since the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
+
+[Math - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm), only dual number exp, no ln.
+
+[Meta-Complex Numbers](http://new.math.uiuc.edu/math198/MA198-2014/rgandre2/seminar.pdf), exp and ln; same old stuff, just a nice layout worth the credit.
 
 ```
 ln dq = 
@@ -356,258 +282,35 @@ V is angle of rotation total
 thetaHat = v + de;
 ```
 
-// tangent topic, about parititioning space; delenay separation provides networks where
-// local clusters can be evaulated without searching the whole avaiable space; even if said 
-// search is 'fast enough'; in practice objects interact simultaneously with very few other objects
-// and those relations are __temporally coherant__.
-https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html
+### Other Applications, and common background
 
---
+[!Spinning T Handle(video)](https://www.youtube.com/watch?v=1n-HMSCDYtM)
+[!Kerbal space program - spinning T handle Simulation(same video)](https://www.youtube.com/watch?v=WPRFerc4zqw)
+[!The Bizarre Behavior of Rotating Bodies, Explained](https://www.youtube.com/watch?v=1VPfZ_XzisU)  (reiterates on the above)
 
-### Internal source notes
+[Wikpedia - Angular Velocity; especially the 3d particle motion](https://en.wikipedia.org/wiki/Angular_velocity)
 
-```
+[quantum spin modelling](http://bohr.physics.berkeley.edu/classes/221/1011/notes/spinrot.pdf)
 
-qAC = qAB (cr) qBC
 
-PQ = pq = -p . q + p x q;
-  (dot) (cross)
-  
+[Quaternions and Exponentials - slides](http://www.cs.jhu.edu/~misha/Fall19/29.pdf)
 
-QP = 
 
-xy=x×y-xTy
+[Quaternions  (long list of general formulas gathered)](https://maxime-tournier.github.io/notes/quaternions.html#interpolation)
 
-xy =cross(x,y) - xT * y;
 
-conjugate
+[Wikipedia Quaternion(of course)](https://en.wikipedia.org/wiki/Quaternion) (especially exponentiation)
 
-w = w;
-x = -x;
-y = -y;
-z = -z;
+[Wikipedia Natural Logarithms](https://en.wikipedia.org/wiki/Natural_logarithm) (bottom of page, 'Plots of the natural logarithm function on the complex plane (principal branch)' complex number extension, graph of abs(ln(x+yi)) = high speed break of record hydraulic press channel. (30,000 RPM!)
 
-q1 q2 =  w1 w2   - v1 dot v2, w1 v2 + w2 v1 + v1 cross v2 
 
-pq = ... well pq
-qp = (pq)*
 
-{\displaystyle {\begin{alignedat}{4}&a_{1}a_{2}&&+a_{1}b_{2}i&&+a_{1}c_{2}j&&+a_{1}d_{2}k\\{}+{}&b_{1}a_{2}i&&+b_{1}b_{2}i^{2}&&+b_{1}c_{2}ij&&+b_{1}d_{2}ik\\{}+{}&c_{1}a_{2}j&&+c_{1}b_{2}ji&&+c_{1}c_{2}j^{2}&&+c_{1}d_{2}jk\\{}+{}&d_{1}a_{2}k&&+d_{1}b_{2}ki&&+d_{1}c_{2}kj&&+d_{1}d_{2}k^{2}\end{alignedat}}}
 
+### Other Topics
 
-	The conjugate of a product of two quaternions is the product of the conjugates 
-	in the reverse order. That is, if p and q are quaternions, 
-	then (pq)* = q*p*, not p*q*.   qp = 
-	 
-	 q* = -1/2 ( q + iqi + jqj + kqk )
-	 
 
-The conjugation of a quaternion, in stark contrast to the complex setting, can be expressed with 
-multiplication and addition of quaternions:
-http://graphics.stanford.edu/courses/cs348a-17-winter/Papers/quaternion.pdf
-
-, Q¯0 = Q00 + Q01i and  Q¯1 = Q10 + Q11i,
-
-
-Q = Q¯0 + Q¯1j (18)
-= (Q00 + Q01i)+(Q10 + Q11i)j (19)
-= Q00 + Q01i + Q10j + Q11k
-
-
-
-log(theta,n)=theta n
-Thus, when defined, the derivative of the logarithm satisfies:
-
-dlog(theta,n)=dtheta n+ thetadn
-
-
-
-q* = -1/2 ( q + iqi + jqj + kqk )
-
-q*.x = -1/2 ( q.x + (-q.x + q.yji + q.zki) + (q.xji -q.y + q.zjk ) + ( q.xki + q.ykj - q.z ) )
-
-                 q.xji + q.yji   
-		 q.zki + q.xki
-		 q.yjk + q.zjk
-
-
-```
-
-
-
-## Spherical Trigonometry in Log Rotation Space
-
-[Wikipedia Spherical Trigonometry](https://en.wikipedia.org/wiki/Spherical_trigonometry)
-
-cos a= cos b cos c + sin b sin c cos A, \!
-cos b= cos c cos a + sin c sin a cos B,\!}\cos b= \cos c \cos a + \sin c \sin a \cos B, \!
-cos c= cos a cos b + sin a sin b cos C,\!}\cos c= \cos a \cos b + \sin a \sin b \cos C, \!
-
-
-## So quaternions To Matrix Vs Complex
-
-2.5 dimensional space?  What does a partial matrix look like?
-
-
-2x2 matrix is a rotation with a complex ... and is
-
-```
-a c
-b d
-```
-
-(sin/cos or exp(complex) )
-
-which takes 1 real, and project and unprojects its rotation.
-
-( real * i ) = - ( i * real )  = real * (-i)
-
-
-```
-real*real  real*i
-i*real     i*i
-
-real*Real  real*I
-i*Real     i*I
-
-
-ri + RI
-
-
-```
-
-
-with a minus on the b-c
-
-only 0 is 0; c and b are projections and anti-projection of d on a
-
-
-and a 3x3 matrix needs 3 inputs 
-
-```
-a d g
-b e h
-c f i
-
-```
-which when 'multiplied'  or crossed with itself
-
-
-```
-aa dd gg   Aa Dd Gg
-bb ee hh   Bb Ee Hh
-cc ff ii   Cc Ff Ii
-
-aA dD gG   AA DD GG
-bB eE hH   BB EE HH
-cC fF iI   CC FF II
-```
-
-
-
-
-where det 'aa' = 1     (a*a = 1)  (ln a + ln a = 1)
-
-
-which is 3 ln 
-
-```
-
-1 is xy 
-1 is yz
-1 is xz
-
-but only as projection much like 1 is xy
-
-1 is xx   1 is xy   1 is xz  1 is xz
-
-1 is yx   1 is yy   1 is yz  1 is yz
-
-
-1 is zx   1 is zx   1 is zz  1 is zz
-
-1 is zy   1 is zy   1 is zz  1 is zz
-
-
-                                      ... ww
-
-
-
-sin(t) cos(t)
-
-                   1 is 
-
-
-
-1 is xy
-1 is yz
-1 is xz
-
-1 is xw
-1 is yw
-1 is zw
-
-1 is wx
-1 is wy
-1 is wz
-
-1 is 
-   
-```  
-
-
-## Observations of the current system
-
-
-```
-
-qx qy qz is crossed and dotted with  vx vy vz in conventional way.
-
-// viewed as it translates a point on the z axis. (should be the same other than the specific path of any point)
-(with Y dominant)
-q.x ->  x/y rotation
-q.y ->  z/y rotation
-q.z ->  x/z rotation
-
-// qx = qZRoll of greate circle normal (around Z axis)
-// qy = qZPitch of great circle normal (around X axis) (formation of great circle)
-// qz = qZYaw of greater cirlce normal (around Y axis)
-
-
-q.x increase rotates counter clockwise(?)
-q.y increase increases the forward pitch applied... 
-
-
-(with X dominant)
-
-q.x -> z/x rotation   ( yaw - primary formation of circle)
-q.y -> x/y rotation   ( roll )
-q.z -> z/y rotation   ( pitch )
-
-
-(with z dominant)
-
-q.x -> z/y pitch
-q.y -> x/z yaw
-q.z -> x/y formation of circle -  roll - x/y
-
-
-```
-
-
-bool reach( A, C, length ) { 
-	if length == 0 return true 
-	else if length == 1 return isEdge( A, C ) 
-	else { 
-		for( B = 1 to n ) 
-			if( reach( A, B, length/2 ) && reach( B, C, length/2 ) ) 
-				return true; 
-	} 
-}
-
-
-
-## Kerbal space program - spinning T handle Simulation
-
-Noted - 6 rotation period.  (in most of these; though apparently it has to do with inertia distribution)
+ tangent topic, about parititioning space; delenay separation provides networks where
+ local clusters can be evaulated without searching the whole avaiable space; even if said 
+ search is 'fast enough'; in practice objects interact simultaneously with very few other objects
+ and those relations are __temporally coherant__.  [3D delaunay tessalation](https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html)
 
