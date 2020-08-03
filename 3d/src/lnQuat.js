@@ -46,6 +46,7 @@ let twisting = false;
 // lnQuat( basis );                        - basis object with {forward:,up:,right:} vectors.
 // lnQuat( {a:, b:, c:} );                 - angle-angle-angle set raw spins.
 // lnQuat( {x:, y:, z: }, {x:, y:, z: } )  - set as lookAt; forward, up vectors
+// lnQuat( {x:, y:, z: }, null )           - set as lookAt; forward, automatic 'up'
 function lnQuat( theta, d, a, b ){
 	this.w = 0; // unused, was angle of axis-angle, then was length of angles(nL)...
 	this.x = 0;  // these could become wrap counters....
@@ -121,6 +122,7 @@ function lnQuat( theta, d, a, b ){
 					}
 
 					if( "object" === typeof d ) {
+						if( !d ) d = { x : -theta.y, y:theta.x, z:-theta.z }; // create a 'up' for the passed forward.
 					        const tmpBasis = { forward: theta, up: d, right: {x:0,y:0,z:0} };
 						tmpBasis.right.x = tmpBasis.forward.y * d.z - tmpBasis.forward.z * d.y;
 						tmpBasis.right.y = tmpBasis.forward.z * d.y - tmpBasis.forward.x * d.z;
