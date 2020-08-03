@@ -1,20 +1,18 @@
 ﻿
-Hm. what do I want it to show...
-I want 
-  - to present this new system of observing curvatures/rotations.
-    - the new system is less calculation and has greater accuracy than existing systems.
-    - THere was a paper about using log-quaternions in long IK chains, and the superior solve time was shown.
-    - It has been applied for updating skinning on models, but had some corner cases that were not handled correctly; this provides a correction for that. (Again more FPS, less work)
+# Discovery of additive rotations
 
-  - How this can be applied in places like differential geometry; rather than the Frenet frame; and complex analysis.
+Rotations are quite linear, and can, in many cases, be simply added and subtracted; there are as
+many times however when a rotation is rotated around an axle external to the frame the rotation is
+in.
 
-  - I want to clearly show what path needs to be filled in next
-    - There is a curvature for the twist of a point at any given sphere... I just don't have specifically what that is.
+## Glossary
+
+axle : an axis of rotation
 
 
 ---
 
-##Complex Numbers and Their Natural Log
+## Complex Numbers and Their Natural Log
 
 Complex numbers of the form `A+Bi`, have a natural log, a generic log-complex will be called `lnC`.
 
@@ -37,7 +35,7 @@ And the resulting log-complex is
 ```
 
 The ln(i) is π/2.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
-which return `-π to π`, instead of '-2 to 2';  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
+which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
 the resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`.
 However, this second part doesn't collapse and become a real, but instead remains as a dual number with a place holder 'ε'.
 
@@ -63,7 +61,15 @@ was assumed as the conversion, all of this would work for a single dimensional v
   exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
 
-##Log Quaternion to Quaternion conversion
+Note, for programmatic purposes, unless you are actually adding relative radiuses also, the real part can
+be kept unscaled.
+
+```
+  exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
+```
+
+
+## Log Quaternion to Quaternion conversion
 
 Using the same method for `exp(lnC)`
 
@@ -100,6 +106,27 @@ If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-qu
 
 ```
 
-Which resembles the classic `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where x,y,z are a normalized axis of rotation.
+Which resembles the classic `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
+and `θ` is the angle of rotation around that axle.
+
+
+
+
+
+---
+
+working notes...
+
+Hm. what do I want it to show...
+I want 
+  - to present this new system of observing curvatures/rotations.
+    - the new system is less calculation and has greater accuracy than existing systems.
+    - THere was a paper about using log-quaternions in long IK chains, and the superior solve time was shown.
+    - It has been applied for updating skinning on models, but had some corner cases that were not handled correctly; this provides a correction for that. (Again more FPS, less work)
+
+  - How this can be applied in places like differential geometry; rather than the Frenet frame; and complex analysis.
+
+  - I want to clearly show what path needs to be filled in next
+    - There is a curvature for the twist of a point at any given sphere... I just don't have specifically what that is.
 
 
