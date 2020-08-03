@@ -5,9 +5,24 @@ Rotations are quite linear, and can, in many cases, be simply added and subtract
 many times however when a rotation is rotated around an axle external to the frame the rotation is
 in.
 
+For complex numbers, the `ln(i)` is `π/2`.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
+which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
+the resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`.
+However, this second part doesn't collapse and become a real, but instead remains as a dual number with a place holder `ε`, and, again, the 
+`π/2` is builtin to the current defintions of sin/cos/arcsin/arccos, so `ln(i)=ε` will be used.
+
+So the two forms are represented like this.
+
+```
+   ln(A+Bi)   = a+bε
+   exp(a+bε)  = A+Bi
+```
+
+
+
 ## Glossary
 
-axle : an axis of rotation
+axle - an axis of rotation.
 
 
 ---
@@ -18,54 +33,33 @@ Complex numbers of the form `A+Bi`, have a natural log, a generic log-complex wi
 
 To get a log-complex from a complex number...
 
-Normalize the real an imaginary components.
-```
-    normAB = sgn(A) * sqrt(A*A+B*B)
-```
-
-Get the angle of rotation
-```
-    angle = arcsin(B/normAB);   // -pi -> pi
-```
-
-And the resulting log-complex is
-```
-    ln(A+Bi) = ln(normAB) + angle*2 * ln(i)
+Normalize the real an imaginary components, and get the angle of rotation
 
 ```
-
-The ln(i) is π/2.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
-which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
-the resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`.
-However, this second part doesn't collapse and become a real, but instead remains as a dual number with a place holder 'ε'.
-
+    ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ln(i) * ε
 
 ```
-	ln(A+Bi) = ln(normAB) + angle*2 * ε
-
-```
-
-However, this doesn't become just another 'real' number, but still needs 
 
 Exponent of a log complex...
 
 ```
-  exp( A+Bε ) = exp(A) * cos( |B|/2 ) + exp(A) * B/sqrt(B*B) * sin( |B|/2 )i
+    exp( A+Bε ) = exp(A) * cos( |B|/2 ) + exp(A) * B/sqrt(B*B) * sin( |B|/2 )i
 ```
 
-Because B has a single dimension, this looks like it's equivalent to... so if this 
+Because `cos(x)=cos(-x)` the absolute value in the `cos()` expression is unneeded.
+Because `B/sqrt(B*B)` keeps the sign, the sign lost in the `sin(|B|/2)` is restored, so the abosolute value isn't needed there either.
+And, because B has a single dimension, this looks like it's equivalent to... so if this 
 was assumed as the conversion, all of this would work for a single dimensional vector as B.
 
-
 ```
-  exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
+    exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
 
 Note, for programmatic purposes, unless you are actually adding relative radiuses also, the real part can
 be kept unscaled.
 
 ```
-  exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
+    exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
 ```
 
 
@@ -91,14 +85,14 @@ But instead treating B as a vector...
 If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion.
 
 ```
-  exp( 0+(x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
                       ) * 1 * sin( |x|+|y|+|z| /2) i
 
 
-  exp( A+(x,y,z)ε ) = cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
@@ -106,10 +100,26 @@ If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-qu
 
 ```
 
-Which resembles the classic `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
+Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
 and `θ` is the angle of rotation around that axle.
 
 
+## Quaternion to Log Quatnerion
+
+```
+  ln( A+(x,y,z)i ) = ...
+```
+
+Compute the normal
+```
+   axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
+   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
+
+   angle = acos(A/normAB)*2
+
+   ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
+
+```
 
 
 
