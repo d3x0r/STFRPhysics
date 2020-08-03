@@ -185,21 +185,31 @@ Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the fram
 get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
 but result by curving space, and finding the relative extrernal point.
 
+## References
 
----
+[Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
+matter so much what the shape of the projection is, but what the source data projects into.
 
-working notes...
+[(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf), Implemented quaternion pose tracking as adders in FPGA Robotics controller.
 
-Hm. what do I want it to show...
-I want 
-  - to present this new system of observing curvatures/rotations.
-    - the new system is less calculation and has greater accuracy than existing systems.
-    - THere was a paper about using log-quaternions in long IK chains, and the superior solve time was shown.
-    - It has been applied for updating skinning on models, but had some corner cases that were not handled correctly; this provides a correction for that. (Again more FPS, less work)
+['Practical Exponential Coordinates using Implicit Dual Quaternions'](http://www.neil.dantam.name/papers/dantam2018practical.pdf) (still not a log system)
 
-  - How this can be applied in places like differential geometry; rather than the Frenet frame; and complex analysis.
+[Pose consensus based on dual quaternion algebra with application to decentralized formation control of mobile manipulators (Log- dual-quaternion)](https://arxiv.org/pdf/1810.08871.pdf)
 
-  - I want to clearly show what path needs to be filled in next
-    - There is a curvature for the twist of a point at any given sphere... I just don't have specifically what that is.
+[kinatimatic control with dual quaternions (euler number)](https://reader.elsevier.com/reader/sd/pii/S0022247X12000327?token=C2A88F2FE30E44EC9A7E1439E715AFAE52DDAC7E05FCCB26B5353C6F6EFEE671588329FD76F673D41FAC945FD9B7CAF4)
+
+[Scaling a quaternion to a power through exp() and log(); Example Java Code](https://math.stackexchange.com/questions/939229/unit-quaternion-to-a-scalar-power)
+
+
+### Applications of Dual Numbers
+
+[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, since the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
+
+[Math - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm), only dual number exp, no ln.
+
+[Meta-Complex Numbers](http://new.math.uiuc.edu/math198/MA198-2014/rgandre2/seminar.pdf), exp and ln; same old stuff, just a nice layout worth the credit.
+
+
+
 
 
