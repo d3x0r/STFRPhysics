@@ -1,10 +1,21 @@
-﻿
+
 # Discovery of additive rotations
 
-Rotations are quite linear, and can, in many cases, be simply added and subtracted, especially when comparing
-the orientations of two free objects in the same frame; there are as
-many times however when a rotation is spun around an axle external to the frame the rotation is
+<TBD>
+
+d3ck0r@gmail.com
+
+Independant Studies, Internet(mostly english)
+
+## Abstract
+
+... what do I say? You've missed the obvious, here's somethinig you missed?
+
+Rotations are quite linear, and can, in many cases, be simply added and subtracted; there are as
+many times however when a rotation is rotated around an axle external to the frame the rotation is
 in.
+
+## Introduction
 
 For complex numbers, the `ln(i)` is `π/2`.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
 which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
@@ -21,7 +32,7 @@ So the two forms are represented like this.
 
 
 
-## Glossary
+### Glossary
 
 - apply() - in math this is multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
     in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
