@@ -39,6 +39,13 @@ var twistDelta = 0;
 // -------------------------------------------------------------------------------
 
 let twisting = false;
+
+// lnQuat( 0    , {x:,y:,z:})              - angle, axis ; normalizes 
+// lnQuat( theta, b, c, d );               - angle, axisX, axisY, axisZ   ; linear normalize axis, scale by angle.
+// lnQuat( 0    , b, c, d );               - 0,     spinX, spinY, spinZ   ; set raw spins
+// lnQuat( basis );                        - basis object with {forward:,up:,right:} vectors.
+// lnQuat( {a:, b:, c:} );                 - angle-angle-angle set raw spins.
+// lnQuat( {x:, y:, z: }, {x:, y:, z: } )  - set as lookAt; forward, up vectors
 function lnQuat( theta, d, a, b ){
 	this.w = 0; // unused, was angle of axis-angle, then was length of angles(nL)...
 	this.x = 0;  // these could become wrap counters....
@@ -108,90 +115,102 @@ function lnQuat( theta, d, a, b ){
 				}
 				else if( "x" in theta )
 				{
+					let setNormal = normalizeNormalTangent;
+					if( "boolean" === typeof d ) {
+						setNormal = d;
+					}
+
+					if( "object" === typeof d ) {
+					        const tmpBasis = { forward: theta, up: d, right: {x:0,y:0,z:0} };
+						tmpBasis.right.x = tmpBasis.forward.y * d.z - tmpBasis.forward.z * d.y;
+						tmpBasis.right.y = tmpBasis.forward.z * d.y - tmpBasis.forward.x * d.z;
+						tmpBasis.right.z = tmpBasis.forward.x * d.x - tmpBasis.forward.y * d.x;
+						this.fromBasis( tmpBasis );
+					} else {
 // x/y/z normal (no spin, based at 'north' (0,1,0) )  {x:,y:,z:}
-					// normal conversion is linear.
-					const l2 = (abs(theta.x)/*+abs(theta.y)*/+abs(theta.z));
-					if( l2 ) {
-						const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
-						//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
-
-						const r = 1/(l2);
-						const tx = theta.x * r; // linear normal
-						const ty = theta.y /l3; // square normal
-						const tz = theta.z * r; // linear normal
-						const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
-						this.x = tz*cosTheta;
-						this.y = 0;
-						this.z = -tx*cosTheta;
-						this.nR = Math.sqrt(this.x*this.x+this.z*this.z);
-						this.nx = this.x / this.nR;
-						this.ny = 0;
-						this.nz = this.z / this.nR;
-						this.dirty = true;
-
-						if(normalizeNormalTangent) {
-							const fN = 1/Math.sqrt( tz*tz+tx*tx );
-
-							const txn = tx*fN;
-							const tzn = tz*fN;
-
-							const s = Math.sin( cosTheta ); // double angle substituted
-							const c = 1- Math.cos( cosTheta ); // double angle substituted
-
-							// determinant coordinates
-							const angle = acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
-
-							// compute the axis
-							const yz = s * this.nx;
-							const xz = ( 2 - c * (this.nx*this.nx + this.nz*this.nz)) * tzn;
-							const xy = s * this.nx * tzn  
-							         + s * this.nz * (1-txn);
-
-							const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
-							this.nx = yz *tmp;
-							this.ny = xz *tmp;
-							this.nz = xy *tmp;
-
-							const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
-							this.x = this.nx * lNorm;
-							this.y = this.ny * lNorm;
-							this.z = this.nz * lNorm;
-
-							// the remining of this is update()
-							this.nL = angle/2;
-							this.nR = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-							this.s = Math.sin( this.nL);
-							this.qw = Math.cos( this.nL);
-							this.dirty = false;
-							/*
-							// the above is this;  getBasis(up), compute new forward and cross right
-							// and restore from basis.
-							const trst = this.getBasis();
-							const fN = 1/Math.sqrt( tz*tz+tx*tx );
-	                                                
-							trst.forward.x = tz*fN;
-							trst.forward.y = 0;
-							trst.forward.z = -tx*fN;
-							trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-							trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-							trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-	                                                
-							this.fromBasis( trst );
-							this.update();						
-							*/
-						}
-
-						if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
-							if( twistDelta ) {
-								this.update();
-								twisting = true;
-								yaw( this, twistDelta /*+ angle*/ );
-								twisting = false;
+						// normal conversion is linear.
+						const l2 = (abs(theta.x)/*+abs(theta.y)*/+abs(theta.z));
+						if( l2 ) {
+							const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
+							//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
+					        
+							const r = 1/(l2);
+							const tx = theta.x * r; // linear normal
+							const ty = theta.y /l3; // square normal
+							const tz = theta.z * r; // linear normal
+							const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
+							this.x = tz*cosTheta;
+							this.y = 0;
+							this.z = -tx*cosTheta;
+							this.nR = Math.sqrt(this.x*this.x+this.z*this.z);
+							this.nx = this.x / this.nR;
+							this.ny = 0;
+							this.nz = this.z / this.nR;
+							this.dirty = true;
+					        
+							if(setNormal) {
+								const fN = 1/Math.sqrt( tz*tz+tx*tx );
+					        
+								const txn = tx*fN;
+								const tzn = tz*fN;
+					        
+								const s = Math.sin( cosTheta ); // double angle substituted
+								const c = 1- Math.cos( cosTheta ); // double angle substituted
+					        
+								// determinant coordinates
+								const angle = acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
+					        
+								// compute the axis
+								const yz = s * this.nx;
+								const xz = ( 2 - c * (this.nx*this.nx + this.nz*this.nz)) * tzn;
+								const xy = s * this.nx * tzn  
+								         + s * this.nz * (1-txn);
+					        
+								const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+								this.nx = yz *tmp;
+								this.ny = xz *tmp;
+								this.nz = xy *tmp;
+					        
+								const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
+								this.x = this.nx * lNorm;
+								this.y = this.ny * lNorm;
+								this.z = this.nz * lNorm;
+					        
+								// the remining of this is update()
+								this.nL = angle/2;
+								this.nR = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
+								this.s = Math.sin( this.nL);
+								this.qw = Math.cos( this.nL);
+								this.dirty = false;
+								/*
+								// the above is this;  getBasis(up), compute new forward and cross right
+								// and restore from basis.
+								const trst = this.getBasis();
+								const fN = 1/Math.sqrt( tz*tz+tx*tx );
+	                                                        
+								trst.forward.x = tz*fN;
+								trst.forward.y = 0;
+								trst.forward.z = -tx*fN;
+								trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
+								trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
+								trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
+	                                                        
+								this.fromBasis( trst );
+								this.update();						
+								*/
+							}
+					        
+							if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
+								if( twistDelta ) {
+									this.update();
+									twisting = true;
+									yaw( this, twistDelta /*+ angle*/ );
+									twisting = false;
+								}
 							}
 						}
-						return;
 					}
-					else return; // 0 rotation.
+					return;
 				}
 			}
 
@@ -880,12 +899,10 @@ function pitch( C, th ) {
 
 }
 
-function roll( C, th ) {
+function roll( q, th ) {
 	// input angle...
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
-
-	const q = C;
 
 	const s  = Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
 	const c = 1- Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
@@ -898,15 +915,13 @@ function roll( C, th ) {
 	const ay = ( c*qy*qz   - s*qx );
 	const az = 1 - c*( qx*qx + qy*qy );
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
+	return finishRodrigues( q, 0, ac, as, ax, ay, az, th );
 }
 
-function yaw( C, th ) {
+function yaw( q, th ) {
 	// input angle...
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
-
-	const q = C;
 
 	const s = Math.sin( 2 * q.nL ); // double angle sin
 	const c = 1- Math.cos( 2 * q.nL ); // double angle cos
@@ -915,7 +930,7 @@ function yaw( C, th ) {
 	const ay = 1 - c*( q.nz*q.nz + q.nx*q.nx );
 	const az = ( s*q.nx      + c*q.ny*q.nz );
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
+	return finishRodrigues( q, 0, ac, as, ax, ay, az, th );
 }
 
 // rotate the passed vector 'from' this space
@@ -1040,31 +1055,27 @@ Quat.prototype.mulLong = function( q ) {
 
 */
 
+lnQUat.quatToLogQuat = quatToLogQuat;
 
+// Accept any generalized quaternion {w,x,y,z}
 function quatToLogQuat( q ) {
-
 	const w = q.w;
-	const r = 1;//Math.sqrt(x*x+y*y+z*z);
-	const ang = acos(w)*2;
-	const s = Math.sin(ang/2);
-	if( !s ) {
-		const l = Math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z );
-		if( l )
-			return new lnQuat( 0, q.x/l, yt/l, zt/l ).update();	
-		else
-			return new lnQuat( 0, 0,1,0 ).update();	
-	}
-	const x = q.x/s;
-	const y = q.y/s;
-	const z = q.z/s;
+	const r = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+	if( ASSERT )
 	{
-		const l = Math.sqrt(x*x + y*y + z*z );
-		if( Math.abs( 1.0 - l ) > 0.001 ) console.log( "Input quat was denormalized", l );
+		// just a warning.
+		if( Math.abs( 1.0 - r ) > 0.001 ) console.log( "Input quat was denormalized", l );
 	}
-
-	const xt = x;
-	const yt = y;
-	const zt = z;
-	return new lnQuat( ang, xt, yt, zt ).update();
+	const bal = Math.sqrt( w*w + r*r );
+	
+	const ang = acos(w/bal)*2;
+	const s = bal*Math.sin(ang/2);
+	if( !s ) {
+		if( r )
+			return new lnQuat( 0, q.x/r, yt/r, zt/r ).update();	
+		else
+			return new lnQuat( 0, 0, 1, 0 ).update();	
+	}
+	return new lnQuat( ang, q.x/s, q.y/s, q.z/s ).update();
 }
 
