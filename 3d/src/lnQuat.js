@@ -1057,7 +1057,7 @@ Quat.prototype.mulLong = function( q ) {
 
 */
 
-lnQUat.quatToLogQuat = quatToLogQuat;
+lnQuat.quatToLogQuat = quatToLogQuat;
 
 // Accept any generalized quaternion {w,x,y,z}
 function quatToLogQuat( q ) {
