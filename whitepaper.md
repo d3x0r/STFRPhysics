@@ -9,7 +9,6 @@ Independant Studies, Internet(mostly english)
 
 ## Abstract
 
-... what do I say? You've missed the obvious, here's somethinig you missed?
 
 Rotations are quite linear, and can, in many cases, be simply added and subtracted; there are as
 many times however when a rotation is rotated around an axle external to the frame the rotation is
@@ -29,8 +28,6 @@ So the two forms are represented like this.
    ln(A+Bi)   = a+bε
    exp(a+bε)  = A+Bi
 ```
-
-
 
 ### Glossary
 
