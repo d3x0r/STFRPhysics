@@ -185,33 +185,14 @@ Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the fram
 get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
 but result by curving space, and finding the relative extrernal point.
 
-## Comparison to Quaternions
+## Conversion from Vector Complex to Quaternion
 
-The exponentiation of a log quaternion carries the sign of the `(x,y,z)` angles
-
-```
-   nR = sqrt(x*x+y*y+z*z);// normal, rectangular
-   nL = |x|+|y|+|z|;   
-   angle = nL/2;
-   axis  = { x: ( x / nR * sin( angle ), y: y / nR * sin( angle ), z: z / nR * sin( nL/2 ) ) }
-```
-
-The sign of the `(x,y,z)` components is applied externally to the sign; I expect this is where the permutation of 'i','j','k' comes from as a multiplier of that sign with 'i' to factor i into 3 individual components.
+This should be specified as an implied rule.  Reasoning and proof of the following is not provided.
 
 ```
-   i = x/|x| * i
-   j = y/|y| * i
-   k = z/|z| * i
-```
-and
-```
-   (x,y,z)i =  x i + y j + z k
+   (x,y,z)i = xi + yj + zk;
 ```
 
-or expanded...
-```
-   (x,y,z)i =  x * x/|x|*i + y * y/|y| i + z * z/|z| i
-```
 
    
 ## References
