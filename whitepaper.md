@@ -193,8 +193,46 @@ This should be specified as an implied rule.  Reasoning and proof of the followi
    (x,y,z)i = xi + yj + zk;
 ```
 
+## Generalized Parameterization of Log Complex
 
-   
+```
+ (ln(A1), ln(A2)) + (x,y,z)i )
+```
+
+which, on exponentiation can be
+
+```
+  theta = |x|+|y|+|z|;
+  sqNorm = sqrt( x*x + y*y + z*z );
+
+   exp(ln(A1))*cos(theta/2) , exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm ) )
+```
+
+which gives more an an elliptical projection from log-complex space given 5 dimensions...
+
+Recovering the seprate `A1`, and `A2` values from a complex number is improbable... probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied)
+
+```
+ ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
+        describes 3 dimensional axis, rotation around that axis, 
+        offset of the rotation from 1 around that axis... 
+        (which looks like 5 degrees of freedom from 4 numbers)
+
+ ( R1, R2, X, Y, Z ) -> (x,y,z,angle, offset, alpha_blend of rotation/offset?) 
+
+ // These can be scaled the same way the x/y/z are, and find another degree of freedom in their total
+ //   
+ len = |R1|+|R2| = R total
+ R1Rel = R1/sqrt(R1+R2)
+ R2Rel = R2/sqrt(R1+R2) 
+ R1Lin = R1/len
+ R2Lin = R2/len 
+
+   ( exp(R1)*cos(theta/2) , exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm ) )
+
+
+```
+
 ## References
 
 [Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
