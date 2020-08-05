@@ -248,6 +248,11 @@ add vectors instead of multiply.
 
 ## References
 
+
+[Youtube Video- Visualizing quaternions (4d numbers) with stereographic projection])https://www.youtube.com/watch?v=d4EgbgTm0Bg)
+
+[Youtube Video - Imaginary Numbers Are Real; Part 1: Introduction](https://www.youtube.com/watch?v=T647CGsuOVU)
+
 [Youtube Video - quaternion expoentiation mapping](https://www.youtube.com/watch?v=UHzAY5Q7ji0), This is actually sort of the inverse way of looking at and understanding log-quaternions. It doesn't
 matter so much what the shape of the projection is, but what the source data projects into.
 
