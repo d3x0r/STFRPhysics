@@ -1,5 +1,5 @@
 
-# Discovery of Additive Rotations
+# Discovery(Development) of Additive Rotations
 
 <TBD>
 
