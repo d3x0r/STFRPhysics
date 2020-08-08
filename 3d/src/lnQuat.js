@@ -1080,4 +1080,5 @@ function quatToLogQuat( q ) {
 	}
 	return new lnQuat( ang, q.x/s, q.y/s, q.z/s ).update();
 }
-
+                      
+//module.exports = exports = lnQuat
