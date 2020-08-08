@@ -36,15 +36,11 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t5 = t4.add2( lnQ5 );
 	
 	const A1 = lnQ1.apply( arm );
-console.log( arm );
 	const A2 = t2.apply( arm );
-console.log( arm );
 	const A3 = t3.apply( arm );
-console.log( arm );
 	const A4 = t4.apply( arm );
-console.log( arm );
 	const A5 = t5.apply( arm );
-console.log( arm );
+
 	const A = [A1,A2,A3,A4,A5];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
