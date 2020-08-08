@@ -1,0 +1,233 @@
+
+<html>
+<head></head>
+<body>
+   <p>
+	<div style="position:relative">
+    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
+	<div style="position:absolute;top:0">
+	<p>Axis 1 X<input type="range" id="X1" value="50"> <span id="X1val"></span> 
+	Axis 1 Y<input type="range" id="Y1" value="50"> <span id="Y1val"></span> 
+	Axis 1 Z<input type="range" id="Z1" value="50"> <span id="Z1val"></span>
+	Angle 1<input type="range" id="A1" value="50"> <span id="A1val"></span> 
+	 </p>
+	<p>Axis 2 X<input type="range" id="X2" value="50"> <span id="X2val"></span> 
+	Axis 2 Y<input type="range" id="Y2" value="50"> <span id="Y2val"></span> 
+	Axis 2 Z<input type="range" id="Z2" value="50"> <span id="Z2val"></span>
+	Angle 2<input type="range" id="A2" value="50"> <span id="A2val"></span> 
+	 </p>
+
+
+	<p>Quat1 = (w:<span id="QW1val"></span>, x:<span id="QX1val"></span>, y:<span id="QY1val"></span>, z:<span id="QZ1val"></span>)
+	    Quat2 = (w:<span id="QW2val"></span>, x:<span id="QX2val"></span>, y:<span id="QY2val"></span>, z:<span id="QZ2val"></span>)
+
+	<p>Q1 ⨯ Q2 (w:<span id="Q1Q2W"></span>, x:<span id="Q1Q2X"></span>, y:<span id="Q1Q2Y"></span>, z:<span id="Q1Q2Z"></span>)
+	<p>ln(Q1 ⨯ Q2) (w:<span id="Q1Q2Wln"></span>, x:<span id="Q1Q2Xln"></span>, y:<span id="Q1Q2Yln"></span>, z:<span id="Q1Q2Zln"></span>)
+
+	<p>Ln(Q1) = (w:<span id="lnQW1val">0</span>, x:<span id="lnQX1val"></span>, y:<span id="lnQY1val"></span>, z:<span id="lnQZ1val"></span>)
+	  Ln(Q2) = (w:<span id="lnQW2val">0</span>, x:<span id="lnQX2val"></span>, y:<span id="lnQY2val"></span>, z:<span id="lnQZ2val"></span>)
+
+	<p>lnQ1 ⨯ lnQ2 (w:<span id="lnQ1Q2W"></span>, x:<span id="lnQ1Q2X"></span>, y:<span id="lnQ1Q2Y"></span>, z:<span id="lnQ1Q2Z"></span>)
+	<p>exp(lnQ1 ⨯ lnQ2) (w:<span id="lnQ1Q2Wexp"></span>, x:<span id="lnQ1Q2Xexp"></span>, y:<span id="lnQ1Q2Yexp"></span>, z:<span id="lnQ1Q2Zexp"></span>)
+
+	</div>
+	</div>
+
+
+</body>
+<script src="./Quat.js"></script>
+<script src="./lnQuat.js"></script>
+<script>
+	let tmp = null;
+
+	const inputs = { A1: { x:document.getElementById( "X1" )
+	       , y:document.getElementById( "Y1" )
+	       , z:document.getElementById( "Z1" )
+	       , a:document.getElementById( "A1" )
+	       , xo:document.getElementById( "X1val" )
+	       , yo:document.getElementById( "Y1val" )
+	       , zo:document.getElementById( "Z1val" )
+	       , ao:document.getElementById( "A1val" )
+		}
+	       , A2: { x:document.getElementById( "X2" )
+	       , y:document.getElementById( "Y2" )
+	       , z:document.getElementById( "Z2" )
+	       , a:document.getElementById( "A2" )
+	       , xo:document.getElementById( "X2val" )
+	       , yo:document.getElementById( "Y2val" )
+	       , zo:document.getElementById( "Z2val" )
+	       , ao:document.getElementById( "A2val" )
+		}
+		,Q1 : {
+		       x:document.getElementById( "QX1val" )
+		       , y:document.getElementById( "QY1val" )
+		       , z:document.getElementById( "QZ1val" )
+		       , w:document.getElementById( "QW1val" )
+		}
+		,Q2 : {
+		       x:document.getElementById( "QX2val" )
+		       , y:document.getElementById( "QY2val" )
+		       , z:document.getElementById( "QZ2val" )
+		       , w:document.getElementById( "QW2val" )
+		}
+		,Q1Q2 : {
+		       x:document.getElementById( "Q1Q2X" )
+		       , y:document.getElementById( "Q1Q2Y" )
+		       , z:document.getElementById( "Q1Q2Z" )
+		       , w:document.getElementById( "Q1Q2W" )
+		}
+		,Q1Q2ln : {
+		       x:document.getElementById( "Q1Q2Xln" )
+		       , y:document.getElementById( "Q1Q2Yln" )
+		       , z:document.getElementById( "Q1Q2Zln" )
+		       , w:document.getElementById( "Q1Q2Wln" )
+		}
+
+		,lnQ1 : {
+		       x:document.getElementById( "lnQX1val" )
+		       , y:document.getElementById( "lnQY1val" )
+		       , z:document.getElementById( "lnQZ1val" )
+		       , w:document.getElementById( "lnQW1val" )
+		}
+		,lnQ2 : {
+		       x:document.getElementById( "lnQX2val" )
+		       , y:document.getElementById( "lnQY2val" )
+		       , z:document.getElementById( "lnQZ2val" )
+		       , w:document.getElementById( "lnQW2val" )
+		}
+		,lnQ1Q2 : {
+		       x:document.getElementById( "lnQ1Q2X" )
+		       , y:document.getElementById( "lnQ1Q2Y" )
+		       , z:document.getElementById( "lnQ1Q2Z" )
+		       , w:document.getElementById( "lnQ1Q2W" )
+		}
+		,lnQ1Q2exp : {
+		       x:document.getElementById( "lnQ1Q2Xexp" )
+		       , y:document.getElementById( "lnQ1Q2Yexp" )
+		       , z:document.getElementById( "lnQ1Q2Zexp" )
+		       , w:document.getElementById( "lnQ1Q2Wexp" )
+		}
+	};
+	for( var f in inputs ) {
+		for( var g in inputs[f] ) {
+			inputs[f][g].oninput = updateCalc;
+		}
+	}
+
+
+function updateCalc() {
+	let vals = { A1:{ x: Number(inputs.A1.x.value)
+		, y: Number(inputs.A1.y.value )
+		, z: Number(inputs.A1.z.value )
+		, a: Number(inputs.A1.a.value )
+		},
+		A2 : { x:Number(inputs.A2.x.value)
+		, y: Number(inputs.A2.y.value )
+		, z: Number(inputs.A2.z.value )
+		, a: Number(inputs.A2.a.value )
+		}
+		}
+
+	vals.A1.x = (vals.A1.x/50)-1;
+	vals.A1.y = (vals.A1.y/50)-1;
+	vals.A1.z = (vals.A1.z/50)-1;
+	vals.A1.a = ((vals.A1.a/50)-1) * 2 * Math.PI;
+	         
+	vals.A2.x = (vals.A2.x/50)-1;
+	vals.A2.y = (vals.A2.y/50)-1;
+	vals.A2.z = (vals.A2.z/50)-1;
+	vals.A2.a = ((vals.A2.a/50)-1) * 2 * Math.PI;
+
+	inputs.A1.xo.textContent = vals.A1.x.toFixed(4);
+	inputs.A1.yo.textContent = vals.A1.y.toFixed(4);
+	inputs.A1.zo.textContent = vals.A1.z.toFixed(4);
+	inputs.A1.ao.textContent = vals.A1.a.toFixed(4);
+
+	inputs.A2.xo.textContent = vals.A2.x.toFixed(4);
+	inputs.A2.yo.textContent = vals.A2.y.toFixed(4);
+	inputs.A2.zo.textContent = vals.A2.z.toFixed(4);
+	inputs.A2.ao.textContent = vals.A2.a.toFixed(4);
+
+	const Q1 = new Quat( vals.A1.a, { x:vals.A1.x,y:vals.A1.y,z:vals.A1.z} );
+	const Q2 = new Quat( vals.A2.a, { x:vals.A2.x,y:vals.A2.y,z:vals.A2.z} );
+	const lnQ1 = new lnQuat( vals.A1.a, { x:vals.A1.x,y:vals.A1.y,z:vals.A1.z} );
+	const lnQ2 = new lnQuat( vals.A2.a, { x:vals.A2.x,y:vals.A2.y,z:vals.A2.z} );
+
+	//console.log( "Q1:", Q1.log(), lnQ1 );
+	//console.log( "Q2:", Q2.log(), lnQ2 );
+
+	const Q1l = Q1.log();
+	const Q2l = Q2.log();
+	const lnQ1e = lnQ1.exp();
+	const lnQ2e = lnQ2.exp();
+	if( Math.abs( Q1l.x - lnQ1.x ) > 0.001 || Math.abs( Q1l.y - lnQ1.y ) > 0.001 || Math.abs( Q1l.z - lnQ1.z ) > 0.001 ){
+		console.log( "Q1l:", Q1l, lnQ1 );
+		console.log( "Q1e:", Q1, lnQ1e );
+	}
+	if( Math.abs( Q2l.x - lnQ2.x ) > 0.001 || Math.abs( Q2l.y - lnQ2.y ) > 0.001 || Math.abs( Q2l.z - lnQ2.z ) > 0.001 ){
+		console.log( "Q2l:", Q2l, lnQ2 );
+		console.log( "Q2e:", Q2, lnQ2e );
+	}
+//	console.log( "Q1:", Q1, lnQ1.exp() );
+//	console.log( "Q2:", Q2, lnQ2.exp() );
+
+	inputs.Q1.w.textContent = Q1.w.toFixed(4);
+	inputs.Q1.x.textContent = Q1.x.toFixed(4);
+	inputs.Q1.y.textContent = Q1.y.toFixed(4);
+	inputs.Q1.z.textContent = Q1.z.toFixed(4);
+
+	inputs.Q2.w.textContent = Q2.w.toFixed(4);
+	inputs.Q2.x.textContent = Q2.x.toFixed(4);
+	inputs.Q2.y.textContent = Q2.y.toFixed(4);
+	inputs.Q2.z.textContent = Q2.z.toFixed(4);
+
+	inputs.lnQ1.w.textContent = lnQ1.w.toFixed(4);
+	inputs.lnQ1.x.textContent = lnQ1.x.toFixed(4);
+	inputs.lnQ1.y.textContent = lnQ1.y.toFixed(4);
+	inputs.lnQ1.z.textContent = lnQ1.z.toFixed(4);
+
+	inputs.lnQ2.w.textContent = lnQ2.w.toFixed(4);
+	inputs.lnQ2.x.textContent = lnQ2.x.toFixed(4);
+	inputs.lnQ2.y.textContent = lnQ2.y.toFixed(4);
+	inputs.lnQ2.z.textContent = lnQ2.z.toFixed(4);
+
+	const Q1Q2 = Q1.mul(Q2);
+	//const lnQ1Q2 = lnQ1.add2( lnQ2 );
+	const lnQ1Q2 = lnQ2.freeSpin(  vals.A1.a,  vals.A1 );
+
+
+
+	inputs.Q1Q2.w.textContent = Q1Q2.w.toFixed(4);
+	inputs.Q1Q2.x.textContent = Q1Q2.x.toFixed(4);
+	inputs.Q1Q2.y.textContent = Q1Q2.y.toFixed(4);
+	inputs.Q1Q2.z.textContent = Q1Q2.z.toFixed(4);
+
+	inputs.lnQ1Q2.w.textContent = lnQ1Q2.w.toFixed(4);
+	inputs.lnQ1Q2.x.textContent = lnQ1Q2.x.toFixed(4);
+	inputs.lnQ1Q2.y.textContent = lnQ1Q2.y.toFixed(4);
+	inputs.lnQ1Q2.z.textContent = lnQ1Q2.z.toFixed(4);
+
+	const lnQ1Q2z = Q1Q2.log();
+
+	inputs.Q1Q2ln.w.textContent = lnQ1Q2z.w.toFixed(4);
+	inputs.Q1Q2ln.x.textContent = lnQ1Q2z.x.toFixed(4);
+	inputs.Q1Q2ln.y.textContent = lnQ1Q2z.y.toFixed(4);
+	inputs.Q1Q2ln.z.textContent = lnQ1Q2z.z.toFixed(4);
+
+	const lnQ1Q2exp = lnQ1Q2.exp();
+
+	inputs.lnQ1Q2exp.w.textContent = lnQ1Q2exp.w.toFixed(4);
+	inputs.lnQ1Q2exp.x.textContent = lnQ1Q2exp.x.toFixed(4);
+	inputs.lnQ1Q2exp.y.textContent = lnQ1Q2exp.y.toFixed(4);
+	inputs.lnQ1Q2exp.z.textContent = lnQ1Q2exp.z.toFixed(4);
+
+}
+
+
+</script>
+
+
+</html>
+
+
+
