@@ -8,13 +8,13 @@
 	<div style="position:absolute;top:0">
 	<p>Axis 1 X<input type="range" id="X1" value="50"> <span id="X1val"></span> 
 	Axis 1 Y<input type="range" id="Y1" value="50"> <span id="Y1val"></span> 
-	Axis 1 Z<input type="range" id="Z1" value="50"> <span id="Z1val"></span>
-	Angle 1<input type="range" id="A1" value="50"> <span id="A1val"></span> 
+	Axis 1 Z<input type="range" id="Z1" value="53"> <span id="Z1val"></span>
+	Angle 1<input type="range" id="A1" value="60"> <span id="A1val"></span> 
 	 </p>
 	<p>Axis 2 X<input type="range" id="X2" value="50"> <span id="X2val"></span> 
-	Axis 2 Y<input type="range" id="Y2" value="50"> <span id="Y2val"></span> 
-	Axis 2 Z<input type="range" id="Z2" value="50"> <span id="Z2val"></span>
-	Angle 2<input type="range" id="A2" value="50"> <span id="A2val"></span> 
+	Axis 2 Y<input type="range" id="Y2" value="48"> <span id="Y2val"></span> 
+	Axis 2 Z<input type="range" id="Z2" value="55"> <span id="Z2val"></span>
+	Angle 2<input type="range" id="A2" value="55"> <span id="A2val"></span> 
 	 </p>
 
 
@@ -113,7 +113,7 @@
 			inputs[f][g].oninput = updateCalc;
 		}
 	}
-
+	updateCalc();
 
 function updateCalc() {
 	let vals = { A1:{ x: Number(inputs.A1.x.value)
@@ -194,6 +194,8 @@ function updateCalc() {
 	const Q1Q2 = Q1.mul(Q2);
 	//const lnQ1Q2 = lnQ1.add2( lnQ2 );
 	const lnQ1Q2 = lnQ2.freeSpin(  vals.A1.a,  vals.A1 );
+//definatly not a cross product... 
+//	const lnQ1Q2 = new lnQuat( 0, lnQ1.y*lnQ2.z-lnQ1.z*lnQ2.y, lnQ1.z*lnQ2.x-lnQ1.x*lnQ2.z, lnQ1.x*lnQ2.y-lnQ1.y*lnQ2.x );
 
 
 
