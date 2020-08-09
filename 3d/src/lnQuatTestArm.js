@@ -41,12 +41,14 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const A4 = t4.apply( arm );
 	const A5 = t5.apply( arm );
 
+	const R = [lnQ1,t2,t3,t4,t5];
 	const A = [A1,A2,A3,A4,A5];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
 		A[n].x += prior.x;
 		A[n].y += prior.y;
 		A[n].z += prior.z;
+		doDrawBasis( R[n], prior );
 		normalVertices.push( new THREE.Vector3( (prior.x)*spaceScale ,(prior.y)*spaceScale    , (prior.z)*spaceScale ))
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 		switch( n ) {
@@ -172,19 +174,19 @@ return;
 
 	function doDrawBasis(lnQ2,t,f,n ) {
 		const basis = lnQ2.update().getBasis( );
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.right.x*normal_del  ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.right.y*normal_del  , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.right.z*normal_del ))
-		                                                                                                                                                                                  
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.up.x*normal_del     ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.up.y*normal_del     , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.up.z*normal_del ))
-		                                                                                                                                                                                  
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale                             ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale                             , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale + basis.forward.x*normal_del,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale + basis.forward.y*normal_del, (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale + basis.forward.z*normal_del ))
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale                             ,(t.y)*spaceScale                             , (t.z)*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale + basis.right.x*normal_del  ,(t.y)*spaceScale + basis.right.y*normal_del  , (t.z)*spaceScale + basis.right.z*normal_del ))
+		                                                                                                
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale                             ,(t.y)*spaceScale                             , (t.z)*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale + basis.up.x*normal_del     ,(t.y)*spaceScale + basis.up.y*normal_del     , (t.z)*spaceScale + basis.up.z*normal_del ))
+		                                                                                                
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale                             ,(t.y)*spaceScale                             , (t.z)*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (t.x)*spaceScale + basis.forward.x*normal_del,(t.y)*spaceScale + basis.forward.y*normal_del, (t.z)*spaceScale + basis.forward.z*normal_del ))
 
 
 		        {
 				//const s = t / (Math.PI*4);
-				const s = (fibre ) / (Math.PI*2);
+				const s = 1;
 				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
@@ -192,18 +194,6 @@ return;
 				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 			}
-
-		if( prior ) {
-			const s = (fibre ) / (Math.PI*2);
-			normalVertices.push( new THREE.Vector3( (f(prior,n?prior.nx:prior.x))*spaceScale ,(f(prior,n?prior.ny:prior.y))*spaceScale    , (f(prior,n?prior.nz:prior.z))*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale   ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale      , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale  ))
-			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
-			prior.nL = lnQ2.nL;
-			prior.nx = lnQ2.nx;
-			prior.ny = lnQ2.ny;
-			prior.nz = lnQ2.nz;
-		}else prior = { nL:lnQ2.nL, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz }
 
 	}
 
