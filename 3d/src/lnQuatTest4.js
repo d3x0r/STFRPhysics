@@ -58,8 +58,8 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	}
 
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
-		const range = (Math.floor(E) + 2 ) * Math.PI;
-		const minRange = (Math.floor(E) +1 ) * Math.PI;
+		const range = (  2 ) * Math.PI;
+		const minRange = (0 ) * Math.PI;
 		drawRange( 0,0,0, range, 20, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
 	}
 	return;

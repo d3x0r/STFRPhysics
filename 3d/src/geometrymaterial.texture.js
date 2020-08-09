@@ -251,7 +251,7 @@ void IntersectLineWithPlane( vec3 Slope, vec3 Origin,  // line m, b
 
     void main() {
         vec2 vUv;
-
+	return;
         #include <clipping_planes_fragment>
 
     	vec4 diffuseColor = vec4( diffuse, opacity );
