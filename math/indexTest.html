@@ -194,6 +194,30 @@ function updateCalc() {
 	const Q1Q2 = Q1.mul(Q2);
 	//const lnQ1Q2 = lnQ1.add2( lnQ2 );
 	const lnQ1Q2 = lnQ2.freeSpin(  vals.A1.a,  vals.A1 );
+/*
+	const b = lnQ2;
+	const a = lnQ1;
+	const c1 = Math.cos( a.nL/2 )
+	const c2 = Math.cos( b.nL/2 )
+	const s1 = Math.sin( a.nL/2 )
+	const s2 = Math.sin( b.nL/2 )
+	const dot = a.nx*b.nx + a.ny*b.ny + a.nz*b.nz;
+	//const angle = lnQ1.x*b.x + lnQ1.y*b.y + lnQ1.z*b.z;
+	const angle = Math.acos( dot );
+	const sAng = Math.sin(angle);
+	const Cx = angle?(s2 * c1 * b.nx + s1 * c2 * a.nx + s1*s2*(b.ny*a.nz-b.nz*a.ny))/sAng:a.nx;
+	const Cy = angle?(s2 * c1 * b.ny + s1 * c2 * a.ny + s1*s2*(b.nz*a.nx-b.nx*a.nz))/sAng:a.ny;
+	const Cz = angle?(s2 * c1 * b.nz + s1 * c2 * a.nz + s1*s2*(b.nx*a.ny-b.ny*a.nx))/sAng:a.nz;
+	const cLen = Math.abs(Cx)+Math.abs(Cy)+Math.abs(Cz);
+	const lnQ1Q2zz = new lnQuat( 0
+		, Cx * angle*2 / cLen
+		, Cy * angle*2 / cLen
+		, Cz * angle*2 / cLen
+		);
+*/
+//		, a.x * c + ( b.ny*a.z-b.nz*a.y ) + dot*b.nx*(1-c)
+//		, a.y * c + ( b.nz*a.x-b.nx*a.z ) + dot*b.ny*(1-c)
+//		, a.z * c + ( b.nx*a.y-b.ny*a.x ) + dot*b.nz*(1-c)
 //definatly not a cross product... 
 //	const lnQ1Q2 = new lnQuat( 0, lnQ1.y*lnQ2.z-lnQ1.z*lnQ2.y, lnQ1.z*lnQ2.x-lnQ1.x*lnQ2.z, lnQ1.x*lnQ2.y-lnQ1.y*lnQ2.x );
 
