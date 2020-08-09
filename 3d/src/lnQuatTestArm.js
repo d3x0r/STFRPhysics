@@ -317,9 +317,9 @@ function DrawQuatPaths(normalVertices,normalColors) {
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * 4*Math.PI;
 		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * 4*Math.PI;
 
-		document.getElementById( "lnQXval"+n).textContent = lnQX.toFixed(4);
-		document.getElementById( "lnQYval"+n).textContent = lnQY.toFixed(4);
-		document.getElementById( "lnQZval"+n).textContent = lnQZ.toFixed(4);
+		document.getElementById( "lnQXval"+n).textContent = curSliders.lnQX[n-1].toFixed(4);
+		document.getElementById( "lnQYval"+n).textContent = curSliders.lnQY[n-1].toFixed(4);
+		document.getElementById( "lnQZval"+n).textContent = curSliders.lnQZ[n-1].toFixed(4);
 
 	}
 
