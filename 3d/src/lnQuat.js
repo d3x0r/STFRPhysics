@@ -812,13 +812,13 @@ function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 	} else {
 		// two axles are coincident, add...
 		if( AdotB > 0 ) {
-			q.x = q.x / q.nL * (q.nL+theta);
-			q.y = q.y / q.nL * (q.nL+theta);
-			q.z = q.z / q.nL * (q.nL+theta);
+			q.x = q.x / q.nL * (q.nL+th);
+			q.y = q.y / q.nL * (q.nL+th);
+			q.z = q.z / q.nL * (q.nL+th);
 		}else {
-			q.x = q.x / q.nL * (q.nL-theta);
-			q.y = q.y / q.nL * (q.nL-theta);
-			q.z = q.z / q.nL * (q.nL-theta);
+			q.x = q.x / q.nL * (q.nL-th);
+			q.y = q.y / q.nL * (q.nL-th);
+			q.z = q.z / q.nL * (q.nL-th);
 		}
 		q.dirty = true;
 	}
