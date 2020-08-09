@@ -690,7 +690,7 @@ lnQuat.prototype.apply = function( v ) {
 		const qy = q.ny*nst;
 		const qz = q.nz*nst;
 
-		//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+		//pÂ’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w Â– v.dot(v))
 		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
@@ -784,31 +784,44 @@ function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 	const sc2 = q.s * ac;
 	const ss = q.s * as;
 	const cc = q.qw * ac;
-	const cosCo2 = cc - ss* (q.nx*ax + q.ny*ay + q.nz*az);
+	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
+	const cosCo2 = cc - ss* AdotB;
 
 	const ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 
-	const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
-	const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
-	const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
-
-	const sAng = Math.sin(ang/2);
+	if( ang ) {
+		const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
+		const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
+		const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
+		const sAng = Math.sin(ang/2);
 	
-	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-
-	q.nL = ang/2;
-	q.nR = sAng/Clx*ang;
-	q.qw = cosCo2;
-	q.s = sAng;
-	q.nx = Cx/sAng;
-	q.ny = Cy/sAng;
-	q.nz = Cz/sAng;
+		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		q.nL = ang/2;
+		q.nR = sAng/Clx*ang;
+		q.qw = cosCo2;
+		q.s = sAng;
+		q.nx = Cx/sAng;
+		q.ny = Cy/sAng;
+		q.nz = Cz/sAng;
 	
-	q.x = Cx/Clx*ang;
-	q.y = Cy/Clx*ang;
-	q.z = Cz/Clx*ang;
+		q.x = Cx/Clx*ang;
+		q.y = Cy/Clx*ang;
+		q.z = Cz/Clx*ang;
 
-	q.dirty = false;
+		q.dirty = false;
+	} else {
+		// two axles are coincident, add...
+		if( AdotB > 0 ) {
+			q.x = q.x / q.nL * (q.nL+theta);
+			q.y = q.y / q.nL * (q.nL+theta);
+			q.z = q.z / q.nL * (q.nL+theta);
+		}else {
+			q.x = q.x / q.nL * (q.nL-theta);
+			q.y = q.y / q.nL * (q.nL-theta);
+			q.z = q.z / q.nL * (q.nL-theta);
+		}
+		q.dirty = true;
+	}
 	return q;
 }
 
@@ -837,7 +850,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const qy = C.ny*nst;
 	const qz = C.nz*nst;
 	
-	//p’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w – v.dot(v))
+	//pÂ’ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w Â– v.dot(v))
 	const tx = 2 * (qy * az_ - qz * ay_); // v.cross(p)*w*2
 	const ty = 2 * (qz * ax_ - qx * az_);
 	const tz = 2 * (qx * ay_ - qy * ax_);
