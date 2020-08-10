@@ -23,6 +23,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const origin = {x:0,y:0,z:0};
 
 	const arm = {x:0,y:0,z:2};
+	const shortArm = {x:0,y:0,z:2/100};
 
 	const lnQ1 = new lnQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] );
 	const lnQ2 = new lnQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] );
@@ -42,6 +43,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const A5 = t5.apply( arm );
 
 	const R = [lnQ1,t2,t3,t4,t5];
+	const A_ = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	const A = [A1,A2,A3,A4,A5];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
@@ -73,6 +75,44 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 			}
 		prior = A[n];
+
+			if( n ) {
+				A_[n].x = A_[n-1].x
+				A_[n].y = A_[n-1].y
+				A_[n].z = A_[n-1].z
+			}
+		for( s = 0; s < 100; s++ )
+		{
+			let prior = R[n].applyDel( shortArm, s/100.0);
+
+			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
+			A_[n].x += prior.x;
+			A_[n].y += prior.y;
+			A_[n].z += prior.z;
+			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
+
+			switch( n ) {
+			case 1:
+				normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+				break;
+			case 2:
+				normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+				break;
+			case 3:
+				normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
+				break;
+			case 4:
+				normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
+				break;
+			default:
+				normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+			}
+		}
 	
 	}
 	
