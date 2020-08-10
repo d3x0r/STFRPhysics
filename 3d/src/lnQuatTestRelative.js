@@ -103,8 +103,8 @@ function drawArm(curSliders,normalVertices,normalColors) {
 					//doDrawBasis( R[n], prior, 1, s/100.0 );
 
 					normalVertices.push( new THREE.Vector3( (pt.x)*spaceScale   ,( pt.y)*spaceScale      , (pt.z)*spaceScale  ))
-					normalColors.push( C)
-					normalColors.push( C)
+					normalColors.push( red)
+					normalColors.push( red)
 					
 				}
 				doDrawBasis( R, pt );
