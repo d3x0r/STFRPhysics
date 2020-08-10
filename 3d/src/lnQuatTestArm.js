@@ -91,6 +91,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			A_[n].z += prior.z;
 			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 
+
 			switch( n ) {
 			case 1:
 				normalColors.push( new THREE.Color( 0,1.0,0,255 ))
@@ -113,6 +114,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 			}
 		}
+			doDrawBasis( R[n], A_[n], 1, 1 );
 	
 	}
 	
