@@ -41,30 +41,44 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	//const t4 = t3.add2( lnQ4 );
 	//const t5 = t4.add2( lnQ5 );
 
-	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL*2, lnQ1 ).update();
-	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL*2, t2 ).update();
-	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL*2, t3 ).update();
-	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL*2, t4 ).update();
-	
+	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL*2, lnQ1 );
+	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL*2, t2 );
+	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL*2, t3 );
+	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL*2, t4 );
+
+	if(0)
+	{
+		{
+			let tmp;
+			tmp = t2.sub2( lnQ1 );
+			doDrawBasis( tmp, { x: -3, y : -3, z:0} );
+			tmp = t3.sub2( t2 );
+			doDrawBasis( tmp, { x: -1, y : -3, z:0} );
+			tmp = t4.sub2( t3 );
+			doDrawBasis( tmp, { x: 1, y : -3, z:0} );
+			tmp = t5.sub2( t4 );
+			doDrawBasis( tmp, { x: 3, y : -3, z:0} );
+		}
+		{
+			doDrawBasis( t2, { x: -3, y : -2, z:0} );
+			doDrawBasis( t3, { x: -1, y : -2, z:0} );
+			doDrawBasis( t4, { x: 1, y : -2, z:0} );
+			doDrawBasis( t5, { x: 3, y : -2, z:0} );
+		}
+		{
+			doDrawBasis( lnQ2, { x: -3, y : -1, z:0} );
+			doDrawBasis( lnQ3, { x: -1, y : -1, z:0} );
+			doDrawBasis( lnQ4, { x: 1, y : -1, z:0} );
+			doDrawBasis( lnQ5, { x: 3, y : -1, z:0} );
+		}
+	}
+
 	const A1 = lnQ1.apply( arm );
 	const A2 = t2.apply( arm );
 	const A3 = t3.apply( arm );
 	const A4 = t4.apply( arm );
 	const A5 = t5.apply( arm );
 	
-	if(0)
-	{
-		const j2 = new lnQuat( 0,lnQ2.x,lnQ2.y,lnQ2.z ).update();
-			doDrawBasis( t2, t2, 2 );
-			doDrawBasis( lnQ1, lnQ1, 2 ); // this point is not on the curve...
-	
-		for( var n = 0; n < Math.PI*4; n += (Math.PI*2)/100 ){
-			//j2.update().roll( (Math.PI*2)/100 );
-			j2.update().freeSpin( (Math.PI*2)/100, lnQ1 );
-			doDrawBasis( j2, j2 );
-		}
-	}	
-
 	const R = [lnQ1,t2,t3,t4,t5];
 	const A = [A1,A2,A3,A4,A5];
 	let prior = origin;
@@ -199,7 +213,7 @@ return;
 	function doDrawBasis(lnQ2,t,s ) {
 		const basis = lnQ2.update().getBasis( );
 		if( !s ) s = 1.0;
-		const l = (t instanceof lnQuat)?1/t.nR:1;
+		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                                   
