@@ -862,6 +862,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
+	if( !th ) return this;
 	const C = this;
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
