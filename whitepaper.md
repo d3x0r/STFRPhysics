@@ -5,63 +5,86 @@
 
 d3ck0r@gmail.com
 
-Independant Studies, Internet(mostly english)
+Independant Studies
 
 ## Abstract
 
-
-Rotations are quite linear, and can, in many cases, be simply added and subtracted; there are as
-many times however when a rotation is rotated around an axle external to the frame the rotation is
-in.  This was (discovered) as a desire to remain in a truly linear rotation space.  Having discovered
-Hamiltonians first, it seems the underlaying additive properties of `ln(Q1)+ln(Q2) ~~ Q1*Q2` (where `~~`
-represents 'is effectively'), have been neglected.
-
+The essential function defining this rotation space map is the exponetial of a log-complex, and by extension
+of a log-vector-complex.
 
 ## Introduction
 
-For complex numbers, the `ln(i)` is `π/2`.  This is just a scalar, but this scalar is builtin to the standard arcsin/arccos functions, 
-which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. Again, 
-the resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`.
-However, this second part doesn't collapse and become a real, but instead remains as a dual number with a place holder `ε`, and, again, the 
-`π/2` is builtin to the current defintions of sin/cos/arcsin/arccos, so `ln(i)=ε` will be used.
+Curvature is a translation of a rectangular space around 1 or more axles; where additional axles composite
+into a single composite axle, around which all space is translated.  The coordinates of a curvature are
+in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `distance/dT`.
+Just like velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
+as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors, which can be
+used to scale all points in the frame to this new frame.
 
-So the two forms are represented like this.
+The space of coordinates representing rotations is linear, be compared relatively (which is to say to 
+take the difference of the rotations).
+when a rotation is rotated, the operation is still `lnQ1 x lnQ2` and not addition, and is the 
+same result as `exp(lnQ1) x exp(lnQ2)`; although the math performed is not the same, and the former 
+retains the relative spin count over time.
 
+In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
+represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
+the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
+vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
+the total angular speed of an object.  
+
+
+
+### Glossary
+
+- apply() - Multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
+    in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
+    another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication.
+- axle - An axis of curvature.
+- curvature - A point translated to another location by curving its forward motion; does not require a third point.
+- frame - The orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
+- log-complex - A natural log of a complex number.
+- rotation - A point translated to another location describing a pivot around a third point.
+- spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
+- vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
+
+---
+
+
+### exp( 0+1i ) and sin/cos functions  (This section still needs work, very clumbsy... )
+
+The natural log of the complex number `0+i` is `π/2`.  This is just a scalar, but this scalar is builtin to the 
+standard arcsin/arccos functions, 
+
+which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. The resulting radians from sin/cos and their 
+related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. This second part doesn't collapse and become a real, 
+but instead remains as a dual number with a place holder `ε`, and, again, the 
+`π/2` is builtin to the current defintions of sin/cos/arcsin/arccos, so `ln(i)=ε` will be used.  (Figure A)
+
+
+Figure A
 ```
    ln(A+Bi)   = a+bε
    exp(a+bε)  = A+Bi
 ```
 
-### Glossary
-
-- apply() - in math this is multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
-    in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
-    another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication, but this is 
-    called `apply()` instead.
-- axle - an axis of curvature.
-- curvature - a point translated to another location by curving its forward motion; does not require a third point.
-- frame - the orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
-- rotation - a point translated to another location referencing a third point.
-- spin - basically 'rotation', however, it's not apply by an angle, as rotation, but measured in a curvature.
-
-
----
-
 ## Complex Numbers and Their Natural Log
 
 Complex numbers of the form `A+Bi`, have a natural log, a generic log-complex will be called `lnC`.
 
-To get a log-complex from a complex number...
+Apply `exp()` to log-complex from a complex number, involves normalizing the real an imaginary 
+components, and get the angle of rotation. (Figure B)
 
-Normalize the real an imaginary components, and get the angle of rotation
 
+Figure B
 ```
     ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ln(i) * ε
 
 ```
 
-Exponent of a log complex...
+Exponent of a log complex (Figure C):
 
+Figure C
 ```
     exp( A+Bε ) = exp(A) * cos( |B|/2 ) + exp(A) * B/sqrt(B*B) * sin( |B|/2 )i
 ```
@@ -70,6 +93,7 @@ Because `cos(x)=cos(-x)` the absolute value in the `cos()` expression is unneede
 Because `B/sqrt(B*B)` keeps the sign, the sign lost in the `sin(|B|/2)` is restored, so the abosolute value isn't needed there either.
 And, because B has a single dimension, this looks like it's equivalent to... 
 
+Figure D
 ```
     exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
@@ -81,6 +105,7 @@ presented.
 Note, for programmatic purposes, unless you are actually adding relative radiuses also, the real part can
 be kept unscaled.
 
+Figure E
 ```
     exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
 ```
@@ -94,12 +119,14 @@ normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.
 
 Using the same method for `exp(lnC)`
 
+Figure F
 ```
   exp( A+Bε ) = exp(A) * cos(|B|)/2) + exp(A) * B/sqrt(B*B) * sin( (B/|B|) /2)i
 ```
 
 But instead treating B as a vector...
 
+Figure G
 ```
   exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -111,6 +138,7 @@ But instead treating B as a vector...
 
 If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion.
 
+Figure H
 ```
   exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -124,7 +152,6 @@ If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-qu
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
                       ) sin( |x|+|y|+|z| /2) i
-
 ```
 
 Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
@@ -133,11 +160,9 @@ and `θ` is the angle of rotation around that axle.
 
 ## Quaternion to Log Quatnerion
 
-```
-   ...
-```
+Compute the normal (Figure I)
 
-Compute the normal
+Figure I
 ```
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
@@ -146,12 +171,15 @@ Compute the normal
 ```
 
 And finally build the log-quaternion...
+
+Figure J
 ```
    ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
 ```
 
 For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful
 
+Figure K
 ```
    ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
 ```
@@ -160,6 +188,7 @@ The real part, (The A) might instead be represted by a vector `(x,y,z)`, and als
 recently discovered this, I leave that to minds brighter than mine).
 
 
+Figure L
 ```
    exp( A+(x,y,z)ε ) = A * cos( (|x|+|y|+|z|)/2) 
                      + A * sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
@@ -173,6 +202,7 @@ The real part is just a scalar of elevetion from 1 to infinite and 1 to 0 at the
 but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
 to the actual acceleration vector, since that vector is actually outside the current rotation.
 
+Figure M
 ```
    exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
                      + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
@@ -189,18 +219,21 @@ but result by curving space, and finding the relative extrernal point.
 
 This should be specified as an implied rule.  Reasoning and proof of the following is not provided.
 
+Figure N
 ```
    (x,y,z)i = xi + yj + zk;
 ```
 
 ## Generalized Parameterization of Log Complex
 
+Figure O
 ```
  (ln(A1), ln(A2)) + (x,y,z)i )
 ```
 
 which, on exponentiation can be
 
+Figure P
 ```
   theta = |x|+|y|+|z|;
   sqNorm = sqrt( x*x + y*y + z*z );
@@ -212,6 +245,7 @@ which gives more an an elliptical projection from log-complex space given 5 dime
 
 Recovering the seprate `A1`, and `A2` values from a complex number is improbable... probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied)
 
+Figure Q
 ```
  ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
         describes 3 dimensional axis, rotation around that axis, 
@@ -229,9 +263,59 @@ Recovering the seprate `A1`, and `A2` values from a complex number is improbable
  R2Lin = R2/len 
 
    ( exp(R1)*cos(theta/2) , exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm ) )
-
-
 ```
+
+## lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
+
+[Extended commentary](Twister.md)
+
+
+This a general purpose rotation of a rotation around some aribtrary axis by some angle theta.
+
+Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
+
+```js
+	as = sin( theta )
+	ac = cos( theta )
+	q = { qw: cos( |x|+|y|+|z| / 2 )
+            , s : sin( |x|+|y|+|z| / 2 )
+	    , nL : |x|+|y|+|z|
+	    , nx : x / sqrt( x*x + y*y + z*z )
+	    , ny : y / sqrt( x*x + y*y + z*z )
+	    , nz : z / sqrt( x*x + y*y + z*z )
+	    }
+
+	AdotB = q.nx*ax + q.ny*ay + q.nz*az;        // dot product of axles
+	angle = acos( q.qw*ac - q.s*as*( AdotB ) ); // really angle/2
+	sAng = Math.sin(angle); // same as sqrt(xx+yy+zz)
+
+	if( sAng < 0.0001) {
+		// if the two axles are coincident, directly add/subtract the angular speed
+		if( AdotB > 0 ) {
+			x = x / q.nL * (q.nL+th);
+			y = y / q.nL * (q.nL+th);
+			z = z / q.nL * (q.nL+th);
+		}else {
+			x = x / q.nL * (q.nL-th);
+			y = y / q.nL * (q.nL-th);
+			z = z / q.nL * (q.nL-th);
+		}
+	} else {
+		Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
+		Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
+		Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
+
+		Clx = sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) );
+
+		// angle angle angle
+		x = Cx/Clx*angle;
+		y = Cy/Clx*angle;
+		z = Cz/Clx*angle;
+	}
+```
+
+
+
 
 ## References
 
