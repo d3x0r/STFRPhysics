@@ -1,11 +1,8 @@
 # Space-Time Field Reactor Physics
 
-# Fast Faraday Force Flux Field Reactor (FFFFFR)
+## Fast Faraday Force Flux Field Reactor (FFFFFR?)
 
-I wrote a few pages, and lost it all :(  Lost some references from page too
-
-(Space-Time Field Reactor ?STFR? )
-
+Mostly this project is just about exploring the rotation space of log-quaternions.
 
 ## Glossary
 
@@ -33,18 +30,31 @@ can apply a smooth correction... but basically this calculator
 
 [Twist operation](Twister.md)
 
+[Wiki Article](https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Quaternion_Natural_Log)
 
+[Curvature Notes](Curvature.md)... This is sort of a explanation of the early demos
 
-[Curvature Notes](Curvature.md)... This is sort of a explanation of the 
+[Log vector complex?](whitepaper.md)  This describes the basic conversion from the flat rotation space to quaternion.
+
+Some [notes on development](MATH.md) of the system; this is fairly old, while I was still trying to get rotations in the raw rotation space instead of the modulated result of matricii or quaternions.
 
 ## Live Demos
  - [Original Math Test](https://d3x0r.github.io/STFRPhysics) Stereographic projection of quaternion... finding 'circles'
- - ... another 2d graph test of extended arccos test.
  - [first](https://d3x0r.github.io/STFRPhysics/3d/index.html) Shows curves of interest - shows bundles of rotations around resulting curve...
  - [second](https://d3x0r.github.io/STFRPhysics/3d/index2.html) Shows just the sub-arc of interest; this used to show a more sparely scattered arc because of a bad multiplier.
  - [third](https://d3x0r.github.io/STFRPhysics/3d/index3.html) curvature plots, demonstrate free angle choice, and free 'same normal vector' choice; which doesn't have to be `up`.
  - [Fourth](https://d3x0r.github.io/STFRPhysics/3d/index4.html) Hopf Fibration generator...
+ - [Arm Additive](https://d3x0r.github.io/STFRPhysics/3d/indexArm.html) 5 segment arm, with 5 rotation settings, added rotations; shows the curvatures over time too; the 'correct' additions would actually be calculated not arbitrary.
+ - [Arm Proper](https://d3x0r.github.io/STFRPhysics/3d/indexArmProper.html) 5 segment arm, with 5 rotation settings, rotation frames applied relative to prior rotation; more what a robot arm would actually do.
+ - [Relative Rotations](https://d3x0r.github.io/STFRPhysics/3d/indexRelative.html) 5 Rotations, showing the curvature from 0.0-1.0 in 0.01 increment steps; shows differential rotations...
 
+## Some included Images
+
+This is a map fo the rotation states; each cube represents +/-2pi rotations, and the other related cubes of rotation near them.
+![Rotation States][rotationStates.png]
+
+This is a sketch of trying to compute the vector for the twist operation of the normal ball shown in the demos... (`A`/`X` slider, with show normal ball checked)
+![Rotation States][twist-notes.png]
 
 
 ## Frame Computation Using Dual Log-Quaternions
