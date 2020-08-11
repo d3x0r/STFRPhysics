@@ -83,28 +83,6 @@ represending `A dot B` operation below. the result is always within +/-pi;
 
 ```
 
-Apply angle-fixup code so the result is in the expected range.
-This causes a jump in octives.
-
-```js
-	let fix = ( ang-(nt+th))
-	// nt is alwasy positive
-	// th can be negative, but is often a small adjustment?
-	// ang is -pi to pi... 
-	// so fix will more often be negative than positive
-	// and making the resulting angle larger reinforces that
-	// fix will be more negative next time.
-	/*
-	while( fix > Math.PI*2 ) {
-		ang -= Math.PI*2;
-		fix -= Math.PI*2;
-	} 
-	*/
-	while( fix < -Math.PI*4 ){
-		ang += Math.PI*4;
-		fix += Math.PI*2;
-	}
-```
 
 
 Compute the output axis of rotation cross product of the axles... and sin(a+b) sort of scalar 
@@ -155,4 +133,31 @@ finally, update the current quaternion with the computed axis and angle.
 	return C;
 
 }
+```
+
+
+## Optional angle fixup
+
+This isn't required, but is something that can be done as application desires.  Before having a stable method to do
+the cross product of two lnQuats, this was used to artificially pad the range to see the full graph.
+Apply angle-fixup code so the result is in the expected range. This can cause a jump in octaves.
+
+```js
+	let fix = ( ang-(nt+th))
+	// nt is alwasy positive
+	// th can be negative, but is often a small adjustment?
+	// ang is -pi to pi... 
+	// so fix will more often be negative than positive
+	// and making the resulting angle larger reinforces that
+	// fix will be more negative next time.
+	/*
+	while( fix > Math.PI*2 ) {
+		ang -= Math.PI*2;
+		fix -= Math.PI*2;
+	} 
+	*/
+	while( fix < -Math.PI*4 ){
+		ang += Math.PI*4;
+		fix += Math.PI*2;
+	}
 ```
