@@ -29,14 +29,14 @@ The rotation space is linear, and can be compared relatively (which is to say to
 while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
 when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
 that lines; even in space, gravity applies a curvature to your inertia).
-When a rotation is rotated, the operation is the [cross product](#user-content-lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
+When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
 retains the correct relative angles within the rotation space; including potential orbital jumps.
 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the [total angular warp](#user-content-regarding-specific-representation) of coodinate space.
+the [total angular warp](#regarding-specific-representation) of coodinate space.
 
 Coorindates within the rotation space have a sort of concentric spherical shell nature to them, since any line radially
 from the origin is the same rotation axle, with a different angular speed.
