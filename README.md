@@ -1,42 +1,46 @@
-# Space-Time Field Reactor Physics
+﻿# Space-Time Field Reactor Physics
 
 ## Fast Faraday Force Flux Field Reactor (FFFFFR?)
 
 Mostly this project is just about exploring the rotation space of log-quaternions.
 
-## Glossary
-
- - quat - short for 'quaternion'.
- - quats - plural of `quaternion`.
- - lnQuat - short for 'quaternion in natural log mapping'  (lnQuats for plural); may also be said as 'log-quaternion' or 'Log Quat'.
- - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later).
- - Quat - the type `class Quat`.
- - principalling - the updating of a lnQuaternion to its prinicpal angles and the associated rate. There is a method `principle()` which sets a lnQuaternion to its principal angles.
-
 ## Preface
 
-All the roads I go down lead back to 'use a matrix!'; yes, I will, but sin() and cos() are single clock lookupss; so can't I just save that loikup 
-until later?  Why do I have to cary the important numbers in normalized coordinates?  
+There exists a coordinate space of rotations that's not self covering.
 
-`A x B != B X A` except in a very small region.  But that's no different than saying `arcsin(sin(A+B)) != A+B` which is true (and untrue) exactly where the first expression is true.
-We forget in the process that we've lost the original information, and are working with a modulated value.   And certainly everywhere I've gone, it's very hard to 
-not find a cross or dot product to represent a rotation, when in reality it's just a simple addition of angle, and a lookup to get the modulated value for the 
-quaternion.  If you apply inverse `A X -B` in certain conditions, that's the same as `B*A` or `A/B` , but then again; that's all in a multiplicative space; it's simpler to just say `A + B - C = D` instead of `C X A X B X -A X - C`  (4 multiplies instead of 2 adds).
+The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
+of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a Cartesian or linear space around 1 or more axles;
+where additional axles composite into a single composite axle, around which all linear space is translated.  The coordinates of a curvature are
+in terms of `dθ/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
+Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
+as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
+all points in the frame to this new frame.
 
-Quaternions, kepd as `cos(theta) + sin(theta)N` where `N` is the axis of rotation; end up re-normalized when mlutiplied so that they stay within bounds; they 
-can apply a smooth correction... but basically this calculator 
+The rotation space is linear, and can be compared relatively(which is to say to take the difference of the rotations).
+While the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
+when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
+that line to get there; even in space, gravity applies a curvature to your inertia).
+When a rotation is rotated, the operation is the [cross product](whitepaper.md#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: 
+`lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)`. The math performed is not the same, and the cross product of 
+log quaternions retains the correct relative angles within the rotation space; including potential orbital jumps.
 
-## Recent additions
+In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
+represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
+the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
+vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
+the [total angular warp](whitepaper.md#regarding-specific-representation) of coodinate space.
 
-[Twist operation](Twister.md)
+Coordinates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
+from the origin is the same rotation axle, with a different angular speed.
 
-[Wiki Article](https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Quaternion_Natural_Log)
 
-[Curvature Notes](Curvature.md)... This is sort of a explanation of the early demos
+## Other Documents
 
-[Log vector complex?](whitepaper.md)  This describes the basic conversion from the flat rotation space to quaternion.
-
-Some [notes on development](MATH.md) of the system; this is fairly old, while I was still trying to get rotations in the raw rotation space instead of the modulated result of matricii or quaternions.
+ - [Log vector complex](whitepaper.md)  This describes log-quaternion/log-vector complex conversions, operations, behaviors, ...
+ - [Twist operation](Twister.md)  Description of application of Rodrigues' Rotation Formula.
+ - [Wiki Article](https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Quaternion_Natural_Log) Formatted math in wiki/latex math.
+ - [Curvature Notes](Curvature.md)... This is also a how-to/explanation of earlier demos(1-3).
+ - Some(dirty) [notes on development](MATH.md) of the system; this is fairly old, while I was still trying to get rotations in the raw rotation space instead of the modulated result of matricii or quaternions.
 
 ## Live Demos
  - [Original Math Test](https://d3x0r.github.io/STFRPhysics) Stereographic projection of quaternion... finding 'circles'
@@ -57,30 +61,28 @@ This is a sketch of trying to compute the vector for the twist operation of the 
 ![Rotation States][twist-notes.png]
 
 
+## Glossary
+
+ - quat - short for 'quaternion'.
+ - quats - plural of `quaternion`.
+ - lnQuat - short for 'quaternion in natural log mapping'  (lnQuats for plural); may also be said as 'log-quaternion' or 'Log Quat'.
+ - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later).
+ - Quat - the type `class Quat`.
+ - principalling - the updating of a lnQuaternion to its prinicpal angles and the associated rate. There is a method `principle()` which sets a lnQuaternion to its principal angles.
+
+
 ## Frame Computation Using Dual Log-Quaternions
 
-I've come to relearn much about the quatnerions and complex numbers especially with applications to rotation.
-Quaternions have a natural logarithm function, and a exp.  Many places stress so very much that the order
-of multiplication matters; however, there's a note that the quaternions which are also unit-quaternion or normalized in
-the process of calculation.  So the reciprical of a unit-quaternion is also the conjugate; so the order or multiplying `pq` vs `qp` 
-is just a matter of applying a negative sign.  Even in the non-logarithmic form, the calculation to apply a quaternion
-for a calculation and involves cross products, such that `A x B  !=  B x A` which is true, but `A x B == -B X A`.  This helps
-identify how order remains in the log-quaternion space.  
+I've come to relearn much about the quaternions and complex numbers especially with applications to rotation.
+Quaternions have a natural logarithm function, and the natural log quaternion has an exponential function. 
 
-Given two logrithmic quaternions(LQ) `LP` and `LQ`, and their equivalent base forms `P` and `Q`,   The multiplication of `P * Q` is
-`LP + LQ` OR `LQ + LP` because addition is commutative;  However the multiplication of `Q * P` is also `P / Q` (since the conjugate is also the recipricol), 
-so this is a subtraction of logs `lP - lQ`.  If the multiplication terms are switched, the same order 
-of operations is preserved in addition of LQ by flipping the sign appropriately.  Probably the above is better expressed
-if the parital -- and ---- signs were shown...  Addition is probably `(--lP) - (-lQ)`... (which doesn't reverse ... just becomes -lp - lq which isn't right either.
-
-`PQ = e^lP * e^lQ = e^(lP+lQ)`
-
-`QP = e^lQ * e^lP = e^(lQ-lP)`
-
-
-On Reflection; it should follow if `Q * P` is  also `P / Q` then `P * Q` is also `Q / P`, No, that doesn't clarify anything, and just muddies the waters.  Adding an Angle `A + B`
-, it's the same as `A - (360-B)`  or `A + B - 360`.... Let's just go ahead and blame it on the 2PI modulus.  The point really is, we shouldn't be doing our quaternion math
-in the projection of the value;  It's like always computing things about the cube on the screen from the pixels on the screen - they make AI's to do that, not formulas.
+Although natural log means, for multiplication of scalars that `exp(ln(A)+ln(B))=A+B`, and this is as much true here,
+the actual operation of rotation is actually a cross product, and not multiplication, hence `exp(ln(Q) ⨯ ln(P)) = Q⨯P`.
+And although this system does become additive, it only applies for virtual object rotations (SLERP), and velocity/acceleration.
+A difference or differential does give the shortest path between two rates of rotation; and can compare relatively the similarity
+of two rotations, which can be used to synchronize rotation.  The ability to rotate in any direction is often constrained by
+physical limitations, such as a rocket's engine is on a certain rigid point, and the thrust direction varies with the rotation of the
+rocket itself; so knowing when/how to apply a trust in order to get to the target spin is different than knowing spin differential.
 
 
 ### Hypothetical failure case
@@ -112,8 +114,6 @@ long chain of actuators; but this scenario is also likely to not overflow rotati
 Principalling of lnQuats can be done with `lnQuat.exp().log()` or `const principal = lnQuat.principal();`.
 
 
-## Log Quaternion Nature
-
 ## Inertial Frame Relavence.
 
 Addition of impulse is the cross product between the vector to the point of impact from the mass' center of gravity and the force of impact. (maybe one of those is negative?)
@@ -121,7 +121,7 @@ Addition of translation is the remaining force applied to the dualQuat.
 The cross of two nearly parallel vectors is nearly 0; so dead on collisions result in translation.
 (The angle is also the arc length, so units of space translate to angle directly).
 
-## Computation overhead introduced vs matricii
+## Computation overhead reduced vs matricii
 
 The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space; that origin and the basis vectors can be retrieved to apply scalar x,y,z and get the resulting translated x,y,z 'world' coordinates.
 lnQuat has a conditioning operation `update()` which updates the `exp()` calculation part, which is computation of the length of the point, and using that to lookup sin/cos values; this is the 'costly' part, subsequent application
@@ -184,9 +184,9 @@ all of these operations can be done in sets of 4 registers.
 
 ## Implementation
 
-[JS Implementation](src/dual-quat.js)...
+[JS Implementation](3d/src/dual-quat.js)...
 
-For implmeentation, existing `Quaternion.log()` function should return a new type 'LogQuaternion' which has different operator to apply and apply-inverse to vectors.
+For implementation, existing `Quaternion.log()` function should return a new type 'LogQuaternion' which has different operator to apply and apply-inverse to vectors.
 
 `LogQuaternion.exp()` should result with a 'Quaternion' type.
 
@@ -246,13 +246,6 @@ They are mappings in different projections, and should be considered as a differ
 
 If we consider the speed of light achievable, 1 half rotation per nano second is a reasonable maximum.  This is 3B RPM is the maximum rotation rate.
 This turns out to be a 1 rotation of 0.3m arc-length per nanosecond is the speed of light.
-
-
-## Quaternion rotation points
-
-1) ln(q) = angle(s) and length.
-
-add vectors instead of multiply.
 
 
 
