@@ -317,7 +317,7 @@ __Figure N__
 
 ### Rotating a 3D vector
 
-(Figure S) applies a rotation to a single point.  Given a point `v`, with `x,y,z` coordinates, and rotation `q` with `nx,ny,nz,sin(s),cos(qw)`, result with `x,y,z`.  The working
+(Figure S) applies a rotation to a single point.  Given a point `v`, with `x,y,z` coordinates, and rotation `q` with `nx,ny,nz,s:sin(θ/2),qw:cos(θ/2)`, result with `x,y,z`.  The working
 variable `nst` is `normal sign theta`; `qw` is `exp(lnQ).w` or `cos(theta/2)`.  This is essentially the same procedure as applying a quaternion to a point, with the
 short `exp()` builtin as cached values.
 
