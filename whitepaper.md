@@ -38,7 +38,7 @@ the normal of the vector representing angular velocity is the axis of rotation. 
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
 the [total angular warp](#regarding-specific-representation) of coodinate space.
 
-Coorindates within the rotation space have a sort of concentric spherical shell nature to them, since any line radially
+Coorindates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
 from the origin is the same rotation axle, with a different angular speed.
 
 ### Glossary
@@ -64,11 +64,10 @@ The natural log of the complex number `0+i` is `π/2`.  This is just a scalar, h
 standard arcsin/arccos functions,  which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. 
 The resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. 
 
-The imaginary part doesn't collapse and become a real,  but instead remains as a dual number with a notation `ε`, and since the `π/2` 
-scalar is builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
+The imaginary part doesn't collapse and become a real,  but instead remains as a dual number with a notation `ε`, and the `π/2` 
+scalar being builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
 
-
-Figure A
+__Figure A__
 ```
    ln(A+Bi)   = a+bε
    exp(a+bε)  = A+Bi
@@ -82,7 +81,7 @@ Apply `exp()` to log-complex from a complex number, involves normalizing the rea
 components, and get the angle of rotation (Figure B).  This expression is simplified from other factors...
 
 
-Figure B
+__Figure B__
 ```
     ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ε
 ```
@@ -99,22 +98,22 @@ Figure C
   - `B/sqrt(B*B)` keeps the sign of B, which is lost in the `sin(|B|/2)`, is restored; so the abosolute value in the `sin()` expression is not needed.
   - B has a single dimension, this looks like it's equivalent to (Figure D).
 
-Figure D
+__Figure D__
 ```
     exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
 
 
-Which becomes the common expression of `ln(A+Bi)` shown in (figure E).
+Which is the common expression of `ln(A+Bi)` shown in (figure E).
 
-Figure E
+__Figure E__
 ```
     exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
 ```
 
-It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, since `A=0` and `exp(0)=1` to become (Figure F).
+It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, `A=0` and `exp(0)=1` to become (Figure F).
 
-Figure F
+__Figure F__
 ```
     exp( 0+Bε ) = cos(B/2) + sin(B/2)i
 ```
@@ -123,7 +122,7 @@ Figure F
 Instead of a single scalar `B` in the complex number, this can be represented with a multipart vector, which has a square normal of 1 scaled by a
 common scalar `b`. (Figure G)
 
-Figure G
+__Figure G__
 ```
     if   B = b(x,y,z)
     then A+Bi = A + b(x,y,z)i
@@ -139,7 +138,7 @@ way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|
 The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
 Intuitively, expanding the vector across a matrix assigns the imaginary parts.
 
-Figure H
+__Figure H__
 ```
    (x,y,z)i = xi + yj + zk;
 ```
@@ -151,7 +150,7 @@ other spacial points by.  `|X|+|Y|+|Z|` is the total rotation.  The axis of rota
 normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  Using the same method for `exp(lnC)` (figure C), 
 while treating B as a vector (Figure G).
 
-Figure G
+__Figure G__
 ```
   exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -161,9 +160,9 @@ Figure G
 ```
 
 
-If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion (figure H).
+If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion is a valid unit quaternion (figure H).
 
-Figure H
+__Figure H__
 ```
   exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -187,7 +186,7 @@ and `θ` is the angle of rotation around that axle.
 
 Compute the normal, and the angle from the real component's `arccos()` (Figure I).
 
-Figure I
+__Figure I__
 ```
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
@@ -196,7 +195,7 @@ Figure I
 
 And finally build the log-quaternion (Figure J).
 
-Figure J
+__Figure J__
 ```
    ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
                                            , (y/axisSquare)/sin(angle/2)
@@ -205,7 +204,7 @@ Figure J
 
 For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
 
-Figure K
+__Figure K__
 ```
    ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
                                                , (y/axisSquare)/sin(angle/2)
@@ -221,7 +220,7 @@ Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,
 
 Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
 
-Figure L
+__Figure L__
 ``` js
 	as = sin( theta )
 	ac = cos( theta )
@@ -269,7 +268,7 @@ basis vectors to scale spacial points with.  The first part of the matrix calcul
 
 This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
 
-Figure M
+__Figure M__
 ```
 	if( !del ) del = 1.0; // assume 1.0 as time to show.
 	
@@ -287,7 +286,7 @@ One might note that multiplications for this are highly parallel, and the result
 applying the matrix to every point afterward manually increases the amount of calculations to greater than just applying the rotation to a point, especially with
 the `sin()` and `cos()` precomputed.
 
-Figure N
+__Figure N__
 ```
 	xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
 	yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
@@ -328,7 +327,7 @@ few vector reorders for cross-product type operations.
 
 Other existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
 but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; although it should be noted that the phrase would
-be 'infinite covering' of projected rotations, since for every +6π project as basis frame or representation of the rotation.
+be 'infinite covering' of projected rotations, for every +6π project as basis frame or representation of the rotation.
 
 These coordinates offer the flexibility to model rotation at any time T and not just at tick 1; a rotation matrix or a 
 quaternion are limited to representing the single
@@ -355,14 +354,14 @@ Further experimentation can explore the possibilty of splitting the single scala
 The exponentiation of a log complex number, as defined, applies the same 'A' scalar to the real and imaginary components, instead the scalar could be split
 to specify two differnt constants for the real and imaginary components (Figure O).  
 
-Figure O
+__Figure O__
 ```
  (ln(A1), ln(A2)) + (x,y,z)ε
 ```
 
 which, on exponentiation can be (figure P)
 
-Figure P
+__Figure P__
 ```
   theta = |x|+|y|+|z|;
   sqNorm = sqrt( x*x + y*y + z*z );
@@ -371,10 +370,10 @@ Figure P
 
 which (should) give more an an elliptical projection from log-complex space given 5 dimensions (Figure Q).
 
-Recovering the separate `A1`, and `A2` values from a complex number is improbable, since it would look like a change in the angle computed by the tangent;
+Recovering the separate `A1`, and `A2` values from a complex number is improbable, it would look like a change in the angle computed by the tangent;
 also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
 
-Figure Q
+__Figure Q__
 ```
  ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
         describes 3 dimensional axis, rotation around that axis, 
@@ -398,10 +397,10 @@ Figure Q
 
 Existing development concentrated only on pure rotations, with 0 real part on the log-quaternion.  
 The real part is just a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
-but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
-to the actual acceleration vector, since that vector is actually outside the current rotation.
+but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be computed with 
+a cross product of the actual acceleration vector.
 
-Figure M
+__Figure R__
 ```
    exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
                      + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
@@ -449,7 +448,7 @@ matter so much what the shape of the projection is, but what the source data pro
 
 ### Applications of Dual Numbers
 
-[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, since the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
+[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
 
 [Math - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm), only dual number exp, no ln.
 
