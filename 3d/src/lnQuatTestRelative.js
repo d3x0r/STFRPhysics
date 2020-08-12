@@ -123,6 +123,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 					normalColors.push( green)
 					normalColors.push( green)
 				}
+				doDrawBasis( R, pt );
 				pt.x = o.x;
 				pt.y = o.y;
 				pt.z = o.z;
@@ -138,6 +139,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 					normalColors.push( blue)
 					normalColors.push( blue)
 				}
+				doDrawBasis( R, pt );
 			}
 		{
 			let tmp;
