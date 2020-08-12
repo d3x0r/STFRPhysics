@@ -121,11 +121,17 @@ Addition of translation is the remaining force applied to the dualQuat.
 The cross of two nearly parallel vectors is nearly 0; so dead on collisions result in translation.
 (The angle is also the arc length, so units of space translate to angle directly).
 
-## Computation overhead reduced vs matricii
+## Computation overhead (intro/re)duced vs matricii and quaternions
 
 The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space; that origin and the basis vectors can be retrieved to apply scalar x,y,z and get the resulting translated x,y,z 'world' coordinates.
 lnQuat has a conditioning operation `update()` which updates the `exp()` calculation part, which is computation of the length of the point, and using that to lookup sin/cos values; this is the 'costly' part, subsequent application
 to points/frames is as expensive as the matrix it replaces.
+
+[Multiply Quaternion three.js code.](https://github.com/mrdoob/three.js/blob/dev/src/math/Quaternion.js#L80) is 16 multplies and 12 adds.
+
+lnQuat cross product is 30 multiplies and 11 adds; 5 parallel multiplies, 3 parallel adds, 1 dotproduct(1 mul,3? add), 1 crossproduct(6 multiplies, 3 adds); unless the axles are near coincident.
+
+
 
 ```
   (translation precompute exp() ) 
@@ -133,18 +139,16 @@ to points/frames is as expensive as the matrix it replaces.
 	sin/cos value are for the same angle, so it can be calated at the same time)
 
   lnQuat.apply(vector) //  aka mul(vec3)
- 18 mul + 9 add  (translation update)
+ 18 mul + 9 add  (translation update)  ( 2 crossproduct, 1 mult 2 adds, 1 vector scale )
 
   lnQuat + lnQuat
- + 3 add   (orientation update) 
+ 30 mul + 11 add  (dot product, cross product, 4 mult, 2 adds)
 
- 18 mul + 12 add   total 
+ 48 mul + 20 add   total 
 
- storage 6 values  (can abbreviate to 3 and 3; w is always 0)
-  note:  exp(0)=1 , 1 is the radius of the output quaternion,
-     resulting that any lnQuat absolutely a normalized Quat
+ storage 6 values
 
-all of these operations can be done in sets of no more than registers; although it is 2 cross products
+most of these operations can be done in parallel register sets; except cross product
 
 ```
 
