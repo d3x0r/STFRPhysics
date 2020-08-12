@@ -48,11 +48,15 @@ from the origin is the same rotation axle, with a different angular speed.
     in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
     another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication.
 - axle - An axis of curvature.
-- curvature - A point translated to another location by curving its forward motion; does not require a third point.
+- curvature - a change in angle over time.
+   - A point translated to another location by curving its forward motion; does not require a third point like 'rotation'. 
+   - Warps the relative space around an axle, thereby translating all points in that space to a new position.
 - frame - The orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
 - log-complex - A natural log of a complex number.
 - modulate - Applying a modulo operator to a number to get the prinicpal angle result.
-- rotation - A point translated to another location describing a pivot around a third point.
+- rotation - A specific translation of spacial coordinates around a point.
+  - A point translated to another location describing a pivot around a third point.
+  - Specifies a fixed frame which can be applied to translate points to a new position.
 - spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
 - vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
 
