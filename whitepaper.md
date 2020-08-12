@@ -90,17 +90,17 @@ Exponent of a log complex (Figure C).
 
 Figure C
 ```
-    exp( A+Bε ) = exp(A) * cos( |B|/2 ) + exp(A) * B/sqrt(B*B) * sin( |B|/2 )i
+    exp( A+Bε ) = exp(A) * cos( |B| ) + exp(A) * B/sqrt(B*B) * sin( |B| )i
 ```
 
 (Figure C) simplifies for the following reasons:
   - `cos(x)=cos(-x)` the absolute value in the `cos()` expression is not needed.
-  - `B/sqrt(B*B)` keeps the sign of B, which is lost in the `sin(|B|/2)`, is restored; so the abosolute value in the `sin()` expression is not needed.
+  - `B/sqrt(B*B)` keeps the sign of B, which is lost in the `sin(|B|)`, is restored; so the abosolute value in the `sin()` expression is not needed.
   - B has a single dimension, this looks like it's equivalent to (Figure D).
 
 __Figure D__
 ```
-    exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
+    exp( A+Bε ) = exp(A) * cos(B) + exp(A) * sin(B)i
 ```
 
 
@@ -108,14 +108,14 @@ Which is the common expression of `ln(A+Bi)` shown in (figure E).
 
 __Figure E__
 ```
-    exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
+    exp( A+Bε ) = A * cos(B) + A * sin(B)i
 ```
 
 It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, `A=0` and `exp(0)=1` to become (Figure F).
 
 __Figure F__
 ```
-    exp( 0+Bε ) = cos(B/2) + sin(B/2)i
+    exp( 0+Bε ) = cos(B) + sin(B)i
 ```
 ### Vector Complex Extension
 
@@ -136,11 +136,19 @@ way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|
 ### Conversion from Vector Complex to Quaternion
 
 The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
-Intuitively, expanding the vector across a matrix assigns the imaginary parts.
+Intuitively, expanding the vector across a matrix assigns the imaginary parts.  
+
+The math partials look like `sin(θ/2)` and `cos(θ/2)` for a quaternion; however, when the multiplications
+are simplified there are terms which are actually double angle substitutions. Rodrigues' Rotation Formula 
+is all in terms of alpha/2, beta/2 and gamma/2.  The quaternion `θ/2` is reverse scalar to split the product?  Or,
+because quaternions are always muultiplied the `θ/2+θ/2 = θ` result?
+
+Having simplifed the math internally (removing common terms, consolidating constants) to work with log quaternions,
+turns out that keeping `sin(θ/2)` and `cos(θ/2)` actually `sin(2*θ/2)` or `sin(θ)`, the same for `cos`.
 
 __Figure H__
 ```
-   (x,y,z)i = xi + yj + zk;
+   (x,y,z)i =  sin(arcsin(x)/2)i + sin(arcsin(y)/2)j + sin(arcsin(z)/2)k;
 ```
 
 ### Log Vector Complex to Quaternion conversion

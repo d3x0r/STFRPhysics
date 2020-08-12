@@ -10,8 +10,18 @@ hard coded (simplifies a few of the calculations).
 
 ## Yaw around the fixed normal.
 
+The object `q` has the following fields
+ - `(x,y,z)` raw coordinates
+ - `nL` (normal-linear): `|x|+|y|+|z|` 
+ - `nR` (normal-rectangular): `sqrt(x*x+y*y+z*z)`
+ - `qw` : `cos(nL/2)`
+ - `s` : `sin(nL/2)`
+ - `(nx,ny,z)` : `(x,y,z)/nR`.
 
-```js
+`qw` is named that, because `cos(theta/2)` is the unit-quaternion `w` component of the quaternion which is `exp(lnQ)`.
+
+
+``` js
 // C is some angle-angle-angle quaternion, th is the angle to turn around it's normal(up)...
 function yaw( C, th ) {
 	// input angle...
@@ -30,25 +40,25 @@ a few operations can be dropped... most of the work still has to be done.  Matri
 would already have these, so rotation one angle to another is approximately the same; but none of this
 is required for the general case of an external axis being specified...
 
-```js
+``` js
 
 	const q = C;
 
 	const nt = q.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-	const s = Math.sin( 2 * nt ); // double angle sin
-	const c = 1- Math.cos( 2 * nt ); // double angle cos
+	const s = Math.sin( nt ); 
+	const c = 1- Math.cos( nt ); 
 
-	const xy = c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-	const yz = c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-	//const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
+	const xy = c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz):   1 - cos(2t)
+	const yz = c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz):   1 - cos(2t)
+	//const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz):   1 - cos(2t)
 	                          
-	const wx = s*q.nx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-	//const wy = s*qy;  // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-	const wz = s*q.nz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
+	const wx = s*q.nx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz):   sin(2t)
+	//const wy = s*qy;  // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz):   sin(2t)
+	const wz = s*q.nz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz):   sin(2t)
 	                          
-	const xx = c*q.nx*q.nx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-	//const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-	const zz = c*q.nz*q.nz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
+	const xx = c*q.nx*q.nx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz):   1 - cos(2t)
+	//const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz):   1 - cos(2t)
+	const zz = c*q.nz*q.nz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz):   1 - cos(2t)
 
 ```
 
@@ -57,7 +67,7 @@ is required for the general case of an external axis being specified...
 Here, `ax`, `ay`, and `az` could be filled by any axis, and normalized.
 This completes the computation of the 'up' normal into `ax`, `ay`, and `az`.  This vector is normalized.
 
-```js
+``` js
 	// ax, ay, az could be given; these are computed as the source quaternion normal
 	const ax = ( xy - wz );
 	const ay = 1 - ( zz + xx );
@@ -71,7 +81,7 @@ skews the result to the imaginary direction...
 https://www.geogebra.org/3d/pwjdwzrz This graph has `arccos( cos(x)cos(y)-sin(x)sin(y)*B )` where B is a slider
 represending `A dot B` operation below. the result is always within +/-pi;
 
-```js
+``` js
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
@@ -90,7 +100,7 @@ plus part of cos(a+b)
 
 
 
-```js
+``` js
 	const Cx = as * q.qw * ax + q.s * ac * q.nx + q.s*as*(ay*q.nz-az*q.ny);
 	const Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 	const Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
@@ -102,7 +112,7 @@ Use the computed angle and get the sin(a/2) to normalize the vector part...
 this is the same value as `sqrt(Cx*Cx+Cy*Cy+Cz*Cz)`.  `Clx` is the linear
 sum scalat times the angle to result with the proper angle-angle-angle values.
 
-```js
+``` js
 
 	const sAng = Math.sin(ang/2); // same as sqrt(xx+yy+zz)
 	
@@ -112,7 +122,7 @@ sum scalat times the angle to result with the proper angle-angle-angle values.
 
 finally, update the current quaternion with the computed axis and angle.
 
-```js
+``` js
 
 	C.nL = ang/2;
 	C.nR = sAng/Clx*ang;
@@ -142,7 +152,7 @@ This isn't required, but is something that can be done as application desires.  
 the cross product of two lnQuats, this was used to artificially pad the range to see the full graph.
 Apply angle-fixup code so the result is in the expected range. This can cause a jump in octaves.
 
-```js
+``` js
 	let fix = ( ang-(nt+th))
 	// nt is alwasy positive
 	// th can be negative, but is often a small adjustment?
