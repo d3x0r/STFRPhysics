@@ -33,21 +33,29 @@ that line to get there; even in space, gravity applies a curvature to your inert
 When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
 retains the correct relative angles within the rotation space; including potential orbital jumps.
 
+
+'Rotation' is typically only considers  the translation of points in space at a specific instant, 
+rather than across all time from `0` until that instant, or beyond.  Simply setting `Time=1`(`T`), and computing the fixed formula based on
+this constant, is equivalent to a 'rotation' . Rotation as a math operation may be considered a subset of curvatures specified in rotation space.
+
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
 the [total angular warp](#regarding-specific-representation) of coodinate space.
 
-Coordinates within the rotation space have a concentric spherical shell nature to them, any line radially
-from the origin is the same rotation axle, with a different angular speed.
+This is *NOT* Euler Angles.  A quick check reveals that it's quite infeasible to get a rotation axis from Euler Angle coodinates; while
+log vector complex representation immediately yields the axle.   Coordinates within the rotation space have a concentric spherical shell nature to them, any radial line 
+from the origin in the rotation space is the same axle, with a different angular speed.  
+
+Operational Note, and speculation: Especially at high curvatures, the difference between two frames may be a chord through the lower concentric spherical shells, which would require it to lose a signficant amount of speed before getting to the destination; the line of lower effert would be a curve around the origin, translating between the shell layers, while  pivoting the origin around an axis at the cross product of the differential axles.  Similarly say when navigating space between planets, the path of lowest energy is not a straight line, but rather is a curved line; in a more direct instance, if you have a point on the ground, and a point on a roof, there is no way to traverse the straight line, being constrained by the system the points are in; rotations have similar constraints on their effective motion changes.
 
 ### Glossary
 
 - apply - Multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
     in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
     another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication.
-- axle - An axis of curvature.
+- axle - An axis of curvature, or more commonly, axis of rotation.
 - curvature - a change in angle over time.
    - A point translated to another location by curving its forward motion; does not require a third point like 'rotation'. 
    - Warps the relative space around an axle, thereby translating all points in that space to a new position.
