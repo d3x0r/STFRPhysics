@@ -157,8 +157,7 @@ way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|
 ### Conversion from Vector Complex to Quaternion
 
 The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
-Reasoning and proof of the following is not provided; intuitively, expanding the vector across a 
-matrix assigns the imaginary parts anyway.
+Intuitively, expanding the vector across a matrix assigns the imaginary parts.
 
 Figure H
 ```
@@ -228,17 +227,21 @@ For programmatic purposes, the scaling of the real part may not matter, so the f
 
 Figure K
 ```
-   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
+                                               , (y/axisSquare)/sin(angle/2)
+                                               , (z/axisSquare)/sin(angle/2) ) ε
 ```
 
-## lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
+### lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
 
-The 'Twister.md' document goes into [more detail](Twister.md).
+Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  The 'Twister.md' document goes into [more detail](Twister.md) about this procedure. 
 
 This a general purpose rotation of a rotation around some aribtrary axis by some angle theta, which retains relative angles.
-
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
+Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
+
+Figure L
 ``` js
 	as = sin( theta )
 	ac = cos( theta )
@@ -278,6 +281,60 @@ Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,
 		z = Cz/Clx*angle;
 	}
 ```
+
+### Getting the frame of a rotation
+
+For a log quaternion `(x,y,z)`, the basis matrix is computed by applying the rotation to the fixed points `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` and using the result as the
+basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can just be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
+
+This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
+
+Figure M
+```
+	if( !del ) del = 1.0; // assume 1.0 as time to show.
+	
+	nR = sqrt(x*x + y*y + z*z );
+	nt = (|x|+|y|+|z|)/2;
+	s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
+	c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+
+	qx = x/nR; // normalizes the imaginary parts
+	qy = y/nR; // output = 1(unit vector)  in  x,y,z parts.
+	qz = z/nR; // 
+```
+
+One might note that multiplications for this are highly parallel, and the resulting basis matrix is nearly cheaper than rotating an arbitrary point; however
+applying the matrix to every point afterward manually increases the amount of calculations to greater than just applying the rotation to a point, especially with
+the `sin()` and `cos()` precomputed.
+
+Figure N
+```
+	xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+
+	wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
+	wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
+	wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+
+	xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+
+	basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
+                , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
+                , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+        };
+```
+
+
+### Regarding Specific Representation
+
+It may seem that a more 'primary' representation of rotation is axis-angle, as that also does not lose precision, and can easily be scaled for relative comparisons with other
+rotations. This would be the same effect as carrying speed and a unit vector representing a direction for velocity calculations; but similarly the `(x,y,z)` coordinates of a velocity vector are actually 4 dimensional `(speed, dx, dy, dz )`.  The speed of a body spinning (2π,2π,2π) is not `sqrt(3) * 2π`, but rather is `3 * 6π`.
+
+Consider that before a rotation of more than 2π can happen, it first has to have a rotation vector `(1/3,1/3,1/3)*2π`.  `(2/3,2/3,2/3)*2π` is 2 rotations around the axle, and `(3/3,3/3,3/3)*2π` is 3 rotations arond the axis in the direction of (1,1,1).
+
 
 ### Generalized Parameterization of Log Complex (experimental)
 
@@ -342,7 +399,7 @@ Figure M
 
 Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
 get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
-but result by curving space, and finding the relative extrernal point.
+but result by applying the curvature to regular cartesian space axis unit vectors, and using the relative external vector as a rotation axis.
 
 
 # Further Work to do
@@ -355,6 +412,10 @@ included in the rotation?  Seems like the result would be perpendicular to reali
 
  1) Really sort of feels like we live in a 3D universe, time, with 0 degrees of freedom, spin with 3 degrees of freedom, but with a linear normal, and linear motion
 with 3 degrees of freedom, but a square normal... (n^0,n^1,n^2).
+
+## Additional Resources
+
+Wikipedia article with formatted maths.  https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Quaternion_Natural_Log  (wikipedia.wiki source file)
 
 
 ## References
