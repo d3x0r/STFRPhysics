@@ -69,7 +69,7 @@ The imaginary part doesn't collapse and become a real,  but instead remains as a
 scalar being builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
 
 __Figure A__
-```
+``` js
    ln(A+Bi)   = a+bε
    exp(a+bε)  = A+Bi
 ```
@@ -83,14 +83,14 @@ components, and get the angle of rotation (Figure B).  This expression is simpli
 
 
 __Figure B__
-```
+``` js
     ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ε
 ```
 
 Exponent of a log complex (Figure C).
 
 Figure C
-```
+``` js
     exp( A+Bε ) = exp(A) * cos( |B| ) + exp(A) * B/sqrt(B*B) * sin( |B| )i
 ```
 
@@ -100,7 +100,7 @@ Figure C
   - B has a single dimension, this looks like it's equivalent to (Figure D).
 
 __Figure D__
-```
+``` js
     exp( A+Bε ) = exp(A) * cos(B) + exp(A) * sin(B)i
 ```
 
@@ -108,14 +108,14 @@ __Figure D__
 Which is the common expression of `ln(A+Bi)` shown in (figure E).
 
 __Figure E__
-```
+``` js
     exp( A+Bε ) = A * cos(B) + A * sin(B)i
 ```
 
 It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, `A=0` and `exp(0)=1` to become (Figure F).
 
 __Figure F__
-```
+``` js
     exp( 0+Bε ) = cos(B) + sin(B)i
 ```
 ### Vector Complex Extension
@@ -124,7 +124,7 @@ Instead of a single scalar `B` in the complex number, this can be represented wi
 common scalar `b`. (Figure G)
 
 __Figure G__
-```
+``` js
     if   B = b(x,y,z)
     then A+Bi = A + b(x,y,z)i
 ```
@@ -148,7 +148,7 @@ Having simplifed the math internally (removing common terms, consolidating const
 turns out that keeping `sin(θ/2)` and `cos(θ/2)` actually `sin(2*θ/2)` or `sin(θ)`, the same for `cos`.
 
 __Figure H__
-```
+``` js
    (x,y,z)i =  sin(arcsin(x)/2)i + sin(arcsin(y)/2)j + sin(arcsin(z)/2)k;
 ```
 
@@ -160,7 +160,7 @@ normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  Using the same method fo
 while treating B as a vector (Figure G).
 
 __Figure G__
-```
+``` js
   exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
@@ -172,7 +172,7 @@ __Figure G__
 If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion is a valid unit quaternion (figure H).
 
 __Figure H__
-```
+``` js
   exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
@@ -196,7 +196,7 @@ and `θ` is the angle of rotation around that axle.
 Compute the normal, and the angle from the real component's `arccos()` (Figure I).
 
 __Figure I__
-```
+``` js
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ/2)+sin(θ/2)...)
    angle = acos(A/normAB)*2
@@ -205,7 +205,7 @@ __Figure I__
 And finally build the log-quaternion (Figure J).
 
 __Figure J__
-```
+``` js
    ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
                                            , (y/axisSquare)/sin(angle/2)
                                            , (z/axisSquare)/sin(angle/2) ) ε
@@ -214,7 +214,7 @@ __Figure J__
 For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
 
 __Figure K__
-```
+``` js
    ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
                                                , (y/axisSquare)/sin(angle/2)
                                                , (z/axisSquare)/sin(angle/2) ) ε
@@ -278,13 +278,13 @@ basis vectors to scale spacial points with.  The first part of the matrix calcul
 This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
 
 __Figure M__
-```
+``` js
 	if( !del ) del = 1.0; // assume 1.0 as time to show.
 	
 	nR = sqrt(x*x + y*y + z*z );
-	nt = (|x|+|y|+|z|)/2;
-	s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
-	c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+	nt = |x|+|y|+|z|;
+	s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+	c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
 
 	qx = x/nR; // normalizes the imaginary parts
 	qy = y/nR; // output = 1(unit vector)  in  x,y,z parts.
@@ -296,7 +296,7 @@ applying the matrix to every point afterward manually increases the amount of ca
 the `sin()` and `cos()` precomputed.
 
 __Figure N__
-```
+``` js
 	xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
 	yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
 	xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
@@ -322,18 +322,17 @@ variable `nst` is `normal sign theta`; `qw` is `exp(lnQ).w` or `cos(theta/2)`.  
 short `exp()` builtin as cached values.
 
 __Figure S__
-```
-	nst = q.s;  //sin(θ/2)
-	qw = q.qw;  //cos(θ/2)
+``` js
+	nst = q.s  //sin(θ/2)
+	qw = q.qw  //cos(θ/2)
 
 	qx = q.nx*nst;
 	qy = q.ny*nst;
 	qz = q.nz*nst;
 
-	//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
-	tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
-	ty = 2 * (qz * v.x - qx * v.z);
-	tz = 2 * (qx * v.y - qy * v.x);
+	tx = 2 * (qy * v.z - qz * v.y)
+	ty = 2 * (qz * v.x - qx * v.z)
+	tz = 2 * (qx * v.y - qy * v.x)
 
 	  x : v.x + qw * tx + ( qy * tz - ty * qz )
 	  y : v.y + qw * ty + ( qz * tx - tz * qx )
@@ -393,14 +392,14 @@ The exponentiation of a log complex number, as defined, applies the same 'A' sca
 to specify two differnt constants for the real and imaginary components (Figure O).  
 
 __Figure O__
-```
- (ln(A1), ln(A2)) + (x,y,z)ε
+``` js
+   (ln(A1), ln(A2)) + (x,y,z)ε
 ```
 
 which, on exponentiation can be (figure P)
 
 __Figure P__
-```
+``` js
   theta = |x|+|y|+|z|;
   sqNorm = sqrt( x*x + y*y + z*z );
   exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
@@ -412,7 +411,7 @@ Recovering the separate `A1`, and `A2` values from a complex number is improbabl
 also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
 
 __Figure Q__
-```
+``` js
  ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
         describes 3 dimensional axis, rotation around that axis, 
         and the offset of the rotation from 1.0 around that axis... 
@@ -439,7 +438,7 @@ but a motion inertia or velocity vector has nothing to do the axis of rotation, 
 a cross product of the actual acceleration vector.
 
 __Figure R__
-```
+``` js
    exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
                      + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
                      + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
