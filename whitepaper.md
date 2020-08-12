@@ -28,7 +28,7 @@ all points in the frame to this new frame.
 The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
 while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
 when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
-that lines; even in space, gravity applies a curvature to your inertia).
+that line to get there; even in space, gravity applies a curvature to your inertia).
 When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
 retains the correct relative angles within the rotation space; including potential orbital jumps.
 
