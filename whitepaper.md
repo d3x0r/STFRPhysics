@@ -44,6 +44,7 @@ the total angular speed of an object.
 - curvature - A point translated to another location by curving its forward motion; does not require a third point.
 - frame - The orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
 - log-complex - A natural log of a complex number.
+- modulate - Applying a modulo operator to a number to get the prinicpal angle result.
 - rotation - A point translated to another location describing a pivot around a third point.
 - spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
 - vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
@@ -72,6 +73,10 @@ quaternion are limited to representing the single
 frame at T=1 for some base rotation (x,y,z).  They only represent the principal projection of that rotation, 
 such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
 
+There are some things this can't do
+ - can't generate a mandelbrot without taking the modulo of the current angular velocity; for some result spin more than π, the result has to wrap to -π.
+ - doesn't compare products of numbers, especially prime numbers that are a modulo of (2?)π.
+ 
 
 ## Log of Complex Numbers and Exponentiation of Log Complex Numbers
 
@@ -100,10 +105,9 @@ components, and get the angle of rotation (Figure B).  This expression is simpli
 Figure B
 ```
     ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ε
-
 ```
 
-Exponent of a log complex (Figure C):
+Exponent of a log complex (Figure C).
 
 Figure C
 ```
@@ -128,8 +132,6 @@ Figure E
     exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
 ```
 
-
-
 It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, since `A=0` and `exp(0)=1` to become (Figure F).
 
 Figure F
@@ -139,11 +141,12 @@ Figure F
 ### Vector Complex Extension
 
 Instead of a single scalar `B` in the complex number, this can be represented with a multipart vector, which has a square normal of 1 scaled by a
-common scaler `b`.
+common scalar `b`. (Figure G)
 
+Figure G
 ```
-    if   B = (x,y,z)
-    then A+Bi = A + (x,y,z)i
+    if   B = b(x,y,z)
+    then A+Bi = A + b(x,y,z)i
 ```
 
 When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
@@ -151,20 +154,23 @@ way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|
 `(x/y/z)/cbrt(xxx+yyy+zzz)` but I've never seen an application of this sort of normal (Footnote 1). 
 
 
+### Conversion from Vector Complex to Quaternion
+
+The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
+Reasoning and proof of the following is not provided; intuitively, expanding the vector across a 
+matrix assigns the imaginary parts anyway.
+
+Figure H
+```
+   (x,y,z)i = xi + yj + zk;
+```
+
 ### Log Vector Complex to Quaternion conversion
 
 The sum of the curvatures is the total rotation of the system, or is the angle around the axle to curve all
 other spacial points by.  `|X|+|Y|+|Z|` is the total rotation.  The axis of rotation is the same coordinates
-normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  
-
-Using the same method for `exp(lnC)`
-
-Figure F
-```
-  exp( A+Bε ) = exp(A) * cos(|B|)/2) + exp(A) * B/sqrt(B*B) * sin( (B/|B|) /2)i
-```
-
-But instead treating B as a vector...
+normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  Using the same method for `exp(lnC)` (figure C), 
+while treating B as a vector (Figure G).
 
 Figure G
 ```
@@ -176,7 +182,7 @@ Figure G
 ```
 
 
-If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion.
+If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion (figure H).
 
 Figure H
 ```
@@ -198,126 +204,42 @@ Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) *
 and `θ` is the angle of rotation around that axle.
 
 
-## Quaternion to Log Quatnerion
+### Vector Complex to Log Complex (ln(vector complex))
 
-Compute the normal (Figure I)
+Compute the normal, and the angle from the real component's `arccos()` (Figure I).
 
 Figure I
 ```
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
-
    angle = acos(A/normAB)*2
 ```
 
-And finally build the log-quaternion...
+And finally build the log-quaternion (Figure J).
 
 Figure J
 ```
-   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
+                                           , (y/axisSquare)/sin(angle/2)
+                                           , (z/axisSquare)/sin(angle/2) ) ε
 ```
 
-For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful
+For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
 
 Figure K
 ```
    ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
 ```
 
-The real part, (The A) might instead be represted by a vector `(x,y,z)`, and also may not fully apply to the imaginary part(? Having only
-recently discovered this, I leave that to minds brighter than mine).
-
-
-Figure L
-```
-   exp( A+(x,y,z)ε ) = A * cos( (|x|+|y|+|z|)/2) 
-                     + A * sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + A * sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + A * sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
-```
-
-
-Experimentally I was only interested in pure rotations, with 0 real part...  
-The real part is just a scalar of elevetion from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevtation or offset,
-but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
-to the actual acceleration vector, since that vector is actually outside the current rotation.
-
-Figure M
-```
-   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
-                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
-```
-
-
-Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
-get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
-but result by curving space, and finding the relative extrernal point.
-
-### Conversion from Vector Complex to Quaternion
-
-This should be specified as an implied rule.  Reasoning and proof of the following is not provided.
-
-Figure N
-```
-   (x,y,z)i = xi + yj + zk;
-```
-
-### Generalized Parameterization of Log Complex
-
-The exponetiation of a log complex number applies the same 'A' scalar to the real and imaginary components, instead this could be split
-to specify two differnt constants for the real and imaginary components.
-
-Figure O
-```
- (ln(A1), ln(A2)) + (x,y,z)ε
-```
-
-which, on exponentiation can be (figure P)
-
-Figure P
-```
-  theta = |x|+|y|+|z|;
-  sqNorm = sqrt( x*x + y*y + z*z );
-  exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
-```
-
-which (should) give more an an elliptical projection from log-complex space given 5 dimensions (Figure Q).
-
-Recovering the separate `A1`, and `A2` values from a complex number is improbable, since it would look like a change in the angle computed by the tangent;
-also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
-
-
-Figure Q
-```
- ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
-        describes 3 dimensional axis, rotation around that axis, 
-        offset of the rotation from 1 around that axis... 
-        (which looks like 5 degrees of freedom from 4 numbers)
-
- ( R1, R2, X, Y, Z ) -> (x,y,z,angle, offset, alpha_blend of rotation/linear scalar?) 
-
- // These can be scaled the same way the x/y/z are, and find another degree of freedom in their total
- //   
- len = |R1|+|R2| = R total
- R1Rel = R1/sqrt(R1+R2)
- R2Rel = R2/sqrt(R1+R2) 
- R1Lin = R1/len
- R2Lin = R2/len 
-    exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
-```
-
 ## lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
 
-[Extended commentary](Twister.md)
+The 'Twister.md' document goes into [more detail](Twister.md).
 
-
-This a general purpose rotation of a rotation around some aribtrary axis by some angle theta.
+This a general purpose rotation of a rotation around some aribtrary axis by some angle theta, which retains relative angles.
 
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
-```js
+``` js
 	as = sin( theta )
 	ac = cos( theta )
 	q = { qw: cos( |x|+|y|+|z| / 2 )
@@ -356,6 +278,72 @@ Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,
 		z = Cz/Clx*angle;
 	}
 ```
+
+### Generalized Parameterization of Log Complex (experimental)
+
+Further experimentation can explore the possibilty of splitting the single scalar into two parts; or perhaps a ratio factor of amount to apply spin vs linear(real) factor.
+The exponentiation of a log complex number, as defined, applies the same 'A' scalar to the real and imaginary components, instead the scalar could be split
+to specify two differnt constants for the real and imaginary components (Figure O).  
+
+Figure O
+```
+ (ln(A1), ln(A2)) + (x,y,z)ε
+```
+
+which, on exponentiation can be (figure P)
+
+Figure P
+```
+  theta = |x|+|y|+|z|;
+  sqNorm = sqrt( x*x + y*y + z*z );
+  exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
+```
+
+which (should) give more an an elliptical projection from log-complex space given 5 dimensions (Figure Q).
+
+Recovering the separate `A1`, and `A2` values from a complex number is improbable, since it would look like a change in the angle computed by the tangent;
+also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
+
+Figure Q
+```
+ ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
+        describes 3 dimensional axis, rotation around that axis, 
+        and the offset of the rotation from 1.0 around that axis... 
+        (which looks like 5 degrees of freedom encoded in 4 numbers)
+
+ ( R1, R2, X, Y, Z ) -> (x,y,z,angle, offset, alpha_blend of rotation/linear scalar?) 
+
+ // These can be scaled the same way the x/y/z are, and find another degree of freedom in their total
+ //   
+ len = |R1|+|R2| = R total
+ R1Rel = R1/sqrt(R1+R2)
+ R2Rel = R2/sqrt(R1+R2) 
+ R1Lin = R1/len
+ R2Lin = R2/len 
+    exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
+```
+
+
+### Scope of Development
+
+Existing development concentrated only on pure rotations, with 0 real part on the log-quaternion.  
+The real part is just a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
+but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
+to the actual acceleration vector, since that vector is actually outside the current rotation.
+
+Figure M
+```
+   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
+                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+```
+
+
+Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
+get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
+but result by curving space, and finding the relative extrernal point.
+
 
 # Further Work to do
 
