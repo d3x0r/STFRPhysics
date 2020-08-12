@@ -21,9 +21,10 @@ The coordinate space of rotations, hence called 'rotation space' or 'rotation ma
 of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
 where additional axles composite into a single composite axle, around which all space is translated.  The coordinates of a curvature are
 in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
-Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
-as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
-all points in the frame to this new frame.
+Velocity sums to a position, angular velocity sums to an angular position.  
+
+Curvature at time 0 is the same as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) 
+vectors used to warp all points in the frame to this new frame.
 
 The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
 while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
@@ -38,7 +39,7 @@ the normal of the vector representing angular velocity is the axis of rotation. 
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
 the [total angular warp](#regarding-specific-representation) of coodinate space.
 
-Coorindates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
+Coordinates within the rotation space have a concentric spherical shell nature to them, any line radially
 from the origin is the same rotation axle, with a different angular speed.
 
 ### Glossary
@@ -197,7 +198,7 @@ Compute the normal, and the angle from the real component's `arccos()` (Figure I
 __Figure I__
 ```
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
-   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
+   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ/2)+sin(θ/2)...)
    angle = acos(A/normAB)*2
 ```
 
@@ -223,15 +224,15 @@ __Figure K__
 
 Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  The 'Twister.md' document goes into [more detail](Twister.md) about this procedure. 
 
-This a general purpose rotation of a rotation around some aribtrary axis by some angle theta, which retains relative angles.
+This a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles.
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
 Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
 
 __Figure L__
 ``` js
-	as = sin( theta )
-	ac = cos( theta )
+	as = sin( θ )
+	ac = cos( θ )
 	q = { qw: cos( |x|+|y|+|z| / 2 )
             , s : sin( |x|+|y|+|z| / 2 )
 	    , nL : |x|+|y|+|z|
@@ -314,6 +315,32 @@ __Figure N__
         };
 ```
 
+### Rotating a 3D vector
+
+(Figure S) applies a rotation to a single point.  Given a point `v`, with `x,y,z` coordinates, and rotation `q` with `nx,ny,nz,sin(s),cos(qw)`, result with `x,y,z`.  The working
+variable `nst` is `normal sign theta`; `qw` is `exp(lnQ).w` or `cos(theta/2)`.  This is essentially the same procedure as applying a quaternion to a point, with the
+short `exp()` builtin as cached values.
+
+__Figure S__
+```
+	nst = q.s;  //sin(θ/2)
+	qw = q.qw;  //cos(θ/2)
+
+	qx = q.nx*nst;
+	qy = q.ny*nst;
+	qz = q.nz*nst;
+
+	//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
+	tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
+	ty = 2 * (qz * v.x - qx * v.z);
+	tz = 2 * (qx * v.y - qy * v.x);
+
+	  x : v.x + qw * tx + ( qy * tz - ty * qz )
+	  y : v.y + qw * ty + ( qz * tx - tz * qx )
+	  z : v.z + qw * tz + ( qx * ty - tx * qy )
+
+```
+
 ### Applications
 
 Relative rotations can be used to synchronize two rotating bodies; in games or a purely virtual world, this gives a direct SLERP operation with addition.  The rotation
@@ -326,20 +353,23 @@ This rotation system also gives the ability to render theoretical curves like Be
 
 ### Comparison to Existing Methods
 
-There was a system 'Euler angles', but the angles are applied in a specfic order in order to rotate a space, so comparisons
-of two sets of angles fails to produce a meaningful result.  While similar to Euler angles, this is NOT Euler angles.
-Other than Euler angles, existing methods of representing and computing rotations are at a specific time `T=1`, and lose the flexibility
+There is a system 'Euler angles', but the angles are applied in a specfic order in order to rotate a space, so comparisons
+of two sets of angles fails to produce a meaningful result; it is also nearly impossible to get an axis of rotation from Euler angles.
+While similar to Euler angles, in that this is also 3 angles, this is NOT Euler angles.  
+
+Other than Euler angles, existing methods of representing and computing 
+rotations are at a specific time `T=1`, and lose the flexibility
 to evaluate their basis frame at any other step.  The computational cost of keeping homogenous angles is low, `sin()` and `cos()` functions are less
 expensive than `sqrt()`, and that's not all that expensive; the order of operations is actually highly parallel in the computations, requiring
-few vector reorders for cross-product type operations. 
+few vector reorders for cross-product type operations.  Existing models of rotation with multiplication are limited to 0-2pi; this is only 1/2 of the rotation space; 
+there's lots of talk about 'double covering' of spherical coordinate systems,
+but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; 
+although it should be noted that the phrase would be 'infinite covering' of projected rotations, 
+where every +2π rotation results with the same basis frame or representation of the rotation.
 
-Other existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
-but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; although it should be noted that the phrase would
-be 'infinite covering' of projected rotations, for every +6π project as basis frame or representation of the rotation.
-
-These coordinates offer the flexibility to model rotation at any time T and not just at tick 1; a rotation matrix or a 
-quaternion are limited to representing the single
-frame at T=1 for some base rotation (x,y,z).  They only represent the principal projection of that rotation, 
+This rotation space coordinate systems offer the flexibility to model rotation at any time T and not just at tick 1; versus, as mentioned, a rotation matrix or a 
+quaternion is limited to representing the single
+frame at T=1 for some base rotation (x,y,z).  Matricii and quaternions also only represent the principal projection of that rotation, 
 such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
 
 There are some things this can't do
