@@ -9,68 +9,53 @@ Independant Studies
 
 ## Abstract
 
-The essential function defining this rotation space map is the exponetial of a log-complex, and by extension
-of a log-vector-complex.
+There exists a coordinate space of rotations that's not self covering.  The essential function defining this rotation space map 
+is the exponential of a log-complex, and by extension of a log-vector-complex.  This paper will define a notation of log
+complex numbers, and modification to the exponential function, the extension from a single scalar to a scaled unit vector, 
+conversion to quaternion, detail the cross product of two natural log vector complex numbers, computation of the basis vectors of
+a rotation, applications, comparison with existing methods and rotation mappings, and additional experimental methods to try.
 
 ## Introduction
 
-Curvature is a translation of a rectangular space around 1 or more axles; where additional axles composite
-into a single composite axle, around which all space is translated.  The coordinates of a curvature are
-in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `distance/dT`.
-Just like velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
-as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors, which can be
-used to scale all points in the frame to this new frame.
+The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
+of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
+where additional axles composite into a single composite axle, around which all space is translated.  The coordinates of a curvature are
+in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
+Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
+as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
+all points in the frame to this new frame.
 
-The space of coordinates representing rotations is linear, be compared relatively (which is to say to 
-take the difference of the rotations).
-when a rotation is rotated, the operation is still `lnQ1 x lnQ2` and not addition, and is the 
-same result as `exp(lnQ1) x exp(lnQ2)`; although the math performed is not the same, and the former 
-retains the relative spin count over time.
+The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
+while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
+when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
+that line to get there; even in space, gravity applies a curvature to your inertia).
+When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
+retains the correct relative angles within the rotation space; including potential orbital jumps.
 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the total angular speed of an object.  
+the [total angular warp](#regarding-specific-representation) of coodinate space.
 
-
+Coorindates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
+from the origin is the same rotation axle, with a different angular speed.
 
 ### Glossary
 
-- apply() - Multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
+- apply - Multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
     in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
     another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication.
 - axle - An axis of curvature.
 - curvature - A point translated to another location by curving its forward motion; does not require a third point.
 - frame - The orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
 - log-complex - A natural log of a complex number.
+- modulate - Applying a modulo operator to a number to get the prinicpal angle result.
 - rotation - A point translated to another location describing a pivot around a third point.
 - spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
 - vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
 
 ---
-
-
-### Applications
-
-Relative rotations can be used to synchronize two rotating bodies; in games or a purely virtual world, this gives a direct SLERP operation with addition.  The rotation
-can be synchronized separately from the linear position; for example piloting a craft in Elite Dangerous and docking at a station from a tangential approach to the docking bay.
-
-Surfaces with curvatures more than zero, can be compared relatively by looking at the change in curvature from one location to another; this would be comparing
-unit curvatures or curvatures at `T=1`.
-
-This rotation system also gives the ability to render theoretical curves like Bertrand Curves where all the frames have a common normal axis to them.  Also can demonstrate Hopf Fibrations by doing arbitrary rotations around 3 axles, again, maintaining the base relative rotation coordinate, instead of being truncated.
-
-### Comparison to Existing Methods
-
-Existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
-but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; although it should be noted that the phrase would
-be 'infinite covering' of projected rotations, since for every +6π project as basis frame or representation of the rotation.
-
-These coordinates offer the flexibility to model rotation at any time T and not just at tick 1; a rotation matrix or a 
-quaternion are limited to representing the single
-frame at T=1 for some base rotation (x,y,z).  They only represent the principal projection of that rotation, 
-such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
 
 
 ## Log of Complex Numbers and Exponentiation of Log Complex Numbers
@@ -79,11 +64,10 @@ The natural log of the complex number `0+i` is `π/2`.  This is just a scalar, h
 standard arcsin/arccos functions,  which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. 
 The resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. 
 
-The imaginary part doesn't collapse and become a real,  but instead remains as a dual number with a notation `ε`, and since the `π/2` 
-scalar is builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
+The imaginary part doesn't collapse and become a real,  but instead remains as a dual number with a notation `ε`, and the `π/2` 
+scalar being builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
 
-
-Figure A
+__Figure A__
 ```
    ln(A+Bi)   = a+bε
    exp(a+bε)  = A+Bi
@@ -97,13 +81,12 @@ Apply `exp()` to log-complex from a complex number, involves normalizing the rea
 components, and get the angle of rotation (Figure B).  This expression is simplified from other factors...
 
 
-Figure B
+__Figure B__
 ```
     ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ε
-
 ```
 
-Exponent of a log complex (Figure C):
+Exponent of a log complex (Figure C).
 
 Figure C
 ```
@@ -115,35 +98,34 @@ Figure C
   - `B/sqrt(B*B)` keeps the sign of B, which is lost in the `sin(|B|/2)`, is restored; so the abosolute value in the `sin()` expression is not needed.
   - B has a single dimension, this looks like it's equivalent to (Figure D).
 
-Figure D
+__Figure D__
 ```
     exp( A+Bε ) = exp(A) * cos(B/2) + exp(A) * sin(B/2)i
 ```
 
 
-Which becomes the common expression of `ln(A+Bi)` shown in (figure E).
+Which is the common expression of `ln(A+Bi)` shown in (figure E).
 
-Figure E
+__Figure E__
 ```
     exp( A+Bε ) = A * cos(B/2) + A * sin(B/2)i
 ```
 
+It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, `A=0` and `exp(0)=1` to become (Figure F).
 
-
-It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, since `A=0` and `exp(0)=1` to become (Figure F).
-
-Figure F
+__Figure F__
 ```
     exp( 0+Bε ) = cos(B/2) + sin(B/2)i
 ```
 ### Vector Complex Extension
 
 Instead of a single scalar `B` in the complex number, this can be represented with a multipart vector, which has a square normal of 1 scaled by a
-common scaler `b`.
+common scalar `b`. (Figure G)
 
+__Figure G__
 ```
-    if   B = (x,y,z)
-    then A+Bi = A + (x,y,z)i
+    if   B = b(x,y,z)
+    then A+Bi = A + b(x,y,z)i
 ```
 
 When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
@@ -151,22 +133,24 @@ way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|
 `(x/y/z)/cbrt(xxx+yyy+zzz)` but I've never seen an application of this sort of normal (Footnote 1). 
 
 
+### Conversion from Vector Complex to Quaternion
+
+The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
+Intuitively, expanding the vector across a matrix assigns the imaginary parts.
+
+__Figure H__
+```
+   (x,y,z)i = xi + yj + zk;
+```
+
 ### Log Vector Complex to Quaternion conversion
 
 The sum of the curvatures is the total rotation of the system, or is the angle around the axle to curve all
 other spacial points by.  `|X|+|Y|+|Z|` is the total rotation.  The axis of rotation is the same coordinates
-normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  
+normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  Using the same method for `exp(lnC)` (figure C), 
+while treating B as a vector (Figure G).
 
-Using the same method for `exp(lnC)`
-
-Figure F
-```
-  exp( A+Bε ) = exp(A) * cos(|B|)/2) + exp(A) * B/sqrt(B*B) * sin( (B/|B|) /2)i
-```
-
-But instead treating B as a vector...
-
-Figure G
+__Figure G__
 ```
   exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -176,9 +160,9 @@ Figure G
 ```
 
 
-If the log-quaternion has a 0 real part, then since `exp(0)=1`, every nil log-quaternion is a valid unit quaternion.
+If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion is a valid unit quaternion (figure H).
 
-Figure H
+__Figure H__
 ```
   exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
@@ -198,126 +182,46 @@ Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) *
 and `θ` is the angle of rotation around that axle.
 
 
-## Quaternion to Log Quatnerion
+### Vector Complex to Log Complex (ln(vector complex))
 
-Compute the normal (Figure I)
+Compute the normal, and the angle from the real component's `arccos()` (Figure I).
 
-Figure I
+__Figure I__
 ```
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
    normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(theta/2)+sin(theta/2)...)
-
    angle = acos(A/normAB)*2
 ```
 
-And finally build the log-quaternion...
+And finally build the log-quaternion (Figure J).
 
-Figure J
+__Figure J__
 ```
-   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
-```
-
-For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful
-
-Figure K
-```
-   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2),  (y/axisSquare)/sin(angle/2), (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
+                                           , (y/axisSquare)/sin(angle/2)
+                                           , (z/axisSquare)/sin(angle/2) ) ε
 ```
 
-The real part, (The A) might instead be represted by a vector `(x,y,z)`, and also may not fully apply to the imaginary part(? Having only
-recently discovered this, I leave that to minds brighter than mine).
+For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
 
-
-Figure L
+__Figure K__
 ```
-   exp( A+(x,y,z)ε ) = A * cos( (|x|+|y|+|z|)/2) 
-                     + A * sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + A * sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + A * sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
+                                               , (y/axisSquare)/sin(angle/2)
+                                               , (z/axisSquare)/sin(angle/2) ) ε
 ```
 
+### lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
 
-Experimentally I was only interested in pure rotations, with 0 real part...  
-The real part is just a scalar of elevetion from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevtation or offset,
-but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be `apply()`ed
-to the actual acceleration vector, since that vector is actually outside the current rotation.
+Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  The 'Twister.md' document goes into [more detail](Twister.md) about this procedure. 
 
-Figure M
-```
-   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
-                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
-```
-
-
-Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
-get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
-but result by curving space, and finding the relative extrernal point.
-
-### Conversion from Vector Complex to Quaternion
-
-This should be specified as an implied rule.  Reasoning and proof of the following is not provided.
-
-Figure N
-```
-   (x,y,z)i = xi + yj + zk;
-```
-
-### Generalized Parameterization of Log Complex
-
-The exponetiation of a log complex number applies the same 'A' scalar to the real and imaginary components, instead this could be split
-to specify two differnt constants for the real and imaginary components.
-
-Figure O
-```
- (ln(A1), ln(A2)) + (x,y,z)ε
-```
-
-which, on exponentiation can be (figure P)
-
-Figure P
-```
-  theta = |x|+|y|+|z|;
-  sqNorm = sqrt( x*x + y*y + z*z );
-  exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
-```
-
-which (should) give more an an elliptical projection from log-complex space given 5 dimensions (Figure Q).
-
-Recovering the separate `A1`, and `A2` values from a complex number is improbable, since it would look like a change in the angle computed by the tangent;
-also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
-
-
-Figure Q
-```
- ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
-        describes 3 dimensional axis, rotation around that axis, 
-        offset of the rotation from 1 around that axis... 
-        (which looks like 5 degrees of freedom from 4 numbers)
-
- ( R1, R2, X, Y, Z ) -> (x,y,z,angle, offset, alpha_blend of rotation/linear scalar?) 
-
- // These can be scaled the same way the x/y/z are, and find another degree of freedom in their total
- //   
- len = |R1|+|R2| = R total
- R1Rel = R1/sqrt(R1+R2)
- R2Rel = R2/sqrt(R1+R2) 
- R1Lin = R1/len
- R2Lin = R2/len 
-    exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
-```
-
-## lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
-
-[Extended commentary](Twister.md)
-
-
-This a general purpose rotation of a rotation around some aribtrary axis by some angle theta.
-
+This a general purpose rotation of a rotation around some aribtrary axis by some angle theta, which retains relative angles.
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
-```js
+Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
+
+__Figure L__
+``` js
 	as = sin( theta )
 	ac = cos( theta )
 	q = { qw: cos( |x|+|y|+|z| / 2 )
@@ -357,6 +261,159 @@ Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,
 	}
 ```
 
+### Getting the frame of a rotation
+
+For a log quaternion `(x,y,z)`, the basis matrix is computed by applying the rotation to the fixed points `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` and using the result as the
+basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can just be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
+
+This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
+
+__Figure M__
+```
+	if( !del ) del = 1.0; // assume 1.0 as time to show.
+	
+	nR = sqrt(x*x + y*y + z*z );
+	nt = (|x|+|y|+|z|)/2;
+	s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
+	c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+
+	qx = x/nR; // normalizes the imaginary parts
+	qy = y/nR; // output = 1(unit vector)  in  x,y,z parts.
+	qz = z/nR; // 
+```
+
+One might note that multiplications for this are highly parallel, and the resulting basis matrix is nearly cheaper than rotating an arbitrary point; however
+applying the matrix to every point afterward manually increases the amount of calculations to greater than just applying the rotation to a point, especially with
+the `sin()` and `cos()` precomputed.
+
+__Figure N__
+```
+	xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+
+	wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
+	wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
+	wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+
+	xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+
+	basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
+                , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
+                , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+        };
+```
+
+### Applications
+
+Relative rotations can be used to synchronize two rotating bodies; in games or a purely virtual world, this gives a direct SLERP operation with addition.  The rotation
+can be synchronized separately from the linear position; for example piloting a craft in Elite Dangerous and docking at a station from a tangential approach to the docking bay.
+
+Surfaces with curvatures more than zero, can be compared relatively by looking at the change in curvature from one location to another; this would be comparing
+unit curvatures or curvatures at `T=1`.
+
+This rotation system also gives the ability to render theoretical curves like Bertrand Curves where all the frames have a common normal axis to them.  Also can demonstrate Hopf Fibrations by doing arbitrary rotations around 3 axles, again, maintaining the base relative rotation coordinate, instead of being truncated.
+
+### Comparison to Existing Methods
+
+There was a system 'Euler angles', but the angles are applied in a specfic order in order to rotate a space, so comparisons
+of two sets of angles fails to produce a meaningful result.  While similar to Euler angles, this is NOT Euler angles.
+Other than Euler angles, existing methods of representing and computing rotations are at a specific time `T=1`, and lose the flexibility
+to evaluate their basis frame at any other step.  The computational cost of keeping homogenous angles is low, `sin()` and `cos()` functions are less
+expensive than `sqrt()`, and that's not all that expensive; the order of operations is actually highly parallel in the computations, requiring
+few vector reorders for cross-product type operations. 
+
+Other existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
+but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; although it should be noted that the phrase would
+be 'infinite covering' of projected rotations, for every +6π project as basis frame or representation of the rotation.
+
+These coordinates offer the flexibility to model rotation at any time T and not just at tick 1; a rotation matrix or a 
+quaternion are limited to representing the single
+frame at T=1 for some base rotation (x,y,z).  They only represent the principal projection of that rotation, 
+such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
+
+There are some things this can't do
+ - can't generate a mandelbrot without taking the modulo of the current angular velocity; for some result spin more than π, the result has to wrap to -π.
+ - doesn't compare products of numbers, especially prime numbers that are a modulo of (2?)π.
+
+
+### Regarding Specific Representation
+
+It may seem that a more 'primary' representation of rotation is axis-angle, as that also does not lose precision, and can easily be scaled for relative comparisons with other
+rotations. This would be the same effect as carrying speed and a unit vector representing a direction for velocity calculations; but similarly the `(x,y,z)` coordinates of a velocity vector are actually 4 dimensional `(speed, dx, dy, dz )`.  The speed of a body spinning (2π,2π,2π) is not `sqrt(3) * 2π`, but rather is `3 * 6π`.
+
+Consider that before a rotation of more than 2π can happen, it first has to have a rotation vector `(1/3,1/3,1/3)*2π`.  `(2/3,2/3,2/3)*2π` is 2 rotations around the axle, and `(3/3,3/3,3/3)*2π` is 3 rotations arond the axis in the direction of (1,1,1).
+
+One might also say that velocity or spacial coordinates should be `(speed,x,y,z)` define the rate to change, and the normal direction to go, with a unit vector is spherical. Although curvatures or rotations make things feel spherical they are not themselves spherical.
+
+### Generalized Parameterization of Log Complex (experimental)
+
+Further experimentation can explore the possibilty of splitting the single scalar into two parts; or perhaps a ratio factor of amount to apply spin vs linear(real) factor.
+The exponentiation of a log complex number, as defined, applies the same 'A' scalar to the real and imaginary components, instead the scalar could be split
+to specify two differnt constants for the real and imaginary components (Figure O).  
+
+__Figure O__
+```
+ (ln(A1), ln(A2)) + (x,y,z)ε
+```
+
+which, on exponentiation can be (figure P)
+
+__Figure P__
+```
+  theta = |x|+|y|+|z|;
+  sqNorm = sqrt( x*x + y*y + z*z );
+  exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
+```
+
+which (should) give more an an elliptical projection from log-complex space given 5 dimensions (Figure Q).
+
+Recovering the separate `A1`, and `A2` values from a complex number is improbable, it would look like a change in the angle computed by the tangent;
+also probably starts as a divide by 2 to each side (so the sum of the logs is the numbers multiplied).
+
+__Figure Q__
+```
+ ( R, X, Y, Z ) -> (x,y,z,angle,offset) 
+        describes 3 dimensional axis, rotation around that axis, 
+        and the offset of the rotation from 1.0 around that axis... 
+        (which looks like 5 degrees of freedom encoded in 4 numbers)
+
+ ( R1, R2, X, Y, Z ) -> (x,y,z,angle, offset, alpha_blend of rotation/linear scalar?) 
+
+ // These can be scaled the same way the x/y/z are, and find another degree of freedom in their total
+ //   
+ len = |R1|+|R2| = R total
+ R1Rel = R1/sqrt(R1+R2)
+ R2Rel = R2/sqrt(R1+R2) 
+ R1Lin = R1/len
+ R2Lin = R2/len 
+    exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
+```
+
+
+### Scope of Development
+
+Existing development concentrated only on pure rotations, with 0 real part on the log-quaternion.  
+The real part is just a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
+but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be computed with 
+a cross product of the actual acceleration vector.
+
+__Figure R__
+```
+   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
+                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+```
+
+
+Operations like 'yaw', 'pitch' and 'roll' around the vectors defined by the frame require applying the curvature to `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` to 
+get the axis from an external perspctive, and then apply a rotation around that axis to the current spin.  These axles don't exist in the spin it itself,
+but result by applying the curvature to regular cartesian space axis unit vectors, and using the relative external vector as a rotation axis.
+
+
 # Further Work to do
 
 If the `B` part of a complex number can be a vector, then could `A` also be a unit vector with a scalar?  That would represent the linear velocity, and would be
@@ -367,6 +424,10 @@ included in the rotation?  Seems like the result would be perpendicular to reali
 
  1) Really sort of feels like we live in a 3D universe, time, with 0 degrees of freedom, spin with 3 degrees of freedom, but with a linear normal, and linear motion
 with 3 degrees of freedom, but a square normal... (n^0,n^1,n^2).
+
+## Additional Resources
+
+Wikipedia article with formatted maths.  https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Quaternion_Natural_Log  (wikipedia.wiki source file)
 
 
 ## References
@@ -387,7 +448,7 @@ matter so much what the shape of the projection is, but what the source data pro
 
 ### Applications of Dual Numbers
 
-[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, since the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
+[dual quaternions, proper euler and imgangary matrix multiplication](https://parasol.tamu.edu/wafr/wafr2018/ppr_files/WAFR_2018_paper_1.pdf); recommends calculation of separate things, the position is mostly independant of the rotation, don't need to always track the projection AND inverse projection of the point.
 
 [Math - Functions Of Dual Numbers](https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/other/dualNumbers/functions/index.htm), only dual number exp, no ln.
 
