@@ -20,23 +20,26 @@ a rotation, applications, comparison with existing methods and rotation mappings
 The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
 of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
 where additional axles composite into a single composite axle, around which all space is translated.  The coordinates of a curvature are
-in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `distance/dT`.
-Just like velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
-as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors, which can be
-used to scale all points in the frame to this new frame.
+in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
+Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
+as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
+all points in the frame to this new frame.
 
 The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
 while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
-when properly constrained to rotation composition, is a different matter.
-when a rotation is rotated, the operation is the [cross product](#user-content-lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
-retains the correct relative angles.
+when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
+that lines; even in space, gravity applies a curvature to your inertia).
+When a rotation is rotated, the operation is the [cross product](#user-content-lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
+retains the correct relative angles within the rotation space; including potential orbital jumps.
 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the total angular speed of an object.  
+the [total angular warp](#user-content-regarding-specific-representation) of coodinate space.
 
+Coorindates within the rotation space have a sort of concentric spherical shell nature to them, since any line radially
+from the origin is the same rotation axle, with a different angular speed.
 
 ### Glossary
 
@@ -316,7 +319,14 @@ This rotation system also gives the ability to render theoretical curves like Be
 
 ### Comparison to Existing Methods
 
-Existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
+There was a system 'Euler angles', but the angles are applied in a specfic order in order to rotate a space, so comparisons
+of two sets of angles fails to produce a meaningful result.  While similar to Euler angles, this is NOT Euler angles.
+Other than Euler angles, existing methods of representing and computing rotations are at a specific time `T=1`, and lose the flexibility
+to evaluate their basis frame at any other step.  The computational cost of keeping homogenous angles is low, `sin()` and `cos()` functions are less
+expensive than `sqrt()`, and that's not all that expensive; the order of operations is actually highly parallel in the computations, requiring
+few vector reorders for cross-product type operations. 
+
+Other existing models of rotation are limited to 0-2pi; this is only 1/2 of the rotation space; there's lots of talk about 'double covering' of spherical coordinate systems,
 but there is no 'covering' except when the rotation is projected to a sphere and used to curve space at some time; although it should be noted that the phrase would
 be 'infinite covering' of projected rotations, since for every +6π project as basis frame or representation of the rotation.
 
@@ -328,7 +338,6 @@ such that they have no concept of behaving differently when rotating multiple ti
 There are some things this can't do
  - can't generate a mandelbrot without taking the modulo of the current angular velocity; for some result spin more than π, the result has to wrap to -π.
  - doesn't compare products of numbers, especially prime numbers that are a modulo of (2?)π.
- 
 
 
 ### Regarding Specific Representation
@@ -338,6 +347,7 @@ rotations. This would be the same effect as carrying speed and a unit vector rep
 
 Consider that before a rotation of more than 2π can happen, it first has to have a rotation vector `(1/3,1/3,1/3)*2π`.  `(2/3,2/3,2/3)*2π` is 2 rotations around the axle, and `(3/3,3/3,3/3)*2π` is 3 rotations arond the axis in the direction of (1,1,1).
 
+One might also say that velocity or spacial coordinates should be `(speed,x,y,z)` define the rate to change, and the normal direction to go, with a unit vector is spherical. Although curvatures or rotations make things feel spherical they are not themselves spherical.
 
 ### Generalized Parameterization of Log Complex (experimental)
 
