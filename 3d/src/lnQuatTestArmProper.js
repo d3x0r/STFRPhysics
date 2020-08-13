@@ -37,11 +37,6 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const lnQ4 = new lnQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = new lnQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
-	//const t2 = lnQ2.add2( lnQ1 );
-	//const t3 = t2.add2( lnQ3 );
-	//const t4 = t3.add2( lnQ4 );
-	//const t5 = t4.add2( lnQ5 );
-
 	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1 );
 	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2 );
 	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
@@ -136,6 +131,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		doDrawBasis( R[n+1], A[n], 1, 1 );
 
 		doDrawBasis( R[n], {x:ox,y:oy,z:oz}, 1, 1 );
+		//doDrawBasis( R[n], R[n], 1, 1 );
 		normalVertices.push( new THREE.Vector3( (ox)*spaceScale   ,( oy)*spaceScale      , (oz)*spaceScale  ))
 		normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 	
