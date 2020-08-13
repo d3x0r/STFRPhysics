@@ -73,7 +73,7 @@ Operational Note, and speculation: Especially at high curvatures, the difference
 
 ## Log of Complex Numbers and Exponentiation of Log Complex Numbers
 
-The natural log of the complex number `0+i` is `π/2`.  This is just a scalar, however, it should be noted that this scalar is builtin to the 
+The natural log of the complex number `0+i` is `π/2`.  This is a scalar, however, it should be noted that this scalar is builtin to the 
 standard arcsin/arccos functions,  which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. 
 The resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. 
 
@@ -173,11 +173,11 @@ while treating B as a vector (Figure G).
 
 __Figure G__
 ``` js
-  exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
+  exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * exp(A) * sin( |x|+|y|+|z| /2) i
+                      ) * exp(A) * sin( |x|+|y|+|z| ) i
 ```
 
 
@@ -185,22 +185,23 @@ If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion
 
 __Figure H__
 ``` js
-  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * 1 * sin( |x|+|y|+|z| /2) i
+                      ) * 1 * sin( |x|+|y|+|z| ) i
 
   -becomes-
-  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) sin( |x|+|y|+|z| /2) i
+                      ) sin( |x|+|y|+|z| ) i
 ```
 
-Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
-and `θ` is the angle of rotation around that axle.
+(Figure H) resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yj + sin(θ/2) * zk`  where `x,y,z` are a normalized axis of rotation, 
+and `θ` is the angle of rotation around that axle; although for the log-complex and subsequent operations, `θ` is more use than `θ/2`; and `θ/2` is only used in 
+the application of a rotation to a rotation or for the rotation of a point.
 
 
 ### Vector Complex to Log Complex (ln(vector complex))
@@ -210,7 +211,7 @@ Compute the normal, and the angle from the real component's `arccos()` (Figure I
 __Figure I__
 ``` js
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
-   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ/2)+sin(θ/2)...)
+   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ)+sin(θ)...)
    angle = acos(A/normAB)*2
 ```
 
@@ -218,25 +219,26 @@ And finally build the log-quaternion (Figure J).
 
 __Figure J__
 ``` js
-   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
-                                           , (y/axisSquare)/sin(angle/2)
-                                           , (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle)
+                                           , (y/axisSquare)/sin(angle)
+                                           , (z/axisSquare)/sin(angle) ) ε
 ```
 
-For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
+For programmatic purposes, the scaling of the real part may not matter, and the expression (figure K) might be more useful, instead of `sign(A)*exp(ln(|A|))`, use `A`; especially if `A=0` and the long expression would fail on `ln(x<=0)` .
 
 __Figure K__
 ``` js
-   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
-                                               , (y/axisSquare)/sin(angle/2)
-                                               , (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = A/cos(angle) + angle * ( (x/axisSquare)/sin(angle)
+                                             , (y/axisSquare)/sin(angle)
+                                             , (z/axisSquare)/sin(angle) ) ε
 ```
 
 ### lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
 
-Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  The 'Twister.md' document goes into [more detail](Twister.md) about this procedure. 
+Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  This is a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles. The 'Twister.md' document goes into [more detail](Twister.md) about this procedure.  When
+adding `ln(A+Bi)+ln(C+Di)` as scalar complex numbers, the axle is parallel/coincidental so the addition/subtraction of the angle becomes a straight addition or subtraction.  When the axles are not parallel, partial values of the angles of each rotation are used.
 
-This a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles.
+
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
 Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
@@ -273,19 +275,19 @@ __Figure L__
 		Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 		Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
 
-		Clx = sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) );
+		Clx = (anlge*2)/ (sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) ));
 
 		// angle angle angle
-		x = Cx/Clx*angle;
-		y = Cy/Clx*angle;
-		z = Cz/Clx*angle;
+		x = Cx*Clx;
+		y = Cy*Clx;
+		z = Cz*Clx;
 	}
 ```
 
 ### Getting the frame of a rotation
 
 For a log quaternion `(x,y,z)`, the basis matrix is computed by applying the rotation to the fixed points `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` and using the result as the
-basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can just be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
+basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
 
 This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
 
@@ -304,7 +306,7 @@ __Figure M__
 ```
 
 One might note that multiplications for this are highly parallel, and the resulting basis matrix is nearly cheaper than rotating an arbitrary point; however
-applying the matrix to every point afterward manually increases the amount of calculations to greater than just applying the rotation to a point, especially with
+applying the matrix to every point afterward manually increases the amount of calculations to greater than applying the rotation to a point, especially with
 the `sin()` and `cos()` precomputed.
 
 __Figure N__
@@ -378,7 +380,7 @@ but there is no 'covering' except when the rotation is projected to a sphere and
 although it should be noted that the phrase would be 'infinite covering' of projected rotations, 
 where every +2π rotation results with the same basis frame or representation of the rotation.
 
-This rotation space coordinate systems offer the flexibility to model rotation at any time T and not just at tick 1; versus, as mentioned, a rotation matrix or a 
+This rotation space coordinate systems offer the flexibility to model rotation at any time T and not only at tick 1; versus, as mentioned, a rotation matrix or a 
 quaternion is limited to representing the single
 frame at T=1 for some base rotation (x,y,z).  Matricii and quaternions also only represent the principal projection of that rotation, 
 such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
@@ -444,13 +446,13 @@ __Figure Q__
 ### Warping Space
 
 Consider a 'hairy ball', simliar to the 'Koosh Ball' toy, with hairs radiaitng form the origin of a space; as the curvature applied to warp
-space increases, the curl of the hairs increases respectively around the axis of rotation.  A different, more finite example would be to just consider
+space increases, the curl of the hairs increases respectively around the axis of rotation.  A different, more finite example would be to consider
 short hairs from `T=0` to `T=1` and consider how those hairs are simultaneously curled around an axle.
 
 ### Scope of Development
 
 Existing development concentrated only on pure rotations, with 0 real part on the log-quaternion.  
-The real part is just a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
+The real part is a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
 but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be computed with 
 a cross product of the actual acceleration vector.
 
