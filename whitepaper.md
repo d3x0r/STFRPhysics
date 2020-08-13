@@ -238,10 +238,10 @@ __Figure K__
 Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  This is a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles. The 'Twister.md' document goes into [more detail](Twister.md) about this procedure.  When
 adding `ln(A+Bi)+ln(C+Di)` as scalar complex numbers, the axle is parallel/coincidental so the addition/subtraction of the angle becomes a straight addition or subtraction.  When the axles are not parallel, partial values of the angles of each rotation are used.
 
-
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
-Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
+Note; while this method almost works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla, does still truncate the result to
++/-2π.
 
 __Figure L__
 ``` js
