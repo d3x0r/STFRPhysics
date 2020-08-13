@@ -59,8 +59,8 @@ function lnQuat( theta, d, a, b ){
 	// temporary sign/cos/normalizers
 	this.s = 0;  // sin(composite theta)
 	this.qw = 1; // cos(composite theta)
-	this.nL = 1; // normal Linear
-	this.nR = 1; // normal Rectangular
+	this.nL = 0; // normal Linear
+	this.nR = 0; // normal Rectangular
 	this.refresh = null;
 	this.dirty = true; // whether update() has to do work.
 
@@ -179,10 +179,10 @@ function lnQuat( theta, d, a, b ){
 								this.z = this.nz * lNorm;
 					        
 								// the remining of this is update()
-								this.nL = angle/2;
+								this.nL = angle;
 								this.nR = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-								this.s = Math.sin( this.nL);
-								this.qw = Math.cos( this.nL);
+								this.s = Math.sin( this.nL/2);
+								this.qw = Math.cos( this.nL/2);
 								this.dirty = false;
 								/*
 								// the above is this;  getBasis(up), compute new forward and cross right
@@ -394,8 +394,8 @@ lnQuat.prototype.getBasisT = function(del, right) {
 		// this basis is not reversable... (well, it might be)
 		const q = this;
 
-		const s1 = Math.sin(q.nL*2); // * 2 * 0.5
-		const c1 = 1 - Math.cos(q.nL*2); // * 2 * 0.5
+		const s1 = Math.sin(q.nL); // * 2 * 0.5
+		const c1 = 1 - Math.cos(q.nL); // * 2 * 0.5
 
 		// up is testForward cross lnQ.normal; this version is from raw q.
 		const testUp = { x:          ( c1 ) * ( q.ny*q.ny*q.nz + q.nz*q.nz*q.nz + q.nx*q.nx*q.nz )  + s1 * q.ny*q.nx   - q.nz
@@ -413,8 +413,8 @@ lnQuat.prototype.getBasisT = function(del, right) {
 		//this.update();
 		if( !del ) del = 1.0;
 		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+		const c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
 
 		const qx = q.nx; // normalizes the imaginary parts
 		const qy = q.ny; // set the sin of their composite angle as their total
@@ -460,8 +460,8 @@ lnQuat.prototype.getBasisT = function(del, right) {
 		//this.update();
 		if( !del ) del = 1.0;
 		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+		const c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
 
 		const qx = q.nx; // normalizes the imaginary parts
 		const qy = q.ny; // set the sin of their composite angle as their total
@@ -493,8 +493,8 @@ function getCayleyBasis() {
 		//this.update();
 		if( !del ) del = 1.0;
 		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		let s  = Math.sin( 2*del * nt ); // sin/cos are the function of exp()
-		let c = 1- Math.cos( 2*del * nt ); // sin/cos are the function of exp()
+		let s  = Math.sin( del * nt ); // sin/cos are the function of exp()
+		let c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
 	        const cL = sqrt( 1+q.nx*q.nx+q.ny*q.ny+q.nz*qn.z);
 		const qx = q.nx/cL; // normalizes the imaginary parts
 		const qy = q.ny/cL; // set the sin of their composite angle as their total
@@ -514,18 +514,18 @@ function getCayleyBasis() {
 
 		const basis = {
 			right(t) {
-				s = Math.sin( 2*t*q.nL );
-				c = 1 - Math.cos( 2*t*q.nL );
+				s = Math.sin( t*q.nL );
+				c = 1 - Math.cos( t*q.nL );
 				return { x : 1 - ( yy() + zz() - xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
 			},
 			up(t) {
-				s = Math.sin( 2*t*q.nL );
-				c = 1 - Math.cos( 2*t*q.nL );
+				s = Math.sin( t*q.nL );
+				c = 1 - Math.cos( t*q.nL );
 				return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() - yy() ), z :     ( wx() + yz() ) };
 			},
 			forward(t) {
-				s = Math.sin( 2*t*q.nL );
-				c = 1 - Math.cos( 2*t*q.nL );
+				s = Math.sin( t*q.nL );
+				c = 1 - Math.cos( t*q.nL );
 				return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
 			},
 		}
@@ -552,7 +552,7 @@ lnQuat.prototype.update = function() {
 
 	// norm-linear    this is / 3 usually, but the sine lookup would
 	//    adds a /3 back in which reverses it.
-	this.nL = (abs(this.x)+abs(this.y)+abs(this.z))/2;///(2*Math.PI); // average of total
+	this.nL = (abs(this.x)+abs(this.y)+abs(this.z));///(2*Math.PI); // average of total
 	if( this.nR ){
 		this.nx = this.x/this.nR /* * this.nL*/;
 		this.ny = this.y/this.nR /* * this.nL*/;
@@ -562,8 +562,8 @@ lnQuat.prototype.update = function() {
 		this.ny = 0;
 		this.nz = 0;
 	}
-	this.s  = Math.sin(this.nL); // only want one half wave...  0-pi total.
-	this.qw = Math.cos(this.nL);
+	this.s  = Math.sin(this.nL/2); // only want one half wave...  0-pi total.
+	this.qw = Math.cos(this.nL/2);
 
 	return this;
 }
@@ -579,8 +579,8 @@ lnQuat.prototype.getFrame = function( t, x, y, z ) {
 lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 	const q = this.apply( lnQvel );
 
-	let s  = Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
-	let c = 1- Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
+	let s  = Math.sin( q.nL ); // sin/cos are the function of exp()
+	let c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
 
 	const xy = ()=>c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
 	const yz = ()=>c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
@@ -596,18 +596,18 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 
 	return {
 		forward(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() ) };
 		},
 		right(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x : 1 - ( yy() + zz() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
 		},
 		up(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() ), z :     ( wx() + yz() ) };
 		}
 	}
@@ -619,11 +619,11 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 lnQuat.prototype.getFrameFunctions2 = function( lnQvel ) {
 	const q = this.apply( lnQvel );
 
-	let s =     Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
-	let c = 1 - Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
+	let s =     Math.sin( q.nL ); // sin/cos are the function of exp()
+	let c = 1 - Math.cos( q.nL ); // sin/cos are the function of exp()
 
-	let ds =     Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
-	let dc = 1 + Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
+	let ds =     Math.cos( q.nL ); // sin/cos are the function of exp()
+	let dc = 1 + Math.sin( q.nL ); // sin/cos are the function of exp()
 
 	const xy = ()=>c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
 	const yz = ()=>c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
@@ -639,18 +639,18 @@ lnQuat.prototype.getFrameFunctions2 = function( lnQvel ) {
 
 	return {
 		forward(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() ) };
 		},
 		right(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x : 1 - ( yy() + zz() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
 		},
 		up(t) {
-			s = Math.sin( 2*t*q.nL );
-			c = 1 - Math.cos( 2*t*q.nL );
+			s = Math.sin( t*q.nL );
+			c = 1 - Math.cos( t*q.nL );
 			return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() ), z :     ( wx() + yz() ) };
 		}
 	}
@@ -707,8 +707,8 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		const result = new lnQuat(
 			function() {
 				const q = v;
-				const as = Math.sin( q.nL * del );
-				const ac = Math.cos( q.nL * del );
+				const as = Math.sin( q.nL * del /2);
+				const ac = Math.cos( q.nL * del /2);
 				const ax = q.nx;
 				const ay = q.ny;
 				const az = q.nz;
@@ -725,9 +725,9 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	} else  {
-		const s  = Math.sin( (q.nL)*del );//q.s;
+		const s  = Math.sin( (q.nL)*del/2 );//q.s;
 		const nst = s/q.nR; // sin(theta)/r    normal * sin_theta
-		const qw = Math.cos( (q.nL)*del );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		const qw = Math.cos( (q.nL)*del/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 
 		const qx = q.x*nst;
 		const qy = q.y*nst;
@@ -796,7 +796,7 @@ function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 		const sAng = Math.sin(ang/2);
 	
 		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		q.nL = ang/2;
+		q.nL = ang;
 		q.nR = sAng/Clx*ang;
 		q.qw = cosCo2;
 		q.s = sAng;
@@ -900,8 +900,8 @@ function pitch( C, th ) {
 
 	const q = C;
 
-	const s  = Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
+	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
+	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
 
 	const qx = q.nx; // normalizes the imaginary parts
 	const qy = q.ny; // set the sin of their composite angle as their total
@@ -919,8 +919,8 @@ function roll( q, th ) {
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
 
-	const s  = Math.sin( 2 * q.nL ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( 2 * q.nL ); // sin/cos are the function of exp()
+	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
+	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
 
 	const qx = q.nx;
 	const qy = q.ny;
@@ -938,8 +938,8 @@ function yaw( q, th ) {
 	const ac = Math.cos( th/2 );
 	const as = Math.sin( th/2 );
 
-	const s = Math.sin( 2 * q.nL ); // double angle sin
-	const c = 1- Math.cos( 2 * q.nL ); // double angle cos
+	const s = Math.sin( q.nL ); // double angle sin
+	const c = 1- Math.cos( q.nL ); // double angle cos
 
 	const ax = ( c*q.nx*q.ny - s*q.nz );
 	const ay = 1 - c*( q.nz*q.nz + q.nx*q.nx );
