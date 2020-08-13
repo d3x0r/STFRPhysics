@@ -143,7 +143,7 @@ __Figure G__
 
 When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
 way to define a unit vector, it might be defined as `+/-1=B/|B|` or `(x,y,z)/(|x|+|y|+|z|))`; another definition might be `+/-1=B/cbrt(BBB)` or 
-`(x/y/z)/cbrt(xxx+yyy+zzz)`, as an example, magnetic fields have a falloff of the cube root([1](#footnote-1).
+`(x/y/z)/cbrt(xxx+yyy+zzz)`, as an example, magnetic fields have a falloff of the cube root\[[1](#footnote-1)\].
 
 
 ### Conversion from Vector Complex to Quaternion
