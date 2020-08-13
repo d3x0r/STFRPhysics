@@ -9,59 +9,71 @@ Independant Studies
 
 ## Abstract
 
-There exists a coordinate space of rotations that's not self covering.  The essential function defining this rotation space map 
-is the exponential of a log-complex, and by extension of a log-vector-complex.  This paper will define a notation of log
+There exists a coordinate space of rotations that is not self covering.  The essential function defining this rotation space map 
+is the exponential of a log-complex, and by extension a log-vector-complex.  This paper will define a notation of log
 complex numbers, and modification to the exponential function, the extension from a single scalar to a scaled unit vector, 
-conversion to quaternion, detail the cross product of two natural log vector complex numbers, computation of the basis vectors of
-a rotation, applications, comparison with existing methods and rotation mappings, and additional experimental methods to try.
+conversion to quaternion, define the cross product of two natural log vector complex numbers, get of the basis vectors of
+a rotation, apply log vector complex to a point to rotate, applications, comparison with existing methods and rotation 
+mappings, and additional experimental methods to try.
 
 ## Introduction
 
 The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
 of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
-where additional axles composite into a single composite axle, around which all space is translated.  The coordinates of a curvature are
+additional axles composite into a single composite axle, around which all space is translated or warped.  The coordinates of a curvature are
 in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
 Velocity sums to a position, angular velocity sums to an angular position.  
 
 Curvature at time 0 is the same as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) 
 vectors used to warp all points in the frame to this new frame.
 
-The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
-while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
-when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
-that line to get there; even in space, gravity applies a curvature to your inertia).
-When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
-retains the correct relative angles within the rotation space; including potential orbital jumps.
+The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations).
+While the differential rotation is knowable, and defines a specific axis/angle itself, the required path to move the rotation coordinate,
+when properly constrained to rotation composition, is a different matter.  Much like in life, although a line from 'here' to 'there', doesn't mean you can use
+that line to get 'there'; in space, for example, gravity applies a curvature to forward velocity, and the path of least effort is curved rather than the direct linear path.
+When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 ⨯ lnQ2`; which is equivalent to `exp(lnQ1) ⨯ exp(lnQ2)`; the math steps performed are different.  The `lnQ1 ⨯ lnQ2`
+results with the correct relative angles within the rotation space; including potential orbital jumps.
+
+'Rotation' is typically only considers  the translation of points in space at a specific instant, 
+rather than across all time from `0` until that instant, or beyond.  Simply setting `Time=1`(`T`), and computing the fixed formula based on
+this constant, is equivalent to a 'rotation' . Rotation as a math operation may be considered a subset of curvatures specified in rotation space.
 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
-vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the [total angular warp](#regarding-specific-representation) of coodinate space.
+vector represents the speed of an object, similarly the sum of the angles of the angular velocity [represents](#regarding-specific-representation)
+the total angular warp of coodinate space.
 
-Coordinates within the rotation space have a concentric spherical shell nature to them, any line radially
-from the origin is the same rotation axle, with a different angular speed.
+This is *NOT* Euler Angles.  A quick check reveals that it's quite infeasible to get a rotation axis from Euler Angle coodinates; while
+log vector complex representation immediately yields the axle.   Coordinates within the rotation space have a concentric spherical shell nature to them, any radial line 
+from the origin in the rotation space is the same axle, with a different angular speed.  
+
+Operational Note, and speculation: Especially at high curvatures, the difference between two frames may be a chord through the lower concentric spherical shells, which would require it to lose a signficant amount of speed before getting to the destination; the line of lower effert would be a curve around the origin, translating between the shell layers, while  pivoting the origin around an axis at the cross product of the differential axles.  Similarly say when navigating space between planets, the path of lowest energy is not a straight line, but rather is a curved line; in a more direct instance, if you have a point on the ground, and a point on a roof, there is no way to traverse the straight line, being constrained by the system the points are in; rotations have similar constraints on their effective motion changes.
 
 ### Glossary
 
 - apply - Multiply a vector by a matrix or matrix by matrix, or quaternion times quaternion.  Addition is simple
     in many cases, so, although true that `A X -B = exp(ln(A)-ln(B))` this only works for rotations within the same frame, or fixed to
     another frame.  Rotation of a rotation by rotation outside of the rotation itself is still a form of multiplication.
-- axle - An axis of curvature.
-- curvature - A point translated to another location by curving its forward motion; does not require a third point.
+- axle - An axis of curvature, or more commonly, axis of rotation.
+- curvature - a change in angle over time.
+   - A point translated to another location by curving its forward motion; does not require a third point like 'rotation'. 
+   - Warps the relative space around an axle, thereby translating all points in that space to a new position.
 - frame - The orientation, which can be desribed by the basis vectors 'right', 'up', and 'forward'; A full frame would include velocity also.
 - log-complex - A natural log of a complex number.
 - modulate - Applying a modulo operator to a number to get the prinicpal angle result.
-- rotation - A point translated to another location describing a pivot around a third point.
+- rotation - A specific translation of spacial coordinates around a point.
+  - A point translated to another location describing a pivot around a third point.
+  - Specifies a fixed frame which can be applied to translate points to a new position.
 - spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
 - vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
-
+- [warp](#warping-space) - Apply a smooth translation over time to translate the points in the space around an axle. 
 ---
 
 
 ## Log of Complex Numbers and Exponentiation of Log Complex Numbers
 
-The natural log of the complex number `0+i` is `π/2`.  This is just a scalar, however, it should be noted that this scalar is builtin to the 
+The natural log of the complex number `0+i` is `π/2`.  This is a scalar, however, it should be noted that this scalar is builtin to the 
 standard arcsin/arccos functions,  which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. 
 The resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. 
 
@@ -130,8 +142,8 @@ __Figure G__
 ```
 
 When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
-way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|+|y|+|z|))`; which also means there should be `+/-1=B/cbrt(BBB)` or 
-`(x/y/z)/cbrt(xxx+yyy+zzz)` but I've never seen an application of this sort of normal (Footnote 1). 
+way to define a unit vector, it might be defined as `+/-1=B/|B|` or `(x,y,z)/(|x|+|y|+|z|))`; another definition might be `+/-1=B/cbrt(BBB)` or 
+`(x/y/z)/cbrt(xxx+yyy+zzz)`, as an example, magnetic fields have a falloff of the cube root<sup>[\[1\]](#footnote-1)</sup>.
 
 
 ### Conversion from Vector Complex to Quaternion
@@ -161,11 +173,11 @@ while treating B as a vector (Figure G).
 
 __Figure G__
 ``` js
-  exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|)/2 ) 
+  exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * exp(A) * sin( |x|+|y|+|z| /2) i
+                      ) * exp(A) * sin( |x|+|y|+|z| ) i
 ```
 
 
@@ -173,22 +185,23 @@ If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion
 
 __Figure H__
 ``` js
-  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * 1 * sin( |x|+|y|+|z| /2) i
+                      ) * 1 * sin( |x|+|y|+|z| ) i
 
   -becomes-
-  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|)/2 ) 
+  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) sin( |x|+|y|+|z| /2) i
+                      ) sin( |x|+|y|+|z| ) i
 ```
 
-Which resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yi + sin(θ/2) * zi`  where `x,y,z` are a normalized axis of rotation, 
-and `θ` is the angle of rotation around that axle.
+(Figure H) resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yj + sin(θ/2) * zk`  where `x,y,z` are a normalized axis of rotation, 
+and `θ` is the angle of rotation around that axle; although for the log-complex and subsequent operations, `θ` is more use than `θ/2`; and `θ/2` is only used in 
+the application of a rotation to a rotation or for the rotation of a point.
 
 
 ### Vector Complex to Log Complex (ln(vector complex))
@@ -198,7 +211,7 @@ Compute the normal, and the angle from the real component's `arccos()` (Figure I
 __Figure I__
 ``` js
    axisSquare = sqrt(x*x+y*y+z*z)   // square the axis
-   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ/2)+sin(θ/2)...)
+   normAB = sqrt( A + axisSquare ); // square the real and axis parts (results in cos(θ)+sin(θ)...)
    angle = acos(A/normAB)*2
 ```
 
@@ -206,25 +219,26 @@ And finally build the log-quaternion (Figure J).
 
 __Figure J__
 ``` js
-   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle/2)
-                                           , (y/axisSquare)/sin(angle/2)
-                                           , (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = ln(normAB) + angle * ( (x/axisSquare)/sin(angle)
+                                           , (y/axisSquare)/sin(angle)
+                                           , (z/axisSquare)/sin(angle) ) ε
 ```
 
-For programmatic purposes, the scaling of the real part may not matter, so the following might be more useful, rather than doing `sign(A)*exp(ln(|A|))` just use `A`; especially if `A=0` and the long expression would fail (figure K).
+For programmatic purposes, the scaling of the real part may not matter, and the expression (figure K) might be more useful, instead of `sign(A)*exp(ln(|A|))`, use `A`; especially if `A=0` and the long expression would fail on `ln(x<=0)` .
 
 __Figure K__
 ``` js
-   ln( A+(x,y,z)i ) = A/cos(angle/2) + angle * ( (x/axisSquare)/sin(angle/2)
-                                               , (y/axisSquare)/sin(angle/2)
-                                               , (z/axisSquare)/sin(angle/2) ) ε
+   ln( A+(x,y,z)i ) = A/cos(angle) + angle * ( (x/axisSquare)/sin(angle)
+                                             , (y/axisSquare)/sin(angle)
+                                             , (z/axisSquare)/sin(angle) ) ε
 ```
 
 ### lnA x lnB - The Cross Product of Natural Log Vector Complex Numbers
 
-Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  The 'Twister.md' document goes into [more detail](Twister.md) about this procedure. 
+Rodrigues' Rotation Forumla is used to rotate a rotation (Figure L).  This is a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles. The 'Twister.md' document goes into [more detail](Twister.md) about this procedure.  When
+adding `ln(A+Bi)+ln(C+Di)` as scalar complex numbers, the axle is parallel/coincidental so the addition/subtraction of the angle becomes a straight addition or subtraction.  When the axles are not parallel, partial values of the angles of each rotation are used.
 
-This a general purpose rotation of a rotation around some aribtrary axis by some angle `θ`, which retains relative angles.
+
 Here, `ax`, `ay`, and `az` could be filled by any normalized unit axis, and `x`,`y`, and `z` specify the rotation being rotated around the axis.
 
 Note; while this method works, I do think there's a more reliable and direct method available; however Rodrigues' Rotation Forumla works well enough.
@@ -261,19 +275,19 @@ __Figure L__
 		Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 		Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
 
-		Clx = sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) );
+		Clx = (anlge*2)/ (sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) ));
 
 		// angle angle angle
-		x = Cx/Clx*angle;
-		y = Cy/Clx*angle;
-		z = Cz/Clx*angle;
+		x = Cx*Clx;
+		y = Cy*Clx;
+		z = Cz*Clx;
 	}
 ```
 
 ### Getting the frame of a rotation
 
 For a log quaternion `(x,y,z)`, the basis matrix is computed by applying the rotation to the fixed points `(1,0,0)`,`(0,1,0)`, and `(0,0,1)` and using the result as the
-basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can just be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
+basis vectors to scale spacial points with.  The first part of the matrix calculation(Figure M) is often precomputed for a tick of `1`, and can be looked up.  Specifying a delta other than `1` requires recomputing the `sin()` and `cos()` of the rotation.
 
 This matrix representation is on the talk page of [Quaternions and spatial rotation](https://en.wikipedia.org/wiki/Talk:Quaternions_and_spatial_rotation#Derivation_(COI_Edit_Request)) under Derivation (COI Edit Request).
 
@@ -292,7 +306,7 @@ __Figure M__
 ```
 
 One might note that multiplications for this are highly parallel, and the resulting basis matrix is nearly cheaper than rotating an arbitrary point; however
-applying the matrix to every point afterward manually increases the amount of calculations to greater than just applying the rotation to a point, especially with
+applying the matrix to every point afterward manually increases the amount of calculations to greater than applying the rotation to a point, especially with
 the `sin()` and `cos()` precomputed.
 
 __Figure N__
@@ -366,7 +380,7 @@ but there is no 'covering' except when the rotation is projected to a sphere and
 although it should be noted that the phrase would be 'infinite covering' of projected rotations, 
 where every +2π rotation results with the same basis frame or representation of the rotation.
 
-This rotation space coordinate systems offer the flexibility to model rotation at any time T and not just at tick 1; versus, as mentioned, a rotation matrix or a 
+This rotation space coordinate systems offer the flexibility to model rotation at any time T and not only at tick 1; versus, as mentioned, a rotation matrix or a 
 quaternion is limited to representing the single
 frame at T=1 for some base rotation (x,y,z).  Matricii and quaternions also only represent the principal projection of that rotation, 
 such that they have no concept of behaving differently when rotating multiple times before the `T=1` frame that they represent.
@@ -429,11 +443,16 @@ __Figure Q__
     exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
 ```
 
+### Warping Space
+
+Consider a 'hairy ball', simliar to the 'Koosh Ball' toy, with hairs radiaitng form the origin of a space; as the curvature applied to warp
+space increases, the curl of the hairs increases respectively around the axis of rotation.  A different, more finite example would be to consider
+short hairs from `T=0` to `T=1` and consider how those hairs are simultaneously curled around an axle.
 
 ### Scope of Development
 
 Existing development concentrated only on pure rotations, with 0 real part on the log-quaternion.  
-The real part is just a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
+The real part is a scalar of elevation from 1 to infinite and 1 to 0 at the same rate; it migt be considered an elevation or offset,
 but a motion inertia or velocity vector has nothing to do the axis of rotation, and neither do accelerations, so this must still be computed with 
 a cross product of the actual acceleration vector.
 
@@ -459,8 +478,8 @@ included in the rotation?  Seems like the result would be perpendicular to reali
 
 ## Footnotes
 
- 1) Really sort of feels like we live in a 3D universe, time, with 0 degrees of freedom, spin with 3 degrees of freedom, but with a linear normal, and linear motion
-with 3 degrees of freedom, but a square normal... (n^0,n^1,n^2).
+ ### Footnote 1
+   Author comment: Really sort of feels like we live in a '3D' universe: time, with 0 degrees of freedom, and a normal of 1 `(100T/1=100T)`; spin with 3 degrees of freedom, with a linear normal `(50,10)/(|50|+|10|)`; and linear motion with 3 degrees of freedom, with a square normal `(50,10)/sqrt(50*50+10*10)`.  A sequence `n^0, n^1, n^2,...` emerges; maybe there is a n^3 involved in (magnetics? Which falls off at a cube root?).  Does that get us to 10 (1+3+3+3) coordinates yet?
 
 ## Additional Resources
 
