@@ -143,7 +143,7 @@ __Figure G__
 
 When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
 way to define a unit vector, it may be defined as `+/-1=B/|B|`  or `(x,y,z)/(|x|+|y|+|z|))`; which also means there should be `+/-1=B/cbrt(BBB)` or 
-`(x/y/z)/cbrt(xxx+yyy+zzz)` but I've never seen an application of this sort of normal (Footnote 1). 
+`(x/y/z)/cbrt(xxx+yyy+zzz)` but I've never seen an application of this sort of normal ([Footnote 1](#footnote-1). 
 
 
 ### Conversion from Vector Complex to Quaternion
@@ -478,8 +478,8 @@ included in the rotation?  Seems like the result would be perpendicular to reali
 
 ## Footnotes
 
- 1) Really sort of feels like we live in a 3D universe, time, with 0 degrees of freedom, spin with 3 degrees of freedom, but with a linear normal, and linear motion
-with 3 degrees of freedom, but a square normal... (n^0,n^1,n^2).
+ ### Footnote 1
+   Author comment: Really sort of feels like we live in a '3D' universe: time, with 0 degrees of freedom, and a normal of 1 `(100T/1=100T)`; spin with 3 degrees of freedom, with a linear normal `(50,10)/(|50|+|10|)`; and linear motion with 3 degrees of freedom, with a square normal `(50,10)/sqrt(50*50+10*10)`.  A sequence `n^0, n^1, n^2,...` emerges; maybe there is a n^3 involved in (magnetics? Which falls off at a cube root?).  Does that get us to 10 (1+3+3+3) coordinates yet?
 
 ## Additional Resources
 
