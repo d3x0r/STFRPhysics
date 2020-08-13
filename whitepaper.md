@@ -9,30 +9,30 @@ Independant Studies
 
 ## Abstract
 
-There exists a coordinate space of rotations that's not self covering.  The essential function defining this rotation space map 
-is the exponential of a log-complex, and by extension of a log-vector-complex.  This paper will define a notation of log
+There exists a coordinate space of rotations that is not self covering.  The essential function defining this rotation space map 
+is the exponential of a log-complex, and by extension a log-vector-complex.  This paper will define a notation of log
 complex numbers, and modification to the exponential function, the extension from a single scalar to a scaled unit vector, 
-conversion to quaternion, detail the cross product of two natural log vector complex numbers, computation of the basis vectors of
-a rotation, applications, comparison with existing methods and rotation mappings, and additional experimental methods to try.
+conversion to quaternion, define the cross product of two natural log vector complex numbers, get of the basis vectors of
+a rotation, apply log vector complex to a point to rotate, applications, comparison with existing methods and rotation 
+mappings, and additional experimental methods to try.
 
 ## Introduction
 
 The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
 of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
-where additional axles composite into a single composite axle, around which all space is translated.  The coordinates of a curvature are
+additional axles composite into a single composite axle, around which all space is translated or warped.  The coordinates of a curvature are
 in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
 Velocity sums to a position, angular velocity sums to an angular position.  
 
 Curvature at time 0 is the same as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) 
 vectors used to warp all points in the frame to this new frame.
 
-The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations), and
-while the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
-when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
-that line to get there; even in space, gravity applies a curvature to your inertia).
-When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)` the math performed is not the same, and the former 
-retains the correct relative angles within the rotation space; including potential orbital jumps.
-
+The rotation space is linear, and can be compared relatively (which is to say to take the difference of the rotations).
+While the differential rotation is knowable, and defines a specific axis/angle itself, the required path to move the rotation coordinate,
+when properly constrained to rotation composition, is a different matter.  Much like in life, although a line from 'here' to 'there', doesn't mean you can use
+that line to get 'there'; in space, for example, gravity applies a curvature to forward velocity, and the path of least effort is curved rather than the direct linear path.
+When a rotation is rotated, the operation is the [cross product](#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: `lnQ1 ⨯ lnQ2`; which is equivalent to `exp(lnQ1) ⨯ exp(lnQ2)`; the math steps performed are different.  The `lnQ1 ⨯ lnQ2`
+results with the correct relative angles within the rotation space; including potential orbital jumps.
 
 'Rotation' is typically only considers  the translation of points in space at a specific instant, 
 rather than across all time from `0` until that instant, or beyond.  Simply setting `Time=1`(`T`), and computing the fixed formula based on
@@ -41,8 +41,8 @@ this constant, is equivalent to a 'rotation' . Rotation as a math operation may 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
 represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
 the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
-vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the [total angular warp](#regarding-specific-representation) of coodinate space.
+vector represents the speed of an object, similarly the sum of the angles of the angular velocity [represents](#regarding-specific-representation)
+the total angular warp of coodinate space.
 
 This is *NOT* Euler Angles.  A quick check reveals that it's quite infeasible to get a rotation axis from Euler Angle coodinates; while
 log vector complex representation immediately yields the axle.   Coordinates within the rotation space have a concentric spherical shell nature to them, any radial line 
@@ -67,7 +67,7 @@ Operational Note, and speculation: Especially at high curvatures, the difference
   - Specifies a fixed frame which can be applied to translate points to a new position.
 - spin - Basically 'rotation', however, it's not expressed by an angle like rotation, but measured in a curvature.
 - vector-complex - A complex number, but the real coordinate and the imaginary coordinate are vector quantities normalized with square root of the sum of squares.
-
+- [warp](#warping-space) - Apply a smooth translation over time to translate the points in the space around an axle. 
 ---
 
 
@@ -441,6 +441,11 @@ __Figure Q__
     exp(R1)*cos(theta/2) + exp(R2) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
 ```
 
+### Warping Space
+
+Consider a 'hairy ball', simliar to the 'Koosh Ball' toy, with hairs radiaitng form the origin of a space; as the curvature applied to warp
+space increases, the curl of the hairs increases respectively around the axis of rotation.  A different, more finite example would be to just consider
+short hairs from `T=0` to `T=1` and consider how those hairs are simultaneously curled around an axle.
 
 ### Scope of Development
 
