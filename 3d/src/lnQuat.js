@@ -664,13 +664,7 @@ lnQuat.prototype.apply = function( v ) {
 	if( v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
-				const q = v;
-				const as = this.s;
-				const ac = this.qw;
-				const ax = this.nx;
-				const ay = this.ny;
-				const az = this.nz;
-	                        return finishRodrigues( q, 0, ac, as, ax, ay, az );
+	                        return finishRodrigues( v, 0, this.nx, this.ny, this.nz, this.nL );
 			}
 		);
 		return result.refresh();
@@ -707,12 +701,10 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		const result = new lnQuat(
 			function() {
 				const q = v;
-				const as = Math.sin( q.nL * del /2);
-				const ac = Math.cos( q.nL * del /2);
 				const ax = q.nx;
 				const ay = q.ny;
 				const az = q.nz;
-	                        return finishRodrigues( q, 0, ac, as, ax, ay, az, 0 );
+	                        return finishRodrigues( q, 0, ax, ay, az, q.nL*del );
 			}
 		);
 		return result.refresh();
@@ -775,27 +767,45 @@ lnQuat.prototype.applyInv = function( v ) {
 }
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
-function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
+function finishRodrigues( q, oct, ax, ay, az, th ) {
 	// A dot B   = cos( angle A->B )
 	// cos( C/2 ) 
 	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
 	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
-	const sc1 = as * q.qw;
-	const sc2 = q.s * ac;
-	const ss = q.s * as;
-	const cc = q.qw * ac;
+	//const angleMax = ( q.nL + Math.abs(th) );
+	const angleNorm = 1;//(angleMax>2*Math.PI)?( Math.PI / angleMax):1;
+	if( angleNorm !== 1 )
+		console.log( "Scalar:", angleMax, angleNorm, th*angleNorm, q.nL*angleNorm );
+	const as = Math.sin( th*angleNorm/2);
+	const ac = Math.cos( th*angleNorm/2);
+	const qw = Math.cos( q.nL*angleNorm/2);
+	const qs = Math.sin( q.nL*angleNorm/2);
+	const sc1 = as * qw;
+	const sc2 = qs * ac;
+	const ss = qs * as;
+	const cc = qw * ac;
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
 	const cosCo2 = cc - ss* AdotB;
 
-	const ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
+	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
+	// only good for rotations between 0 and pi.
 
-	if( ang ) {
+	if( ang ) {      // as bc     bs ac       as bs
+			// vector rotation is just...
+			// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
+			// when btheta is small, baxis is small pi/2 cos is 0 so this is small
+			// when both are large, cross product is dominant (pi/2)
+			
 		const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
 		const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
 		const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 		const sAng = Math.sin(ang/2);
 	
-		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+	if( angleNorm !== 1 )
+	console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
+		//ang = 2*ang/angleNorm;
+		
 		q.nL = ang;
 		q.nR = sAng/Clx*ang;
 		q.qw = cosCo2;
@@ -830,8 +840,6 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
 	if( "undefined" === typeof oct ) oct = 4;
 	const C = this;
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
 
 	const q = C;
 
@@ -858,14 +866,11 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( C, oct-4, ac, as, ax, ay, az, th );
+	return finishRodrigues( C, oct-4, ax, ay, az, th );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
 	const C = this;
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
-
 	const q = C;
 
 	const ax_ = axis.x;
@@ -878,8 +883,9 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const ay = ay_/aLen;
 	const az = az_/aLen;
 
-	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
+	return finishRodrigues( C, 0, ax, ay, az, th );
 }
+
 lnQuat.prototype.twist = function(c){
 	return yaw( this, c );
 }
@@ -894,50 +900,30 @@ lnQuat.prototype.roll = function(c){
 }
 
 
-function pitch( C, th ) {
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
-
-	const q = C;
-
+function pitch( q, th ) {
 	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
 	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
 
-	const qx = q.nx; // normalizes the imaginary parts
-	const qy = q.ny; // set the sin of their composite angle as their total
-	const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-	const ax = 1 - c*( qy*qy + qz*qz );
-	const ay = ( s*qz    + c*qx*qy );
-	const az = ( c*qx*qz - s*qy );
-	return finishRodrigues( C, 0, ac, as, ax, ay, az, th );
-
+	const ax = 1 - c*( q.ny*q.ny + q.nz*q.nz );
+	const ay = ( s*q.nz    + c*q.nx*q.ny );
+	const az = ( c*q.nx*q.nz - s*q.ny );
+	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
 function roll( q, th ) {
 	// input angle...
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
-
 	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
 	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
 
-	const qx = q.nx;
-	const qy = q.ny;
-	const qz = q.nz;
+	const ax = ( s*q.ny      + c*q.nx*q.nz );
+	const ay = ( c*q.ny*q.nz   - s*q.nx );
+	const az = 1 - c*( q.nx*q.nx + q.ny*q.ny );
 
-	const ax = ( s*qy      + c*qx*qz );
-	const ay = ( c*qy*qz   - s*qx );
-	const az = 1 - c*( qx*qx + qy*qy );
-
-	return finishRodrigues( q, 0, ac, as, ax, ay, az, th );
+	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
 function yaw( q, th ) {
 	// input angle...
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
-
 	const s = Math.sin( q.nL ); // double angle sin
 	const c = 1- Math.cos( q.nL ); // double angle cos
 
@@ -945,7 +931,7 @@ function yaw( q, th ) {
 	const ay = 1 - c*( q.nz*q.nz + q.nx*q.nx );
 	const az = ( s*q.nx      + c*q.ny*q.nz );
 
-	return finishRodrigues( q, 0, ac, as, ax, ay, az, th );
+	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
 // rotate the passed vector 'from' this space
