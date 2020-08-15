@@ -696,7 +696,7 @@ lnQuat.prototype.apply = function( v ) {
 
 //-------------------------------------------
 
-lnQuat.prototype.applyDel = function( v, del ) {
+lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 	if( v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
@@ -713,10 +713,34 @@ lnQuat.prototype.applyDel = function( v, del ) {
 	if( 'undefined' === typeof del ) del = 1.0;
 	this.update();
 	// 3+2 +sqrt+exp+sin
-        if( !(q.nL*del) ) {
+        if( !(q.nL*del) && !q2 ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	} else  {
+
+		if( q2 ) {
+			const ax = this.x * del + q2.x * del2;
+			const ay = this.y * del + q2.y * del2;
+			const az = this.z * del + q2.z * del2;
+			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+			const r = Math.sqrt(ax*ax+ay*ay+az*az);
+
+			const s  = Math.sin( (l)/2 );//q.s;
+			const nst = s/r; // sin(theta)/r    normal * sin_theta
+			const qw = Math.cos( (l)/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		        
+			const qx = ax*nst;
+			const qy = ay*nst;
+			const qz = az*nst;
+		        
+			const tx = 2 * (qy * v.z - qz * v.y);
+			const ty = 2 * (qz * v.x - qx * v.z);
+			const tz = 2 * (qx * v.y - qy * v.x);
+			return { x : v.x + qw * tx + ( qy * tz - ty * qz )
+			       , y : v.y + qw * ty + ( qz * tx - tz * qx )
+			       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };			
+		}
+
 		const s  = Math.sin( (q.nL)*del/2 );//q.s;
 		const nst = s/q.nR; // sin(theta)/r    normal * sin_theta
 		const qw = Math.cos( (q.nL)*del/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
@@ -729,8 +753,8 @@ lnQuat.prototype.applyDel = function( v, del ) {
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
 		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-			, y : v.y + qw * ty + ( qz * tx - tz * qx )
-			, z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		       , y : v.y + qw * ty + ( qz * tx - tz * qx )
+		       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
 		//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
 		// 18+12 (30)   12(2)+(3) (17 parallel)
 	}

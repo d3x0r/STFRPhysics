@@ -42,6 +42,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const A4 = t4.apply( arm );
 	const A5 = t5.apply( arm );
 
+	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R = [lnQ1,t2,t3,t4,t5];
 	const A_ = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	const A = [A1,A2,A3,A4,A5];
@@ -81,9 +82,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				A_[n].y = A_[n-1].y
 				A_[n].z = A_[n-1].z
 			}
+
 		for( s = 0; s < 100; s++ )
 		{
-			let prior = R[n].applyDel( shortArm, s/100.0);
+			let prior = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 
 			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 			A_[n].x += prior.x;
