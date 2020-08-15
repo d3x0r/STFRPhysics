@@ -75,6 +75,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const A4 = t4.apply( arm );
 	const A5 = t5.apply( arm );
 	
+	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R = [lnQ1,t2,t3,t4,t5];
 	const A_ = [A1,A2,A3,A4,A5];
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
@@ -95,7 +96,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		}
 		for( var s = 0; s <= 100; s++ ) {
 
-			prior = R[n].applyDel( shortArm, s/100.0);
+			prior = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
@@ -127,14 +128,28 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		normalColors.push( new THREE.Color( 0.5,0,0,255 ))
 			}
 		}
+		//if( n > 0 )
+			doDrawBasis( R[n], A[n], 1, 1 );
 		if( n < 4 )
-		doDrawBasis( R[n+1], A[n], 1, 1 );
 
 		doDrawBasis( R[n], {x:ox,y:oy,z:oz}, 1, 1 );
-		//doDrawBasis( R[n], R[n], 1, 1 );
+
+		doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
+		if( n < 4 )
+		{
+		normalVertices.push( new THREE.Vector3( (R[n].nx*R[n].nL)*spaceScale   ,( R[n].ny*R[n].nL)*spaceScale      , (R[n].nz*R[n].nL)*spaceScale  ))
+		normalVertices.push( new THREE.Vector3( (R[n+1].nx*R[n+1].nL)*spaceScale   ,( R[n+1].ny*R[n+1].nL)*spaceScale      , (R[n+1].nz*R[n+1].nL)*spaceScale  ))
+		pushN(n);
+		}
+
+
 		normalVertices.push( new THREE.Vector3( (ox)*spaceScale   ,( oy)*spaceScale      , (oz)*spaceScale  ))
 		normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 	
+		pushN(n);
+
+		function pushN(n){
+
 		switch( n ) {
 		case 1:
 			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
@@ -156,12 +171,13 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 			}
+		}
 	}
 	
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
 		const range = (2 ) * Math.PI;
 		const minRange = (0) * Math.PI;
-		drawRange( 0,0,0, range, 40, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
+		drawRange( 0,0,0, range, 20, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
 	}
 return;
 	var priorHere;
@@ -208,7 +224,7 @@ return;
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
-		const normLen = 0.5*(steps/range);
+		const normLen = 0.2*(steps/range);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
@@ -238,12 +254,12 @@ return;
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
 				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.forward.x*normal_del/normLen,oy*spaceScale + basis.forward.y*normal_del/normLen, oz*spaceScale + basis.forward.z*normal_del/normLen ))
 	        
-				normalColors.push( new THREE.Color( 255,0,0,255 ))
-				normalColors.push( new THREE.Color( 255,0,0,255 ))
-				normalColors.push( new THREE.Color( 0,255,0,255 ))
-				normalColors.push( new THREE.Color( 0,255,0,255 ))
-				normalColors.push( new THREE.Color( 0,0,255,255))
-				normalColors.push( new THREE.Color( 0,0,255,255 ))
+				normalColors.push( new THREE.Color( 255,0,0,0.25 ))
+				normalColors.push( new THREE.Color( 255,0,0,0.25 ))
+				normalColors.push( new THREE.Color( 0,255,0,0.25 ))
+				normalColors.push( new THREE.Color( 0,255,0,0.25 ))
+				normalColors.push( new THREE.Color( 0,0,0.9,0.25))
+				normalColors.push( new THREE.Color( 0,0,0.9,0.25 ))
 				
 					
 				}
