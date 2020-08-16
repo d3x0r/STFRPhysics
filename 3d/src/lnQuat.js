@@ -973,6 +973,108 @@ lnQuat.prototype.addConj = function( q ) {
 	return this;//.update();
 }
 
+class EulerRotor {
+	x = new lnQuat(0,0,0,0);
+	y = new lnQuat(0,0,0,0);
+	z = new lnQuat(0,0,0,0);
+	//t = new lnQuat();
+
+	/*
+	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1 );
+	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2 );
+	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
+	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
+	*/
+	
+	constructor(x_,y_,z_) {
+		this.x.x = x_;
+		this.x.dirty = true;
+		this.y.y = y_;
+		this.y.dirty = true;
+		this.z.z = z_;
+		this.z.dirty = true;
+	}
+	update() {
+		this.x.update();
+		this.y.update();
+		this.z.update();
+		return this;
+	}
+	applyDel( v, del, v2, del2 ) {
+		//const a = x.
+		return v;
+	}
+	get lnQuat() {
+		this.y.update(); this.z.update();
+		const t = this.x.freeSpin( this.y.nL, this.y );
+		t.freeSpin( this.z.nL, this.z );
+		return t;
+	}
+	get x() {
+		return this.x.x;
+	}		
+	get nx() {
+		return this.x.nx;
+	}		
+	get y() {
+		return this.y.y;
+	}		
+	get ny() {
+		return this.y.ny;
+	}		
+	get z() {
+		return this.z.z;
+	}		
+	get nz() {
+		return this.z.nz;
+	}
+	set x(v) {
+		this.x.x = v;
+		this.x.dirty = true;
+	}		
+	set y(v) {
+		this.y.y = v;
+		this.y.dirty = true;
+	}		
+	set z(v) {
+		this.z.z = v;
+		this.z.dirty = true;
+	}
+	freeSpin(th,v){
+		const a = this.x.freeSpin( th, v );
+		const b = this.y.freeSpin( th, v );
+		const c = this.z.freeSpin( th, v );
+		
+		return c;
+	}		
+
+	getBasisT(T){
+		return new lnQuat( 0, this.x.x, this.y.y, this.z.z ).update().getBasisT(T);
+	}		
+
+	apply(v){
+		if( v instanceof EulerRotor ) {
+
+			const t2 = this.x.update();
+			const t3 = this.y.update().freeSpin( t2.nL, t2 );
+			const t4 = this.z.update().freeSpin( t3.nL, t3 );
+
+			return t4;	
+
+			const z = this.lnQuat.update();
+			const a = this.x.freeSpin( this.z.nL/2, this.z );
+			const b = this.y.freeSpin( a.nL/2, a );
+			const c = this.z.freeSpin( b.nL/2, b );
+			return new EulerRotor( c.x, c.y, c.z );
+		}
+						
+		const a = this.x.apply( v );
+		const b = this.y.apply( a );
+		const c = this.z.apply( b );
+		return c;
+	}		
+}
+
 
 // -------------------------------------------------------------------------------
 //  Testing Apparatii
