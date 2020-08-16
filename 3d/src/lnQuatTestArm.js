@@ -31,6 +31,8 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const lnQ4 = new lnQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] );
 	const lnQ5 = new lnQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] );
 
+	let mode = document.getElementById( "keepInertia" )?.checked?1:0;
+
 	const t2 = lnQ2.add2( lnQ1 );
 	const t3 = t2.add2( lnQ3 );
 	const t4 = t3.add2( lnQ4 );
@@ -93,7 +95,11 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		{
 			//let step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 
-			let step = R[n].applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
+			let step;
+			if( mode === 0 )
+				step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
+			else
+				step = R[n].applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
 
 			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 			A_[n].x += step.x;

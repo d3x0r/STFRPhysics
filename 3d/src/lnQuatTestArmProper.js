@@ -25,6 +25,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const arm = {x:0,y:0,z:2};
 	const shortArm = {x:0,y:0,z:2/100};
 
+	let mode = document.getElementById( "keepInertia" )?.checked?1:0;
 	//const lnQ1 = new lnQuat( {x: curSliders.lnQX[0],y: curSliders.lnQY[0],z: curSliders.lnQZ[0]} );
 	//const lnQ2 = new lnQuat( {x: curSliders.lnQX[1],y: curSliders.lnQY[1],z: curSliders.lnQZ[1]} );
 	//const lnQ3 = new lnQuat( {x: curSliders.lnQX[2],y: curSliders.lnQY[2],z: curSliders.lnQZ[2]} );
@@ -42,10 +43,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
 	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
 
-	const t2_ = t2.add2( lnQ1 ).update();
-	const t3_ = t2_.add2( t3 ).update();
-	const t4_ = t3_.add2( t4 ).update();
-	const t5_ = t4_.add2( t5 ).update();
+	const t2_ = mode===0?t2:t2.add2( lnQ1 ).update();
+	const t3_ = mode===0?t3:t2_.add2( t3 ).update();
+	const t4_ = mode===0?t4:t3_.add2( t4 ).update();
+	const t5_ = mode===0?t5:t4_.add2( t5 ).update();
 
 	const A1 = lnQ1.apply( arm );
 	const A2 = t2_.apply( arm );
@@ -75,7 +76,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		}
 		for( var s = 0; s <= 100; s++ ) {
 
-			prior = R[n].applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
+			prior = (mode===0?R_[n]:R[n]).applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
