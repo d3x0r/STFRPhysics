@@ -35,13 +35,19 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t3 = t2.add2( lnQ3 );
 	const t4 = t3.add2( lnQ4 );
 	const t5 = t4.add2( lnQ5 );
-	
-	const A1 = lnQ1.apply( arm );
-	const A2 = t2.apply( arm );
-	const A3 = t3.apply( arm );
-	const A4 = t4.apply( arm );
-	const A5 = t5.apply( arm );
 
+	const t2_ = t2.add2( lnQ1 );
+	const t3_ = t2_.add2( t3 );
+	const t4_ = t3_.add2( t4 );
+	const t5_ = t4_.add2( t5 );
+
+	const A1 = lnQ1.apply( arm );
+	const A2 = t2_.apply( arm );
+	const A3 = t3_.apply( arm );
+	const A4 = t4_.apply( arm );
+	const A5 = t5_.apply( arm );
+
+	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R = [lnQ1,t2,t3,t4,t5];
 	const A_ = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
@@ -51,7 +57,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		A[n].x += prior.x;
 		A[n].y += prior.y;
 		A[n].z += prior.z;
-		doDrawBasis( R[n], prior );
+		doDrawBasis( Rz[n], prior );
 		normalVertices.push( new THREE.Vector3( (prior.x)*spaceScale ,(prior.y)*spaceScale    , (prior.z)*spaceScale ))
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 		switch( n ) {
@@ -85,12 +91,14 @@ function drawArm(curSliders,normalVertices,normalColors) {
 
 		for( s = 0; s < 100; s++ )
 		{
-			let prior = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
+			//let step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
+
+			let step = R[n].applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
 
 			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
-			A_[n].x += prior.x;
-			A_[n].y += prior.y;
-			A_[n].z += prior.z;
+			A_[n].x += step.x;
+			A_[n].y += step.y;
+			A_[n].z += step.z;
 			normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 
 
@@ -116,7 +124,8 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 			}
 		}
-			doDrawBasis( R[n], A_[n], 1, 1 );
+			doDrawBasis( Rz[n], A_[n], 1, 1 );
+			
 	
 	}
 	
