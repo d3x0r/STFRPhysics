@@ -42,41 +42,20 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
 	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
 
-	if(0)
-	{
-		{
-			let tmp;
-			tmp = t2.sub2( lnQ1 );
-			doDrawBasis( tmp, { x: -3, y : -3, z:0} );
-			tmp = t3.sub2( t2 );
-			doDrawBasis( tmp, { x: -1, y : -3, z:0} );
-			tmp = t4.sub2( t3 );
-			doDrawBasis( tmp, { x: 1, y : -3, z:0} );
-			tmp = t5.sub2( t4 );
-			doDrawBasis( tmp, { x: 3, y : -3, z:0} );
-		}
-		{
-			doDrawBasis( t2, { x: -3, y : -2, z:0} );
-			doDrawBasis( t3, { x: -1, y : -2, z:0} );
-			doDrawBasis( t4, { x: 1, y : -2, z:0} );
-			doDrawBasis( t5, { x: 3, y : -2, z:0} );
-		}
-		{
-			doDrawBasis( lnQ2, { x: -3, y : -1, z:0} );
-			doDrawBasis( lnQ3, { x: -1, y : -1, z:0} );
-			doDrawBasis( lnQ4, { x: 1, y : -1, z:0} );
-			doDrawBasis( lnQ5, { x: 3, y : -1, z:0} );
-		}
-	}
+	const t2_ = t2.add2( lnQ1 ).update();
+	const t3_ = t2_.add2( t3 ).update();
+	const t4_ = t3_.add2( t4 ).update();
+	const t5_ = t4_.add2( t5 ).update();
 
 	const A1 = lnQ1.apply( arm );
-	const A2 = t2.apply( arm );
-	const A3 = t3.apply( arm );
-	const A4 = t4.apply( arm );
-	const A5 = t5.apply( arm );
+	const A2 = t2_.apply( arm );
+	const A3 = t3_.apply( arm );
+	const A4 = t4_.apply( arm );
+	const A5 = t5_.apply( arm );
 	
 	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
-	const R = [lnQ1,t2,t3,t4,t5];
+	const R  = [lnQ1,t2,t3,t4,t5];
+	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 	const A_ = [A1,A2,A3,A4,A5];
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
@@ -96,7 +75,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		}
 		for( var s = 0; s <= 100; s++ ) {
 
-			prior = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
+			prior = R[n].applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
@@ -104,42 +83,42 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			A[n].z += prior.z;
 			//doDrawBasis( R[n], prior, 1, s/100.0 );
 
-		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 
-		switch( n ) {
-		case 1:
-			normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-			normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-			break;
-		case 2:
-			normalColors.push( new THREE.Color( 0,0,0.5,255 ))
-			normalColors.push( new THREE.Color( 0,0,0.5,255 ))
-			break;
-		case 3:
-			normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
-			normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
-			break;
-		case 4:
-			normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
-			normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
-			break;
-		default:
-		normalColors.push( new THREE.Color( 0.5,0,0,255 ))
-		normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+			switch( n ) {
+			case 1:
+				normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+				normalColors.push( new THREE.Color( 0,0.5,0,255 ))
+				break;
+			case 2:
+				normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+				normalColors.push( new THREE.Color( 0,0,0.5,255 ))
+				break;
+			case 3:
+				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
+				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
+				break;
+			case 4:
+				normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
+				normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
+				break;
+			default:
+				normalColors.push( new THREE.Color( 0.5,0,0,255 ))
+				normalColors.push( new THREE.Color( 0.5,0,0,255 ))
 			}
 		}
 		//if( n > 0 )
-			doDrawBasis( R[n], A[n], 1, 1 );
-		if( n < 4 )
-
+			//doDrawBasis( R[n], A[n], 1, 1 );
+			doDrawBasis( Rz[n], A[n], 1, 1 );
 		doDrawBasis( R[n], {x:ox,y:oy,z:oz}, 1, 1 );
 
-		doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
+		//doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
+		if(0)
 		if( n < 4 )
 		{
-		normalVertices.push( new THREE.Vector3( (R[n].nx*R[n].nL)*spaceScale   ,( R[n].ny*R[n].nL)*spaceScale      , (R[n].nz*R[n].nL)*spaceScale  ))
-		normalVertices.push( new THREE.Vector3( (R[n+1].nx*R[n+1].nL)*spaceScale   ,( R[n+1].ny*R[n+1].nL)*spaceScale      , (R[n+1].nz*R[n+1].nL)*spaceScale  ))
-		pushN(n);
+			normalVertices.push( new THREE.Vector3( (R[n].nx*R[n].nL)*spaceScale   ,( R[n].ny*R[n].nL)*spaceScale      , (R[n].nz*R[n].nL)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (R[n+1].nx*R[n+1].nL)*spaceScale   ,( R[n+1].ny*R[n+1].nL)*spaceScale      , (R[n+1].nz*R[n+1].nL)*spaceScale  ))
+			pushN(n);
 		}
 
 
@@ -400,12 +379,18 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
 	for( var n = 1; n <= 5; n++ ) {
-			let lnQX = Number(document.getElementById( "lnQX"+n ).value);
-			let lnQY = Number(document.getElementById( "lnQY"+n ).value);
-			let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
-		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * 4*Math.PI;
-		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * 4*Math.PI;
-		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * 4*Math.PI;
+		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
+		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
+		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
+		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI;
+		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI;
+		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI;
+	if(0)
+		if( n > 1 ) {
+			 curSliders.lnQX[n-1] += curSliders.lnQX[n-2];
+			 curSliders.lnQY[n-1] += curSliders.lnQY[n-2];
+			 curSliders.lnQZ[n-1] += curSliders.lnQZ[n-2];
+		}
 
 		document.getElementById( "lnQXval"+n).textContent = curSliders.lnQX[n-1].toFixed(4);
 		document.getElementById( "lnQYval"+n).textContent = curSliders.lnQY[n-1].toFixed(4);
