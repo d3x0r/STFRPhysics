@@ -44,10 +44,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t5_ = t4_.add2( t5 );
 
 	const A1 = lnQ1.apply( arm );
-	const A2 = t2_.apply( arm );
-	const A3 = t3_.apply( arm );
-	const A4 = t4_.apply( arm );
-	const A5 = t5_.apply( arm );
+	const A2 = (mode===0?t2:t2_).apply( arm );
+	const A3 = (mode===0?t3:t3_).apply( arm );
+	const A4 = (mode===0?t4:t4_).apply( arm );
+	const A5 = (mode===0?t5:t5_).apply( arm );
 
 	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
@@ -59,30 +59,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		A[n].x += prior.x;
 		A[n].y += prior.y;
 		A[n].z += prior.z;
-		doDrawBasis( Rz[n], prior );
+		doDrawBasis( mode===0?R[n]:Rz[n], prior );
 		normalVertices.push( new THREE.Vector3( (prior.x)*spaceScale ,(prior.y)*spaceScale    , (prior.z)*spaceScale ))
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-		switch( n ) {
-		case 1:
-			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
-			break;
-		case 2:
-			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
-			break;
-		case 3:
-			normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
-			break;
-		case 4:
-			normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
-			break;
-		default:
-		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
-		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
-			}
+		pushN(n);
 		prior = A[n];
 
 			if( n ) {
@@ -91,11 +71,11 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				A_[n].z = A_[n-1].z
 			}
 
+			let step;
 		for( s = 0; s < 100; s++ )
 		{
 			//let step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 
-			let step;
 			if( mode === 0 )
 				step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 			else
@@ -131,11 +111,43 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			}
 		}
 			doDrawBasis( Rz[n], A_[n], 1, 1 );
+		normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
+		A_[n].x += step.x*100;
+		A_[n].y += step.y*100;
+		A_[n].z += step.z*100;
+		normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
+		pushN(n);
 			
 	
 	}
 	
 return;
+
+		function pushN(n){
+
+		switch( n ) {
+		case 1:
+			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
+			break;
+		case 2:
+			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
+			break;
+		case 3:
+			normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0,1.0,255 ))
+			break;
+		case 4:
+			normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
+			normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
+			break;
+		default:
+		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+		normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+			}
+		}
+
 	var priorHere;
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	var fibre;
