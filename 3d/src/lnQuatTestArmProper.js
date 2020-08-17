@@ -48,6 +48,11 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t4_ = mode===0?t4:t3_.add2( t4 ).update();
 	const t5_ = mode===0?t5:t4_.add2( t5 ).update();
 
+	const r2_ = t2.sub2( lnQ1 );
+	const r3_ = t3.sub2( t2 );
+	const r4_ = t4.sub2( t3 );
+	const r5_ = t5.sub2( t4 );
+
 	const A1 = lnQ1.apply( arm );
 	const A2 = t2_.apply( arm );
 	const A3 = t3_.apply( arm );
@@ -55,6 +60,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const A5 = t5_.apply( arm );
 	
 	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
+	const Rm = [lnQ1,r2_,r3_,r4_,r5_];
 	const R  = [lnQ1,t2,t3,t4,t5];
 	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 	const A_ = [A1,A2,A3,A4,A5];
@@ -75,8 +81,11 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			A_[n+1].z += A_[n].z;
 		}
 		for( var s = 0; s <= 100; s++ ) {
-
-			prior = (mode===0?R_[n]:R[n]).applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
+			// start from either the end of the previous
+			//           or from the end of the sum of the previous
+			//   add either the rotation itself (to the end of rotations)
+			//   or add the translated rotation (to the end of the sum of rotations)
+			prior = (mode===0?Rm[n]:R[n]).applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
@@ -108,9 +117,19 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				normalColors.push( new THREE.Color( 0.5,0,0,255 ))
 			}
 		}
+		
+		doDrawBasis( mode==0?R[n]:Rz[n], A[n], 1, 1 );
+
+		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+		A[n].x += prior.x*100;
+		A[n].y += prior.y*100;
+		A[n].z += prior.z*100;
+		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+		pushN(n);
+
 		//if( n > 0 )
 			//doDrawBasis( R[n], A[n], 1, 1 );
-			doDrawBasis( Rz[n], A[n], 1, 1 );
+			// 
 		doDrawBasis( R[n], {x:ox,y:oy,z:oz}, 1, 1 );
 
 		//doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
