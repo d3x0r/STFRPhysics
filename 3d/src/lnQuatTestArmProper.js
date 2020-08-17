@@ -130,7 +130,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		//if( n > 0 )
 			//doDrawBasis( R[n], A[n], 1, 1 );
 			// 
-		doDrawBasis( R[n], {x:ox,y:oy,z:oz}, 1, 1 );
+		doDrawBasis( mode==0?R[n]:Rz[n], {x:ox,y:oy,z:oz}, 1, 1 );
 
 		//doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
 		if(0)
@@ -398,13 +398,14 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	curSliders.lnQX = [];
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
+	let scalar = document.getElementById( "largeRange")?.checked;
 	for( var n = 1; n <= 5; n++ ) {
 		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
-		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI;
-		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI;
-		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI;
+		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1);
+		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1);
+		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1);
 	if(0)
 		if( n > 1 ) {
 			 curSliders.lnQX[n-1] += curSliders.lnQX[n-2];
