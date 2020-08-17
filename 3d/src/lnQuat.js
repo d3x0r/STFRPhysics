@@ -553,13 +553,13 @@ lnQuat.prototype.update = function() {
 	// norm-linear    this is / 3 usually, but the sine lookup would
 	//    adds a /3 back in which reverses it.
 	this.nL = (abs(this.x)+abs(this.y)+abs(this.z));///(2*Math.PI); // average of total
-	if( this.nR ){
+	if( this.nR && this.nL ){
 		this.nx = this.x/this.nR /* * this.nL*/;
 		this.ny = this.y/this.nR /* * this.nL*/;
 		this.nz = this.z/this.nR /* * this.nL*/;
 	}else {
 		this.nx = 0;
-		this.ny = 0;
+		this.ny = 1;
 		this.nz = 0;
 	}
 	this.s  = Math.sin(this.nL/2); // only want one half wave...  0-pi total.
@@ -726,12 +726,12 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
 
 			const s  = Math.sin( (l)/2 );//q.s;
-			const nst = s/r; // sin(theta)/r    normal * sin_theta
+			const nst = r?s/r:1; // sin(theta)/r    normal * sin_theta
 			const qw = Math.cos( (l)/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 		        
-			const qx = ax*nst;
-			const qy = ay*nst;
-			const qz = az*nst;
+			const qx = l?ax*nst:0;
+			const qy = l?ay*nst:1;
+			const qz = l?az*nst:0;
 		        
 			const tx = 2 * (qy * v.z - qz * v.y);
 			const ty = 2 * (qz * v.x - qx * v.z);

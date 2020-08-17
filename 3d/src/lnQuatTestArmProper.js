@@ -43,10 +43,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
 	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
 
-	const t2_ = mode===0?t2:t2.add2( lnQ1 ).update();
-	const t3_ = mode===0?t3:t2_.add2( t3 ).update();
-	const t4_ = mode===0?t4:t3_.add2( t4 ).update();
-	const t5_ = mode===0?t5:t4_.add2( t5 ).update();
+	const t2_ = t2.add2( lnQ1 ).update();
+	const t3_ = t2_.add2( t3 ).update();
+	const t4_ = t3_.add2( t4 ).update();
+	const t5_ = t4_.add2( t5 ).update();
 
 	const r2_ = t2.sub2( lnQ1 );
 	const r3_ = t3.sub2( t2 );
@@ -54,12 +54,12 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const r5_ = t5.sub2( t4 );
 
 	const A1 = lnQ1.apply( arm );
-	const A2 = t2_.apply( arm );
-	const A3 = t3_.apply( arm );
-	const A4 = t4_.apply( arm );
-	const A5 = t5_.apply( arm );
+	const A2 = (mode===0?t2:t2_).apply( arm );
+	const A3 = (mode===0?t3:t3_).apply( arm );
+	const A4 = (mode===0?t4:t4_).apply( arm );
+	const A5 = (mode===0?t5:t5_).apply( arm );
 	
-	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
+	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const Rm = [lnQ1,r2_,r3_,r4_,r5_];
 	const R  = [lnQ1,t2,t3,t4,t5];
 	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
@@ -83,9 +83,9 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		for( var s = 0; s <= 100; s++ ) {
 			// start from either the end of the previous
 			//           or from the end of the sum of the previous
-			//   add either the rotation itself (to the end of rotations)
+			//   add either relative rotation itself (to the end of rotations)
 			//   or add the translated rotation (to the end of the sum of rotations)
-			prior = (mode===0?Rm[n]:R[n]).applyDel( shortArm, s/100.0, n?Rz[n-1]:null, 1.0 );
+			prior = (mode===0?Rm[n]:R[n]).applyDel( shortArm, s/100.0, n?((mode===0?R:Rz)[n-1]):null, 1.0 );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
