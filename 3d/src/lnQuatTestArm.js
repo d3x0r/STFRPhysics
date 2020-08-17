@@ -110,7 +110,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 				normalColors.push( new THREE.Color( 1.0,0,0,255 ))
 			}
 		}
-			doDrawBasis( Rz[n], A_[n], 1, 1 );
+			doDrawBasis( mode===0?R[n]:Rz[n], A_[n], 1, 1 );
 		normalVertices.push( new THREE.Vector3( (A_[n].x)*spaceScale   ,( A_[n].y)*spaceScale      , (A_[n].z)*spaceScale  ))
 		A_[n].x += step.x*100;
 		A_[n].y += step.y*100;
