@@ -189,52 +189,8 @@
 
 
 
-			let maximize = document.getElementById( "maximize" ).checked;
-			let minimize = document.getElementById( "minimize" ).checked;
-			let midify = document.getElementById( "midify" ).checked;
-			let harden = document.getElementById( "harden" ).checked;
-			let brick = document.getElementById( "brick" ).checked;
 
-			let n = 0;
-			var newData = [];
-			for( var z = 0; z < field.dims[2]; z++ ) {
-				for( var y = 0; y < field.dims[1]; y++ ) {
-					for( var x = 0; x < field.dims[0]; x++ ) {
-						var a = field.data[n];
-						if( a > 0 ) {
-							if( harden ) {
-								newData.push( 9.0 );  // 1:10
-							} else if( brick ) {
-								newData.push( 1.0 );  // 1:10
-							} else if( midify ) {
-								newData.push( 1.0 );
-							} else if( minimize ) {
-								newData.push( 500 );
-							}
-							else if( maximize ) {
-								newData.push( 0.0000001 );
-							}
-							else {
-								newData.push( a * inflatVal );
-							}
-						}else {
-							if( harden ) {	
-								newData.push( -1 );  // 1:10
-							} else if( brick ) {
-								newData.push( -9 );  // 1:10
-							} else if( midify ) {
-								newData.push( -1.0 );
-							} 
-							else
-								newData.push( a );
-						}
-						n++;
-					}
-				}
-			}
-
-	  var opts;
-	  var result = mesher( newData, field.dims, opts = {
+	  var opts = {
                   elements : fieldElements,
 		  minimize : document.getElementById( "minimize" ).checked,
 		  maximize : document.getElementById( "maximize" ).checked,
@@ -246,134 +202,9 @@
 		  smoothShade : document.getElementById( "smoothShade" ).checked,
 		  showGrid : document.getElementById( "showGrid").checked,
 		  geometryHelper : geometryHelper,
-		} );
+		};
 	  var end = (new Date()).getTime();
 
-	  //Update statistics
-	  document.getElementById("resolution").value = field.dims[0] + 'x' + field.dims[1] + 'x' + field.dims[2];
-	  if( result ){
-	  	document.getElementById("vertcount").value = result.vertices.length;
-	  	document.getElementById("facecount").value = result.faces.length;
-
-		if( opts.showGrid ) {
-			for(var i=0; i<result.vertices.length; ++i) {
-				geometryHelper.addPoint( result.vertices[i]
-									, null, null // texture, and uv[1,0] 
-									 , [0xA0,0x00,0xA0,255] // edge color
-									 , [0x11, 0x11, 0x11, 255] // face color
-									 , [0,0,0] // normal *needs to be updated*;
-									 , 100 // pow
-									 , false // use texture
-									 , false // flat
-									 , false // decal texture?
-									 , [result.vertices[i][0]+0.125,result.vertices[i][1]+0.125,result.vertices[i][2]+0.125]  // modulous of this point.
-								);
-			}
-			const cb = new THREE.Vector3(), ab = new THREE.Vector3();
-			for(var i=0; i<result.faces.length; ++i) {
-				const f = result.faces[i];
-				const vA = result.vertices[f[0]];
-				const vB = result.vertices[f[1]];
-				const vC = result.vertices[f[2]];
-
-				let norm=[0,0,0];
-				let tmp=[0,0,0];
-				//if( !vA || !vB || !vC ) debugger;
-				norm[0] = vC[0]-vB[0];norm[1] = vC[1]-vB[1];norm[2] = vC[2]-vB[2];
-				tmp[0] = vA[0]-vB[0];tmp[1] = vA[1]-vB[1];tmp[2] = vA[2]-vB[2];
-				let a=norm[0],b=norm[1],c=norm[2];
-				norm[0]=norm[1]*tmp[2] - norm[2]*tmp[1];
-				norm[1]=norm[2]*tmp[0] - a      *tmp[2];
-				norm[2]=a      *tmp[1] - b      *tmp[0];
-				let ds;
-				if( (ds=norm[0]*norm[0]+norm[1]*norm[1]+norm[2]*norm[2]) < 0.01 ){
-					norm[0] = vB[0]-vA[0];norm[1] = vB[1]-vA[1];norm[2] = vB[2]-vA[2];
-					tmp[0] = vC[0]-vA[0];tmp[1] = vC[1]-vA[1];tmp[2] = vC[2]-vA[2];
-					let a=norm[0],b=norm[1],c=norm[2];
-					norm[0]=norm[1]*tmp[2] - norm[2]*tmp[1];
-					norm[1]=norm[2]*tmp[0] - a*tmp[2];
-					norm[2]=a      *tmp[1] - b*tmp[0];
-					ds=norm[0]*norm[0]+norm[1]*norm[1]+norm[2]*norm[2];
-				}
-				norm[0] *= 1/Math.sqrt(ds);norm[1] *= 1/Math.sqrt(ds);norm[2] *= 1/Math.sqrt(ds);
-
-				geometryHelper.addFace( f[0], f[1],f[2], norm);
-			}
-			geometryHelper.markDirty();
-			document.getElementById("vertcount").value = geometryHelper.used;
-		  	document.getElementById("facecount").value = geometryHelper.usedFaces/3;
-		} else {
-			document.getElementById("vertcount").value = result.vertices.length;
-		  	document.getElementById("facecount").value = result.faces.length;
-			for(var i=0; i<result.vertices.length; ++i) {
-				var v = result.vertices[i];
-				geometry.vertices.push(new THREE.Vector3(v[0], v[1], v[2]));
-			}
-
-			for(var i=0; i<result.faces.length; ++i) {
-				var f = result.faces[i];
-				if(f.length === 3) {
-					geometry.faces.push(new THREE.Face3(f[0], f[1], f[2]));
-				} else if(f.length === 4) {
-					geometry.faces.push(new THREE.Face4(f[0], f[1], f[2], f[3]));
-				} else {
-					//Polygon needs to be subdivided
-				}
-			}
-
-			var cb = new THREE.Vector3(), ab = new THREE.Vector3();
-			for (var i=0; i<geometry.faces.length; ++i) {
-			var f = geometry.faces[i];
-			var vA = geometry.vertices[f.a];
-			var vB = geometry.vertices[f.b];
-			var vC = geometry.vertices[f.c];
-			cb.subVectors(vC, vB);
-			ab.subVectors(vA, vB);
-			cb.cross(ab);
-			cb.normalize();
-			if (geometry.faces[i].length == 3) {
-				continue;
-			}
-
-			if( cb.length() < 0.001 ){
-				cb.subVectors(vB, vA);
-				ab.subVectors(vC, vA);
-				cb.cross(ab);
-				cb.normalize();
-				if (geometry.faces[i].length == 3) {
-					continue;
-				}
-
-			}
-
-			// quad
-			if (f.d /*cb.isZero()*/) {
-				// broken normal in the first triangle, let's use the second triangle
-				var vA = geometry.vertices[f.a];
-				var vB = geometry.vertices[f.c];
-				var vC = geometry.vertices[f.d];
-				//if( !vA || !vB || !vC ) debugger;
-				cb.subVectors(vC, vB);
-				ab.subVectors(vA, vB);
-				cb.cross(ab);
-				cb.normalize();
-			}
-			f.normal.copy(cb);
-			}
-
-	}
-
-	}else{
-		if( !opts.showGrid ) {
-			document.getElementById("vertcount").value = geometry.vertices.length;
-			document.getElementById("facecount").value = geometry.faces.length;
-		}
-		else {
-			document.getElementById("vertcount").value = geometryHelper.used;
-		  	document.getElementById("facecount").value = geometryHelper.usedFaces/3;
-
-		}
-	}
 	  document.getElementById("meshtime").value = (end - start) / 1000.0;
 
 
@@ -381,47 +212,6 @@
 	  geometry.elementsNeedUpdate = true;
 	  geometry.normalsNeedUpdate = true;
 
-	  geometry.computeBoundingBox();
-	  geometry.computeBoundingSphere();
-		if( document.getElementById( "showNormal" ).checked && !document.getElementById("showGrid").checked ) {
-			material	= new THREE.MeshNormalMaterial();
-			surfacemesh	= new THREE.Mesh( geometry, material );
-			surfacemesh.doubleSided = true;
-		}
-		else {
-			if( document.getElementById("showGrid").checked )
-			{
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
-					material	= THREE.DualGridGeometryMaterial();
-					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
-					material.uniforms.elementMap3.value = fieldElements.texture.texture;
-					material.uniforms.elementX.value = fieldElements.dims[0];
-					material.uniforms.elementY.value = fieldElements.dims[1];
-					material.uniforms.elementZ.value = fieldElements.texture.halfZ;
-					material.uniforms.cursorIconTex.value = window.ttCommon.cursorIcon;
-
-					material.defines.CALCULATE_COSINE_MERGE = document.getElementById( "sharpenTransition" ).checked?1:0;
-					material.uniforms.cursorIconUp.value.set( 0, 1, 0 ); // this should update to the camera up 
-
-					surfacemesh	= new THREE.Mesh( geometry, material );
-				}else{
-					material	= THREE.GridGeometryMaterial();
-					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
-					material.uniforms.cursorIconTex.value = window.ttCommon.cursorIcon;
-					material.defines.CALCULATE_COSINE_MERGE = document.getElementById( "sharpenTransition" ).checked?1:0;
-					material.uniforms.cursorIconUp.value.set( 0, 0, 1 ); // this should update to the camera up 
-
-					surfacemesh	= new THREE.Mesh( geometry, material );
-				}
-				//cluster.THREE_solid.add( sector.THREE_solid = new THREE.Mesh( sector.solid_geometry.geometry, geometryShader ) );
-			}else {
-				material	= new THREE.MeshPhongMaterial({
-					color:0x700070
-				});
-				surfacemesh	= new THREE.Mesh( geometry, material );
-				surfacemesh.doubleSided = true;
-			}
-		}
 		var wirematerial = new THREE.MeshBasicMaterial({
 				color : 0xffffff
 			  , wireframe : true
@@ -438,18 +228,8 @@
 			scene.add( lineSegments );
 		}
 
-		scene.add( surfacemesh );
 		scene.add( wiremesh );
 
-			var bb = geometry.boundingBox;
-			wiremesh.position.x = surfacemesh.position.x = -(bb.max.x + bb.min.x) / 2.0;
-			wiremesh.position.y = surfacemesh.position.y = -(bb.max.y + bb.min.y) / 2.0;
-			wiremesh.position.z = surfacemesh.position.z = -(bb.max.z + bb.min.z) / 2.0;
-			if( geometryNormals ) {
-				lineSegments.position.x = surfacemesh.position.x = -(bb.max.x + bb.min.x) / 2.0;
-				lineSegments.position.y = surfacemesh.position.y = -(bb.max.y + bb.min.y) / 2.0;
-				lineSegments.position.z = surfacemesh.position.z = -(bb.max.z + bb.min.z) / 2.0;
-			}
 		}
 	
 		window.doInit = ()=>{
@@ -479,7 +259,7 @@
 			}
 
 			canvas.addEventListener( "mousemove", (evt)=>{
-				if( material.uniforms && material.uniforms.cursorRayNormal ) {
+				if( material && material.uniforms && material.uniforms.cursorRayNormal ) {
 					var pRect = canvas.getBoundingClientRect();
 					var x = evt.clientX - pRect.left;
 					var y = evt.clientY - pRect.top;
@@ -734,14 +514,14 @@
 
 			// update camera controls
 			cameraControls.update();
-		if( material.uniforms && material.uniforms.cursorIconUp ) {
+		if( material && material.uniforms && material.uniforms.cursorIconUp ) {
           			material.uniforms.cursorIconUp.value.copy( camera.up ); // this should update to the camera up 
           			material.uniforms.cursorRayOrigin.value.copy( camera.position ); // this should update to the camera up 
 	}
 
 
-	  surfacemesh.visible = document.getElementById("showfacets").checked;
-	  wiremesh.visible = document.getElementById("showedges").checked;
+	  //surfacemesh.visible = document.getElementById("showfacets").checked;
+	  //wiremesh.visible = document.getElementById("showedges").checked;
 
 			// actually render the scene
 			renderer.render( scene, camera );
