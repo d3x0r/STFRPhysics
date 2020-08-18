@@ -385,7 +385,7 @@ lnQuat.prototype.torque = function( direction, turns ) {
 
 
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
-lnQuat.prototype.getBasisT = function(del, right) {
+lnQuat.prototype.getBasisT = function(del, from, right) {
 	// this is terse; for more documentation see getBasis Method.
 	if( right ) {
 		// this basis is supposed to be the rotation axis, and the tangent on the 
@@ -458,14 +458,21 @@ lnQuat.prototype.getBasisT = function(del, right) {
 	} else {
 		const q = this;
 		//this.update();
-		if( !del ) del = 1.0;
-		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
+		if( "undefined" === typeof del ) del = 1.0;
+		const ax = from?from.x+q.x*del:q.x;	
+		const ay = from?from.y+q.y*del:q.y;	
+		const az = from?from.z+q.z*del:q.z;	
+		const alen = from?Math.abs(ax)+Math.abs(ay)+Math.abs(az):(this.nL*del);
+		const sqlen = from?Math.sqrt(ax*ax+ay*ay+az*az):(this.nR);
 
-		const qx = q.nx; // normalizes the imaginary parts
-		const qy = q.ny; // set the sin of their composite angle as their total
-		const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
+		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+		const s  = Math.sin( nt ); // sin/cos are the function of exp()
+		const c = 1- Math.cos( nt ); // sin/cos are the function of exp()
+		if( from ) 
+			console.log( "FROM:", q, from, ax, ay, az, nt );
+		const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
+		const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
+		const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
 
 		const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
 		const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
@@ -529,8 +536,7 @@ function getCayleyBasis() {
 				return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
 			},
 		}
-		return basis;	
-
+		return basis;
 }
 
 
@@ -902,12 +908,14 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const az_ = axis.z;
 	// make sure it's normalized
 	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
+	if( aLen ) {
+		const ax = ax_/aLen;
+		const ay = ay_/aLen;
+		const az = az_/aLen;
 
-	const ax = ax_/aLen;
-	const ay = ay_/aLen;
-	const az = az_/aLen;
-
-	return finishRodrigues( C, 0, ax, ay, az, th );
+		return finishRodrigues( C, 0, ax, ay, az, th );
+	}
+	return this;
 }
 
 lnQuat.prototype.twist = function(c){

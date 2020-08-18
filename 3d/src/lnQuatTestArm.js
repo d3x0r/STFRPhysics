@@ -43,6 +43,17 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	const t4_ = t3_.add2( t4 );
 	const t5_ = t4_.add2( t5 );
 
+	//const t2 = lnQ1.add2( lnQ2.spin( t2_.nL/2, t2_ ) );
+	//console.log( "Q becomes Q2", lnQ2, t2, t2 );
+	//const t3 = t2.applyBeta(lnQ3);
+	//const t4 = t3.applyBeta(lnQ4);
+	//const t5 = t4.applyBeta(lnQ5);
+
+	drawRange( t2.x, t2.y, t2.z, Math.PI/32, 5 );
+	drawRange( t3.x, t3.y, t3.z, Math.PI/32, 5 );
+	drawRange( t4.x, t4.y, t4.z, Math.PI/32, 5 );
+	drawRange( t5.x, t5.y, t5.z, Math.PI/32, 5 );
+	
 	const A1 = lnQ1.apply( arm );
 	const A2 = (mode===0?t2:t2_).apply( arm );
 	const A3 = (mode===0?t3:t3_).apply( arm );
@@ -196,8 +207,9 @@ return;
 	// graph of location to rotation... 
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
+		if( "undefined" === typeof unscaled ) unscaled = true;
 		if( !minr ) minr = 0;
-		const normLen = 0.5*(steps/range);
+		const normLen = 0.1*(steps/range);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
@@ -211,7 +223,7 @@ return;
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 	        
-				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
+				const nL = 1;//(Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
 				const ox = unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx);
 				const oy = unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny);

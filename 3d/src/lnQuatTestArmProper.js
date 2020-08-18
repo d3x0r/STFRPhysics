@@ -86,12 +86,14 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			//   add either relative rotation itself (to the end of rotations)
 			//   or add the translated rotation (to the end of the sum of rotations)
 			prior = (mode===0?Rm[n]:R[n]).applyDel( shortArm, s/100.0, n?((mode===0?R:Rz)[n-1]):null, 1.0 );
+
+			if( ( s % 8 ) === 0 ) 
+				doDrawBasis( mode==0?Rm[n]:R[n], A[n], 1, s/100.0, n?((mode===0?R:Rz)[n-1]):null );
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
 			A[n].y += prior.y;
 			A[n].z += prior.z;
-			//doDrawBasis( R[n], prior, 1, s/100.0 );
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 
@@ -118,7 +120,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			}
 		}
 		
-		doDrawBasis( mode==0?R[n]:Rz[n], A[n], 1, 1 );
+		//doDrawBasis( mode==0?R[n]:Rz[n], A[n], 1, 1 );
 
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 		A[n].x += prior.x*100;
@@ -130,7 +132,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		//if( n > 0 )
 			//doDrawBasis( R[n], A[n], 1, 1 );
 			// 
-		doDrawBasis( mode==0?R[n]:Rz[n], {x:ox,y:oy,z:oz}, 1, 1 );
+		//doDrawBasis( mode==0?R[n]:Rz[n], {x:ox,y:oy,z:oz}, 1, 1 );
 
 		//doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
 		if(0)
@@ -179,45 +181,6 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		drawRange( 0,0,0, range, 20, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
 	}
 return;
-	var priorHere;
-	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
-	var fibre;
-	//let prior = null;
-	const lATC = Math.sqrt(A*A+T*T+C*C);
-	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
-	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
-	
-			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (A/lATC*2*Math.PI)*spaceScale   ,(T/lATC*2*Math.PI)*spaceScale      , (C/lATC*2*Math.PI)*spaceScale  ))
-			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0,0,255 ))
-
-			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (xRot/lB*2*Math.PI)*spaceScale   ,(yRot/lB*2*Math.PI)*spaceScale      , (zRot/lB*2*Math.PI)*spaceScale  ))
-			normalColors.push( new THREE.Color( 1.0,0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0,0,0,255 ))
-
-			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (AxRot/lB*2*Math.PI)*spaceScale   ,(AyRot/lA*2*Math.PI)*spaceScale      , (AzRot/lA*2*Math.PI)*spaceScale  ))
-			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0,255 ))
-	const steps = stepCount;
-	const subSteps = turnCount;//Math.sqrt(steps);
-		prior = null;              
-	for( nTotal = 0; nTotal < steps; nTotal++ ) {
-		fibre = nTotal * ( 1*( 2*Math.PI ) / ( steps ) );//  - 2*Math.PI;
-		
-		const lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
-		const lnQ    = new lnQuat( T    , lnQrot.apply( { x: A, y:B, z:C } ) );
-
-		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
-		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
-		
-		doDrawBasis( lnQ, fibre, (q,x)=>x * q.nL, true );
-		
-	}
-
-	return;
 
 	// graph of location to rotation... 
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
@@ -269,8 +232,8 @@ return;
 	
 	}
 
-	function doDrawBasis(lnQ2,t,s,Del ) {
-		const basis = lnQ2.update().getBasisT( Del );
+	function doDrawBasis(lnQ2,t,s,Del,from ) {
+		const basis = lnQ2.update().getBasisT( Del,from );
 		if( !s ) s = 1.0;
 		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                               ))
@@ -282,71 +245,18 @@ return;
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                                ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.forward.x*normal_del*s,(t.y/l)*spaceScale + basis.forward.y*normal_del*s, (t.z/l)*spaceScale + basis.forward.z*normal_del*s ))
 
-
-		        {
-				//const s = t / (Math.PI*4);
-				const s = 1;
-				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
-				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
-			}
-
-	}
-
-}
-
-
-function QuatPathing(q_, v, c,normalVertices,normalColors) {
-	const spaceScale = 5;
-	const normal_del = 1;
-	const q = new lnQuat( {a:q_.x, b:q_.y, c:q_.z} );
-
-	const o = [6/spaceScale,+6/spaceScale,+6/spaceScale];
-	let prior_v = null;
-	for( var x = -0.0; x < 0.25; x+= 0.02 ) {
-		q.twist( x );
-		prior_v = null;        	
-		var t = 0;
-		for( ; t <= 1; t+=0.1 ) {
-			
-			const new_v = q.applyDel( v, t );
-			new_v.x += o[0];new_v.y += o[1];new_v.z += o[2];
-				if( prior_v ) {
-					normalVertices.push( new THREE.Vector3( prior_v.x*spaceScale,prior_v.y*spaceScale, prior_v.z*spaceScale ))
-					normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
-					normalColors.push( c)
-					normalColors.push( c)
-				}
-				prior_v = new_v;
-			if( (t % 0.750 ) <= 0.01 || t >=0.99  ) {
-				const basis = q.getBasisT( t );
-	        
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                           ,new_v.y*spaceScale                           , new_v.z*spaceScale ))
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del, new_v.z*spaceScale + basis.right.z*normal_del ))
-	        
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                        ,new_v.y*spaceScale                        , new_v.z*spaceScale ))
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
-	        
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
-				normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
-	        
-				normalColors.push( new THREE.Color( 255,0,0,255 ))
-				normalColors.push( new THREE.Color( 255,0,0,255 ))
-				normalColors.push( new THREE.Color( 0,255,0,255 ))
-				normalColors.push( new THREE.Color( 0,255,0,255 ))
-				normalColors.push( new THREE.Color( 0,0,255,255))
-				normalColors.push( new THREE.Color( 0,0,255,255 ))
-	        
-			}
-		};
+		{
+			//const s = t / (Math.PI*4);
+			const s = 1;
+			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+		}
 	}
 }
-
-
-
 
 function DrawQuatNormals(normalVertices,normalColors) {
 	const v = { x:0,y:1,z:0};
@@ -389,9 +299,8 @@ function DrawQuatNormals(normalVertices,normalColors) {
 			
 	
 	}
-
-
 }
+
 function DrawQuatPaths(normalVertices,normalColors) {
         let curSliders = {
 	};
@@ -469,12 +378,6 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	const cy = new THREE.Color( 128,128,128,255 );
 	const cz = new THREE.Color( 0,192,192,255 );
 	drawArm( curSliders, normalVertices,normalColors );
-	//QuatPathing2( lnQ, yAxis, cy,normalVertices,normalColors );
-
-	
-	//QuatPathing( lnQ, xAxis, cx,normalVertices,normalColors );
-	//QuatPathing( lnQ, yAxis, cy,normalVertices,normalColors );
-	//QuatPathing( lnQ, zAxis, cz,normalVertices,normalColors );
 }
 
 
