@@ -6,6 +6,7 @@
 
 var l = 0;
 var SaltyRNG = require( "salty_random_generator.js" ).SaltyRNG;
+var lnQuat = require( "../lib/lnQuat.js" );
 
 var RNG = SaltyRNG( (salt)=>{salt.push( Date.now() ) } );
 
@@ -163,13 +164,13 @@ function handleKeyEvents( event, isDown ) {
 			break;
 		case keys.NUM2:
 			if( isDown )
-				myMover.matrix.motion.torque.x = -Accel1;
+				myMover.matrix.motion.torque.x = Accel1;
 			else
 				myMover.matrix.motion.torque.x = 0;
 			break;
 		case keys.NUM8:
 			if( isDown )
-				myMover.matrix.motion.torque.x = Accel1;
+				myMover.matrix.motion.torque.x = -Accel1;
 			else
 				myMover.matrix.motion.torque.x = 0;
 			break;
@@ -189,13 +190,13 @@ function handleKeyEvents( event, isDown ) {
 
 		case keys.NUM7:
 			if( isDown )
-				myMover.matrix.motion.torque.z = -Accel1;
+				myMover.matrix.motion.torque.z = Accel1;
 			else
 				myMover.matrix.motion.torque.z = 0;
 			break;
 		case keys.NUM9:
 			if( isDown )
-				myMover.matrix.motion.torque.z = Accel1;
+				myMover.matrix.motion.torque.z = -Accel1;
 			else
 				myMover.matrix.motion.torque.z = 0;
 			break;
@@ -216,14 +217,14 @@ function handleKeyEvents( event, isDown ) {
 
 		case keys.NUM0:
 			if( isDown )
-				myMover.matrix.motion.acceleration.z = linAccel1;
+				myMover.matrix.motion.acceleration.z = -linAccel1;
 			else
 				myMover.matrix.motion.acceleration.z = 0;
 			break;
 
 		case keys.NUMDOT:
 			if( isDown )
-				myMover.matrix.motion.acceleration.z = -linAccel1;
+				myMover.matrix.motion.acceleration.z = linAccel1;
 			else
 				myMover.matrix.motion.acceleration.z = 0;
 			break;
@@ -377,10 +378,8 @@ function addModelToScene2(object) {
 //	geometry, materials
  //   var material = new THREE.MeshFaceMaterial(materials);
  //   var object = new THREE.Mesh(geometry, material);
-
-
+	var x;
 	for( var n = 0; n < 10; n++ ) {
-		var x;
 	    scene.add(x = object.clone());
 		x.matrixAutoUpdate = false;
 		x.matrix.origin.x = n * 5;
@@ -393,11 +392,10 @@ function addModelToScene2(object) {
 		movers2.push(x);
 	}
 
-
-	    scene.add(myMover = x = object);
-		movers2.push(x);
-		x.matrixAutoUpdate = false;
-		 myMover.add( camera );
+	scene.add(myMover = x = object);
+	movers2.push(x);
+	x.matrixAutoUpdate = false;
+	myMover.add( camera );
 	//camMat = camera.matrix;
 	//camera.matrix = myMover.matrix;
 }
