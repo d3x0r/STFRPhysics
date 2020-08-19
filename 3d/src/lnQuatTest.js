@@ -571,7 +571,7 @@ if(1)
 	if( showCoordinateGrid ) {
 		const range = (Math.floor(E) + 2 ) * Math.PI;
 		const minRange = (Math.floor(E) +1 ) * Math.PI;
-		drawRange( 0,0,0, range, 20, minRange );
+		drawRange( 0,0,0, range, 40, 2*Math.PI );
 	}
 	// graph of location to rotation... 
 	function drawRange( cx,cy,cz,range,steps, minr ) {
@@ -580,9 +580,9 @@ if(1)
 	for( let x = -range; x <= range;  x += (2*range)/steps ) {
 		for( let y = -range; y <= range;  y += (2*range)/steps ) {
 			for( let z = -range; z <= range; z += (2*range)/steps ) {
+			if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) > minr ) continue;
 				const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
 			const basis = lnQ.getBasis( );
-			if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
 
 			// the original normal direction; projected offset of sphere (linear scaled)
 			//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
