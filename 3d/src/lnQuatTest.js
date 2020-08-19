@@ -6,7 +6,7 @@ let drawNormalBall = false;
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const spaceScale = 5;
 	const normal_del = 1;
-	const o = [6/spaceScale,+6/spaceScale,+6/spaceScale];
+	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 
 	const ax = Math.abs(A);
 	const ay = 0;//Math.abs(B);
