@@ -488,18 +488,24 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 		const q = this;
 		//this.update();
 		if( "undefined" === typeof del ) del = 1.0;
-		const ax = from?(addN2?from.nx*from.nL:from.x)+(addN2?q.nx*q.nL:q.x)*del:q.x;	
-		const ay = from?(addN2?from.ny*from.nL:from.y)+(addN2?q.ny*q.nL:q.y)*del:q.y;	
-		const az = from?(addN2?from.nz*from.nL:from.z)+(addN2?q.nz*q.nL:q.z)*del:q.z;	
-		const alen = from?Math.abs(ax)+Math.abs(ay)+Math.abs(az):(this.nL*del);
-		const sqlen = from?Math.sqrt(ax*ax+ay*ay+az*az):(this.nR);
+		let ax, ay, az;
+		if( addN2 ) {
+			ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
+			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
+			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+		} else {
+			ax = from?from.x:0 + (q.x*del);	
+			ay = from?from.y:0 + (q.y*del);	
+			az = from?from.z:0 + (q.z*del);	
+		}
+		const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
 
 		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 		const s  = Math.sin( nt ); // sin/cos are the function of exp()
 		const c1 = Math.cos( nt ); // sin/cos are the function of exp()
 		const c = 1- c1;
-		if( from ) 
-			console.log( "FROM:", q, from, ax, ay, az, nt );
+
 		const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
 		const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
 		const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
@@ -710,21 +716,82 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 		// v is unmodified.	
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	} else  {
-
 		if( q2 ) {
-			const ax = (addN2?this.nx*this.nL:this.x) * del + (addN2?q2.nx*q2.nL:q2.x) * del2;
-			const ay = (addN2?this.ny*this.nL:this.y) * del + (addN2?q2.ny*q2.nL:q2.y) * del2;
-			const az = (addN2?this.nz*this.nL:this.z) * del + (addN2?q2.nz*q2.nL:q2.z) * del2;
+
+			let ax = 0;
+			let ay = 0;
+			let az = 0;
+/*************** 
+ * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
+   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
+   by the sin( ||Q2||_1 + ||Q1||_2 *del )
+			const SLERP = false;
+			if( SLERP ) {
+				const dot = { x: this.nx * q2.nx 
+				            , y: this.ny * q2.ny 
+				            , y: this.nz * q2.nz 
+					};
+				const sin_q = sin(this.nL/2);
+				const sin_q2 = sin(q2.nL/2);
+
+				const cos_q = sin(this.nL/2);
+				const cos_q2 = sin(q2.nL/2);
+
+				if( Math.abs(dot > 0.9995 ) )
+				{
+					const angle_del = q2.nL + q.nL*del;
+					
+					ax = q2.nx * sin_q2 + del * ( this.nx * sin_q );
+					ay = q2.ny * sin_q2 + del * ( this.ny * sin_q );
+					az = q2.nz * sin_q2 + del * ( this.nz * sin_q );
+					
+				}else {
+					const theta_0 = Math.acos(dot);
+					const theta = theta_0 * del;
+					const st = sin(theta);
+					const st_0 = sin(theta_0);
+					const s0 = cos(theta) - dot* st/st_0;
+					const s1 = st/st_0;
+				
+					ax = s0 * this.nx * sin_q + s1 * q2.nx * sin_q2
+					ay = s0 * this.ny * sin_q + s1 * q2.ny * sin_q2
+					az = s0 * this.nz * sin_q + s1 * q2.nz * sin_q2
+					
+				}
+
+				ax /= Math.sin( q2.nL + q.nL *del ) * angle_del;
+				ay /= Math.sin( q2.nL + q.nL *del ) * angle_del;
+				az /= Math.sin( q2.nL + q.nL *del ) * angle_del;
+			}
+			else 
+****************************************/
+
+			{
+				if( addN2) {
+					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+					ax = this.nx*this.nL * del + q2.nx*q2.nL * del2;
+					ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
+					az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
+				} else {
+					// this.x === ( this.x / this.nL ) * this.nL
+					ax = this.x * del + q2.x * del2;
+					ay = this.y * del + q2.y * del2;
+					az = this.z * del + q2.z * del2;
+				}
+			}
+
 			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
-
+			if( !l ) {
+				return {x:v.x, y:v.y, z:v.z }; // 1.0
+			}
 			const s  = Math.sin( (l)/2 );//q.s;
 			const nst = r?s/r:1; // sin(theta)/r    normal * sin_theta
 			const qw = Math.cos( (l)/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 		        
-			const qx = l?ax*nst:0;
-			const qy = l?ay*nst:1;
-			const qz = l?az*nst:0;
+			const qx = l?ax*nst:q2?q2.nx:0;
+			const qy = l?ay*nst:q2?q2.ny:1;
+			const qz = l?az*nst:q2?q2.nz:0;
 		        
 			const tx = 2 * (qy * v.z - qz * v.y);
 			const ty = 2 * (qz * v.x - qx * v.z);
@@ -734,9 +801,25 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 			       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };			
 		}
 
-		const s  = Math.sin( (q.nL)*del/2 );//q.s;
-		const nst = s/q.nR; // sin(theta)/r    normal * sin_theta
-		const qw = Math.cos( (q.nL)*del/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		if( addN2) {
+			// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+			ax = this.nx*this.nL * del;
+			ay = this.ny*this.nL * del;
+			az = this.nz*this.nL * del;
+		} else {
+			// this.x === ( this.x / this.nL ) * this.nL
+			ax = this.x * del;
+			ay = this.y * del;
+			az = this.z * del;
+		}
+		const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+		if( !l ) {
+			return { x:v.x, y:v.y, z:v.z }
+		}
+		const r = Math.sqrt(ax*ax+ay*ay+az*az);
+		const s  = Math.sin( (l)*del/2 );//q.s;
+		const nst = s/r; // sin(theta)/r    normal * sin_theta
+		const qw = Math.cos( (l)*del/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 
 		const qx = q.x*nst;
 		const qy = q.y*nst;
