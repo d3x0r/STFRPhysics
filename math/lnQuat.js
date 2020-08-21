@@ -274,6 +274,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	if( tzz >= 2 ) tzz = 0;
 */
 	/*
+	https://stackoverflow.com/a/12472591/4619267
 	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
