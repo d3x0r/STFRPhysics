@@ -494,6 +494,13 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 			ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
 			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
 			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+			
+			const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+			// convert back from nr*angle to nl*angle
+			ax *= r_/l_
+			ay *= r_/l_
+			az *= r_/l_
 		} else {
 			ax = (from?from.x:0) + (q.x*del);	
 			ay = (from?from.y:0) + (q.y*del);	
@@ -803,6 +810,14 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 					ax = this.nx*this.nL * del + q2.nx*q2.nL * del2;
 					ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
 					az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
+					const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+					const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+					if( addN2 ) {
+						// convert back from nr*angle to nl*angle
+						ax *= r_/l_
+						ay *= r_/l_
+						az *= r_/l_
+					}
 				} else {
 					// this.x === ( this.x / this.nL ) * this.nL
 					ax = this.x * del + q2.x * del2;
@@ -811,13 +826,6 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				}
 			}
 
-			const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-			if( addN2 ) {
-				ax *= l_/r_
-				ay *= l_/r_
-				az *= l_/r_
-			}
 			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
 

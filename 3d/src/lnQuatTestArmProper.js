@@ -258,15 +258,78 @@ return;
 		}
 
 	if( from ) {
+		let x,y,z;
 
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                               ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.right.x*normal_del*s  ,(from.y+Del*lnQ2.y)*2*spaceScale + basis.right.y*normal_del*s  , (from.z+Del*lnQ2.z)*2*spaceScale + basis.right.z*normal_del*s  ))
-		                                                                                                                                                                                               
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                               ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.up.x*normal_del*s     ,(from.y+Del*lnQ2.y)*2*spaceScale + basis.up.y*normal_del *s    , (from.z+Del*lnQ2.z)*2*spaceScale + basis.up.z*normal_del*s     ))
-		                                                                                                                                                                                               
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                                ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.forward.x*normal_del*s,(from.y+Del*lnQ2.y)*2*spaceScale + basis.forward.y*normal_del*s, (from.z+Del*lnQ2.z)*2*spaceScale + basis.forward.z*normal_del*s ))
+			if( SLERP ) {
+				const dot =  lnQ2.nx * from.nx 
+				            + lnQ2.ny * from.ny 
+				            + lnQ2.nz * from.nz 
+					;
+				const angle = Math.acos( dot );
+				if( Math.abs(angle) < 0.0001 ){
+					if( addN2) {
+						x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL;
+						y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL;
+						z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL;
+						const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
+						const r_ = Math.sqrt(x*x+y*y+z*z);
+						// convert back from nr*angle to nl*angle
+						x *= r_/l_
+						y *= r_/l_
+						z *= r_/l_
+					} else {
+						x = lnQ2.x * Del + from.x ;
+						y = lnQ2.y * Del + from.y ;
+						z = lnQ2.z * Del + from.z ;
+					}
+					
+				} else {
+					const sa = Math.sin(angle);
+					const sa1 = Math.sin((1-Del)*angle);
+					const sa2 = Math.sin(Del*angle);
+				
+					if( addN2) {
+						x = (from.x+lnQ2.nx*lnQ2.nL) * sa2/sa + (from.nx*from.nL) * sa1/sa;
+						y = (from.y+lnQ2.ny*lnQ2.nL) * sa2/sa + (from.ny*from.nL) * sa1/sa;
+						z = (from.z+lnQ2.nz*lnQ2.nL) * sa2/sa + (from.nz*from.nL) * sa1/sa;
+						const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
+						const r_ = Math.sqrt(x*x+y*y+z*z);
+						// convert back from nr*angle to nl*angle
+						x *= r_/l_
+						y *= r_/l_
+						z *= r_/l_
+					} else {
+						x = (from.x+lnQ2.x) * sa2/sa + from.x * sa1/sa;
+						y = (from.y+lnQ2.y) * sa2/sa + from.y * sa1/sa;
+						z = (from.z+lnQ2.z) * sa2/sa + from.z * sa1/sa;
+					}
+				}
+			} 
+			else 
+		if( addN2 ) {
+			// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+			x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL ;
+			y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL ;
+			z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL ;
+			const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
+			const r_ = Math.sqrt(x*x+y*y+z*z);
+			// convert back from nr*angle to nl*angle
+			x *= r_/l_
+			y *= r_/l_
+			z *= r_/l_
+		} else {
+			x = from.x + Del * lnQ2.x;
+			y = from.y + Del * lnQ2.y;
+			z = from.z + Del * lnQ2.z;
+		}
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.right.x*normal_del*s  ,(y)*2*spaceScale + basis.right.y*normal_del*s  , (z)*2*spaceScale + basis.right.z*normal_del*s  ))
+		                                                                                                                                               
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.up.x*normal_del*s     ,(y)*2*spaceScale + basis.up.y*normal_del *s    , (z)*2*spaceScale + basis.up.z*normal_del*s     ))
+		                                                                                                                                               
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                                ))
+		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.forward.x*normal_del*s,(y)*2*spaceScale + basis.forward.y*normal_del*s, (z)*2*spaceScale + basis.forward.z*normal_del*s ))
 
 		if(0) {
 		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale - 0.5 * normal_del   ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale ))
