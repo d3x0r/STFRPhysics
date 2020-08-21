@@ -62,8 +62,9 @@
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		     <br>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" checked>
-		 - Larger Range(6x)<input type="checkbox" id="largeRange" > (calculate to bias rotation wraps at 2pi, losing the actual high spin)
+		 - Larger Range(6x)<input type="checkbox" id="largeRange" >
 		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
+		 - SLERP: <input type="checkbox" id="useSLERP" >
 
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
@@ -144,6 +145,12 @@
 			addN2 = true;
 		}else 			
 			addN2 = false;
+		if( document.getElementById( "useSLERP" )?.checked ) {
+			SLERP = true;
+		}else 			
+			SLERP = false;
+
+
 
 
 		  var mesher = meshers[ document.getElementById("mesher").value ]
@@ -442,6 +449,8 @@
 			//is.range = 1000;
 
 			is = document.getElementById( "add2Norm" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "useSLERP" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "inflation" );
 			is.oninput = updateMesh;

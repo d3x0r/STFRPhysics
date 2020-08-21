@@ -3,6 +3,7 @@ const speedOfLight = 1;
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
 var addN2 = true;
+var SLERP = true;
 const abs = (x)=>Math.abs(x);
 
 // 'fixed' acos for inputs > 1
@@ -494,9 +495,9 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
 			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
 		} else {
-			ax = from?from.x:0 + (q.x*del);	
-			ay = from?from.y:0 + (q.y*del);	
-			az = from?from.z:0 + (q.z*del);	
+			ax = (from?from.x:0) + (q.x*del);	
+			ay = (from?from.y:0) + (q.y*del);	
+			az = (from?from.z:0) + (q.z*del);	
 		}
 		const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
@@ -725,12 +726,29 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
  * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
    ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
    by the sin( ||Q2||_1 + ||Q1||_2 *del )
-			const SLERP = false;
+#*/
 			if( SLERP ) {
-				const dot = { x: this.nx * q2.nx 
-				            , y: this.ny * q2.ny 
-				            , y: this.nz * q2.nz 
-					};
+				const dot =  this.nx * q2.nx 
+				            + this.ny * q2.ny 
+				            + this.nz * q2.nz 
+					;
+				const angle = Math.acos( dot );
+				if( Math.abs(angle) < 0.0001 ){
+
+					ax = this.x * del + q2.x * del2;
+					ay = this.y * del + q2.y * del2;
+					az = this.z * del + q2.z * del2;
+				} else {
+					const sa = Math.sin(angle);
+					const sa1 = Math.sin((1-del)*angle);
+					const sa2 = Math.sin(del*angle);
+				
+					ax = (q2.x+this.x) * sa2/sa + q2.x * sa1/sa;
+					ay = (q2.y+this.y) * sa2/sa + q2.y * sa1/sa;
+					az = (q2.z+this.z) * sa2/sa + q2.z * sa1/sa;
+				}
+
+/*			
 				const sin_q = sin(this.nL/2);
 				const sin_q2 = sin(q2.nL/2);
 
@@ -762,9 +780,10 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				ax /= Math.sin( q2.nL + q.nL *del ) * angle_del;
 				ay /= Math.sin( q2.nL + q.nL *del ) * angle_del;
 				az /= Math.sin( q2.nL + q.nL *del ) * angle_del;
+*/
 			}
 			else 
-****************************************/
+//****************************************/
 
 			{
 				if( addN2) {
