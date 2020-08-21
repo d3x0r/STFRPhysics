@@ -794,21 +794,35 @@ function finishRodrigues( q, oct, ac, as, ax, ay, az, th ) {
 	const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 
 	const sAng = Math.sin(ang/2);
-	
-	const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+	if( sAng ) {
+		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+	        
+		q.nL = ang/2;
+		q.nR = sAng/Clx*ang;
+		q.qw = cosCo2;
+		q.s = sAng;
+		q.nx = Cx/sAng;
+		q.ny = Cy/sAng;
+		q.nz = Cz/sAng;
+		
+		q.x = Cx/Clx*ang;
+		q.y = Cy/Clx*ang;
+		q.z = Cz/Clx*ang;
+	}else {
+		const Clx = sAng*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
 
-	q.nL = ang/2;
-	q.nR = sAng/Clx*ang;
-	q.qw = cosCo2;
-	q.s = sAng;
-	q.nx = Cx/sAng;
-	q.ny = Cy/sAng;
-	q.nz = Cz/sAng;
+		q.nL = 0;
+		q.nR = 0;
+		q.qw = 1;
+		q.s = 0;
+		q.nx = 0;
+		q.ny = 1;
+		q.nz = 0;
 	
-	q.x = Cx/Clx*ang;
-	q.y = Cy/Clx*ang;
-	q.z = Cz/Clx*ang;
-
+		q.x = 0;
+		q.y = 0;
+		q.z = 0;
+	}
 	q.dirty = false;
 	return q;
 }

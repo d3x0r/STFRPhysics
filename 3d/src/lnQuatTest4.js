@@ -149,7 +149,10 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			prior.nx = lnQ2.nx;
 			prior.ny = lnQ2.ny;
 			prior.nz = lnQ2.nz;
-		}else prior = { nL:lnQ2.nL, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz }
+			prior.x = lnQ2.x;
+			prior.y = lnQ2.y;
+			prior.z = lnQ2.z;
+		}else prior = { nL:lnQ2.nL, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz,x:lnQ2.x,y:lnQ2.y,z:lnQ2.z }
 
 	}
 

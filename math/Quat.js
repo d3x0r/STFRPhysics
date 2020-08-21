@@ -115,6 +115,29 @@ Quat.prototype.mul = function( q ) {
 	// 16+12
 }
 
+Quat.prototype.mulConj = function( q ) {
+      //parse(P, w, x, y, z);
+      // Q1 * Q2 = [w1 * w2 - dot(v1, v2), w1 * v2 + w2 * v1 + cross(v1, v2)]
+      // Not commutative because cross(v1, v2) != cross(v2, v1)!  ( but cross(v1,v2) = -cross(v2,v1) )
+
+      const w1 = +this['w'];
+      const x1 = -this['x'];
+      const y1 = -this['y'];
+      const z1 = -this['z'];
+
+      const w2 = q['w'];
+      const x2 = q['x'];
+      const y2 = q['y'];
+      const z2 = q['z'];
+
+      return new Quat(
+              w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+              w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+              w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2,
+              w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2);
+	// 16+12
+}
+
 // multiply the long way; take the logs, add them and reverse the exp().
 // validation that P*Q = exp(P.log()+Q.log())
 Quat.prototype.mulLong = function( q ) {

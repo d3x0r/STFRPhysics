@@ -257,7 +257,7 @@ __Figure L__
 
 	AdotB = q.nx*ax + q.ny*ay + q.nz*az;        // dot product of axles
 	angle = acos( q.qw*ac - q.s*as*( AdotB ) ); // really angle/2
-	sAng = Math.sin(angle); // same as sqrt(xx+yy+zz)
+	sAng = Math.sin(angle); // same as sqrt(xx+yy+zz); for x,y,z below
 
 	if( sAng < 0.0001) {
 		// if the two axles are coincident, directly add/subtract the angular speed
