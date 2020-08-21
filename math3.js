@@ -332,6 +332,7 @@ b^2 = a^2 + c^2 - 2ac cos(B)
 		return this;
 	}
 /*
+https://stackoverflow.com/a/12472591/4619267
     ( yz - wx ) - ( wx + yz )     -2wx     2*sin(2t) * nx 
 x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
      ( xz - wy ) -  ( wy + xz )   -2wy     2*sin(2t) * ny
