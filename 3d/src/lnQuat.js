@@ -734,18 +734,30 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 					;
 				const angle = Math.acos( dot );
 				if( Math.abs(angle) < 0.0001 ){
-
-					ax = this.x * del + q2.x * del2;
-					ay = this.y * del + q2.y * del2;
-					az = this.z * del + q2.z * del2;
+					if( addN2) {
+						ax = this.nx*this.nL * del + q2.nx*q2.nL * del2;
+						ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
+						az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
+					} else {
+						ax = this.x * del + q2.x * del2;
+						ay = this.y * del + q2.y * del2;
+						az = this.z * del + q2.z * del2;
+					}
+					
 				} else {
 					const sa = Math.sin(angle);
 					const sa1 = Math.sin((1-del)*angle);
 					const sa2 = Math.sin(del*angle);
 				
-					ax = (q2.x+this.x) * sa2/sa + q2.x * sa1/sa;
-					ay = (q2.y+this.y) * sa2/sa + q2.y * sa1/sa;
-					az = (q2.z+this.z) * sa2/sa + q2.z * sa1/sa;
+					if( addN2) {
+						ax = (q2.x+this.nx*this.nL) * sa2/sa + (q2.nx*q2.nL) * sa1/sa;
+						ay = (q2.y+this.ny*this.nL) * sa2/sa + (q2.ny*q2.nL) * sa1/sa;
+						az = (q2.z+this.nz*this.nL) * sa2/sa + (q2.nz*q2.nL) * sa1/sa;
+					} else {
+						ax = (q2.x+this.x) * sa2/sa + q2.x * sa1/sa;
+						ay = (q2.y+this.y) * sa2/sa + q2.y * sa1/sa;
+						az = (q2.z+this.z) * sa2/sa + q2.z * sa1/sa;
+					}
 				}
 
 /*			
@@ -799,8 +811,16 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				}
 			}
 
+			const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+			if( addN2 ) {
+				ax *= l_/r_
+				ay *= l_/r_
+				az *= l_/r_
+			}
 			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
+
 			if( !l ) {
 				return {x:v.x, y:v.y, z:v.z }; // 1.0
 			}
