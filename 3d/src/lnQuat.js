@@ -2,7 +2,7 @@ const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
-
+var addN2 = true;
 const abs = (x)=>Math.abs(x);
 
 // 'fixed' acos for inputs > 1
@@ -459,9 +459,9 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 		const q = this;
 		//this.update();
 		if( "undefined" === typeof del ) del = 1.0;
-		const ax = from?from.x+q.x*del:q.x;	
-		const ay = from?from.y+q.y*del:q.y;	
-		const az = from?from.z+q.z*del:q.z;	
+		const ax = from?(addN2?from.nx*from.nL:from.x)+(addN2?q.nx*q.nL:q.x)*del:q.x;	
+		const ay = from?(addN2?from.ny*from.nL:from.y)+(addN2?q.ny*q.nL:q.y)*del:q.y;	
+		const az = from?(addN2?from.nz*from.nL:from.z)+(addN2?q.nz*q.nL:q.z)*del:q.z;	
 		const alen = from?Math.abs(ax)+Math.abs(ay)+Math.abs(az):(this.nL*del);
 		const sqlen = from?Math.sqrt(ax*ax+ay*ay+az*az):(this.nR);
 
@@ -725,9 +725,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 	} else  {
 
 		if( q2 ) {
-			const ax = this.x * del + q2.x * del2;
-			const ay = this.y * del + q2.y * del2;
-			const az = this.z * del + q2.z * del2;
+			const ax = (addN2?this.nx*this.nL:this.x) * del + (addN2?q2.nx*q2.nL:q2.x) * del2;
+			const ay = (addN2?this.ny*this.nL:this.y) * del + (addN2?q2.ny*q2.nL:q2.y) * del2;
+			const az = (addN2?this.nz*this.nL:this.z) * del + (addN2?q2.nz*q2.nL:q2.z) * del2;
 			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
 

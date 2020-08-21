@@ -87,8 +87,9 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			//   or add the translated rotation (to the end of the sum of rotations)
 			prior = (mode===0?Rm[n]:R[n]).applyDel( shortArm, s/100.0, n?((mode===0?R:Rz)[n-1]):null, 1.0 );
 
-			if( ( s % 8 ) === 0 ) 
+			if( ( s % 2 ) === 0 )  {
 				doDrawBasis( mode==0?Rm[n]:R[n], A[n], 1, s/100.0, n?((mode===0?R:Rz)[n-1]):null );
+			}
 		
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			A[n].x += prior.x;
@@ -255,6 +256,42 @@ return;
 			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 		}
+
+	if( from ) {
+
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.right.x*normal_del*s  ,(from.y+Del*lnQ2.y)*2*spaceScale + basis.right.y*normal_del*s  , (from.z+Del*lnQ2.z)*2*spaceScale + basis.right.z*normal_del*s  ))
+		                                                                                                                                                                                               
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.up.x*normal_del*s     ,(from.y+Del*lnQ2.y)*2*spaceScale + basis.up.y*normal_del *s    , (from.z+Del*lnQ2.z)*2*spaceScale + basis.up.z*normal_del*s     ))
+		                                                                                                                                                                                               
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale                               ,(from.y+Del*lnQ2.y)*2*spaceScale                               , (from.z+Del*lnQ2.z)*2*spaceScale                                ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*2*spaceScale + basis.forward.x*normal_del*s,(from.y+Del*lnQ2.y)*2*spaceScale + basis.forward.y*normal_del*s, (from.z+Del*lnQ2.z)*2*spaceScale + basis.forward.z*normal_del*s ))
+
+		if(0) {
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale - 0.5 * normal_del   ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale + 0.5 * normal_del   ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale ))
+		                                                                                                                                                              
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale - 0.5 * normal_del  , (from.z+Del*lnQ2.z)*spaceScale  ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale + 0.5 * normal_del  , (from.z+Del*lnQ2.z)*spaceScale  ))
+		                                                                                                                                                              
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale - 0.5 * normal_del  ))
+		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale + 0.5 * normal_del  ))
+		}
+
+		{
+			//const s = t / (Math.PI*4);
+			const s = 1;
+			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+		}
+		}
+
+
 	}
 }
 

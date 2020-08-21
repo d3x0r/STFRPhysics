@@ -63,6 +63,7 @@
 		     <br>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" checked>
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" > (calculate to bias rotation wraps at 2pi, losing the actual high spin)
+		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
 
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
@@ -138,6 +139,11 @@
 		  scene.remove( surfacemesh );
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
+
+		if( document.getElementById( "add2Norm" )?.checked ) {
+			addN2 = true;
+		}else 			
+			addN2 = false;
 
 
 		  var mesher = meshers[ document.getElementById("mesher").value ]
@@ -435,6 +441,8 @@
 			//is.value = 500;
 			//is.range = 1000;
 
+			is = document.getElementById( "add2Norm" );
+			is.oninput = updateMesh;
 			is = document.getElementById( "inflation" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "noInflation" );
