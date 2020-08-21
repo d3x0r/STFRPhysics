@@ -274,6 +274,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	if( tzz >= 2 ) tzz = 0;
 */
 	/*
+	https://stackoverflow.com/a/12472591/4619267
 	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
@@ -387,6 +388,34 @@ lnQuat.prototype.torque = function( direction, turns ) {
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, from, right) {
 	// this is terse; for more documentation see getBasis Method.
+	if( false ) { // this is        https://mathworld.wolfram.com/RodriguesRotationFormula.html
+		const q = this;
+
+		const s1 = Math.sin(q.nL*del); // * 2 * 0.5
+		const c1 = Math.cos(q.nL*del); // * 2 * 0.5
+
+		// up is testForward cross lnQ.normal; this version is from raw q.
+		const testUp = { x:       q.nx*q.ny*(1-c1)-q.nz*s1
+		               , y:  c1+ q.ny*q.ny*(1-c1)
+		               , z:  q.nx*s1 + q.ny*q.nz*(1-c1)
+		};
+
+		// up is testForward cross lnQ.normal; this version is from raw q.
+		const testForward = { x:   q.ny*s1 + q.nx*q.nz*(1-c1)
+		                    , y:  -q.nx*s1+ q.ny*q.nz * (1-c1)
+		                    , z:  c1+q.nz*q.nz*(1-c1)
+		};
+
+		const testRight = { x:  c1 + ( 1-c1 ) * ( q.nx*q.nx ) 
+		                  , y: q.nz*s1 + q.nx*q.ny*(1-c1)
+		                  , z: -q.ny * s1 + q.nx*q.nz*(1-c1)
+		};
+		const basis = { right  :testRight
+		              , up     :testUp
+		              , forward:testForward
+		              };
+		return basis;	
+	}
 	if( right ) {
 		// this basis is supposed to be the rotation axis, and the tangent on the 
 		// rotation...., and the normal to the circle (which is not nesscarily normal to the sphere)
@@ -467,7 +496,8 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 
 		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 		const s  = Math.sin( nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( nt ); // sin/cos are the function of exp()
+		const c1 = Math.cos( nt ); // sin/cos are the function of exp()
+		const c = 1- c1;
 		if( from ) 
 			console.log( "FROM:", q, from, ax, ay, az, nt );
 		const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
@@ -486,9 +516,9 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 		const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
 		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
 
-		const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
-		              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
-		              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+		const basis = { right  :{ x : c1 + ( xx ),       y :      ( wz + xy ), z :      ( xz - wy ) }
+		              , up     :{ x :      ( xy - wz ),  y : c1 + (yy),        z :      ( wx + yz ) }
+		              , forward:{ x :      ( wy + xz ),  y :      ( yz - wx ), z : c1 + ( zz ) }
 		              };
 		return basis;	
 	}
@@ -587,49 +617,6 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 
 	let s  = Math.sin( q.nL ); // sin/cos are the function of exp()
 	let c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
-
-	const xy = ()=>c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-	const yz = ()=>c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-	const xz = ()=>c*q.nx*q.nz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
-
-	const wx = ()=>s*q.nx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-	const wy = ()=>s*q.ny;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-	const wz = ()=>s*q.nz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
-
-	const xx = ()=>c*q.nx*q.nx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-	const yy = ()=>c*q.ny*q.ny;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-	const zz = ()=>c*q.nz*q.nz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
-
-	return {
-		forward(t) {
-			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() ) };
-		},
-		right(t) {
-			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x : 1 - ( yy() + zz() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
-		},
-		up(t) {
-			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() ), z :     ( wx() + yz() ) };
-		}
-	}
-}
-
-
-// this returns functions which result in vectors that update
-// as the current 
-lnQuat.prototype.getFrameFunctions2 = function( lnQvel ) {
-	const q = this.apply( lnQvel );
-
-	let s =     Math.sin( q.nL ); // sin/cos are the function of exp()
-	let c = 1 - Math.cos( q.nL ); // sin/cos are the function of exp()
-
-	let ds =     Math.cos( q.nL ); // sin/cos are the function of exp()
-	let dc = 1 + Math.sin( q.nL ); // sin/cos are the function of exp()
 
 	const xy = ()=>c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
 	const yz = ()=>c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
@@ -832,8 +819,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const sAng = Math.sin(ang/2);
 	
 		const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-	if( angleNorm !== 1 )
-	console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
+		/*
+		if( angleNorm !== 1 )
+			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
+		*/
 		//ang = 2*ang/angleNorm;
 		
 		q.nL = ang;
@@ -934,9 +923,10 @@ lnQuat.prototype.roll = function(c){
 
 function pitch( q, th ) {
 	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
+	const c1 = Math.cos( q.nL ); // sin/cos are the function of exp()
+	const c = 1- c1;
 
-	const ax = 1 - c*( q.ny*q.ny + q.nz*q.nz );
+	const ax = c1 + c*( q.nx*q.nx );
 	const ay = ( s*q.nz    + c*q.nx*q.ny );
 	const az = ( c*q.nx*q.nz - s*q.ny );
 	return finishRodrigues( q, 0, ax, ay, az, th );
@@ -945,11 +935,12 @@ function pitch( q, th ) {
 function roll( q, th ) {
 	// input angle...
 	const s  = Math.sin( q.nL ); // sin/cos are the function of exp()
-	const c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
+	const c1 = Math.cos( q.nL ); // sin/cos are the function of exp()
+	const c = 1- c1;
 
 	const ax = ( s*q.ny      + c*q.nx*q.nz );
 	const ay = ( c*q.ny*q.nz   - s*q.nx );
-	const az = 1 - c*( q.nx*q.nx + q.ny*q.ny );
+	const az = c1 + c*( q.nz*q.nz );
 
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
@@ -957,10 +948,11 @@ function roll( q, th ) {
 function yaw( q, th ) {
 	// input angle...
 	const s = Math.sin( q.nL ); // double angle sin
-	const c = 1- Math.cos( q.nL ); // double angle cos
+	const c1 = Math.cos( q.nL ); // sin/cos are the function of exp()
+	const c = 1- c1;
 
 	const ax = ( c*q.nx*q.ny - s*q.nz );
-	const ay = 1 - c*( q.nz*q.nz + q.nx*q.nx );
+	const ay = c1 + c*( q.ny*q.ny );
 	const az = ( s*q.nx      + c*q.ny*q.nz );
 
 	return finishRodrigues( q, 0, ax, ay, az, th );
