@@ -1,0 +1,149 @@
+{
+	"metadata": {
+		"version": 4.5,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+			"type": "BoxBufferGeometry",
+			"width": 1,
+			"height": 1,
+			"depth": 1,
+			"widthSegments": 1,
+			"heightSegments": 1,
+			"depthSegments": 1
+		},
+		{
+			"uuid": "61F2B7C1-915A-4CD5-BB0E-AF2A0692BC4E",
+			"type": "PlaneBufferGeometry",
+			"width": 1,
+			"height": 1,
+			"widthSegments": 1,
+			"heightSegments": 1
+		}],
+	"materials": [
+		{
+			"uuid": "EC06F579-CEDA-47CA-9EF7-FFC1CD82A592",
+			"type": "MeshStandardMaterial",
+			"color": 16777215,
+			"roughness": 0.5,
+			"metalness": 0.5,
+			"emissive": 6183695,
+			"opacity": 0.54,
+			"transparent": true,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "AAE5DBB2-0884-406A-AA2D-BB2ADB2190A8",
+			"type": "LineBasicMaterial",
+			"color": 4465275,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "26C88011-2C7D-48FC-9B8E-C6DF4F8BAC37",
+			"type": "MeshBasicMaterial",
+			"color": 5911931,
+			"opacity": 0.6,
+			"transparent": true,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "D682BCA0-9CCA-4382-99AC-51AE2732D33E",
+			"type": "MeshStandardMaterial",
+			"color": 16777215,
+			"roughness": 0.5,
+			"metalness": 0.5,
+			"emissive": 0,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		}],
+	"object": {
+		"uuid": "59EACD25-F321-4B29-A137-1555B53BD481",
+		"type": "Group",
+		"name": "Group",
+		"layers": 1,
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0.54,0,1],
+		"children": [
+			{
+				"uuid": "52B8578B-E7CC-4B87-B397-0E54FB6C2D4C",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [-0.017523,0,-5.019969,0,0,0.94,0,0,0.939994,0,-0.003281,0,1.21187,0.935311,1.429528,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "EC06F579-CEDA-47CA-9EF7-FFC1CD82A592"
+			},
+			{
+				"uuid": "D7911427-8FA3-4A20-8DC9-028CF43C31EC",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [0.035046,-0.017523,-5.019847,0,0,0.939994,-0.003281,0,0.939977,0.000023,0.006562,0,0.20463,0.962793,1.39539,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "EC06F579-CEDA-47CA-9EF7-FFC1CD82A592"
+			},
+			{
+				"uuid": "F35614E6-5977-497D-9F39-6E05E8CF4D81",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [-0.017523,0,-5.019969,0,0,0.94,0,0,0.939994,0,-0.003281,0,-1.792148,0.946646,1.438664,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "AAE5DBB2-0884-406A-AA2D-BB2ADB2190A8"
+			},
+			{
+				"uuid": "AA241559-0BC4-4E8A-96D9-C8B7B5A60487",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [5.02,0,0,0,0,0.94,0,0,0,0,0.94,0,0.013577,0.000142,-0.618012,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "26C88011-2C7D-48FC-9B8E-C6DF4F8BAC37"
+			},
+			{
+				"uuid": "124BACF0-B800-413B-8389-52CA85C0D2CE",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [5.02,0,0,0,0,0.94,0,0,0,0,0.94,0,0.013577,0,3.462001,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "EC06F579-CEDA-47CA-9EF7-FFC1CD82A592"
+			},
+			{
+				"uuid": "E1995EE3-A103-4A4B-911F-683077D391A6",
+				"type": "Mesh",
+				"name": "Box",
+				"layers": 1,
+				"matrix": [0,0,-5.02,0,0,0.94,0,0,0.94,0,0,0,-0.794493,0.968996,1.411984,1],
+				"geometry": "2095FD11-D9C7-4767-B906-E4D2CAA4DF93",
+				"material": "EC06F579-CEDA-47CA-9EF7-FFC1CD82A592"
+			},
+			{
+				"uuid": "E8E3019B-0FDA-4857-A811-45908AB52A8C",
+				"type": "Mesh",
+				"name": "Plane",
+				"layers": 1,
+				"matrix": [0.714364,-0.699674,-0.011857,0,0.012469,0.029669,-0.999482,0,0.699663,0.713846,0.029919,0,1.03107,0.564877,-0.626429,1],
+				"geometry": "61F2B7C1-915A-4CD5-BB0E-AF2A0692BC4E",
+				"material": "D682BCA0-9CCA-4382-99AC-51AE2732D33E"
+			},
+			{
+				"uuid": "A49E47CD-6981-42ED-ADEE-B2CB75B6BC18",
+				"type": "Mesh",
+				"name": "Plane",
+				"layers": 1,
+				"matrix": [0.714364,-0.699674,-0.011857,0,0.012469,0.029669,-0.999482,0,0.699663,0.713846,0.029919,0,1.03107,0.564877,3.483774,1],
+				"geometry": "61F2B7C1-915A-4CD5-BB0E-AF2A0692BC4E",
+				"material": "D682BCA0-9CCA-4382-99AC-51AE2732D33E"
+			}]
+	}
+}
