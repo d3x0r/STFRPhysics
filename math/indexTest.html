@@ -17,6 +17,7 @@
 	Angle 2<input type="range" id="A2" value="55"> <span id="A2val"></span> 
 	 </p>
 
+	<hr>
 
 	<p>Quat1 = (w:<span id="QW1val"></span>, x:<span id="QX1val"></span>, y:<span id="QY1val"></span>, z:<span id="QZ1val"></span>)
 	    Quat2 = (w:<span id="QW2val"></span>, x:<span id="QX2val"></span>, y:<span id="QY2val"></span>, z:<span id="QZ2val"></span>)
@@ -29,6 +30,12 @@
 
 	<p>lnQ1 ⨯ lnQ2 (w:<span id="lnQ1Q2W"></span>, x:<span id="lnQ1Q2X"></span>, y:<span id="lnQ1Q2Y"></span>, z:<span id="lnQ1Q2Z"></span>)
 	<p>exp(lnQ1 ⨯ lnQ2) (w:<span id="lnQ1Q2Wexp"></span>, x:<span id="lnQ1Q2Xexp"></span>, y:<span id="lnQ1Q2Yexp"></span>, z:<span id="lnQ1Q2Zexp"></span>)
+	<hr>
+	<p>Q1 ⨯ Q2 ⨯ Q1*(w:<span id="cQ1Q2W"></span>, x:<span id="cQ1Q2X"></span>, y:<span id="cQ1Q2Y"></span>, z:<span id="cQ1Q2Z"></span>)
+	<p>ln(Q1 ⨯ Q2 ⨯ Q1*) (w:<span id="cQ1Q2Wln"></span>, x:<span id="cQ1Q2Xln"></span>, y:<span id="cQ1Q2Yln"></span>, z:<span id="cQ1Q2Zln"></span>)
+
+	<p>lnQ1 + lnQ2 (w:<span id="lnQ1pQ2W"></span>, x:<span id="lnQ1pQ2X"></span>, y:<span id="lnQ1pQ2Y"></span>, z:<span id="lnQ1pQ2Z"></span>)
+	<p>exp(lnQ1 + lnQ2 ) (w:<span id="lnQ1pQ2Wexp"></span>, x:<span id="lnQ1pQ2Xexp"></span>, y:<span id="lnQ1pQ2Yexp"></span>, z:<span id="lnQ1pQ2Zexp"></span>)
 
 	</div>
 	</div>
@@ -76,11 +83,23 @@
 		       , z:document.getElementById( "Q1Q2Z" )
 		       , w:document.getElementById( "Q1Q2W" )
 		}
+		,cQ1Q2 : {
+		       x:document.getElementById( "cQ1Q2X" )
+		       , y:document.getElementById( "cQ1Q2Y" )
+		       , z:document.getElementById( "cQ1Q2Z" )
+		       , w:document.getElementById( "cQ1Q2W" )
+		}
 		,Q1Q2ln : {
 		       x:document.getElementById( "Q1Q2Xln" )
 		       , y:document.getElementById( "Q1Q2Yln" )
 		       , z:document.getElementById( "Q1Q2Zln" )
 		       , w:document.getElementById( "Q1Q2Wln" )
+		}
+		,cQ1Q2ln : {
+		       x:document.getElementById( "cQ1Q2Xln" )
+		       , y:document.getElementById( "cQ1Q2Yln" )
+		       , z:document.getElementById( "cQ1Q2Zln" )
+		       , w:document.getElementById( "cQ1Q2Wln" )
 		}
 
 		,lnQ1 : {
@@ -107,6 +126,19 @@
 		       , z:document.getElementById( "lnQ1Q2Zexp" )
 		       , w:document.getElementById( "lnQ1Q2Wexp" )
 		}
+		,lnQ1pQ2 : {
+		       x:document.getElementById( "lnQ1pQ2X" )
+		       , y:document.getElementById( "lnQ1pQ2Y" )
+		       , z:document.getElementById( "lnQ1pQ2Z" )
+		       , w:document.getElementById( "lnQ1pQ2W" )
+		}
+		,lnQ1pQ2exp : {
+		       x:document.getElementById( "lnQ1pQ2Xexp" )
+		       , y:document.getElementById( "lnQ1pQ2Yexp" )
+		       , z:document.getElementById( "lnQ1pQ2Zexp" )
+		       , w:document.getElementById( "lnQ1pQ2Wexp" )
+		}
+
 	};
 	for( var f in inputs ) {
 		for( var g in inputs[f] ) {
@@ -153,6 +185,9 @@ function updateCalc() {
 	const lnQ1 = new lnQuat( vals.A1.a, { x:vals.A1.x,y:vals.A1.y,z:vals.A1.z} );
 	const lnQ2 = new lnQuat( vals.A2.a, { x:vals.A2.x,y:vals.A2.y,z:vals.A2.z} );
 
+	const lnQ1pQ2 = lnQ1.add2( lnQ2 );
+	const lnQ1pQ2exp = lnQ1pQ2.exp();
+
 	//console.log( "Q1:", Q1.log(), lnQ1 );
 	//console.log( "Q2:", Q2.log(), lnQ2 );
 
@@ -192,7 +227,6 @@ function updateCalc() {
 	inputs.lnQ2.z.textContent = lnQ2.z.toFixed(4);
 
 	const Q1Q2 = Q1.mul(Q2);
-	//const lnQ1Q2 = lnQ1.add2( lnQ2 );
 	const lnQ1Q2 = lnQ2.freeSpin(  vals.A1.a,  vals.A1 );
 /*
 	const b = lnQ2;
@@ -246,6 +280,38 @@ function updateCalc() {
 	inputs.lnQ1Q2exp.x.textContent = lnQ1Q2exp.x.toFixed(4);
 	inputs.lnQ1Q2exp.y.textContent = lnQ1Q2exp.y.toFixed(4);
 	inputs.lnQ1Q2exp.z.textContent = lnQ1Q2exp.z.toFixed(4);
+
+	//const cQ1Q2 = Q1.mul(Q2);
+	//const cQ1Q2Q1 = cQ1Q2.mulConj( Q1 );
+	const cQ1Q2 = Q1.mulConj(Q2);
+	const cQ1Q2Q1 = cQ1Q2.mul( Q1 );
+	console.log( "Q's", Q1, Q2 );
+	
+	
+	inputs.cQ1Q2.w.textContent = cQ1Q2Q1.w.toFixed(4);
+	inputs.cQ1Q2.x.textContent = cQ1Q2Q1.x.toFixed(4);
+	inputs.cQ1Q2.y.textContent = cQ1Q2Q1.y.toFixed(4);
+	inputs.cQ1Q2.z.textContent = cQ1Q2Q1.z.toFixed(4);
+
+	const cQ1Q2Q1ln = cQ1Q2.mul( Q1 ).log();
+	inputs.cQ1Q2ln.w.textContent = cQ1Q2Q1ln.w.toFixed(4);
+	inputs.cQ1Q2ln.x.textContent = cQ1Q2Q1ln.x.toFixed(4);
+	inputs.cQ1Q2ln.y.textContent = cQ1Q2Q1ln.y.toFixed(4);
+	inputs.cQ1Q2ln.z.textContent = cQ1Q2Q1ln.z.toFixed(4);
+
+	
+	
+	inputs.lnQ1pQ2.w.textContent = lnQ1pQ2.w.toFixed(4);
+	inputs.lnQ1pQ2.x.textContent = lnQ1pQ2.x.toFixed(4);
+	inputs.lnQ1pQ2.y.textContent = lnQ1pQ2.y.toFixed(4);
+	inputs.lnQ1pQ2.z.textContent = lnQ1pQ2.z.toFixed(4);
+
+
+	inputs.lnQ1pQ2exp.w.textContent = lnQ1pQ2exp.w.toFixed(4);
+	inputs.lnQ1pQ2exp.x.textContent = lnQ1pQ2exp.x.toFixed(4);
+	inputs.lnQ1pQ2exp.y.textContent = lnQ1pQ2exp.y.toFixed(4);
+	inputs.lnQ1pQ2exp.z.textContent = lnQ1pQ2exp.z.toFixed(4);
+
 
 }
 
