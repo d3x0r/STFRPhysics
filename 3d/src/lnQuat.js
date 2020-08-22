@@ -691,7 +691,7 @@ lnQuat.prototype.apply = function( v ) {
 		const qy = q.ny*nst;
 		const qz = q.nz*nst;
 
-		//p = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w  v.dot(v))
+		//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
 		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
@@ -735,6 +735,16 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
    by the sin( ||Q2||_1 + ||Q1||_2 *del )
 #*/
 			if( SLERP ) {
+				const target = {x:this.x+q2.x, y:this.y+q2.y, z:this.z+q2.z };
+				const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
+				const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
+				
+
+				const r = longslerp( q2, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+				ax = r.x;
+				ay = r.y;
+				az = r.z;
+				/*
 				const dot =  this.nx * q2.nx 
 				            + this.ny * q2.ny 
 				            + this.nz * q2.nz 
@@ -766,7 +776,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 						az = (q2.z+this.z) * sa2/sa + q2.z * sa1/sa;
 					}
 				}
-
+				*/
 /*			
 				const sin_q = sin(this.nL/2);
 				const sin_q2 = sin(q2.nL/2);
@@ -847,17 +857,27 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 			       , y : v.y + qw * ty + ( qz * tx - tz * qx )
 			       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };			
 		}
+		else {
+			if( SLERP ) {
 
-		if( addN2) {
-			// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
-			ax = this.nx*this.nL * del;
-			ay = this.ny*this.nL * del;
-			az = this.nz*this.nL * del;
-		} else {
-			// this.x === ( this.x / this.nL ) * this.nL
-			ax = this.x * del;
-			ay = this.y * del;
-			az = this.z * del;
+				const r = longslerp( {nx:0,ny:0,nz:0}, this, del );
+				ax = r.x;
+				ay = r.y;
+				az = r.z;
+				
+			}
+
+			if( addN2) {
+				// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+				ax = this.nx*this.nL * del;
+				ay = this.ny*this.nL * del;
+				az = this.nz*this.nL * del;
+			} else {
+				// this.x === ( this.x / this.nL ) * this.nL
+				ax = this.x * del;
+				ay = this.y * del;
+				az = this.z * del;
+			}
 		}
 		const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		if( !l ) {
@@ -1007,7 +1027,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const qy = C.ny*nst;
 	const qz = C.nz*nst;
 	
-	//p = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w  v.dot(v))
+	//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
 	const tx = 2 * (qy * az_ - qz * ay_); // v.cross(p)*w*2
 	const ty = 2 * (qz * ax_ - qx * az_);
 	const tz = 2 * (qx * ay_ - qy * ax_);
@@ -1205,112 +1225,10 @@ class EulerRotor {
 	}		
 }
 
-
-// -------------------------------------------------------------------------------
-//  Testing Apparatii
-// -------------------------------------------------------------------------------
-
-
-if( ("undefined" == typeof window ) && test )       {
-
-	if( test2() )
-		test1();
-
-	function test2() {
-		return false; // claim fail, to stop test chain.
-	}
-	
-	function test1() {
-	         /*
-		  * please update to compare vs an 'official' quaternion implementation.
-		console.log( "Normal x,y,z:", new Quat( 1, { x:1, y:1, z:1 } ) );
-		console.log( "lNormal x,y,z:", new lnQuat( 1, { x:1, y:1, z:1 } ).exp() );
-
-		console.log( "Normal x:", new Quat( 1, { x:1, y:0, z:0 } ).log() );
-		console.log( "Normal y:", new Quat( 1, { x:0, y:1, z:0 } ).log() );
-		console.log( "Normal z:", new Quat( 1, { x:0, y:0, z:1 } ).log() );
-		console.log( "Normal (5,2,0):", new Quat( { x:5, y:2, z:0 } ).log() );
-		console.log( "Normal (5,2,0):", new lnQuat( { x:5, y:2, z:0 } ) );
-		const Q_n1 = new Quat( { x:5, y:2, z:1 } );
-		const p1 = Q_n1.apply( {x:0,y:1,z:0} );
-		console.log( "Normal (5,2,1):", Q_n1.log(), Q_n1.apply( {x:0,y:1,z:0} ), {x:p1.x*5,y:p1.y*5,z:p1.z*5} ) ;
-
-		console.log( "Normal1 (5,2,1):", lnQ_n1, lnQ_n1.apply( {x:0,y:1,z:0} ) );
-		console.log( "Normal2 (5,2,1):", lnQ_n2, lnQ_n2.apply( {x:0,y:1,z:0} ), lnQ_n2.apply( {x:0,y:0,z:1} ) );
-		const stmpz = lnQ_n3.apply( {x:0,y:1,z:0} );
-		stmpz.x *= 5.2;
-		stmpz.y *= 5.2;
-		stmpz.z *= 5.2;
-
-		console.log( "Normal3 (5,2,1):", lnQ_n3, lnQ_n3.apply( {x:0,y:1,z:0} ), lnQ_n3.apply( {x:0,y:0,z:1} ), stmpz );
-
-		console.log( "Basis 1 (5,2,1):", lnQ_n1.getBasis() );
-		console.log( "Basis 2 (5,2,1):", lnQ_n2.getBasis() );
-
-		// just two rotations in a non zero direction
-		const q1 = new Quat( 30/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
-		const q2 = new Quat( 17/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
-
-		//const q1 = new Quat( 0, {x:1, y:0, z:0 } );
-		//const q2 = new Quat( 90/ 180 * Math.PI, {x:0, y:1, z:0 } );
-
-		const rlnq1 = new lnQuat( 30/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
-		const rlnq2 = new lnQuat( 17/ 180 * Math.PI, {x:0.5773, y:0.57735026919, z:0.57735026919 } );
-		//const rlnq1 = new lnQuat( 0, {x:1, y:0, z:0 } );
-	//	const rlnq2 = new lnQuat( 90/ 180 * Math.PI, {x:0, y:1, z:0 } );
-
-		const lnq1 = q1.log();
-		const lnq2 = q2.log();
-		console.log( "q1:", JSON.stringify( q1 ), "q2:", JSON.stringify( q2  ));
-		console.log( "lnq1:", JSON.stringify( lnq1 ), "lnq2:", JSON.stringify( lnq2  ));
-		console.log( "rlnq1:", JSON.stringify( rlnq1 ), "rlnq2:", JSON.stringify( rlnq2  ));
-		const q1q2a = q1.mul( q2 );
-		const q1q2b = q1.mulLong( q2 );
-		console.log( "a:", JSON.stringify( q1q2a ), "b:", JSON.stringify( q1q2b  ));
-
-		const v = { x:2, y:5, z:-3};
-
-		console.log( "q1 v : ", JSON.stringify( q1.apply(v) ) );	
-		console.log( "q2 v : ", JSON.stringify( q2.apply(v) ) );	
-		console.log( "lnq1 exp v : ", JSON.stringify( rlnq1.exp().apply(v) ) );	
-		console.log( "lnq2 exp v : ", JSON.stringify( rlnq2.exp().apply(v) ) );	
-		console.log( "lnq1 v : ", JSON.stringify( rlnq1.apply(v) ) );	
-		console.log( "lnq2 v : ", JSON.stringify( rlnq2.apply(v) ) );	
-
-		const lnq1q2 = rlnq1.addNew( rlnq2 ); // changes 
-		console.log( "q1q2 v", JSON.stringify( q1q2a.apply( v ) ) );
-
-		console.log( "lnq1q2 v", JSON.stringify( lnq1q2.apply( v ) ) );
-		
-		console.log( "  q1 basis?", q1.getBasis() );
-		console.log( "  q2 basis?", q2.getBasis() );
-		console.log( " lq1 basis?", lnq1.getBasis() );
-		console.log( " lq2 basis?", lnq2.getBasis()  );
-		console.log( "rlq1 basis?", rlnq1.getBasis() );
-		console.log( "rlq2 basis?", rlnq2.getBasis() );
-		console.log( "lq1q2 basis?", lnq1q2.getBasis()  );
-		*/ 
-	}
-}
-
 // -------------------------------------------------------------------------------
 //  Quaternion (Rotation part)
 // -------------------------------------------------------------------------------
-//   x y z w -> i j k R
 
-// multiply the long way; take the logs, add them and reverse the exp().
-// validation that P*Q = exp(P.log()+Q.log())
-/*
-  // Quat class no longer exists... this is for later implementation with a standard quat library.
-Quat.prototype.mulLong = function( q ) {
-	const lnThis = this.log();
-	const lnQ = q.log();
-	lnThis.add( lnQ );
-	const r = lnThis.exp();
-	return r;
-}
-
-*/
 
 lnQuat.quatToLogQuat = quatToLogQuat;
 
@@ -1329,11 +1247,239 @@ function quatToLogQuat( q ) {
 	const s = bal*Math.sin(ang/2);
 	if( !s ) {
 		if( r )
-			return new lnQuat( 0, q.x/r, yt/r, zt/r ).update();	
+			return new lnQuat( 0, q.x/r, q.y/r, q.z/r ).update();	
 		else
 			return new lnQuat( 0, 0, 1, 0 ).update();	
 	}
 	return new lnQuat( ang, q.x/s, q.y/s, q.z/s ).update();
 }
-                      
+
+function quatArrayToLogQuat( q ) {
+		return quatToLogQuat( {x:q[0],y:q[1],z:q[2],w:q[3]} );
+ }
 //module.exports = exports = lnQuat
+
+
+
+
+
+function longslerp(a, b, t ) {
+	const u = [ a.nx*a.nL, a.ny*a.nL, a.nz*a.nL]
+	const v = [ b.nx*b.nL, b.ny*b.nL, b.nz* b.nL]
+      var p = axisAngleToQuaternion(u);
+      var q = axisAngleToQuaternion(v);
+      var r = slerp(p, q, t);
+	return quatArrayToLogQuat( r );		
+}
+
+// -*- coding: utf-8; -*-
+
+// Copyright 2019, Richard Copley <buster at buster dot me dot uk>
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+//     http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+    // Assuming p and q are not parallel or antiparallel, return a quaternion
+    // that interpolates between p and q.
+    function slerp(p, q, t) {
+      normalizeQuaternion(p);
+      normalizeQuaternion(q);
+      var cosTheta = p[0] * q[0] + p[1] * q[1] + p[2] * q[2] + p[3] * q[3];
+      var theta = Math.acos(cosTheta);
+
+      // Find the arc length from p to q along a great circle on the unit
+      // sphere. (The unit sphere is a 3-dimensional surface in the
+      // 4-dimensional space of quaternions).
+
+      // Interpolate.
+      var sinTheta = Math.sin(theta);
+      var s0 = Math.sin((1 - t) * theta) / sinTheta;
+      var s1 = Math.sin(t * theta) / sinTheta;
+      return [
+        s0 * p[0] + s1 * q[0],
+        s0 * p[1] + s1 * q[1],
+        s0 * p[2] + s1 * q[2],
+        s0 * p[3] + s1 * q[3]
+      ];
+    }
+
+    function axisAngleToQuaternion(v) {
+      // If A = (x0,y0,z0) is the unit length axis of rotation and if θ is the
+      // angle of rotation, a quaternionq=w+xi+yj+zk that represents the rotation
+      // satisfies w= cos(θ/2), x=x0 sin(θ/2), y=y0 sin(θ/2) and z=z0 sin(θ/2).
+
+      var angle = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+      if (angle === 0) {
+        return [0, 0, 0, 1];
+      }
+      var k = Math.sin(angle / 2) / angle, c = Math.cos(angle / 2);
+      return [k * v[0], k * v[1], k * v[2], c];
+    }
+
+    function quaternionToMatrix(q) {
+      var xx = q[0] * q[0];
+      var xy = q[0] * q[1];
+      var xz = q[0] * q[2];
+      var xw = q[0] * q[3];
+
+      var yy = q[1] * q[1];
+      var yz = q[1] * q[2];
+      var yw = q[1] * q[3];
+
+      var zz = q[2] * q[2];
+      var zw = q[2] * q[3];
+
+      var ww = q[3] * q[3];
+
+      return [
+        [1 - 2 * yy - 2 * zz, 2 * xy - 2 * zw, 2 * xz + 2 * yw],
+        [2 * xy + 2 * zw, 1 - 2 * xx - 2 * zz, 2 * yz - 2 * xw],
+        [2 * xz - 2 * yw, 2 * yz + 2 * xw, 1 - 2 * xx - 2 * yy]
+      ];
+    }
+
+    // Multiply 3-by-3 matrices.
+    function normalizeQuaternion(q) {
+      var length = Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+      q[0] /= length;
+      q[1] /= length;
+      q[2] /= length;
+      q[3] /= length;
+    }
+
+    function leftPad(string, width)
+    {
+      var result = "";
+      for (var i = string.length; i < width; ++ i) {
+        result += " ";
+      }
+      return result + string;
+    }
+
+    function formatNumber(x) {
+      return leftPad(x.toFixed(4), 8);
+    }
+
+    function matrixToString(m) {
+      var text = "";
+      for (var i = 0; i != 3; ++i) {
+        for (var j = 0; j != 3; ++j) {
+          text = text + formatNumber(m[i][j]);
+        }
+        text = text + "\n";
+      }
+      return text;
+    }
+
+    // Multiply transpose of matrix a by matrix b.
+    function matrixMultiplyTranspose(a, b) {
+      return [
+        [
+          a[0][0] * b[0][0] + a[0][1] * b[0][1] + a[0][2] * b[0][2],
+          a[0][0] * b[1][0] + a[0][1] * b[1][1] + a[0][2] * b[1][2],
+          a[0][0] * b[2][0] + a[0][1] * b[2][1] + a[0][2] * b[2][2],
+        ],
+        [
+          a[1][0] * b[0][0] + a[1][1] * b[0][1] + a[1][2] * b[0][2],
+          a[1][0] * b[1][0] + a[1][1] * b[1][1] + a[1][2] * b[1][2],
+          a[1][0] * b[2][0] + a[1][1] * b[2][1] + a[1][2] * b[2][2],
+        ],
+        [
+          a[2][0] * b[0][0] + a[2][1] * b[0][1] + a[2][2] * b[0][2],
+          a[2][0] * b[1][0] + a[2][1] * b[1][1] + a[2][2] * b[1][2],
+          a[2][0] * b[2][0] + a[2][1] * b[2][1] + a[2][2] * b[2][2],
+        ]
+      ];
+    }
+
+    function formatAxisAndAngle(v) {
+      var angle = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+      var axis = [v[0] / angle, v[1] / angle, v[2] / angle];
+      var text = "angle" + formatNumber(angle) + ", axis";
+      if (angle) {
+        text = text +
+          formatNumber(axis[0]) +
+          formatNumber(axis[1]) +
+          formatNumber(axis[2]);
+      }
+      else {
+        text = text + " undefined";
+      }
+      return text;
+    }
+
+    function matrixToAxisAngle(m) {
+      var trace = m[0][0] + m[1][1] + m[2][2];
+      trace = Math.min(3, Math.max(-1, trace));
+      var angle = Math.acos((trace - 1) / 2);
+      var v = [
+        m[2][1] - m[1][2],
+        m[0][2] - m[2][0],
+        m[1][0] - m[0][1]
+      ];
+      var k = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+      if (k) {
+        v[0] *= angle / k;
+        v[1] *= angle / k;
+        v[2] *= angle / k;
+      }
+      return v;
+    }
+
+    updateModel = function () {
+
+      // Calculate the interpolated rotation matrix.
+      var t = +values.t;
+      var u = [+values.u0, +values.u1, +values.u2];
+      var v = [+values.v0, +values.v1, +values.v2];
+      var p = axisAngleToQuaternion(u);
+      var q = axisAngleToQuaternion(v);
+      var r = slerp(p, q, t);
+      var C = quaternionToMatrix(r);
+
+      // For testing, calculate the axis angle of the rotation from q to r.
+      var A = quaternionToMatrix(p);
+      var B = quaternionToMatrix(q);
+      var R = matrixMultiplyTranspose(C, A);
+      var AA = matrixMultiplyTranspose(A, A);
+      var BB = matrixMultiplyTranspose(B, B);
+      var CC = matrixMultiplyTranspose(C, C);
+      var RR = matrixMultiplyTranspose(R, R);
+      var w = matrixToAxisAngle(R);
+
+      var text = "";
+      text = text + "u: " + formatAxisAndAngle(u) + "\n";
+      text = text + "v: " + formatAxisAndAngle(v) + "\n";
+      text = text + "\n";
+      text = text + "First rotation A = quaternionToMatrix(p), where";
+      text = text + " p = axisAngleToQuaternion(u)\n";
+      text = text + matrixToString(A);
+      text = text + "\n";
+      text = text + "Second rotation B = quaternionToMatrix(q), where";
+      text = text + " q = axisAngleToQuaternion(v)\n";
+      text = text + matrixToString(B);
+      text = text + "\n";
+      text = text + "Interpolated rotation C = quaternionToMatrix(r), where";
+      text = text + " r = slerp(p, q, t)\n";
+      text = text + matrixToString(C);
+      text = text + "\n";
+      text = text + "Rotation R = C A⁻¹\n";
+      text = text + matrixToString(R);
+      text = text + "\n";
+      text = text + "w = matrixToAxisAngle(R)\n"
+      text = text + "w: " + formatAxisAndAngle(w) + "\n";
+
+      statusText.nodeValue = text;
+    }
+
+  //  updateModel();
