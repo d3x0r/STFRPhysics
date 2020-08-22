@@ -80,9 +80,9 @@ function lnQuat( theta, d, a, b ){
 				const spin = (abs(d)+abs(a)+abs(b));
 				if( spin ) {
 					const nSpin = (theta)/spin;
-					this.x = d?d*nSpin:Math.PI*2;
-					this.y = a?a*nSpin:Math.PI*2;
-					this.z = b?b*nSpin:Math.PI*2;
+					this.x = d*nSpin;
+					this.y = a*nSpin;
+					this.z = b*nSpin;
 				} else {
 					this.x = 0;
 					this.y = 0;
@@ -879,15 +879,12 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 		}
 		else {
 			if( SLERP ) {
-
-				const r = longslerp( {nx:0,ny:0,nz:0}, this, del );
+				const r = longslerp( {nx:0,ny:0,nz:0,nL:0}, this, del );
 				ax = r.x;
 				ay = r.y;
 				az = r.z;
-				
 			}
-
-			if( addN2) {
+			else if( addN2) {
 				// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
 				ax = this.nx*this.nL * del;
 				ay = this.ny*this.nL * del;
