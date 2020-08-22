@@ -9,7 +9,7 @@ let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 2;
-
+let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angle
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -203,9 +203,9 @@ return;
 	        
 				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-				const ox = unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx);
-				const oy = unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny);
-				const oz = unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz);
+				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx));
+				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny));
+				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz));
 	        
 		
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
@@ -322,6 +322,14 @@ return;
 			y = from.y + Del * lnQ2.y;
 			z = from.z + Del * lnQ2.z;
 		}
+
+		if( showScaledPoints ) {
+			const r = Math.sqrt(x*x+y*y+z*z);
+			const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
+			x *= l / r;
+			y *= l / r;
+			z *= l / r;
+		}
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.right.x*normal_del*s  ,(y)*2*spaceScale + basis.right.y*normal_del*s  , (z)*2*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                               
@@ -331,16 +339,6 @@ return;
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                                ))
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.forward.x*normal_del*s,(y)*2*spaceScale + basis.forward.y*normal_del*s, (z)*2*spaceScale + basis.forward.z*normal_del*s ))
 
-		if(0) {
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale - 0.5 * normal_del   ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale + 0.5 * normal_del   ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale ))
-		                                                                                                                                                              
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale - 0.5 * normal_del  , (from.z+Del*lnQ2.z)*spaceScale  ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale + 0.5 * normal_del  , (from.z+Del*lnQ2.z)*spaceScale  ))
-		                                                                                                                                                              
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale - 0.5 * normal_del  ))
-		normalVertices.push( new THREE.Vector3( (from.x+Del*lnQ2.x)*spaceScale                      ,(from.y+Del*lnQ2.y)*spaceScale                     , (from.z+Del*lnQ2.z)*spaceScale + 0.5 * normal_del  ))
-		}
 
 		{
 			//const s = t / (Math.PI*4);
@@ -415,12 +413,6 @@ function DrawQuatPaths(normalVertices,normalColors) {
 		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1);
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1);
 		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1);
-	if(0)
-		if( n > 1 ) {
-			 curSliders.lnQX[n-1] += curSliders.lnQX[n-2];
-			 curSliders.lnQY[n-1] += curSliders.lnQY[n-2];
-			 curSliders.lnQZ[n-1] += curSliders.lnQZ[n-2];
-		}
 
 		document.getElementById( "lnQXval"+n).textContent = curSliders.lnQX[n-1].toFixed(4);
 		document.getElementById( "lnQYval"+n).textContent = curSliders.lnQY[n-1].toFixed(4);
@@ -463,6 +455,11 @@ function DrawQuatPaths(normalVertices,normalColors) {
 		shownL = check.checked;
 	}
 
+
+	if( document.getElementById( "showScaled" )?.checked ) {
+		showScaledPoints = true;
+	}else 			
+		showScaledPoints = false;
 
 
 	check = document.getElementById( "normalizeTangents");

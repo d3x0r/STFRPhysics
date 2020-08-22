@@ -58,14 +58,14 @@
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
-		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" checked>
+		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		     <br>
-		 - Keep Inertia: <input type="checkbox" id="keepInertia" checked>
-		 - Larger Range(6x)<input type="checkbox" id="largeRange" >
+		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
+		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
-		 - SLERP: <input type="checkbox" id="useSLERP" >
-
+		 - SLERP: <input type="checkbox" id="useSLERP" ><br>
+		 - Show Scaled to 'Show Basis Map': <input type="checkbox" id="showScaled" >
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
@@ -149,7 +149,6 @@
 			SLERP = true;
 		}else 			
 			SLERP = false;
-
 
 
 
@@ -482,6 +481,8 @@
 			is.onchange = updateMesh;
 
 
+			is = document.getElementById( "showScaled" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "normalizeTangents" );
