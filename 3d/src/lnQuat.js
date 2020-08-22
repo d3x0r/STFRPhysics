@@ -4,6 +4,7 @@ const speedOfLight = 1;
 const ASSERT = false;
 var addN2 = true;
 var SLERP = true;
+var SLERPbasis = true;
 const abs = (x)=>Math.abs(x);
 
 // 'fixed' acos for inputs > 1
@@ -490,21 +491,40 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 		//this.update();
 		if( "undefined" === typeof del ) del = 1.0;
 		let ax, ay, az;
-		if( addN2 ) {
-			ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
-			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
-			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+		if( SLERPbasis ) {
+			if( from ) {
+			const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
+			const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
+			const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
 			
-			const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-			// convert back from nr*angle to nl*angle
-			ax *= r_/l_
-			ay *= r_/l_
-			az *= r_/l_
+
+			const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+			ax = r.x;
+			ay = r.y;
+			az = r.z;
+			} else {
+				const r = longslerp( {nx:0,ny:0,nz:0, nL:0}, this, del );
+				ax = r.x;
+				ay = r.y;
+				az = r.z;
+			}
 		} else {
-			ax = (from?from.x:0) + (q.x*del);	
-			ay = (from?from.y:0) + (q.y*del);	
-			az = (from?from.z:0) + (q.z*del);	
+			if( addN2 ) {
+				ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
+				ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
+				az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+			
+				const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+				const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+				// convert back from nr*angle to nl*angle
+				ax *= r_/l_
+				ay *= r_/l_
+				az *= r_/l_
+			} else {
+				ax = (from?from.x:0) + (q.x*del);	
+				ay = (from?from.y:0) + (q.y*del);	
+				az = (from?from.z:0) + (q.z*del);	
+			}
 		}
 		const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
@@ -1249,7 +1269,7 @@ function quatToLogQuat( q ) {
 		if( r )
 			return new lnQuat( 0, q.x/r, q.y/r, q.z/r ).update();	
 		else
-			return new lnQuat( 0, 0, 1, 0 ).update();	
+			return new lnQuat( 0, 0, 0, 0 ).update();	
 	}
 	return new lnQuat( ang, q.x/s, q.y/s, q.z/s ).update();
 }
