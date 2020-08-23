@@ -305,24 +305,24 @@ return;
 					}
 				}
 			} 
-			else 
-		if( addN2 ) {
-			// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
-			x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL ;
-			y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL ;
-			z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL ;
-			const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
-			const r_ = Math.sqrt(x*x+y*y+z*z);
-			// convert back from nr*angle to nl*angle
-			x *= r_/l_
-			y *= r_/l_
-			z *= r_/l_
-		} else {
-			x = from.x + Del * lnQ2.x;
-			y = from.y + Del * lnQ2.y;
-			z = from.z + Del * lnQ2.z;
-		}
-
+			else {
+				 if( addN2 ) {
+					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+					x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL ;
+					y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL ;
+					z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL ;
+					const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
+					const r_ = Math.sqrt(x*x+y*y+z*z);
+					// convert back from nr*angle to nl*angle
+					x *= r_/l_
+					y *= r_/l_
+					z *= r_/l_
+				} else {
+					x = from.x + Del * lnQ2.x;
+					y = from.y + Del * lnQ2.y;
+					z = from.z + Del * lnQ2.z;
+				}
+			}
 		if( showScaledPoints ) {
 			const r = Math.sqrt(x*x+y*y+z*z);
 			const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
@@ -330,6 +330,7 @@ return;
 			y *= l / r;
 			z *= l / r;
 		}
+
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.right.x*normal_del*s  ,(y)*2*spaceScale + basis.right.y*normal_del*s  , (z)*2*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                               
