@@ -64,6 +64,7 @@
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
+		 - Bisect Analog: <input type="checkbox" id="bisectAnalog" > 
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
@@ -89,6 +90,7 @@
 		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
 		</p>
 		<p>
+		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> <br>
 		X1:<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
 		Y1:<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
 		Z1:<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> <br>
@@ -452,6 +454,8 @@
 				is.oninput = updateMesh;
 			}
 
+			is = document.getElementById( "timeScalar" );
+			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
 
@@ -491,6 +495,8 @@
 			is.onchange = updateMesh;
 
 
+			is = document.getElementById( "bisectAnalog" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );
