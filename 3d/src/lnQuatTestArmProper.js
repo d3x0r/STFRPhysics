@@ -266,8 +266,10 @@ function drawAnalogArm(curSliders,slerp) {
 			for( s = 0; s <= 100; s++ ) {
 				result.portion = null;
 				prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
-			
-				draw( result.portion, SLERPbasis?from.slerpRel( delta, s*timeScale/100.0 ):null );
+				if( SLERPbasis ) {
+					draw( result.portion, from, delta, s*timeScale/100.0 );
+				} else
+					draw( result.portion, from, delta, s*timeScale/100.0 );
 			}
 		}
 		// draw the long segment to match digital arm.
@@ -280,11 +282,11 @@ function drawAnalogArm(curSliders,slerp) {
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 		pushN(n);
 
-		function draw(q,qSlerp)
+		function draw(q,from,to,delta)
 		{
 			if( ( s % 3 ) === 0 )  {
-				if( qSlerp ) {
-					doDrawBasis( qSlerp, A[n], 1, 1, null, 0.3 );
+				if( from ) {
+					doDrawBasis( to, A[n], 1, delta, from, 0.3 );
 				} else 
 					doDrawBasis( q, A[n], 1, 1, null, 0.3 );
 			}

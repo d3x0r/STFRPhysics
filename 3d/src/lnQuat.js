@@ -872,11 +872,8 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 }
 
 lnQuat.prototype.slerpRel = function( q2, del ) {
-	const newQ = new lnQuat( 0, this.x+q2.x, this.y+q2.y, this.z+q2.z);
-	const SLERP_=SLERP;
-	SLERP=true;
-	const result = this.slerp( newQ, del );
-	SLERP=SLERP_;
+	const newQ = new lnQuat( 0, this.x+q2.x, this.y+q2.y, this.z+q2.z).update();
+	const result = longslerp( this, newQ, del );
 	return result;
 }
 
@@ -929,7 +926,6 @@ lnQuat.prototype.slerp = function( q2, del ) {
 			return new lnQuat( 0, ax, ay, az );
 		}
 		else {
-			console.log( "When do we slerp without a target?" );
 			if( SLERP ) {
 				return longslerp( {nx:0,ny:0,nz:0,nL:0}, this, del );
 			}
@@ -1309,6 +1305,7 @@ function quatArrayToLogQuat( q ) {
 
 
 function longslerp(a, b, t ) {
+	
 	const u = [ a.nx*a.nL, a.ny*a.nL, a.nz*a.nL]
 	const v = [ b.nx*b.nL, b.ny*b.nL, b.nz* b.nL]
       var p = axisAngleToQuaternion(u);
