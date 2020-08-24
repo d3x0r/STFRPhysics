@@ -77,7 +77,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		}
                 
 		if( n > 0 ){
-			doDrawBasis( A_R_ts[n], A__ts[n-1], 1, 1 );
+			doDrawBasis( A_R_ts[n], A__ts[n-1], 1.5, 1, null, 1.0 );
 		}
 
 
@@ -284,7 +284,7 @@ function drawAnalogArm(curSliders,slerp) {
 		function draw(q)
 		{
 			if( ( s % 3 ) === 0 )  {
-				doDrawBasis( q, A[n], 1, 1 );
+				doDrawBasis( q, A[n], 1, 1, null, 0.3 );
 			}
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
@@ -293,7 +293,7 @@ function drawAnalogArm(curSliders,slerp) {
 			A[n].z += prior.z;
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			pushN(n,0.5);
+			pushN(n,0.3);
 		}
 		
 	}
@@ -308,8 +308,6 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_
 
-drawAnalogArm( curSliders, slerp );
-return;
 
 	const origin = {x:0,y:0,z:0};
 
@@ -625,9 +623,10 @@ return;
 	
 	}
 
-	function doDrawBasis(lnQ2,t,s,Del,from ) {
+	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
 		const basis = lnQ2.update().getBasisT( Del,from );
 		if( !s ) s = 1.0;
+		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
@@ -639,14 +638,12 @@ return;
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.forward.x*normal_del*s,(t.y/l)*spaceScale + basis.forward.y*normal_del*s, (t.z/l)*spaceScale + basis.forward.z*normal_del*s ))
 
 		{
-			//const s = t / (Math.PI*4);
-			const s = 1;
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
+			normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
+			normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
+			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
 		}
 
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
@@ -737,7 +734,7 @@ return;
 
 		{
 			//const s = t / (Math.PI*4);
-			const s = 1;
+			const s = colorS;
 			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
 			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
@@ -883,8 +880,10 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	drawCoordinateGrid();
 	drawDigitalTimeArm( curSliders, slerp );
 
-	drawArm( curSliders, normalVertices, normalColors, false );
-	drawArm( curSliders, normalVertices, normalColors, true );
+	drawAnalogArm( curSliders, slerp ); 
+
+	//drawArm( curSliders, normalVertices, normalColors, false );
+	//drawArm( curSliders, normalVertices, normalColors, true );
 }
 
 

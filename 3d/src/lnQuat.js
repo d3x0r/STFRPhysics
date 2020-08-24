@@ -742,6 +742,8 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 	// 3+2 +sqrt+exp+sin
         if( !(q.nL*del) && !q2 ) {
 		// v is unmodified.	
+		if( result2 ) 
+			result2.portion = this;
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	} else  {
 		if( q2 ) {
