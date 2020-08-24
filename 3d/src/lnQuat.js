@@ -871,6 +871,15 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 	// 21 mul + 9 add  (+ some; not updated)
 }
 
+lnQuat.prototype.slerpRel = function( q2, del ) {
+	const newQ = new lnQuat( 0, this.x+q2.x, this.y+q2.y, this.z+q2.z);
+	const SLERP_=SLERP;
+	SLERP=true;
+	const result = this.slerp( newQ, del );
+	SLERP=SLERP_;
+	return result;
+}
+
 lnQuat.prototype.slerp = function( q2, del ) {
 	const q = this;
 	if( 'undefined' === typeof del ) del = 1.0;
@@ -891,7 +900,7 @@ lnQuat.prototype.slerp = function( q2, del ) {
    by the sin( ||Q2||_1 + ||Q1||_2 *del )
 #*/
 			if( SLERP ) {
-				return  longslerp( this, q2, del );
+				return longslerp( this, q2, del );
 			}
 			else 
 //****************************************/

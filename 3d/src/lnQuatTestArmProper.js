@@ -264,11 +264,10 @@ function drawAnalogArm(curSliders,slerp) {
 			const delta = (keepInertia===0?Rm[n]:R[n]);
 
 			for( s = 0; s <= 100; s++ ) {
-
 				result.portion = null;
 				prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
 			
-				draw( result.portion );
+				draw( result.portion, SLERPbasis?from.slerpRel( delta, s*timeScale/100.0 ):null );
 			}
 		}
 		// draw the long segment to match digital arm.
@@ -281,10 +280,13 @@ function drawAnalogArm(curSliders,slerp) {
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 		pushN(n);
 
-		function draw(q)
+		function draw(q,qSlerp)
 		{
 			if( ( s % 3 ) === 0 )  {
-				doDrawBasis( q, A[n], 1, 1, null, 0.3 );
+				if( qSlerp ) {
+					doDrawBasis( qSlerp, A[n], 1, 1, null, 0.3 );
+				} else 
+					doDrawBasis( q, A[n], 1, 1, null, 0.3 );
 			}
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
@@ -496,28 +498,7 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 			A[n].z += prior.z;
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-
-			switch( n ) {
-			case 1:
-				normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-				normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-				break;
-			case 2:
-				normalColors.push( new THREE.Color( 0,0,0.5,255 ))
-				normalColors.push( new THREE.Color( 0,0,0.5,255 ))
-				break;
-			case 3:
-				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
-				normalColors.push( new THREE.Color( 0,0.5,0.5,255 ))
-				break;
-			case 4:
-				normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
-				normalColors.push( new THREE.Color( 0.5,0.5,0,255 ))
-				break;
-			default:
-				normalColors.push( new THREE.Color( 0.5,0,0,255 ))
-				normalColors.push( new THREE.Color( 0.5,0,0,255 ))
-			}
+			pushN( n, 0.5 );
 		}
 		
 		
@@ -537,13 +518,6 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 		//doDrawBasis( keepInertia==0?R[n]:Rz[n], {x:ox,y:oy,z:oz}, 1, 1 );
 
 		//doDrawBasis( R[n], { x:R[n].nx*R[n].nL, y:R[n].ny*R[n].nL, z:R[n].nz*R[n].nL}, 1, 1 );
-		if(0)
-		if( n < 4 )
-		{
-			normalVertices.push( new THREE.Vector3( (R[n].nx*R[n].nL)*spaceScale   ,( R[n].ny*R[n].nL)*spaceScale      , (R[n].nz*R[n].nL)*spaceScale  ))
-			normalVertices.push( new THREE.Vector3( (R[n+1].nx*R[n+1].nL)*spaceScale   ,( R[n+1].ny*R[n+1].nL)*spaceScale      , (R[n+1].nz*R[n+1].nL)*spaceScale  ))
-			pushN(n);
-		}
 
 		
 		normalVertices.push( new THREE.Vector3( (ox)*spaceScale   ,( oy)*spaceScale      , (oz)*spaceScale  ))
@@ -559,9 +533,7 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 
 	}
 	
-return;
-
-
+	return;
 }
 
 
