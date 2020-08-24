@@ -2,9 +2,9 @@ const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
-var addN2 = true;
+var addN2 = false;
 var SLERP = true;
-var SLERPbasis = true;
+var SLERPbasis = false;
 const abs = (x)=>Math.abs(x);
 
 // 'fixed' acos for inputs > 1

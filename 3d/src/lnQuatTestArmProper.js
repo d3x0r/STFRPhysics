@@ -24,6 +24,20 @@ let normalVertices,normalColors;
 	const spaceScale = 5;
 	const normal_del = 1;
 
+function test1() {
+	// this test fails... although I would think that Y and PQ5 should be close
+	const P = new lnQuat( 0, 0.1, 0.2, 0.3 ).update();
+	const Q = new lnQuat( 0, -0.3, -0.1, 0.2 ).update();
+	const PQ1 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.nL, Q );
+	const PQ5 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.nL*0.5, Q );
+	SLERP=true;
+	const X = P.slerp( PQ1, 0.5 );
+	SLERP=false;
+	const Y = P.slerp( PQ1, 0.5 );
+	console.log( "Things:", X, Y, PQ5 );
+}
+test1();
+
 function drawDigitalTimeArm(curSliders, slerp) {
 	
 	const origin = {x:0,y:0,z:0};
