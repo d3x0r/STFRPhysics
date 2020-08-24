@@ -143,11 +143,12 @@ function drawAnalogArm(curSliders,slerp) {
 	const lnQ4 = new lnQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = new lnQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
-	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1 );
-	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2 );
-	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
-	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
+	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale );
+	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale );
+	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale );
+	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale );
 
+	// compute inertial frames
 	const t2_ = t2.add2( lnQ1 ).update();
 	const t3_ = t2_.add2( t3 ).update();
 	const t4_ = t3_.add2( t4 ).update();
@@ -163,7 +164,6 @@ function drawAnalogArm(curSliders,slerp) {
 	const A3 = (keepInertia===0?t3:t3_).applyDel( arm );
 	const A4 = (keepInertia===0?t4:t4_).applyDel( arm );
 	const A5 = (keepInertia===0?t5:t5_).applyDel( arm );
-
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const Rm = [lnQ1,r2_,r3_,r4_,r5_];
@@ -261,7 +261,7 @@ function drawAnalogArm(curSliders,slerp) {
 			//   add either relative rotation itself (to the end of rotations)
 			//   or add the translated rotation (to the end of the sum of rotations)
 			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const delta = (keepInertia===0?Rm[n]:R[n]);
+			const delta = (keepInertia===0?Rm:R)[n];
 
 			for( s = 0; s <= 100; s++ ) {
 				result.portion = null;
