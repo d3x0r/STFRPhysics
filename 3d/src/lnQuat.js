@@ -317,8 +317,8 @@ lnQuat.prototype.spinDiff = function( q ) {
 lnQuat.prototype.add = function( q2, t ) {
 	return lnQuatAdd( this, q2, t||1 );
 }
-lnQuat.prototype.add2 = function( q2 ) {
-	return new lnQuat( 0, this.x, this.y, this.z ).add( q2 );
+lnQuat.prototype.add2 = function( q2, t ) {
+	return new lnQuat( 0, this.x, this.y, this.z ).add( q2, t );
 }
 
 function lnQuatSub( q, q2, s ) {
@@ -723,7 +723,7 @@ lnQuat.prototype.apply = function( v ) {
 
 //-------------------------------------------
 
-lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
+lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 	if( v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
@@ -761,79 +761,14 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				
 
 				const r = longslerp( q2, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+				if( result2 ) 
+				result2.portion = r;
 				ax = r.x;
 				ay = r.y;
 				az = r.z;
-				/*
-				const dot =  this.nx * q2.nx 
-				            + this.ny * q2.ny 
-				            + this.nz * q2.nz 
-					;
-				const angle = Math.acos( dot );
-				if( Math.abs(angle) < 0.0001 ){
-					if( addN2) {
-						ax = this.nx*this.nL * del + q2.nx*q2.nL * del2;
-						ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
-						az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
-					} else {
-						ax = this.x * del + q2.x * del2;
-						ay = this.y * del + q2.y * del2;
-						az = this.z * del + q2.z * del2;
-					}
-					
-				} else {
-					const sa = Math.sin(angle);
-					const sa1 = Math.sin((1-del)*angle);
-					const sa2 = Math.sin(del*angle);
-				
-					if( addN2) {
-						ax = (q2.x+this.nx*this.nL) * sa2/sa + (q2.nx*q2.nL) * sa1/sa;
-						ay = (q2.y+this.ny*this.nL) * sa2/sa + (q2.ny*q2.nL) * sa1/sa;
-						az = (q2.z+this.nz*this.nL) * sa2/sa + (q2.nz*q2.nL) * sa1/sa;
-					} else {
-						ax = (q2.x+this.x) * sa2/sa + q2.x * sa1/sa;
-						ay = (q2.y+this.y) * sa2/sa + q2.y * sa1/sa;
-						az = (q2.z+this.z) * sa2/sa + q2.z * sa1/sa;
-					}
-				}
-				*/
-/*			
-				const sin_q = sin(this.nL/2);
-				const sin_q2 = sin(q2.nL/2);
-
-				const cos_q = sin(this.nL/2);
-				const cos_q2 = sin(q2.nL/2);
-
-				if( Math.abs(dot > 0.9995 ) )
-				{
-					const angle_del = q2.nL + q.nL*del;
-					
-					ax = q2.nx * sin_q2 + del * ( this.nx * sin_q );
-					ay = q2.ny * sin_q2 + del * ( this.ny * sin_q );
-					az = q2.nz * sin_q2 + del * ( this.nz * sin_q );
-					
-				}else {
-					const theta_0 = Math.acos(dot);
-					const theta = theta_0 * del;
-					const st = sin(theta);
-					const st_0 = sin(theta_0);
-					const s0 = cos(theta) - dot* st/st_0;
-					const s1 = st/st_0;
-				
-					ax = s0 * this.nx * sin_q + s1 * q2.nx * sin_q2
-					ay = s0 * this.ny * sin_q + s1 * q2.ny * sin_q2
-					az = s0 * this.nz * sin_q + s1 * q2.nz * sin_q2
-					
-				}
-
-				ax /= Math.sin( q2.nL + q.nL *del ) * angle_del;
-				ay /= Math.sin( q2.nL + q.nL *del ) * angle_del;
-				az /= Math.sin( q2.nL + q.nL *del ) * angle_del;
-*/
 			}
 			else 
 //****************************************/
-
 			{
 				if( addN2) {
 					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
@@ -855,6 +790,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 					az = this.z * del + q2.z * del2;
 				}
 			}
+
+			if( result2 && !result2.portion )
+				result2.portion = new lnQuat( 0, ax, ay, az );
 
 			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
@@ -889,6 +827,11 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				ax = this.nx*this.nL * del;
 				ay = this.ny*this.nL * del;
 				az = this.nz*this.nL * del;
+				const newLen = sqrt( ax*ax+ay*ay+az*az);
+				const new1Norm = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+				ax *= newLen/new1Norm;
+				ay *= newLen/new1Norm;
+				az *= newLen/new1Norm;
 			} else {
 				// this.x === ( this.x / this.nL ) * this.nL
 				ax = this.x * del;
@@ -896,18 +839,21 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 				az = this.z * del;
 			}
 		}
+		if( result2 && !result2.portion )
+			result2.portion = new lnQuat( 0, ax, ay, az );
+
 		const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		if( !l ) {
 			return { x:v.x, y:v.y, z:v.z }
 		}
 		const r = Math.sqrt(ax*ax+ay*ay+az*az);
-		const s  = Math.sin( (l)*del/2 );//q.s;
+		const s  = Math.sin( (l)/2 );//q.s;
 		const nst = s/r; // sin(theta)/r    normal * sin_theta
-		const qw = Math.cos( (l)*del/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		const qw = Math.cos( (l)/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 
-		const qx = q.x*nst;
-		const qy = q.y*nst;
-		const qz = q.z*nst;
+		const qx = ax*nst;
+		const qy = ay*nst;
+		const qz = az*nst;
 
 		const tx = 2 * (qy * v.z - qz * v.y);
 		const ty = 2 * (qz * v.x - qx * v.z);
@@ -922,6 +868,77 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2 ) {
 	// total 
 	// 21 mul + 9 add  (+ some; not updated)
 }
+
+lnQuat.prototype.slerp = function( q2, del ) {
+	const q = this;
+	if( 'undefined' === typeof del ) del = 1.0;
+	this.update();
+	// 3+2 +sqrt+exp+sin
+        if( !(q.nL*del) && !q2 ) {
+		// v is unmodified.
+		return new lnQuat( this )
+	} else  {
+		if( q2 ) {
+
+			let ax = 0;
+			let ay = 0;
+			let az = 0;
+/*************** 
+ * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
+   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
+   by the sin( ||Q2||_1 + ||Q1||_2 *del )
+#*/
+			if( SLERP ) {
+				return  longslerp( this, q2, del );
+			}
+			else 
+//****************************************/
+			{
+				if( addN2) {
+					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+					ax = this.nx*this.nL * del + (1-del)*q2.nx*q2.nL;
+					ay = this.ny*this.nL * del + (1-del)*q2.ny*q2.nL;
+					az = this.nz*this.nL * del + (1-del)*q2.nz*q2.nL;
+					const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+					const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+					if( addN2 ) {
+						// convert back from nr*angle to nl*angle
+						ax *= r_/l_
+						ay *= r_/l_
+						az *= r_/l_
+					}
+				} else {
+					// this.x === ( this.x / this.nL ) * this.nL
+					ax = this.x * (1-del) + (del)*q2.x;
+					ay = this.y * (1-del) + (del)*q2.y;
+					az = this.z * (1-del) + (del)*q2.z;
+				}
+			}
+	
+			return new lnQuat( 0, ax, ay, az );
+		}
+		else {
+			console.log( "When do we slerp without a target?" );
+			if( SLERP ) {
+				return longslerp( {nx:0,ny:0,nz:0,nL:0}, this, del );
+			}
+
+			if( addN2) {
+				// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
+				ax = this.nx*this.nL * del;
+				ay = this.ny*this.nL * del;
+				az = this.nz*this.nL * del;
+			} else {
+				// this.x === ( this.x / this.nL ) * this.nL
+				ax = this.x * del;
+				ay = this.y * del;
+				az = this.z * del;
+			}
+		}
+		return new lnQuat( 0, ax, ay, az );
+	}
+}
+
 
 lnQuat.prototype.applyInv = function( v ) {
 	//x y z w l
