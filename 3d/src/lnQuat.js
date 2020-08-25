@@ -566,7 +566,7 @@ function getCayleyBasis() {
 		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 		let s  = Math.sin( del * nt ); // sin/cos are the function of exp()
 		let c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
-	        const cL = sqrt( 1+q.nx*q.nx+q.ny*q.ny+q.nz*qn.z);
+	        const cL = Math.sqrt( 1+q.nx*q.nx+q.ny*q.ny+q.nz*qn.z);
 		const qx = q.nx/cL; // normalizes the imaginary parts
 		const qy = q.ny/cL; // set the sin of their composite angle as their total
 		const qz = q.nz/cL; // output = 1(unit vector) * sin  in  x,y,z parts.
@@ -829,7 +829,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 				ax = this.nx*this.nL * del;
 				ay = this.ny*this.nL * del;
 				az = this.nz*this.nL * del;
-				const newLen = sqrt( ax*ax+ay*ay+az*az);
+				const newLen = Math.sqrt( ax*ax+ay*ay+az*az);
 				const new1Norm = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 				ax *= newLen/new1Norm;
 				ay *= newLen/new1Norm;
