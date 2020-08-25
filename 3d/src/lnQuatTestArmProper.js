@@ -13,6 +13,7 @@ let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angl
 let bisectAnalog = true;
 let trisectAnalog = false;
 let timeScale = 1.5;
+let drawRotationAxles = true;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -66,20 +67,21 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	const tmpR = { portion:null };
 	const A1_ts = lnQ1.applyDel( arm, timeScale, null, 0, tmpR );
-	const A1_R_ts = tmpR.portion;  tmpR.portion = null;
+	const A1_R_ts = tmpR.portion.update();  tmpR.portion = null;
 	const A2_ts = (keepInertia===0?t2_ts:t2__ts).applyDel( arm, timeScale, null, 0, tmpR );
-	const A2_R_ts = tmpR.portion;  tmpR.portion = null;
+	const A2_R_ts = tmpR.portion.update();  tmpR.portion = null;
 	const A3_ts = (keepInertia===0?t3_ts:t3__ts).applyDel( arm, timeScale, null, 0, tmpR );
-	const A3_R_ts = tmpR.portion;  tmpR.portion = null;
+	const A3_R_ts = tmpR.portion.update();  tmpR.portion = null;
 	const A4_ts = (keepInertia===0?t4_ts:t4__ts).applyDel( arm, timeScale, null, 0, tmpR );
-	const A4_R_ts = tmpR.portion;  tmpR.portion = null;
+	const A4_R_ts = tmpR.portion.update();  tmpR.portion = null;
 	const A5_ts = (keepInertia===0?t5_ts:t5__ts).applyDel( arm, timeScale, null, 0, tmpR );
-	const A5_R_ts = tmpR.portion;  tmpR.portion = null;
+	const A5_R_ts = tmpR.portion.update();  tmpR.portion = null;
 
 	
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R_ts  = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const Rz_ts = [lnQ1,t2__ts,t3__ts,t4__ts,t5__ts];
+	const Rw_ts = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
 	const A_R_ts = [A1_R_ts,A2_R_ts,A3_R_ts,A4_R_ts,A5_R_ts];
 	let prior = origin;
@@ -94,7 +96,15 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			doDrawBasis( A_R_ts[n], A__ts[n-1], 1.5, 1, null, 1.0 );
 		}
 
-
+		/*
+		  not sure which rotation axis this is supposed to show at this point; but this dowsn't work.
+		if( drawRotationAxles ) {
+			normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (A__ts[n].x + 4*R_ts[n].nx)*spaceScale   ,( A__ts[n].y+ 4*R_ts[n].ny)*spaceScale      , (A__ts[n].z+ 4*R_ts[n].nz)*spaceScale  ))
+	
+			pushN(n, 0.3);
+		}
+		*/
 		normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
 		normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
 	
@@ -298,6 +308,15 @@ function drawAnalogArm(curSliders,slerp) {
 
 		function draw(q,from,to,delta)
 		{
+			if( s == 50 && delta ){
+				if( drawRotationAxles ) {
+					normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
+	
+					pushN(n,0.5);
+				}
+
+			}
 			if( ( s % 3 ) === 0 )  {
 				if( from ) {
 					doDrawBasis( to, A[n], 1, delta, from, 0.3 );
