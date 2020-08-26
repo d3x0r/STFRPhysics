@@ -308,7 +308,7 @@ function drawAnalogArm(curSliders,slerp) {
 		{
 			if( s == 50 && delta || ( drawRotationAllAxles ) ){
 				if( drawRotationAxles ) {
-					if( SLERP ) {
+					if( SLERP || addN2 ) {
 					normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
 					normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
 					}else {
@@ -819,9 +819,9 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1);
 		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1);
 
-		document.getElementById( "lnQXval"+n).textContent = curSliders.lnQX[n-1].toFixed(4);
-		document.getElementById( "lnQYval"+n).textContent = curSliders.lnQY[n-1].toFixed(4);
-		document.getElementById( "lnQZval"+n).textContent = curSliders.lnQZ[n-1].toFixed(4);
+		document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]*180/Math.PI).toFixed(4);
+		document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]*180/Math.PI).toFixed(4);
+		document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]*180/Math.PI).toFixed(4);
 
 	}
 
