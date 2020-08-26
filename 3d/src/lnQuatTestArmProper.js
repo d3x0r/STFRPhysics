@@ -291,10 +291,7 @@ function drawAnalogArm(curSliders,slerp) {
 			for( s = 0; s <= 100; s++ ) {
 				result.portion = null;
 				prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
-				if( SLERPbasis ) {
-					draw( result.portion, from, delta, s*timeScale/100.0 );
-				} else
-					draw( result.portion, from, delta, s*timeScale/100.0 );
+				draw( result.portion, from, delta, s*timeScale/100.0 );
 			}
 		}
 		// draw the long segment to match digital arm.
@@ -309,7 +306,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 		function draw(q,from,to,delta)
 		{
-			if( s == 50 && delta || ( drawRotationAllAxles || SLERP ) ){
+			if( s == 50 && delta || ( drawRotationAllAxles ) ){
 				if( drawRotationAxles ) {
 					if( SLERP ) {
 					normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
