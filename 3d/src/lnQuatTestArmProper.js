@@ -49,7 +49,7 @@ function mkQuat( a,b,c,d ){
 	const lin = Math.abs(a)+Math.abs(b)+Math.abs(c)+Math.abs(d);
 	//return new lnQuat( a*scalar/lin, b*scalar/lin ,c*scalar/lin,d*scalar/lin );
 	//return new lnQuat( a*lin/scalar, b*lin/scalar ,c*lin/scalar,d*lin/scalar );
-	return new lnQuat( a, b , c, d );
+	return new lnQuat( a, b, c, d );
 }
 
 function drawDigitalTimeArm(curSliders, slerp) {
@@ -179,6 +179,38 @@ function drawAnalogArm(curSliders,slerp) {
 	const lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
 	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
+
+/*
+	const r1 = { o:{x:0,y:0,z:0}, n:{x:lnQ1.nx,y:lnQ1.ny,z:lnQ1.nz}, l:lnQ1.nR }
+
+	const lnQ2n = { x:lnQ2.nx, y:lnQ2.ny, z:lnQ2.nz };
+	const r2 = { o:{ x:r1.o.x+r1.n.x, y:r1.o.y+r1.n.y, z:r1.o.z + r1.n.z }, n: lnQ1.applyDel( lnQ2n, 0.5 ) }
+
+	const r2_1 = Math.abs(r2.n.x)+Math.abs(r2.n.y)+Math.abs(r2.n.z);
+	const q2_1 = Math.abs(lnQ2.x)+Math.abs(lnQ2.y)+Math.abs(lnQ2.z);
+	const t2 = new lnQuat( 0, lnQ1.x+r2.n.x*q2_1/r2_1, lnQ1.y+r2.n.y*q2_1/r2_1, lnQ1.z+r2.n.z*q2_1/r2_1 );
+
+
+	const lnQ3n = { x:lnQ3.nx, y:lnQ3.ny, z:lnQ3.nz };
+	const r3 = { o:{ x:r2.o.x+r2.n.x, y:r2.o.y+r2.n.y, z:r2.o.z + r2.n.z }, n: t2.applyDel( lnQ3n, 0.5 ) }
+	const r3_1 = Math.abs(r3.n.x)+Math.abs(r3.n.y)+Math.abs(r3.n.z);
+	const q3_1 = Math.abs(lnQ3.x)+Math.abs(lnQ3.y)+Math.abs(lnQ3.z);
+	const t3 = new lnQuat( 0, r3.o.x+r3.n.x*q3_1/r3_1, r3.o.y+r3.n.y*q3_1/r3_1, r3.o.z+r3.n.z*q3_1/r3_1 );
+
+
+	const lnQ4n = { x:lnQ4.nx, y:lnQ4.ny, z:lnQ4.nz };
+	const r4 = { o:{ x:r3.o.x+r3.n.x, y:r3.o.y+r3.n.y, z:r3.o.z + r3.n.z }, n: t3.applyDel( lnQ4n, 1 ) }
+	const r4_1 = Math.abs(r4.n.x)+Math.abs(r4.n.y)+Math.abs(r4.n.z);
+	const q4_1 = Math.abs(lnQ4.x)+Math.abs(lnQ4.y)+Math.abs(lnQ4.z);
+	const t4 = new lnQuat( 0, r4.n.x*q4_1/r4_1, r4.n.y*q4_1/r4_1, r4.n.z*q4_1/r4_1 );
+
+
+	const lnQ5n = { x:lnQ5.nx, y:lnQ5.ny, z:lnQ5.nz };
+	const r5 = { o:{ x:r4.o.x+r4.n.x, y:r4.o.y+r4.n.y, z:r4.o.z + r4.n.z }, n: t4.applyDel( lnQ5n, 1 ) }
+	const r5_1 = Math.abs(r5.n.x)+Math.abs(r5.n.y)+Math.abs(r5.n.z);
+	const q5_1 = Math.abs(lnQ5.x)+Math.abs(lnQ5.y)+Math.abs(lnQ5.z);
+	const t5 = new lnQuat( 0, r5.n.x*q5_1/r5_1, r5.n.y*q5_1/r5_1, r5.n.z*q5_1/r5_1 );
+*/
 
 	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale );
 	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale );
@@ -688,8 +720,12 @@ return;
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
+					const ll = Math.abs(x)+Math.abs(y)+Math.abs(z);
+					const lr = Math.sqrt(x*x+y*y+z*z);
 					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
 				const basis = lnQ.getBasis( );
+				if( (lr) > range ) continue;
+
 				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
 	        
 				// the original normal direction; projected offset of sphere (linear scaled)
@@ -698,11 +734,11 @@ return;
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 	        
-				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
+				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx));
-				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny));
-				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz));
+				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/nL:nL*lnQ.nx));
+				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/nL:nL*lnQ.ny));
+				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/nL:nL*lnQ.nz));
 	        
 		
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
