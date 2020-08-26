@@ -572,10 +572,10 @@ function drawSquare( n, q ) {
 					                                                                                                                                
 		normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
-		pushN(n,0.9);
-		pushN(n,0.9);
-		pushN(n,0.9);
-		pushN(n,0.9);
+		pushN(3,0.9);
+		pushN(3,0.9);
+		pushN(3,0.9);
+		pushN(3,0.9);
         }
 
         if(drawRotationSquaresXY)
