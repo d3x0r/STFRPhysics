@@ -524,9 +524,13 @@ function drawSquare( n, q ) {
         const onef3 = (1 - n*0.05 + 0.01) *4;
 
 
-	const qx = new lnQuat( 0, q.x, 0, 0 );
-	const qy = new lnQuat( 0, 0, q.y, 0 );
-	const qz = new lnQuat( 0, 0, 0, q.z );
+	//const qx = new lnQuat( 0, q.x, 0, 0 );
+//	const qy = new lnQuat( 0, 0, q.y, 0 );
+//	const qz = new lnQuat( 0, 0, 0, q.z );
+
+	const qx = new lnQuat( 0, q.nx*q.nL, 0, 0 );
+	const qy = new lnQuat( 0, 0, q.ny*q.nL, 0 );
+	const qz = new lnQuat( 0, 0, 0, q.nz*q.nL );
 
         {
 		const p1 =  {x:one,y:one,z:0 } ;
