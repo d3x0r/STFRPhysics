@@ -61,7 +61,10 @@
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
-		 - Show Scaled to 'Show Basis Map': <input type="checkbox" id="showScaled" >
+		 - Show Scaled to 'Show Basis Map': <input type="checkbox" id="showScaled" ><br>
+		 - Draw Representative Rotation Squares: <input type="checkbox" id="drawSquares" >
+		 - show X-Y: <input type="checkbox" id="drawSquaresXY" >
+		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
@@ -433,6 +436,13 @@
 			is = document.getElementById( "drawNormalBall" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "normalizeTangents" );
+			is.onchange = updateMesh;
+			
+			is = document.getElementById( "drawSquares" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawSquaresXY" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawSquaresYX" );
 			is.onchange = updateMesh;
                                                
 
