@@ -53,10 +53,11 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		     <br>
+		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" > All: <input type="checkbox" id="drawRotationAllAxles" > <BR>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
-		 - Bisect Analog: <input type="checkbox" id="bisectAnalog" > 
+
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
@@ -413,6 +414,10 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "showGrid" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "drawRotationAxles" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRotationAllAxles" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showCoordinateGrid" );
@@ -423,8 +428,6 @@
 			is.onchange = updateMesh;
 
 
-			is = document.getElementById( "bisectAnalog" );
-			is.onchange = updateMesh;
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );

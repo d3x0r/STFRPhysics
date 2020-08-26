@@ -747,7 +747,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		return {x:v.x, y:v.y, z:v.z }; // 1.0
 	} else  {
 		if( q2 ) {
-
+			q2.update();
 			let ax = 0;
 			let ay = 0;
 			let az = 0;
@@ -764,7 +764,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 
 				const r = longslerp( q2, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
 				if( result2 ) 
-				result2.portion = r;
+					result2.portion = r;
 				ax = r.x;
 				ay = r.y;
 				az = r.z;
@@ -777,14 +777,14 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 					ax = this.nx*this.nL * del + q2.nx*q2.nL * del2;
 					ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
 					az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
+
 					const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 					const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-					if( addN2 ) {
-						// convert back from nr*angle to nl*angle
-						ax *= r_/l_
-						ay *= r_/l_
-						az *= r_/l_
-					}
+					// convert back from nr*angle to nl*angle
+					ax *= r_/l_
+					ay *= r_/l_
+					az *= r_/l_
+
 				} else {
 					// this.x === ( this.x / this.nL ) * this.nL
 					ax = this.x * del + q2.x * del2;
