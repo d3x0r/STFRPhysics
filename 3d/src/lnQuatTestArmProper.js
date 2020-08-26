@@ -179,11 +179,13 @@ function drawAnalogArm(curSliders,slerp) {
 	const t4_ = t3_.add2( t4 ).update();
 	const t5_ = t4_.add2( t5 ).update();
 
+	// compute non-inertial differential
 	const r2_ = t2.sub2( lnQ1 );
 	const r3_ = t3.sub2( t2 );
 	const r4_ = t4.sub2( t3 );
 	const r5_ = t5.sub2( t4 );
 
+	// 
 	const A1 = lnQ1.applyDel( arm );
 	const A2 = (keepInertia===0?t2:t2_).applyDel( arm );
 	const A3 = (keepInertia===0?t3:t3_).applyDel( arm );
@@ -194,105 +196,33 @@ function drawAnalogArm(curSliders,slerp) {
 	const Rm = [lnQ1,r2_,r3_,r4_,r5_];
 	const R  = [lnQ1,t2,t3,t4,t5];
 	const Rz = [lnQ1,t2_,t3_,t4_,t5_];
-	const A_ = [A1,A2,A3,A4,A5];
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
-		const ox = n?A_[n-1].x:0;
-		const oy = n?A_[n-1].y:0;
-		const oz = n?A_[n-1].z:0;
+		if( keepInertia )
+			drawSquare( n, Rz[n] );
+		else
+			drawSquare( n, R[n] );
 		if( n ) {
 			A[n].x = A[n-1].x
 			A[n].y = A[n-1].y
 			A[n].z = A[n-1].z
 		}
-		if( (n+1) < 5 ) {
-			A_[n+1].x += A_[n].x;
-			A_[n+1].y += A_[n].y;
-			A_[n+1].z += A_[n].z;
-
-		}
                 var s;
 		var scalar = 100;
 		const result = { portion : null };
-		if( trisectAnalog ) {
-			const pointList = [];
-			function doLevel( l, P, Q, mn, mx ) {
-				if( Math.abs( mx-mn ) < 0.001 ) debugger;
-				if( l > 4 ) return;
-				let x1 = mn + (mx-mn)/3;
-				let x2 = mn + (2*(mx-mn)/3);
-				
-				const mid1 = P.slerp( Q, 0.33 );
-				const mid2 = P.slerp( Q, 0.66 );
+		
+		// start from either the end of the previous
+		//           or from the end of the sum of the previous
+		//   add either relative rotation itself (to the end of rotations)
+		//   or add the translated rotation (to the end of the sum of rotations)
+		const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
+		const delta = (keepInertia===0?Rm:R)[n];
 
-				doLevel( l+1, P, mid1, mn, x1 );
-				pointList.push( mid1 );
-				doLevel( l+1, mid1, mid2, x1, x2 );
-				pointList.push( mid2 );
-				doLevel( l+1, mid2, Q, x2, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R[n]:Rz[n]);
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(timeScale * pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			result.portion = pointList[pointList.length-1];
-			
-			
-		} else if( bisectAnalog ) {
-			const pointList = [];
-			function doLevel( n, P, Q, mn, mx ) {
-				if( n > 6 ) return;
-				let x = (mx+mn)/2;
-				const mid = P.slerp( Q, timeScale*0.5 );
-
-				doLevel( n+1, P, mid, mn, x );
-				pointList.push( mid );
-				//console.log( "Add point:", n, x );
-				doLevel( n+1, mid, Q, x, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R[n]:Rz[n]);
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			
-			result.portion = pointList[pointList.length-1];
-			
-		} else {
-			// start from either the end of the previous
-			//           or from the end of the sum of the previous
-			//   add either relative rotation itself (to the end of rotations)
-			//   or add the translated rotation (to the end of the sum of rotations)
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const delta = (keepInertia===0?Rm:R)[n];
-
-			for( s = 0; s <= 100; s++ ) {
-				result.portion = null;
-				prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
-				draw( result.portion, from, delta, s*timeScale/100.0 );
-			}
+		for( s = 0; s <= 100; s++ ) {
+			result.portion = null;
+			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
+			draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
@@ -574,6 +504,29 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 	return;
 }
 
+function drawSquare( n, q ) {
+	const one = (1 - n*0.02) *4;
+	const p1 = q.apply( {x:one,y:one,z:0 } );
+	const p2 = q.apply( {x:one,y:-one,z:0 } );
+	const p3 = q.apply( {x:-one,y:one,z:0 } );
+	const p4 = q.apply( {x:-one,y:-one,z:0 } );
+
+	normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+	normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+				                                                                                                                                
+	normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+	normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+	
+	normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+	normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+				                                                                                                                                
+	normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+	normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+	pushN(n,0.6);
+	pushN(n,0.6);
+	pushN(n,0.6);
+	pushN(n,0.6);
+}
 
 function drawCoordinateGrid() {
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
@@ -914,3 +867,72 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 }
 
 
+
+
+/*
+  // bisect and trisect algorithms - testing half of half of  half ....
+		if( trisectAnalog ) {
+			const pointList = [];
+			function doLevel( l, P, Q, mn, mx ) {
+				if( Math.abs( mx-mn ) < 0.001 ) debugger;
+				if( l > 4 ) return;
+				let x1 = mn + (mx-mn)/3;
+				let x2 = mn + (2*(mx-mn)/3);
+				
+				const mid1 = P.slerp( Q, 0.33 );
+				const mid2 = P.slerp( Q, 0.66 );
+
+				doLevel( l+1, P, mid1, mn, x1 );
+				pointList.push( mid1 );
+				doLevel( l+1, mid1, mid2, x1, x2 );
+				pointList.push( mid2 );
+				doLevel( l+1, mid2, Q, x2, mx );
+			}
+
+			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
+			const to = (keepInertia===0?R:Rz)[n];
+
+			pointList.push( from );
+			doLevel( 0, from, to, 0, 1*timeScale );
+
+			pointList.push( to );
+			scalar = pointList.length;
+			tmpShortArm.z = 2/(timeScale * pointList.length);
+			for( s = 0; s < pointList.length; s++ ) {
+				const point = pointList[s]
+				prior = point.applyDel( tmpShortArm, 1.0 );
+				draw( point )
+			}
+			result.portion = pointList[pointList.length-1];
+		} else if( bisectAnalog ) {
+			const pointList = [];
+			function doLevel( n, P, Q, mn, mx ) {
+				if( n > 6 ) return;
+				let x = (mx+mn)/2;
+				const mid = P.slerp( Q, timeScale*0.5 );
+
+				doLevel( n+1, P, mid, mn, x );
+				pointList.push( mid );
+				//console.log( "Add point:", n, x );
+				doLevel( n+1, mid, Q, x, mx );
+			}
+
+			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
+			const to = (keepInertia===0?R[n]:Rz[n]);
+
+			pointList.push( from );
+			doLevel( 0, from, to, 0, 1*timeScale );
+
+			pointList.push( to );
+			scalar = pointList.length;
+			tmpShortArm.z = 2/(pointList.length);
+			for( s = 0; s < pointList.length; s++ ) {
+				const point = pointList[s]
+				prior = point.applyDel( tmpShortArm, 1.0 );
+				draw( point )
+			}
+			
+			result.portion = pointList[pointList.length-1];
+			
+
+*/
