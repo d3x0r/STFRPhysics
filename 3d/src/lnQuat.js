@@ -77,7 +77,6 @@ function lnQuat( theta, d, a, b ){
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
 			if( theta ) {
-				throw new Error( "CHECK INITIALIZER" );
 				const spin = (abs(d)+abs(a)+abs(b));
 				if( spin ) {
 					const nSpin = (theta)/spin;
@@ -151,11 +150,6 @@ function lnQuat( theta, d, a, b ){
 							this.nx = this.x / this.nR;
 							this.ny = 0;
 							this.nz = this.z / this.nR;
-
-							this.x = this.nx*cosTheta;
-							this.y = 0;
-							this.z = this.nz*cosTheta;
-
 							this.dirty = true;
 					        
 							if(setNormal) {
@@ -181,7 +175,7 @@ function lnQuat( theta, d, a, b ){
 								this.ny = xz *tmp;
 								this.nz = xy *tmp;
 					        
-								const lNorm = angle;
+								const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
 								this.x = this.nx * lNorm;
 								this.y = this.ny * lNorm;
 								this.z = this.nz * lNorm;
@@ -295,7 +289,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	this.nx = yz *tmp;
 	this.ny = xz *tmp;
 	this.nz = xy *tmp;
-	const lNorm = angle;// / (abs(this.nx)+abs(this.ny)+abs(this.nz));
+	const lNorm = angle / (abs(this.nx)+abs(this.ny)+abs(this.nz));
 	this.x = this.nx * lNorm;
 	this.y = this.ny * lNorm;
 	this.z = this.nz * lNorm;
@@ -501,7 +495,7 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 			if( from ) {
 			const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
 			const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-			const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
+			const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
 			
 
 			const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
@@ -520,20 +514,20 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 				ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
 				az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
 			
+				const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 				const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-				const l_ = l_;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 				// convert back from nr*angle to nl*angle
 				ax *= r_/l_
 				ay *= r_/l_
 				az *= r_/l_
 			} else {
-				ax = (from?from.x:0) + (q.x*del);
-				ay = (from?from.y:0) + (q.y*del);
-				az = (from?from.z:0) + (q.z*del);
+				ax = (from?from.x:0) + (q.x*del);	
+				ay = (from?from.y:0) + (q.y*del);	
+				az = (from?from.z:0) + (q.z*del);	
 			}
 		}
+		const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
-		const alen = sqlen;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 
 		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
 		const s  = Math.sin( nt ); // sin/cos are the function of exp()
@@ -628,7 +622,7 @@ lnQuat.prototype.update = function() {
 
 	// norm-linear    this is / 3 usually, but the sine lookup would
 	//    adds a /3 back in which reverses it.
-	this.nL = this.nR;//(abs(this.x)+abs(this.y)+abs(this.z));///(2*Math.PI); // average of total
+	this.nL = (abs(this.x)+abs(this.y)+abs(this.z));///(2*Math.PI); // average of total
 	if( this.nR && this.nL ){
 		this.nx = this.x/this.nR /* * this.nL*/;
 		this.ny = this.y/this.nR /* * this.nL*/;
@@ -765,7 +759,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			if( SLERP ) {
 				const target = {x:this.x+q2.x, y:this.y+q2.y, z:this.z+q2.z };
 				const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-				const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
+				const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
 				
 
 				const r = longslerp( q2, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
@@ -784,8 +778,8 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 					ay = this.ny*this.nL * del + q2.ny*q2.nL * del2;
 					az = this.nz*this.nL * del + q2.nz*q2.nL * del2;
 
+					const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 					const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-					const l_ = r_;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 					// convert back from nr*angle to nl*angle
 					ax *= r_/l_
 					ay *= r_/l_
@@ -802,8 +796,8 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			if( result2 && !result2.portion )
 				result2.portion = new lnQuat( 0, ax, ay, az );
 
+			const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 			const r = Math.sqrt(ax*ax+ay*ay+az*az);
-			const l = r;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 
 			if( !l ) {
 				return {x:v.x, y:v.y, z:v.z }; // 1.0
@@ -836,7 +830,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 				ay = this.ny*this.nL * del;
 				az = this.nz*this.nL * del;
 				const newLen = Math.sqrt( ax*ax+ay*ay+az*az);
-				const new1Norm = newLen;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+				const new1Norm = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 				ax *= newLen/new1Norm;
 				ay *= newLen/new1Norm;
 				az *= newLen/new1Norm;
@@ -850,11 +844,11 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		if( result2 && !result2.portion )
 			result2.portion = new lnQuat( 0, ax, ay, az );
 
-		const r = Math.sqrt(ax*ax+ay*ay+az*az);
-		const l = r;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+		const l = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 		if( !l ) {
 			return { x:v.x, y:v.y, z:v.z }
 		}
+		const r = Math.sqrt(ax*ax+ay*ay+az*az);
 		const s  = Math.sin( (l)/2 );//q.s;
 		const nst = s/r; // sin(theta)/r    normal * sin_theta
 		const qw = Math.cos( (l)/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
@@ -913,8 +907,8 @@ lnQuat.prototype.slerp = function( q2, del ) {
 					ax = this.nx*this.nL * del + (1-del)*q2.nx*q2.nL;
 					ay = this.ny*this.nL * del + (1-del)*q2.ny*q2.nL;
 					az = this.nz*this.nL * del + (1-del)*q2.nz*q2.nL;
+					const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 					const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-					const l_ = r_;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 					if( addN2 ) {
 						// convert back from nr*angle to nl*angle
 						ax *= r_/l_
@@ -1015,8 +1009,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 		const sAng = Math.sin(ang/2);
 	
-		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		const Clx = ang/(sAng);//*Math.sqrt((Cx*Cx+Cy*Cy+Cz*Cz)/(sAng*sAng));//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
 		/*
 		if( angleNorm !== 1 )
 			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
@@ -1024,16 +1017,16 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		//ang = 2*ang/angleNorm;
 		
 		q.nL = ang;
-		q.nR = ang;//sAng/Clx*ang;
+		q.nR = sAng/Clx*ang;
 		q.qw = cosCo2;
 		q.s = sAng;
 		q.nx = Cx/sAng;
 		q.ny = Cy/sAng;
 		q.nz = Cz/sAng;
 	
-		q.x = Cx*Clx;
-		q.y = Cy*Clx;
-		q.z = Cz*Clx;
+		q.x = Cx/Clx*ang;
+		q.y = Cy/Clx*ang;
+		q.z = Cz/Clx*ang;
 
 		q.dirty = false;
 	} else {
