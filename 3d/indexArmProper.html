@@ -20,14 +20,6 @@
 		<script src="./src/threex.dragpancontrols.js"></script>
 
 	<!--Mesh algorithms-->
-	<script src="./src/marchingcubes.js"></script>
-	<script src="./src/marchingtetrahedra.js"></script>
-	<script src="./src/marchingtetrahedra2.js"></script>
-	<script src="./src/marchingtetrahedra3.js"></script>
-	<script src="./src/marchingtetrahedra4.js"></script>
-	<script src="./src/surfacenets.js"></script>
-
-	<script src="./src/perlinnoise.js"></script>
 
 		<link href="./src/main.css" rel="stylesheet">
 	</head>
@@ -124,16 +116,6 @@
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
-		var meshers = {
-		    'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
-		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
-		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
-		 // , 'Marching Cubes': MarchingCubes
-		 // , 'Marching Tetraheda' : MarchingTetrahedra
-		//	,  'Naive Surface Nets': SurfaceNets
-		};
-
-		
 
 		var testdata = {};
 		var testelements = {};
@@ -162,30 +144,7 @@
 			SLERPbasis = false;
 
 
-		  var mesher = meshers[ document.getElementById("mesher").value ]
-		
-		var field  = testdata[ document.getElementById("datasource").value ]( document.getElementById("fillOutside").checked?-1
-			          :document.getElementById("fillInside").checked?1
-			          :0
-			 )
-
 			 var geometryHelper ;
-			 	  //Create surface mesh
-			if( document.getElementById( "showGrid").checked) {
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
-					geometryHelper = THREE.DualGridGeometryBuffer();
-					geometry = geometryHelper.geometry;
-
-				}else {
-					geometryHelper = THREE.GridGeometryBuffer();
-					geometry = geometryHelper.geometry;
-				}
-			}else {
-				geometry	= new THREE.Geometry();
-				geometry.vertices.length = 0;
-				geometry.faces.length = 0;
-
-			}
 			if( document.getElementById("showNormals").checked ) {
 					geometryNormals	= new THREE.Geometry();
 					geometryNormals.vertices.length = 0;
@@ -193,32 +152,20 @@
 					geometryNormals.colors.length = 0;
 			}else geometryNormals = null;
 
-			var fieldElements  = testelements[ document.getElementById("datasource").value ]( field, document.getElementById("fillOutside").checked?-1
-			          :document.getElementById("fillInside").checked?1
-			          :0 );
-
 
 			
 			var start = (new Date()).getTime();
-			var inflatVal = document.getElementById( "inflation" ).value;
-			if( inflatVal < 50 )
-				inflatVal = ( 10/(60-inflatVal));
-			else 
-				inflatVal = 1+( inflatVal - 50 ) / 5;
 
 	if( geometryNormals  ) 
 		DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 
-
-
-
 	  var opts = {
-                  elements : fieldElements,
+                  elements : null,
 		  minimize : document.getElementById( "minimize" ).checked,
 		  maximize : document.getElementById( "maximize" ).checked,
-		  inflation : inflatVal,
-		  vertices : geometry.vertices,
-		  faces : geometry.faces,
+		  inflation : 0,
+		  vertices : null, //geometry.vertices,
+		  faces : null, //geometry.faces,
 		  normalVertices : geometryNormals && geometryNormals.vertices,
 		  normalColors : geometryNormals && geometryNormals.colors,
 		  smoothShade : document.getElementById( "smoothShade" ).checked,
@@ -230,16 +177,9 @@
 	  document.getElementById("meshtime").value = (end - start) / 1000.0;
 
 
-	  geometry.verticesNeedUpdate = true;
-	  geometry.elementsNeedUpdate = true;
-	  geometry.normalsNeedUpdate = true;
-
-		var wirematerial = new THREE.MeshBasicMaterial({
-				color : 0xffffff
-			  , wireframe : true
-			});
-		wiremesh = new THREE.Mesh(geometry, wirematerial);
-		wiremesh.doubleSided = true;
+	 // geometry.verticesNeedUpdate = true;
+	 // geometry.elementsNeedUpdate = true;
+	 // geometry.normalsNeedUpdate = true;
 
 		if( geometryNormals ) {
 			var linematerial = new THREE.LineBasicMaterial({
@@ -250,12 +190,12 @@
 			scene.add( lineSegments );
 		}
 
-		scene.add( wiremesh );
+		//scene.add( wiremesh );
 
 		}
 	
 		window.doInit = ()=>{
-		if( !init() )	animate();
+			if( !init() )	animate();
 		}
 		// init the scene
 		function init(){
@@ -412,18 +352,6 @@
 */
 
 			//Initialize dom elements
-			testdata = window.createTestData(0);
-			testelements = window.createTestElementData();
-			var ds = document.getElementById("datasource");
-			for(var id in testdata) {
-			  ds.add(new Option(id, id), null);
-			}
-			ds.onchange = updateMesh;
-			var ms = document.getElementById("mesher");
-			for(var alg in meshers) {
-			  ms.add(new Option(alg, alg), null);
-			}
-			ms.onchange = updateMesh;
 
 			document.getElementById("showfacets").checked = true;
 			document.getElementById("showedges").checked  = false;
