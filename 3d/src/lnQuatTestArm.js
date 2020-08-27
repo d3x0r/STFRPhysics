@@ -9,6 +9,7 @@ let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 1;
+let showLineSeg = [true,false,false,false,false];
 
 
 let showRaw = true;  // just raw x/y/z at x/y/z
@@ -70,6 +71,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		A[n].x += prior.x;
 		A[n].y += prior.y;
 		A[n].z += prior.z;
+
 		doDrawBasis( mode===0?R[n]:Rz[n], prior );
 		normalVertices.push( new THREE.Vector3( (prior.x)*spaceScale ,(prior.y)*spaceScale    , (prior.z)*spaceScale ))
 		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
@@ -427,6 +429,27 @@ function DrawQuatPaths(normalVertices,normalColors) {
 		shownR = check.checked;
 	}
 	check = document.getElementById( "shownL" );
+	if( check ) {
+		shownL = check.checked;
+	}
+
+	check = document.getElementById( "showX1" );
+	if( check ) {
+		shownL = check.checked;
+	}
+	check = document.getElementById( "showX2" );
+	if( check ) {
+		shownL = check.checked;
+	}
+	check = document.getElementById( "showX3" );
+	if( check ) {
+		shownL = check.checked;
+	}
+	check = document.getElementById( "showX4" );
+	if( check ) {
+		shownL = check.checked;
+	}
+	check = document.getElementById( "showX5" );
 	if( check ) {
 		shownL = check.checked;
 	}
