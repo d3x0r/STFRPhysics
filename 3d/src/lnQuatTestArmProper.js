@@ -162,7 +162,7 @@ return;
 	}
 
 	function pushN(n,s){
-		if( !s ) s = 1.0;
+		if( !s ) s = 0.99;
 		let c = Math.floor(s)/10;
 		s = s % 1;
 		switch( n ) {
