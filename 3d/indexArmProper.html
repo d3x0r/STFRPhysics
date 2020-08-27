@@ -56,15 +56,17 @@
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" > All: <input type="checkbox" id="drawRotationAllAxles" > <BR>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
+		 Interpolate
 		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
 
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
-		 - Show Scaled to 'Show Basis Map': <input type="checkbox" id="showScaled" ><br>
+		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" >
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" ><br>
 		 - Draw Representative Rotation Squares: <input type="checkbox" id="drawSquares" checked >
 		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
-		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
+		 - show Y-X: <input type="checkbox" id="drawSquaresYX" >
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
@@ -86,6 +88,7 @@
 		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
 		</p>
 		<p>
+		Show Axis/Angles: <input type="checkbox" id="showAxis" > Show Degrees: <input type="checkbox" id="showDegrees" checked>
 		<table>
 		<tr><td colspan=5>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
@@ -95,6 +98,7 @@
 		</td><td> X
 		</td><td> Y
 		</td><td> Z
+		</td><td> Angle
 		</td></tr>
 
 		<tr><td>1</td><td>
@@ -110,6 +114,7 @@
 		<tr><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval1">-0-</SPAN></td><td><SPAN id="lnQYval1">-0-</SPAN></td><td><SPAN id="lnQZval1">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle1">-0-</SPAN> 
 		</td></tr>
 		
 		<tr><td>2</td><td>
@@ -124,6 +129,7 @@
 		<tr><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td><SPAN id="lnQZval2">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle2">-0-</SPAN> 
 		</td></tr>
 
 		<tr><td>3</td><td>
@@ -138,6 +144,7 @@
 		<tr><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td><SPAN id="lnQZval3">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle3">-0-</SPAN> 
 		</td></tr>
 
 		<tr><td>4</td><td>
@@ -151,7 +158,9 @@
 		</td></tr>
 		<tr><td> </td><td>
 		</td><td>
-		<SPAN id="lnQXval4">-0-</SPAN></td><td><SPAN id="lnQYval4">-0-</SPAN></td><td><SPAN id="lnQZval4">-0-</SPAN> 
+		<SPAN id="lnQXval4">-0-</SPAN></td><td><SPAN id="lnQYval4">-0-</SPAN>
+		</td><td><SPAN id="lnQZval4">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle4">-0-</SPAN> 
 		</td></tr>
 
 		<tr><td>5</td><td>
@@ -166,6 +175,7 @@
 		<tr><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval5">-0-</SPAN></td><td><SPAN id="lnQYval5">-0-</SPAN></td><td><SPAN id="lnQZval5">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle5">-0-</SPAN> 
 		</td></tr>
 		</table>
 
@@ -434,6 +444,11 @@
 			is = document.getElementById("shownL");
 			is.onchange = updateMesh;
 
+			is = document.getElementById("showAxis");
+			is.onchange = updateMesh;
+			is = document.getElementById("showDegrees");
+			is.onchange = updateMesh;
+
 			for( var n = 1; n <= 5; n++ ) {
 				is = document.getElementById( "lnQX"+n );
 				is.oninput = updateMesh;
@@ -483,14 +498,24 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
-			is = document.getElementById( "showCoordinateGrid" );
-			is.onchange = updateMesh;
 			is = document.getElementById( "showInvCoordinateGrid" );
 			is.onchange = updateMesh;
-			is = document.getElementById( "showRawCoordinateGrid" );
+
+			{
+				const is2 = document.getElementById( "showCoordinateGrid" );
+				is2.onchange = updateMesh;
+				const is= document.getElementById( "showRawCoordinateGrid" );
+				is.onchange = ()=>{
+					if( is2.checked )
+						document.getElementById( "showScaled" ).checked = !is.checked;
+
+					updateMesh();
+				} 
+			}
+
+
+			is = document.getElementById( "showCoords" );
 			is.onchange = updateMesh;
-
-
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );

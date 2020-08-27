@@ -10,6 +10,7 @@ let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 2;
 let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angle
+let showCoords = false;
 let bisectAnalog = false;
 let trisectAnalog = false;
 let timeScale = 1.5;
@@ -527,14 +528,16 @@ function drawSquare( n, q ) {
 	const onef2 = (1 - n*0.1 - 0.01 )*4;
         const onef3 = (1 - n*0.1 - 0.02 )*4;
 
-
-	//const qx = new lnQuat( 0, q.x*2, 0, 0 );
-	//const qy = new lnQuat( 0, 0, q.y*2, 0 );
-	//const qz = new lnQuat( 0, 0, 0, q.z*2 );
-
-	const qx = new lnQuat( 0, q.nx*q.nR, 0, 0 );
-	const qy = new lnQuat( 0, 0, q.ny*q.nR, 0 );
-	const qz = new lnQuat( 0, 0, 0, q.nz*q.nR );
+	
+	// q.x and q.nx*q.nR are equivalent
+	// the total rotation si still q.nl.
+	const qx = new lnQuat( 0, q.x, 0, 0 );
+	const qy = new lnQuat( 0, 0, q.y, 0 );
+	const qz = new lnQuat( 0, 0, 0, q.z );
+	//console.log( "asadfdf", q.x, q.nx*q.nR, q.nL, q.nR );
+	//const qx = new lnQuat( 0, q.nx*q.nR, 0, 0 );
+	//const qy = new lnQuat( 0, 0, q.ny*q.nR, 0 );
+	//const qz = new lnQuat( 0, 0, 0, q.nz*q.nR );
 
         {
 		const p1 =  {x:one, y:one, z:0 } ;
@@ -684,7 +687,7 @@ function drawCoordinateGrid() {
 	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
 		const range = (2 ) * Math.PI;
 		const minRange = (0) * Math.PI;
-		drawRange( 0,0,0, range, 20, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
+		drawRange( 0,0,0, range, 40, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
 	}
 return;
 }
@@ -692,12 +695,13 @@ return;
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
-		const normLen = 0.2*(steps/range);
+		const normLen = 0.15*(steps/range);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
 					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
-				const basis = lnQ.getBasis( );
+					if( lnQ.nL > range ) continue;
+					const basis = lnQ.getBasis( );
 				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
 	        
 				// the original normal direction; projected offset of sphere (linear scaled)
@@ -708,9 +712,9 @@ return;
 	        
 				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx));
-				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny));
-				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz));
+				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
+				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
+				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
 	        
 		
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
@@ -828,6 +832,8 @@ return;
 					}
 				}
 			}
+
+		if( showCoords ) {
 			if( showScaledPoints ) {
 				const r = Math.sqrt(x*x+y*y+z*z);
 				const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
@@ -857,7 +863,7 @@ return;
 			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 		}
-
+		}
 
 	}
 
@@ -916,17 +922,40 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
 	let scalar = document.getElementById( "largeRange")?.checked;
+	let axis = document.getElementById( "showAxis")?.checked;
+	let degrees = document.getElementById( "showDegrees")?.checked;
+
 	for( var n = 1; n <= 5; n++ ) {
 		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
+
 		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1);
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1);
 		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1);
-
-		document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]*180/Math.PI).toFixed(4);
-		document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]*180/Math.PI).toFixed(4);
-		document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]*180/Math.PI).toFixed(4);
+		const len = Math.abs( curSliders.lnQX[n-1] ) +Math.abs( curSliders.lnQY[n-1] ) +Math.abs( curSliders.lnQZ[n-1] ) ;
+		const qlen = Math.sqrt( curSliders.lnQX[n-1]*curSliders.lnQX[n-1] + curSliders.lnQY[n-1]*curSliders.lnQY[n-1] + curSliders.lnQZ[n-1]*curSliders.lnQZ[n-1] );
+		if( axis ) {
+		document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]/qlen).toFixed(4);
+		document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]/qlen).toFixed(4);
+		document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]/qlen).toFixed(4);
+		}else {
+			if( degrees ) {
+				document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]*180/Math.PI).toFixed(4);
+			}else{
+				document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]).toFixed(4);
+			}
+		}
+		if( degrees ) {
+			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+		} else {
+			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+		}
+		//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 
 	}
 
@@ -1004,6 +1033,8 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	}else 			
 		drawRotationSquaresYX = false;
 	
+
+	showCoords = document.getElementById( "showCoords" )?.checked ;
 
 	if( document.getElementById( "showScaled" )?.checked ) {
 		showScaledPoints = true;
