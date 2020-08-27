@@ -70,7 +70,7 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		     <br>
-		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" > All: <input type="checkbox" id="drawRotationAllAxles" > <BR>
+		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 Interpolate
@@ -89,6 +89,7 @@
 			</p>
 
 		</p>
+		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw Rotation Squares: <input type="checkbox" id="drawSquares" checked >
 		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
 		 - show Y-X: <input type="checkbox" id="drawSquaresYX" >
@@ -519,16 +520,6 @@
 			is = document.getElementById( "smoothShade" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showNormal" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "showGrid" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "drawRotationAxles" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "drawRotationAllAxles" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "sharpenTransition" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "showInvCoordinateGrid" );
 			is.onchange = updateMesh;
 
 			{

@@ -132,6 +132,34 @@ return;
 }
 
 
+	function pushN2(n,s1,s2){
+		let c1 = Math.floor(s1)/10;
+		s1 = s1 % 1;
+		let c2 = Math.floor(s2)/10;
+		s2 = s2 % 1;
+		switch( n ) {
+		case 0:
+			normalColors.push( new THREE.Color( 1.0*s1,1.0*c1,1.0*c1,255 ))
+			normalColors.push( new THREE.Color( 1.0*s2,1.0*c2,1.0*c2,255 ))
+			break;
+		case 1:
+			normalColors.push( new THREE.Color( 1.0*c1,1.0*s1,1.0*c1,255 ))
+			normalColors.push( new THREE.Color( 1.0*c2,1.0*s2,1.0*c2,255 ))
+			break;
+		case 2:
+			normalColors.push( new THREE.Color( 1.0*c1,1.0*c1,1.0*s1,255 ))
+			normalColors.push( new THREE.Color( 1.0*c2,1.0*c2,1.0*s2,255 ))
+			break;
+		case 3:
+			normalColors.push( new THREE.Color( 1.0*c1,1.0*s1,1.0*s1,255 ))
+			normalColors.push( new THREE.Color( 1.0*c2,1.0*s2,1.0*s2,255 ))
+			break;
+		case 4:
+			normalColors.push( new THREE.Color( 1.0*s1,1.0*s1,1.0*c1,255 ))
+			normalColors.push( new THREE.Color( 1.0*s2,1.0*s2,1.0*c2,255 ))
+			break;
+		}
+	}
 
 	function pushN(n,s){
 		if( !s ) s = 1.0;
@@ -257,13 +285,18 @@ function drawAnalogArm(curSliders,slerp) {
 			if( s == 50 && delta || ( drawRotationAllAxles ) ){
 				if( drawRotationAxles ) {
 					if( SLERP || addN2 ) {
-					normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
-					normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
 					}else {
-					normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
-					normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x + 0*to.nx)*spaceScale   ,( A[n].y + 0 * to.ny)*spaceScale      , (A[n].z+ 0*to.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x - 0*to.nx)*spaceScale   ,( A[n].y - 0 * to.ny)*spaceScale      , (A[n].z-0*to.nz)*spaceScale  ))
+						normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
 	                                }
-					pushN(n,0.5);
+						pushN2(n,4.9,0.2);
+						pushN2(n,0.2,4.9);
 					
 				}
 
