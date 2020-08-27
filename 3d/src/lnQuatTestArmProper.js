@@ -21,6 +21,7 @@ let drawRotationSquaresXY = true;
 let drawRotationSquaresYX = true;
 let drawRotationSquareLimit = 1;
 let showLineSeg = [true,false,false,false,false];
+let fixAxleRotation= true;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -70,10 +71,15 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
-	const t2_ts = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale );
-	const t3_ts = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale );
-	const t4_ts = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nL, t3_ts, timeScale );
-	const t5_ts = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.nL, t4_ts, timeScale );
+	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):lnQ1.add2(lnQ2);
+	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale )    :t2.add2(lnQ3);
+	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale )    :t3.add2(lnQ4);
+	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale )    :t4.add2(lnQ5);
+
+	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale )  :lnQ1.add2(lnQ2,timeScale);
+	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale ):t2.add2(lnQ3,timeScale)  ;
+	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nL, t3_ts, timeScale ):t3.add2(lnQ4,timeScale)  ;
+	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.nL, t4_ts, timeScale ):t4.add2(lnQ5,timeScale)  ;
 
 	const t2__ts = t2_ts.add2( lnQ1 ).update();
 	const t3__ts = t2__ts.add2( t3_ts ).update();
@@ -213,10 +219,10 @@ function drawAnalogArm(curSliders,slerp) {
 	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
-	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale );
-	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale );
-	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale );
-	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale );
+	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):lnQ1.add2(lnQ2);
+	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale ):t2.add2(lnQ3);
+	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale ):t3.add2(lnQ4);
+	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale ):t4.add2(lnQ5);
 
 	// compute inertial frames
 	const t2_ = t2.add2( lnQ1 ).update();
@@ -596,10 +602,10 @@ function drawSquare( n, q ) {
         }
 
         {
-		const p1 = q.apply( {x:onef1,y:onef1,z:0 } );
-		const p2 = q.apply( {x:onef1,y:-onef1,z:0 } );
-		const p3 = q.apply( {x:-onef1,y:onef1,z:0 } );
-		const p4 = q.apply( {x:-onef1,y:-onef1,z:0 } );
+		const p1 = q.applyDel( {x:onef1,y:onef1,z:0 }, timeScale );
+		const p2 = q.applyDel( {x:onef1,y:-onef1,z:0 }, timeScale );
+		const p3 = q.applyDel( {x:-onef1,y:onef1,z:0 }, timeScale );
+		const p4 = q.applyDel( {x:-onef1,y:-onef1,z:0 }, timeScale );
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -621,10 +627,10 @@ function drawSquare( n, q ) {
         if(drawRotationSquaresXY)
 	{
 		{
-			const p1 = qx.apply( {x:onef2,y:onef2,z:0 } );
-			const p2 = qx.apply( {x:onef2,y:-onef2,z:0 } );
-			const p3 = qx.apply( {x:-onef2,y:onef2,z:0 } );
-			const p4 = qx.apply( {x:-onef2,y:-onef2,z:0 } );
+			const p1 = qx.applyDel( {x:onef2,y:onef2,z:0 }  , timeScale);
+			const p2 = qx.applyDel( {x:onef2,y:-onef2,z:0 } , timeScale );
+			const p3 = qx.applyDel( {x:-onef2,y:onef2,z:0 } , timeScale );
+			const p4 = qx.applyDel( {x:-onef2,y:-onef2,z:0 }, timeScale );
 		        
 			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -644,10 +650,10 @@ function drawSquare( n, q ) {
 		}
 	        
 		{
-			const p1 = qx.apply(qy.apply( {x:onef3,y:onef3,z:0 } ));
-			const p2 = qx.apply(qy.apply( {x:onef3,y:-onef3,z:0 } ));
-			const p3 = qx.apply(qy.apply( {x:-onef3,y:onef3,z:0 } ));
-			const p4 = qx.apply(qy.apply( {x:-onef3,y:-onef3,z:0 } ));
+			const p1 = qx.applyDel(qy.applyDel( {x:onef3,y:onef3,z:0 }  , timeScale), timeScale);
+			const p2 = qx.applyDel(qy.applyDel( {x:onef3,y:-onef3,z:0 } , timeScale), timeScale);
+			const p3 = qx.applyDel(qy.applyDel( {x:-onef3,y:onef3,z:0 } , timeScale), timeScale);
+			const p4 = qx.applyDel(qy.applyDel( {x:-onef3,y:-onef3,z:0 }, timeScale), timeScale);
 		        
 			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -669,10 +675,10 @@ function drawSquare( n, q ) {
 	if(drawRotationSquaresYX) 
 	{
                 {
-			const p1 = qx.apply( {x:onef2,y:onef2,z:0 } );
-			const p2 = qx.apply( {x:onef2,y:-onef2,z:0 } );
-			const p3 = qx.apply( {x:-onef2,y:onef2,z:0 } );
-			const p4 = qx.apply( {x:-onef2,y:-onef2,z:0 } );
+			const p1 = qx.applyDel( {x:onef2,y:onef2,z:0  , timeScale} );
+			const p2 = qx.applyDel( {x:onef2,y:-onef2,z:0 , timeScale} );
+			const p3 = qx.applyDel( {x:-onef2,y:onef2,z:0 , timeScale} );
+			const p4 = qx.applyDel( {x:-onef2,y:-onef2,z:0, timeScale } );
 	        
 			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -692,10 +698,10 @@ function drawSquare( n, q ) {
                 }
                 
 		{
-			const p1 = qy.apply(qx.apply( {x:onef3,y:onef3,z:0 } ));
-			const p2 = qy.apply(qx.apply( {x:onef3,y:-onef3,z:0 } ));
-			const p3 = qy.apply(qx.apply( {x:-onef3,y:onef3,z:0 } ));
-			const p4 = qy.apply(qx.apply( {x:-onef3,y:-onef3,z:0 } ));
+			const p1 = qy.applyDel(qx.applyDel( {x:onef3,y:onef3,z:0 }  , timeScale), timeScale);
+			const p2 = qy.applyDel(qx.applyDel( {x:onef3,y:-onef3,z:0 } , timeScale), timeScale);
+			const p3 = qy.applyDel(qx.applyDel( {x:-onef3,y:onef3,z:0 } , timeScale), timeScale);
+			const p4 = qy.applyDel(qx.applyDel( {x:-onef3,y:-onef3,z:0 }, timeScale), timeScale);
 		        
 			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -955,6 +961,8 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
 	let scalar = document.getElementById( "largeRange")?.checked;
+	let scalar2 = document.getElementById( "fineRange")?.checked;
+
 	let axis = document.getElementById( "showAxis")?.checked;
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
@@ -963,9 +971,9 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
 
-		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1);
-		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1);
-		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1);
+		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:scalar2?0.25:1);
+		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:scalar2?0.25:1);
+		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:scalar2?0.25:1);
 		const len = Math.abs( curSliders.lnQX[n-1] ) +Math.abs( curSliders.lnQY[n-1] ) +Math.abs( curSliders.lnQZ[n-1] ) ;
 		const qlen = Math.sqrt( curSliders.lnQX[n-1]*curSliders.lnQX[n-1] + curSliders.lnQY[n-1]*curSliders.lnQY[n-1] + curSliders.lnQZ[n-1]*curSliders.lnQZ[n-1] );
 		if( axis ) {
@@ -1066,6 +1074,8 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	}else 			
 		drawRotationSquaresYX = false;
 	
+
+	fixAxleRotation	= document.getElementById( "fixAxleRotation" )?.checked ;
 
 	showCoords = document.getElementById( "showCoords" )?.checked ;
 

@@ -89,6 +89,9 @@
 			</p>
 
 		</p>
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" checked> 
+		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
+
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw Rotation Squares: <input type="checkbox" id="drawSquares" checked >
 		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
@@ -555,6 +558,13 @@
 			is = document.getElementById( "normalizeTangents" );
 			is.onchange = updateMesh;
 			
+
+			is = document.getElementById( "fineRange" );
+			is.onchange = updateMesh;
+
+			is = document.getElementById( "fixAxleRotation" );
+			is.onchange = updateMesh;
+
 			is = document.getElementById( "drawSquares" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawSquaresXY" );
