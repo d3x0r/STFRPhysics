@@ -22,6 +22,8 @@ let drawRotationSquaresYX = true;
 let drawRotationSquareLimit = 1;
 let showLineSeg = [true,false,false,false,false];
 let fixAxleRotation= true;
+let showRotationCurve = "X";
+let showRotationCurveSegment = -1;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -99,9 +101,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const A5_R_ts = tmpR.portion.update();  tmpR.portion = null;
 
 	
-	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
+	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R_ts  = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const Rz_ts = [lnQ1,t2__ts,t3__ts,t4__ts,t5__ts];
+	drawRotationCurve( Rz_ts, R_ );
 	const Rw_ts = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
 	const A_R_ts = [A1_R_ts,A2_R_ts,A3_R_ts,A4_R_ts,A5_R_ts];
@@ -132,7 +135,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		pushN(n);
 	}
 	
-return;
+	return;
 
 
 }
@@ -325,9 +328,69 @@ function drawAnalogArm(curSliders,slerp) {
 		
 	}
 	
-return;
+	return;
 
 
+}
+
+
+function drawRotationCurve( arr, arr2 ) {
+	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
+
+		const lnQ = arr[showRotationCurveSegment-1].update();
+		const lnQN = arr[showRotationCurveSegment-2];
+		if( lnQ ) {
+			let lnQ2;
+			if( showRotationCurveSegment == 1 ) {
+				lnQ2 = new lnQuat( {a:lnQ.x*timeScale,b:lnQ.y*timeScale,c:lnQ.z*timeScale} );
+			}
+
+			for( var t = -Math.PI; t<= Math.PI; t+=0.02* timeScale ) {
+				if( showRotationCurveSegment == 1 ) {
+					if( showRotationCurve == "X" ) 
+						lnQ2.x = lnQ.x*timeScale + t;
+					else if( showRotationCurve == "Z" ) 
+						lnQ2.z = lnQ.z*timeScale + t;
+					else if( showRotationCurve == "Y" ) 
+						lnQ2.y = lnQ.y*timeScale + t;
+					doDrawBasis( lnQ2, lnQ2, 1, 1 );
+				}else {
+					const lnQRaw = arr2[showRotationCurveSegment-1].update();
+	  	  	
+					if( showRotationCurve == "X" ) 
+						lnQ2 = new lnQuat( 0, lnQRaw.x + t, lnQRaw.y, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+					else if( showRotationCurve == "Y" ) 
+						lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y + t, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+					else if( showRotationCurve == "Z" ) 
+						lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y, lnQRaw.z + t ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+					
+					
+					doDrawBasis( lnQ2, lnQ2, 1, 1 );
+				}
+				
+				
+			}
+		}
+/*		
+		if( showRotationCurve == "X" ) 
+			lnQ2.pitch( -0.5 );
+		else if( showRotationCurve == "Z" ) 
+			lnQ2.roll( -0.5 );
+		else if( showRotationCurve == "Y" ) 
+			lnQ2.yaw( -0.5 );
+
+		for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
+		//let lnQ2 = new lnQuat( {a:lnQ.x,b:lnQ.y,c:lnQ.z} );
+			if( showRotationCurve == "X" ) 
+				lnQ2.pitch( 0.02 ).update();
+			else if( showRotationCurve == "Z" ) 
+				lnQ2.roll( 0.02 ).update();
+			else if( showRotationCurve == "Y" ) 
+				lnQ2.yaw( 0.02 ).update();
+
+		}
+*/
+	}
 }
 
 
@@ -786,6 +849,7 @@ return;
 		if( !s ) s = 1.0;
 		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
+	if( t != lnQ2 )  {
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                                   
@@ -803,6 +867,8 @@ return;
 			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
 			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
 		}
+
+	}
 
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
 			if( from ) {
