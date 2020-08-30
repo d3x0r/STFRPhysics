@@ -1126,18 +1126,13 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 				document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]).toFixed(4);
 			}
 		}
+		const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
+		const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
+		document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
 		if( degrees ) {
 			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
-			const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
-			const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
-			document.getElementById( "xRot"+n).textContent = ((curSliders.lnQX[n-1]/xyl*xyr) *180/Math.PI).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr)*180/Math.PI).toFixed(4);
 		} else {
 			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
-			const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
-			const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
-			document.getElementById( "xRot"+n).textContent = ((curSliders.lnQX[n-1]/xyl*xyr) ).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr) ).toFixed(4);
 		}
 		//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 
