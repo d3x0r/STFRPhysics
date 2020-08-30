@@ -621,7 +621,7 @@ function drawSquare( n, q ) {
 	const qy = new lnQuat( 0, 0, q.y , 0 );
 	const qz = new lnQuat( 0, 0, 0, q.z  );
 
-	const qcomp1 = new lnQuat( 0, q.x*q.nR/q.nL, q.y*q.nR/q.nL, q.z*q.nR/q.nL );
+	//const qcomp1 = new lnQuat( 0, q.x*q.nR/q.nL, q.y*q.nR/q.nL, q.z*q.nR/q.nL );
 
 	//console.log( "asadfdf", q.x, q.nx*q.nR, q.nL, q.nR );
 	//const qx = new lnQuat( 0, q.nx*q.nR, 0, 0 );
@@ -673,7 +673,7 @@ function drawSquare( n, q ) {
 		pushN(n,0.8);
 		pushN(n,0.8);
         }
-
+	/*
         {
 		const p1 = qcomp1.applyDel( {x:onef1,y:onef1,z:0 }, timeScale );
 		const p2 = qcomp1.applyDel( {x:onef1,y:-onef1,z:0 }, timeScale );
@@ -696,6 +696,7 @@ function drawSquare( n, q ) {
 		pushN(n,9.99);
 		pushN(n,9.99);
         }
+        */
 
         if(drawRotationSquaresXY)
 	{
@@ -752,10 +753,10 @@ function drawSquare( n, q ) {
 			let p3 = {x:-onef3,y:onef3,z:0 } 
 			let p4 = {x:-onef3,y:-onef3,z:0 }
 			for( var i = 0; i < 20; i++ ) {
-				 p1 = qx.applyDel(qy.applyDel( p1, timeScale/20), timeScale/20);
-				 p2 = qx.applyDel(qy.applyDel( p2, timeScale/20), timeScale/20);
-				 p3 = qx.applyDel(qy.applyDel( p3, timeScale/20), timeScale/20);
-				 p4 = qx.applyDel(qy.applyDel( p4, timeScale/20), timeScale/20);
+				 p1 = qx.applyDel(qy.applyDel( p1, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p2 = qx.applyDel(qy.applyDel( p2, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p3 = qx.applyDel(qy.applyDel( p3, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p4 = qx.applyDel(qy.applyDel( p4, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
 			        
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -828,10 +829,10 @@ function drawSquare( n, q ) {
 			let p3 = {x:-onef3,y:onef3,z:0 } 
 			let p4 = {x:-onef3,y:-onef3,z:0 }
 			for( var i = 0; i < 20; i++ ) {
-				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/20), timeScale/20);
-				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/20), timeScale/20);
-				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/20), timeScale/20);
-				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/20), timeScale/20);
+				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
 			        
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -1133,6 +1134,8 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr)*180/Math.PI).toFixed(4);
 		} else {
 			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+			const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
+			const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
 			document.getElementById( "xRot"+n).textContent = ((curSliders.lnQX[n-1]/xyl*xyr) ).toFixed(4);
 			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr) ).toFixed(4);
 		}
