@@ -73,6 +73,22 @@ function lnQuat( theta, d, a, b ){
 			this.refresh = theta;
 			return;
 		}
+		if( theta instanceof lnQuat ) {
+// clone an existing lnQuat
+			this.x = theta.x;
+			this.y = theta.y;
+			this.z = theta.z;
+			this.nx = theta.nx;
+			this.ny = theta.ny;
+			this.nz = theta.nz;
+			this.nL = theta.nL;
+			this.nR = theta.nR;
+			this.s = theta.s;
+			this.qw = theta.qw;
+			this.dirty = theta.dirty;
+			return;
+		}
+
 		if( "undefined" !== typeof a ) {
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
@@ -105,15 +121,17 @@ function lnQuat( theta, d, a, b ){
 					this.x = theta.a;
 					this.y = theta.b;
 					this.z = theta.c;
-					const l3 = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
+					this.nL = Math.abs(this.x)+Math.abs(this.y)+Math.abs(this.z);
+					this.s = Math.sin( this.nL/2 );
+					this.qw = Math.cos( this.nL/2 );
+					this.nR = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
 					//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
-					if( l3 ) {
-						this.nx = this.x/l3 /* * qw*/;
-						this.ny = this.y/l3 /* * qw*/;
-						this.nz = this.z/l3 /* * qw*/;
+					if( this.nR ) {
+						this.nx = this.x/this.nR /* * qw*/;
+						this.ny = this.y/this.nR /* * qw*/;
+						this.nz = this.z/this.nR /* * qw*/;
 					}
-						
-					this.update();
+					this.dirty = false;
 					return;
 				}
 				else if( "x" in theta )
@@ -240,50 +258,18 @@ function lnQuat( theta, d, a, b ){
 }
 
 
-let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
-	// tr(M)=2cos(theta)+1 .
+	// tr(M)=2cos(theta)+1 . https://stackoverflow.com/a/12472591/4619267
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
-	console.log( "FB t is:", t, basis.right.x, basis.up.y, basis.forward.z );
-
-	//	if( t > 1 || t < -1 )
-	// 1,1,1 -1 = 2;/2 = 1
-	// -1-1-1 -1 = -4 /2 = -2;
-	/// okay; but a rotation matrix never gets back to the full rotation? so 0-1 is enough?  is that why evertyhing is biased?
-	//  I thought it was more that sine() - 0->pi is one full positive wave... where the end is the same as the start
-	//  and then pi to 2pi is all negative, so it's like the inverse of the rotation (and is only applied as an inverse? which reverses the negative limit?)
-	//  So maybe it seems a lot of this is just biasing math anyway?
 	let angle = acos(t);
-	if( !angle ) {
-		//console.log( "primary rotation is '0'", t, angle, this.nL, basis.right.x, basis.up.y, basis.forward.z );
-		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.nL = this.nR = 0;
-		this.ny = 1; // axis normal.
-		this.s = 0;
-		this.qw = 1;
-		this.dirty = false;
-		return this;
-	}
-/*
-	if( !this.octave ) this.octave = 1;
-	if( tzz == 0 ) {
-		this.bias = -this.octave * 2*Math.PI;
-	}else {
-		this.bias = (this.octave-1) * 2*Math.PI
-	}
-	//angle += this.bias
-	tzz++;
-	this.i = tzz;
-	if( tzz >= 2 ) tzz = 0;
-*/
 	/*
-	https://stackoverflow.com/a/12472591/4619267
 	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 	*/	
-	const yz = basis.up     .z - basis.forward.y;
-	const xz = basis.forward.x - basis.right  .z;
-	const xy = basis.right  .y - basis.up     .x;
+	const yz = basis.up     .z - basis.forward.y; // (R21 - R12)
+	const xz = basis.forward.x - basis.right  .z; // (R02 - R20)
+	const xy = basis.right  .y - basis.up     .x; // (R10 - R01)
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
 
 	this.nx = yz *tmp;
@@ -389,220 +375,75 @@ lnQuat.prototype.torque = function( direction, turns ) {
 
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, from, right) {
-	// this is terse; for more documentation see getBasis Method.
-	if( false ) { // this is        https://mathworld.wolfram.com/RodriguesRotationFormula.html
-		const q = this;
-
-		const s1 = Math.sin(q.nL*del); // * 2 * 0.5
-		const c1 = Math.cos(q.nL*del); // * 2 * 0.5
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testUp = { x:       q.nx*q.ny*(1-c1)-q.nz*s1
-		               , y:  c1+ q.ny*q.ny*(1-c1)
-		               , z:  q.nx*s1 + q.ny*q.nz*(1-c1)
-		};
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testForward = { x:   q.ny*s1 + q.nx*q.nz*(1-c1)
-		                    , y:  -q.nx*s1+ q.ny*q.nz * (1-c1)
-		                    , z:  c1+q.nz*q.nz*(1-c1)
-		};
-
-		const testRight = { x:  c1 + ( 1-c1 ) * ( q.nx*q.nx ) 
-		                  , y: q.nz*s1 + q.nx*q.ny*(1-c1)
-		                  , z: -q.ny * s1 + q.nx*q.nz*(1-c1)
-		};
-		const basis = { right  :testRight
-		              , up     :testUp
-		              , forward:testForward
-		              };
-		return basis;	
-	}
-	if( right ) {
-		// this basis is supposed to be the rotation axis, and the tangent on the 
-		// rotation...., and the normal to the circle (which is not nesscarily normal to the sphere)
-
-		// this basis is not reversable... (well, it might be)
-		const q = this;
-
-		const s1 = Math.sin(q.nL); // * 2 * 0.5
-		const c1 = 1 - Math.cos(q.nL); // * 2 * 0.5
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testUp = { x:          ( c1 ) * ( q.ny*q.ny*q.nz + q.nz*q.nz*q.nz + q.nx*q.nx*q.nz )  + s1 * q.ny*q.nx   - q.nz
-		               , y:  - s1 * ( q.nz*q.nz + q.nx * q.nx  )
-		               , z: q.nx - ( c1 ) * ( q.nx*q.nz*q.nz + q.nx*q.nx*q.nx + q.nx*q.ny*q.ny )  + s1 * q.nz*q.ny
-		};
-
-		const nRup = Math.sqrt(testUp.x*testUp.x + testUp.y*testUp.y + testUp.z*testUp.z );
-		//console.log( "up cross:", nRup );
-
-		testUp.x /= nRup;
-		testUp.y /= nRup;
-		testUp.z /= nRup;
-
-		//this.update();
-		if( !del ) del = 1.0;
-		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
-
-		const qx = q.nx; // normalizes the imaginary parts
-		const qy = q.ny; // set the sin of their composite angle as their total
-		const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-		const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-		const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
- 
-		const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-		const wy = s*qy;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-		const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
- 
-		const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-		const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-		const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
- 
-		const basis = { right  :{ x : 0,  y : ( wz + xy ), z :     ( xz - wy ) }
-		              , up     :{ x :     ( xy - wz ),  y : 0, z :     ( wx + yz ) }
-		              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 0 }
-		              };
+	const q = this;
+	//this.update();
+	if( "undefined" === typeof del ) del = 1.0;
+	let ax, ay, az;
+	if( SLERPbasis ) {
+		if( from ) {
+		const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
+		const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
+		const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
 		
-		// forward is... along the curve...
-		// 
-		const newForward = { x : q.nx 
-		           	, y : q.ny
-		           	, z : q.nz };
-		//const up = 
-		
-		//basis.right = basis.forward;
-         	basis.forward = testUp;
-		// cross of up and right is forward.
-		const cURx1 = newForward.z * basis.forward.y - newForward.y * basis.forward.z;
-		const cURy1 = newForward.x * basis.forward.z - newForward.z * basis.forward.x;
-		const cURz1 = newForward.y * basis.forward.x - newForward.x * basis.forward.y;
-		const norm = Math.sqrt(cURx1*cURx1+cURy1*cURy1+cURz1*cURz1);
-		basis.up = { x : cURx1/norm, y : cURy1/norm, z : cURz1/norm };
-		basis.right = testUp; // temporary
-		basis.forward = newForward;
-		return basis;	
-	} else {
-		const q = this;
-		//this.update();
-		if( "undefined" === typeof del ) del = 1.0;
-		let ax, ay, az;
-		if( SLERPbasis ) {
-			if( from ) {
-			const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
-			const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-			const targetAng = Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
-			
 
-			const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+		const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+		ax = r.x;
+		ay = r.y;
+		az = r.z;
+		} else {
+			const r = longslerp( {nx:0,ny:0,nz:0, nL:0}, this, del );
 			ax = r.x;
 			ay = r.y;
 			az = r.z;
-			} else {
-				const r = longslerp( {nx:0,ny:0,nz:0, nL:0}, this, del );
-				ax = r.x;
-				ay = r.y;
-				az = r.z;
-			}
+		}
+	} else {
+		if( addN2 ) {
+			ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
+			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
+			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+		
+			const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+			// convert back from nr*angle to nl*angle
+			ax *= r_/l_
+			ay *= r_/l_
+			az *= r_/l_
 		} else {
-			if( addN2 ) {
-				ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
-				ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
-				az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
-			
-				const l_ = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-				const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-				// convert back from nr*angle to nl*angle
-				ax *= r_/l_
-				ay *= r_/l_
-				az *= r_/l_
-			} else {
-				ax = (from?from.x:0) + (q.x*del);	
-				ay = (from?from.y:0) + (q.y*del);	
-				az = (from?from.z:0) + (q.z*del);	
-			}
+			ax = (from?from.x:0) + (q.x*del);	
+			ay = (from?from.y:0) + (q.y*del);	
+			az = (from?from.z:0) + (q.z*del);	
 		}
-		const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
-
-		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( nt ); // sin/cos are the function of exp()
-		const c1 = Math.cos( nt ); // sin/cos are the function of exp()
-		const c = 1- c1;
-
-		const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
-		const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
-		const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-		const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-		const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
-		const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
-		const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
-
-		const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-		const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const basis = { right  :{ x : c1 + ( xx ),       y :      ( wz + xy ), z :      ( xz - wy ) }
-		              , up     :{ x :      ( xy - wz ),  y : c1 + (yy),        z :      ( wx + yz ) }
-		              , forward:{ x :      ( wy + xz ),  y :      ( yz - wx ), z : c1 + ( zz ) }
-		              };
-		return basis;	
 	}
+	const alen = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+	const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
 
+	const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+	const s  = Math.sin( nt ); // sin/cos are the function of exp()
+	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
+	const c = 1- c1;
+
+	const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
+	const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
+	const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
+	const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
+	const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+
+	const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const basis = { right  :{ x : c1 + ( xx ),       y :      ( wz + xy ), z :      ( xz - wy ) }
+	              , up     :{ x :      ( xy - wz ),  y : c1 + (yy),        z :      ( wx + yz ) }
+	              , forward:{ x :      ( wy + xz ),  y :      ( yz - wx ), z : c1 + ( zz ) }
+	              };
+	return basis;	
 }
-
-function getCayleyBasis() {
-		const q = this;
-		//this.update();
-		if( !del ) del = 1.0;
-		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		let s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-		let c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
-	        const cL = Math.sqrt( 1+q.nx*q.nx+q.ny*q.ny+q.nz*qn.z);
-		const qx = q.nx/cL; // normalizes the imaginary parts
-		const qy = q.ny/cL; // set the sin of their composite angle as their total
-		const qz = q.nz/cL; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-		const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-		const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
-		const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
-		const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
-
-		const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-		const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const basis = {
-			right(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x : 1 - ( yy() + zz() - xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
-			},
-			up(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() - yy() ), z :     ( wx() + yz() ) };
-			},
-			forward(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
-			},
-		}
-		return basis;
-}
-
 
 lnQuat.prototype.getRelativeBasis = function( q2 ) {
 	const q = this;
@@ -615,7 +456,6 @@ lnQuat.prototype.update = function() {
 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
 	if( !this.dirty ) return this;
 	this.dirty = false;
-
 
 	// norm-rect
 	this.nR = Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
@@ -634,7 +474,6 @@ lnQuat.prototype.update = function() {
 	}
 	this.s  = Math.sin(this.nL/2); // only want one half wave...  0-pi total.
 	this.qw = Math.cos(this.nL/2);
-
 	return this;
 }
 
@@ -751,11 +590,6 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			let ax = 0;
 			let ay = 0;
 			let az = 0;
-/*************** 
- * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
-   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
-   by the sin( ||Q2||_1 + ||Q1||_2 *del )
-#*/
 			if( SLERP ) {
 				const target = {x:this.x+q2.x, y:this.y+q2.y, z:this.z+q2.z };
 				const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
@@ -770,7 +604,6 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 				az = r.z;
 			}
 			else 
-//****************************************/
 			{
 				if( addN2) {
 					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
@@ -891,16 +724,10 @@ lnQuat.prototype.slerp = function( q2, del ) {
 			let ax = 0;
 			let ay = 0;
 			let az = 0;
-/*************** 
- * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
-   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
-   by the sin( ||Q2||_1 + ||Q1||_2 *del )
-#*/
 			if( SLERP ) {
 				return longslerp( this, q2, del );
 			}
 			else 
-//****************************************/
 			{
 				if( addN2) {
 					// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
@@ -998,11 +825,11 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
 
-	if( ang ) {      // as bc     bs ac       as bs
-			// vector rotation is just...
-			// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
-			// when btheta is small, baxis is small pi/2 cos is 0 so this is small
-			// when both are large, cross product is dominant (pi/2)
+	if( Math.abs(ang) > 0.00001 ) {      // as bc     bs ac       as bs
+		// vector rotation is just...
+		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
+		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
+		// when both are large, cross product is dominant (pi/2)
 			
 		const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
 		const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
@@ -1035,7 +862,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 			q.x = q.x / q.nL * (q.nL+th);
 			q.y = q.y / q.nL * (q.nL+th);
 			q.z = q.z / q.nL * (q.nL+th);
-		}else {
+		}else { // or subtract
 			q.x = q.x / q.nL * (q.nL-th);
 			q.y = q.y / q.nL * (q.nL-th);
 			q.z = q.z / q.nL * (q.nL-th);
@@ -1164,107 +991,6 @@ lnQuat.prototype.addConj = function( q ) {
 	return this;//.update();
 }
 
-class EulerRotor {
-	x = new lnQuat(0,0,0,0);
-	y = new lnQuat(0,0,0,0);
-	z = new lnQuat(0,0,0,0);
-	//t = new lnQuat();
-
-	/*
-	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1 );
-	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2 );
-	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3 );
-	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4 );
-	*/
-	
-	constructor(x_,y_,z_) {
-		this.x.x = x_;
-		this.x.dirty = true;
-		this.y.y = y_;
-		this.y.dirty = true;
-		this.z.z = z_;
-		this.z.dirty = true;
-	}
-	update() {
-		this.x.update();
-		this.y.update();
-		this.z.update();
-		return this;
-	}
-	applyDel( v, del, v2, del2 ) {
-		//const a = x.
-		return v;
-	}
-	get lnQuat() {
-		this.y.update(); this.z.update();
-		const t = this.x.freeSpin( this.y.nL, this.y );
-		t.freeSpin( this.z.nL, this.z );
-		return t;
-	}
-	get x() {
-		return this.x.x;
-	}		
-	get nx() {
-		return this.x.nx;
-	}		
-	get y() {
-		return this.y.y;
-	}		
-	get ny() {
-		return this.y.ny;
-	}		
-	get z() {
-		return this.z.z;
-	}		
-	get nz() {
-		return this.z.nz;
-	}
-	set x(v) {
-		this.x.x = v;
-		this.x.dirty = true;
-	}		
-	set y(v) {
-		this.y.y = v;
-		this.y.dirty = true;
-	}		
-	set z(v) {
-		this.z.z = v;
-		this.z.dirty = true;
-	}
-	freeSpin(th,v){
-		const a = this.x.freeSpin( th, v );
-		const b = this.y.freeSpin( th, v );
-		const c = this.z.freeSpin( th, v );
-		
-		return c;
-	}		
-
-	getBasisT(T){
-		return new lnQuat( 0, this.x.x, this.y.y, this.z.z ).update().getBasisT(T);
-	}		
-
-	apply(v){
-		if( v instanceof EulerRotor ) {
-
-			const t2 = this.x.update();
-			const t3 = this.y.update().freeSpin( t2.nL, t2 );
-			const t4 = this.z.update().freeSpin( t3.nL, t3 );
-
-			return t4;	
-
-			const z = this.lnQuat.update();
-			const a = this.x.freeSpin( this.z.nL/2, this.z );
-			const b = this.y.freeSpin( a.nL/2, a );
-			const c = this.z.freeSpin( b.nL/2, b );
-			return new EulerRotor( c.x, c.y, c.z );
-		}
-						
-		const a = this.x.apply( v );
-		const b = this.y.apply( a );
-		const c = this.z.apply( b );
-		return c;
-	}		
-}
 
 // -------------------------------------------------------------------------------
 //  Quaternion (Rotation part)
@@ -1302,34 +1028,32 @@ function quatArrayToLogQuat( q ) {
 
 
 
-
-
-function longslerp(a, b, t ) {
-	
+// convert lnQuat_Start, lnQuat_Dest, 0-1 return lnQuat of inbetween rotation
+function longslerp(a, b, t ) {	
 	const u = [ a.nx*a.nL, a.ny*a.nL, a.nz*a.nL]
 	const v = [ b.nx*b.nL, b.ny*b.nL, b.nz* b.nL]
-      var p = axisAngleToQuaternion(u);
-      var q = axisAngleToQuaternion(v);
-      var r = slerp(p, q, t);
+	const p = axisAngleToQuaternion(u);
+	const q = axisAngleToQuaternion(v);
+	const r = slerp(p, q, t);
 	return quatArrayToLogQuat( r );		
 }
 
-// -*- coding: utf-8; -*-
 
+//-------- SLERP PROVIDED BY....
+// -*- coding: utf-8; -*-
 // Copyright 2019, Richard Copley <buster at buster dot me dot uk>
 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-
-//     http://www.apache.org/licenses/LICENSE-2.0
-
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+    function axisAngleToQuaternion(v) {
+      // If A = (x0,y0,z0) is the unit length axis of rotation and if θ is the
+      // angle of rotation, a quaternionq=w+xi+yj+zk that represents the rotation
+      // satisfies w= cos(θ/2), x=x0 sin(θ/2), y=y0 sin(θ/2) and z=z0 sin(θ/2).
+      var angle = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+      if (angle === 0) {
+        return [0, 0, 0, 1];
+      }
+      var k = Math.sin(angle / 2) / angle, c = Math.cos(angle / 2);
+      return [k * v[0], k * v[1], k * v[2], c];
+    }
 
     // Assuming p and q are not parallel or antiparallel, return a quaternion
     // that interpolates between p and q.
@@ -1355,41 +1079,6 @@ function longslerp(a, b, t ) {
       ];
     }
 
-    function axisAngleToQuaternion(v) {
-      // If A = (x0,y0,z0) is the unit length axis of rotation and if θ is the
-      // angle of rotation, a quaternionq=w+xi+yj+zk that represents the rotation
-      // satisfies w= cos(θ/2), x=x0 sin(θ/2), y=y0 sin(θ/2) and z=z0 sin(θ/2).
-
-      var angle = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-      if (angle === 0) {
-        return [0, 0, 0, 1];
-      }
-      var k = Math.sin(angle / 2) / angle, c = Math.cos(angle / 2);
-      return [k * v[0], k * v[1], k * v[2], c];
-    }
-
-    function quaternionToMatrix(q) {
-      var xx = q[0] * q[0];
-      var xy = q[0] * q[1];
-      var xz = q[0] * q[2];
-      var xw = q[0] * q[3];
-
-      var yy = q[1] * q[1];
-      var yz = q[1] * q[2];
-      var yw = q[1] * q[3];
-
-      var zz = q[2] * q[2];
-      var zw = q[2] * q[3];
-
-      var ww = q[3] * q[3];
-
-      return [
-        [1 - 2 * yy - 2 * zz, 2 * xy - 2 * zw, 2 * xz + 2 * yw],
-        [2 * xy + 2 * zw, 1 - 2 * xx - 2 * zz, 2 * yz - 2 * xw],
-        [2 * xz - 2 * yw, 2 * yz + 2 * xw, 1 - 2 * xx - 2 * yy]
-      ];
-    }
-
     // Multiply 3-by-3 matrices.
     function normalizeQuaternion(q) {
       var length = Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
@@ -1399,129 +1088,5 @@ function longslerp(a, b, t ) {
       q[3] /= length;
     }
 
-    function leftPad(string, width)
-    {
-      var result = "";
-      for (var i = string.length; i < width; ++ i) {
-        result += " ";
-      }
-      return result + string;
-    }
-
-    function formatNumber(x) {
-      return leftPad(x.toFixed(4), 8);
-    }
-
-    function matrixToString(m) {
-      var text = "";
-      for (var i = 0; i != 3; ++i) {
-        for (var j = 0; j != 3; ++j) {
-          text = text + formatNumber(m[i][j]);
-        }
-        text = text + "\n";
-      }
-      return text;
-    }
-
-    // Multiply transpose of matrix a by matrix b.
-    function matrixMultiplyTranspose(a, b) {
-      return [
-        [
-          a[0][0] * b[0][0] + a[0][1] * b[0][1] + a[0][2] * b[0][2],
-          a[0][0] * b[1][0] + a[0][1] * b[1][1] + a[0][2] * b[1][2],
-          a[0][0] * b[2][0] + a[0][1] * b[2][1] + a[0][2] * b[2][2],
-        ],
-        [
-          a[1][0] * b[0][0] + a[1][1] * b[0][1] + a[1][2] * b[0][2],
-          a[1][0] * b[1][0] + a[1][1] * b[1][1] + a[1][2] * b[1][2],
-          a[1][0] * b[2][0] + a[1][1] * b[2][1] + a[1][2] * b[2][2],
-        ],
-        [
-          a[2][0] * b[0][0] + a[2][1] * b[0][1] + a[2][2] * b[0][2],
-          a[2][0] * b[1][0] + a[2][1] * b[1][1] + a[2][2] * b[1][2],
-          a[2][0] * b[2][0] + a[2][1] * b[2][1] + a[2][2] * b[2][2],
-        ]
-      ];
-    }
-
-    function formatAxisAndAngle(v) {
-      var angle = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-      var axis = [v[0] / angle, v[1] / angle, v[2] / angle];
-      var text = "angle" + formatNumber(angle) + ", axis";
-      if (angle) {
-        text = text +
-          formatNumber(axis[0]) +
-          formatNumber(axis[1]) +
-          formatNumber(axis[2]);
-      }
-      else {
-        text = text + " undefined";
-      }
-      return text;
-    }
-
-    function matrixToAxisAngle(m) {
-      var trace = m[0][0] + m[1][1] + m[2][2];
-      trace = Math.min(3, Math.max(-1, trace));
-      var angle = Math.acos((trace - 1) / 2);
-      var v = [
-        m[2][1] - m[1][2],
-        m[0][2] - m[2][0],
-        m[1][0] - m[0][1]
-      ];
-      var k = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-      if (k) {
-        v[0] *= angle / k;
-        v[1] *= angle / k;
-        v[2] *= angle / k;
-      }
-      return v;
-    }
-
-    updateModel = function () {
-
-      // Calculate the interpolated rotation matrix.
-      var t = +values.t;
-      var u = [+values.u0, +values.u1, +values.u2];
-      var v = [+values.v0, +values.v1, +values.v2];
-      var p = axisAngleToQuaternion(u);
-      var q = axisAngleToQuaternion(v);
-      var r = slerp(p, q, t);
-      var C = quaternionToMatrix(r);
-
-      // For testing, calculate the axis angle of the rotation from q to r.
-      var A = quaternionToMatrix(p);
-      var B = quaternionToMatrix(q);
-      var R = matrixMultiplyTranspose(C, A);
-      var AA = matrixMultiplyTranspose(A, A);
-      var BB = matrixMultiplyTranspose(B, B);
-      var CC = matrixMultiplyTranspose(C, C);
-      var RR = matrixMultiplyTranspose(R, R);
-      var w = matrixToAxisAngle(R);
-
-      var text = "";
-      text = text + "u: " + formatAxisAndAngle(u) + "\n";
-      text = text + "v: " + formatAxisAndAngle(v) + "\n";
-      text = text + "\n";
-      text = text + "First rotation A = quaternionToMatrix(p), where";
-      text = text + " p = axisAngleToQuaternion(u)\n";
-      text = text + matrixToString(A);
-      text = text + "\n";
-      text = text + "Second rotation B = quaternionToMatrix(q), where";
-      text = text + " q = axisAngleToQuaternion(v)\n";
-      text = text + matrixToString(B);
-      text = text + "\n";
-      text = text + "Interpolated rotation C = quaternionToMatrix(r), where";
-      text = text + " r = slerp(p, q, t)\n";
-      text = text + matrixToString(C);
-      text = text + "\n";
-      text = text + "Rotation R = C A⁻¹\n";
-      text = text + matrixToString(R);
-      text = text + "\n";
-      text = text + "w = matrixToAxisAngle(R)\n"
-      text = text + "w: " + formatAxisAndAngle(w) + "\n";
-
-      statusText.nodeValue = text;
-    }
-
-  //  updateModel();
+// End SLERP
+//----------------------------------------------
