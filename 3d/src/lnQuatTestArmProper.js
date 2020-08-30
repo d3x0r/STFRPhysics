@@ -1111,9 +1111,9 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 		const len = Math.abs( curSliders.lnQX[n-1] ) +Math.abs( curSliders.lnQY[n-1] ) +Math.abs( curSliders.lnQZ[n-1] ) ;
 		const qlen = Math.sqrt( curSliders.lnQX[n-1]*curSliders.lnQX[n-1] + curSliders.lnQY[n-1]*curSliders.lnQY[n-1] + curSliders.lnQZ[n-1]*curSliders.lnQZ[n-1] );
 		if( axis ) {
-		document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]/qlen).toFixed(4);
-		document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]/qlen).toFixed(4);
-		document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]/qlen).toFixed(4);
+			document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]/qlen).toFixed(4);
+			document.getElementById( "lnQYval"+n).textContent = (curSliders.lnQY[n-1]/qlen).toFixed(4);
+			document.getElementById( "lnQZval"+n).textContent = (curSliders.lnQZ[n-1]/qlen).toFixed(4);
 		}else {
 			if( degrees ) {
 				document.getElementById( "lnQXval"+n).textContent = (curSliders.lnQX[n-1]*180/Math.PI).toFixed(4);
@@ -1127,8 +1127,14 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 		}
 		if( degrees ) {
 			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+			const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
+			const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
+			document.getElementById( "xRot"+n).textContent = ((curSliders.lnQX[n-1]/xyl*xyr) *180/Math.PI).toFixed(4);
+			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr)*180/Math.PI).toFixed(4);
 		} else {
 			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+			document.getElementById( "xRot"+n).textContent = ((curSliders.lnQX[n-1]/xyl*xyr) ).toFixed(4);
+			document.getElementById( "yRot"+n).textContent = ((curSliders.lnQY[n-1]/xyl*xyr) ).toFixed(4);
 		}
 		//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 
