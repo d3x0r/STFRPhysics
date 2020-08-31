@@ -622,6 +622,8 @@ function drawSquare( n, q, qPrior ) {
 
 	if( !qPrior ) qPrior = lnQ0;
 	
+	const next = q.add2( qPrior);
+
 	//console.log( "Prior:", qPrior, q, 
 
 	// q.x and q.nx*q.nR are equivalent
@@ -674,10 +676,10 @@ function drawSquare( n, q, qPrior ) {
 
         {
 		// this isn't apply... it's just add...
-		const p1 = q.add2( qPrior).applyDel({x:onef9 ,y :onef9,z:0 }, timeScale);
-		const p2 = q.add2( qPrior).applyDel({x:onef9 ,y:-onef9,z:0 }, timeScale);
-		const p3 = q.add2( qPrior).applyDel({x:-onef9,y: onef9,z:0 }, timeScale);
-		const p4 = q.add2( qPrior).applyDel({x:-onef9,y:-onef9,z:0 }, timeScale);
+		const p1 = next.applyDel({x:onef9 ,y :onef9,z:0 }, timeScale);
+		const p2 = next.applyDel({x:onef9 ,y:-onef9,z:0 }, timeScale);
+		const p3 = next.applyDel({x:-onef9,y: onef9,z:0 }, timeScale);
+		const p4 = next.applyDel({x:-onef9,y:-onef9,z:0 }, timeScale);
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -697,10 +699,10 @@ function drawSquare( n, q, qPrior ) {
         }
 	if( drawMechanicalRot ) 
 	{
-		const p1 = q.applyDel( qPrior.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL), timeScale*q.nR/q.nL );
-		const p2 = q.applyDel( qPrior.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL), timeScale*q.nR/q.nL );
-		const p3 = q.applyDel( qPrior.applyDel({x:-onef1,y: onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL), timeScale*q.nR/q.nL );
-		const p4 = q.applyDel( qPrior.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL), timeScale*q.nR/q.nL );
+		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
+		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
+		const p3 = ( next.applyDel({x:-onef1,y: onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
+		const p4 = ( next.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -722,16 +724,18 @@ function drawSquare( n, q, qPrior ) {
 	if( drawRawRot )
 	{
 		const _20 = drawRotationInterpolant[n];
-		let p1 = qPrior.applyDel({x:onef4,y:onef4,z:0 }  , timeScale )
-		let p2 = qPrior.applyDel({x:onef4,y:-onef4,z:0 } , timeScale )
-		let p3 = qPrior.applyDel({x:-onef4,y:onef4,z:0 } , timeScale )
-		let p4 = qPrior.applyDel({x:-onef4,y:-onef4,z:0 }, timeScale )
+		let p1_ = {x:onef4,y:onef4,z:0 }  
+		let p2_ = {x:onef4,y:-onef4,z:0 } 
+		let p3_ = {x:-onef4,y:onef4,z:0 } 
+		let p4_ = {x:-onef4,y:-onef4,z:0 }
 		for( let i = 0; i < _20; i++ )
                 {
-			 p1 = q.applyDel( p1, timeScale/_20 );
-			 p2 = q.applyDel( p2, timeScale/_20 );
-			 p3 = q.applyDel( p3, timeScale/_20 );
-			 p4 = q.applyDel( p4, timeScale/_20 );
+			const step = qPrior.add2( q, i*timeScale/_20 );
+
+			const p1 = step.apply( p1_, timeScale/_20 );
+			const p2 = step.apply( p2_, timeScale/_20 );
+			const p3 = step.apply( p3_, timeScale/_20 );
+			const p4 = step.apply( p4_, timeScale/_20 );
 	        
 			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
