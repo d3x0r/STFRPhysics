@@ -528,9 +528,12 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
 	if( v instanceof lnQuat ) {
+		const this_ = this;
+		this.update();
+		v.update();
 		const result = new lnQuat(
 			function() {
-	                        return finishRodrigues( v, 0, this.nx, this.ny, this.nz, this.nL );
+	                        return finishRodrigues( v, 0, this_.nx, this_.ny, this_.nz, this_.nL );
 			}
 		);
 		return result.refresh();
