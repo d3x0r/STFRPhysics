@@ -613,6 +613,7 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 function drawSquare( n, q, qPrior ) {
 	//if( n > 0 ) return;
 	const one   = (1 - n*0.1 ) *4;
+	const onef9 = (1 - n*0.1 - 0.085 )*4;
 	const onef4 = (1 - n*0.1 - 0.04 )*4;
 	const onef1 = (1 - n*0.1 - 0.03 )*4;
 	const onef2 = (1 - n*0.1 - 0.01 )*4;
@@ -673,10 +674,10 @@ function drawSquare( n, q, qPrior ) {
 
         {
 		// this isn't apply... it's just add...
-		const p1 = q.add2( qPrior).applyDel({x:onef1 ,y :onef1,z:0 }, timeScale);
-		const p2 = q.add2( qPrior).applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale);
-		const p3 = q.add2( qPrior).applyDel({x:-onef1,y: onef1,z:0 }, timeScale);
-		const p4 = q.add2( qPrior).applyDel({x:-onef1,y:-onef1,z:0 }, timeScale);
+		const p1 = q.add2( qPrior).applyDel({x:onef9 ,y :onef9,z:0 }, timeScale);
+		const p2 = q.add2( qPrior).applyDel({x:onef9 ,y:-onef9,z:0 }, timeScale);
+		const p3 = q.add2( qPrior).applyDel({x:-onef9,y: onef9,z:0 }, timeScale);
+		const p4 = q.add2( qPrior).applyDel({x:-onef9,y:-onef9,z:0 }, timeScale);
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
