@@ -27,8 +27,10 @@ let showRotationCurveSegment = -1;
 let stepScalar = [false,false,false,false,false];
 let drawRotationInterpolant = [false,false,false,false,false];
 let drawRawRot = false;
+let drawRawRotIter = false;
 let drawMechanicalRot= false;
 let drawRotIter= false;
+let showArms = true;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -258,11 +260,12 @@ function drawAnalogArm(curSliders,slerp) {
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
-		if( showLineSeg[n] && drawRotationSquares )
+		if( showLineSeg[n] && drawRotationSquares ) {
 			if( keepInertia )
 				drawSquare( n, R[n], Rz[n-1], );
 			else
 				drawSquare( n, Rm[n], Rz[n-1] );
+		}
 		if( n ) {
 			A[n].x = A[n-1].x
 			A[n].y = A[n-1].y
@@ -282,17 +285,23 @@ function drawAnalogArm(curSliders,slerp) {
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
 			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
-			draw( result.portion, from, delta, s*timeScale/100.0 );
+			if( showArms )
+				draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
-		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+		if( showArms )
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+
 		R[n] = result.portion;
 		Rz[n] = result.portion;
 		A[n].x += prior.x*scalar;
 		A[n].y += prior.y*scalar;
 		A[n].z += prior.z*scalar;
-		normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-		pushN(n);
+
+		if( showArms){
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+			pushN(n);
+		}
 
 		function draw(q,from,to,delta)
 		{
@@ -610,6 +619,7 @@ function drawArm(curSliders,normalVertices_,normalColors_, slerp) {
 	return;
 }
 
+let priorComposite = null;
 function drawSquare( n, q, qPrior ) {
 	//if( n > 0 ) return;
 	const one   = (1 - n*0.1 ) *4;
@@ -620,11 +630,18 @@ function drawSquare( n, q, qPrior ) {
         const onef3 = (1 - n*0.1 - 0.02 )*4;
 
 
-	if( !qPrior ) qPrior = lnQ0;
+	if( !qPrior ) {
+		qPrior = lnQ0;
+		priorComposite = lnQ0;
+	}
+	if( !drawRawRot ){ 
+		qPrior = priorComposite;
+		//console.log( "Using xy prior" );
+	}
 	
-	const next = q.add2( qPrior);
+	const next = q.add2( qPrior).update();
 
-	//console.log( "Prior:", qPrior, q, 
+	//console.log( "Prior:", qPrior, q, next );
 
 	// q.x and q.nx*q.nR are equivalent
 	// the total rotation si still q.nl.
@@ -635,21 +652,13 @@ function drawSquare( n, q, qPrior ) {
 	const qy = qPrior.apply(new lnQuat( 0,   0 , q.y ,   0));
 	const qz = qPrior.apply(new lnQuat( 0,   0 ,   0 , q.z));
 
-	const qxy = qPrior.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)));
-	const qyx = qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)));
+	const qxy = drawRawRot?qPrior.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)))
+			:priorComposite.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)))
+			;
+	const qyx = drawRawRot?qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)))
+			:priorComposite.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)));
 
-	//const qBasis = qPrior.getBasis();
-
-	//const qx = new lnQuat( 0, q.x * q.nR/q.nL, 0, 0 );
-	//const qy = new lnQuat( 0, 0, q.y * q.nR/q.nL, 0 );
-	//const qz = new lnQuat( 0, 0, 0, q.z * q.nR/q.nL );
-
-	//const qcomp1 = new lnQuat( 0, q.x*q.nR/q.nL, q.y*q.nR/q.nL, q.z*q.nR/q.nL );
-
-	//console.log( "asadfdf", q.x, q.nx*q.nR, q.nL, q.nR );
-	//const qx = new lnQuat( 0, q.nx*q.nR, 0, 0 );
-	//const qy = new lnQuat( 0, 0, q.ny*q.nR, 0 );
-	//const qz = new lnQuat( 0, 0, 0, q.nz*q.nR );
+	priorComposite = drawRotationSquaresYX?qyx:qxy;
 
         {
 		const p1 =  qPrior.applyDel({x:one, y:one, z:0 }, timeScale) ;
@@ -674,6 +683,7 @@ function drawSquare( n, q, qPrior ) {
 		pushN(n,5.9);
         }
 
+	if( drawRawRot )
         {
 		// this isn't apply... it's just add...
 		const p1 = next.applyDel({x:onef9 ,y :onef9,z:0 }, timeScale);
@@ -696,8 +706,45 @@ function drawSquare( n, q, qPrior ) {
 		pushN2(n,0.8,9.9);
 		pushN2(n,0.8,9.9);
 		pushN2(n,0.8,9.9);
+
+		if( drawRawRotIter )
+		{
+			const _20 = drawRotationInterpolant[n];
+			let p1_ = {x:onef4,y:onef4,z:0 }  
+			let p2_ = {x:onef4,y:-onef4,z:0 } 
+			let p3_ = {x:-onef4,y:onef4,z:0 } 
+			let p4_ = {x:-onef4,y:-onef4,z:0 }
+			for( let i = 0; i < _20; i++ )
+                        {
+				const step = qPrior.add2( q, i*timeScale/_20 );
+	        
+				const p1 = step.apply( p1_, timeScale/_20 );
+				const p2 = step.apply( p2_, timeScale/_20 );
+				const p3 = step.apply( p3_, timeScale/_20 );
+				const p4 = step.apply( p4_, timeScale/_20 );
+		        
+				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+							                                                                                                                                
+				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+				normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+				
+				normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+							                                                                                                                                
+				normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+				normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+				pushN(n,0.6);
+				pushN(n,0.6);
+				pushN(n,0.6);
+				pushN(n,0.6);
+                        }
+                }
+
+
         }
-	if( drawMechanicalRot ) 
+
+	if( drawRotIter || drawMechanicalRot ) 
 	{
 		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
 		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
@@ -720,40 +767,6 @@ function drawSquare( n, q, qPrior ) {
 		pushN(n,0.99);
 		pushN(n,0.99);
 	}
-
-	if( drawRawRot )
-	{
-		const _20 = drawRotationInterpolant[n];
-		let p1_ = {x:onef4,y:onef4,z:0 }  
-		let p2_ = {x:onef4,y:-onef4,z:0 } 
-		let p3_ = {x:-onef4,y:onef4,z:0 } 
-		let p4_ = {x:-onef4,y:-onef4,z:0 }
-		for( let i = 0; i < _20; i++ )
-                {
-			const step = qPrior.add2( q, i*timeScale/_20 );
-
-			const p1 = step.apply( p1_, timeScale/_20 );
-			const p2 = step.apply( p2_, timeScale/_20 );
-			const p3 = step.apply( p3_, timeScale/_20 );
-			const p4 = step.apply( p4_, timeScale/_20 );
-	        
-			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
-						                                                                                                                                
-			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
-			
-			normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
-						                                                                                                                                
-			normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
-			pushN(n,0.6);
-			pushN(n,0.6);
-			pushN(n,0.6);
-			pushN(n,0.6);
-                }
-        }
 
 
         if(drawRotationSquaresXY)
@@ -805,10 +818,10 @@ function drawSquare( n, q, qPrior ) {
 		}
 		if( drawRotIter && drawRotationInterpolant[n] )
 		{
-			let p1 = {x:onef3,y:onef3,z:0 }  
-			let p2 = {x:onef3,y:-onef3,z:0 } 
-			let p3 = {x:-onef3,y:onef3,z:0 } 
-			let p4 = {x:-onef3,y:-onef3,z:0 }
+			let p1 = qPrior.applyDel({x:onef3,y:onef3,z:0 }  , timeScale);  
+			let p2 = qPrior.applyDel({x:onef3,y:-onef3,z:0 } , timeScale);  
+			let p3 = qPrior.applyDel({x:-onef3,y:onef3,z:0 } , timeScale);  
+			let p4 = qPrior.applyDel({x:-onef3,y:-onef3,z:0 }, timeScale);  
 			const _20 = drawRotationInterpolant[n];
 			for( var i = 0; i < _20; i++ ) {
 				const del = timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1));
@@ -1105,7 +1118,7 @@ return;
 
 
 
-function DrawQuatNormals(normalVertices,normalColors) {
+function DrawNormalBall(normalVertices,normalColors) {
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 3;
 	const normal_del = 0.25;
@@ -1157,9 +1170,10 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
 	drawRawRot = document.getElementById( "drawRawRot")?.checked;
+	drawRawRotIter = document.getElementById( "drawRawRotIter")?.checked;
 	drawRotIter = document.getElementById( "drawRotIter")?.checked;
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
-
+	showArms = document.getElementById( "showArm")?.checked;
 	let scalar = document.getElementById( "largeRange")?.checked;
 	let scalar2 = document.getElementById( "fineRange")?.checked;
 
@@ -1334,22 +1348,14 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	if( check )
 		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
-        DrawQuatNormals(normalVertices,normalColors);
-
-	const xAxis = {x:1,y:0,z:0};
-	const yAxis = {x:0,y:1,z:0};
-	const zAxis = {x:0,y:0,z:1};
-	const cx = new THREE.Color( 192,192,0,255 );
-	const cy = new THREE.Color( 128,128,128,255 );
-	const cz = new THREE.Color( 0,192,192,255 );
+        DrawNormalBall(normalVertices,normalColors);
 
 	drawCoordinateGrid();
-	drawDigitalTimeArm( curSliders, slerp );
+	if( showArms )
+		drawDigitalTimeArm( curSliders, slerp );
 
+	// squares is calculated in analog arm.
 	drawAnalogArm( curSliders, slerp ); 
-
-	//drawArm( curSliders, normalVertices, normalColors, false );
-	//drawArm( curSliders, normalVertices, normalColors, true );
 }
 
 

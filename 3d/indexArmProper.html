@@ -36,7 +36,7 @@
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
-		   Show Advanced: <input type="checkbox" id="showAdvanced" ><br>
+		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
 		<p style="display:none">Input Data:</p>
 		<p style="display:none"><select id="datasource"></select></p>
 		<p style="display:none">Algorithm:</p>
@@ -89,7 +89,7 @@
 			</p>
 
 		</p>
-		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" checked> 
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" unchecked> 
 		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
 
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
@@ -97,6 +97,7 @@
 		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
 		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
 		 - Draw Real Rot: <input type="checkbox" id="drawRawRot" >
+		 - Show Iteration: <input type="checkbox" id="drawRawRotIter" >
 		 - Show Mechanical Composite: <input type="checkbox" id="drawMechanicalRot" >
                  - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 
@@ -141,7 +142,7 @@
 		</td></tr>
 		
 		<tr id="arm2" style="color:green"><td>2</td><td>
-			<input type="checkbox" id="showX2" unchecked>
+			<input type="checkbox" id="showX2" checked>
 		</td><td> 
 		<input type="range" id="lnQX2" min="0"  max="1000"  value="500"> 
 		</td><td>
@@ -161,7 +162,7 @@
 		</td></tr>
 
 		<tr id="arm3" style="color:blue"><td>3</td><td>
-			<input type="checkbox" id="showX3" unchecked>
+			<input type="checkbox" id="showX3" checked>
 		</td><td> 
 		<input type="range" id="lnQX3" min="0"  max="1000"  value="500"> 
 		</td><td>
@@ -181,7 +182,7 @@
 		</td></tr>
 
 		<tr id="arm4" style="color:cyan"><td>4</td><td>
-			<input type="checkbox" id="showX4" unchecked>
+			<input type="checkbox" id="showX4" checked>
 		</td><td> 
 		<input type="range" id="lnQX4" min="0"  max="1000"  value="500"> 
 		</td><td>
@@ -202,7 +203,7 @@
 		</td></tr>
 
 		<tr id="arm5" style="color:yellow"><td>5</td><td>
-			<input type="checkbox" id="showX5" unchecked>
+			<input type="checkbox" id="showX5" checked>
 		</td><td> 
 		<input type="range" id="lnQX5" min="0"  max="1000"  value="500"> 
 		</td><td>
@@ -249,7 +250,6 @@
 		if( is && is.checked ) {
 			showAdvanced = true;
 		}
-
 
 		{
 			var names = ["time","arm3val", "arm3","arm4val", "arm4","arm5val", "arm5","advancedControls" ]
@@ -558,6 +558,8 @@ function blurSlider( slider ) {
 			//is.value = 500;
 			//is.range = 1000;
 
+			is = document.getElementById( "showArm");
+			if( is ) is.onchange=updateMesh;
 			is = document.getElementById( "add2Norm" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERP" );
@@ -627,6 +629,8 @@ function blurSlider( slider ) {
 			is = document.getElementById( "drawRotIter" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawMechanicalRot" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRawRotIter" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawRawRot" );
 			is.onchange = updateMesh;
