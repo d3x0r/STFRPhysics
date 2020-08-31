@@ -24,6 +24,8 @@ let showLineSeg = [true,false,false,false,false];
 let fixAxleRotation= true;
 let showRotationCurve = "X";
 let showRotationCurveSegment = -1;
+let stepScalar = [false,false,false,false,false];
+let drawRotationInterpolant = [false,false,false,false,false];
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -746,17 +748,18 @@ function drawSquare( n, q ) {
 			pushN(n,0.2);
 		}
 
-
+		if( drawRotationInterpolant[n] )
 		{
 			let p1 = {x:onef3,y:onef3,z:0 }  
 			let p2 = {x:onef3,y:-onef3,z:0 } 
 			let p3 = {x:-onef3,y:onef3,z:0 } 
 			let p4 = {x:-onef3,y:-onef3,z:0 }
-			for( var i = 0; i < 20; i++ ) {
-				 p1 = qx.applyDel(qy.applyDel( p1, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p2 = qx.applyDel(qy.applyDel( p2, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p3 = qx.applyDel(qy.applyDel( p3, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p4 = qx.applyDel(qy.applyDel( p4, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+			const _20 = drawRotationInterpolant[n];
+			for( var i = 0; i < _20; i++ ) {
+				 p1 = qx.applyDel(qy.applyDel( p1, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p2 = qx.applyDel(qy.applyDel( p2, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p3 = qx.applyDel(qy.applyDel( p3, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p4 = qx.applyDel(qy.applyDel( p4, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
 			        
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -769,10 +772,10 @@ function drawSquare( n, q ) {
 							                                                                                                                                
 				normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
 			}
 		}
 	}
@@ -823,16 +826,18 @@ function drawSquare( n, q ) {
 			pushN(n,0.2);
 			pushN(n,0.2);
 		}
+		if( drawRotationInterpolant[n] )
 		{
 			let p1 = {x:onef3,y:onef3,z:0 }  
 			let p2 = {x:onef3,y:-onef3,z:0 } 
 			let p3 = {x:-onef3,y:onef3,z:0 } 
 			let p4 = {x:-onef3,y:-onef3,z:0 }
-			for( var i = 0; i < 20; i++ ) {
-				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
-				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/(20/(q.nL/q.nR))), timeScale/(20/(q.nL/q.nR)));
+			const _20 = drawRotationInterpolant[n];
+			for( var i = 0; i < _20; i++ ) {
+				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
 			        
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -845,10 +850,10 @@ function drawSquare( n, q ) {
 							                                                                                                                                
 				normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
-				pushN(n,Math.floor(i/3)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
+				pushN(n,Math.floor(i/_20*9)+0.5);
 			}
 		}
 	}
@@ -1128,13 +1133,30 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 		}
 		const xyr = Math.sqrt( curSliders.lnQX[n-1] * curSliders.lnQX[n-1] + curSliders.lnQY[n-1] * curSliders.lnQY[n-1] );
 		const xyl = Math.abs( curSliders.lnQX[n-1] ) + Math.abs( curSliders.lnQY[n-1] );
-		document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
-		if( degrees ) {
-			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+		const showInterpolant = document.getElementById( "drawInterp"+n)
+		if( showInterpolant )  
+			drawRotationInterpolant[n-1] = showInterpolant.value;
+		const useStep = document.getElementById( "useStep"+n)
+		if( stepScalar[n-1] = useStep.checked ) {
+			document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
 		} else {
-			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+			document.getElementById( "stepScalar"+n).textContent = 1;
+			
+		}
+
+
+		if( degrees ) {
+			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] * (qlen/len) *180/Math.PI).toFixed(4);
+		} else {
+			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] * (qlen/len)).toFixed(4);
+		}
+		if( degrees ) {
+			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] * (qlen/len)*180/Math.PI).toFixed(4);
+		} else {
+			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] * (qlen/len)).toFixed(4);
 		}
 		//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
+		
 
 	}
 
