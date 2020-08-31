@@ -80,10 +80,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
-	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):lnQ1.add2(lnQ2);
-	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale )    :t2.add2(lnQ3);
-	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale )    :t3.add2(lnQ4);
-	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale )    :t4.add2(lnQ5);
+	const t2    = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):lnQ1.add2(lnQ2);
+	const t3    = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale )    :t2.add2(lnQ3);
+	const t4    = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale )    :t3.add2(lnQ4);
+	const t5    = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale )    :t4.add2(lnQ5);
 
 	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale )  :lnQ1.add2(lnQ2,timeScale);
 	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale ):t2.add2(lnQ3,timeScale)  ;
@@ -111,12 +111,12 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const R_ts  = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const Rz_ts = [lnQ1,t2__ts,t3__ts,t4__ts,t5__ts];
-	drawRotationCurve( Rz_ts, R_ );
 	const Rw_ts = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
 	const A_R_ts = [A1_R_ts,A2_R_ts,A3_R_ts,A4_R_ts,A5_R_ts];
+	drawRotationCurve( Rz_ts, R_, A_R_ts );
 	let prior = origin;
-	for( var n = 0; n < 5; n++ ) {
+        for( var n = 0; n < 5; n++ ) {
 		if( (n+1) < 5 ) {
 			A__ts[n+1].x += A__ts[n].x;
 			A__ts[n+1].y += A__ts[n].y;
@@ -136,10 +136,13 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			pushN(n, 0.3);
 		}
 		*/
+		if( showArms )
+		{
 		normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
 		normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
 	
 		pushN(n);
+		}
 	}
 	
 	return;
@@ -285,7 +288,6 @@ function drawAnalogArm(curSliders,slerp) {
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
 			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
-			if( showArms )
 				draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
@@ -305,39 +307,42 @@ function drawAnalogArm(curSliders,slerp) {
 
 		function draw(q,from,to,delta)
 		{
-			if( s == 50 && delta || ( drawRotationAllAxles ) ){
-				if( drawRotationAxles ) {
-					if( SLERP || addN2 ) {
-						normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
-					}else {
-						normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x + 0*to.nx)*spaceScale   ,( A[n].y + 0 * to.ny)*spaceScale      , (A[n].z+ 0*to.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x - 0*to.nx)*spaceScale   ,( A[n].y - 0 * to.ny)*spaceScale      , (A[n].z-0*to.nz)*spaceScale  ))
-						normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
-	                                }
-						pushN2(n,4.9,0.2);
-						pushN2(n,0.2,4.9);
-					
-				}
-
-			}
 			if( ( s % 3 ) === 0 )  {
 				if( from ) {
 					doDrawBasis( to, A[n], 1, delta, from, 0.3 );
 				} else 
 					doDrawBasis( q, A[n], 1, 1, null, 0.3 );
 			}
+			if( showArms )
+			{
+				if( s == 50 && delta || ( drawRotationAllAxles ) ){
+					if( drawRotationAxles ) {
+						if( SLERP || addN2 ) {
+							normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
+						}else {
+							normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 0*to.nx)*spaceScale   ,( A[n].y + 0 * to.ny)*spaceScale      , (A[n].z+ 0*to.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x - 0*to.nx)*spaceScale   ,( A[n].y - 0 * to.ny)*spaceScale      , (A[n].z-0*to.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
+	                                        }
+							pushN2(n,4.9,0.2);
+							pushN2(n,0.2,4.9);
+						
+					}
+				        
+				}
 
-			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			A[n].x += prior.x;
-			A[n].y += prior.y;
-			A[n].z += prior.z;
+				normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+				A[n].x += prior.x;
+				A[n].y += prior.y;
+				A[n].z += prior.z;
 
-			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			pushN(n,0.3);
+				normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+				pushN(n,0.3);
+			}
 		}
 		
 	}
@@ -348,41 +353,61 @@ function drawAnalogArm(curSliders,slerp) {
 }
 
 
-function drawRotationCurve( arr, arr2 ) {
+function drawRotationCurve( arr, arr2, arr3 ) {
 	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
-
-		const lnQ = arr[showRotationCurveSegment-1].update();
-		const lnQN = arr[showRotationCurveSegment-2];
-		if( lnQ ) {
-			let lnQ2;
-			if( showRotationCurveSegment == 1 ) {
-				lnQ2 = new lnQuat( {a:lnQ.x*timeScale,b:lnQ.y*timeScale,c:lnQ.z*timeScale} );
-			}
-
-			for( var t = -Math.PI; t<= Math.PI; t+=0.02* timeScale ) {
+	        if( fixAxleRotation ) {
+			const lnQ = arr[showRotationCurveSegment-1].update();
+			const lnQN = arr[showRotationCurveSegment-2];
+			if( lnQ ) {
+				let lnQ2;
 				if( showRotationCurveSegment == 1 ) {
-					if( showRotationCurve == "X" ) 
-						lnQ2.x = lnQ.x*timeScale + t;
-					else if( showRotationCurve == "Z" ) 
-						lnQ2.z = lnQ.z*timeScale + t;
-					else if( showRotationCurve == "Y" ) 
-						lnQ2.y = lnQ.y*timeScale + t;
-					doDrawBasis( lnQ2, lnQ2, 1, 1 );
-				}else {
-					const lnQRaw = arr2[showRotationCurveSegment-1].update();
-	  	  	
-					if( showRotationCurve == "X" ) 
-						lnQ2 = new lnQuat( 0, lnQRaw.x + t, lnQRaw.y, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-					else if( showRotationCurve == "Y" ) 
-						lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y + t, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-					else if( showRotationCurve == "Z" ) 
-						lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y, lnQRaw.z + t ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-					
-					
-					doDrawBasis( lnQ2, lnQ2, 1, 1 );
+					lnQ2 = new lnQuat( {a:lnQ.x*timeScale,b:lnQ.y*timeScale,c:lnQ.z*timeScale} );
 				}
-				
-				
+		        
+				for( var t = -Math.PI; t<= Math.PI; t+=0.02* timeScale ) {
+					if( showRotationCurveSegment == 1 ) {
+						if( showRotationCurve == "X" ) 
+							lnQ2.x = lnQ.x*timeScale + t;
+						else if( showRotationCurve == "Z" ) 
+							lnQ2.z = lnQ.z*timeScale + t;
+						else if( showRotationCurve == "Y" ) 
+							lnQ2.y = lnQ.y*timeScale + t;
+						doDrawBasis( lnQ2, lnQ2, 1, 1 );
+					}else {
+						const lnQRaw = arr2[showRotationCurveSegment-1].update();
+	  	  	  	
+						if( showRotationCurve == "X" ) 
+							lnQ2 = new lnQuat( 0, lnQRaw.x + t, lnQRaw.y, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+						else if( showRotationCurve == "Y" ) 
+							lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y + t, lnQRaw.z ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+						else if( showRotationCurve == "Z" ) 
+							lnQ2 = new lnQuat( 0, lnQRaw.x, lnQRaw.y, lnQRaw.z + t ).update().freeSpin( lnQN.nL, lnQN, timeScale );
+						
+						
+						doDrawBasis( lnQ2, lnQ2, 1, 1 );
+					}
+					
+					
+				}
+			}
+		}else {
+			const lnQ = arr[showRotationCurveSegment-1].update();
+			const lnQN = arr3[showRotationCurveSegment-1] || lnQ0;
+			if( lnQN ) {
+				let lnQ2;
+				const from = { x: (lnQN.x)*timeScale, y:(lnQN.y)*timeScale,z:(lnQN.z)*timeScale } ;
+				lnQ2 = new lnQuat( 0, from.x, from.y, from.z );
+				for( var t = -Math.PI; t<= Math.PI; t+=0.02* timeScale ) {
+						if( showRotationCurve == "X" ) 
+							lnQ2.x = from.x + t;
+						else if( showRotationCurve == "Z" ) 
+							lnQ2.z = from.z + t;
+						else if( showRotationCurve == "Y" ) 
+							lnQ2.y = from.y + t;
+						doDrawBasis( lnQ2, lnQ2, 1, 1 );
+					
+					
+				}
 			}
 		}
 	}
@@ -992,7 +1017,7 @@ return;
 		if( !s ) s = 1.0;
 		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
-	if( t != lnQ2 )  {
+	if( t != lnQ2 && showArms )  {
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale                               ,(t.y/l)*spaceScale                               , (t.z/l)*spaceScale                               ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                                   
@@ -1351,7 +1376,6 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
         DrawNormalBall(normalVertices,normalColors);
 
 	drawCoordinateGrid();
-	if( showArms )
 		drawDigitalTimeArm( curSliders, slerp );
 
 	// squares is calculated in analog arm.
