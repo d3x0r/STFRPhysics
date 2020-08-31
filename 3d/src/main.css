@@ -41,4 +41,12 @@ body {
 
 .right {
 	text-align:right;
+	border-left:1px solid black;
+}
+.header {
+	border:1px solid black;
+}
+
+.col {
+	left-border:1px solid black;
 }

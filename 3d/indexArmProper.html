@@ -95,10 +95,13 @@
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw Rotation Squares: <input type="checkbox" id="drawSquares" checked >
 		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
-		 - show Y-X: <input type="checkbox" id="drawSquaresYX" >
+		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
+		 - Draw Real Rot: <input type="checkbox" id="drawRawRot" >
+		 - Show Mechanical Composite: <input type="checkbox" id="drawMechanicalRot" >
+                 - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 
 		<p>
-		Show Axis/Angles: <input type="checkbox" id="showAxis" > Show Degrees: <input type="checkbox" id="showDegrees" checked>
+		Show Axis/Angles: <input type="checkbox" id="showAxis" > Show Degrees: <input type="checkbox" id="showDegrees" checked> 
 		<table>
 		<tr id="time"><td colspan=5>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
@@ -108,11 +111,12 @@
 		</td><td> X
 		</td><td> Y
 		</td><td> Z
-		</td><td> Angle
-		</td><td> Step Scalar
-		</td><td> (Use)
-		</td><td> Unscaled XRot
-		</td><td> Unscaled YRot
+		</td><td class="header"> Angle
+		</td><td class="header"> Step Scalar
+		</td><td class="header"> (Use)
+		</td><td class="header"> Mech. XRot
+		</td><td class="header"> Mech. YRot
+		</td><td class="header"> Iterations
 		</td></tr>
 
 		<tr><td style="color:red">1</td><td>
@@ -130,10 +134,10 @@
 		<SPAN id="lnQXval1">-0-</SPAN></td><td><SPAN id="lnQYval1">-0-</SPAN></td><td><SPAN id="lnQZval1">-0-</SPAN> 
 		</td><td><SPAN id="lnQAngle1">-0-</SPAN> 
 		</td><td class="right"><SPAN id="stepScalar1">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep1" checked>
+		</td><td ><INPUT type="checkbox" id="useStep1" >
 		</td><td class="right"><SPAN id="xRot1">-0-</SPAN> 
 		</td><td class="right"><SPAN id="yRot1">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp1" min=0 max=50>
+		</td><td class="right"><input type="range" id="drawInterp1" min=0 max=250 value=25 >
 		</td></tr>
 		
 		<tr id="arm2" style="color:green"><td>2</td><td>
@@ -150,10 +154,10 @@
 		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td><SPAN id="lnQZval2">-0-</SPAN> 
 		</td><td><SPAN id="lnQAngle2">-0-</SPAN> 
 		</td><td class="right"><SPAN id="stepScalar2">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep2" checked>
+		</td><td ><INPUT type="checkbox" id="useStep2" >
 		</td><td class="right"><SPAN id="xRot2">-0-</SPAN> 
 		</td><td class="right"><SPAN id="yRot2">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp2">
+		</td><td class="right"><input type="range" id="drawInterp2" min=0 max=250 value=25>
 		</td></tr>
 
 		<tr id="arm3" style="color:blue"><td>3</td><td>
@@ -170,10 +174,10 @@
 		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td><SPAN id="lnQZval3">-0-</SPAN> 
 		</td><td><SPAN id="lnQAngle3">-0-</SPAN> 
 		</td><td class="right"><SPAN id="stepScalar3">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep3" checked>
+		</td><td ><INPUT type="checkbox" id="useStep3" >
 		</td><td class="right"><SPAN id="xRot3">-0-</SPAN> 
 		</td><td class="right"><SPAN id="yRot3">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp3">
+		</td><td class="right"><input type="range" id="drawInterp3" min=0 max=250 value=25>
 		</td></tr>
 
 		<tr id="arm4" style="color:cyan"><td>4</td><td>
@@ -191,10 +195,10 @@
 		</td><td><SPAN id="lnQZval4">-0-</SPAN> 
 		</td><td><SPAN id="lnQAngle4">-0-</SPAN> 
 		</td><td class="right"><SPAN id="stepScalar4">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep4" checked>
+		</td><td ><INPUT type="checkbox" id="useStep4" >
 		</td><td class="right"><SPAN id="xRot4">-0-</SPAN> 
 		</td><td class="right"><SPAN id="yRot4">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp4">
+		</td><td class="right"><input type="range" id="drawInterp4" min=0 max=250 value=25>
 		</td></tr>
 
 		<tr id="arm5" style="color:yellow"><td>5</td><td>
@@ -211,10 +215,10 @@
 		<SPAN id="lnQXval5">-0-</SPAN></td><td><SPAN id="lnQYval5">-0-</SPAN></td><td><SPAN id="lnQZval5">-0-</SPAN> 
 		</td><td><SPAN id="lnQAngle5">-0-</SPAN> 
 		</td><td class="right"><SPAN id="stepScalar5">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep5" checked>
+		</td><td ><INPUT type="checkbox" id="useStep5" >
 		</td><td class="right"><SPAN id="xRot5">-0-</SPAN> 
 		</td><td class="right"><SPAN id="yRot5">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp5">
+		</td><td class="right"><input type="range" id="drawInterp5" min=0 max=250 value=25>
 		</td></tr>
 		</table>
 
@@ -619,6 +623,13 @@ function blurSlider( slider ) {
 			is = document.getElementById( "fixAxleRotation" );
 			is.onchange = updateMesh;
 
+                                                       
+			is = document.getElementById( "drawRotIter" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawMechanicalRot" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRawRot" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "drawSquares" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawSquaresXY" );
