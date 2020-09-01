@@ -1,4 +1,4 @@
-
+8
 let A,B,C,D,E;  // slider values
 let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
@@ -74,12 +74,16 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	let keepInertia = document.getElementById( "keepInertia" )?.checked?1:0;
 
-	const lnQ1 = mkQuat( lnQ0 ).yaw(curSliders.lnQY[0]).pitch(curSliders.lnQX[0]).roll(curSliders.lnQZ[0]);
+	const lnQ1 = mkQuat().yaw(curSliders.lnQY[0]).pitch(curSliders.lnQX[0]).roll(curSliders.lnQZ[0]);
+	const lnQ2 = mkQuat().yaw(curSliders.lnQY[1]).pitch(curSliders.lnQX[1]).roll(curSliders.lnQZ[1]);
+	const lnQ3 = mkQuat().yaw(curSliders.lnQY[2]).pitch(curSliders.lnQX[2]).roll(curSliders.lnQZ[2]);
+	const lnQ4 = mkQuat().yaw(curSliders.lnQY[3]).pitch(curSliders.lnQX[3]).roll(curSliders.lnQZ[3]);
+	const lnQ5 = mkQuat().yaw(curSliders.lnQY[4]).pitch(curSliders.lnQX[4]).roll(curSliders.lnQZ[4]);
 	//const lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
-	const lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
-	const lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
-	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
-	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
+	//const lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
+	//const lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
+	//const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
+	//const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
 	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale )  :lnQ1.add2(lnQ2,timeScale);
 	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale ):t2_ts.add2(lnQ3,timeScale)  ;
@@ -110,7 +114,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const Rw_ts = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
 	const A_R_ts = [A1_R_ts,A2_R_ts,A3_R_ts,A4_R_ts,A5_R_ts];
-	drawRotationCurve( Rz_ts, R_, A_R_ts, curSliders );
+	drawRotationCurve( Rz_ts, R_, A_R_ts, curSliders, R_ts );
 	let prior = origin;
         for( var n = 0; n < 5; n++ ) {
 		if( (n+1) < 5 ) {
@@ -223,11 +227,15 @@ function drawAnalogArm(curSliders,slerp) {
 	//const lnQ5 = new lnQuat( {x: curSliders.lnQX[4],y: curSliders.lnQY[4],z: curSliders.lnQZ[4]} );
 
 	const lnQ1 = mkQuat( lnQ0 ).yaw(curSliders.lnQY[0]).pitch(curSliders.lnQX[0]).roll(curSliders.lnQZ[0]);
+	const lnQ2 = mkQuat().yaw(curSliders.lnQY[1]).pitch(curSliders.lnQX[1]).roll(curSliders.lnQZ[1]);
+	const lnQ3 = mkQuat().yaw(curSliders.lnQY[2]).pitch(curSliders.lnQX[2]).roll(curSliders.lnQZ[2]);
+	const lnQ4 = mkQuat().yaw(curSliders.lnQY[3]).pitch(curSliders.lnQX[3]).roll(curSliders.lnQZ[3]);
+	const lnQ5 = mkQuat().yaw(curSliders.lnQY[4]).pitch(curSliders.lnQX[4]).roll(curSliders.lnQZ[4]);
 	//const lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
-	const lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
-	const lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
-	const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
-	const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
+	//const lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
+	//const lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
+	//const lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
+	//const lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):lnQ1.add2(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale ):t2.add2(lnQ3);
@@ -306,9 +314,9 @@ function drawAnalogArm(curSliders,slerp) {
 		{
 			if( ( s % 3 ) === 0 )  {
 				if( from ) {
-					doDrawBasis( to, A[n], 1, delta, from, 0.3 );
+					doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
 				} else 
-					doDrawBasis( q, A[n], 1, 1, null, 0.3 );
+					doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
 			}
 			if( showArms )
 			{
@@ -350,10 +358,10 @@ function drawAnalogArm(curSliders,slerp) {
 }
 
 
-function drawRotationCurve( arr, arr2, arr3, curSliders ) {
+function drawRotationCurve( arr, arr2, arr3, curSliders, arr4 ) {
 	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
 	        if( fixAxleRotation ) {
-			const lnQ = arr[showRotationCurveSegment-1].update();
+			const lnQ = arr4[showRotationCurveSegment-2]|| lnQ0;
 			const lnQN = arr3[showRotationCurveSegment-2]|| lnQ0;
 			const lnQZ = arr2[showRotationCurveSegment-1];
 			if( lnQ ) {
@@ -373,32 +381,12 @@ function drawRotationCurve( arr, arr2, arr3, curSliders ) {
 					//lnQ2.y = lnQ.y*timeScale + t;
 
 				for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
-					if( showRotationCurveSegment == 1 ) {
-
-						//const lnQ1 = mkQuat( lnQ0 ).yaw(curSliders.lnQX[0]).pitch(curSliders.lnQY[0]).roll(curSliders.lnQZ[0]);
-
-						if( showRotationCurve == "X" ) 
-							lnQ2.pitch( 0.02 );
-							//lnQ2.x = lnQ.x*timeScale + t;
-						else if( showRotationCurve == "Z" ) 
-							lnQ2.roll( 0.02 );
-							//lnQ2.z = lnQ.z*timeScale + t;
-						else if( showRotationCurve == "Y" ) 
-							lnQ2.yaw( 0.02 );
-							//lnQ2.y = lnQ.y*timeScale + t;
-						doDrawBasis( lnQ2, lnQ2, 1, 1 );
-					}else {
-						if( showRotationCurve == "X" ) 
-							lnQ2 = new lnQuat( 0, curSliders.lnQX[showRotationCurveSegment-1] + t, curSliders.lnQY[showRotationCurveSegment-1], curSliders.lnQZ[showRotationCurveSegment-1] ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-						else if( showRotationCurve == "Y" ) 
-							lnQ2 = new lnQuat( 0, curSliders.lnQX[showRotationCurveSegment-1], curSliders.lnQY[showRotationCurveSegment-1] + t, curSliders.lnQZ[showRotationCurveSegment-1] ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-						else if( showRotationCurve == "Z" ) 
-							lnQ2 = new lnQuat( 0, curSliders.lnQX[showRotationCurveSegment-1], curSliders.lnQY[showRotationCurveSegment-1], curSliders.lnQZ[showRotationCurveSegment-1] + t ).update().freeSpin( lnQN.nL, lnQN, timeScale );
-						
-						doDrawBasis( lnQ2, lnQ2, 1, 1 );
-					}
-					
-					
+					const lnQ1 = mkQuat().yaw((( showRotationCurve == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
+						.pitch((( showRotationCurve == "X" ) ?t:0)+curSliders.lnQX[showRotationCurveSegment-1])
+						.roll((( showRotationCurve == "Z" ) ?t:0)+curSliders.lnQZ[showRotationCurveSegment-1]);
+					lnQ1.freeSpin( lnQ.nL, lnQ )
+					//lnQ1.add( lnQ );
+					doDrawBasis( lnQ1, lnQ1, 1, 1 );
 				}
 			}
 		}else {
