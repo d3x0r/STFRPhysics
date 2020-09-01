@@ -81,6 +81,7 @@
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" >
 		 - Scale 2-norm: <input type="checkbox" id="showScaled" ><br>
+		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 
 			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
 			   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
@@ -92,13 +93,13 @@
 		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" unchecked> 
 		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
 
-		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
-		 - Draw Rotation Squares: <input type="checkbox" id="drawSquares" checked >
-		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
-		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
-		 - Draw Real Rot: <input type="checkbox" id="drawRawRot" >
+		 - Draw Rotation Squares: <input style="display:none" type="checkbox" id="drawSquares" checked >
+		 show X-Y <input type="radio" name="drawMode" id="drawSquaresXY" checked >
+		 - show Y-X <input type="radio" name="drawMode" id="drawSquaresYX" >
+		 - Mechanical: <input type="radio" name="drawMode" id="drawMechanicalRot" >
+		 - real: <input type="radio" name="drawMode" id="drawRawRot" >
+		 - none <input type="radio" name="drawMode" id="drawSquaresNone" ><br>
 		 - Show Iteration: <input type="checkbox" id="drawRawRotIter" >
-		 - Show Mechanical Composite: <input type="checkbox" id="drawMechanicalRot" >
                  - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 
 		<p>
@@ -243,7 +244,15 @@
 		  scene.remove( lineSegments );
 
 		var is;
-
+		const tis = document.getElementById( "drawSquaresNone" );
+		if( tis.checked ) {
+			let is = document.getElementById( "drawSquares" );
+			is.checked = false;
+		}else{
+			let is = document.getElementById( "drawSquares" );
+			is.checked = true;
+		}
+		
 		let showAdvanced = false;
 		is = document.getElementById( "showAdvanced" );
 		if( is ) is.onchange = updateMesh;
@@ -559,7 +568,13 @@ function blurSlider( slider ) {
 			//is.range = 1000;
 
 			is = document.getElementById( "showArm");
-			if( is ) is.onchange=updateMesh;
+			if( is ) is.onchange=()=>{
+				let is = document.getElementById( "drawRawRotIter" );
+				is.onchange = updateMesh;
+				is = document.getElementById( "drawRawRot" ).checked = true;
+				is = document.getElementById( "drawSquaresXY" ).checked = false;
+				is = document.getElementById( "drawSquaresYX" ).checked = false;
+			}
 			is = document.getElementById( "add2Norm" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERP" );
@@ -641,6 +656,10 @@ function blurSlider( slider ) {
 			is = document.getElementById( "drawSquaresYX" );
 			is.onchange = updateMesh;
                                                
+			is = document.getElementById( "drawSquaresNone" );
+			is.onchange = updateMesh;
+
+
 
 			is = document.getElementById( "fillOutside" );
 			is.onchange = updateTestData;
