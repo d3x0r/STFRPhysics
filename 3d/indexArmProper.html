@@ -534,9 +534,9 @@ function focusSlider( slider, path, n ) {
 }
 
 function blurSlider( slider ) {
-	showRotationCurve = null;
-	showRotationCurveSegment = -1;
-	updateMesh();
+	//showRotationCurve = null;
+	//showRotationCurveSegment = -1;
+	//updateMesh();
 }
 			for( var n = 1; n <= 5; n++ ) {
 				is = document.getElementById( "lnQX"+n );
@@ -570,10 +570,8 @@ function blurSlider( slider ) {
 			is = document.getElementById( "showArm");
 			if( is ) is.onchange=()=>{
 				let is = document.getElementById( "drawRawRotIter" );
-				is.onchange = updateMesh;
 				is = document.getElementById( "drawRawRot" ).checked = true;
-				is = document.getElementById( "drawSquaresXY" ).checked = false;
-				is = document.getElementById( "drawSquaresYX" ).checked = false;
+				updateMesh();
 			}
 			is = document.getElementById( "add2Norm" );
 			is.oninput = updateMesh;
