@@ -79,8 +79,8 @@
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
-		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" >
-		 - Scale 2-norm: <input type="checkbox" id="showScaled" ><br>
+		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked><br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 
 			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
@@ -103,7 +103,7 @@
                  - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 
 		<p>
-		Show Axis/Angles: <input type="checkbox" id="showAxis" > Show Degrees: <input type="checkbox" id="showDegrees" checked> 
+		Show Axis/Angles: <input type="checkbox" id="showAxis" > Set Raw Angles:<input type="checkbox" id="rawAngles"> Show Degrees: <input type="checkbox" id="showDegrees" checked> 
 		<table>
 		<tr id="time"><td colspan=5>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
@@ -519,7 +519,9 @@
 			is.onchange = updateMesh;
 			is = document.getElementById("shownL");
 			is.onchange = updateMesh;
-
+                                                      
+			is = document.getElementById("rawAngles");
+			is.onchange = updateMesh;
 			is = document.getElementById("showAxis");
 			is.onchange = updateMesh;
 			is = document.getElementById("showDegrees");
