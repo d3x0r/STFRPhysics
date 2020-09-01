@@ -38,3 +38,15 @@ body {
 	left		: 10px;
 	padding		: 5px;
 }
+
+.right {
+	text-align:right;
+	border-left:1px solid black;
+}
+.header {
+	border:1px solid black;
+}
+
+.col {
+	left-border:1px solid black;
+}

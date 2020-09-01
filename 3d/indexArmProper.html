@@ -36,6 +36,7 @@
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
+		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
 		<p style="display:none">Input Data:</p>
 		<p style="display:none"><select id="datasource"></select></p>
 		<p style="display:none">Algorithm:</p>
@@ -46,26 +47,6 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
-		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
-		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
-			<br>
-		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
-		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
-		     <br>
-		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" > All: <input type="checkbox" id="drawRotationAllAxles" > <BR>
-		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
-		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
-		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
-
-		 - SLERP: <input type="checkbox" id="useSLERP" >
-		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
-		<br>
-		 - Show Scaled to 'Show Basis Map': <input type="checkbox" id="showScaled" ><br>
-		 - Draw Representative Rotation Squares: <input type="checkbox" id="drawSquares" checked >
-		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
-		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
-		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
 		<p style="display:none">Vertex count: <input type="text" id="vertcount" value="0"> </p>
@@ -80,37 +61,167 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
-		<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
-		   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
-		   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
-		   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
+
+		<p id ="advancedControls" style="display:none" >
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
+		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
+		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
+			<br>
+		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
+		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
+		     <br>
+		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
+		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
+		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
+		 Interpolate
+		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
+
+		 - SLERP: <input type="checkbox" id="useSLERP" >
+		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
+		<br>
+		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" >
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" ><br>
+
+			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
+			   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
+			   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
+			   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
+			</p>
+
 		</p>
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" unchecked> 
+		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
+
+		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
+		 - Draw Rotation Squares: <input type="checkbox" id="drawSquares" checked >
+		 - show X-Y: <input type="checkbox" id="drawSquaresXY" checked >
+		 - show Y-X: <input type="checkbox" id="drawSquaresYX" ><br>
+		 - Draw Real Rot: <input type="checkbox" id="drawRawRot" >
+		 - Show Iteration: <input type="checkbox" id="drawRawRotIter" >
+		 - Show Mechanical Composite: <input type="checkbox" id="drawMechanicalRot" >
+                 - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
+
 		<p>
-		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> <br>
-		X1:<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
-		Y1:<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
-		Z1:<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> <br>
-		X1:<SPAN id="lnQXval1">-0-</SPAN> Y:<SPAN id="lnQYval1">-0-</SPAN> Z:<SPAN id="lnQZval1">-0-</SPAN> <br>
+		Show Axis/Angles: <input type="checkbox" id="showAxis" > Show Degrees: <input type="checkbox" id="showDegrees" checked> 
+		<table>
+		<tr id="time"><td colspan=5>
+		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
+		</td></tr>
+		<tr><td> 
+		</td><td> 
+		</td><td> X
+		</td><td> Y
+		</td><td> Z
+		</td><td class="header"> Angle
+		</td><td class="header"> Step Scalar
+		</td><td class="header"> (Use)
+		</td><td class="header"> Mech. XRot
+		</td><td class="header"> Mech. YRot
+		</td><td class="header"> Iterations
+		</td></tr>
 
-		X2:<input type="range" id="lnQX2" min="0"  max="1000"  value="500"> 
-		Y2:<input type="range" id="lnQY2" min="0"  max="1000" value="501"> 
-		Z2:<input type="range" id="lnQZ2" min="0"  max="1000" value="500"> <br>
-		X1:<SPAN id="lnQXval2">-0-</SPAN> Y:<SPAN id="lnQYval2">-0-</SPAN> Z:<SPAN id="lnQZval2">-0-</SPAN> <br>
+		<tr><td style="color:red">1</td><td>
+			<input type="checkbox" id="showX1" checked>
+		</td><td> 
+		<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> 
+		</td></tr>
 
-		X3:<input type="range" id="lnQX3" min="0"  max="1000"  value="500"> 
-		Y3:<input type="range" id="lnQY3" min="0"  max="1000" value="501"> 
-		Z3:<input type="range" id="lnQZ3" min="0"  max="1000" value="500"> <br>
-		X1:<SPAN id="lnQXval3">-0-</SPAN> Y:<SPAN id="lnQYval3">-0-</SPAN> Z:<SPAN id="lnQZval3">-0-</SPAN> <br>
+		<tr><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval1">-0-</SPAN></td><td><SPAN id="lnQYval1">-0-</SPAN></td><td><SPAN id="lnQZval1">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle1">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar1">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep1" >
+		</td><td class="right"><SPAN id="xRot1">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot1">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp1" min=0 max=250 value=25 >
+		</td></tr>
+		
+		<tr id="arm2" style="color:green"><td>2</td><td>
+			<input type="checkbox" id="showX2" checked>
+		</td><td> 
+		<input type="range" id="lnQX2" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY2" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ2" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm2val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td><SPAN id="lnQZval2">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle2">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar2">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep2" >
+		</td><td class="right"><SPAN id="xRot2">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot2">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp2" min=0 max=250 value=25>
+		</td></tr>
 
-		X4:<input type="range" id="lnQX4" min="0"  max="1000"  value="500"> 
-		Y4:<input type="range" id="lnQY4" min="0"  max="1000" value="501"> 
-		Z4:<input type="range" id="lnQZ4" min="0"  max="1000" value="500"> <br>
-		X1:<SPAN id="lnQXval4">-0-</SPAN> Y:<SPAN id="lnQYval4">-0-</SPAN> Z:<SPAN id="lnQZval4">-0-</SPAN> <br>
+		<tr id="arm3" style="color:blue"><td>3</td><td>
+			<input type="checkbox" id="showX3" checked>
+		</td><td> 
+		<input type="range" id="lnQX3" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY3" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ3" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm3val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td><SPAN id="lnQZval3">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle3">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar3">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep3" >
+		</td><td class="right"><SPAN id="xRot3">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot3">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp3" min=0 max=250 value=25>
+		</td></tr>
 
-		X5:<input type="range" id="lnQX5" min="0"  max="1000"  value="500"> 
-		Y5:<input type="range" id="lnQY5" min="0"  max="1000" value="501"> 
-		Z5:<input type="range" id="lnQZ5" min="0"  max="1000" value="500"> <br>
-		X1:<SPAN id="lnQXval5">-0-</SPAN> Y:<SPAN id="lnQYval5">-0-</SPAN> Z:<SPAN id="lnQZval5">-0-</SPAN> <br>
+		<tr id="arm4" style="color:cyan"><td>4</td><td>
+			<input type="checkbox" id="showX4" checked>
+		</td><td> 
+		<input type="range" id="lnQX4" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY4" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ4" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm4val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval4">-0-</SPAN></td><td><SPAN id="lnQYval4">-0-</SPAN>
+		</td><td><SPAN id="lnQZval4">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle4">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar4">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep4" >
+		</td><td class="right"><SPAN id="xRot4">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot4">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp4" min=0 max=250 value=25>
+		</td></tr>
+
+		<tr id="arm5" style="color:yellow"><td>5</td><td>
+			<input type="checkbox" id="showX5" checked>
+		</td><td> 
+		<input type="range" id="lnQX5" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY5" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ5" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm5val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval5">-0-</SPAN></td><td><SPAN id="lnQYval5">-0-</SPAN></td><td><SPAN id="lnQZval5">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle5">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar5">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep5" >
+		</td><td class="right"><SPAN id="xRot5">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot5">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp5" min=0 max=250 value=25>
+		</td></tr>
+		</table>
 
 	  </div>
 	</div>
@@ -130,6 +241,29 @@
 		  scene.remove( surfacemesh );
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
+
+		var is;
+
+		let showAdvanced = false;
+		is = document.getElementById( "showAdvanced" );
+		if( is ) is.onchange = updateMesh;
+		if( is && is.checked ) {
+			showAdvanced = true;
+		}
+
+		{
+			var names = ["time","arm3val", "arm3","arm4val", "arm4","arm5val", "arm5","advancedControls" ]
+			for( var name of names ) {
+				let is = document.getElementById( name );
+			
+				if( is) if( showAdvanced ) {
+					is.style.display = "";
+				}else
+					is.style.display = "none";
+			}
+
+
+		}
 
 		if( document.getElementById( "add2Norm" )?.checked ) {
 			addN2 = true;
@@ -377,13 +511,46 @@
 			is = document.getElementById("shownL");
 			is.onchange = updateMesh;
 
+			is = document.getElementById("showAxis");
+			is.onchange = updateMesh;
+			is = document.getElementById("showDegrees");
+			is.onchange = updateMesh;
+
+	
+function focusSlider( slider, path, n ) {
+	showRotationCurve = path;
+	showRotationCurveSegment = n;
+	updateMesh();
+	
+}
+
+function blurSlider( slider ) {
+	showRotationCurve = null;
+	showRotationCurveSegment = -1;
+	updateMesh();
+}
 			for( var n = 1; n <= 5; n++ ) {
 				is = document.getElementById( "lnQX"+n );
 				is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
 				is = document.getElementById( "lnQY"+n );
 				is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
 				is = document.getElementById( "lnQZ"+n);
 				is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
+
+				is = document.getElementById( "showX"+n);
+				is.oninput = updateMesh;
+				is = document.getElementById( "useStep"+n);
+				is.oninput = updateMesh;
+
+				is = document.getElementById( "drawInterp"+n);
+				is.oninput = updateMesh;
+
 			}
 
 			is = document.getElementById( "timeScalar" );
@@ -391,6 +558,8 @@
 			//is.value = 500;
 			//is.range = 1000;
 
+			is = document.getElementById( "showArm");
+			if( is ) is.onchange=updateMesh;
 			is = document.getElementById( "add2Norm" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERP" );
@@ -415,6 +584,19 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "showNormal" );
 			is.onchange = updateMesh;
+
+			{
+				const is2 = document.getElementById( "showCoordinateGrid" );
+				is2.onchange = updateMesh;
+				const is= document.getElementById( "showRawCoordinateGrid" );
+				is.onchange = ()=>{
+					if( is2.checked )
+						document.getElementById( "showScaled" ).checked = !is.checked;
+
+					updateMesh();
+				} 
+			}
+
 			is = document.getElementById( "showGrid" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawRotationAxles" );
@@ -423,14 +605,12 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
-			is = document.getElementById( "showCoordinateGrid" );
-			is.onchange = updateMesh;
 			is = document.getElementById( "showInvCoordinateGrid" );
 			is.onchange = updateMesh;
-			is = document.getElementById( "showRawCoordinateGrid" );
+
+
+			is = document.getElementById( "showCoords" );
 			is.onchange = updateMesh;
-
-
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );
@@ -438,6 +618,22 @@
 			is = document.getElementById( "normalizeTangents" );
 			is.onchange = updateMesh;
 			
+
+			is = document.getElementById( "fineRange" );
+			is.onchange = updateMesh;
+
+			is = document.getElementById( "fixAxleRotation" );
+			is.onchange = updateMesh;
+
+                                                       
+			is = document.getElementById( "drawRotIter" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawMechanicalRot" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRawRotIter" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRawRot" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "drawSquares" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawSquaresXY" );
