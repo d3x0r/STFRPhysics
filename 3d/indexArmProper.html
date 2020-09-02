@@ -652,6 +652,10 @@ function blurSlider( slider ) {
 
 			const changefunc = (evt)=>{
 				document.getElementById( "rawAngles" ).checked = is1.checked || is2.checked || is3.checked;
+				document.getElementById( "fixAxleRotation" ).checked = !(is1.checked || is2.checked || is3.checked);
+				document.getElementById( "keepInertia" ).checked = (is1.checked || is2.checked || is3.checked);
+				document.getElementById( "applyAccel" ).checked = !(is1.checked || is2.checked || is3.checked);
+
 				document.getElementById( "showScaled" ).checked = is4.checked;
 				updateMesh();
 			}
