@@ -521,7 +521,10 @@
 			is.onchange = updateMesh;
                                                       
 			is = document.getElementById("rawAngles");
-			is.onchange = updateMesh;
+			is.onchange = ()=>{
+				is = document.getElementById( "showScaled" ).checked = !document.getElementById( "rawAngles" ).checked;
+				updateMesh();
+			}
 			is = document.getElementById("showAxis");
 			is.onchange = updateMesh;
 			is = document.getElementById("showDegrees");
