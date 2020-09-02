@@ -71,7 +71,7 @@
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		     <br>
 		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
-		 - Keep Inertia: <input type="checkbox" id="keepInertia" checked >
+		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Apply Accel: <input type="checkbox" id="applyAccel">
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 Interpolate
@@ -91,7 +91,7 @@
 			</p>
 
 		</p>
-		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" unchecked> 
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" checked> 
 		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
 
 		 - Draw Rotation Squares: <input style="display:none" type="checkbox" id="drawSquares" checked >
@@ -646,7 +646,7 @@ function blurSlider( slider ) {
 			const is5 = document.getElementById( "fixAxleRotation" );
 			is5.onchange = ()=>{
 				document.getElementById( "keepInertia" ).checked = !is5.checked;
-				document.getElementById( "applyAccel" ).checked = !is5.checked;
+				document.getElementById( "applyAccel" ).checked = false;
 				updateMesh();
 			}
 

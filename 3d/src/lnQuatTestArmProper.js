@@ -364,75 +364,52 @@ function drawRotationCurve( arr, deltas,  curSliders, spinOnly ) {
 	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
 		let lnQ2;
 		//const lnQ_Here = arr[showRotationCurveSegment-1] || lnQ0;
-		const lnQ_Here = (fixAxleRotation?deltas[showRotationCurveSegment-1]:arr[showRotationCurveSegment-1]) || lnQ0;
+		const lnQ_Here = (fixAxleRotation?arr[showRotationCurveSegment-1]:arr[showRotationCurveSegment-1]) || lnQ0;
 		const from = (rawAngles)?{ x: (lnQ_Here.x)*timeScale, y:(lnQ_Here.y)*timeScale,z:(lnQ_Here.z)*timeScale }:null;
 	
 		if( rawAngles ) {
-			lnQ2 = new lnQuat( 0, from.x, from.y, from.z );
+			lnQ2 = new lnQuat( 0
+				,from.x = curSliders.lnQX[showRotationCurveSegment-1]
+				,from.y = curSliders.lnQY[showRotationCurveSegment-1]
+				,from.z = curSliders.lnQZ[showRotationCurveSegment-1])
 		}
-	        if( fixAxleRotation ) {
+	        {
+			const lnQ = (fixAxleRotation?spinOnly:arr)[showRotationCurveSegment-2]|| lnQ0;
 			if( rawAngles ) {
-				// this is wrong(so far)
-				const lnQ = spinOnly[showRotationCurveSegment-2]|| lnQ0;
-				{
-					for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
-						// this works.
-						if( showRotationCurve == "X" ) 
-							lnQ2.x = from.x + t;
-						else if( showRotationCurve == "Z" ) 
-							lnQ2.z = from.z + t;
-						else if( showRotationCurve == "Y" ) 
-							lnQ2.y = from.y + t;
-						lnQ2.freeSpin( lnQ.nL, lnQ )
-						if( keepInertia )
-							lnQ2.add( lnQ );
-						doDrawBasis( lnQ2, lnQ2, 1, 1 );
+				for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
+					// this works.
+					lnQ2.x = from.x;
+					lnQ2.y = from.y;
+					lnQ2.z = from.z;
+					lnQ2.dirty = true;
+					if( showRotationCurve == "X" ) 
+						lnQ2.x = from.x + t;
+					else if( showRotationCurve == "Z" ) 
+						lnQ2.z = from.z + t;
+					else if( showRotationCurve == "Y" ) 
+						lnQ2.y = from.y + t;
+				        if( fixAxleRotation ) {
+						lnQ2.update().freeSpin( lnQ.nL, lnQ )
 					}
+					if( keepInertia )
+						lnQ2.add( lnQ );
+					doDrawBasis( lnQ2, lnQ2, 1, 1 );
 				}
+				
 			}else {
 				// this works.
-				const lnQ = spinOnly[showRotationCurveSegment-2]|| lnQ0;
-				//const lnQ = lnQN;//[showRotationCurveSegment-2]|| lnQ0;
-				//const lnQ_ = arr4[showRotationCurveSegment-1]|| lnQ0;
-				//const lnQN = arr3[showRotationCurveSegment-2]|| lnQ0;
-				if( lnQ ) {
+				{
 					for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
 						const lnQ1 = mkQuat().yaw((( showRotationCurve == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
-							.pitch((( showRotationCurve == "X" ) ?t:0)+curSliders.lnQX[showRotationCurveSegment-1])
-							.roll((( showRotationCurve == "Z" ) ?t:0)+curSliders.lnQZ[showRotationCurveSegment-1])
-						lnQ1.freeSpin( lnQ.nL, lnQ )
+							.pitch((( showRotationCurve == "X" ) ?t:0)           +curSliders.lnQX[showRotationCurveSegment-1])
+							.roll((( showRotationCurve == "Z" ) ?t:0)            +curSliders.lnQZ[showRotationCurveSegment-1])
+					        if( fixAxleRotation ) {
+							lnQ1.freeSpin( lnQ.nL, lnQ )
+						}
 						if( keepInertia )
-							lnQ1.add( lnQ );
+							lnQ1.add( lnQN );
 						doDrawBasis( lnQ1, lnQ1, 1, 1 );
 					}
-				}
-			}
-		}else {
-			//const lnQ = arr[showRotationCurveSegment-1].update();
-			//const lnQ = arr4[showRotationCurveSegment-2]|| lnQ0;
-			//const lnQ = arr[showRotationCurveSegment-2]|| lnQ0;
-			{
-				for( var t = -Math.PI; t<= Math.PI; t+=0.02* timeScale ) {
-					if( rawAngles ) {
-						// this works.
-						if( showRotationCurve == "X" ) 
-							lnQ2.x = from.x + t;
-						else if( showRotationCurve == "Z" ) 
-							lnQ2.z = from.z + t;
-						else if( showRotationCurve == "Y" ) 
-							lnQ2.y = from.y + t;
-						//lnQ2.add( lnQN );
-						doDrawBasis( lnQ2, lnQ2, 1, 1 );
-					}else {
-						// this works.
-						const lnQ1 = mkQuat().yaw((( showRotationCurve == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
-							.pitch((( showRotationCurve == "X" ) ?t:0)+curSliders.lnQX[showRotationCurveSegment-1])
-							.roll((( showRotationCurve == "Z" ) ?t:0)+curSliders.lnQZ[showRotationCurveSegment-1])
-						lnQ1.add( lnQN );
-						doDrawBasis( lnQ1, lnQ1, 1, 1 );
-					}
-					
-					
 				}
 			}
 		}
