@@ -250,6 +250,12 @@ function drawAnalogArm(curSliders,slerp) {
 	}
 
 	// compute non-inertial differential
+	const r2_d = t2.sub2( Ro[0] );
+	const r3_d = t3.sub2( Ro[1] );
+	const r4_d = t4.sub2( Ro[2] );
+	const r5_d = t5.sub2( Ro[3] );
+
+	// compute non-inertial differential
 	const r2_ = t2.sub2( lnQ1 );
 	const r3_ = t3.sub2( t2 );
 	const r4_ = t4.sub2( t3 );
@@ -263,11 +269,15 @@ function drawAnalogArm(curSliders,slerp) {
 	const A5 = t5.applyDel( arm );
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
-	const Rm = [lnQ1,r2_,r3_,r4_,r5_];
-	const R  = [lnQ1,t2,t3,t4,t5];
+	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
+	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
+	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
-
-	drawRotationCurve( R, Rm, curSliders, Ro );
+	console.log( "Draw:", Rb );
+	// { a,      b,            c,                       d,                                   e }
+	// { a,    a+b,        a+b+c,                 a+b+c+d,                           a+b+c+d+e }
+	// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
+	drawRotationCurve( R, Ro, curSliders, Rb );
 
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
@@ -358,14 +368,16 @@ function drawAnalogArm(curSliders,slerp) {
 
 }
 
+// { a,      b,            c,                       d,                                   e }
+// { a,    a+b,        a+b+c,                 a+b+c+d,                           a+b+c+d+e }
+// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
 
-function drawRotationCurve( arr, deltas,  curSliders, spinOnly ) {
+function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 	const lnQN = arr[showRotationCurveSegment-2]|| lnQ0; // prior base... 
 	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
 		let lnQ2;
 		//const lnQ_Here = arr[showRotationCurveSegment-1] || lnQ0;
-		const lnQ_Here = (fixAxleRotation?arr[showRotationCurveSegment-1]:arr[showRotationCurveSegment-1]) || lnQ0;
-		const from = (rawAngles)?{ x: (lnQ_Here.x)*timeScale, y:(lnQ_Here.y)*timeScale,z:(lnQ_Here.z)*timeScale }:null;
+		const from = (rawAngles)?{ x: 0, y:0,z:0 }:null;
 	
 		if( rawAngles ) {
 			lnQ2 = new lnQuat( 0
@@ -373,8 +385,10 @@ function drawRotationCurve( arr, deltas,  curSliders, spinOnly ) {
 				,from.y = curSliders.lnQY[showRotationCurveSegment-1]
 				,from.z = curSliders.lnQZ[showRotationCurveSegment-1])
 		}
+		  const lnQ = spinOnly[showRotationCurveSegment-2]||lnQ0;
+		  const lnQBase = base[showRotationCurveSegment-1];
 
-		const lnQ = arr[showRotationCurveSegment-2]|| lnQ0;
+		//const lnQ = arr[showRotationCurveSegment-2]|| lnQ0;
 		if( rawAngles ) {
 			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
 				// this works.
@@ -391,10 +405,7 @@ function drawRotationCurve( arr, deltas,  curSliders, spinOnly ) {
 
 			        if( fixAxleRotation )
 					lnQ2.update().freeSpin( lnQ.nL, lnQ )
-				if( applyAccel )
-					lnQ2.add( lnQ );
-				if( keepInertia )
-					lnQ2.add( lnQ );
+				lnQ2.add( lnQBase );
 				doDrawBasis( lnQ2, lnQ2, 1, 1 );
 			}
 		}else {
@@ -404,10 +415,7 @@ function drawRotationCurve( arr, deltas,  curSliders, spinOnly ) {
 					.roll((( showRotationCurve == "Z" ) ?t:0)            +curSliders.lnQZ[showRotationCurveSegment-1])
 			        if( fixAxleRotation )
 					lnQ1.freeSpin( lnQ.nL, lnQ )
-				if( applyAccel )
-					lnQ1.add( lnQN );
-				if( keepInertia )
-					lnQ1.add( lnQN );
+				lnQ1.add( lnQBase );
 				doDrawBasis( lnQ1, lnQ1, 1, 1 );
 			}
 		}
