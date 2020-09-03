@@ -273,10 +273,11 @@ function drawAnalogArm(curSliders,slerp) {
 	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
-	console.log( "Draw:", Rb );
-	// { a,      b,            c,                       d,                                   e }
-	// { a,    a+b,        a+b+c,                 a+b+c+d,                           a+b+c+d+e }
-	// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
+
+	// { a,      b,            c,                       d,                                   e }  no accel
+	// { a,    a+b,        a+b+c,                 a+b+c+d,                           a+b+c+d+e }  accel/keep inertia
+	// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }  accel+keep inertia
+	// { a,2a +b,3a+2b +c,                    4a+3b+2c +d,                       5a+4b+3c+2d+e }  accel+keep inertia
 	drawRotationCurve( R, Ro, curSliders, Rb );
 
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
