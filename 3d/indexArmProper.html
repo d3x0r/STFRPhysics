@@ -18,6 +18,7 @@
 		<script src="./src/THREEx.FullScreen.js"></script>
 		<script src="./src/THREEx.WindowResize.js"></script>
 		<script src="./src/threex.dragpancontrols.js"></script>
+		<script src="./src/three.js/THREE.MeshLine.js"></script>
 
 	<!--Mesh algorithms-->
 
@@ -233,10 +234,35 @@
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
+		let canvasWidth = 640;
+		let canvasHeight = 480;
 
 		var testdata = {};
 		var testelements = {};
 		var material	= null;
+		const shapes = [];
+		var tickCallback= null;
+	
+		makeShapes();
+		function makeShapes() {
+			for( var i = 0; i < 5; i++ ) {
+				geometry = new THREE.CubeGeometry( 1, 1, 1 );
+				material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+				cube = new THREE.Mesh( geometry, material );
+				shapes.push(cube);
+				//here is the funcion defined and attached to the  object
+				cube.setColor = function(color){
+				     cube.material.color.set(color);
+				}
+				cube.position.set( i*2 - 4,0,0);
+
+				cube.setColor(0xFFFFFF)  //change color using hex value or
+				cube.setColor("blue")    //set material color by using color name
+
+			}
+		}
+
+		
 
 		function updateMesh() {
 
@@ -301,42 +327,59 @@
 			}else geometryNormals = null;
 
 
-			
+					
+
+
 			var start = (new Date()).getTime();
 
-	if( geometryNormals  ) 
-		DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+	        	if( geometryNormals  ) 
+				tickCallback = DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+		
+	          var opts = {
+        	          elements : null,
+	        	  minimize : document.getElementById( "minimize" ).checked,
+			  maximize : document.getElementById( "maximize" ).checked,
+			  inflation : 0,
+			  vertices : null, //geometry.vertices,
+			  faces : null, //geometry.faces,
+			  normalVertices : geometryNormals && geometryNormals.vertices,
+			  normalColors : geometryNormals && geometryNormals.colors,
+			  smoothShade : document.getElementById( "smoothShade" ).checked,
+			  showGrid : document.getElementById( "showGrid").checked,
+			  geometryHelper : geometryHelper,
+			};
+		  var end = (new Date()).getTime();
+		
+	          document.getElementById("meshtime").value = (end - start) / 1000.0;
+		
 
-	  var opts = {
-                  elements : null,
-		  minimize : document.getElementById( "minimize" ).checked,
-		  maximize : document.getElementById( "maximize" ).checked,
-		  inflation : 0,
-		  vertices : null, //geometry.vertices,
-		  faces : null, //geometry.faces,
-		  normalVertices : geometryNormals && geometryNormals.vertices,
-		  normalColors : geometryNormals && geometryNormals.colors,
-		  smoothShade : document.getElementById( "smoothShade" ).checked,
-		  showGrid : document.getElementById( "showGrid").checked,
-		  geometryHelper : geometryHelper,
-		};
-	  var end = (new Date()).getTime();
-
-	  document.getElementById("meshtime").value = (end - start) / 1000.0;
-
-
-	 // geometry.verticesNeedUpdate = true;
-	 // geometry.elementsNeedUpdate = true;
-	 // geometry.normalsNeedUpdate = true;
-
-		if( geometryNormals ) {
-			var linematerial = new THREE.LineBasicMaterial({
-				color : 0xffffff
-			  , vertexColors: THREE.VertexColors
-			});
-			lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
-			scene.add( lineSegments );
-		}
+	 	 	 // geometry.verticesNeedUpdate = true;
+	 	 	 // geometry.elementsNeedUpdate = true;
+	 	 	 // geometry.normalsNeedUpdate = true;
+			if( geometryNormals ) {
+				var linematerial2 = new MeshLineMaterial({
+					color : 0xffffff
+				   , lineWidth : 0.1
+				  , vertexColors: THREE.VertexColors
+					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
+				});
+		        
+				for( var i = 0; i < geometryNormals.vertices.length; i+=2 ) {
+					const arr = [geometryNormals.vertices[i*2+0],geometryNormals.vertices[i*2+1]];
+					const ml = new MeshLine();
+					ml.setGeometry( arr );
+		        
+				}
+		        
+				var linematerial = new THREE.LineBasicMaterial({
+					color : 0xffffff
+				   , linewidth : 3.0
+				  , vertexColors: THREE.VertexColors
+				});
+				lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
+				//lineSegments = new THREE.Mesh( ml.geometry, linematerial2 );
+				scene.add( lineSegments );
+			}
 
 		//scene.add( wiremesh );
 
@@ -349,8 +392,8 @@
 		function init(){
 
 			var canvas = document.createElement( 'canvas' );
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
+			canvasWidth = canvas.width = window.innerWidth;
+			canvasHeight = canvas.height = window.innerHeight;
 			var context = canvas.getContext( 'webgl2', { alpha: false, antialias: true } );
 			if( Detector.webgl ){
 				renderer = new THREE.WebGLRenderer({
@@ -380,13 +423,10 @@
 					var v = new THREE.Vector3( 0, 0, -1 );
 					v.unproject( camera );
 
-		var rc = new THREE.Raycaster();
-		rc.setFromCamera( new THREE.Vector2( x, y ), camera );
-
+					var rc = new THREE.Raycaster();
+					rc.setFromCamera( new THREE.Vector2( x, y ), camera );
 
 					material.uniforms.cursorRayNormal.value.set( -x, -y, (pRect.width/2350)*camera.aspect )  ;
-
-
 
 				}
 			} );
@@ -449,6 +489,9 @@
 			light2.position.x = 0;
 			scene.add( light2 );
 	}
+			for( let shape of shapes ) {
+				scene.add(shape );
+			}
 /*
 			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
 			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
@@ -704,7 +747,8 @@ function blurSlider( slider ) {
 
 		// animation loop
 		function animate() {
-
+		        if( tickCallback )
+				tickCallback( shapes );
 			// loop on request animation loop
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating

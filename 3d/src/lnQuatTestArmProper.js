@@ -49,6 +49,13 @@ let lnQ3;
 let lnQ4;
 let lnQ5;
 
+const lnQ_current = [];
+let lnQ1_current;
+let lnQ2_current;
+let lnQ3_current;
+let lnQ4_current;
+let lnQ5_current;
+
 let normalVertices,normalColors;
 	const spaceScale = 5;
 	const normal_del = 1;
@@ -248,6 +255,11 @@ function drawAnalogArm(curSliders,slerp) {
 		t4.add( t3 );
 		t5.add( t4 );
 	}
+	lnQ_current[0] = lnQ1_current = lnQ1;
+	lnQ_current[1] = lnQ2_current = t2;
+	lnQ_current[2] = lnQ3_current = t3;
+	lnQ_current[3] = lnQ4_current = t4;
+	lnQ_current[4] = lnQ5_current = t5;
 
 	// compute non-inertial differential
 	const r2_d = t2.sub2( Ro[0] );
@@ -374,6 +386,8 @@ function drawAnalogArm(curSliders,slerp) {
 // { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
 
 function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
+	for( let i = 0; i < 3; i++ ) {
+		showRotationCurve = (i===0)?"X":(i===1)?"Y":"Z";
 	const lnQN = arr[showRotationCurveSegment-2]|| lnQ0; // prior base... 
 	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
 		let lnQ2;
@@ -420,6 +434,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				doDrawBasis( lnQ1, lnQ1, 1, 1 );
 			}
 		}
+	}
 	}
 }
 
@@ -970,7 +985,79 @@ function DrawNormalBall(normalVertices,normalColors) {
 	}
 }
 
-function DrawQuatPaths(normalVertices_,normalColors_) {
+let clock = 0.0;
+let start = 0;
+const curPos = [new lnQuat(),];
+
+function setMatrix( n, q, m ) {
+	const me = m.elements;
+	const b = q.getBasis();
+	//console.log( "M:", m );
+/*
+	m.elements[0+0] = b.right.x;
+	m.elements[4+0] = b.right.y;
+	m.elements[8+0] = b.right.z;
+	//m.elements[0+3] = 0;
+	m.elements[0+1] = b.up.x;
+	m.elements[4+1] = b.up.y;
+	m.elements[8+1] = b.up.z;
+	//m.elements[4+3] = 0;
+	m.elements[0+2] = b.forward.x;
+	m.elements[4+2] = b.forward.y;
+	m.elements[8+2] = b.forward.z;
+	//m.elements[8+3] = 0;
+*/
+	m.elements[0+0] = b.right.x;
+	m.elements[0+1] = b.right.y;
+	m.elements[0+2] = b.right.z;
+	//m.elements[0+3] = 0;
+	m.elements[4+0] = b.up.x;
+	m.elements[4+1] = b.up.y;
+	m.elements[4+2] = b.up.z;
+	//m.elements[4+3] = 0;
+	m.elements[8+0] = b.forward.x;
+	m.elements[8+1] = b.forward.y;
+	m.elements[8+2] = b.forward.z;
+	//m.elements[8+3] = 0;
+	m.elements[12+0] = n*2-4;
+	m.elements[12+1] = 0;
+	m.elements[12+2] = 0;
+	//m.elements[12+3] = b.forward.x;
+}
+
+function tickQuat( shapes ) {
+	const end = Date.now();
+	if( !start ) {
+		start = end - 15;
+		for( let n = 0; n < shapes.length; n++ ) {
+			curPos.push( new lnQuat() );
+		}
+	}
+	const delta = ( end - start ) / 1000;
+	clock += ( end - start ) / 1000;
+	start = end;
+
+	for( let n = 0; n < shapes.length; n++ ) {
+		const offset = Math.floor(clock );
+		if( clock % 2 > 1 ) {
+			//clock -= 1;
+		}
+		if( n+offset < lnQ_current.length )
+			curPos[n].add( lnQ_current[n+offset], delta );
+		const shape = shapes[n];
+		shape.matrixAutoUpdate = false;
+		setMatrix( n, curPos[n], shape.matrix );
+	}
+
+	if( clock > 7 ) { 
+		clock = 0;
+		curPos.length = 0;
+		start = 0;
+	}
+
+}
+
+function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_
         let curSliders = {
@@ -1204,6 +1291,13 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 
 	// squares is calculated in analog arm.
 	drawAnalogArm( curSliders, slerp ); 
+
+	// tick needs lnQ?_current
+	start = 0;
+	clock = 0;
+	curPos.length = 0;
+	return tickQuat;
+
 }
 
 
