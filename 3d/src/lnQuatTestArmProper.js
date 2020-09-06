@@ -386,10 +386,11 @@ function drawAnalogArm(curSliders,slerp) {
 // { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
 
 function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
+	const origShow = showRotationCurve;
 	for( let i = 0; i < 3; i++ ) {
-		showRotationCurve = (i===0)?"X":(i===1)?"Y":"Z";
+		let showRotationCurve_ = (i===0)?"X":(i===1)?"Y":"Z";
 	const lnQN = arr[showRotationCurveSegment-2]|| lnQ0; // prior base... 
-	if( showRotationCurve && ( showRotationCurveSegment >= 0 ) ) {
+	if( showRotationCurve_ && ( showRotationCurveSegment >= 0 ) ) {
 		let lnQ2;
 		//const lnQ_Here = arr[showRotationCurveSegment-1] || lnQ0;
 		const from = (rawAngles)?{ x: 0, y:0,z:0 }:null;
@@ -411,27 +412,27 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				lnQ2.y = from.y;
 				lnQ2.z = from.z;
 				lnQ2.dirty = true;
-				if( showRotationCurve == "X" ) 
+				if( showRotationCurve_ == "X" ) 
 					lnQ2.x = from.x + t;
-				else if( showRotationCurve == "Z" ) 
+				else if( showRotationCurve_ == "Z" ) 
 					lnQ2.z = from.z + t;
-				else if( showRotationCurve == "Y" ) 
+				else if( showRotationCurve_ == "Y" ) 
 					lnQ2.y = from.y + t;
 
 			        if( fixAxleRotation )
 					lnQ2.update().freeSpin( lnQ.nL, lnQ )
 				lnQ2.add( lnQBase );
-				doDrawBasis( lnQ2, lnQ2, 1, 1 );
+				doDrawBasis( lnQ2, lnQ2, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 		}else {
 			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
-				const lnQ1 = mkQuat().yaw((( showRotationCurve == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
-					.pitch((( showRotationCurve == "X" ) ?t:0)           +curSliders.lnQX[showRotationCurveSegment-1])
-					.roll((( showRotationCurve == "Z" ) ?t:0)            +curSliders.lnQZ[showRotationCurveSegment-1])
+				const lnQ1 = mkQuat().yaw((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
+					.pitch((( showRotationCurve_ == "X" ) ?t:0)           +curSliders.lnQX[showRotationCurveSegment-1])
+					.roll((( showRotationCurve_ == "Z" ) ?t:0)            +curSliders.lnQZ[showRotationCurveSegment-1])
 			        if( fixAxleRotation )
 					lnQ1.freeSpin( lnQ.nL, lnQ )
 				lnQ1.add( lnQBase );
-				doDrawBasis( lnQ1, lnQ1, 1, 1 );
+				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 		}
 	}
