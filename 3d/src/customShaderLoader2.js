@@ -3,9 +3,14 @@ import  "./three.js/three.min.js"
 import "./three.js/TrackballControls.js"
 import "./three.js/gameMouse.js"  // adds mouse to voxel world controller
 import "./three.js/personalFill.js"  // adds pools, constants, and some matrix convenience methods
+import {LineSegments2,LineMaterial,LineSegmentsGeometry} from "./three.js/ls.js"
+THREE.LineSegmentsGeometry2 = LineSegmentsGeometry;
+THREE.LineMaterial2 = LineMaterial;
+THREE.LineSegments2 = LineSegments2;
 
 import "./lnQuat.js"
 import "./lnQuatTest.js"
+
 
 import {Textures,on as TextureDone} from "./textureLoader2.js"
 import {TextureStack} from "./textureStack.canvas.js"
