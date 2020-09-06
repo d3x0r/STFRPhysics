@@ -19,6 +19,7 @@
 		<script src="./src/THREEx.WindowResize.js"></script>
 		<script src="./src/threex.dragpancontrols.js"></script>
 		<script src="./src/three.js/THREE.MeshLine.js"></script>
+		<script src="./src/three.js/ls.js" type="module" ></script>
 
 	<!--Mesh algorithms-->
 
@@ -243,7 +244,7 @@
 		const shapes = [];
 		var tickCallback= null;
 	
-		makeShapes();
+		//makeShapes();
 		function makeShapes() {
 			for( var i = 0; i < 5; i++ ) {
 				geometry = new THREE.CubeGeometry( 1, 1, 1 );
@@ -319,16 +320,24 @@
 
 
 			 var geometryHelper ;
+					const geometryNormalsvertices= [];
+					const geometryNormalsfaces= [];
+					const geometryNormalscolors= [];
+
 			if( document.getElementById("showNormals").checked ) {
 					geometryNormals	= new THREE.Geometry();
 					geometryNormals.vertices.length = 0;
 					geometryNormals.faces.length = 0;
 					geometryNormals.colors.length = 0;
+					//geometryNormals	= new THREE.LineSegmentsGeometry2();
+					geometryNormalsvertices.length = 0;
+					geometryNormalsfaces.length = 0;
+					geometryNormalscolors.length = 0;
 			}else geometryNormals = null;
 
 
 					
-
+	 		
 
 			var start = (new Date()).getTime();
 
@@ -357,6 +366,22 @@
 	 	 	 // geometry.elementsNeedUpdate = true;
 	 	 	 // geometry.normalsNeedUpdate = true;
 			if( geometryNormals ) {
+				const arr = [];
+				for( let p of geometryNormals.vertices ) {	
+					arr.push(p.x);arr.push(p.y);arr.push(p.z);
+				}
+				const arrc = [];
+				for( let p of geometryNormals.colors ) {	
+					arrc.push(p.r);arrc.push(p.g);arrc.push(p.b);
+				}
+				const newgeometryNormals	= new THREE.LineSegmentsGeometry2();
+				//const tmplineSegments =  new THREE.LineSegments( geometryNormals, linematerial );
+
+
+				newgeometryNormals.setPositions( arr );
+				
+				newgeometryNormals.setColors( arrc );
+				/*
 				var linematerial2 = new MeshLineMaterial({
 					color : 0xffffff
 				   , lineWidth : 0.1
@@ -370,13 +395,15 @@
 					ml.setGeometry( arr );
 		        
 				}
-		        
-				var linematerial = new THREE.LineBasicMaterial({
-					color : 0xffffff
-				   , linewidth : 3.0
+		                  */
+//				var linematerial = new THREE.LineBasicMaterial({
+				var linematerial = new THREE.LineMaterial2({
+					color : 0xffffffff
+				   , linewidth : 3
 				  , vertexColors: THREE.VertexColors
+					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
 				});
-				lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
+				lineSegments = new THREE.LineSegments2( newgeometryNormals, linematerial );
 				//lineSegments = new THREE.Mesh( ml.geometry, linematerial2 );
 				scene.add( lineSegments );
 			}
@@ -747,7 +774,7 @@ function blurSlider( slider ) {
 
 		// animation loop
 		function animate() {
-		        if( tickCallback )
+		        if( shapes.length && tickCallback )
 				tickCallback( shapes );
 			// loop on request animation loop
 			// - it has to be at the begining of the function
