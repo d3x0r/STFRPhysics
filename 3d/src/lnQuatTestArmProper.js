@@ -406,7 +406,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 
 		//const lnQ = arr[showRotationCurveSegment-2]|| lnQ0;
 		if( rawAngles ) {
-			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
+			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.08 ) {
 				// this works.
 				lnQ2.x = from.x;
 				lnQ2.y = from.y;
@@ -761,7 +761,7 @@ function drawCoordinateGrid() {
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
-		const normLen = 0.15*(steps/range);
+		const normLen = 0.5*(steps/range);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
@@ -782,9 +782,10 @@ function drawCoordinateGrid() {
 	        
 				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-				const ox = 2*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
-				const oy = 2*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
-				const oz = 2*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
+				const pointScalar = 2/ Math.PI;
+				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
+				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
+				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
 	        
 		
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
@@ -815,6 +816,7 @@ function drawCoordinateGrid() {
 	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
 		const basis = lnQ2.update().getBasisT( Del,from );
 		if( !s ) s = 1.0;
+		s = s/Math.PI;
 		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
 	if( t != lnQ2 && showArms )  {
@@ -916,14 +918,15 @@ function drawCoordinateGrid() {
 			}
 
 		//console.log( "Draw point:", x, y, z );
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.right.x*normal_del*s  ,(y)*2*spaceScale + basis.right.y*normal_del*s  , (z)*2*spaceScale + basis.right.z*normal_del*s  ))
+		const pointScalar = 2/ Math.PI;
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                               ,(y)*pointScalar*spaceScale                               , (z)*pointScalar*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
 		                                                                                                                                               
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                               ))
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.up.x*normal_del*s     ,(y)*2*spaceScale + basis.up.y*normal_del *s    , (z)*2*spaceScale + basis.up.z*normal_del*s     ))
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                               ,(y)*pointScalar*spaceScale                               , (z)*pointScalar*spaceScale                               ))
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.up.x*normal_del*s     ,(y)*pointScalar*spaceScale + basis.up.y*normal_del *s    , (z)*pointScalar*spaceScale + basis.up.z*normal_del*s     ))
 		                                                                                                                                               
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale                               ,(y)*2*spaceScale                               , (z)*2*spaceScale                                ))
-		normalVertices.push( new THREE.Vector3( (x)*2*spaceScale + basis.forward.x*normal_del*s,(y)*2*spaceScale + basis.forward.y*normal_del*s, (z)*2*spaceScale + basis.forward.z*normal_del*s ))
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                               ,(y)*pointScalar*spaceScale                               , (z)*pointScalar*spaceScale                                ))
+		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.forward.x*normal_del*s,(y)*pointScalar*spaceScale + basis.forward.y*normal_del*s, (z)*pointScalar*spaceScale + basis.forward.z*normal_del*s ))
 
 
 		{
