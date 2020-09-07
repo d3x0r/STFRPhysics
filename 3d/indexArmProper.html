@@ -71,6 +71,7 @@
 			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
+		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
 		     <br>
 		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
@@ -399,7 +400,7 @@
 //				var linematerial = new THREE.LineBasicMaterial({
 				var linematerial = new THREE.LineMaterial2({
 					color : 0xffffffff
-				   , linewidth : 3
+				   , linewidth : 2.75
 				  , vertexColors: THREE.VertexColors
 					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
 				});
@@ -704,9 +705,12 @@ function blurSlider( slider ) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
+
 			is = document.getElementById( "drawNormalBall" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "normalizeTangents" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showNormalBallCoords" );
 			is.onchange = updateMesh;
 			
 

@@ -36,7 +36,6 @@ let keepInertia = document.getElementById( "keepInertia" )?.checked;
 let applyAccel = document.getElementById( "applyAccel" )?.checked;
 
 
-
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
 let shownL = true;  //  p / nL
@@ -950,6 +949,7 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 3;
 	const normal_del = 0.25;
+	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
 	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
 	if(drawNormalBall/*draw normal ball with twist*/)
@@ -961,6 +961,8 @@ function DrawNormalBall(normalVertices,normalColors) {
 				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
 				//lnQ.twist( twistDelta );
 			drawN( lnQ, norm );
+			if( drawCoords )
+				doDrawBasis( lnQ, lnQ, 1, 1 );
 		}
 	}
 
@@ -1088,6 +1090,8 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
+		if( n === 1 )
+			twistDelta = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8;
 
 		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
