@@ -84,7 +84,7 @@
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
-		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked><br>
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 
 			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
@@ -676,6 +676,9 @@ function blurSlider( slider ) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "showNormal" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "showSliderCurves" );
+			is.onchange = updateMesh;
+
 
 			{
 				const is2 = document.getElementById( "showCoordinateGrid" );
