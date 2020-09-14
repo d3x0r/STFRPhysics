@@ -828,7 +828,8 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
 
-	if( Math.abs(ang) > 0.00001 ) {      // as bc     bs ac       as bs
+	if( Math.abs(ang) > 0.00001 ) {  // resulting angle has to be significant... or the normal is 0.
+		// as bc     bs ac       as bs
 		// vector rotation is just...
 		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
 		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
@@ -837,28 +838,28 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
 		const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
 		const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
-		const sAng = Math.sin(ang/2);
-	
-		const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		
+		const Clx = (ang)/(Math.abs(Cx)+Math.abs(Cy)+Math.abs(Cz));
 		/*
 		if( angleNorm !== 1 )
 			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
 		*/
 		//ang = 2*ang/angleNorm;
 		
-		q.nL = ang;
-		q.nR = sAng/Clx*ang;
-		q.qw = cosCo2;
-		q.s = sAng;
-		q.nx = Cx/sAng;
-		q.ny = Cy/sAng;
-		q.nz = Cz/sAng;
+		//q.nL = ang;
+		//q.nR = sAng/Clx*ang;
+		//q.qw = cosCo2;
+		//q.s = sAng;
+		//q.nx = Cx/sAng;
+		//q.ny = Cy/sAng;
+		//q.nz = Cz/sAng;
 	
-		q.x = Cx/Clx*ang;
-		q.y = Cy/Clx*ang;
-		q.z = Cz/Clx*ang;
+		q.x = Cx*Clx;
+		q.y = Cy*Clx;
+		q.z = Cz*Clx;
 
-		q.dirty = false;
+		q.dirty = true;
+		return q.update();
 	} else {
 		// two axles are coincident, add...
 		if( AdotB > 0 ) {

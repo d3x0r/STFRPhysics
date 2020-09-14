@@ -215,16 +215,16 @@ function meshCloud(data, dims) {
 	// index with [odd] [tet_of_cube] [0-5 line index]
 	// result is composite point data offset.
 	const edgeToComp = [
-		[[1*dim0*dim1*6  + 0,1*dim0*dim1*6  + 3,1,1*dim0*dim1*6  + 4,5,2]
-		 ,[1*6 + 0,1*6 + 2,4,1*6 + 1,5,3]
-		 ,[1*dim0*6  + 3,1*dim0*6  + 1,0,1*dim0*6  + 5,2,4]
-		 ,[1*dim0*dim1*6  + 1*dim0*6  + 3,1*dim0*dim1*6  + 4,1*dim0*6  + 5,1*dim0*dim1*6  + 1*6 + 0,1*6 + 2,1*dim0*6  + 1*6 + 1]
-		 ,[2,5,4,1*dim0*dim1*6  + 4,1*6 + 2,1*dim0*6  + 5]]
-		,[[0,1,3,2,5,4]
-		 ,[1*dim0*dim1*6  + 4,1*dim0*dim1*6  + 3,5,1*dim0*dim1*6  + 1*6 + 0,1*6 + 1,1*6 + 2]
-		 ,[1*dim0*dim1*6  + 1*dim0*6  + 3,1*dim0*dim1*6  + 0,1*dim0*6  + 1,1*dim0*dim1*6  + 4,2,1*dim0*6  + 5]
-		 ,[1*6 + 0,1*dim0*6  + 1*6 + 1,1*dim0*6  + 3,1*6 + 2,1*dim0*6  + 5,4]
-		 ,[4,5,1*6 + 2,2,1*dim0*dim1*6  + 4,1*dim0*6  + 5]
+		[ [1*dim0*dim1*6  + 0            , 1*dim0*dim1*6  + 3, 1            , 1*dim0*dim1*6  + 4      , 5      , 2                 ]
+		 ,[1*6 + 0                       , 1*6 + 2           , 4            , 1*6 + 1                 , 5      , 3                 ]
+		 ,[1*dim0*6  + 3                 , 1*dim0*6  + 1     , 0            , 1*dim0*6  + 5           , 2      , 4                 ]
+		 ,[1*dim0*dim1*6  + 1*dim0*6  + 3, 1*dim0*dim1*6  + 4, 1*dim0*6  + 5, 1*dim0*dim1*6  + 1*6 + 0, 1*6 + 2,1*dim0*6  + 1*6 + 1]
+		 ,[2                             , 5                 , 4            , 1*dim0*dim1*6  + 4      , 1*6 + 2,1*dim0*6  + 5      ]]
+		,[[0                             , 1                  , 3            , 2                       , 5                , 4       ]
+		 ,[1*dim0*dim1*6  + 4            , 1*dim0*dim1*6  + 3 , 5            , 1*dim0*dim1*6  + 1*6 + 0, 1*6 + 1          , 1*6 + 2 ]
+		 ,[1*dim0*dim1*6  + 1*dim0*6  + 3, 1*dim0*dim1*6  + 0 , 1*dim0*6  + 1, 1*dim0*dim1*6  + 4     , 2                 , 1*dim0*6  + 5]
+		 ,[1*6 + 0                       , 1*dim0*6  + 1*6 + 1, 1*dim0*6  + 3, 1*6 + 2                , 1*dim0*6  + 5     , 4         ]
+		 ,[4                             , 5                  , 1*6 + 2      , 2                      , 1*dim0*dim1*6  + 4, 1*dim0*6  + 5]
 		 ]
 		];
 	
@@ -546,10 +546,12 @@ function meshCloud(data, dims) {
 					if( useFace-- ) {
 						bits[dataOffset] = 1; // set any 1 bit is set here.
 						const fpi = facePointIndexes[odd][tet][invert][useFace];
+
 						for( var tri=0;tri< fpi.length; tri++ ){
 							const ai = baseOffset+fpi[tri][0];
 							const bi = baseOffset+fpi[tri][1];
 							const ci = baseOffset+fpi[tri][2];
+							
 							// ai, bi, ci are indexes into computed pointcloud layer.
 // --V-V-V-V-V-V-V-V-- GENERATE OUTPUT FACE --V-V-V-V-V-V-V-V--
 
