@@ -397,10 +397,22 @@ function drawAnalogArm(curSliders,slerp) {
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
 						}else {
-							normalVertices.push( new THREE.Vector3( (A[n].x - 2*to.nx)*spaceScale   ,( A[n].y - 2 * to.ny)*spaceScale      , (A[n].z-2*to.nz)*spaceScale  ))
-							normalVertices.push( new THREE.Vector3( (A[n].x + 0*to.nx)*spaceScale   ,( A[n].y + 0 * to.ny)*spaceScale      , (A[n].z+ 0*to.nz)*spaceScale  ))
-							normalVertices.push( new THREE.Vector3( (A[n].x - 0*to.nx)*spaceScale   ,( A[n].y - 0 * to.ny)*spaceScale      , (A[n].z-0*to.nz)*spaceScale  ))
-							normalVertices.push( new THREE.Vector3( (A[n].x + 2*to.nx)*spaceScale   ,( A[n].y + 2 * to.ny)*spaceScale      , (A[n].z+ 2*to.nz)*spaceScale  ))
+							const ax = to.x + from.x * delta;
+							const ay = to.y + from.y * delta;
+							const az = to.z + from.z * delta;
+
+							const l = ax*ax + ay*ay + az*az;
+
+							const s = Math.sqrt(l);
+
+							const nx = ax/s;
+							const ny = ay/s;
+							const nz = az/s;
+							
+							normalVertices.push( new THREE.Vector3( (A[n].x - 2*nx)*spaceScale   ,( A[n].y - 2 * ny)*spaceScale      , (A[n].z- 2*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 0*nx)*spaceScale   ,( A[n].y + 0 * ny)*spaceScale      , (A[n].z+ 0*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x - 0*nx)*spaceScale   ,( A[n].y - 0 * ny)*spaceScale      , (A[n].z- 0*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 2*nx)*spaceScale   ,( A[n].y + 2 * ny)*spaceScale      , (A[n].z+ 2*nz)*spaceScale  ))
 						}
 						pushN2(n,4.9,0.2);
 						pushN2(n,0.2,4.9);
