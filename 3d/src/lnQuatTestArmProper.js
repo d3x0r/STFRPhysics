@@ -36,6 +36,7 @@ let rawAngles = false;
 let keepInertia = document.getElementById( "keepInertia" )?.checked;
 let applyAccel = document.getElementById( "applyAccel" )?.checked;
 let showSliderCurves = false;
+let totalNormal = 0;
 let drawWorldAxles = false;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
@@ -828,17 +829,65 @@ function drawCoordinateGrid() {
 		
 		if( !minr ) minr = 0;
 		const normLen = 0.5*(steps/range);
+
+		if(0)
+		for( let z = -range; z <= range;  z += (range)/steps ) {
+			const lnQ = new lnQuat( {a:totalNormal, b:0, c:totalNormal-z } );
+			drawN( lnQ );
+			simpleBasis( lnQ );	
+			
+			//drawN( new lnQuat( {a:totalNormal, b:0, c:-z } ) );
+			//drawN( new lnQuat( {a:-totalNormal, b:0, c:-z } ) );
+			//drawN( new lnQuat( {a:-totalNormal, b:0, c:z } ) );
+			
+		}
+		// this just gives the solid ring around for the same total...
+		if(1)
+		for( let t = 0; t <= 1.0;  t += 1/steps ) {
+			const x = totalNormal * (1.0-t);
+			const z = totalNormal * t;
+			drawN( new lnQuat( {a:x, b:0, c:z } ) );
+			drawN( new lnQuat( {a:x, b:0, c:-z } ) );
+			drawN( new lnQuat( {a:-x, b:0, c:-z } ) );
+			drawN( new lnQuat( {a:-x, b:0, c:z } ) );
+			if(0){
+			drawN( new lnQuat( {a:x,  b:z, c:0 } ) );
+			drawN( new lnQuat( {a:x,  b:-z, c:0 } ) );
+			drawN( new lnQuat( {a:-x, b:-z, c:0 } ) );
+			drawN( new lnQuat( {a:-x, b:z, c:0 } ) );
+			drawN( new lnQuat( {a:0,  b:z , c:x  } ) );
+			drawN( new lnQuat( {a:0,  b:-z, c:x  } ) );
+			drawN( new lnQuat( {a:0, b:-z , c:-x } ) );
+			drawN( new lnQuat( {a:0, b:z  , c:-x } ) );
+			}
+		}
+	if(0)	
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
-					const ll = Math.abs(x)+Math.abs(y)+Math.abs(z);
-					const lr = Math.sqrt(x*x+y*y+z*z);
-					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
-					if( lnQ.nL > range ) continue;
-					const basis = lnQ.getBasis( );
-				if( (lr) > range ) continue;
+					const ll = Math.abs(cx+x)+Math.abs(cy+y)+Math.abs(cz+z);
+//					if( Math.abs( ll - Math.abs(totalNormal) ) > 0.05 ) continue;
+			if(0)
+					if( Math.abs( (Math.abs(z)+Math.abs(x)) - Math.abs(totalNormal) ) > 0.1 
+								|| Math.abs(y) > 0.1 ) continue;
+					//if( Math.abs( Math.abs(x) - Math.abs(totalNormal) ) > 0.1
+					//			|| Math.abs(y) > 0.1 ) continue;
+					//if( Math.abs( Math.abs(y) - Math.abs(totalNormal) ) > 0.2 ) continue;
+					//if( Math.abs( Math.abs(z) - Math.abs(totalNormal) ) > 0.2 ) continue;
+				if( (ll) > range ) continue;
 
 				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
+
+					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
+					simpleBasis( lnQ );	
+				}
+				
+			}
+			
+		}
+	
+		function simpleBasis(lnQ) {
+					const basis = lnQ.getBasis( );
 		
 				// the original normal direction; projected offset of sphere (linear scaled)
 				//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
@@ -846,14 +895,14 @@ function drawCoordinateGrid() {
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 		
-				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
+				//const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
 				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
 				const pointScalar = 2/ Math.PI;
 				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
 				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
 				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
 		
-		
+		                //drawN( lnQ );
 				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
 				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/normLen  ,oy*spaceScale + basis.right.y*normal_del /normLen , oz*spaceScale + basis.right.z*normal_del/normLen ))
 																				
@@ -870,13 +919,33 @@ function drawCoordinateGrid() {
 				normalColors.push( new THREE.Color( 0,0,0.9,0.25))
 				normalColors.push( new THREE.Color( 0,0,0.9,0.25 ))
 				
-					
-				}
-				
-			}
-			
 		}
+
+	function drawN( lnQ )
+	{
+	const v = { x:0,y:1,z:0};
+			simpleBasis(lnQ);
+			const new_v = lnQ.apply( v );
+			const basis = lnQ.getBasis( );
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			,new_v.y*spaceScale			, new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
+
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			     ,new_v.y*spaceScale			     , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
+
+			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
+			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
+			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
+			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
+			normalColors.push( new THREE.Color( 0,0,0.6,0.6))
+			normalColors.push( new THREE.Color( 0,0,0.6,0.6 ))
+			
 	
+	}
 	}
 
 	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
@@ -1006,6 +1075,8 @@ function drawCoordinateGrid() {
 			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 		}
 		}
+
+
 
 	}
 
@@ -1150,11 +1221,11 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let rotateZArm = document.getElementById( "drawArmFromZ" )?.checked;
 
 	if( rotateXArm )
-		;
+		armPrimary= 0;
 	else if( rotateYArm )
-		;
+		armPrimary= 1;
 	else if( rotateZArm )
-		;
+		armPrimary= 2;
 
 	let scalar = document.getElementById( "largeRange")?.checked;
 	let scalar2 = document.getElementById( "fineRange")?.checked;
@@ -1166,9 +1237,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
-		if( n === 1 )
+		if( n === 1 ) {
 			twistDelta = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8;
-
+		        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+		}
 		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
