@@ -106,6 +106,7 @@
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
 		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
+		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > 
 
 			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
 			   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
@@ -118,6 +119,12 @@
 		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
 
 		 - Draw Rotation Squares: <input style="display:none" type="checkbox" id="drawSquares" checked >
+		   <br>
+		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
+		 - Arm From Y<input type="radio" name="drawFrom" id="drawArmFromY"  >
+		 - Arm From Z<input type="radio" name="drawFrom" id="drawArmFromZ"  >
+		<br>
+
 		 show X-Y <input type="radio" name="drawMode" id="drawSquaresXY"  >
 		 - show Y-X <input type="radio" name="drawMode" id="drawSquaresYX" >
 		 - Mechanical: <input type="radio" name="drawMode" id="drawMechanicalRot" >
@@ -610,6 +617,14 @@
 			is = document.getElementById("applyAccel");
 			if( is ) is.onchange = updateMesh;
 
+			is = document.getElementById("drawArmFromX");
+			if( is ) is.onchange = updateMesh;
+			is = document.getElementById("drawArmFromY");
+			if( is ) is.onchange = updateMesh;
+			is = document.getElementById("drawArmFromZ");
+			if( is ) is.onchange = updateMesh;
+
+
 			is = document.getElementById("showRaw");
 			is.onchange = updateMesh;
 			is = document.getElementById("shownRnL");
@@ -721,6 +736,9 @@ function blurSlider( slider ) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawRotationAxles" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "drawWorldAxles" );
+			is.onchange = updateMesh;
+
 			is = document.getElementById( "drawRotationAllAxles" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );

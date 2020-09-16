@@ -35,7 +35,7 @@ let rawAngles = false;
 let keepInertia = document.getElementById( "keepInertia" )?.checked;
 let applyAccel = document.getElementById( "applyAccel" )?.checked;
 let showSliderCurves = false;
-
+let drawWorldAxles = false;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
@@ -353,18 +353,27 @@ function drawAnalogArm(curSliders,slerp) {
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
 						}else {
-							const ax = to.x + from.x * delta;
-							const ay = to.y + from.y * delta;
-							const az = to.z + from.z * delta;
 
-							const l = ax*ax + ay*ay + az*az;
+								let  nx;
+								let  ny;
+								let  nz;
+							if( drawWorldAxles ) {
+								const ax = to.x + from.x * delta;
+								const ay = to.y + from.y * delta;
+								const az = to.z + from.z * delta;
+					
+								const l = ax*ax + ay*ay + az*az;
+						
+								const s = Math.sqrt(l);
 
-							const s = Math.sqrt(l);
-
-							const nx = ax/s;
-							const ny = ay/s;
-							const nz = az/s;
-							
+								 nx = ax/s;
+								 ny = ay/s;
+								 nz = az/s;
+							 }else {
+								nx = to.nx;
+								ny = to.ny;
+								nz = to.nz;
+							}
 							normalVertices.push( new THREE.Vector3( (A[n].x - 2*nx)*spaceScale   ,( A[n].y - 2 * ny)*spaceScale      , (A[n].z- 2*nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 0*nx)*spaceScale   ,( A[n].y + 0 * ny)*spaceScale      , (A[n].z+ 0*nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*nx)*spaceScale   ,( A[n].y - 0 * ny)*spaceScale      , (A[n].z- 0*nz)*spaceScale  ))
@@ -1093,8 +1102,20 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	rawAngles = document.getElementById( "rawAngles")?.checked;
 	keepInertia = document.getElementById( "keepInertia" )?.checked;
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
-
+	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
+
+	let rotateXArm = document.getElementById( "drawArmFromX" )?.checked;
+	let rotateYArm = document.getElementById( "drawArmFromY" )?.checked;
+	let rotateZArm = document.getElementById( "drawArmFromZ" )?.checked;
+
+	if( rotateXArm )
+		;
+	else if( rotateYArm )
+		;
+	else if( rotateZArm )
+		;
+
 	let scalar = document.getElementById( "largeRange")?.checked;
 	let scalar2 = document.getElementById( "fineRange")?.checked;
 
