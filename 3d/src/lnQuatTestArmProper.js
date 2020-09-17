@@ -1292,9 +1292,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 				document.getElementById( "lnQYval"+n).textContent = (lnQ.y*180/Math.PI).toFixed(4);
 				document.getElementById( "lnQZval"+n).textContent = (lnQ.z*180/Math.PI).toFixed(4);
 			}else{
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.xcur).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.ycur).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.zcur).toFixed(4);
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.x).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.y).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.z).toFixed(4);
 			}
 		}
 		const xyr = lnQ.nR;
