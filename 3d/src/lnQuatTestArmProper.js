@@ -92,7 +92,9 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		      :armPrimary==1?{x:0,y:2,z:0}
 			:{x:0,y:0,z:2};
 
-
+	for( let zz = 1; zz < 2; zz++ ) {
+		//let fixAxleRotation = zz===1;
+		//let keepInertia = zz=== 0;
 	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale   ):new lnQuat(lnQ2);
 	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale ):new lnQuat(lnQ3);
 	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nL, t3_ts, timeScale ):new lnQuat(lnQ4);
@@ -162,7 +164,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		pushN(n);
 		}
 	}
-	
+	}	
 	return;
 
 
@@ -244,7 +246,9 @@ function drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-
+	for( let zz = 0; zz < 2; zz++ ) {
+		let fixAxleRotation = zz===1;
+		let keepInertia = zz=== 0;
 
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale ):new lnQuat(lnQ3);
@@ -342,7 +346,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 		if( showArms){
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			pushN(n);
+			pushN(n, zz/3+0.4);
 		}
 
 		function draw(q,from,to,delta)
@@ -441,6 +445,7 @@ function drawAnalogArm(curSliders,slerp) {
 			}
 		}
 		
+	}
 	}
 	
 	return;
@@ -1147,7 +1152,7 @@ function drawCoordinateGrid() {
 			}
 
 		//console.log( "Draw point:", x, y, z );
-		const pointScalar = 2/ Math.PI;
+		const pointScalar = 12/ Math.PI;
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
 																			       
@@ -1184,7 +1189,8 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)
 		for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
-			for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
+			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
+			for( let t = 3*Math.PI/8; t < 5*Math.PI/8; t+= 0.25/2 ){
 				let x = Math.sin(t );
 				const z = Math.cos(t);
 				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );

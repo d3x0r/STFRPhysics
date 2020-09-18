@@ -6,6 +6,11 @@ Mostly this project is just about exploring the rotation space of log-quaternion
 
 ## Preface
 
+So there's new or unusual about adding rotations, and log(quaternion) is actually correct in itself.
+
+
+### Old Preface
+
 There exists a coordinate space of rotations that's not self covering.
 
 The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
