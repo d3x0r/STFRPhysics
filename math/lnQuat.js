@@ -553,7 +553,7 @@ lnQuat.prototype.update = function() {
 
 	// norm-linear    this is / 3 usually, but the sine lookup would
 	//    adds a /3 back in which reverses it.
-	this.nL = (abs(this.x)+abs(this.y)+abs(this.z))/2;///(2*Math.PI); // average of total
+	this.nL = this.nR;//(abs(this.x)+abs(this.y)+abs(this.z))/2;///(2*Math.PI); // average of total
 	if( this.nR ){
 		this.nx = this.x/this.nR /* * this.nL*/;
 		this.ny = this.y/this.nR /* * this.nL*/;
