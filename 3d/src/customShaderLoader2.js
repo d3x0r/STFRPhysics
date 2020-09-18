@@ -8,7 +8,7 @@ THREE.LineSegmentsGeometry2 = LineSegmentsGeometry;
 THREE.LineMaterial2 = LineMaterial;
 THREE.LineSegments2 = LineSegments2;
 
-import "./lnQuat.js"
+import "./lnQuatSq.js"
 import "./lnQuatTest.js"
 
 

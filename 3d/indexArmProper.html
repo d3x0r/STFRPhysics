@@ -7,7 +7,7 @@
 
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuat.js"></script>
+		<script src="./src/lnQuatSq.js"></script>
 		<script src="./src/Quat.js"></script>
 		<script src="./src/lnQuatTestArmProper.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
@@ -24,6 +24,8 @@
 	<style>
 .controls { pointer-events: none; }
 input {pointer-events:all}
+
+/*
 #sliders tr td:nth-child(9), #sliders th:nth-child(9) {
     display: none;
 }
@@ -42,6 +44,7 @@ input {pointer-events:all}
 #sliders tr td:nth-child(8), #sliders th:nth-child(8) {
     display: none;
 }
+*/
 	</style>
 	<!--Mesh algorithms-->
 
@@ -136,12 +139,12 @@ input {pointer-events:all}
 		<p>
 		Show Axis/Angles: <input type="checkbox" id="showAxis" > Set Raw Angles:<input type="checkbox" id="rawAngles"> Show Degrees: <input type="checkbox" id="showDegrees" checked> 
 		<table id="sliders">
-			<col><col><col><col>
+			<!--col><col><col><col>
 			<col style="width:0">
 			<col style="width:0">
 			<col style="width:0">
 			<col style="width:0">
-			<col style="width:0">
+			<col style="width:0"-->
 		<tr id="time"><td colspan=5>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
 		</td></tr>

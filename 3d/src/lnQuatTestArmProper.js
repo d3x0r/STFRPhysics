@@ -84,6 +84,47 @@ function mkQuat( a,b,c,d ){
 	return new lnQuat( a, b, c, d );
 }
 
+function testAdditiveTest() {
+	const A = lnQ1.getBasis();
+	const B = { right : lnQ2.apply(A.right)
+		  , up : lnQ2.apply(A.up)
+		 , forward : lnQ2.apply(A.forward)
+		};
+	const Q3 = new lnQuat().fromBasis( B );
+
+	const A1 = lnQ2.getBasis();
+	const B1 = { right : lnQ1.apply(A1.right)
+		  , up : lnQ1.apply(A1.up)
+		 , forward : lnQ1.apply(A1.forward)
+		};
+	const Q13 = new lnQuat().fromBasis( B1 );
+
+	const Q4 = new lnQuat();
+	const Q5 = new lnQuat();
+	for( let t = 0; t < 1.0; t += 0.0625 ) {
+		Q4.x = lnQ1.x * (1-t) + Q3.x * t;
+		Q4.y = lnQ1.y * (1-t) + Q3.y * t;
+		Q4.z = lnQ1.z * (1-t) + Q3.z * t;
+		doDrawBasis( Q4, Q4, 2.3, 1.0, 0, null, 0.99 );
+		Q4.x = lnQ2.x * (1-t) + Q13.x * t;
+		Q4.y = lnQ2.y * (1-t) + Q13.y * t;
+		Q4.z = lnQ2.z * (1-t) + Q13.z * t;
+		doDrawBasis( Q4, Q4, 2.3, 1.0, 0, null, 0.5 );
+		Q5.x = lnQ1.x * t;
+		Q5.y = lnQ1.y * t;
+		Q5.z = lnQ1.z * t;
+		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.99 );
+		Q5.x = lnQ2.x * t;
+		Q5.y = lnQ2.y * t;
+		Q5.z = lnQ2.z * t;
+		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.5 );
+		Q5.x = lnQ1.x + lnQ2.x * t;
+		Q5.y = lnQ1.y + lnQ2.y * t;
+		Q5.z = lnQ1.z + lnQ2.z * t;
+		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.99 );
+	}
+}
+
 function drawDigitalTimeArm(curSliders, slerp) {
 	
 	const origin = {x:0,y:0,z:0};
@@ -1147,7 +1188,7 @@ function drawCoordinateGrid() {
 			}
 
 		//console.log( "Draw point:", x, y, z );
-		const pointScalar = 2/ Math.PI;
+		const pointScalar = 12/ Math.PI;
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
 																			       
@@ -1528,12 +1569,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	}
 
 
-
+	testAdditiveTest()
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )
 		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
-
+	
 	DrawNormalBall(normalVertices,normalColors);
 
 	drawCoordinateGrid();

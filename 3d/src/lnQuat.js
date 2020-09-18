@@ -279,6 +279,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	this.x = this.nx * lNorm;
 	this.y = this.ny * lNorm;
 	this.z = this.nz * lNorm;
+	//console.log( "Reuslt1:", x, y, z, "Result2:", Math.sqrt(Basis.right.x*basis.right.x+1)/2, Math.sqrt(Basis.right.x*basis.right.x+1)/2
 	//console.log( "frombasis primary values:", this.x, this.y, this.z );
 
 	this.dirty = true;
