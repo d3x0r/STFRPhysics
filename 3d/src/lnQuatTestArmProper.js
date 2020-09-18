@@ -77,8 +77,8 @@ function test1() {
 //test1();
 
 function mkQuat( a,b,c,d ){
-	const scalar = Math.sqrt(a*a+b*b+c*c+d*d);
-	const lin = Math.abs(a)+Math.abs(b)+Math.abs(c)+Math.abs(d);
+	//const scalar = Math.sqrt(a*a+b*b+c*c+d*d);
+	//const lin = Math.abs(a)+Math.abs(b)+Math.abs(c)+Math.abs(d);
 	//return new lnQuat( a*scalar/lin, b*scalar/lin ,c*scalar/lin,d*scalar/lin );
 	//return new lnQuat( a*lin/scalar, b*lin/scalar ,c*lin/scalar,d*lin/scalar );
 	return new lnQuat( a, b, c, d );
@@ -136,10 +136,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	for( let zz = 1; zz < 2; zz++ ) {
 		//let fixAxleRotation = zz===1;
 		//let keepInertia = zz=== 0;
-	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale   ):new lnQuat(lnQ2);
-	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nL, t2_ts, timeScale ):new lnQuat(lnQ3);
-	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nL, t3_ts, timeScale ):new lnQuat(lnQ4);
-	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.nL, t4_ts, timeScale ):new lnQuat(lnQ5);
+	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nR, lnQ1, timeScale   ):new lnQuat(lnQ2);
+	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nR, t2_ts, timeScale ):new lnQuat(lnQ3);
+	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nR, t3_ts, timeScale ):new lnQuat(lnQ4);
+	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.nR, t4_ts, timeScale ):new lnQuat(lnQ5);
 
 	if( applyAccel ) {
 		t2_ts.add( lnQ1 );
@@ -291,10 +291,10 @@ function drawAnalogArm(curSliders,slerp) {
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
 
-	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL, lnQ1, timeScale ):new lnQuat(lnQ2);
-	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL, t2, timeScale ):new lnQuat(lnQ3);
-	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL, t3, timeScale ):new lnQuat(lnQ4);
-	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL, t4, timeScale ):new lnQuat(lnQ5);
+	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nR, lnQ1, timeScale ):new lnQuat(lnQ2);
+	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nR, t2, timeScale ):new lnQuat(lnQ3);
+	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nR, t3, timeScale ):new lnQuat(lnQ4);
+	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nR, t4, timeScale ):new lnQuat(lnQ5);
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
 
@@ -533,7 +533,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 					lnQ2.y = from.y + t;
 
 				if( fixAxleRotation )
-					lnQ2.update().freeSpin( lnQ.nL, lnQ )
+					lnQ2.update().freeSpin( lnQ.nR, lnQ )
 				lnQ2.add( lnQBase );
 				doDrawBasis( lnQ2, lnQ2, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
@@ -543,7 +543,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 					.pitch((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1])
 					.roll((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1])
 				if( fixAxleRotation )
-					lnQ1.freeSpin( lnQ.nL, lnQ )
+					lnQ1.freeSpin( lnQ.nR, lnQ )
 				lnQ1.add( lnQBase );
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
@@ -680,10 +680,10 @@ function drawSquare( n, q, qPrior ) {
 
 	if( drawRotIter || drawMechanicalRot ) 
 	{
-		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
-		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
-		const p3 = ( next.applyDel({x:-onef1,y: onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
-		const p4 = ( next.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nL));
+		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
+		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
+		const p3 = ( next.applyDel({x:-onef1,y: onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
+		const p4 = ( next.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -1421,7 +1421,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 		lnQ.update();
 
-		const len = lnQ.nL;
+		const len = lnQ.nR;
 		const qlen = lnQ.nR;
 		if( axis ) {
 			document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
@@ -1439,7 +1439,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			}
 		}
 		const xyr = lnQ.nR;
-		const xyl = lnQ.nL;
+		const xyl = lnQ.nR;
 		const showInterpolant = document.getElementById( "drawInterp"+n)
 		if( showInterpolant )  
 			drawRotationInterpolant[n-1] = showInterpolant.value;
@@ -1549,9 +1549,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	showCoords = document.getElementById( "showCoords" )?.checked ;
 
 	if( document.getElementById( "showScaled" )?.checked ) {
-		showScaledPoints = true;
-	}else 			
 		showScaledPoints = false;
+	}
+	//else 			
+	//	showScaledPoints = false;
 
 	check = document.getElementById( "showX1" );
 	if( check ) {
