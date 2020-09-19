@@ -1,0 +1,253 @@
+
+<html>
+<head></head>
+<body>
+   <p>
+	<div style="position:relative">
+    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
+	<div style="position:absolute;top:0">
+	<p>Axis 1 X<input type="range" id="X1" value="50"> <span id="X1val"></span> 
+	Axis 1 Y<input type="range" id="Y1" value="50"> <span id="Y1val"></span> 
+	Axis 1 Z<input type="range" id="Z1" value="53"> <span id="Z1val"></span>
+	Angle 1<input type="range" id="A1" value="60"> <span id="A1val"></span> 
+	 </p>
+	<p>Axis 2 X<input type="range" id="X2" value="50"> <span id="X2val"></span> 
+	Axis 2 Y<input type="range" id="Y2" value="48"> <span id="Y2val"></span> 
+	Axis 2 Z<input type="range" id="Z2" value="55"> <span id="Z2val"></span>
+	Angle 2<input type="range" id="A2" value="55"> <span id="A2val"></span> 
+	 </p>
+
+	<p>steps<input type="range" id="steps" value=50 min=1 max = 500> <span id="stepval"></span> 
+	
+	<p>Point X<input type="range" id="PointX" value="50"> <span id="PointXval"></span> 
+	 Y<input type="range" id="PointY" value="50"> <span id="PointYval"></span> 
+	 Z<input type="range" id="PointZ" value="53"> <span id="PointZval"></span>
+	 </p>
+
+	<hr>
+	<table id="table"></table>
+
+
+	</div>
+	</div>
+
+
+</body>
+<script src="./Quat.js"></script>
+<script src="./lnQuat.js"></script>
+<script>
+	let tmp = null;
+
+	const inputs = { 
+		steps : document.getElementById( "steps" )
+		,stepval : document.getElementById( "stepval" )
+		,A1: { x:document.getElementById( "X1" )
+	       , y:document.getElementById( "Y1" )
+	       , z:document.getElementById( "Z1" )
+	       , a:document.getElementById( "A1" )
+	       , xo:document.getElementById( "X1val" )
+	       , yo:document.getElementById( "Y1val" )
+	       , zo:document.getElementById( "Z1val" )
+	       , ao:document.getElementById( "A1val" )
+		}
+	       , A2: { x:document.getElementById( "X2" )
+	       , y:document.getElementById( "Y2" )
+	       , z:document.getElementById( "Z2" )
+	       , a:document.getElementById( "A2" )
+	       , xo:document.getElementById( "X2val" )
+	       , yo:document.getElementById( "Y2val" )
+	       , zo:document.getElementById( "Z2val" )
+	       , ao:document.getElementById( "A2val" )
+		}
+	       , P: { x:document.getElementById( "PointX" )
+	       , y:document.getElementById( "PointY" )
+	       , z:document.getElementById( "PointZ" )
+	       , xo:document.getElementById( "PointXval" )
+	       , yo:document.getElementById( "PointYval" )
+	       , zo:document.getElementById( "PointZval" )
+		}
+		
+	};
+	for( var f in inputs ) {
+		for( var g in inputs[f] ) {
+			if( inputs[f][g] )
+				inputs[f][g].oninput = updateCalc;
+		}
+	}
+	makeTable();
+	updateCalc();
+
+	function makeTable() {
+		const table = document.getElementById( "table" );
+		
+		const row1 = table.insertRow();
+		row1.insertCell().textContent = "A1 then A2" ;
+		const cells1 = {
+			x:row1.insertCell(),
+			y:row1.insertCell(),
+			z:row1.insertCell(),
+			};
+		inputs.p1 = cells1;
+
+		const row1a = table.insertRow();
+		const cells1a = {
+			x:row1a.insertCell(),
+			y:row1a.insertCell(),
+			z:row1a.insertCell(),
+			};
+		inputs.p1a = cells1a;
+
+
+
+		const row2 = table.insertRow();
+		row2.insertCell().textContent = "A2 then A1" ;
+		const cells2 = {
+			x:row2.insertCell(),
+			y:row2.insertCell(),
+			z:row2.insertCell(),
+			};
+		inputs.p2 = cells2;
+
+		const row2a = table.insertRow();
+		row2a.insertCell().textContent = "---" ;
+		const cells2a = {
+			x:row2a.insertCell(),
+			y:row2a.insertCell(),
+			z:row2a.insertCell(),
+			};
+		inputs.p2a = cells2a;
+
+		const rowavg = table.insertRow();
+		rowavg.insertCell().textContent = "Above Avg." ;
+
+		const cellsavg = {
+			x:rowavg.insertCell(),
+			y:rowavg.insertCell(),
+			z:rowavg.insertCell(),
+			};
+		inputs.pavg = cellsavg;
+
+		const rowsep = table.insertRow();
+		rowsep.insertCell().textContent = "---" ;
+
+		const row3 = table.insertRow();
+		row3.insertCell().textContent = "A2+A1" ;
+		const cells3 = {
+			x:row3.insertCell(),
+			y:row3.insertCell(),
+			z:row3.insertCell(),
+			};
+		inputs.p3 = cells3;
+
+		const rowerr = table.insertRow();
+		rowerr.insertCell().textContent = "Diff" ;
+		const cellserr = {
+			x:rowerr.insertCell(),
+			y:rowerr.insertCell(),
+			z:rowerr.insertCell(),
+			};
+		inputs.perr = cellserr;
+
+	}
+
+function updateCalc() {
+	let vals = { A1:{ x: Number(inputs.A1.x.value)
+		, y: Number(inputs.A1.y.value )
+		, z: Number(inputs.A1.z.value )
+		, a: Number(inputs.A1.a.value )
+		},
+		A2 : { x:Number(inputs.A2.x.value)
+		, y: Number(inputs.A2.y.value )
+		, z: Number(inputs.A2.z.value )
+		, a: Number(inputs.A2.a.value )
+		},
+		P : { x:Number(inputs.P.x.value)
+		, y: Number(inputs.P.y.value )
+		, z: Number(inputs.P.z.value )
+		}
+		}
+
+	vals.A1.x = (vals.A1.x/50)-1;
+	vals.A1.y = (vals.A1.y/50)-1;
+	vals.A1.z = (vals.A1.z/50)-1;
+	vals.A1.a = ((vals.A1.a/50)-1) * 2 * Math.PI;
+	         
+	vals.A2.x = (vals.A2.x/50)-1;
+	vals.A2.y = (vals.A2.y/50)-1;
+	vals.A2.z = (vals.A2.z/50)-1;
+	vals.A2.a = ((vals.A2.a/50)-1) * 2 * Math.PI;
+
+	inputs.A1.xo.textContent = vals.A1.x.toFixed(4);
+	inputs.A1.yo.textContent = vals.A1.y.toFixed(4);
+	inputs.A1.zo.textContent = vals.A1.z.toFixed(4);
+	inputs.A1.ao.textContent = vals.A1.a.toFixed(4);
+
+	inputs.A2.xo.textContent = vals.A2.x.toFixed(4);
+	inputs.A2.yo.textContent = vals.A2.y.toFixed(4);
+	inputs.A2.zo.textContent = vals.A2.z.toFixed(4);
+	inputs.A2.ao.textContent = vals.A2.a.toFixed(4);
+
+	inputs.P.xo.textContent = vals.P.x.toFixed(4);
+	inputs.P.yo.textContent = vals.P.y.toFixed(4);
+	inputs.P.zo.textContent = vals.P.z.toFixed(4);
+
+	const lnQ1 = new lnQuat( vals.A1.a, vals.A1 );
+	const lnQ2 = new lnQuat( vals.A2.a, vals.A2 );
+
+	const lnQ3 = lnQ1.add2( lnQ2 );
+	const steps = inputs.steps.value;
+	inputs.stepval.textContent = steps;
+	const iterApp = (q,q2,p)=>{
+		for( let n = 0; n < steps; n++ ) {
+			p = q.applyDel(p, 1/steps);
+			p = q2.applyDel(p, 1/steps);
+		}
+		return p;
+	}
+	
+	const p1 = iterApp( lnQ1, lnQ2, vals.P );
+	const p2 = iterApp( lnQ2, lnQ1, vals.P );
+	//const p1a = lnQ2.apply( vals.P );
+	//const p2a = lnQ1.apply( p1a );
+	const p3 = lnQ3.apply( vals.P );
+
+	inputs.pavg.x.textContent = ((p1.x+p2.x)/2).toFixed(4);
+	inputs.pavg.y.textContent = ((p1.y+p2.y)/2).toFixed(4);
+	inputs.pavg.z.textContent = ((p1.z+p2.z)/2).toFixed(4);
+	
+	inputs.perr.x.textContent = ((p1.x+p2.x)/2 - p3.x).toFixed(4);
+	inputs.perr.y.textContent = ((p1.y+p2.y)/2 - p3.y).toFixed(4);
+	inputs.perr.z.textContent = ((p1.z+p2.z)/2 - p3.z).toFixed(4);
+
+	inputs.p1.x.textContent = p1.x;
+	inputs.p1.y.textContent = p1.y;
+	inputs.p1.z.textContent = p1.z;
+
+	//inputs.p1a.x.textContent = p1a.x;
+	//inputs.p1a.y.textContent = p1a.y;
+	//inputs.p1a.z.textContent = p1a.z;
+
+	inputs.p2.x.textContent = p2.x;
+	inputs.p2.y.textContent = p2.y;
+	inputs.p2.z.textContent = p2.z;
+
+
+	//inputs.p2a.x.textContent = p2a.x;
+	//inputs.p2a.y.textContent = p2a.y;
+	//inputs.p2a.z.textContent = p2a.z;
+
+	inputs.p3.x.textContent = p3.x;
+	inputs.p3.y.textContent = p3.y;
+	inputs.p3.z.textContent = p3.z;
+
+
+}
+
+
+</script>
+
+
+</html>
+
+
+
