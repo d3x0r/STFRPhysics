@@ -39,8 +39,8 @@ rather than across all time from `0` until that instant, or beyond.  Simply sett
 this constant, is equivalent to a 'rotation' . Rotation as a math operation may be considered a subset of curvatures specified in rotation space.
 
 In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
-represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
-the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
+represent it's angular velocity.   The unit vector representing velocity is the direction of motion, while
+the unit of the vector representing angular velocity is the axis of rotation.  The length of the velocity
 vector represents the speed of an object, similarly the sum of the angles of the angular velocity [represents](#regarding-specific-representation)
 the total angular warp of coodinate space.
 
@@ -71,84 +71,12 @@ Operational Note, and speculation: Especially at high curvatures, the difference
 ---
 
 
-## Log of Complex Numbers and Exponentiation of Log Complex Numbers
 
-The natural log of the complex number `0+i` is `π/2`.  This is a scalar, however, it should be noted that this scalar is builtin to the 
-standard arcsin/arccos functions,  which return `-π to π`, instead of `-2 to 2`;  `-2 * π/2 = -π`  and `2 * π/2 = π`. 
-The resulting radians from sin/cos and their related arcsin/arccos functions include the `π/2` multiplication from `ln(i)`. 
+### Quaternion
 
-The imaginary part doesn't collapse and become a real,  but instead remains as a dual number with a notation `ε`, and the `π/2` 
-scalar being builtin to the current defintions of sin/cos/arcsin/arccos, the notation of `ln(i)=ε` will be used rather than `ln(i)=πε/2`.  (Figure A)
+To Be Deleted...
 
-__Figure A__
-``` js
-   ln(A+Bi)   = a+bε
-   exp(a+bε)  = A+Bi
-```
-
-### Complex Numbers and Their Natural Log
-
-Complex numbers of the form `A+Bi`, have a natural log, a generic log-complex will be called `lnC`.
-
-Apply `exp()` to log-complex from a complex number, involves normalizing the real an imaginary 
-components, and get the angle of rotation (Figure B).  This expression is simplified from other factors...
-
-
-__Figure B__
-``` js
-    ln(A+Bi) = ln( sgn(A) * sqrt(A*A+B*B) ) + arcsin(B/sgn(A) * sqrt(A*A+B*B))*2 * ε
-```
-
-Exponent of a log complex (Figure C).
-
-Figure C
-``` js
-    exp( A+Bε ) = exp(A) * cos( |B| ) + exp(A) * B/sqrt(B*B) * sin( |B| )i
-```
-
-(Figure C) simplifies for the following reasons:
-  - `cos(x)=cos(-x)` the absolute value in the `cos()` expression is not needed.
-  - `B/sqrt(B*B)` keeps the sign of B, which is lost in the `sin(|B|)`, is restored; so the abosolute value in the `sin()` expression is not needed.
-  - B has a single dimension, this looks like it's equivalent to (Figure D).
-
-__Figure D__
-``` js
-    exp( A+Bε ) = exp(A) * cos(B) + exp(A) * sin(B)i
-```
-
-
-Which is the common expression of `ln(A+Bi)` shown in (figure E).
-
-__Figure E__
-``` js
-    exp( A+Bε ) = A * cos(B) + A * sin(B)i
-```
-
-It should be noted that (Figure D) simplifies specifically in the case of unit-vector rotations, `A=0` and `exp(0)=1` to become (Figure F).
-
-__Figure F__
-``` js
-    exp( 0+Bε ) = cos(B) + sin(B)i
-```
-### Vector Complex Extension
-
-Instead of a single scalar `B` in the complex number, this can be represented with a multipart vector, which has a square normal of 1 scaled by a
-common scalar `b`. (Figure G)
-
-__Figure G__
-``` js
-    if   B = b(x,y,z)
-    then A+Bi = A + b(x,y,z)i
-```
-
-When for a unit scaled `B`, `B/sqrt(BB)`, the equivalent expression for a unit vector is `(x,y,z)/sqrt(xx+yy+zz)`.  However, this is not the only
-way to define a unit vector, it might be defined as `+/-1=B/|B|` or `(x,y,z)/(|x|+|y|+|z|))`; another definition might be `+/-1=B/cbrt(BBB)` or 
-`(x/y/z)/cbrt(xxx+yyy+zzz)`, as an example, magnetic fields have a falloff of the cube root<sup>[\[1\]](#footnote-1)</sup>.
-
-
-### Conversion from Vector Complex to Quaternion
-
-The conversion from vector complex to quaternion could be specified as a given rule (Figure H).  
+The conversion to quaternion could be specified as a given rule (Figure H).  
 Intuitively, expanding the vector across a matrix assigns the imaginary parts.  
 
 The math partials look like `sin(θ/2)` and `cos(θ/2)` for a quaternion; however, when the multiplications
@@ -167,7 +95,7 @@ __Figure H__
 ### Log Vector Complex to Quaternion conversion
 
 The sum of the curvatures is the total rotation of the system, or is the angle around the axle to curve all
-other spacial points by.  `|X|+|Y|+|Z|` is the total rotation.  The axis of rotation is the same coordinates
+other spacial points by.  `sqrt( x*x + y*y + z*z )` is the total rotation.  The axis of rotation is the same coordinates
 normalized by their square normal `sqrt(X*X+Y*Y+Z*Z)`.  Using the same method for `exp(lnC)` (figure C), 
 while treating B as a vector (Figure G).
 
@@ -177,7 +105,7 @@ __Figure G__
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * exp(A) * sin( |x|+|y|+|z| ) i
+                      ) * exp(A) * sin( |A| ) i
 ```
 
 
@@ -189,14 +117,14 @@ __Figure H__
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) * 1 * sin( |x|+|y|+|z| ) i
+                      ) * 1 * sin( sqrt( x*x + y*y + z*z ) ) i
 
   -becomes-
   exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|) ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
-                      ) sin( |x|+|y|+|z| ) i
+                      ) sin( sqrt( x*x + y*y + z*z ) ) i
 ```
 
 (Figure H) resembles the axis-angle conversion to quaternion `cos(θ/2) + sin(θ/2) * xi + sin(θ/2) * yj + sin(θ/2) * zk`  where `x,y,z` are a normalized axis of rotation, 
@@ -245,11 +173,12 @@ Note; while this method almost works, I do think there's a more reliable and dir
 
 __Figure L__
 ``` js
+	θ = sqrt( x*x + y*y + z*z )
 	as = sin( θ )
 	ac = cos( θ )
-	q = { qw: cos( |x|+|y|+|z| / 2 )
-            , s : sin( |x|+|y|+|z| / 2 )
-	    , nL : |x|+|y|+|z|
+	q = { qw: cos( sqrt( x*x + y*y + z*z ) / 2 )
+            , s : sin( sqrt( x*x + y*y + z*z ) / 2 )
+	    , nL : sqrt( x*x + y*y + z*z )
 	    , nx : x / sqrt( x*x + y*y + z*z )
 	    , ny : y / sqrt( x*x + y*y + z*z )
 	    , nz : z / sqrt( x*x + y*y + z*z )
@@ -295,10 +224,10 @@ __Figure M__
 ``` js
 	if( !del ) del = 1.0; // assume 1.0 as time to show.
 	
-	nR = sqrt(x*x + y*y + z*z );
-	nt = |x|+|y|+|z|;
-	s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-	c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
+	θ = sqrt( x*x + y*y + z*z )
+	s = Math.sin( del * θ );    // sin/cos are the function of exp()
+	c = Math.cos( del * θ ); // sin/cos are the function of exp()
+	m = 1 - c; // sin/cos are the function of exp()
 
 	qx = x/nR; // normalizes the imaginary parts
 	qy = y/nR; // output = 1(unit vector)  in  x,y,z parts.
@@ -311,21 +240,21 @@ the `sin()` and `cos()` precomputed.
 
 __Figure N__
 ``` js
-	xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-	yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-	xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+	xy = m*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(t))
+	yz = m*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(t))
+	xz = m*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(t))
 
-	wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
-	wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
-	wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+	wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(t)
+	wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(t)
+	wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(t)
 
-	xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-	yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-	zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+	xx = m*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(t))
+	yy = m*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(t))
+	zz = m*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(t))
 
-	basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
-                , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
-                , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+	basis = { right  :{ x : c + xx , y : wz + xy, z : xz - wy }
+                , up     :{ x : xy - wz, y : c + yy , z : wx + yz }
+                , forward:{ x : wy + xz, y : yz - wx, z : c + zz  }
         };
 ```
 
@@ -337,20 +266,21 @@ short `exp()` builtin as cached values.
 
 __Figure S__
 ``` js
-	nst = q.s  //sin(θ/2)
-	qw = q.qw  //cos(θ/2)
+	θ  = sqrt( x*x + y*y + z*z )
+	s  = sin(θ/2)
+	c  = cos(θ/2)
 
-	qx = q.nx*nst;
-	qy = q.ny*nst;
-	qz = q.nz*nst;
+	qx = q.nx*s;
+	qy = q.ny*s;
+	qz = q.nz*s;
 
 	tx = 2 * (qy * v.z - qz * v.y)
 	ty = 2 * (qz * v.x - qx * v.z)
 	tz = 2 * (qx * v.y - qy * v.x)
 
-	  x : v.x + qw * tx + ( qy * tz - ty * qz )
-	  y : v.y + qw * ty + ( qz * tx - tz * qx )
-	  z : v.z + qw * tz + ( qx * ty - tx * qy )
+	x = v.x + c * tx + ( qy * tz - ty * qz )
+	y = v.y + c * ty + ( qz * tx - tz * qx )
+	z = v.z + c * tz + ( qx * ty - tx * qy )
 
 ```
 
@@ -390,15 +320,6 @@ There are some things this can't do
  - doesn't compare products of numbers, especially prime numbers that are a modulo of (2?)π.
 
 
-### Regarding Specific Representation
-
-It may seem that a more 'primary' representation of rotation is axis-angle, as that also does not lose precision, and can easily be scaled for relative comparisons with other
-rotations. This would be the same effect as carrying speed and a unit vector representing a direction for velocity calculations; but similarly the `(x,y,z)` coordinates of a velocity vector are actually 4 dimensional `(speed, dx, dy, dz )`.  The speed of a body spinning (2π,2π,2π) is not `sqrt(3) * 2π`, but rather is `3 * 6π`.
-
-Consider that before a rotation of more than 2π can happen, it first has to have a rotation vector `(1/3,1/3,1/3)*2π`.  `(2/3,2/3,2/3)*2π` is 2 rotations around the axle, and `(3/3,3/3,3/3)*2π` is 3 rotations arond the axis in the direction of (1,1,1).
-
-One might also say that velocity or spacial coordinates should be `(speed,x,y,z)` define the rate to change, and the normal direction to go, with a unit vector is spherical. Although curvatures or rotations make things feel spherical they are not themselves spherical.
-
 ### Generalized Parameterization of Log Complex (experimental)
 
 Further experimentation can explore the possibilty of splitting the single scalar into two parts; or perhaps a ratio factor of amount to apply spin vs linear(real) factor.
@@ -414,7 +335,7 @@ which, on exponentiation can be (figure P)
 
 __Figure P__
 ``` js
-  theta = |x|+|y|+|z|;
+  theta = sqrt( x*x + y*y + z*z );
   sqNorm = sqrt( x*x + y*y + z*z );
   exp(ln(A1))*cos(theta/2) + exp(ln(A2)) * sin(theta/2) * ( x/sqNorm, y/sqNorm, z/sqNorm )i
 ```
@@ -458,10 +379,10 @@ a cross product of the actual acceleration vector.
 
 __Figure R__
 ``` js
-   exp( 0+(x,y,z)ε ) = cos( (|x|+|y|+|z|)/2) 
-                     + sin((|x|+|y|+|z|)/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
-                     + sin((|x|+|y|+|z|)/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
+   exp( 0+(x,y,z)ε ) = cos( (sqrt( x*x + y*y + z*z ))/2) 
+                     + sin( (sqrt( x*x + y*y + z*z ))/2) * ( (x/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin( (sqrt( x*x + y*y + z*z ))/2) * ( (y/sqrt(x*x+y*y+z*z))/sin(angle/2)
+                     + sin( (sqrt( x*x + y*y + z*z ))/2) * ( (z/sqrt(x*x+y*y+z*z))/sin(angle/2)
 ```
 
 

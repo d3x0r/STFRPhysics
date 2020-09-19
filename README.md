@@ -331,3 +331,25 @@ thetaHat = v + de;
  search is 'fast enough'; in practice objects interact simultaneously with very few other objects
  and those relations are __temporally coherant__.  [3D delaunay tessalation](https://www.ljll.math.upmc.fr/perronnet/delaunay3d/delaunay3d.html)
 
+---
+
+## Approach 2
+
+# Rotations
+
+All rotations can be modeled using a gyroscope located at the origin of a coordinate system. The direction of the 
+axle through the rotor is the axis of rotation, and the turn of the rotor around the axis from a certain 0 point represents
+the angular velocity with which the space is transformed around the axis.
+
+Rotations which are relative to the current location can be composited in rotation coordinates; before being applied to a rotation.
+Rotations which are rlative to other rotations need to be rotated around the base axis, however, the path from the end of the previous rotation to the new one starts at the previous, and is added to this one.
+
+It doesn't HAVE to be done that way, if the rotation is always applied at the target value, instead of iterated between two states, then the 
+origin of the rotation does not matter; however, it can be advantageous to know that base position.
+
+For any specific X/Y/Z coordinate in rotation space, there is only one representation of that vector.
+If within a single frame, a rotation around the Y axis is applied, the base frame is spun around the Y axis; this means the X and Z direction vectors are also rotating.  An addition X rotation from the position in 
+rotation space will be applied as if the rotation was applied to the Z axis, the composite the rotation of the X and Y in the same way as if the rotation was performed the other way.
+Rotation around the X axis rotates the frame such that a change in the Y will now be aligned with the Z axis, which is also heading in the same direction as the previous addition.
+
+This is a way to combine angular velocities and get a net axis/angle of rotation.  This is not the same a rotation applied to a rotation.

@@ -4,22 +4,18 @@ The natural log of a quaternion represents curving space by 3 angles around 3 ax
 
 The rotation from each axle coordinate represent rotating the plane perpendicular to the specified axis simultaneously with all other axles.  Although the measures can be considered in angles, the representation is actually the arc-length of the curve; an angle implies a rotation around a point, where a curvature is a delta applied to the current point in an inertial direction.
 
-Just an observational note: log quaternions have rings, or octaves of rotations; that is for rotations greater than 4<math>\pi</math> have related curves.  Curvatures of things that approach this boundary appear to chaotically jump orbits.
+Just an observational note: log quaternions have rings, or octaves of rotations; that is for rotations greater than <math>+/-2\pi</math> have related curves; at .
+
+
 
 :<math>
-\begin{bmatrix}
- X\\
- Y\\
- Z\\
+Q = [ $X$ $Y$ $Z$ ]
 \end{bmatrix}
 </math>
-Other related values are immediately derivable.
-:<math>
-\begin{matrix}
-normal_{square}= \sqrt(XX+YY+ZZ)\\
-normal_{linear} = |X|+|Y|+|Z|
-\end{matrix}
-</math>
+Other related values are immediately derivable, such as the length (Euclidean norm) of the vector,
+:<math>||$V$|| = \sqrt(XX+YY+ZZ)</math>
+and its 1-norm (sometimes called the Manhattan norm),
+:<math>||$V$||_1 = |X|+|Y|+|Z|</math>
 The total angle of rotation....
 :<math>
    \theta = normal_{linear} / 2
