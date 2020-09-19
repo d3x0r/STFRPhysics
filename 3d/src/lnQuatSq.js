@@ -116,7 +116,7 @@ function lnQuat( theta, d, a, b ){
 				}
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
-					const l1 = Math.abs(b)+Math.abs(theta.b)+Math.abs(theta.c);
+					const l1 = Math.abs(theta.b)+Math.abs(theta.b)+Math.abs(theta.c);
 					const l3 = Math.sqrt(theta.a*theta.a+theta.b*theta.b+theta.c*theta.c);
 
 					this.x = theta.a * l1 / l3;

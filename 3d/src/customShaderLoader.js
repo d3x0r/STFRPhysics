@@ -5,7 +5,6 @@ import "./three.js/gameMouse.js"  // adds mouse to voxel world controller
 import "./three.js/personalFill.js"  // adds pools, constants, and some matrix convenience methods
 
 import "./lnQuatSq.js"
-import "./lnQuatTest.js"
 
 import {Textures,on as TextureDone} from "./textureLoader.js"
 import {TextureStack} from "./textureStack.canvas.js"

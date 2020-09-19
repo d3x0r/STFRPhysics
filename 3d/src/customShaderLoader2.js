@@ -9,7 +9,6 @@ THREE.LineMaterial2 = LineMaterial;
 THREE.LineSegments2 = LineSegments2;
 
 import "./lnQuatSq.js"
-import "./lnQuatTest.js"
 
 
 import {Textures,on as TextureDone} from "./textureLoader2.js"

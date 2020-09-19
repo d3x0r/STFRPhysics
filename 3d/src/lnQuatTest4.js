@@ -6,15 +6,7 @@ let turnCount = 12;
 let stepCount = 1000;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
-let showInvCoordinateGrid = false;
-let showRawCoordinateGrid = false;
 let twistCount = 1;
-
-
-let showRaw = true;  // just raw x/y/z at x/y/z
-let shownRnL = true;  // p * nL / nR
-let shownL = true;  //  p / nL
-let shownR = true;  // p.n(xyz)  p / nR
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var priorHere;
@@ -53,42 +45,36 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
 		
-		doDrawBasis( lnQ, fibre, (q,x)=>x * q.nL, true );
+		doDrawBasis( lnQ, fibre, (q,x)=>x * q.θ, true );
 		
 	}
 
-	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
+	if( showCoordinateGrid  ) {
 		const range = (  2 ) * Math.PI;
 		const minRange = (0 ) * Math.PI;
-		drawRange( 0,0,0, range, 12*Math.PI, Math.PI*2, showRawCoordinateGrid, showInvCoordinateGrid );
+		drawRange( 0,0,0, range, 12*Math.PI, Math.PI*2 );
 	}
 	return;
 
 	// graph of location to rotation... 
-	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
+	function drawRange( cx,cy,cz,range,steps, minr, invert ) {
 		
 		if( !minr ) minr = 0;
+		minr = minr*minr;
+		const r = range*range;
 		const normLen = 0.15*(steps/range);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
-				
-				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) > minr ) continue;
-				//if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
-					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
+				const l = x*x+y*y+z*z;
+				if( l > r ) continue;
+				//if( l > minr ) continue;
+				const lnQ = new lnQuat( 0, cx+x, cy+y, cz+z );
 				const basis = lnQ.getBasis( );
 	        
-				// the original normal direction; projected offset of sphere (linear scaled)
-				//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
-				//normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-	        
-				const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z))/2;
-				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
-				const ox = unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nx);
-				const oy = unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.ny);
-				const oz = unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL/2:lnQ.nL*lnQ.nz);
+				const ox = lnQ.x;
+				const oy = lnQ.y;
+				const oz = lnQ.z;
 	        
 		
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
@@ -145,14 +131,14 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalVertices.push( new THREE.Vector3( (f(lnQ2,n?lnQ2.nx:lnQ2.x))*spaceScale   ,(f(lnQ2,n?lnQ2.ny:lnQ2.y))*spaceScale      , (f(lnQ2,n?lnQ2.nz:lnQ2.z))*spaceScale  ))
 			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
 			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
-			prior.nL = lnQ2.nL;
+			prior.θ = lnQ2.θ;
 			prior.nx = lnQ2.nx;
 			prior.ny = lnQ2.ny;
 			prior.nz = lnQ2.nz;
 			prior.x = lnQ2.x;
 			prior.y = lnQ2.y;
 			prior.z = lnQ2.z;
-		}else prior = { nL:lnQ2.nL, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz,x:lnQ2.x,y:lnQ2.y,z:lnQ2.z }
+		}else prior = { θ:lnQ2.θ, nx:lnQ2.nx,ny:lnQ2.ny,nz:lnQ2.nz,x:lnQ2.x,y:lnQ2.y,z:lnQ2.z }
 
 	}
 
@@ -335,41 +321,12 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 	console.log( "Current Sliders", curSliders );
 
-	let check = document.getElementById( "showCoordinateGrid" );
-	if( check ) {
-		showCoordinateGrid = check.checked;
-	}
-	check = document.getElementById( "drawNormalBall" );
+	showCoordinateGrid = document.getElementById( "showCoordinateGrid" )?.checked;
+
+	let check = document.getElementById( "drawNormalBall" );
 	if( check ) {
 		drawNormalBall = check.checked;
 	}
-
-	check = document.getElementById( "showInvCoordinateGrid" );
-	if( check ) {
-		showInvCoordinateGrid = check.checked;
-	}
-	check = document.getElementById( "showRawCoordinateGrid" );
-	if( check ) {
-		showRawCoordinateGrid = check.checked;
-	}
-
-	check = document.getElementById( "showRaw" );
-	if( check ) {
-		showRaw = check.checked;
-	}
-	check = document.getElementById( "shownRnL" );
-	if( check ) {
-		shownRnL = check.checked;
-	}
-	check = document.getElementById( "shownR" );
-	if( check ) {
-		shownR = check.checked;
-	}
-	check = document.getElementById( "shownL" );
-	if( check ) {
-		shownL = check.checked;
-	}
-
 
 	document.getElementById( "lnQXval").textContent = A;
 	document.getElementById( "lnQYval").textContent = B;
