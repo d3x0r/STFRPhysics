@@ -7,8 +7,7 @@
 
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuat.js"></script>
-		<script src="./src/Quat.js"></script>
+		<script src="./src/lnQuatSq.js"></script>
 		<script src="./src/lnQuatTestRelative.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
@@ -20,14 +19,6 @@
 		<script src="./src/threex.dragpancontrols.js"></script>
 
 	<!--Mesh algorithms-->
-	<script src="./src/marchingcubes.js"></script>
-	<script src="./src/marchingtetrahedra.js"></script>
-	<script src="./src/marchingtetrahedra2.js"></script>
-	<script src="./src/marchingtetrahedra3.js"></script>
-	<script src="./src/marchingtetrahedra4.js"></script>
-	<script src="./src/surfacenets.js"></script>
-
-	<script src="./src/perlinnoise.js"></script>
 
 		<link href="./src/main.css" rel="stylesheet">
 	</head>
@@ -116,8 +107,6 @@
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
-		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
 		 // , 'Marching Cubes': MarchingCubes
 		 // , 'Marching Tetraheda' : MarchingTetrahedra

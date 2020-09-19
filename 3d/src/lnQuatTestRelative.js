@@ -11,11 +11,6 @@ let showRawCoordinateGrid = false;
 let twistCount = 2;
 
 
-let showRaw = true;  // just raw x/y/z at x/y/z
-let shownRnL = true;  // p * nL / nR
-let shownL = true;  //  p / nL
-let shownR = true;  // p.n(xyz)  p / nR
-
 function drawArm(curSliders,normalVertices,normalColors) {
 	const spaceScale = 5;
 	const normal_del = 1;
@@ -44,10 +39,10 @@ function drawArm(curSliders,normalVertices,normalColors) {
 	//const t4 = t3.add2( lnQ4 );
 	//const t5 = t4.add2( lnQ5 );
 
-	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nL*2, lnQ1 );
-	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nL*2, t2 );
-	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nL*2, t3 );
-	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nL*2, t4 );
+	const t2 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1 );
+	const t3 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2 );
+	const t4 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3 );
+	const t5 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4 );
 
 	if(1)
 	{
@@ -144,7 +139,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 		{
 			let tmp;
 			tmp = lnQ2.sub2( lnQ1 ).update();
-			lnQ1.freeSpin( tmp.nL*2, {x:tmp.nx,y:tmp.ny,z:tmp.nz} );
+			lnQ1.freeSpin( tmp.θ, {x:tmp.nx,y:tmp.ny,z:tmp.nz} );
 			doDrawBasis( lnQ1, { x: -4, y : -1.5, z:0} );	
 				const pt = {x:(-4),y:-1.0,z:0};
 
@@ -288,7 +283,7 @@ return;
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
 		
-		doDrawBasis( lnQ, fibre, (q,x)=>x * q.nL, true );
+		doDrawBasis( lnQ, fibre, true );
 		
 	}
 
