@@ -1,0 +1,166 @@
+http://mathb.in/45267
+---
+Notation:
+ 
+ - a vector : $[a,b,c,...]$
+ - 1-norm of a vector: $ ||[x,y,z]||_1 = \sqrt[1] {|x^1|+|y^1|+|z^1|} $ or $ |x|+|y|+|z| $ 
+     - or for : $ [v_1,v_2,v_3,..] $, the 1-norm is: $ \sum_{i=1}^n |v_i|  $
+ - 2-norm of a vector: $ ||[x,y,z]|| = \sqrt { x^2+y^2+z^2 } $
+   - or for: $ [v_1,v_2,v_3,..] $, the 2-norm is: $ \sqrt { \sum_{i=1}^n v_i^2 } $
+
+---
+## AAA to Human Readable AAA
+
+Given $A$ as angle-angle-angle vector $[{X},{Y} ,{Z}] $ 
+
+Human Readable: $ \frac { A ||A|| } {||A||_1} $
+
+---
+## AAA to axis-angle
+
+Given $A$ as angle-angle-angle vector $[{X},{Y} ,{Z}] $ 
+
+Axis-Angle: $ [ \frac {A} {||A||}, ||{A}|| ] $
+
+---
+## axis-angle to AAA
+
+given axis-angle:
+$ A_a =[ {x},{y},{z},{{\theta}}]  $, $A_r=[x,y,z]$, and $A_\theta = \theta$.
+
+Angle angle angle: $   \frac  {{A_\theta}A_r} {||A_r||} $
+
+---
+
+
+## AAA To Quaternion
+
+Given $A$ as angle-angle-angle vector $[{X},{Y} ,{Z}]$
+
+Quaternion: [$\cos(\frac {||A||} {2} ),  \sin ( \frac {||A||} {2} ) \frac A {|||A||} $]
+
+
+## Quaternion to AAA
+
+Given $A$ as angle-angle-angle vector $[{X},{Y} ,{Z}]$
+
+Quaternion: [$\cos(\frac {||A||} {2} ),  \sin ( \frac {||A||} {2} ) \frac A {|||A||} $]
+
+
+---
+## Conversion from Normal Vector(Y)
+
+Representation of a normal as a rotation, this assumes that the vector $(0,1,0)$ is 'up'.  If some other axle is considered primary, the coordinates can be simply swapped.
+
+This assume a unit vector in the direction of the normal
+$N = [ X, Y, Z ]$
+
+
+The rotation axis is the $X$,$Z$ coordinate(or $Y$,$X$ if $Z$ is 'up', or $Y$,$Z$ if $X$ is 'up')...
+$   \alpha = |X| + |Z|$
+
+If $\alpha = 0$ then result: $[0,0,0]$
+else result: $ [      cos^{-1}( \frac {Y} {||N||} ) \frac X \alpha, 	0, cos^{-1}( \frac Y {||N||}) \frac Z \alpha ] $
+
+## Align Normal using Basis
+The default tangent and bi-tangent of rotations which only have their normal set, results in tangents and bi-tangents that are irregular.  Alternatively build a basis matrix, and convert from basis using the above mentioned method. 
+Compute the normal of the above, and the matrix to convert...
+And then use the basis to log quaternion conversion...
+
+$\begin{matrix}    R =  [      cos^{-1}( \frac Y {||N||} ) \frac X \alpha, 	0, cos^{-1}( \frac Y {||N||} ) \frac Z \alpha ] \\
+	E = \sqrt { R_Z^2+R_X^2 } \\
+\begin{bmatrix}
+(Y  \frac {-R_X }{ E })&X&\frac {R_Z}{E} \\
+ (Z  \frac {R_Z}{E})-(X \cdot \frac {-R_X }{ E } )&Y&0\\
+ (-(Y  \frac {R_Z}{E} )&Z&\frac {-R_X }{ E }
+\end{bmatrix}
+\end{matrix}
+$
+
+
+## Align Normal Directly
+
+Or This is the direct computation to result with a log quaternion; compute the above result vector and then...
+
+
+This is the angle $angle = cos^{-1} ( ( Y + 1 ) * ( 1 - {\frac X E} ) / 2 - 1 ) $
+
+
+$\begin{matrix}
+        yz = sin \beta X \\
+	xz = ( 2 - (1-\cos \beta) (X^2 + Z^2) )  {\frac Z E}\\
+	xy = sin \beta  X {\frac Z E}   + sin \beta  Z  (1-{\frac X E})
+\end{matrix} \\
+ \begin{bmatrix}
+                            \frac{yz}{\sqrt(yz^2 + xz^2 + xy^2)} &
+							\frac{xz}{\sqrt(yz^2 + xz^2 + xy^2)} &
+							\frac{xy}{\sqrt(yz^2 + xz^2 + xy^2)}
+\end{bmatrix}                            
+$
+
+and finally compute the resulting log quaternion.
+
+Result : $\begin{bmatrix}
+  \frac{n_x \cdot angle}{|n_x| + |n_y| + |n_z| }&
+  \frac{n_y \cdot angle}{|n_x| + |n_y| + |n_z| }&
+  \frac{n_z \cdot angle}{|n_x| + |n_y| + |n_z| }
+\end{bmatrix} $
+
+---
+
+## Rodriguez Rotation
+
+The input for this is a lnQuat, and an axis to rotate the rotation around and an angle around the axis to rotate.
+
+Normalized axis of rotation...
+
+given: 
+
+- ${A} = [X_1, Y_1 ,Z_1] $   
+  - Spin Angle $\alpha = ||A||$
+  - axis $A_x$ = $A/||A||$
+- ${B} = [X_2, Y_2 ,Z_2] $  
+  - Spin Angle $\beta = ||B||$
+  - axis $B_x$ = $B/||B||$.
+
+Rotation angle: $\cos \frac{\gamma}{2} = \cos \alpha   \cos \beta  + \sin \alpha    \sin \beta  (  A_x \cdot B_x )$
+
+get the result angle: $ \gamma = 2 \cos^{-1}( \cos \frac {\gamma}{2} )$
+
+
+Compute axis : $C$ = $  \sin \beta  \cos \alpha  (A_x)  + \sin \alpha  \cos \beta (B_x) + \sin \alpha \sin \beta  ( A_x ⨯ B_x ) $
+
+result : $\frac {\gamma C} {||C||}$
+
+
+
+## AAA to Matrix
+
+given: ${A} = [X, Y ,Z] $
+
+convert to angle-axis  $ \theta = ||A|| $, and $[x,y,z]$ = $\begin{bmatrix} \frac {X} {||A||} & \frac {Y} {||A||} &  \frac {Z} {||A||} \end{bmatrix} $
+
+
+Compute some partial expressions:$\begin{matrix}
+   x_y = xy(1-\cos \theta) &   w_x = x\sin \theta  &  x_x = xx(1-\cos \theta) \\
+   y_z = yz(1-\cos \theta) &    w_y = y\sin \theta &  y_y = yy(1-\cos \theta) \\
+   x_z = xz(1-\cos \theta) &    w_z = z\sin \theta &  z_z = zz(1-\cos \theta) 
+\end{matrix}\\$
+
+
+Compute the resulting matrix: $\begin{bmatrix}
+\cos \theta+x_x &  x_y + w_z      & w_y + x_z \\
+ w_z + x_y      & \cos \theta+y_y & y_z - w_x \\
+ x_z - w_y      &  w_x + y_z      & \cos \theta+z_z
+\end{bmatrix} $
+ 
+
+Expanded : $    \begin{bmatrix}
+\cos \theta+x^2 (1-\cos \theta)     &   xy(1-\cos \theta) + z\sin \theta & y\sin \theta + xz(1-\cos \theta) \\
+ z\sin \theta + xy(1-\cos \theta)   & \cos \theta+y^2 (1-\cos \theta)    & yz(1-\cos \theta) - x\sin \theta \\
+xz(1-\cos \theta) - y\sin \theta    &  x\sin \theta + yz(1-\cos \theta)  & \cos \theta+z^{2}(1-\cos \theta)
+\end{bmatrix} $
+
+
+
+
