@@ -1,3 +1,4 @@
+let pointScalar = 12/ Math.PI;
 
 let armPrimary = 1; // 0 = x, 1=y, 2=z
 let A,B,C,D,E;  // slider values
@@ -374,15 +375,30 @@ function drawAnalogArm(curSliders,slerp) {
 						normalColors.push( new THREE.Color( 0,1.0,0,1.0 ))
 						normalColors.push( new THREE.Color( 0,0,1.0,1.0))
 						normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
+
+
 					}
 				}
 			
 				if( from ) {
 					doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
-				} else 
+				} else {
 					doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
+				}	
 
 			}
+
+				if( from ) {
+				const delta2 = delta - timeScale/100.0;
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x + to.x * delta2)*spaceScale ,pointScalar*( from.y  + to.y * delta2)*spaceScale    , pointScalar*(from.z  + to.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x+ to.x * delta)*spaceScale   ,pointScalar*( from.y + to.y * delta)*spaceScale      , pointScalar*(from.z + to.z * delta)*spaceScale  ))
+				} else {
+				const delta2 = delta - timeScale/100.0;
+				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta2)*spaceScale   ,pointScalar*( 0 * (1-delta2) + to.y * delta2)*spaceScale      , pointScalar*(0 * (1-delta2) + to.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta)*spaceScale   ,pointScalar*( 0 * (1-delta) + to.y * delta)*spaceScale      , pointScalar*(0 * (1-delta) + to.z * delta)*spaceScale  ))
+				}	
+				pushN( n );
+
 			if( showArms )
 			{
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
@@ -1098,7 +1114,6 @@ function drawCoordinateGrid() {
 			}
 
 		//console.log( "Draw point:", x, y, z );
-		const pointScalar = 12/ Math.PI;
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
 		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
 																			       
@@ -1275,6 +1290,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 	let scalar = document.getElementById( "largeRange")?.checked;
 	let scalar2 = document.getElementById( "fineRange")?.checked;
+
+	if( scalar2 && !scalar ) pointScalar = (12/ Math.PI);
+	if( !scalar2 && !scalar ) pointScalar = (3/ Math.PI);
+	if( scalar2 && scalar ) pointScalar = (2/ Math.PI);
+	if( !scalar2 && scalar ) pointScalar = ( Math.PI/2);
+
 
 	let axis = document.getElementById( "showAxis")?.checked;
 	let degrees = document.getElementById( "showDegrees")?.checked;
