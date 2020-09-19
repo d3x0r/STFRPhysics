@@ -99,11 +99,11 @@ function lnQuat( theta, d, a, b ){
 // angle-angle-angle  {a:,b:,c:}
 					const l1 = Math.abs(theta.b)+Math.abs(theta.b)+Math.abs(theta.c);
 					const l3 = Math.sqrt(theta.a*theta.a+theta.b*theta.b+theta.c*theta.c);
-
-					this.x = theta.a * l1 / l3;
-					this.y = theta.b * l1 / l3;
-					this.z = theta.c * l1 / l3;
-					this.update();
+					if( l3 > 0.000001 ) {
+						this.x = theta.a * l1 / l3;
+						this.y = theta.b * l1 / l3;
+						this.z = theta.c * l1 / l3;
+					}
 					return;
 				}
 				else if( "x" in theta )

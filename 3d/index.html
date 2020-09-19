@@ -7,7 +7,7 @@
 
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuat.js"></script>
+		<script src="./src/lnQuatSq.js"></script>
 		<script src="./src/lnQuatTest.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
@@ -18,16 +18,6 @@
 		<script src="./src/THREEx.WindowResize.js"></script>
 		<script src="./src/threex.dragpancontrols.js"></script>
 
-	<!--Mesh algorithms-->
-	<script src="./src/marchingcubes.js"></script>
-	<script src="./src/marchingtetrahedra.js"></script>
-	<script src="./src/marchingtetrahedra2.js"></script>
-	<script src="./src/marchingtetrahedra3.js"></script>
-	<script src="./src/marchingtetrahedra4.js"></script>
-	<script src="./src/dual-marching-tetrahedra-3D.js"></script>
-	<script src="./src/surfacenets.js"></script>
-
-	<script src="./src/perlinnoise.js"></script>
 
 		<link href="./src/main.css" rel="stylesheet">
 	</head>
@@ -83,13 +73,6 @@
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Dual Marching Tetrahedra (DCL-volume)' : DualMarchingTetrahedra3
-		  , 'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
-		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
-		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
-		 // , 'Marching Cubes': MarchingCubes
-		 // , 'Marching Tetraheda' : MarchingTetrahedra
-		//	,  'Naive Surface Nets': SurfaceNets
 		};
 		var testdata = {};
 		var testelements = {};
@@ -97,16 +80,11 @@
 
 		function updateMesh() {
 
-		  scene.remove( surfacemesh );
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
 
 
-		  var mesher = meshers[ document.getElementById("mesher").value ]
-		var field  = testdata[ document.getElementById("datasource").value ]( document.getElementById("fillOutside").checked?-1
-			          :document.getElementById("fillInside").checked?1
-			          :0
-			 )
+		  var mesher = null
 
 			 var geometryHelper ;
 			 	  //Create surface mesh
@@ -132,72 +110,20 @@
 					geometryNormals.colors.length = 0;
 			}else geometryNormals = null;
 
-			var fieldElements  = testelements[ document.getElementById("datasource").value ]( field, document.getElementById("fillOutside").checked?-1
-			          :document.getElementById("fillInside").checked?1
-			          :0 );
 
 
 			
 			var start = (new Date()).getTime();
-			var inflatVal = document.getElementById( "inflation" ).value;
-			if( inflatVal < 50 )
-				inflatVal = ( 10/(60-inflatVal));
-			else 
-				inflatVal = 1+( inflatVal - 50 ) / 5;
 
 
-
-			let maximize = document.getElementById( "maximize" ).checked;
-			let minimize = document.getElementById( "minimize" ).checked;
-			let midify = document.getElementById( "midify" ).checked;
-			let harden = document.getElementById( "harden" ).checked;
-			let brick = document.getElementById( "brick" ).checked;
-
-			let n = 0;
-			var newData = [];
-			for( var z = 0; z < field.dims[2]; z++ ) {
-				for( var y = 0; y < field.dims[1]; y++ ) {
-					for( var x = 0; x < field.dims[0]; x++ ) {
-						var a = field.data[n];
-						if( a > 0 ) {
-							if( harden ) {
-								newData.push( 9.0 );  // 1:10
-							} else if( brick ) {
-								newData.push( 1.0 );  // 1:10
-							} else if( midify ) {
-								newData.push( 1.0 );
-							} else if( minimize ) {
-								newData.push( 500 );
-							}
-							else if( maximize ) {
-								newData.push( 0.0000001 );
-							}
-							else {
-								newData.push( a * inflatVal );
-							}
-						}else {
-							if( harden ) {	
-								newData.push( -1 );  // 1:10
-							} else if( brick ) {
-								newData.push( -9 );  // 1:10
-							} else if( midify ) {
-								newData.push( -1.0 );
-							} 
-							else
-								newData.push( a );
-						}
-						n++;
-					}
-				}
-			}
 
 	  var opts = {
-                  elements : fieldElements,
-		  minimize : document.getElementById( "minimize" ).checked,
-		  maximize : document.getElementById( "maximize" ).checked,
-		  inflation : inflatVal,
-		  vertices : geometry.vertices,
-		  faces : geometry.faces,
+                  elements : null,
+		  minimize : null,
+		  maximize : null,
+		  inflation : 0,
+		  vertices : null,
+		  faces : null,
 		  normalVertices : geometryNormals && geometryNormals.vertices,
 		  normalColors : geometryNormals && geometryNormals.colors,
 		  smoothShade : document.getElementById( "smoothShade" ).checked,
