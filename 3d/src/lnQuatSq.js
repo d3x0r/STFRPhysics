@@ -745,6 +745,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
 	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
 	//const angleMax = ( q.θ + Math.abs(th) );
+	const xmy = th/2 - q.θ/2
+	const xpy = th/2 + q.θ/2
+	
 	const as = Math.sin( th/2);
 	const ac = Math.cos( th/2);
 	const qw = Math.cos( q.θ/2);
@@ -754,7 +757,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	const ss = qs * as;
 	//const cc = qw * ac;
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
-	const cosCo2 = ( ( 1-AdotB )*Math.cos( q.θ/2-th/2 ) + (1+AdotB)*Math.cos(th/2+q.θ/2  ) )/2;
+	const cosCo2 = ( ( 1-AdotB )*Math.cos( xmy ) + (1+AdotB)*Math.cos( xpy ) )/2;
 	//const cosCo2 = cc - ss* AdotB;
 
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
@@ -765,10 +768,20 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 			// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
 			// when btheta is small, baxis is small pi/2 cos is 0 so this is small
 			// when both are large, cross product is dominant (pi/2)
+
+		const crsX = (ay*q.nz-az*q.ny);
+		const ss1 = (Math.sin(xmy)+Math.sin(xpy))
+		const ss2 = (Math.sin(xpy)-Math.sin(xmy))
+		const cc1 = ( Math.cos(xmy) - Math.cos(xpy) )
+		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 )/2;
+		const crsY = (az*q.nx-ax*q.nz);
+		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 )/2;
+		const crsZ = (ax*q.ny-ay*q.nx);
+		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 )/2;
 			
-		const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
-		const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
-		const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
+		//const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
+		//const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
+		//const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 		const sAng = Math.sin(ang/2);
 	
 		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));

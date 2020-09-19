@@ -319,7 +319,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	tmp = document.getElementById( "AZval" );
 	if( tmp ) tmp.textContent = AzRot;
 
-	console.log( "Current Sliders", curSliders );
+	//console.log( "Current Sliders", curSliders );
 
 	showCoordinateGrid = document.getElementById( "showCoordinateGrid" )?.checked;
 
