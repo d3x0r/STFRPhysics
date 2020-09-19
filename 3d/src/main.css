@@ -1,3 +1,6 @@
+.controls { pointer-events: none; }
+input {pointer-events:all}
+
 body {
 	overflow	: hidden;
 	padding		: 0;
