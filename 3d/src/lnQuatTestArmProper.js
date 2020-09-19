@@ -40,7 +40,7 @@ let totalNormal = 0;
 let drawWorldAxles = false;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
-let shownRnL = true;  // p * nL / nR
+let shownRnL = true;  // p * θ / nR
 let shownL = true;  //  p / nL
 let shownR = true;  // p.n(xyz)  p / nR
 const lnQ0 = new lnQuat();
@@ -66,8 +66,8 @@ function test1() {
 	// this test fails... although I would think that Y and PQ5 should be close
 	const P = new lnQuat( 0, 0.1, 0.2, 0.3 ).update();
 	const Q = new lnQuat( 0, -0.3, -0.1, 0.2 ).update();
-	const PQ1 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.nL, Q );
-	const PQ5 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.nL*0.5, Q );
+	const PQ1 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ, Q );
+	const PQ5 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ*0.5, Q );
 	SLERP=true;
 	const X = P.slerp( PQ1, 0.5 );
 	SLERP=false;
@@ -84,47 +84,6 @@ function mkQuat( a,b,c,d ){
 	return new lnQuat( a, b, c, d );
 }
 
-function testAdditiveTest() {
-	const A = lnQ1.getBasis();
-	const B = { right : lnQ2.apply(A.right)
-		  , up : lnQ2.apply(A.up)
-		 , forward : lnQ2.apply(A.forward)
-		};
-	const Q3 = new lnQuat().fromBasis( B );
-
-	const A1 = lnQ2.getBasis();
-	const B1 = { right : lnQ1.apply(A1.right)
-		  , up : lnQ1.apply(A1.up)
-		 , forward : lnQ1.apply(A1.forward)
-		};
-	const Q13 = new lnQuat().fromBasis( B1 );
-
-	const Q4 = new lnQuat();
-	const Q5 = new lnQuat();
-	for( let t = 0; t < 1.0; t += 0.0625 ) {
-		Q4.x = lnQ1.x * (1-t) + Q3.x * t;
-		Q4.y = lnQ1.y * (1-t) + Q3.y * t;
-		Q4.z = lnQ1.z * (1-t) + Q3.z * t;
-		doDrawBasis( Q4, Q4, 2.3, 1.0, 0, null, 0.99 );
-		Q4.x = lnQ2.x * (1-t) + Q13.x * t;
-		Q4.y = lnQ2.y * (1-t) + Q13.y * t;
-		Q4.z = lnQ2.z * (1-t) + Q13.z * t;
-		doDrawBasis( Q4, Q4, 2.3, 1.0, 0, null, 0.5 );
-		Q5.x = lnQ1.x * t;
-		Q5.y = lnQ1.y * t;
-		Q5.z = lnQ1.z * t;
-		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.99 );
-		Q5.x = lnQ2.x * t;
-		Q5.y = lnQ2.y * t;
-		Q5.z = lnQ2.z * t;
-		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.5 );
-		Q5.x = lnQ1.x + lnQ2.x * t;
-		Q5.y = lnQ1.y + lnQ2.y * t;
-		Q5.z = lnQ1.z + lnQ2.z * t;
-		doDrawBasis( Q5, Q5, 2.3, 1.0, 0, null, 0.99 );
-	}
-}
-
 function drawDigitalTimeArm(curSliders, slerp) {
 	
 	const origin = {x:0,y:0,z:0};
@@ -136,10 +95,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
-	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nR, lnQ1, timeScale   ):new lnQuat(lnQ2);
-	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nR, t2_ts, timeScale ):new lnQuat(lnQ3);
-	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nR, t3_ts, timeScale ):new lnQuat(lnQ4);
-	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.nR, t4_ts, timeScale ):new lnQuat(lnQ5);
+	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
+	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
+	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
+	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
 
 	if( applyAccel ) {
 		t2_ts.add( lnQ1 );
@@ -282,10 +241,10 @@ function drawAnalogArm(curSliders,slerp) {
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
 
-	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nR, lnQ1, timeScale ):new lnQuat(lnQ2);
-	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.nR, t2, timeScale ):new lnQuat(lnQ3);
-	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.nR, t3, timeScale ):new lnQuat(lnQ4);
-	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.nR, t4, timeScale ):new lnQuat(lnQ5);
+	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
+	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
+	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3, timeScale ):new lnQuat(lnQ4);
+	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4, timeScale ):new lnQuat(lnQ5);
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
 
@@ -524,7 +483,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 					lnQ2.y = from.y + t;
 
 				if( fixAxleRotation )
-					lnQ2.update().freeSpin( lnQ.nR, lnQ )
+					lnQ2.update().freeSpin( lnQ.θ, lnQ )
 				lnQ2.add( lnQBase );
 				doDrawBasis( lnQ2, lnQ2, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
@@ -534,7 +493,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 					.pitch((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1])
 					.roll((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1])
 				if( fixAxleRotation )
-					lnQ1.freeSpin( lnQ.nR, lnQ )
+					lnQ1.freeSpin( lnQ.θ, lnQ )
 				lnQ1.add( lnQBase );
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
@@ -568,11 +527,8 @@ function drawSquare( n, q, qPrior ) {
 
 	//console.log( "Prior:", qPrior, q, next );
 
-	// q.x and q.nx*q.nR are equivalent
+	// q.x and q.nx*q.θ are equivalent
 	// the total rotation si still q.nl.
-	//const qx = new lnQuat( 0, q.x * q.nR/q.nL, 0, 0 );
-	//const qy = new lnQuat( 0, 0, q.y * q.nR/q.nL, 0 );
-	//const qz = new lnQuat( 0, 0, 0, q.z * q.nR/q.nL );
 	const qx = qPrior.apply(new lnQuat( 0, q.x ,   0 ,   0));
 	const qy = qPrior.apply(new lnQuat( 0,   0 , q.y ,   0));
 	const qz = qPrior.apply(new lnQuat( 0,   0 ,   0 , q.z));
@@ -671,10 +627,10 @@ function drawSquare( n, q, qPrior ) {
 
 	if( drawRotIter || drawMechanicalRot ) 
 	{
-		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
-		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
-		const p3 = ( next.applyDel({x:-onef1,y: onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
-		const p4 = ( next.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale*qPrior.nR/qPrior.nR));
+		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale));
+		const p2 = ( next.applyDel({x:onef1 ,y:-onef1,z:0 }, timeScale));
+		const p3 = ( next.applyDel({x:-onef1,y: onef1,z:0 }, timeScale));
+		const p4 = ( next.applyDel({x:-onef1,y:-onef1,z:0 }, timeScale));
 
 		normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 		normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -749,7 +705,7 @@ function drawSquare( n, q, qPrior ) {
 			let p4 = qPrior.applyDel({x:-onef3,y:-onef3,z:0 }, timeScale);  
 			const _20 = drawRotationInterpolant[n];
 			for( var i = 0; i < _20; i++ ) {
-				const del = timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1));
+				const del = timeScale/(_20/1);
 				 p1 = qx.applyDel(qy.applyDel( p1, del), del);
 				 p2 = qx.applyDel(qy.applyDel( p2, del), del);
 				 p3 = qx.applyDel(qy.applyDel( p3, del), del);
@@ -828,10 +784,10 @@ function drawSquare( n, q, qPrior ) {
 			let p4 = {x:-onef3,y:-onef3,z:0 }
 			const _20 = drawRotationInterpolant[n];
 			for( var i = 0; i < _20; i++ ) {
-				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
-				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
-				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
-				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1))), timeScale/(_20/(stepScalar[n]?q.nL/q.nR:1)));
+				 p1 = qy.applyDel(qx.applyDel( p1, timeScale/(_20/1)), timeScale/(_20/1));
+				 p2 = qy.applyDel(qx.applyDel( p2, timeScale/(_20/1)), timeScale/(_20/1));
+				 p3 = qy.applyDel(qx.applyDel( p3, timeScale/(_20/1)), timeScale/(_20/1));
+				 p4 = qy.applyDel(qx.applyDel( p4, timeScale/(_20/1)), timeScale/(_20/1));
 				
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -900,12 +856,10 @@ function drawCoordinateGrid() {
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 		
-				//const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
-				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
 				const pointScalar = 2/ Math.PI;
-				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
-				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
-				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
+				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x:lnQ.θ*lnQ.nx));
+				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y:lnQ.θ*lnQ.ny));
+				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z:lnQ.θ*lnQ.nz));
 		
 		                //drawN( lnQ );
 				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
@@ -1025,12 +979,10 @@ function drawCoordinateGrid() {
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 		
-				//const nL = (Math.abs(lnQ.x) + Math.abs(lnQ.y) + Math.abs(lnQ.z));
-				//const nR = Math.sqrt( lnQ.x*lnQ.x+lnQ.y*lnQ.y+lnQ.z*lnQ.z );
 				const pointScalar = 2/ Math.PI;
-				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nx));
-				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.ny));
-				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z*lnQ.nR/lnQ.nL:lnQ.nL*lnQ.nz));
+				const ox = pointScalar*lnQ.x;
+				const oy = pointScalar*lnQ.y;
+				const oz = pointScalar*lnQ.z;
 		
 		                //drawN( lnQ );
 				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
@@ -1084,7 +1036,7 @@ function drawCoordinateGrid() {
 		if( !s ) s = 1.0;
 		s = s/Math.PI;
 		if( !colorS ) colorS = s;
-		const l = 1;//(t instanceof lnQuat)?1/t.nR:1;
+		const l = 1;//(t instanceof lnQuat)?1/t.θ:1;
 	if( t != lnQ2 && showArms )  {
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
@@ -1116,61 +1068,23 @@ function drawCoordinateGrid() {
 						;
 					const angle = Math.acos( dot );
 					if( Math.abs(angle) < 0.0001 ){
-						if( addN2) {
-							x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL;
-							y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL;
-							z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL;
-							const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
-							const r_ = Math.sqrt(x*x+y*y+z*z);
-							// convert back from nr*angle to nl*angle
-							x *= r_/l_
-							y *= r_/l_
-							z *= r_/l_
-						} else {
-							x = lnQ2.x * Del + from.x ;
-							y = lnQ2.y * Del + from.y ;
-							z = lnQ2.z * Del + from.z ;
-						}
-						
+						x = lnQ2.x * Del + from.x ;
+						y = lnQ2.y * Del + from.y ;
+						z = lnQ2.z * Del + from.z ;
 					} else {
 						const sa = Math.sin(angle);
 						const sa1 = Math.sin((1-Del)*angle);
 						const sa2 = Math.sin(Del*angle);
 					
-						if( addN2) {
-							x = (from.x+lnQ2.nx*lnQ2.nL) * sa2/sa + (from.nx*from.nL) * sa1/sa;
-							y = (from.y+lnQ2.ny*lnQ2.nL) * sa2/sa + (from.ny*from.nL) * sa1/sa;
-							z = (from.z+lnQ2.nz*lnQ2.nL) * sa2/sa + (from.nz*from.nL) * sa1/sa;
-							const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
-							const r_ = Math.sqrt(x*x+y*y+z*z);
-							// convert back from nr*angle to nl*angle
-							x *= r_/l_
-							y *= r_/l_
-							z *= r_/l_
-						} else {
-							x = (from.x+lnQ2.x) * sa2/sa + from.x * sa1/sa;
-							y = (from.y+lnQ2.y) * sa2/sa + from.y * sa1/sa;
-							z = (from.z+lnQ2.z) * sa2/sa + from.z * sa1/sa;
-						}
+						x = (from.x+lnQ2.x) * sa2/sa + from.x * sa1/sa;
+						y = (from.y+lnQ2.y) * sa2/sa + from.y * sa1/sa;
+						z = (from.z+lnQ2.z) * sa2/sa + from.z * sa1/sa;
 					}
 				} 
 				else {
-					 if( addN2 ) {
-						// ax === ( this.x / this.nR ) * this.nL   .... and     this.nx === this.x / this.nR
-						x = lnQ2.nx*lnQ2.nL * Del + from.nx*from.nL ;
-						y = lnQ2.ny*lnQ2.nL * Del + from.ny*from.nL ;
-						z = lnQ2.nz*lnQ2.nL * Del + from.nz*from.nL ;
-						const l_ = Math.abs(x)+Math.abs(y)+Math.abs(z);
-						const r_ = Math.sqrt(x*x+y*y+z*z);
-						// convert back from nr*angle to nl*angle
-						x *= r_/l_
-						y *= r_/l_
-						z *= r_/l_
-					} else {
-						x = from.x + Del * lnQ2.x;
-						y = from.y + Del * lnQ2.y;
-						z = from.z + Del * lnQ2.z;
-					}
+					x = from.x + Del * lnQ2.x;
+					y = from.y + Del * lnQ2.y;
+					z = from.z + Del * lnQ2.z;
 				}
 			}
 
@@ -1412,8 +1326,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 		lnQ.update();
 
-		const len = lnQ.nR;
-		const qlen = lnQ.nR;
+		const len = lnQ.θ;
 		if( axis ) {
 			document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
 			document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
@@ -1422,17 +1335,17 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			// normalize the output angle... 
 			const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
 			if( degrees ) {
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.nR*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.nR*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.nR*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4);
 			}else{
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.nR).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.nR).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.nR).toFixed(4);
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
 			}
-		}
-		const xyr = lnQ.nR;
-		const xyl = lnQ.nR;
+		}               
+		const xyr = lnQ.θ;
+		const xyl = lnQ.θ;
 		const showInterpolant = document.getElementById( "drawInterp"+n)
 		if( showInterpolant )  
 			drawRotationInterpolant[n-1] = showInterpolant.value;
@@ -1446,12 +1359,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 
 		if( degrees ) {
-			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] * (qlen/len) *180/Math.PI).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] * (qlen/len)*180/Math.PI).toFixed(4);
+			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
+			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
 			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
 		} else {
-			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] * (qlen/len)).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] * (qlen/len)).toFixed(4);
+			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
+			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
 			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
 		}
 		if( degrees ) {
@@ -1568,8 +1481,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		showLineSeg[4] = check.checked;
 	}
 
-
-	testAdditiveTest()
 
 	check = document.getElementById( "normalizeTangents");
 	if( check )
