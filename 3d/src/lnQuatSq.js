@@ -752,9 +752,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	const sc1 = as * qw;
 	const sc2 = qs * ac;
 	const ss = qs * as;
-	const cc = qw * ac;
+	//const cc = qw * ac;
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
-	const cosCo2 = cc - ss* AdotB;
+	const cosCo2 = ( ( 1-AdotB )*Math.cos( q.θ/2-th/2 ) + (1+AdotB)*Math.cos(th/2+q.θ/2  ) )/2;
+	//const cosCo2 = cc - ss* AdotB;
 
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
