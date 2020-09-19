@@ -133,9 +133,9 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		      :armPrimary==1?{x:0,y:2,z:0}
 			:{x:0,y:0,z:2};
 
-	for( let zz = 1; zz < 2; zz++ ) {
-		//let fixAxleRotation = zz===1;
-		//let keepInertia = zz=== 0;
+	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
+		let fixAxleRotation = zz===1;
+		let keepInertia = zz=== 0;
 	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.nR, lnQ1, timeScale   ):new lnQuat(lnQ2);
 	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.nR, t2_ts, timeScale ):new lnQuat(lnQ3);
 	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.nR, t3_ts, timeScale ):new lnQuat(lnQ4);
@@ -188,21 +188,12 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			doDrawBasis( A_R_ts[n], A__ts[n-1], 1.5, 1, null, 1.0 );
 		}
 
-		/*
-		  not sure which rotation axis this is supposed to show at this point; but this dowsn't work.
-		if( drawRotationAxles ) {
-			normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
-			normalVertices.push( new THREE.Vector3( (A__ts[n].x + 4*R_ts[n].nx)*spaceScale   ,( A__ts[n].y+ 4*R_ts[n].ny)*spaceScale      , (A__ts[n].z+ 4*R_ts[n].nz)*spaceScale  ))
-	
-			pushN(n, 0.3);
-		}
-		*/
 		if( showArms )
 		{
-		normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
-		normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
 	
-		pushN(n);
+			pushN(n, zz/3+0.4);
 		}
 	}
 	}	
@@ -287,7 +278,7 @@ function drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-	for( let zz = 0; zz < 2; zz++ ) {
+	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
 
@@ -1428,14 +1419,16 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
 			document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
 		}else {
+			// normalize the output angle... 
+			const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
 			if( degrees ) {
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.nR*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.nR*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.nR*180/Math.PI).toFixed(4);
 			}else{
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z).toFixed(4);
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.nR).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.nR).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.nR).toFixed(4);
 			}
 		}
 		const xyr = lnQ.nR;

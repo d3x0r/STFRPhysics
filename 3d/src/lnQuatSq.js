@@ -410,220 +410,77 @@ lnQuat.prototype.torque = function( direction, turns ) {
 
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, from, right) {
-	// this is terse; for more documentation see getBasis Method.
-	if( false ) { // this is        https://mathworld.wolfram.com/RodriguesRotationFormula.html
-		const q = this;
-
-		const s1 = Math.sin(q.nL*del); // * 2 * 0.5
-		const c1 = Math.cos(q.nL*del); // * 2 * 0.5
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testUp = { x:       q.nx*q.ny*(1-c1)-q.nz*s1
-		               , y:  c1+ q.ny*q.ny*(1-c1)
-		               , z:  q.nx*s1 + q.ny*q.nz*(1-c1)
-		};
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testForward = { x:   q.ny*s1 + q.nx*q.nz*(1-c1)
-		                    , y:  -q.nx*s1+ q.ny*q.nz * (1-c1)
-		                    , z:  c1+q.nz*q.nz*(1-c1)
-		};
-
-		const testRight = { x:  c1 + ( 1-c1 ) * ( q.nx*q.nx ) 
-		                  , y: q.nz*s1 + q.nx*q.ny*(1-c1)
-		                  , z: -q.ny * s1 + q.nx*q.nz*(1-c1)
-		};
-		const basis = { right  :testRight
-		              , up     :testUp
-		              , forward:testForward
-		              };
-		return basis;	
-	}
-	if( right ) {
-		// this basis is supposed to be the rotation axis, and the tangent on the 
-		// rotation...., and the normal to the circle (which is not nesscarily normal to the sphere)
-
-		// this basis is not reversable... (well, it might be)
-		const q = this;
-
-		const s1 = Math.sin(q.nL); // * 2 * 0.5
-		const c1 = 1 - Math.cos(q.nL); // * 2 * 0.5
-
-		// up is testForward cross lnQ.normal; this version is from raw q.
-		const testUp = { x:          ( c1 ) * ( q.ny*q.ny*q.nz + q.nz*q.nz*q.nz + q.nx*q.nx*q.nz )  + s1 * q.ny*q.nx   - q.nz
-		               , y:  - s1 * ( q.nz*q.nz + q.nx * q.nx  )
-		               , z: q.nx - ( c1 ) * ( q.nx*q.nz*q.nz + q.nx*q.nx*q.nx + q.nx*q.ny*q.ny )  + s1 * q.nz*q.ny
-		};
-
-		const nRup = Math.sqrt(testUp.x*testUp.x + testUp.y*testUp.y + testUp.z*testUp.z );
-		//console.log( "up cross:", nRup );
-
-		testUp.x /= nRup;
-		testUp.y /= nRup;
-		testUp.z /= nRup;
-
-		//this.update();
-		if( !del ) del = 1.0;
-		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-		const c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
-
-		const qx = q.nx; // normalizes the imaginary parts
-		const qy = q.ny; // set the sin of their composite angle as their total
-		const qz = q.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
-		const yz = c*qy*qz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
-		const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz)   1 - cos(2t)
- 
-		const wx = s*qx;     // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz)   sin(2t)
-		const wy = s*qy;     // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz)   sin(2t)
-		const wz = s*qz;     // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz)   sin(2t)
- 
-		const xx = c*qx*qx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz)   1 - cos(2t)
-		const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz)   1 - cos(2t)
-		const zz = c*qz*qz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz)   1 - cos(2t)
- 
-		const basis = { right  :{ x : 0,  y : ( wz + xy ), z :     ( xz - wy ) }
-		              , up     :{ x :     ( xy - wz ),  y : 0, z :     ( wx + yz ) }
-		              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 0 }
-		              };
+	const q = this;
+	//this.update();
+	if( "undefined" === typeof del ) del = 1.0;
+	let ax, ay, az;
+	if( SLERPbasis ) {
+		if( from ) {
+		const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
+		const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
+		const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
 		
-		// forward is... along the curve...
-		// 
-		const newForward = { x : q.nx 
-		           	, y : q.ny
-		           	, z : q.nz };
-		//const up = 
-		
-		//basis.right = basis.forward;
-         	basis.forward = testUp;
-		// cross of up and right is forward.
-		const cURx1 = newForward.z * basis.forward.y - newForward.y * basis.forward.z;
-		const cURy1 = newForward.x * basis.forward.z - newForward.z * basis.forward.x;
-		const cURz1 = newForward.y * basis.forward.x - newForward.x * basis.forward.y;
-		const norm = Math.sqrt(cURx1*cURx1+cURy1*cURy1+cURz1*cURz1);
-		basis.up = { x : cURx1/norm, y : cURy1/norm, z : cURz1/norm };
-		basis.right = testUp; // temporary
-		basis.forward = newForward;
-		return basis;	
-	} else {
-		const q = this;
-		//this.update();
-		if( "undefined" === typeof del ) del = 1.0;
-		let ax, ay, az;
-		if( SLERPbasis ) {
-			if( from ) {
-			const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
-			const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-			const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
-			
 
-			const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+		const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, nL:targetAng  }, del );
+		ax = r.x;
+		ay = r.y;
+		az = r.z;
+		} else {
+			const r = longslerp( {nx:0,ny:0,nz:0, nL:0}, this, del );
 			ax = r.x;
 			ay = r.y;
 			az = r.z;
-			} else {
-				const r = longslerp( {nx:0,ny:0,nz:0, nL:0}, this, del );
-				ax = r.x;
-				ay = r.y;
-				az = r.z;
-			}
+		}
+	} else {
+		if( addN2 ) {
+			ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
+			ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
+			az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
+		
+			const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
+			const l_ = l_;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+			// convert back from nr*angle to nl*angle
+			ax *= r_/l_
+			ay *= r_/l_
+			az *= r_/l_
 		} else {
-			if( addN2 ) {
-				ax = (from?(from.nx*from.nL):0) + q.nx*q.nL*del;	
-				ay = (from?(from.ny*from.nL):0) + q.ny*q.nL*del;	
-				az = (from?(from.nz*from.nL):0) + q.nz*q.nL*del;	
-			
-				const r_ = Math.sqrt(ax*ax+ay*ay+az*az);
-				const l_ = l_;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-				// convert back from nr*angle to nl*angle
-				ax *= r_/l_
-				ay *= r_/l_
-				az *= r_/l_
-			} else {
-				ax = (from?from.x:0) + (q.x*del);
-				ay = (from?from.y:0) + (q.y*del);
-				az = (from?from.z:0) + (q.z*del);
-			}
+			ax = (from?from.x:0) + (q.x*del);
+			ay = (from?from.y:0) + (q.y*del);
+			az = (from?from.z:0) + (q.z*del);
 		}
-		const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
-		const alen = sqlen;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
-
-		const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		const s  = Math.sin( nt ); // sin/cos are the function of exp()
-		const c1 = Math.cos( nt ); // sin/cos are the function of exp()
-		const c = 1- c1;
-
-		const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
-		const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
-		const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-		const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-		const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
-		const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
-		const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
-
-		const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-		const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const basis = { right  :{ x : c1 + ( xx ),       y :      ( wz + xy ), z :      ( xz - wy ) }
-		              , up     :{ x :      ( xy - wz ),  y : c1 + (yy),        z :      ( wx + yz ) }
-		              , forward:{ x :      ( wy + xz ),  y :      ( yz - wx ), z : c1 + ( zz ) }
-		              };
-		return basis;	
 	}
+	const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
+	const alen = sqlen;//Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+
+	const nt = alen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+	const s  = Math.sin( nt ); // sin/cos are the function of exp()
+	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
+	const c = 1- c1;
+
+	const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
+	const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
+	const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
+
+	const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
+	const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
+	const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+
+	const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const basis = { right  :{ x : c1 + xx, y : wz + xy, z : xz - wy }
+	              , up     :{ x : xy - wz, y : c1 + yy, z : wx + yz }
+		      , forward:{ x : wy + xz, y : yz - wx, z : c1 + zz }
+	              };
+	return basis;	
+	
 
 }
-
-function getCayleyBasis() {
-		const q = this;
-		//this.update();
-		if( !del ) del = 1.0;
-		const nt = this.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-		let s  = Math.sin( del * nt ); // sin/cos are the function of exp()
-		let c = 1- Math.cos( del * nt ); // sin/cos are the function of exp()
-	        const cL = Math.sqrt( 1+q.nx*q.nx+q.ny*q.ny+q.nz*qn.z);
-		const qx = q.nx/cL; // normalizes the imaginary parts
-		const qy = q.ny/cL; // set the sin of their composite angle as their total
-		const qz = q.nz/cL; // output = 1(unit vector) * sin  in  x,y,z parts.
-
-		const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-		const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-		const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
-		const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
-		const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
-
-		const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-		const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-		const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
-
-		const basis = {
-			right(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x : 1 - ( yy() + zz() - xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
-			},
-			up(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() - yy() ), z :     ( wx() + yz() ) };
-			},
-			forward(t) {
-				s = Math.sin( t*q.nL );
-				c = 1 - Math.cos( t*q.nL );
-				return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() - zz() ) };
-			},
-		}
-		return basis;
-}
-
 
 lnQuat.prototype.getRelativeBasis = function( q2 ) {
 	const q = this;
@@ -636,7 +493,6 @@ lnQuat.prototype.update = function() {
 	// sqrt, 3 mul 2 add 1 div 1 sin 1 cos
 	if( !this.dirty ) return this;
 	this.dirty = false;
-
 
 	// norm-rect
 	this.nR = Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
@@ -671,7 +527,8 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 	const q = this.apply( lnQvel );
 
 	let s  = Math.sin( q.nL ); // sin/cos are the function of exp()
-	let c = 1- Math.cos( q.nL ); // sin/cos are the function of exp()
+	let c1 = Math.cos( q.nL ); // sin/cos are the function of exp()
+	let c  = 1- c1; // sin/cos are the function of exp()
 
 	const xy = ()=>c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz)   1 - cos(2t)
 	const yz = ()=>c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz)   1 - cos(2t)
@@ -688,18 +545,21 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 	return {
 		forward(t) {
 			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : 1 - ( xx() + yy() ) };
+			c1 = Math.cos( t*q.nL );
+			c = 1 - c1;
+			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : c1 + ( zz() ) };
 		},
 		right(t) {
 			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x : 1 - ( yy() + zz() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
+			c1 = Math.cos( t*q.nL );
+			c = 1 - c1;
+			return { x : c1 + ( xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
 		},
 		up(t) {
 			s = Math.sin( t*q.nL );
-			c = 1 - Math.cos( t*q.nL );
-			return { x :     ( xy() - wz() ),  y : 1 - ( zz() + xx() ), z :     ( wx() + yz() ) };
+			c1 = Math.cos( t*q.nL );
+			c = 1 - c1;
+			return { x :     ( xy() - wz() ),  y : c1 + yy(), z :     ( wx() + yz() ) };
 		}
 	}
 }
