@@ -17,30 +17,12 @@ function acos(x) {
 	return Math.acos(plusminus(x)) - trunc(x+1,2)*Math.PI/2;
 }
 
-// takes an input and returns -1 to 1
-// where overflow bounces wraps at the ends.
-function delwrap(x) {
-	if( x < 0 )
-		return ( 2*( (x+1)/2 - Math.floor((x+1)/2)) -1);
-	else
-		return( 2*( (x+1)/2 - Math.floor((x+1)/2)) -1);
-}
-
-// takes an input and returns -1 to 1
-// where overflow bounces from the ends.
-function signedMod(x) {
-	return 1-Math.abs(1-(x))%2;
-
-}
-
 const test = true;
 let normalizeNormalTangent = false;
 var twistDelta = 0;
 // -------------------------------------------------------------------------------
 //  Log Quaternion (Rotation part)
 // -------------------------------------------------------------------------------
-
-let twisting = false;
 
 // lnQuat( 0    , {x:,y:,z:})              - angle, axis ; normalizes 
 // lnQuat( theta, b, c, d );               - angle, axisX, axisY, axisZ   ; linear normalize axis, scale by angle.
@@ -142,29 +124,29 @@ function lnQuat( theta, d, a, b ){
 					} else {
 // x/y/z normal (no spin, based at 'north' (0,1,0) )  {x:,y:,z:}
 						// normal conversion is linear.
-						const l2 = (abs(theta.x)/*+abs(theta.y)*/+abs(theta.z));
+						const l2 = (Math.abs(theta.x)/*+abs(theta.y)*/+Math.abs(theta.z));
 						if( l2 ) {
 							const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
 							//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
 					        
-							const r = 1/(l2);
-							const tx = theta.x * r; // linear normal
 							const ty = theta.y /l3; // square normal
-							const tz = theta.z * r; // linear normal
 							const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
-							this.x = tz*cosTheta;
-							this.z = -tx*cosTheta;
-							this.θ = Math.sqrt(tx2*tx2+tz2*tz2);
-							
-							this.nx = this.x / this.θ;
+							const norm1 = Math.sqrt(theta.x*theta.x+theta.z*theta.z);
+							// get square normal...
+							this.nx = theta.z/norm1;
 							this.ny = 0;
-							this.nz = this.z / this.θ;
+							this.nz = -theta.x/norm1;
+
+							this.θ = cosTheta;							
+							this.x = this.nx*cosTheta;
+							this.z = this.nz*cosTheta;
+							
 
 							if(setNormal) {
-								const fN = 1/Math.sqrt( tz*tz+tx*tx );
+								//const fN = 1/Math.sqrt( tz*tz+tx*tx );
 					        
-								const txn = tx*fN;
-								const tzn = tz*fN;
+								const txn = -this.nz;
+								const tzn = this.nx;
 					        
 								const s = Math.sin( cosTheta ); // double angle substituted
 								const c = 1- Math.cos( cosTheta ); // double angle substituted
@@ -211,13 +193,8 @@ function lnQuat( theta, d, a, b ){
 								*/
 							}
 					        
-							if(!twisting) { // nope/ still can't just 'twist' the target... have to re-resolve back to beginning
-								if( twistDelta ) {
-									this.update();
-									twisting = true;
-									yaw( this, twistDelta /*+ angle*/ );
-									twisting = false;
-								}
+							if( twistDelta ) {
+								yaw( this, twistDelta /*+ angle*/ );
 							}
 						}
 					}
