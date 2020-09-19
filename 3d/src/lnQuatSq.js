@@ -2,8 +2,7 @@ const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
-var addN2 = false;
-var SLERP = true;
+var SLERP = false;
 var SLERPbasis = false;
 const abs = (x)=>Math.abs(x);
 
@@ -1240,50 +1239,3 @@ function longslerp(a, b, t ) {
       return v;
     }
 
-    updateModel = function () {
-
-      // Calculate the interpolated rotation matrix.
-      var t = +values.t;
-      var u = [+values.u0, +values.u1, +values.u2];
-      var v = [+values.v0, +values.v1, +values.v2];
-      var p = axisAngleToQuaternion(u);
-      var q = axisAngleToQuaternion(v);
-      var r = slerp(p, q, t);
-      var C = quaternionToMatrix(r);
-
-      // For testing, calculate the axis angle of the rotation from q to r.
-      var A = quaternionToMatrix(p);
-      var B = quaternionToMatrix(q);
-      var R = matrixMultiplyTranspose(C, A);
-      var AA = matrixMultiplyTranspose(A, A);
-      var BB = matrixMultiplyTranspose(B, B);
-      var CC = matrixMultiplyTranspose(C, C);
-      var RR = matrixMultiplyTranspose(R, R);
-      var w = matrixToAxisAngle(R);
-
-      var text = "";
-      text = text + "u: " + formatAxisAndAngle(u) + "\n";
-      text = text + "v: " + formatAxisAndAngle(v) + "\n";
-      text = text + "\n";
-      text = text + "First rotation A = quaternionToMatrix(p), where";
-      text = text + " p = axisAngleToQuaternion(u)\n";
-      text = text + matrixToString(A);
-      text = text + "\n";
-      text = text + "Second rotation B = quaternionToMatrix(q), where";
-      text = text + " q = axisAngleToQuaternion(v)\n";
-      text = text + matrixToString(B);
-      text = text + "\n";
-      text = text + "Interpolated rotation C = quaternionToMatrix(r), where";
-      text = text + " r = slerp(p, q, t)\n";
-      text = text + matrixToString(C);
-      text = text + "\n";
-      text = text + "Rotation R = C A⁻¹\n";
-      text = text + matrixToString(R);
-      text = text + "\n";
-      text = text + "w = matrixToAxisAngle(R)\n"
-      text = text + "w: " + formatAxisAndAngle(w) + "\n";
-
-      statusText.nodeValue = text;
-    }
-
-  //  updateModel();
