@@ -513,6 +513,37 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				lnQ1.add( lnQBase );
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
+
+/*
+			// this does a range around the curves - but it's a lot of segments...
+			for( var t = -Math.PI; t<= Math.PI; t+=0.1 ) {
+				for( var s = -Math.PI/8; s < Math.PI/8; s+= 0.05 ) {
+				for( var u = -Math.PI/8; u < Math.PI/8; u+= 0.05 ) {
+					let lnQ1;
+					if( showRotationCurve_ == "X" )
+						lnQ1 = mkQuat().yaw(s+curSliders.lnQY[showRotationCurveSegment-1])
+							.pitch( t +curSliders.lnQX[showRotationCurveSegment-1])
+							.roll( u +curSliders.lnQZ[showRotationCurveSegment-1])
+
+					if( showRotationCurve_ == "Y" )
+						lnQ1 = mkQuat().yaw(t+curSliders.lnQY[showRotationCurveSegment-1])
+							.pitch( u +curSliders.lnQX[showRotationCurveSegment-1])
+							.roll( s +curSliders.lnQZ[showRotationCurveSegment-1])
+
+					if( showRotationCurve_ == "Z" )
+						lnQ1 = mkQuat().yaw( u+curSliders.lnQY[showRotationCurveSegment-1])
+							.pitch( s +curSliders.lnQX[showRotationCurveSegment-1])
+							.roll( t +curSliders.lnQZ[showRotationCurveSegment-1])
+
+					if( fixAxleRotation )
+						lnQ1.freeSpin( lnQ.θ, lnQ )
+					lnQ1.add( lnQBase );
+					doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
+				}
+				}
+			}
+*/
+
 		}
 	}
 	}
