@@ -514,7 +514,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 
-/*
+	/*
 			// this does a range around the curves - but it's a lot of segments...
 			for( var t = -Math.PI; t<= Math.PI; t+=0.1 ) {
 				for( var s = -Math.PI/8; s < Math.PI/8; s+= 0.05 ) {
@@ -542,8 +542,8 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				}
 				}
 			}
-*/
 
+          */
 		}
 	}
 	}
@@ -868,12 +868,16 @@ function drawCoordinateGrid() {
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
-		const normLen = 0.5*(steps/range);
-
+		//steps *= 2;
+		const normLen = 0.125*(steps/range) * (( 12/ Math.PI ) / pointScalar);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
 					const ll = Math.abs(cx+x)+Math.abs(cy+y)+Math.abs(cz+z);
+					const px = cx+x;
+					const py = cy+y;
+					const pz = cz+z;
+					const lr = Math.sqrt( px*px+py*py+pz*pz );
 //					if( Math.abs( ll - Math.abs(totalNormal) ) > 0.05 ) continue;
 			if(0)
 					if( Math.abs( (Math.abs(z)+Math.abs(x)) - Math.abs(totalNormal) ) > 0.1 
@@ -882,11 +886,11 @@ function drawCoordinateGrid() {
 					//			|| Math.abs(y) > 0.1 ) continue;
 					//if( Math.abs( Math.abs(y) - Math.abs(totalNormal) ) > 0.2 ) continue;
 					//if( Math.abs( Math.abs(z) - Math.abs(totalNormal) ) > 0.2 ) continue;
-				if( (ll) > range ) continue;
+				if( (lr) > range ) continue;
 
-				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
+				//if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
 
-					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
+					const lnQ = new lnQuat( 0,px,py,pz );
 					simpleBasis( lnQ );	
 				}
 				
@@ -895,18 +899,23 @@ function drawCoordinateGrid() {
 		}
 	
 		function simpleBasis(lnQ) {
-					const basis = lnQ.getBasis( );
-		
+					const basis = lnQ.update().getBasis( );
+	if(0)
+				if(!(  (Math.abs( basis.up.z - 0.01) < 0.001 )
+					&&  (Math.abs( basis.up.x - 0.01 ) < 0.001 )
+					&&  (basis.up.y > 0) ) ) return;
+			if(0)
+				if(  (Math.abs( basis.up.x ) + Math.abs(basis.up.z )) > 0.01 || basis.up.y < 0) return;
 				// the original normal direction; projected offset of sphere (linear scaled)
 				//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
 				//normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 				//normalColors.push( new THREE.Color( 255,0,255,255 ))
 		
-				const pointScalar = 2/ Math.PI;
-				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x:lnQ.θ*lnQ.nx));
-				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y:lnQ.θ*lnQ.ny));
-				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z:lnQ.θ*lnQ.nz));
+				//const pointScalar = 2/ Math.PI;
+				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x:(lnQ.θ*lnQ.nx)));
+				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y:(lnQ.θ*lnQ.ny)));
+				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z:(lnQ.θ*lnQ.nz)));
 		
 		                //drawN( lnQ );
 				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
