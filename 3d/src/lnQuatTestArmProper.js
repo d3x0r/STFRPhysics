@@ -868,7 +868,8 @@ function drawCoordinateGrid() {
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
 		if( !minr ) minr = 0;
-		//steps *= 2;
+		//steps *= 8;
+		//range *= 2;
 		const normLen = 0.125*(steps/range) * (( 12/ Math.PI ) / pointScalar);
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
@@ -901,8 +902,8 @@ function drawCoordinateGrid() {
 		function simpleBasis(lnQ) {
 					const basis = lnQ.update().getBasis( );
 	if(0)
-				if(!(  (Math.abs( basis.up.z - 0.01) < 0.001 )
-					&&  (Math.abs( basis.up.x - 0.01 ) < 0.001 )
+				if(!(  (Math.abs( basis.up.z - curSliders.lnQX[1]) < 0.001 )
+					&&  (Math.abs( basis.up.x - curSliders.lnQX[1] ) < 0.001 )
 					&&  (basis.up.y > 0) ) ) return;
 			if(0)
 				if(  (Math.abs( basis.up.x ) + Math.abs(basis.up.z )) > 0.01 || basis.up.y < 0) return;
@@ -1191,7 +1192,7 @@ function DrawNormalBall(normalVertices,normalColors) {
 	if(drawNormalBall/*draw normal ball with twist*/)
 		for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
-			for( let t = 3*Math.PI/8; t < 5*Math.PI/8; t+= 0.25/2 ){
+			for( let t = -Math.PI; t < Math.PI; t+= 0.25/2 ){
 				let x = Math.sin(t );
 				const z = Math.cos(t);
 				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
