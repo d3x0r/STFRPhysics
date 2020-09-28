@@ -402,17 +402,21 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 	const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
 	const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
 
-	const xy = c*qx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
-	const yz = c*qy*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
-	const xz = c*qx*qz;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+	const cnx = c*qx;
+	const cny = c*qy;
+	const cnz = c*qz;
+
+	const xy = cnx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	const yz = cny*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	const xz = cnz*qx;  // x * z / (xx+yy+zz) * (1 - cos(2t))
 
 	const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
 	const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
 	const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
 
-	const xx = c*qx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
-	const yy = c*qy*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
-	const zz = c*qz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+	const xx = cnx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	const yy = cny*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	const zz = cnz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
 
 	const basis = { right  :{ x : c1 + xx, y : wz + xy, z : xz - wy }
 	              , up     :{ x : xy - wz, y : c1 + yy, z : wx + yz }
@@ -775,24 +779,25 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 			// when btheta is small, baxis is small pi/2 cos is 0 so this is small
 			// when both are large, cross product is dominant (pi/2)
 
-		const crsX = (ay*q.nz-az*q.ny);
 		const ss1 = sxmy + sxpy
 		const ss2 = sxpy - sxmy
 		const cc1 = cxmy - cxpy
 
-		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 )/2;
+		const sAng = Math.sin(ang/2)*2;
+	
+		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const Clx = ang/sAng;//*Math.sqrt((Cx*Cx+Cy*Cy+Cz*Cz)/(sAng*sAng));//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+		const crsX = (ay*q.nz-az*q.ny);
+		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 )*Clx;
 		const crsY = (az*q.nx-ax*q.nz);
-		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 )/2;
+		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 )*Clx;
 		const crsZ = (ax*q.ny-ay*q.nx);
-		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 )/2;
+		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 )*Clx;
 			
 		//const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
 		//const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
 		//const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
-		const sAng = Math.sin(ang/2);
-	
-		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		const Clx = ang/(sAng);//*Math.sqrt((Cx*Cx+Cy*Cy+Cz*Cz)/(sAng*sAng));//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
 		/*
 		if( angleNorm !== 1 )
 			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
@@ -802,13 +807,13 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		q.θ = ang;//sAng/Clx*ang;
 		q.qw = cosCo2;
 		q.s = sAng;
-		q.nx = Cx/sAng;
-		q.ny = Cy/sAng;
-		q.nz = Cz/sAng;
+		q.nx = Cx/ang;
+		q.ny = Cy/ang;
+		q.nz = Cz/ang;
 	
-		q.x = Cx*Clx;
-		q.y = Cy*Clx;
-		q.z = Cz*Clx;
+		q.x = Cx;
+		q.y = Cy;
+		q.z = Cz;
 
 		q.dirty = false;
 	} else {
@@ -899,9 +904,11 @@ function pitch( q, th ) {
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
-	const ax = c1 + c*( q.nx*q.nx );
-	const ay = ( s*q.nz    + c*q.nx*q.ny );
-	const az = ( c*q.nx*q.nz - s*q.ny );
+	const cnx = c*q.nx
+	const ax = ( cnx*q.nx + c1 );
+	const ay = ( cnx*q.ny + s*q.nz );
+	const az = ( cnx*q.nz - s*q.ny );
+
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
@@ -911,9 +918,10 @@ function roll( q, th ) {
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
-	const ax = ( s*q.ny      + c*q.nx*q.nz );
-	const ay = ( c*q.ny*q.nz   - s*q.nx );
-	const az = c1 + c*( q.nz*q.nz );
+	const cnz = c * q.nz;
+	const ax = ( cnz*q.nx ) + s*q.ny;
+	const ay = ( cnz*q.ny ) - s*q.nx;
+	const az = ( cnz*q.nz ) + c1;
 
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
@@ -924,9 +932,10 @@ function yaw( q, th ) {
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
-	const ax = ( c*q.nx*q.ny - s*q.nz );
-	const ay = c1 + c*( q.ny*q.ny );
-	const az = ( s*q.nx      + c*q.ny*q.nz );
+	const cny = c * q.ny;
+	const ax = ( cny*q.nx ) - s*q.nz;
+	const ay = ( cny*q.ny ) + c1;
+	const az = ( cny*q.nz ) + s*q.nx;
 
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
