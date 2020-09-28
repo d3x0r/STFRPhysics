@@ -34,8 +34,7 @@ axis of rotation regardless of a insignificant angle... resulting in a 'high qua
 Which follows that `1*cos + 1*sin` are also remeniscent of a unit circle in complex plane.
 
 Log quaternions, quatnerions in the log-space, have 3 `angle`; However, these are more properly arcs over time.  The sum of the angles of a rotation is the sum of the angles.
-And the total sum of the system angles is the total angle of rotation of the system; this is a linear length `linLen = |x| + |y| + |z|` 
-and the normalizing is `x/linLen, y/linLen, z/linLen` to get the total (or average /mean curvature).
+And the human readable total sum of the system angles is the total angle of rotation of the system; this is a linear length `linLen = |x| + |y| + |z|`.
 
  https://en.wikipedia.org/wiki/Curvature
  https://en.wikipedia.org/wiki/Mean_curvature
