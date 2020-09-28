@@ -507,9 +507,11 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
 	if( v instanceof lnQuat ) {
+		const this_ = this;
 		const result = new lnQuat(
 			function() {
-	                        return finishRodrigues( v, 0, this.nx, this.ny, this.nz, this.θ );
+				this_.update(); 
+	                        return finishRodrigues( v.update(), 0, this_.nx, this_.ny, this_.nz, this_.θ );
 			}
 		);
 		return result.refresh();
@@ -807,13 +809,13 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	} else {
 		// two axles are coincident, add...
 		if( AdotB > 0 ) {
-			q.x = q.x / q.θ * (q.θ+th);
-			q.y = q.y / q.θ * (q.θ+th);
-			q.z = q.z / q.θ * (q.θ+th);
+			q.x = q.nx * (q.θ+th);
+			q.y = q.ny * (q.θ+th);
+			q.z = q.nz * (q.θ+th);
 		}else {
-			q.x = q.x / q.θ * (q.θ-th);
-			q.y = q.y / q.θ * (q.θ-th);
-			q.z = q.z / q.θ * (q.θ-th);
+			q.x = q.nx * (q.θ-th);
+			q.y = q.ny * (q.θ-th);
+			q.z = q.nz * (q.θ-th);
 		}
 		q.dirty = true;
 	}
