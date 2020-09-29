@@ -39,6 +39,7 @@ let applyAccel = document.getElementById( "applyAccel" )?.checked;
 let showSliderCurves = false;
 let totalNormal = 0;
 let drawWorldAxles = false;
+let mountOrder = 0;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * θ / nR
@@ -62,6 +63,31 @@ let lnQ5_current;
 let normalVertices,normalColors;
 	const spaceScale = 5;
 	const normal_del = 1;
+
+function makeQuat(p,y,r) {
+	switch( mountOrder ) {
+	case 0:
+	return mkQuat().roll(r).yaw(y).pitch(p);
+	case 1:
+	return mkQuat().roll(r).pitch(p).yaw(y);
+
+	case 2:
+	return mkQuat().pitch(p).yaw(y).roll(r);
+	case 3:
+	return mkQuat().pitch(p).roll(r).yaw(y);
+	
+	case 4:
+	return mkQuat().yaw(y).pitch(p).roll(r);
+	case 5:
+	return mkQuat().yaw(y).roll(r).pitch(p);
+	case 6:{
+		const l2 = Math.sqrt(p*p+y*y);
+		const l3 = Math.sqrt(p*p+y*y+r*r);
+		//return mkQuat(0,p,y/l2,r/l3);
+		return mkQuat(0,p,y,r);
+	}
+	}
+}
 
 function test1() {
 	// this test fails... although I would think that Y and PQ5 should be close
@@ -505,9 +531,12 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 			}
 		}else {
 			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
-				const lnQ1 = mkQuat().yaw((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
-					.pitch((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1])
-					.roll((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1])
+				const lnQ1 = makeQuat((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1]
+						, ((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
+						, ((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1]) );
+				//const lnQ1 = mkQuat().yaw((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
+				//	.pitch((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1])
+				//	.roll((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1])
 				if( fixAxleRotation )
 					lnQ1.freeSpin( lnQ.θ, lnQ )
 				lnQ1.add( lnQBase );
@@ -1228,10 +1257,13 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const spaceScale = 3;
 	const normal_del = 0.25;
 	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
-	if(drawNormalBall/*draw normal ball with twist*/)
+	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
+	if(drawNormalBall/*draw normal ball with twist*/)  {
+		if(!pickRandomNormals)
 		for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			for( let t = -Math.PI; t < Math.PI; t+= 0.25/2 ){
+				
 				let x = Math.sin(t );
 				const z = Math.cos(t);
 				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
@@ -1239,8 +1271,21 @@ function DrawNormalBall(normalVertices,normalColors) {
 				if( drawCoords )
 					doDrawBasis( lnQ, lnQ, 1, 1 );
 			}
-	}
+		}
 
+		if(pickRandomNormals) // random normal test.
+		for( let h_ = 0; h_ <= 250; h_++ ) {
+			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
+			const h = ( Math.acos( 1- Math.random()*2 ) )/(Math.PI/2) - 1;
+			const t = Math.random() * Math.PI*2;
+				let x = Math.sin(t );
+				const z = Math.cos(t);
+				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+				drawN( lnQ );
+				if( drawCoords )
+					doDrawBasis( lnQ, lnQ, 1, 1 );
+		}
+	}
 	function drawN( lnQ )
 	{
 			const new_v = lnQ.apply( v );
@@ -1380,6 +1425,8 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let axis = document.getElementById( "showAxis")?.checked;
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
+	for( var order = 0; order < 7	; order++ ) {
+	mountOrder = order;	
 	for( var n = 1; n <= 5; n++ ) {
 		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
@@ -1397,31 +1444,31 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			if( rawAngles )
 				lnQ = lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
 			else
-				lnQ = lnQ1 = mkQuat().yaw(curSliders.lnQY[0]).pitch(curSliders.lnQX[0]).roll(curSliders.lnQZ[0]);
+				lnQ = lnQ1 = makeQuat( curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] );
 			break;
 		case 2:
 			if( rawAngles )
 				lnQ = lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
 			else
-				lnQ = lnQ2 = mkQuat().yaw(curSliders.lnQY[1]).pitch(curSliders.lnQX[1]).roll(curSliders.lnQZ[1]);
+				lnQ = lnQ2 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 			break;
 		case 3:
 			if( rawAngles )
 				lnQ = lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
 			else
-				lnQ = lnQ3 = mkQuat().yaw(curSliders.lnQY[2]).pitch(curSliders.lnQX[2]).roll(curSliders.lnQZ[2]);
+				lnQ = lnQ3 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 			break;
 		case 4:
 			if( rawAngles )
 				lnQ = lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
 			else
-				lnQ = lnQ4 = mkQuat().yaw(curSliders.lnQY[3]).pitch(curSliders.lnQX[3]).roll(curSliders.lnQZ[3]);
+				lnQ = lnQ4 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 			break;
 		case 5:
 			if( rawAngles )
 				lnQ = lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
 			else
-				lnQ = lnQ5 = mkQuat().yaw(curSliders.lnQY[4]).pitch(curSliders.lnQX[4]).roll(curSliders.lnQZ[4]);
+				lnQ = lnQ5 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 			break;
 		}
 
@@ -1590,10 +1637,11 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	DrawNormalBall(normalVertices,normalColors);
 
 	drawCoordinateGrid();
-		drawDigitalTimeArm( curSliders, slerp );
+	drawDigitalTimeArm( curSliders, slerp );
 
 	// squares is calculated in analog arm.
 	drawAnalogArm( curSliders, slerp ); 
+	}
 
 	// tick needs lnQ?_current
 	start = 0;

@@ -93,6 +93,8 @@
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
+		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
+
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
 		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
 		     <br>
@@ -754,7 +756,10 @@ function blurSlider( slider ) {
 			is = document.getElementById( "showScaled" );
 			is.onchange = updateMesh;
 
+
 			is = document.getElementById( "drawNormalBall" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "pickRandomNormals" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "normalizeTangents" );
 			is.onchange = updateMesh;
@@ -762,6 +767,8 @@ function blurSlider( slider ) {
 			is.onchange = updateMesh;
 			
 
+			is = document.getElementById( "largeRange" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "fineRange" );
 			is.onchange = updateMesh;
 
