@@ -1274,7 +1274,7 @@ function DrawNormalBall(normalVertices,normalColors) {
 		}
 
 		if(pickRandomNormals) // random normal test.
-		for( let h_ = 0; h_ <= 250; h_++ ) {
+		for( let h_ = 0; h_ <= 1000; h_++ ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			const h = ( Math.acos( 1- Math.random()*2 ) )/(Math.PI/2) - 1;
 			const t = Math.random() * Math.PI*2;
@@ -1425,222 +1425,222 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let axis = document.getElementById( "showAxis")?.checked;
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
-	for( var order = 0; order < 7	; order++ ) {
-	mountOrder = order;	
-	for( var n = 1; n <= 5; n++ ) {
-		let lnQX = Number(document.getElementById( "lnQX"+n ).value);
-		let lnQY = Number(document.getElementById( "lnQY"+n ).value);
-		let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
-		if( n === 1 ) {
-			twistDelta = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8;
-		        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-		}
-		curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-		curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-		curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-		let lnQ;
-	       	switch(n) {
-		case 1:
-			if( rawAngles )
-				lnQ = lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
-			else
-				lnQ = lnQ1 = makeQuat( curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] );
-			break;
-		case 2:
-			if( rawAngles )
-				lnQ = lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
-			else
-				lnQ = lnQ2 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
-			break;
-		case 3:
-			if( rawAngles )
-				lnQ = lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
-			else
-				lnQ = lnQ3 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
-			break;
-		case 4:
-			if( rawAngles )
-				lnQ = lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
-			else
-				lnQ = lnQ4 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
-			break;
-		case 5:
-			if( rawAngles )
-				lnQ = lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
-			else
-				lnQ = lnQ5 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
-			break;
-		}
-
-		lnQ.update();
-
-		const len = lnQ.θ;
-		if( axis ) {
-			document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
-			document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
-			document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
-		}else {
-			// normalize the output angle... 
-			const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
-			if( degrees ) {
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4);
-			}else{
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
+	{
+		mountOrder = 6;//order;	
+		for( var n = 1; n <= 5; n++ ) {
+			let lnQX = Number(document.getElementById( "lnQX"+n ).value);
+			let lnQY = Number(document.getElementById( "lnQY"+n ).value);
+			let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
+			if( n === 1 ) {
+				twistDelta = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8;
+			        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			}
-		}               
-		const xyr = lnQ.θ;
-		const xyl = lnQ.θ;
-		const showInterpolant = document.getElementById( "drawInterp"+n)
-		if( showInterpolant )  
-			drawRotationInterpolant[n-1] = showInterpolant.value;
-		const useStep = document.getElementById( "useStep"+n)
-		if( stepScalar[n-1] = useStep.checked ) {
-			document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
-		} else {
-			document.getElementById( "stepScalar"+n).textContent = 1;
+			curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			let lnQ;
+		       	switch(n) {
+			case 1:
+				if( rawAngles )
+					lnQ = lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
+				else
+					lnQ = lnQ1 = makeQuat( curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] );
+				break;
+			case 2:
+				if( rawAngles )
+					lnQ = lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
+				else
+					lnQ = lnQ2 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
+				break;
+			case 3:
+				if( rawAngles )
+					lnQ = lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
+				else
+					lnQ = lnQ3 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
+				break;
+			case 4:
+				if( rawAngles )
+					lnQ = lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
+				else
+					lnQ = lnQ4 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
+				break;
+			case 5:
+				if( rawAngles )
+					lnQ = lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
+				else
+					lnQ = lnQ5 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
+				break;
+			}
+	        
+			lnQ.update();
+	        
+			const len = lnQ.θ;
+			if( axis ) {
+				document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
+			}else {
+				// normalize the output angle... 
+				const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
+				if( degrees ) {
+					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4);
+					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4);
+					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4);
+				}else{
+					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ).toFixed(4);
+					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ).toFixed(4);
+					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
+				}
+			}               
+			const xyr = lnQ.θ;
+			const xyl = lnQ.θ;
+			const showInterpolant = document.getElementById( "drawInterp"+n)
+			if( showInterpolant )  
+				drawRotationInterpolant[n-1] = showInterpolant.value;
+			const useStep = document.getElementById( "useStep"+n)
+			if( stepScalar[n-1] = useStep.checked ) {
+				document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
+			} else {
+				document.getElementById( "stepScalar"+n).textContent = 1;
+				
+			}
+	        
+	        
+			if( degrees ) {
+				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
+				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
+				document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+			} else {
+				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
+				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
+				document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+			}
+			if( degrees ) {
+			} else {
+			}
+			//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 			
+	        
 		}
-
-
-		if( degrees ) {
-			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
-			document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
-		} else {
-			document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
-			document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
-			document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+	        
+		timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);
+		document.getElementById( "timeScalarValue" ).textContent = timeScale.toFixed(4);
+	        
+		let check = document.getElementById( "showCoordinateGrid" );
+		if( check ) {
+			showCoordinateGrid = check.checked;
 		}
-		if( degrees ) {
-		} else {
+		check = document.getElementById( "drawNormalBall" );
+		if( check ) {
+			drawNormalBall = check.checked;
 		}
-		//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
+	        
+		check = document.getElementById( "showInvCoordinateGrid" );
+		if( check ) {
+			showInvCoordinateGrid = check.checked;
+		}
+		check = document.getElementById( "showRawCoordinateGrid" );
+		if( check ) {
+			showRawCoordinateGrid = check.checked;
+		}
+	        
+		check = document.getElementById( "drawRotationAxles " );
+		if( check ) {
+			drawRotationAxles  = check.checked;
+		}
+		check = document.getElementById( "drawAllRotationAxles " );
+		if( check ) {
+			drawAllRotationAxles  = check.checked;
+		}
 		
-
-	}
-
-	timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);
-	document.getElementById( "timeScalarValue" ).textContent = timeScale.toFixed(4);
-
-	let check = document.getElementById( "showCoordinateGrid" );
-	if( check ) {
-		showCoordinateGrid = check.checked;
-	}
-	check = document.getElementById( "drawNormalBall" );
-	if( check ) {
-		drawNormalBall = check.checked;
-	}
-
-	check = document.getElementById( "showInvCoordinateGrid" );
-	if( check ) {
-		showInvCoordinateGrid = check.checked;
-	}
-	check = document.getElementById( "showRawCoordinateGrid" );
-	if( check ) {
-		showRawCoordinateGrid = check.checked;
-	}
-
-	check = document.getElementById( "drawRotationAxles " );
-	if( check ) {
-		drawRotationAxles  = check.checked;
-	}
-	check = document.getElementById( "drawAllRotationAxles " );
-	if( check ) {
-		drawAllRotationAxles  = check.checked;
-	}
-	
-
-	check = document.getElementById( "showRaw" );
-	if( check ) {
-		showRaw = check.checked;
-	}
-	check = document.getElementById( "shownRnL" );
-	if( check ) {
-		shownRnL = check.checked;
-	}
-	check = document.getElementById( "shownR" );
-	if( check ) {
-		shownR = check.checked;
-	}
-	check = document.getElementById( "shownL" );
-	if( check ) {
-		shownL = check.checked;
-	}
-
-
-	if( document.getElementById( "drawRotationAllAxles" )?.checked ) {
-		drawRotationAllAxles = true;
-	}else 			
-		drawRotationAllAxles = false;
-
-	if( document.getElementById( "drawRotationAxles" )?.checked ) {
-		drawRotationAxles = true;
-	}else 			
-		drawRotationAxles = false;
-
-	if( document.getElementById( "drawSquares" )?.checked ) {
-		drawRotationSquares = true;
-	}else 			
-		drawRotationSquares = false;
-
-	if( document.getElementById( "drawSquaresXY" )?.checked ) {
-		drawRotationSquaresXY = true;
-	}else 			
-		drawRotationSquaresXY = false;
-
-	if( document.getElementById( "drawSquaresYX" )?.checked ) {
-		drawRotationSquaresYX = true;
-	}else 			
-		drawRotationSquaresYX = false;
-	
-
-	fixAxleRotation	= document.getElementById( "fixAxleRotation" )?.checked ;
-
-	showCoords = document.getElementById( "showCoords" )?.checked ;
-
-	if( document.getElementById( "showScaled" )?.checked ) {
-		showScaledPoints = false;
-	}
-	//else 			
-	//	showScaledPoints = false;
-
-	check = document.getElementById( "showX1" );
-	if( check ) {
-		showLineSeg[0] = check.checked;
-	}
-	check = document.getElementById( "showX2" );
-	if( check ) {
-		showLineSeg[1] = check.checked;
-	}
-	check = document.getElementById( "showX3" );
-	if( check ) {
-		showLineSeg[2] = check.checked;
-	}
-	check = document.getElementById( "showX4" );
-	if( check ) {
-		showLineSeg[3] = check.checked;
-	}
-	check = document.getElementById( "showX5" );
-	if( check ) {
-		showLineSeg[4] = check.checked;
-	}
-
-
-	check = document.getElementById( "normalizeTangents");
-	if( check )
-		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
-	
-	DrawNormalBall(normalVertices,normalColors);
-
-	drawCoordinateGrid();
-	drawDigitalTimeArm( curSliders, slerp );
-
-	// squares is calculated in analog arm.
-	drawAnalogArm( curSliders, slerp ); 
+	        
+		check = document.getElementById( "showRaw" );
+		if( check ) {
+			showRaw = check.checked;
+		}
+		check = document.getElementById( "shownRnL" );
+		if( check ) {
+			shownRnL = check.checked;
+		}
+		check = document.getElementById( "shownR" );
+		if( check ) {
+			shownR = check.checked;
+		}
+		check = document.getElementById( "shownL" );
+		if( check ) {
+			shownL = check.checked;
+		}
+	        
+	        
+		if( document.getElementById( "drawRotationAllAxles" )?.checked ) {
+			drawRotationAllAxles = true;
+		}else 			
+			drawRotationAllAxles = false;
+	        
+		if( document.getElementById( "drawRotationAxles" )?.checked ) {
+			drawRotationAxles = true;
+		}else 			
+			drawRotationAxles = false;
+	        
+		if( document.getElementById( "drawSquares" )?.checked ) {
+			drawRotationSquares = true;
+		}else 			
+			drawRotationSquares = false;
+	        
+		if( document.getElementById( "drawSquaresXY" )?.checked ) {
+			drawRotationSquaresXY = true;
+		}else 			
+			drawRotationSquaresXY = false;
+	        
+		if( document.getElementById( "drawSquaresYX" )?.checked ) {
+			drawRotationSquaresYX = true;
+		}else 			
+			drawRotationSquaresYX = false;
+		
+	        
+		fixAxleRotation	= document.getElementById( "fixAxleRotation" )?.checked ;
+	        
+		showCoords = document.getElementById( "showCoords" )?.checked ;
+	        
+		if( document.getElementById( "showScaled" )?.checked ) {
+			showScaledPoints = false;
+		}
+		//else 			
+		//	showScaledPoints = false;
+	        
+		check = document.getElementById( "showX1" );
+		if( check ) {
+			showLineSeg[0] = check.checked;
+		}
+		check = document.getElementById( "showX2" );
+		if( check ) {
+			showLineSeg[1] = check.checked;
+		}
+		check = document.getElementById( "showX3" );
+		if( check ) {
+			showLineSeg[2] = check.checked;
+		}
+		check = document.getElementById( "showX4" );
+		if( check ) {
+			showLineSeg[3] = check.checked;
+		}
+		check = document.getElementById( "showX5" );
+		if( check ) {
+			showLineSeg[4] = check.checked;
+		}
+	        
+	        
+		check = document.getElementById( "normalizeTangents");
+		if( check )
+			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+		
+		DrawNormalBall(normalVertices,normalColors);
+	        
+		drawCoordinateGrid();
+		drawDigitalTimeArm( curSliders, slerp );
+	        
+		// squares is calculated in analog arm.
+		drawAnalogArm( curSliders, slerp ); 
 	}
 
 	// tick needs lnQ?_current
