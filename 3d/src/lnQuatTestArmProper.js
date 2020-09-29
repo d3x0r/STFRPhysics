@@ -586,7 +586,13 @@ function drawSquare( n, q, qPrior ) {
 	const qyx = drawRawRot?qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)))
 			:priorComposite.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)));
 
-	priorComposite = drawRotationSquaresYX?qyx:qxy;
+	const qxyz = drawRawRot?qPrior.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
+			:priorComposite.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
+			;
+	const qyxz = drawRawRot?qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
+			:priorComposite.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, q.z)));
+
+	priorComposite = drawRotationSquaresYX?qyxz:qxyz;
 
 	{
 		const p1 =  qPrior.applyDel({x:one, y:one, z:0 }, timeScale) ;
@@ -699,6 +705,11 @@ function drawSquare( n, q, qPrior ) {
 
 	if(drawRotationSquaresXY)
 	{
+		if( n === 0 )  {
+			doDrawBasis( qx, qx, 2.0*Math.PI );
+			doDrawBasis( qxy, qxy, 2.0*Math.PI );
+			doDrawBasis( qxyz, qxyz, 2.0*Math.PI );
+		}
 		{
 			const p1 = qx.applyDel( {x:onef2,y:onef2,z:0 }  , timeScale );
 			const p2 = qx.applyDel( {x:onef2,y:-onef2,z:0 } , timeScale );
@@ -744,6 +755,29 @@ function drawSquare( n, q, qPrior ) {
 			pushN(n,0.2);
 			pushN(n,0.2);
 		}
+		if(1)
+		{
+			const p1 = qxyz.applyDel( {x:onef4,y:onef3,z:0 }  , timeScale);
+			const p2 = qxyz.applyDel( {x:onef4,y:-onef3,z:0 } , timeScale);
+			const p3 = qxyz.applyDel( {x:-onef4,y:onef3,z:0 } , timeScale);
+			const p4 = qxyz.applyDel( {x:-onef4,y:-onef3,z:0 }, timeScale);
+			
+			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+																						
+			normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+			
+			normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
+																						
+			normalVertices.push( new THREE.Vector3( p4.x*spaceScale   ,p4.y*spaceScale  , p4.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( p3.x*spaceScale   ,p3.y*spaceScale  , p3.z*spaceScale  ))
+			pushN(n,0.8);
+			pushN(n,0.8);
+			pushN(n,0.8);
+			pushN(n,0.8);
+		}
 		if( drawRotIter && drawRotationInterpolant[n] )
 		{
 			let p1 = qPrior.applyDel({x:onef3,y:onef3,z:0 }  , timeScale);  
@@ -778,6 +812,11 @@ function drawSquare( n, q, qPrior ) {
 	}
 	if(drawRotationSquaresYX) 
 	{
+		if( n === 0 )  {
+			doDrawBasis( qy, qy, 2.0*Math.PI );
+			doDrawBasis( qyx, qyx, 2.0*Math.PI );
+			doDrawBasis( qyxz, qyxz, 2.0*Math.PI );
+		}
 		{
 			const p1 = qy.applyDel( {x:onef2,y:onef2,z:0  }, timeScale );
 			const p2 = qy.applyDel( {x:onef2,y:-onef2,z:0 }, timeScale );

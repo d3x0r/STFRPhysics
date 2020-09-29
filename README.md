@@ -7,7 +7,7 @@ Mostly this project is just about exploring the rotation space of log-quaternion
 ## Preface
 
 So there's new or unusual about adding rotations, and log(quaternion) is actually correct in itself.
-
+https://en.wikipedia.org/wiki/Lie_product_formula 
 
 ### Old Preface
 
@@ -126,70 +126,6 @@ Addition of translation is the remaining force applied to the dualQuat.
 The cross of two nearly parallel vectors is nearly 0; so dead on collisions result in translation.
 (The angle is also the arc length, so units of space translate to angle directly).
 
-## Computation overhead (intro/re)duced vs matricii and quaternions
-
-The dual log quaternion has to be applied to the dual part, to rotate the projected origin into its own space; that origin and the basis vectors can be retrieved to apply scalar x,y,z and get the resulting translated x,y,z 'world' coordinates.
-lnQuat has a conditioning operation `update()` which updates the `exp()` calculation part, which is computation of the length of the point, and using that to lookup sin/cos values; this is the 'costly' part, subsequent application
-to points/frames is as expensive as the matrix it replaces.
-
-[Multiply Quaternion three.js code.](https://github.com/mrdoob/three.js/blob/dev/src/math/Quaternion.js#L80) is 16 multplies and 12 adds.
-
-lnQuat cross product is 30 multiplies and 11 adds; 5 parallel multiplies, 3 parallel adds, 1 dotproduct(1 mul,3? add), 1 crossproduct(6 multiplies, 3 adds); unless the axles are near coincident.
-
-
-
-```
-  (translation precompute exp() ) 
-  1 sqrt, 3 mul 2 add 1 div 1 sin 1 cos
-	sin/cos value are for the same angle, so it can be calated at the same time)
-
-  lnQuat.apply(vector) //  aka mul(vec3)
- 18 mul + 9 add  (translation update)  ( 2 crossproduct, 1 mult 2 adds, 1 vector scale )
-
-  lnQuat + lnQuat
- 30 mul + 11 add  (dot product, cross product, 4 mult, 2 adds)
-
- 48 mul + 20 add   total 
-
- storage 6 values
-
-most of these operations can be done in parallel register sets; except cross product
-
-```
-
-operation counts for applying a matrix to another matrix.
-
-```
-  matrix * dual part (translation update)
- 18 mul 6 adds
-
-  matrix * matrix part (orientation update)
- 18 mul 6 adds
-
-
-36 multiply and 12 adds
-
- storage 16(12) values (9 + 3)   usually sent as 4x4 or 3x3 and 3.
-```
-
-
-overhead compared to dual-quaterion
-
-```
-  origin apply  (translation)
-   18 multiply and 12 adds
-
-  quat * quat   (orienatation)
-    32 multiply and 12 adds 
-
-50 multiplies and 24 adds
-  
-although there are SIMD 'broadcast' things that make matrix multiply more efficient, it still takes more data to load....
-all of these operations can be done in sets of 4 registers.
-
- storage 8 values  (4 + 4)
-
-```
 
 ## Implementation
 
@@ -203,28 +139,7 @@ They are mappings in different projections, and should be considered as a differ
 
 | Type | Description |
 |---|---|
-| Vector | x,y,z points relative to common axis notations; an lnQuatVector these represent the rotation around each axis. |
-| Quat | (w,x,z,y) Standard quaternion.  Quat().log() returns a lnQuat().
 | lnQuat | (x,y,z) Quaternion in natural log map.  lnQuat().exp() returns a Quat().
-| dlnQuat | (xr,yr,zr , xo,yo,zo) Dual Natural Log Quaternion; adds an offset to the frame.  This is the actual base type used in this engine.
-
-| Vector Methods | Parameters | Description |
-|---|---|---|
-| add | (v) | add a vector to this one; update in-place. |
-
-| Quat Methods | Parameters | Description |
-|---|---|---|
-| new | ( theta, direction ) | (constructor) Takes theta angle in radians and direction normal around which the theta angle rotates |
-|  "  | ( a,b,c,d ) | (constructor)set literal parameters w,x,y,z respectively |
-|  "  | ( normal ) | (constructor)Use normal and create a quaternion pointing in that direction |
-| mul | (q) | multiply this quaternion with another quaternion; result with a new Quat(). |
-| add | (q) | add passed quaternion to this quaternion. |
-| addNew | (q) | add passed quaternion to this quaternion, return a new Quat(). |
-| apply | (v) | apply rotation to vector parameter, result with a new vector. |
-| applyInv | (v) | 'unapply' or apply the quaternion inversed to translate point from quaternion space. |
-| log | () | return this quaternion as the natural log of this quaternion.  Returns a new lnQuat(). |
-| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix) |
-| normalize | (q) | make sure this is a unit quaternion (only the axis direction? not including w?) |
 
 
 | lnQuat Methods | Parameters | Description |
@@ -243,12 +158,6 @@ They are mappings in different projections, and should be considered as a differ
 | torque | ( angles, turns ) | apply a torque to this quaternion.  (this += a * t ). |
 
 
-
-| dlnQuat Methods | Parameters | Description |
-|---|---|---|
-| apply | (v) | apply rotation and offset to vector parameter, result with a new vector. |
-| applyInv | (v) | 'unapply' or apply the dual-log-quaternion inversed to translate point from quaternion space. |
-| getBasis | () | return { forward, right, up } object with 3 vectors and the related scalar direction vectors.  (Is also the rotation Matrix) |
 
 
 ## Rotation limits
