@@ -808,7 +808,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		
 		q.θ = ang;//sAng/Clx*ang;
 		q.qw = cosCo2;
-		q.s = sAng;
+		q.s = sAng/2;
 		q.nx = Cx/ang;
 		q.ny = Cy/ang;
 		q.nz = Cz/ang;
