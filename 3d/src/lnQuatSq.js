@@ -794,7 +794,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const sAng = Math.sin(ang/2);
 	
 		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		const Clx = ang/(sAng);//*Math.sqrt((Cx*Cx+Cy*Cy+Cz*Cz)/(sAng*sAng));//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
 		/*
 		if( angleNorm !== 1 )
 			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
@@ -804,13 +804,13 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		q.θ = ang;//sAng/Clx*ang;
 		q.qw = cosCo2;
 		q.s = sAng;
-		q.nx = Cx/sAng;
-		q.ny = Cy/sAng;
-		q.nz = Cz/sAng;
+		q.nx = Cx*Clx;
+		q.ny = Cy*Clx;
+		q.nz = Cz*Clx;
 	
-		q.x = Cx*Clx;
-		q.y = Cy*Clx;
-		q.z = Cz*Clx;
+		q.x = q.nx*ang;
+		q.y = q.ny*ang;
+		q.z = q.nz*ang;
 
 		q.dirty = false;
 	} else {
