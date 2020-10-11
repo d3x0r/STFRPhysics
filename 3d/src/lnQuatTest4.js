@@ -9,6 +9,7 @@ let drawNormalBall = false;
 let twistCount = 1;
 let normalVertices = null;
 let normalColors = null;
+let showOnNormalBall = false;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var priorHere;
@@ -48,10 +49,10 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
 
-		if(1) 		
-			doDrawBasis( lnQ, fibre, true );
-		else
+		if(showOnNormalBall) 		
 			drawN( lnQ );
+		else
+			doDrawBasis( lnQ, fibre, true );
 		
 	}
 
@@ -246,9 +247,6 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	function drawN( lnQ )
 	{
 			const new_v = lnQ.apply( v );
-			if( (new_v.x*new_v.x+new_v.y*new_v.y+new_v.z*new_v.z - 16 ) > 0.001 ) {
-				console.log( "TICK", v, (new_v.x*new_v.x+new_v.y*new_v.y+new_v.z*new_v.z - 16 ) );
-		}	
 			const basis = lnQ.getBasis( );
 
 			// the original normal direction; projected offset of sphere (linear scaled)
@@ -280,6 +278,7 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_;
 
+	showOnNormalBall = document.getElementById( "showOnNormalBall" )?.checked;
         let curSliders = {
 	};
 			let lnQX = document.getElementById( "lnQX" ).value;
