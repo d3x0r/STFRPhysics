@@ -10,6 +10,16 @@ let twistCount = 1;
 let normalVertices = null;
 let normalColors = null;
 let showOnNormalBall = false;
+let showTrajectories = false;
+
+let priorPosx = {x:0,y:0,z:0};
+let priorPosy = {x:0,y:0,z:0};
+let priorPosz = {x:0,y:0,z:0};
+let priorPosxyz = {x:0,y:0,z:0};
+let stepx = {x:0.02, y:0, z:0 };
+let stepy = {x:0, y:0.02, z:0 };
+let stepz = {x:0, y:0, z:0.02 };
+let stepxyz = {x:0.02, y:0.02, z:0.02 };
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var priorHere;
@@ -18,7 +28,20 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	var fibre;
 	let prior = null;
-
+	if( showTrajectories ) {
+		priorPosx.x = 0;
+		priorPosx.y = 0;
+		priorPosx.z = 0;
+		priorPosy.x = 0;
+		priorPosy.y = 0;
+		priorPosy.z = 0;
+		priorPosz.x = 0;
+		priorPosz.y = 0;
+		priorPosz.z = 0;
+		priorPosxyz.x = 0;
+		priorPosxyz.y = 0;
+		priorPosxyz.z = 0;
+	}
 	const lATC = Math.sqrt(A*A+T*T+C*C);
 	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
@@ -48,6 +71,41 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
+		if( showTrajectories ) {
+			const newDelx = lnQ.apply( stepx );
+			const newDely = lnQ.apply( stepy );
+			const newDelz = lnQ.apply( stepz );
+			const newDelxyz = lnQ.apply( stepxyz );
+		
+			normalVertices.push( new THREE.Vector3( (priorPosx.x)*spaceScale             ,(priorPosx.y)*spaceScale                , (priorPosx.z)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (priorPosx.x+newDelx.x)*spaceScale   ,(priorPosx.y+newDelx.y)*spaceScale      , (priorPosx.z+newDelx.z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (priorPosy.x)*spaceScale             ,(priorPosy.y)*spaceScale                , (priorPosy.z)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (priorPosy.x+newDely.x)*spaceScale   ,(priorPosy.y+newDely.y)*spaceScale      , (priorPosy.z+newDely.z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (priorPosz.x)*spaceScale             ,(priorPosz.y)*spaceScale                , (priorPosz.z)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (priorPosz.x+newDelz.x)*spaceScale   ,(priorPosz.y+newDelz.y)*spaceScale      , (priorPosz.z+newDelz.z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (priorPosxyz.x)*spaceScale             ,(priorPosxyz.y)*spaceScale                , (priorPosxyz.z)*spaceScale ))
+			normalVertices.push( new THREE.Vector3( (priorPosxyz.x+newDelxyz.x)*spaceScale   ,(priorPosxyz.y+newDelxyz.y)*spaceScale      , (priorPosxyz.z+newDelxyz.z)*spaceScale  ))
+			priorPosx.x += newDelx.x;
+			priorPosx.y += newDelx.y;
+			priorPosx.z += newDelx.z;
+			priorPosy.x += newDely.x;
+			priorPosy.y += newDely.y;
+			priorPosy.z += newDely.z;
+			priorPosz.x += newDelz.x;
+			priorPosz.y += newDelz.y;
+			priorPosz.z += newDelz.z;
+			priorPosxyz.x += newDelxyz.x;
+			priorPosxyz.y += newDelxyz.y;
+			priorPosxyz.z += newDelxyz.z;
+			normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+			normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+			normalColors.push( new THREE.Color( 0.6,0,0.6,255 ))
+			normalColors.push( new THREE.Color( 0.6,0,0.6,255 ))
+			normalColors.push( new THREE.Color( 0,0.6,0.6,255 ))
+			normalColors.push( new THREE.Color( 0,0.6,0.6,255 ))
+			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
+			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
+		}
 
 		if(showOnNormalBall) 		
 			drawN( lnQ );
@@ -279,6 +337,7 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	normalColors = normalColors_;
 
 	showOnNormalBall = document.getElementById( "showOnNormalBall" )?.checked;
+	showTrajectories = document.getElementById( "showTrajectories" )?.checked;
         let curSliders = {
 	};
 			let lnQX = document.getElementById( "lnQX" ).value;

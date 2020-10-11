@@ -41,11 +41,12 @@
 		<p style="display:none">Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
 		<p style="display:none">Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
-		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
+		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >
 			<br>
-		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" value="checked">
+		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" >
+		 - Show Trajectories: <input type="checkbox" id="showTrajectories">
 			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" value="unchecked">
@@ -427,6 +428,9 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "showOnNormalBall" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "showTrajectories" );
+			is.onchange = updateMesh;
+
 			
 
 
