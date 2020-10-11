@@ -7,6 +7,8 @@ let stepCount = 1000;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let twistCount = 1;
+let normalVertices = null;
+let normalColors = null;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	var priorHere;
@@ -15,6 +17,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	var fibre;
 	let prior = null;
+
 	const lATC = Math.sqrt(A*A+T*T+C*C);
 	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
@@ -44,8 +47,11 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*2) %(1/subSteps)) - (Math.PI*2);
 		lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
-		
-		doDrawBasis( lnQ, fibre, true );
+
+		if(1) 		
+			doDrawBasis( lnQ, fibre, true );
+		else
+			drawN( lnQ );
 		
 	}
 
@@ -193,24 +199,35 @@ function QuatPathing(q_, v, c,normalVertices,normalColors) {
 
 
 
+	const spaceScale = 5;
+	const normal_del = 0.25;
+	const v = { x:0,y:4,z:0};
+//	const v = { x:1,y:1,z:1};
 
 function DrawQuatNormals(normalVertices,normalColors) {
-	const v = { x:0,y:1,z:0};
-	const spaceScale = 3;
-	const normal_del = 0.25;
-	drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
-	drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
-if(drawNormalBall/*draw normal ball with twist*/)
-	for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
-		for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
-			let x = Math.sin(t );
-			const z = Math.cos(t);
-			let norm ;
-			const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
-			//lnQ.twist( twistDelta );
-		drawN( lnQ, norm );
-	}
-	}
+	//drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
+	//drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
+	if(drawNormalBall/*draw normal ball with twist*/)
+		for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
+			for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
+				let x = Math.sin(t );
+				const z = Math.cos(t);
+				const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+				//lnQ.twist( twistDelta );
+				drawN( lnQ );
+			}
+		}
+	if(0)
+		for( x = -Math.PI*4;x < Math.PI*4; x+= 0.5 )
+		for( y = -Math.PI*4;y < Math.PI*4; y+= 0.5 )
+		for( z = -Math.PI*4;z < Math.PI*4; z+= 0.5 )
+		 {
+			{
+				const lnQ = new lnQuat( 0,x,y,z );
+				drawN( lnQ );
+			}
+		}
+
 
 	if(0)
 	for( let h = -1; h <= 1; h+= 0.25 ) {
@@ -218,15 +235,20 @@ if(drawNormalBall/*draw normal ball with twist*/)
 	for( let t = Math.PI; t < Math.PI*3/2; t+= 0.25 ){
 			let x = Math.sin(t );
 			const z = Math.cos(t);
-			let norm ;
-			const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
-		drawN( lnQ, norm );
+			const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+		drawN( lnQ );
 	}
 	}
-	function drawN( lnQ, n )
+
+
+}
+
+	function drawN( lnQ )
 	{
 			const new_v = lnQ.apply( v );
-
+			if( (new_v.x*new_v.x+new_v.y*new_v.y+new_v.z*new_v.z - 16 ) > 0.001 ) {
+				console.log( "TICK", v, (new_v.x*new_v.x+new_v.y*new_v.y+new_v.z*new_v.z - 16 ) );
+		}	
 			const basis = lnQ.getBasis( );
 
 			// the original normal direction; projected offset of sphere (linear scaled)
@@ -235,11 +257,11 @@ if(drawNormalBall/*draw normal ball with twist*/)
 			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 			//normalColors.push( new THREE.Color( 255,0,255,255 ))
 
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del  ,new_v.y*spaceScale + basis.right.y*normal_del  ,new_v.z*spaceScale + basis.right.z*normal_del ))
 
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                        ,new_v.y*spaceScale                        , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del     ,new_v.y*spaceScale + basis.up.y*normal_del     ,new_v.z*spaceScale + basis.up.z*normal_del ))
 
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
@@ -254,9 +276,10 @@ if(drawNormalBall/*draw normal ball with twist*/)
 	
 	}
 
+function DrawQuatPaths(normalVertices_,normalColors_) {
+	normalVertices = normalVertices_
+	normalColors = normalColors_;
 
-}
-function DrawQuatPaths(normalVertices,normalColors) {
         let curSliders = {
 	};
 			let lnQX = document.getElementById( "lnQX" ).value;
