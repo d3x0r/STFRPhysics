@@ -785,41 +785,29 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const ss2 = sxpy - sxmy
 		const cc1 = cxmy - cxpy
 
-		const sAng = Math.sin(ang/2)*2;
-	
-		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		const Clx = ang/sAng;//*Math.sqrt((Cx*Cx+Cy*Cy+Cz*Cz)/(sAng*sAng));//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-
-		const crsX = (ay*q.nz-az*q.ny);
-		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 )*Clx;
-		const crsY = (az*q.nx-ax*q.nz);
-		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 )*Clx;
-		const crsZ = (ax*q.ny-ay*q.nx);
-		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 )*Clx;
-			
-		//const Cx = sc1 * ax + sc2 * q.nx + ss*(ay*q.nz-az*q.ny);
-		//const Cy = sc1 * ay + sc2 * q.ny + ss*(az*q.nx-ax*q.nz);
-		//const Cz = sc1 * az + sc2 * q.nz + ss*(ax*q.ny-ay*q.nx);
 		const sAng = Math.sin(ang/2);
-	
-		//const Clx = (sAng)*(Math.abs(Cx/sAng)+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+		// the following expression is /2
+		// and is not normalized with sin of angle/2.
+		const crsX = (ay*q.nz-az*q.ny);
+		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
+		const crsY = (az*q.nx-ax*q.nz);
+		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
+		const crsZ = (ax*q.ny-ay*q.nx);
+		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
+			
 		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		/*
-		if( angleNorm !== 1 )
-			console.log( "ANGLE TO BE", ang*2, 2*ang/angleNorm );
-		*/
-		//ang = 2*ang/angleNorm;
 		
-		q.θ = ang;//sAng/Clx*ang;
+		q.θ  = ang;
 		q.qw = cosCo2;
-		q.s = sAng;
+		q.s  = sAng;
 		q.nx = Cx*Clx;
 		q.ny = Cy*Clx;
 		q.nz = Cz*Clx;
 	
-		q.x = q.nx*ang;
-		q.y = q.ny*ang;
-		q.z = q.nz*ang;
+		q.x  = q.nx*ang;
+		q.y  = q.ny*ang;
+		q.z  = q.nz*ang;
 
 		q.dirty = false;
 	} else {
