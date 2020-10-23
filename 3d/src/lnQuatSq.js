@@ -754,32 +754,22 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
 
-	const xmy = th/2 - q.θ/2; // X - Y  (x minus y)
-	const xpy = th/2 + q.θ/2  // X + Y  (x plus y )
+	const xmy = (th - q.θ)/2; // X - Y  (x minus y)
+	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
 	const cxmy = Math.cos(xmy);
 	const cxpy = Math.cos(xpy);
-	const sxmy = Math.sin(xmy);
-	const sxpy = Math.sin(xpy);
-	
-	//const as = Math.sin( th/2);
-	//const ac = Math.cos( th/2);
-	//const qw = Math.cos( q.θ/2);
-	//const qs = Math.sin( q.θ/2);
-	//const sc1 = as * qw;
-	//const sc2 = qs * ac;
-	//const ss = qs * as;
-	//const cc = qw * ac;
 	const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
-	//const cosCo2 = cc - ss* AdotB;
 
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
 
 	if( ang ) {      // as bc     bs ac       as bs
-			// vector rotation is just...
-			// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
-			// when btheta is small, baxis is small pi/2 cos is 0 so this is small
-			// when both are large, cross product is dominant (pi/2)
+		const sxmy = Math.sin(xmy);
+		const sxpy = Math.sin(xpy);
+		// vector rotation is just...
+		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
+		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
+		// when both are large, cross product is dominant (pi/2)
 
 		const ss1 = sxmy + sxpy
 		const ss2 = sxpy - sxmy
@@ -795,9 +785,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-			
+
+		// this is NOT /sin(theta);  it is, but only in some ranges...
 		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
-		
+
 		q.θ  = ang;
 		q.qw = cosCo2;
 		q.s  = sAng;
