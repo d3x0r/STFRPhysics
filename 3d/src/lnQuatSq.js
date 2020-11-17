@@ -777,7 +777,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 		const sAng = Math.sin(ang/2);
 
-		// the following expression is /2
+		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
