@@ -138,6 +138,13 @@
                  - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 		<p>
 		Show Axis/Angles: <input type="checkbox" id="showAxis" > Set Raw Angles:<input type="checkbox" id="rawAngles"> Show Degrees: <input type="checkbox" id="showDegrees" checked> 
+		<br>Rotation Mount (R)oll/(Y)aw/(P)itch: RYP<input type="radio" name="drawMode" id="mountRYP" checked > 
+			 - RPY<input type="radio" name="drawMode" id="mountRPY" >
+			 - PYR<input type="radio" name="drawMode" id="mountPYR" >
+			 - PRY<input type="radio" name="drawMode" id="mountPRY" >
+			 - YPR<input type="radio" name="drawMode" id="mountYPR" >
+			 - YRP<input type="radio" name="drawMode" id="mountYRP" >
+			 - free<input type="radio" name="drawMode" id="mountNone" >
 		<table id="sliders">
 			<!--col><col><col><col>
 			<col style="width:0">
@@ -638,6 +645,11 @@
 			is = document.getElementById("shownL");
 			is.onchange = updateMesh;
                                                       
+			["mountRYP","mountRPY","mountYPR","mountYRP","mountPYR","mountPRY","mountNone"].forEach( (m)=>{
+				is = document.getElementById(m);
+				is.onchange = updateMesh;
+			})
+
 			is = document.getElementById("rawAngles");
 			is.onchange = ()=>{
 				is = document.getElementById( "showScaled" ).checked = !document.getElementById( "rawAngles" ).checked;

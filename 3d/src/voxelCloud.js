@@ -168,6 +168,11 @@ function pointDistanceT( p, o, n ) {
 	return n.length();
 }
 
+const tests = [ { prime:'x', primeN:0, out:'h' },
+		{ prime:'y', primeN:1, out:'v' },
+		{ prime:'z', primeN:2, out:'s' },
+	];
+
 VoxelCloud.prototype.rayCast = function( o, forward )
 	{
 		const cloudPos = this.toGrid( o );
@@ -215,7 +220,7 @@ VoxelCloud.prototype.rayCast = function( o, forward )
 				n.z = 0;
 				n[test.prime] = off[test.prime]/2;
 			}
-			else if (Norm.x <= -0.01)
+			else if (Norm[test.prime] <= -0.01)
 			{
 				collide[test.prime] = true;
 				const d = Delta[test.out];

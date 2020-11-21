@@ -351,7 +351,7 @@ function onTouchCancel(event) {
 
 
 
-
+// duplicated in VoxelCloud
 function  rayCast(cluster, o, forward )
 {
     var Out = null;

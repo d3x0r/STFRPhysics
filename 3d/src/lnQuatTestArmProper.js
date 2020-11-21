@@ -530,12 +530,12 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				doDrawBasis( lnQ2, lnQ2, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 		}else {
+			lnQ.update();              
 			for( var t = -Math.PI*2; t<= Math.PI*2; t+=0.02 ) {
 				const lnQ1 = makeQuat((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1]
-						, ((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
+						, ((( showRotationCurve_ == "Y" ) ?t:0)     +curSliders.lnQY[showRotationCurveSegment-1])
 						, ((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1]) );
 				lnQ1.update();
-				lnQ.update();
 				//const lnQ1 = mkQuat().yaw((( showRotationCurve_ == "Y" ) ?t:0)+curSliders.lnQY[showRotationCurveSegment-1])
 				//	.pitch((( showRotationCurve_ == "X" ) ?t:0)	   +curSliders.lnQX[showRotationCurveSegment-1])
 				//	.roll((( showRotationCurve_ == "Z" ) ?t:0)	    +curSliders.lnQZ[showRotationCurveSegment-1])
@@ -1394,6 +1394,16 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
 	drawRawRot = document.getElementById( "drawRawRot")?.checked;
+        mountOrder = document.getElementById( "mountNone")?.checked?6
+        	: document.getElementById( "mountYRP")?.checked?5
+        	: document.getElementById( "mountYPR")?.checked?4
+        	: document.getElementById( "mountPRY")?.checked?3
+        	: document.getElementById( "mountPYR")?.checked?2
+        	: document.getElementById( "mountRPY")?.checked?1
+        	: document.getElementById( "mountRYP")?.checked?0
+                : 6
+                ;
+        
 	drawRawRotIter = document.getElementById( "drawRawRotIter")?.checked;
 	drawRotIter = document.getElementById( "drawRotIter")?.checked;
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
@@ -1428,7 +1438,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
 	{
-		mountOrder = 6;//order;	
 		for( var n = 1; n <= 5; n++ ) {
 			let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 			let lnQY = Number(document.getElementById( "lnQY"+n ).value);
