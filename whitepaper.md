@@ -204,7 +204,7 @@ __Figure L__
 		Cy = as * q.qw * ay + q.s * ac * q.ny + q.s*as*(az*q.nx-ax*q.nz);
 		Cz = as * q.qw * az + q.s * ac * q.nz + q.s*as*(ax*q.ny-ay*q.nx);
 
-		Clx = (anlge*2)/ (sAng * ( abs(Cx/sAng) + abs(Cy/sAng) + abs(Cz/sAng) ));
+		Clx = angle / sqrt( Cx*Cx + Cy*Cy + Cz*Cz );
 
 		// angle angle angle
 		x = Cx*Clx;
