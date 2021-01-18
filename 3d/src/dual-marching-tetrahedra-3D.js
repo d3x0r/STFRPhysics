@@ -87,7 +87,9 @@ this is the vertex references on the right, and which 'vert N' applies.
 
 */
 
-var DualMarchingTetrahedra3 = (function() {
+import {lnQuat} from "./lnQuatSq.js"
+
+var DualMarchingTetrahedra3 = window.DualMarchingTetrahedra3 = (function() {
 const debug_ = false;
 	// static working buffers
 
@@ -489,6 +491,8 @@ function PointState(v,type1,type2,typeDelta) {
 	let result = {
 		id:pointStateHolder.length,
 		normalBuffer:[0,0,0],
+		normalAngle : 0,
+		normals : 0,
 		vertBuffer:[v[0],v[1],v[2]],
 		visits:0,
 		valid : true,
@@ -957,7 +961,7 @@ function meshCloud(data, dims) {
 					const data0=baseOffset+dataOffset[p0];
 					const data1=baseOffset+dataOffset[p1];
 	
-					d=-data[data0]; e=-data[data1];
+					const d=-data[data0]; const e=-data[data1];
 	
 					if( ( d <= 0 && e >0  )|| (d > 0 && e <= 0 ) ){
 						let t;
@@ -1044,7 +1048,7 @@ function meshCloud(data, dims) {
 				if( z >= (dim2-1)) tetSkip |= 4;
 				const dataOffset = x + (y*dim0) + z*dim1*dim0;
 	        		odd = (( x + y ) &1) ^ zOdd;
-				for( tet = 0; tet < 5; tet++ ) {
+				for( let tet = 0; tet < 5; tet++ ) {
 					if( tetMasks[odd][tet] & tetSkip ) continue;
 
 					let f;
@@ -1148,9 +1152,10 @@ function meshCloud(data, dims) {
 								fnorm[2]=a       *tmp[1] - b       *tmp[0];
 								let ds;
 								if( (ds=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.000001 ){
-									ds = 1/Math.sqrt(ds);
-									fnorm[0] *= ds;fnorm[1] *= ds;fnorm[2] *= ds;
-									if( 0 && normalVertices ) {
+									//ds = 1/Math.sqrt(ds);
+									//fnorm[0] *= ds;fnorm[1] *= ds;fnorm[2] *= ds;
+									if( normalVertices ) {
+										/*
 										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
 										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
 										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
@@ -1164,18 +1169,20 @@ function meshCloud(data, dims) {
 										normalColors.push( new THREE.Color( 0,255,0,255 ))
 										normalColors.push( new THREE.Color( 0,0,255,255))
 										normalColors.push( new THREE.Color( 0,0,255,255 ))
+										*/
+										//normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										//normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
+										//normalColors.push( new THREE.Color( 255,255,255,255 ))
+										//normalColors.push( new THREE.Color( 255,255,255,255 ))
 
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
-										normalColors.push( new THREE.Color( 255,255,255,255 ))
-										normalColors.push( new THREE.Color( 255,255,255,255 ))
 									};
 								}else {
 									// basically never happens given the initial triangle characterization.
 									//console.log( "1Still not happy...", fnorm, ds,vA, vB, vC );
 									//continue;
 									// this is a sliver tri-face; really want to disregard this one.
-									if( 0 && normalVertices ) {
+									if( normalVertices ) {
+									/*
 										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
 										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
 										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
@@ -1189,13 +1196,13 @@ function meshCloud(data, dims) {
 										normalColors.push( new THREE.Color( 0,255,0,255 ))
 										normalColors.push( new THREE.Color( 0,0,255,255))
 										normalColors.push( new THREE.Color( 0,0,255,255 ))
+									*/
 
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
-										normalColors.push( new THREE.Color( 1,1,1,255 ))
-										normalColors.push( new THREE.Color( 1,1,1,255 ))
+									//	normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+									//	normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
+									//	normalColors.push( new THREE.Color( 1,1,1,255 ))
+									//	normalColors.push( new THREE.Color( 1,1,1,255 ))
 									};
-
 
 									// b->A  c->A
 									fnorm[0] = vB[0]-vA[0];fnorm[1] = vB[1]-vA[1];fnorm[2] = vB[2]-vA[2];
@@ -1206,8 +1213,8 @@ function meshCloud(data, dims) {
 									fnorm[2]=a       *tmp[1] - b       *tmp[0];
 									let ds2;
 									if( (ds2=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.00000001 ){
-										ds2 = 1/Math.sqrt(ds2);
-										fnorm[0] *= ds2;fnorm[1] *= ds2;fnorm[2] *= ds2;
+										//ds2 = 1/Math.sqrt(ds2);
+										//fnorm[0] *= ds2;fnorm[1] *= ds2;fnorm[2] *= ds2;
 									} else {
 										//console.log( "2Still not happy...", ds2, vA, vB, vC );
 										// B->C  A->C
@@ -1219,14 +1226,30 @@ function meshCloud(data, dims) {
 										fnorm[2]=a       *tmp[1] - b       *tmp[0];
 										let ds3;
 										if( (ds3=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.00000001 ){
-											ds3 = 1/Math.sqrt(ds3);
-											fnorm[0] *= ds3;fnorm[1] *= ds3;fnorm[2] *= ds3;
+											//ds3 = 1/Math.sqrt(ds3);
+											//fnorm[0] *= ds3;fnorm[1] *= ds3;fnorm[2] *= ds3;
 										} 
 										//else 
 										//	console.log( "3Still not happy...", ds, vA, vB, vC );
 									}
 								}
-	
+								const lnQ = new lnQuat( { x:-fnorm[0], y:-fnorm[1], z:-fnorm[2] }, false );
+								fnorm[0] = lnQ.x;
+								fnorm[1] = lnQ.y;
+								fnorm[2] = lnQ.z;
+
+									if( 0 && normalVertices ) {
+										const basis = lnQ.getBasis();
+										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										normalVertices.push( new THREE.Vector3( v1[0] + basis.up.x,v1[1] +basis.up.y,v1[2] +basis.up.z ));
+										normalColors.push( new THREE.Color( 255,55,255,255 ))
+										normalColors.push( new THREE.Color( 255,55,255,255 ))
+
+										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										normalVertices.push( new THREE.Vector3( v1[0] + basis.right.x,v1[1] +basis.right.y,v1[2] +basis.right.z ));
+										normalColors.push( new THREE.Color( 255,0,0,255 ))
+										normalColors.push( new THREE.Color( 255,0,0,255 ))
+									}
 								{
 									a1t[0]=vB[0]-vA[0];a1t[1]=vB[1]-vA[1];a1t[2]=vB[2]-vA[2];
 									a2t[0]=vC[0]-vA[0];a2t[1]=vC[1]-vA[1];a2t[2]=vC[2]-vA[2];
@@ -1236,9 +1259,16 @@ function meshCloud(data, dims) {
 									    (a2t[0]*a2t[0]+a2t[1]*a2t[1]+a2t[2]*a2t[2] ) >0.00000001 )
 										angle = 2*Math.acos( clamp((a1t[0]*a2t[0]+a1t[1]*a2t[1]+a1t[2]*a2t[2])/(Math.sqrt(a1t[0]*a1t[0]+a1t[1]*a1t[1]+a1t[2]*a1t[2])*Math.sqrt(a2t[0]*a2t[0]+a2t[1]*a2t[1]+a2t[2]*a2t[2] ) ), 1.0 ));
 									if( angle < 0.0001 ) angle = 0.001
+									angle = 1.0;
+									//pointStateHolder[ai].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
+									//pointStateHolder[ai].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
+									//pointStateHolder[ai].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
+									angle = 1.0;
 									pointStateHolder[ai].normalBuffer[0] += fnorm[0]*angle;
 									pointStateHolder[ai].normalBuffer[1] += fnorm[1]*angle;
 									pointStateHolder[ai].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[ai].normalAngle += angle;
+									pointStateHolder[ai].normals ++;
 								}
 
 								{
@@ -1251,9 +1281,15 @@ function meshCloud(data, dims) {
 									}
 
 									if( angle < 0.0001 ) angle = 0.001
+									angle = 1.0;
+									//pointStateHolder[bi].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
+									//pointStateHolder[bi].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
+									//pointStateHolder[bi].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
 									pointStateHolder[bi].normalBuffer[0] += fnorm[0]*angle;
 									pointStateHolder[bi].normalBuffer[1] += fnorm[1]*angle;
 									pointStateHolder[bi].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[bi].normalAngle += angle;
+									pointStateHolder[bi].normals ++;
 								}
 
 								{
@@ -1265,9 +1301,15 @@ function meshCloud(data, dims) {
 										(a2t[0]*a2t[0]+a2t[1]*a2t[1]+a2t[2]*a2t[2] ) >0.00000001 )
 										angle = 2*Math.acos( clamp((a1t[0]*a2t[0]+a1t[1]*a2t[1]+a1t[2]*a2t[2])/(Math.sqrt(a1t[0]*a1t[0]+a1t[1]*a1t[1]+a1t[2]*a1t[2])*Math.sqrt(a2t[0]*a2t[0]+a2t[1]*a2t[1]+a2t[2]*a2t[2] ) ), 1.0) );
 									if( angle < 0.0001 ) angle = 0.001
+									//pointStateHolder[ci].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
+									//pointStateHolder[ci].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
+									//pointStateHolder[ci].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
+									angle = 1.0;
 									pointStateHolder[ci].normalBuffer[0] += fnorm[0]*angle;
 									pointStateHolder[ci].normalBuffer[1] += fnorm[1]*angle;
 									pointStateHolder[ci].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[ci].normalAngle += angle;
+									pointStateHolder[ci].normals ++;
 								}
 						}
 // --^-^-^-^-^-^-- END GENERATE NORMALS --^-^-^-^-^-^--
@@ -1280,22 +1322,43 @@ function meshCloud(data, dims) {
 	// normalize the normals.
 	for( var ps = 0; ps < pointStateHolder.length; ps++ ) {
 		const pointstate = pointStateHolder[ps];
+		pointstate.normalBuffer[0] /= pointstate.normals;
+		pointstate.normalBuffer[1] /= pointstate.normals;
+		pointstate.normalBuffer[2] /= pointstate.normals;
+
 		const s = 1/Math.sqrt(pointstate.normalBuffer[0]*pointstate.normalBuffer[0]+pointstate.normalBuffer[1]*pointstate.normalBuffer[1]+pointstate.normalBuffer[2]*pointstate.normalBuffer[2] );
 		if( s === Infinity ) { 
 			pointstate.valid = false;
+			console.log( "Failed pointState buffer is:", pointstate.normalBuffer );
 			continue;
 			//debugger;
 		}
-		pointstate.normalBuffer[0] *= -s;
-		pointstate.normalBuffer[1] *= -s;
-		pointstate.normalBuffer[2] *= -s;
+		const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
+		const basis = lnQ.getBasis();
+		//pointstate.normalBuffer[0] *= -s;
+		//pointstate.normalBuffer[1] *= -s;
+		//pointstate.normalBuffer[2] *= -s;
+		pointstate.normalBuffer[0] = basis.up.x;
+		pointstate.normalBuffer[1] = basis.up.y;
+		pointstate.normalBuffer[2] = basis.up.z;
+
+
 		//if( isNaN(pointstate.normalBuffer[0] )) debugger;
-		if(  0 && normalVertices ) {
+		if(  normalVertices ) {
+			//const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
+			//const basis = lnQ.getBasis();
+			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
+			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + basis.up.x,pointstate.vertBuffer[1] + basis.up.y,pointstate.vertBuffer[2] + basis.up.z ));
+			normalColors.push( new THREE.Color( 125,125,0,255 ))
+			normalColors.push( new THREE.Color( 125,125,0,255 ))
+
+/*
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + pointstate.normalBuffer[0]/2,pointstate.vertBuffer[1] + pointstate.normalBuffer[1]/2,pointstate.vertBuffer[2] + pointstate.normalBuffer[2]/2 ));
 			normalColors.push( new THREE.Color( 255,255,0,255 ))
 			normalColors.push( new THREE.Color( 255,255,0,255 ))
-	};
+*/
+		}
 
 	}
 
@@ -1317,10 +1380,9 @@ function meshCloud(data, dims) {
 				if( z >= (dim2-1)) tetSkip |= 4;
 				const dataOffset = x + (y*dim0) + z*dim1*dim0;
 	        		odd = (( x + y ) &1) ^ zOdd;
-				for( tet = 0; tet < 5; tet++ ) {
+				for( let tet = 0; tet < 5; tet++ ) {
 					if( tetMasks[odd][tet] & tetSkip ) continue;
 
-					let f;
 					let invert = 0;
 					let useFace = 0;
 
@@ -1408,6 +1470,7 @@ function meshCloud(data, dims) {
 							const ai = points[baseOffset+fpi[0][0]];
 							const bi = points[baseOffset+fpi[0][1]];
 							const ci = points[baseOffset+fpi[0][2]];
+							let psh1, psh2, psh3;
 
 		
 							//console.log( "vertices", tet, useFace, tri, "odd:",odd, "invert:", invert, "pos:", x, y, z, "dels:", pointStateHolder[ai].typeDelta, pointStateHolder[bi].typeDelta, pointStateHolder[ci].typeDelta, "a:", pointStateHolder[ai].invert, pointStateHolder[ai].type1, pointStateHolder[ai].type2, "b:", pointStateHolder[bi].invert, pointStateHolder[bi].type1, pointStateHolder[bi].type2, "c:", pointStateHolder[ci].invert, pointStateHolder[ci].type1, pointStateHolder[ci].type2 );
@@ -1573,6 +1636,7 @@ function meshCloud(data, dims) {
 		if( opts.geometryHelper )	{
 			return opts.geometryHelper.addFace( ai, ci, bi, n, false	);
 		}
+		let f;
 
 		return faces.push( f = new THREE.Face3( ai, ci, bi, n ) );
 
