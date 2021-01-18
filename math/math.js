@@ -36,10 +36,10 @@ const myForm = {
 
 const values = {A:0.0,B:0.0,C:0.0,D:0.0};
 
-myForm.sliderA.oninput = readValues;
-myForm.sliderB.oninput = readValues;
-myForm.sliderC.oninput = readValues;
-myForm.sliderD.oninput = readValues;
+myForm.sliderA.oninput = myForm.sliderValA.oninput = readValues;
+myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
+myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
+myForm.sliderD.oninput = myForm.sliderValD.oninput = readValues;
 
 function readValues()  {
 	values.A = (Number(myForm.sliderA.value)/10.0)-5;
