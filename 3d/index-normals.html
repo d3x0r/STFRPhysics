@@ -23,7 +23,7 @@
 	<script src="./src/marchingtetrahedra2.js"></script>
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
-	<script src="./src/dual-marching-tetrahedra-3D.js"></script>
+	<script type="module" src="./src/dual-marching-tetrahedra-3D.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
 	<script src="./src/perlinnoise.js"></script>
@@ -31,8 +31,6 @@
 		<link href="./src/main.css" rel="stylesheet">
 	</head>
 <body>
-	<!-- three.js container -->
-		<div id="container"></div>
 	<!-- info on screen display -->
 	<div id="info">
 		<div class="top">
@@ -71,13 +69,15 @@
 
 	  </div>
 	</div>
+	<!-- three.js container -->
+		<div id="container"></div>
 
 	<script type="text/javascript">
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Dual Marching Tetrahedra (DCL-volume)' : DualMarchingTetrahedra3
+		    'Dual Marching Tetrahedra (DCL-volume)' : window.DualMarchingTetrahedra3
 		  , 'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
 		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
@@ -429,6 +429,7 @@
 					context : undefined,
 				});
 			}
+		    meshers['Dual Marching Tetrahedra (DCL-volume)'] = window.DualMarchingTetrahedra3;
 
 			canvas.addEventListener( "mousemove", (evt)=>{
 				if( material.uniforms && material.uniforms.cursorRayNormal ) {
