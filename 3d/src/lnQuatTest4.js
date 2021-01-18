@@ -1,5 +1,8 @@
+import {lnQuat} from "./lnQuatSq.js" 
 
-let A,B,C,D,E;  // slider values
+let A,B,C,D,E,T;  // slider values
+let twistDelta = 0;
+let normalizeNormalTangent = false;
 let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
 let turnCount = 12;
@@ -63,7 +66,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const steps = stepCount;
 	const subSteps = turnCount;//Math.sqrt(steps);
 		prior = null;              
-	for( nTotal = 0; nTotal < steps; nTotal++ ) {
+	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
 		fibre = nTotal * ( 1*( 2*Math.PI ) / ( steps ) );//  - 2*Math.PI;
 		
 		const lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
@@ -332,6 +335,7 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	
 	}
 
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices_,normalColors_) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_;

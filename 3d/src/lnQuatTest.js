@@ -1,5 +1,6 @@
+import {lnQuat} from "./lnQuatSq.js"
 
-let A,B,C,D,E;  // slider values
+let A,B,C,D,E,T;  // slider values
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 
@@ -701,6 +702,8 @@ if(drawNormalBall/*draw normal ball with twist*/)
 
 
 }
+
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices,normalColors) {
 
 			let lnQX = document.getElementById( "lnQX" ).value;
@@ -712,7 +715,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 			//A = (lnQX/10-5)/10;
 
 			//let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(B=(lnQY/10-5)/20) , c: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
-			T = (lnQT/500-1);
+			 T = (lnQT/500-1);
 			E=lnQA/100;
 			let lnQ = new lnQuat( 0, (A=lnQX/500-1) , (B=lnQY/500-1) , (C=lnQZ/500-1)   );
 	A = A * Math.PI*4;
@@ -721,7 +724,7 @@ function DrawQuatPaths(normalVertices,normalColors) {
 	T = T * Math.PI*4;
 	E = E * 30;
 	D = T ;
-	twistDelta = A;
+	//twistDelta = A;
 
 
 	let check = document.getElementById( "showCoordinateGrid" );

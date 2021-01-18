@@ -39,6 +39,12 @@ function lnQuat( theta, d, a, b ){
 	this.nx = 0;  // default normal
 	this.ny = 1;  // 
 	this.nz = 0;
+
+	this.dθ = 0;
+	this.dnx = 0;  // default normal
+	this.dny = 1;  // 
+	this.dnz = 0;
+
 	// temporary sign/cos/normalizers
 	this.s = 0;  // sin(composite theta)
 	this.qw = 1; // cos(composite theta)
@@ -561,6 +567,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		return result.refresh();
 	}
 	const q = this;
+	let ax, ay, az;
 	if( 'undefined' === typeof del ) del = 1.0;
 	this.update();
 	// 3+2 +sqrt+exp+sin
@@ -744,6 +751,43 @@ lnQuat.prototype.applyInv = function( v ) {
 	// 21 mul + 9 add
 }
 
+function getPitchDirection( q, th ) 
+{
+	const s  = Math.sin( q.θ ); // sin/cos are the function of exp()
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+
+	const cnx = c*q.nx
+	const ax = ( cnx*q.nx + c1 );
+	const ay = ( cnx*q.ny + s*q.nz );
+	const az = ( cnx*q.nz - s*q.ny );
+
+	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
+
+	const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
+			       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
+	const dAng = acos( temp ) * 2;
+
+	if( dAng ) {      // as bc     bs ac       as bs
+		const crsX = (ay*q.nz-az*q.ny);
+		const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
+		const crsY = (az*q.nx-ax*q.nz);
+		const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
+		const crsZ = (ax*q.ny-ay*q.nx);
+		const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
+
+		const dClx = dAng/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
+		return {x:dCx*dClx, y:dCy*dClx,z:dCz*dClx };
+	} 
+	return {x:0,y:0,z:0};
+}
+
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
 function finishRodrigues( q, oct, ax, ay, az, th ) {
 	// A dot B   = cos( angle A->B )
@@ -763,6 +807,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
 
+	const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
+			       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
+	const dAng = acos( temp ) * 2;
+
 	if( ang ) {      // as bc     bs ac       as bs
 		const sxmy = Math.sin(xmy);
 		const sxpy = Math.sin(xpy);
@@ -777,17 +825,30 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 		const sAng = Math.sin(ang/2);
 
+		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
+
 		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
+		const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
 		const crsY = (az*q.nx-ax*q.nz);
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
+		const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
 		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
+		const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
+					- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
+					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
 		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+
+		const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
 
 		q.θ  = ang;
 		q.qw = cosCo2;
@@ -795,7 +856,12 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		q.nx = Cx*Clx;
 		q.ny = Cy*Clx;
 		q.nz = Cz*Clx;
-	
+
+		q.dnx = dCx*dClx;
+		q.dny = dCy*dClx;
+		q.dnz = dCz*dClx;
+		q.dθ = dAng; 
+		
 		q.x  = q.nx*ang;
 		q.y  = q.ny*ang;
 		q.z  = q.nz*ang;
@@ -1254,3 +1320,5 @@ function longslerp(a, b, t ) {
       return v;
     }
 
+export {lnQuat}
+export {slerp}

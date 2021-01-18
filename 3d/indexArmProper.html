@@ -7,9 +7,9 @@
 
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuatSq.js"></script>
-		<script src="./src/Quat.js"></script>
-		<script src="./src/lnQuatTestArmProper.js"></script>
+		<script type="module" src="./src/lnQuatSq.js"></script>
+		<script type="module" src="./src/Quat.js"></script>
+		<script type="module" src="./src/lnQuatTestArmProper.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
 		<script src="./src/Stats.js"></script>
@@ -386,7 +386,7 @@
 			var start = (new Date()).getTime();
 
 	        	if( geometryNormals  ) 
-				tickCallback = DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+				tickCallback = window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 		
 	          var opts = {
         	          elements : null,

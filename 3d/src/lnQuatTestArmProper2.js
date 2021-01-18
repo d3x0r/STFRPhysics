@@ -1,4 +1,4 @@
-
+import {lnQuat} from "./lnQuatSq.js"
 let A,B,C,D,E;  // slider values
 let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
@@ -393,6 +393,8 @@ function DrawQuatNormals(normalVertices,normalColors) {
 
 
 }
+
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices,normalColors) {
         let curSliders = {
 	};
@@ -451,8 +453,8 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 
 	check = document.getElementById( "normalizeTangents");
-	if( check )
-		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+	//if( check )
+		//normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
         DrawQuatNormals(normalVertices,normalColors);
 

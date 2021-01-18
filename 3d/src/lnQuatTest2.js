@@ -1,5 +1,7 @@
-
-let A,B,C,D,E;  // slider values
+import {lnQuat} from "./lnQuatSq.js"
+let A,B,C,D,E,T;  // slider values
+let twistDelta= 0;
+let normalizeNormalTangent = false;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let showInvCoordinateGrid = false;
@@ -471,7 +473,7 @@ if(1)
 		if(1) { // graph of angle around curve...
 			if( priorHere ) {
 				const dot = priorHere.x * lnQ2.nx + priorHere.y * lnQ2.ny + priorHere.z * lnQ2.nz;
-				const val = (Math.PI-acos(dot))*100 ;
+				const val = (Math.PI-Math.acos(dot))*100 ;
 				normalVertices.push( new THREE.Vector3( (o[0]+(t))*spaceScale - 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
 				normalVertices.push( new THREE.Vector3( (o[0]+(t))*spaceScale + 0.5 * normal_del   ,(o[1]+(val))*spaceScale                     , (o[2]+(0))*spaceScale ))
 				                                                                                                                                
@@ -815,6 +817,7 @@ if(drawNormalBall/*draw normal ball with twist*/)
 
 
 }
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices,normalColors) {
 
 			let lnQX = document.getElementById( "lnQX" ).value;

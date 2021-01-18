@@ -7,8 +7,8 @@
 
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuat.js"></script>
-		<script src="./src/lnQuatTest2.js"></script>
+		<script type="module" src="./src/lnQuat.js"></script>
+		<script type="module" src="./src/lnQuatTest2.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
 		<script src="./src/Stats.js"></script>
@@ -155,7 +155,7 @@
 				inflatVal = 1+( inflatVal - 50 ) / 5;
 
 	if( geometryNormals  ) 
-		DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+		window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 
 
 

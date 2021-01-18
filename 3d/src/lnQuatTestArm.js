@@ -1,4 +1,4 @@
-
+import {lnQuat} from "./lnQuatSq.js"
 let A,B,C,D,E;  // slider values
 let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
@@ -85,7 +85,7 @@ function drawArm(curSliders,normalVertices,normalColors) {
 			}
 
 			let step;
-		for( s = 0; s < 100; s++ )
+		for( let s = 0; s < 100; s++ )
 		{
 			//let step = R_[n].applyDel( shortArm, s/100.0, n?R[n-1]:null, 1.0 );
 
@@ -333,7 +333,7 @@ function QuatPathing(q_, v, c,normalVertices,normalColors) {
 
 
 
-
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatNormals(normalVertices,normalColors) {
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 3;
@@ -457,8 +457,8 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 
 	check = document.getElementById( "normalizeTangents");
-	if( check )
-		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+	//if( check )
+		//normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
         DrawQuatNormals(normalVertices,normalColors);
 
