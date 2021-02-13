@@ -1,3 +1,4 @@
+
 const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
@@ -18,6 +19,14 @@ function acos(x) {
 
 const test = true;
 let normalizeNormalTangent = false;
+let vectorType = Vector;
+
+function Vector(x,y,z) {
+	this.x=x;
+	this.y=y;
+	this.z=z;
+}
+
 var twistDelta = 0;
 // -------------------------------------------------------------------------------
 //  Log Quaternion (Rotation part)
@@ -30,7 +39,7 @@ var twistDelta = 0;
 // lnQuat( {a:, b:, c:} );                 - angle-angle-angle set raw spins.
 // lnQuat( {x:, y:, z: }, {x:, y:, z: } )  - set as lookAt; forward, up vectors
 // lnQuat( {x:, y:, z: }, null )           - set as lookAt; forward, automatic 'up'
-function lnQuat( theta, d, a, b ){
+function lnQuat( theta, d, a, b, e ){
 	this.w = 0; // unused, was angle of axis-angle, then was length of angles(n)...
 	this.x = 0;  // these could become wrap counters....
 	this.y = 0;  // total rotation each x,y,z axis.
@@ -51,6 +60,69 @@ function lnQuat( theta, d, a, b ){
 	this.θ = 0; // length
 	this.refresh = null;
 	this.dirty = true; // whether update() has to do work.
+	this.set( theta,d,a,b,e);
+}
+
+lnQuat.setVectorType = function( vT ){
+	vectorType = vT;
+}
+
+lnQuat.prototype.set = function(theta,d,a,b,e)
+{
+
+	function alignZero(q) {
+		//const fN = 1/Math.sqrt( tz*tz+tx*tx );
+		const b = q.getBasis();
+		const ty = b.up.y;
+		const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
+		const txn = -q.nz;
+		const tzn = q.nx;
+		
+		const s = Math.sin( cosTheta ); // double angle substituted
+		const c = 1- Math.cos( cosTheta ); // double angle substituted
+		
+		// determinant coordinates
+		const angle = acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
+		
+		// compute the axis
+		const yz = s * q.nx;
+		const xz = ( 2 - c * (q.nx*q.nx + q.nz*q.nz)) * tzn;
+		const xy = s * q.nx * tzn  
+		         + s * q.nz * (1-txn);
+		
+		const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+		q.nx = yz *tmp;
+		q.ny = xz *tmp;
+		q.nz = xy *tmp;
+		
+		const lNorm = angle;
+		q.x = q.nx * lNorm;
+		q.y = q.ny * lNorm;
+		q.z = q.nz * lNorm;
+		
+		// the remining of this is update()
+		q.θ = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+		q.s = Math.sin( q.θ/2);
+		q.qw = Math.cos( q.θ/2);
+		q.dirty = false;
+		/*
+		// the above is this;  getBasis(up), compute new forward and cross right
+		// and restore from basis.
+		const trst = q.getBasis();
+		const fN = 1/Math.sqrt( tz*tz+tx*tx );
+	                                      
+		trst.forward.x = tz*fN;
+		trst.forward.y = 0;
+		trst.forward.z = -tx*fN;
+		trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
+		trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
+		trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
+	                                      
+		q.fromBasis( trst );
+		q.update();						
+		*/
+	}
+
 
 	if( "undefined" !== typeof theta ) {
 
@@ -93,6 +165,11 @@ function lnQuat( theta, d, a, b ){
 				this.x = d;
 				this.y = a;
 				this.z = b;
+				this.dirty = true;
+				if( e ) {
+					this.update();
+					alignZero(this);
+				}
 			}
 
 		}else {
@@ -100,6 +177,17 @@ function lnQuat( theta, d, a, b ){
 				if( "up" in theta ) {
 // basis object {forward:,right:,up:}
 					return this.fromBasis( theta );
+				}
+				if( "lat" in theta ) {
+					const x = Math.sin(theta.lng);
+					const z = Math.cos(theta.lng);
+					this.x = x * theta.lat; this.y = 0; this.z = z * theta.lat;
+					this.dirty = true;
+					if( d ) {
+						this.update();
+						alignZero(this);
+					}
+					return;
 				}
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
@@ -210,7 +298,7 @@ function lnQuat( theta, d, a, b ){
 // angle-axis initialization method
 			const θ = theta/ Math.sqrt( d.x*(d.x) + d.y*(d.y) + d.z*(d.z) ); // make sure to normalize axis.
 			// if no rotation, then nothing.
-			if( abs(theta) > 0.000001 ) {
+			if( Math.abs(theta) > 0.000001 ) {
 				this.x = d.x * θ;
 				this.y = d.y * θ;
 				this.z = d.z * θ;
@@ -226,7 +314,7 @@ let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
-	console.log( "FB t is:", t, basis.right.x, basis.up.y, basis.forward.z );
+	//console.log( "FB t is:", t, basis.right.x, basis.up.y, basis.forward.z );
 
 	//	if( t > 1 || t < -1 )
 	// 1,1,1 -1 = 2;/2 = 1
@@ -293,7 +381,7 @@ lnQuat.prototype.exp = function() {
 
 // return the difference in spins
 lnQuat.prototype.spinDiff = function( q ) {
-	return abs(this.x - q.x) + abs(this.y - q.y) + abs(this.z - q.z);
+	return Math.abs(this.x - q.x) + Math.abs(this.y - q.y) + Math.abs(this.z - q.z);
 }
 
 lnQuat.prototype.add = function( q2, t ) {
@@ -494,19 +582,19 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 			s = Math.sin( t*q.θ );
 			c1 = Math.cos( t*q.θ );
 			c = 1 - c1;
-			return { x :     ( wy() + xz() ),  y :     ( yz() - wx() ), z : c1 + ( zz() ) };
+			return new vectorType(   ( wy() + xz() ), ( yz() - wx() ),  c1 + ( zz() ) );
 		},
 		right(t) {
 			s = Math.sin( t*q.θ );
 			c1 = Math.cos( t*q.θ );
 			c = 1 - c1;
-			return { x : c1 + ( xx() ),  y :     ( wz() + xy() ), z :     ( xz() - wy() ) };
+			return new vectorType(     c1 + ( xx() ), ( wz() + xy() ),      ( xz() - wy() ) );
 		},
 		up(t) {
 			s = Math.sin( t*q.θ );
 			c1 = Math.cos( t*q.θ );
 			c = 1 - c1;
-			return { x :     ( xy() - wz() ),  y : c1 + yy(), z :     ( wx() + yz() ) };
+			return new vectorType(   ( xy() - wz() ),   c1 + yy(),      ( wx() + yz() ) );
 		}
 	}
 }
@@ -530,9 +618,9 @@ lnQuat.prototype.apply = function( v ) {
 	const q = this;
 	this.update();
 	// 3+2 +sqrt+exp+sin
-        if( !q.θ ) {
+	if( !q.θ ) {
 		// v is unmodified.	
-		return {x:v.x, y:v.y, z:v.z }; // 1.0
+		return new vectorType( v.x, v.y, v.z ); // 1.0
 	} else {
 		const nst = q.s; // normal * sin_theta
 		const qw = q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
@@ -545,9 +633,9 @@ lnQuat.prototype.apply = function( v ) {
 		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
-		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		       , y : v.y + qw * ty + ( qz * tx - tz * qx )
-		       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		return new vectorType(  v.x + qw * tx + ( qy * tz - ty * qz )
+		       , v.y + qw * ty + ( qz * tx - tz * qx )
+		       , v.z + qw * tz + ( qx * ty - tx * qy ) );
 	} 
 }
 
@@ -561,7 +649,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 				const ax = q.nx;
 				const ay = q.ny;
 				const az = q.nz;
-	                        return finishRodrigues( q, 0, ax, ay, az, q.θ*del );
+				return finishRodrigues( q, 0, ax, ay, az, q.θ*del );
 			}
 		);
 		return result.refresh();
@@ -575,7 +663,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		// v is unmodified.	
 		if( result2 ) 
 			result2.portion = this;
-		return {x:v.x, y:v.y, z:v.z }; // 1.0
+		return new vectorType(v.x, v.y, v.z ); // 1.0
 	} else  {
 		if( q2 ) {
 			q2.update();
@@ -627,9 +715,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			const tx = 2 * (qy * v.z - qz * v.y);
 			const ty = 2 * (qz * v.x - qx * v.z);
 			const tz = 2 * (qx * v.y - qy * v.x);
-			return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-			       , y : v.y + qw * ty + ( qz * tx - tz * qx )
-			       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };			
+			return new vectorType( v.x + qw * tx + ( qy * tz - ty * qz )
+			       , v.y + qw * ty + ( qz * tx - tz * qx )
+			       , v.z + qw * tz + ( qx * ty - tx * qy ) );
 		}
 		else {
 			if( SLERP ) {
@@ -648,7 +736,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 
 		const θ = Math.sqrt(ax*ax+ay*ay+az*az);
 		if( !θ ) {
-			return { x:v.x, y:v.y, z:v.z }
+			return new vectorType( v.x, v.y, v.z )
 		}
 		const s  = Math.sin( θ/2 );//q.s;
 		const nst = s/θ; // sin(theta)/r    normal * sin_theta
@@ -661,9 +749,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		const tx = 2 * (qy * v.z - qz * v.y);
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
-		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-		       , y : v.y + qw * ty + ( qz * tx - tz * qx )
-		       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+		return new vectorType( v.x + qw * tx + ( qy * tz - ty * qz )
+		       , v.y + qw * ty + ( qz * tx - tz * qx )
+		       , v.z + qw * tz + ( qx * ty - tx * qy ) );
 		//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
 		// 18+12 (30)   12(2)+(3) (17 parallel)
 	}
@@ -744,9 +832,9 @@ lnQuat.prototype.applyInv = function( v ) {
 	const ty = 2 * (qz * v.x - qx * v.z);
 	const tz = 2 * (qx * v.y - qy * v.x);
 
-	return { x : v.x + qw * tx + ( qy * tz - ty * qz )
-	       , y : v.y + qw * ty + ( qz * tx - tz * qx )
-	       , z : v.z + qw * tz + ( qx * ty - tx * qy ) };
+	return new vectorType(  v.x + qw * tx + ( qy * tz - ty * qz )
+	       ,  v.y + qw * ty + ( qz * tx - tz * qx )
+	       ,  v.z + qw * tz + ( qx * ty - tx * qy ) );
 	// total 
 	// 21 mul + 9 add
 }
@@ -783,9 +871,9 @@ function getPitchDirection( q, th )
 					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		const dClx = dAng/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
-		return {x:dCx*dClx, y:dCy*dClx,z:dCz*dClx };
+		return new vectorType(dCx*dClx, dCy*dClx,dCz*dClx );
 	} 
-	return {x:0,y:0,z:0};
+	return new vectorType(0,0,0);
 }
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
@@ -846,9 +934,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
-		const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);//+Math.abs(Cy/sAng)+Math.abs(Cz/sAng));
+		const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
 
 		q.θ  = ang;
 		q.qw = cosCo2;
