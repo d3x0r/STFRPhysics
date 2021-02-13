@@ -16,6 +16,7 @@ let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * nL / nR
 let shownL = true;  //  p / nL
 let shownR = true;  // p.n(xyz)  p / nR
+let normalizeNormalTangent = false;
 
 function drawArm(curSliders,normalVertices,normalColors) {
 	const spaceScale = 5;
@@ -345,9 +346,8 @@ function DrawQuatNormals(normalVertices,normalColors) {
 			for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 				let x = Math.sin(t );
 				const z = Math.cos(t);
-				let norm ;
-				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
-				//lnQ.twist( twistDelta );
+				const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) }, normalizeNormalTangent );
+				lnQ.twist( twistDelta );
 			drawN( lnQ, norm );
 		}
 	}
@@ -457,8 +457,8 @@ function DrawQuatPaths(normalVertices,normalColors) {
 
 
 	check = document.getElementById( "normalizeTangents");
-	//if( check )
-		//normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+	if( check )
+		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
         DrawQuatNormals(normalVertices,normalColors);
 

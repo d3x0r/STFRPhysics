@@ -10,6 +10,7 @@ let turnCount = 12;
 let stepCount = 1000;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
+let normalizeNormalTangent = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 2;
@@ -1311,13 +1312,10 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
-		for( let h = 1*-1; h <= 1; h+= 0.1/2 ) {
+		for( let h = 0; h <= Math.PI; h+= Math.PI/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			for( let t = -Math.PI; t < Math.PI; t+= 0.25/2 ){
-				
-				let x = Math.sin(t );
-				const z = Math.cos(t);
-				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+				const lnQ = new lnQuat( { lat: h, lng:t }, normalizeNormalTangent );
 				drawN( lnQ );
 				if( drawCoords )
 					doDrawBasis( lnQ, lnQ, 1, 1 );
@@ -1329,9 +1327,9 @@ function DrawNormalBall(normalVertices,normalColors) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			const h = ( Math.acos( 1- Math.random()*2 ) )/(Math.PI/2) - 1;
 			const t = Math.random() * Math.PI*2;
-				let x = Math.sin(t );
+				const x = Math.sin(t );
 				const z = Math.cos(t);
-				const lnQ = new lnQuat( norm={x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+				const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) }, normalizeNormalTangent );
 				drawN( lnQ );
 				if( drawCoords )
 					doDrawBasis( lnQ, lnQ, 1, 1 );
@@ -1691,9 +1689,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		}
 	        
 	        
-		//check = document.getElementById( "normalizeTangents");
-		//if( check )
-		//	normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+		check = document.getElementById( "normalizeTangents");
+		if( check )
+			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 		
 		DrawNormalBall(normalVertices,normalColors);
 	        
