@@ -183,6 +183,11 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					return this.fromBasis( theta );
 				}
 				if( "lat" in theta ) {
+					if( !theta.lat ) {
+						this.x = 0; this.z = 0; this.y = theta.lng;
+						this.dirty = true; 
+						return this;
+					}
 					const x = Math.sin(theta.lng);
 					const z = Math.cos(theta.lng);
 					this.x = x * theta.lat; this.y = 0; this.z = z * theta.lat;
@@ -932,24 +937,25 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-		const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
+		//const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
+		//			- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
+		//			+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
 		const crsY = (az*q.nx-ax*q.nz);
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-		const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
+		//const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
+		//			- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
+		//			+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
 		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-		const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
+		//const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
+		//			- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
+		//			+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		const Clx = 1/Math.sin( sAng/2);//Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		//const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
-		const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
+		//const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
 
 		q.θ  = ang;
 		q.qw = cosCo2;
@@ -958,10 +964,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		q.ny = Cy*Clx;
 		q.nz = Cz*Clx;
 
-		q.dnx = dCx*dClx;
-		q.dny = dCy*dClx;
-		q.dnz = dCz*dClx;
-		q.dθ = dAng; 
+		//q.dnx = dCx*dClx;
+		//q.dny = dCy*dClx;
+		//q.dnz = dCz*dClx;
+		//q.dθ = dAng; 
 		
 		q.x  = q.nx*ang;
 		q.y  = q.ny*ang;
