@@ -197,14 +197,53 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						alignZero(this);
 
 					}
-						if( theta.lng >= Math.PI )
-							yaw( this.update(), twistDelta + Math.PI*2/*+ angle*/ );
-						else if( theta.lng <= -Math.PI )
-							yaw( this.update(), twistDelta - Math.PI*2/*+ angle*/ );
-						else
-							if( twistDelta ) {
-								yaw( this.update(), twistDelta /*+ angle*/ );
+					if( theta.lng >= Math.PI )
+						yaw( this.update(), twistDelta + Math.PI*2/*+ angle*/ );
+					else if( theta.lng <= -Math.PI )
+						yaw( this.update(), twistDelta - Math.PI*2/*+ angle*/ );
+					else
+						if( twistDelta ) {
+							yaw( this.update(), twistDelta /*+ angle*/ );
+						}
+
+					if( theta.lat >= Math.PI ) {
+						if( theta.lat >= Math.PI*2 ) {
+							lnQ.x = lnQ.x;
+							lnQ.y = lnQ.y;
+							lnQ.z = lnQ.z;
+							lnQ.dirty = true;
+							lnQ.update();
+						} else {
+							if( theta.lat >= Math.PI*2 ) {
+								
+							}else {
+								lnQ.x = -lnQ.x;
+								lnQ.y = lnQ.y;
+								lnQ.z = -lnQ.z;
+								lnQ.dirty = true;
+								lnQ.update();
 							}
+						}
+					}
+					if( theta.lat < 0 ) {
+						if( theta.lat >= -Math.PI ) {
+							lnQ.x = -lnQ.x;
+							lnQ.y = lnQ.y;
+							lnQ.z = -lnQ.z;
+							lnQ.dirty = true;
+							lnQ.update();
+						}else {
+							if( theta.lat >= -Math.PI*2 ) {
+								lnQ.x = lnQ.x;
+								lnQ.y = lnQ.y;
+								lnQ.z = lnQ.z;
+								lnQ.dirty = true;
+								lnQ.update();
+							} else {
+							}
+						}
+					}
+
 					return;
 				}
 				if( "a" in theta ) {
@@ -952,8 +991,8 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		//			+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = 1/Math.sin( sAng/2);//Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-		//const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		//const Clx = 1/Math.sin( sAng/2);//Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
 		//const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
 

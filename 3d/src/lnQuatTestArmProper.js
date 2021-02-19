@@ -1312,26 +1312,12 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
-		for( let h = -Math.PI*2; h <= Math.PI*2; h+= 3.1/25 ) {
+		for( let h = 0; h < Math.PI; h+= 3.1/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			for( let t = -Math.PI*2; t < Math.PI*2; t+= 0.25/2 ){
 				//if( t > (Math.PI + 0.5) ) continue;
-
-				const lnQ = new lnQuat( { lat: h, lng:t }, normalizeNormalTangent );
-				if( h > Math.PI ) {
-					lnQ.x = -lnQ.x;
-					lnQ.y = lnQ.y;
-					lnQ.z = -lnQ.z;
-					lnQ.dirty = true;
-					lnQ.update();
-				}
-				if( h < 0 ) {
-					lnQ.x = -lnQ.x;
-					lnQ.y = lnQ.y;
-					lnQ.z = -lnQ.z;
-					lnQ.dirty = true;
-					lnQ.update();
-				}
+				const h_ = h;//-(1/1)*Math.PI + h;// - 1*Math.PI/2 - Math.PI/4;
+				const lnQ = new lnQuat( { lat: h_, lng:t }, normalizeNormalTangent );
 
 				drawN( lnQ );
 				if( drawCoords )
