@@ -63,6 +63,10 @@ function lnQuat( theta, d, a, b, e ){
 	this.set( theta,d,a,b,e);
 }
 
+lnQuat.setTwistDelta = function(t) {
+	twistDelta = t;
+}
+
 lnQuat.setVectorType = function( vT ){
 	vectorType = vT;
 }
@@ -186,7 +190,16 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					if( d ) {
 						this.update();
 						alignZero(this);
+
 					}
+						if( theta.lng >= Math.PI )
+							yaw( this.update(), twistDelta + Math.PI*2/*+ angle*/ );
+						else if( theta.lng <= -Math.PI )
+							yaw( this.update(), twistDelta - Math.PI*2/*+ angle*/ );
+						else
+							if( twistDelta ) {
+								yaw( this.update(), twistDelta /*+ angle*/ );
+							}
 					return;
 				}
 				if( "a" in theta ) {
