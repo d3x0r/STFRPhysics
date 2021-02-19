@@ -155,6 +155,10 @@
 		<tr id="time"><td colspan=5>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
 		</td></tr>
+
+		<tr id="twist"><td colspan=5>
+		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
+		</td></tr>
 		<tr><td> 
 		</td><td> 
 		</td><td> X
@@ -698,6 +702,8 @@ function blurSlider( slider ) {
 			}
 
 			is = document.getElementById( "timeScalar" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "twistDelta" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;

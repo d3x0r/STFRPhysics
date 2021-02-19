@@ -1314,8 +1314,12 @@ function DrawNormalBall(normalVertices,normalColors) {
 		if(!pickRandomNormals)
 		for( let h = 0; h <= Math.PI; h+= Math.PI/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
-			for( let t = -Math.PI; t < Math.PI; t+= 0.25/2 ){
+			for( let t = -Math.PI*2; t < Math.PI*2; t+= 0.25/2 ){
+				//if( t > (Math.PI + 0.5) ) continue;
+
 				const lnQ = new lnQuat( { lat: h, lng:t }, normalizeNormalTangent );
+
+
 				drawN( lnQ );
 				if( drawCoords )
 					doDrawBasis( lnQ, lnQ, 1, 1 );
@@ -1486,12 +1490,18 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
 	{
+			let td = Number(document.getElementById( "twistDelta" ).value);
+		
+		const twistDelta = ( (td/500)-1 ) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8 ;
+		document.getElementById( "twistDeltaValue" ).textContent = twistDelta.toFixed(4);
+
+		lnQuat.setTwistDelta( twistDelta );
+
 		for( var n = 1; n <= 5; n++ ) {
 			let lnQX = Number(document.getElementById( "lnQX"+n ).value);
 			let lnQY = Number(document.getElementById( "lnQY"+n ).value);
 			let lnQZ = Number(document.getElementById( "lnQZ"+n ).value);
 			if( n === 1 ) {
-				//twistDelta = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8;
 			        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			}
 			curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
