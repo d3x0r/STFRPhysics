@@ -1324,23 +1324,23 @@ function computeBall( normalVertices,normalColors ) {
 				//if( lat > 14 ) continue;
 				//if( lng < (len-3) ) continue;
 					const qlat = lat * deg2rad(60)/size;
-					const qlng = (pp * deg2rad(120)) + lng * (deg2rad(30)/(lat||1)*2);
+					const qlng = (pp>3?0.1:0.0)+ (pp * deg2rad(120)) + lng * (deg2rad(30)/(lat||1)*2);
 
 					lnQ.set( {lat:qlat, lng:qlng}, true )
 					lnQ.update();
 			//console.log("Data Point:", lnQ.x, lnQ.y, lnQ.z, lat, lng );
-					drawN( lnQ, pp/6*1.5 );
+					drawN( lnQ, (pp*len+lng)/(6*len)*1.5 );
 					if( drawCoords )
 //lnQ2,t,s,Del,from,colorS 
-						doDrawBasis( lnQ, lnQ, 1, 1, null, pp/6);
+						doDrawBasis( lnQ, lnQ, 1, 1, null, (pp*len+lng)/(6*len));
 
 					if(1) {
 
 						lnQ.set( {lat:(deg2rad(180)-qlat), lng:deg2rad(180)+qlng}, true );
 						lnQ.update();
-						drawN( lnQ , lat/size);
+						drawN( lnQ , (pp*len+lng)/(6*len)*1.5);
 						if( drawCoords )
-							doDrawBasis( lnQ, lnQ, 1, 1, null, pp/6 );
+							doDrawBasis( lnQ, lnQ, 1, 1, null, (pp*len+lng)/(6*len) );
 					}
 				}
 		}
@@ -1354,13 +1354,13 @@ function computeBall( normalVertices,normalColors ) {
 				
 				for( let lng = 0; lng <= size; lng++ ) {
 					// 0, 2  (1, 3)  120, 40
-					const x = {lat:deg2rad(60) + sqStep * lat, lng:deg2rad(60)*eqp + lng*sqStep };
-					 lnQ.set( {lat:deg2rad(60) + sqStep * lat, lng:deg2rad(60)*eqp + lng*sqStep }, true );
+					const x = {lat:deg2rad(60) + sqStep * lat, lng:(eqp>6?0.1:0.0)+deg2rad(60)*eqp + lng*sqStep };
+					 lnQ.set( {lat:deg2rad(60) + sqStep * lat, lng:(eqp>6?0.1:0.0)+deg2rad(60)*eqp + lng*sqStep }, true );
 					lnQ.update();
 					//if( lng == 0 || lng == 1 || lng == 2 ) {
 					//	console.log( "GOT:", lat, lng, lnQ.x, lnQ.y, lnQ.z, x )
 					//}
-				drawN( lnQ, lng/size );
+				drawN( lnQ, eqp/12*1.5 );
 				if( drawCoords )
 					doDrawBasis( lnQ, lnQ, 1, 1, null, (eqp+0.1)/12 );
 
