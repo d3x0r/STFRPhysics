@@ -1307,7 +1307,7 @@ function computeBall( normalVertices,normalColors ) {
 	function deg2rad(x) { return x * Math.PI / 180.0 }
 	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
 
-	const size = 4;
+	const size = 16;
 	const lnQ = new lnQuat();
 	const v = { x:0,y:1,z:0};
 
