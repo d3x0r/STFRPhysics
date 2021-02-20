@@ -1233,10 +1233,49 @@ function meshCloud(data, dims) {
 										//	console.log( "3Still not happy...", ds, vA, vB, vC );
 									}
 								}
-								const lnQ = new lnQuat( { x:-fnorm[0], y:-fnorm[1], z:-fnorm[2] }, false );
-								fnorm[0] = lnQ.x;
-								fnorm[1] = lnQ.y;
-								fnorm[2] = lnQ.z;
+								const lnQ = new lnQuat( { x:-fnorm[0], y:-fnorm[1], z:-fnorm[2] }, false ).update();
+
+					//this.x = x * theta.lat; this.y = 0; this.z = z * theta.lat;
+					//const z = Math.cos(theta.lng);
+								const l = ( lnQ.x * lnQ.x + lnQ.z * lnQ.z );
+								if( l ) {
+									const lat = Math.sqrt(l);
+									const lng = ( ( lnQ.nx < 0 ) ? -1 : 1 ) * Math.acos(lnQ.nz);
+									
+									if(  normalVertices ) {
+										
+										const basis = lnQ.getBasis();
+										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										normalVertices.push( new THREE.Vector3( v1[0] + basis.up.x*1.1,v1[1] +basis.up.y*1.1,v1[2] +basis.up.z*1.1 ));
+										normalColors.push( new THREE.Color( 0.1,1.0,1.0 ))
+										normalColors.push( new THREE.Color( 0.1,1.0,1.0 ))
+
+									}
+								
+
+									if(  normalVertices ) {
+										const lnQx = new lnQuat( { lat:lat, lng:lng}, false );
+										
+										const basis = lnQx.getBasis();
+										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										normalVertices.push( new THREE.Vector3( v1[0] + basis.up.x,v1[1] +basis.up.y,v1[2] +basis.up.z ));
+										normalColors.push( new THREE.Color( 255,55,255,255 ))
+										normalColors.push( new THREE.Color( 255,55,255,255 ))
+									}
+								   
+									fnorm[0] = lat;
+									fnorm[1] = lng;
+									fnorm[2] = 0;
+
+								} else {								
+									fnorm[0] = 0;
+									fnorm[1] = 0;
+									fnorm[2] = 0;
+								}
+
+								//fnorm[0] = lnQ.x;
+								//fnorm[1] = lnQ.y;
+								//fnorm[2] = lnQ.z;
 
 									if( 0 && normalVertices ) {
 										const basis = lnQ.getBasis();
@@ -1264,9 +1303,9 @@ function meshCloud(data, dims) {
 									//pointStateHolder[ai].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[ai].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
 									angle = 1.0;
-									pointStateHolder[ai].normalBuffer[0] += fnorm[0]*angle;
-									pointStateHolder[ai].normalBuffer[1] += fnorm[1]*angle;
-									pointStateHolder[ai].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[ai].normalBuffer[0] += fnorm[0];//*angle;
+									pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
+									pointStateHolder[ai].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[ai].normalAngle += angle;
 									pointStateHolder[ai].normals ++;
 								}
@@ -1285,9 +1324,9 @@ function meshCloud(data, dims) {
 									//pointStateHolder[bi].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
 									//pointStateHolder[bi].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[bi].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
-									pointStateHolder[bi].normalBuffer[0] += fnorm[0]*angle;
-									pointStateHolder[bi].normalBuffer[1] += fnorm[1]*angle;
-									pointStateHolder[bi].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[bi].normalBuffer[0] += fnorm[0];//*angle;
+									pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
+									pointStateHolder[bi].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[bi].normalAngle += angle;
 									pointStateHolder[bi].normals ++;
 								}
@@ -1305,9 +1344,9 @@ function meshCloud(data, dims) {
 									//pointStateHolder[ci].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[ci].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
 									angle = 1.0;
-									pointStateHolder[ci].normalBuffer[0] += fnorm[0]*angle;
-									pointStateHolder[ci].normalBuffer[1] += fnorm[1]*angle;
-									pointStateHolder[ci].normalBuffer[2] += fnorm[2]*angle;
+									pointStateHolder[ci].normalBuffer[0] += fnorm[0];//*angle;
+									pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
+									pointStateHolder[ci].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[ci].normalAngle += angle;
 									pointStateHolder[ci].normals ++;
 								}
@@ -1326,6 +1365,7 @@ function meshCloud(data, dims) {
 		pointstate.normalBuffer[1] /= pointstate.normals;
 		pointstate.normalBuffer[2] /= pointstate.normals;
 
+	/*
 		const s = 1/Math.sqrt(pointstate.normalBuffer[0]*pointstate.normalBuffer[0]+pointstate.normalBuffer[1]*pointstate.normalBuffer[1]+pointstate.normalBuffer[2]*pointstate.normalBuffer[2] );
 		if( s === Infinity ) { 
 			pointstate.valid = false;
@@ -1333,7 +1373,8 @@ function meshCloud(data, dims) {
 			continue;
 			//debugger;
 		}
-		const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
+	*/
+		const lnQ = new lnQuat( { lat: pointstate.normalBuffer[0], lng:pointstate.normalBuffer[1] }, false );
 		const basis = lnQ.getBasis();
 		//pointstate.normalBuffer[0] *= -s;
 		//pointstate.normalBuffer[1] *= -s;
@@ -1349,8 +1390,8 @@ function meshCloud(data, dims) {
 			//const basis = lnQ.getBasis();
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + basis.up.x,pointstate.vertBuffer[1] + basis.up.y,pointstate.vertBuffer[2] + basis.up.z ));
-			normalColors.push( new THREE.Color( 125,125,0,255 ))
-			normalColors.push( new THREE.Color( 125,125,0,255 ))
+			normalColors.push( new THREE.Color( 0.5,0.9,0 ))
+			normalColors.push( new THREE.Color( 0.5,0.9,0 ))
 
 /*
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
