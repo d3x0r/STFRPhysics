@@ -483,7 +483,7 @@
 			var canvas = document.createElement( 'canvas' );
 			canvasWidth = canvas.width = window.innerWidth;
 			canvasHeight = canvas.height = window.innerHeight;
-			var context = canvas.getContext( 'webgl2', { alpha: false, antialias: true } );
+			var context = canvas.getContext( 'webgl', { alpha: false, antialias: true } );
 			if( Detector.webgl ){
 				renderer = new THREE.WebGLRenderer({
 					canvas: canvas, context: context,
