@@ -64,8 +64,8 @@ let lnQ4_current;
 let lnQ5_current;
 
 let normalVertices,normalColors;
-	const spaceScale = 5;
-	const normal_del = 4;
+	const spaceScale = 1.5;
+	const normal_del = 0.4;
 
 function makeQuat(p,y,r) {
 	switch( mountOrder ) {
@@ -1206,7 +1206,9 @@ function drawCoordinateGrid() {
 
 
 	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
+
 		const basis = lnQ2.update().getBasisT( Del,from );
+const normal_del = 3;
 		if( !s ) s = 1.0;
 		s = s/Math.PI;
 		if( !colorS ) colorS = s;
@@ -1262,13 +1264,13 @@ function drawCoordinateGrid() {
 				}
 			}
 
-		if( showCoords ) {
-			if( showScaledPoints ) {
+		if( showCoords || 1 ) {
+			if( !showScaledPoints  ) {
 				const r = Math.sqrt(x*x+y*y+z*z);
 				const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
-				x *= l / r;
-				y *= l / r;
-				z *= l / r;
+				x *= r / l;
+				y *= r / l;
+				z *= r / l;
 			}
 
 		//console.log( "Draw point:", x, y, z );
@@ -1310,7 +1312,8 @@ function computeBall( normalVertices,normalColors ) {
 	const size = 16;
 	const lnQ = new lnQuat();
 	const v = { x:0,y:1,z:0};
-
+	
+	const normalize = normalizeNormalTangent;
 	addVerts(  ) ;
 
 	function addVerts() {
@@ -1324,9 +1327,9 @@ function computeBall( normalVertices,normalColors ) {
 				//if( lat > 14 ) continue;
 				//if( lng < (len-3) ) continue;
 					const qlat = lat * deg2rad(60)/size;
-					const qlng = (pp>3?0.1:0.0)+ (pp * deg2rad(120)) + lng * (deg2rad(30)/(lat||1)*2);
+					const qlng = (pp>3?0.02:0.0)+ (pp * deg2rad(120)) + lng * (deg2rad(30)/(lat||1)*2);
 
-					lnQ.set( {lat:qlat, lng:qlng}, true )
+					lnQ.set( {lat:qlat, lng:qlng}, normalize )
 					lnQ.update();
 			//console.log("Data Point:", lnQ.x, lnQ.y, lnQ.z, lat, lng );
 					drawN( lnQ, (pp*len+lng)/(6*len)*1.5 );
@@ -1336,7 +1339,7 @@ function computeBall( normalVertices,normalColors ) {
 
 					if(1) {
 
-						lnQ.set( {lat:(deg2rad(180)-qlat), lng:deg2rad(180)+qlng}, true );
+						lnQ.set( {lat:(deg2rad(180)-qlat), lng:deg2rad(180)+qlng}, normalize );
 						lnQ.update();
 						drawN( lnQ , (pp*len+lng)/(6*len)*1.5);
 						if( drawCoords )
@@ -1354,8 +1357,9 @@ function computeBall( normalVertices,normalColors ) {
 				
 				for( let lng = 0; lng <= size; lng++ ) {
 					// 0, 2  (1, 3)  120, 40
-					const x = {lat:deg2rad(60) + sqStep * lat, lng:(eqp>6?0.1:0.0)+deg2rad(60)*eqp + lng*sqStep };
-					 lnQ.set( {lat:deg2rad(60) + sqStep * lat, lng:(eqp>6?0.1:0.0)+deg2rad(60)*eqp + lng*sqStep }, true );
+					const x = {lat:deg2rad(60) + sqStep * lat, lng:(eqp>6?0.02:0.0)+deg2rad(60)*eqp + lng*sqStep };
+
+					 lnQ.set( x, normalize );
 					lnQ.update();
 					//if( lng == 0 || lng == 1 || lng == 2 ) {
 					//	console.log( "GOT:", lat, lng, lnQ.x, lnQ.y, lnQ.z, x )
@@ -1405,11 +1409,11 @@ function computeBall( normalVertices,normalColors ) {
 
 
 function DrawNormalBall(normalVertices,normalColors) {
-	computeBall( normalVertices, normalColors );
-
+	return computeBall( normalVertices, normalColors );
+  drawNormalBall = true;
 	const v = { x:0,y:1,z:0};
-	const spaceScale = 3;
-	const normal_del = 0.25;
+	const spaceScale = 30;
+	const normal_del = 1.0;
 	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
@@ -1773,10 +1777,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		showCoords = document.getElementById( "showCoords" )?.checked ;
 	        
 		if( document.getElementById( "showScaled" )?.checked ) {
-			showScaledPoints = false;
+			showScaledPoints = true;
 		}
-		//else 			
-		//	showScaledPoints = false;
+		else 			
+			showScaledPoints = false;
 	        
 		check = document.getElementById( "showX1" );
 		if( check ) {

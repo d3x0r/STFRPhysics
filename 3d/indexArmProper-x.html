@@ -87,7 +87,7 @@
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
 
-		<p id ="advancedControls" style="display:none" >
+		<p id ="advancedControls"  >
 		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
@@ -95,7 +95,7 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 
-		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
+		 <span style="visibility:visible">- Normalize Tangents: <input type="checkbox" id="normalizeTangents" ></span>
 		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
 		     <br>
 		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
@@ -109,7 +109,7 @@
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
-		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
+		 <span style="visibility:visible">- Scale 2-norm: <input type="checkbox" id="showScaled" checked ></span> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > <br>
 		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
@@ -341,7 +341,7 @@
 			for( var name of names ) {
 				let is = document.getElementById( name );
 			
-				if( is) if( showAdvanced ) {
+				if( is) if( 1||showAdvanced ) {
 					is.style.display = "";
 				}else
 					is.style.display = "none";
