@@ -491,6 +491,7 @@ function PointState(v,type1,type2,typeDelta) {
 	let result = {
 		id:pointStateHolder.length,
 		normalBuffer:[0,0,0],
+		normalSources: [],
 		normalAngle : 0,
 		normals : 0,
 		vertBuffer:[v[0],v[1],v[2]],
@@ -1042,7 +1043,12 @@ function meshCloud(data, dims) {
 			for( var x = 0; x < dim0; x++ ) {
 				let tetSkip = 0;
 				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
-
+/*
+if( x > 3 ) continue;
+//if( x < 8 ) continue;
+if( z < (dim2/2-1) ) continue
+if( z > (dim2/2) ) continue
+  */
 				if( x >= (dim0-1)) tetSkip |= 1;
 				if( y >= (dim1-1)) tetSkip |= 2;
 				if( z >= (dim2-1)) tetSkip |= 4;
@@ -1266,7 +1272,7 @@ function meshCloud(data, dims) {
 									fnorm[0] = lat;
 									fnorm[1] = lng;
 									fnorm[2] = 0;
-
+								//		console.log( "point:", x, y, z, "latlng:", lat, lng );
 								} else {								
 									fnorm[0] = 0;
 									fnorm[1] = 0;
@@ -1299,15 +1305,32 @@ function meshCloud(data, dims) {
 										angle = 2*Math.acos( clamp((a1t[0]*a2t[0]+a1t[1]*a2t[1]+a1t[2]*a2t[2])/(Math.sqrt(a1t[0]*a1t[0]+a1t[1]*a1t[1]+a1t[2]*a1t[2])*Math.sqrt(a2t[0]*a2t[0]+a2t[1]*a2t[1]+a2t[2]*a2t[2] ) ), 1.0 ));
 									if( angle < 0.0001 ) angle = 0.001
 									angle = 1.0;
+									pointStateHolder[ai].normalSources.push( fnorm.slice( 0, 2 ) );
 									//pointStateHolder[ai].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
 									//pointStateHolder[ai].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[ai].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
-									angle = 1.0;
+									if( pointStateHolder[ai].normals ) {
+										const oldavglat = ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals );
+										const oldavg = ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals );
+										//console.log( "difa:", pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals, fnorm[1], Math.abs( ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals ) - fnorm[1] ) );
+										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
+											if( fnorm[1] > 0 ) 
+												pointStateHolder[ai].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
+											else
+												pointStateHolder[ai].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
+										}else
+											pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
+									} else
+										pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
+
+
 									pointStateHolder[ai].normalBuffer[0] += fnorm[0];//*angle;
-									pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
+									//pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
 									pointStateHolder[ai].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[ai].normalAngle += angle;
 									pointStateHolder[ai].normals ++;
+
+									//console.log( "newda:", pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals );
 								}
 
 								{
@@ -1321,11 +1344,25 @@ function meshCloud(data, dims) {
 
 									if( angle < 0.0001 ) angle = 0.001
 									angle = 1.0;
+									pointStateHolder[bi].normalSources.push( fnorm.slice( 0, 2 ) );
 									//pointStateHolder[bi].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
 									//pointStateHolder[bi].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[bi].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
+									if( pointStateHolder[bi].normals ) {
+										const oldavg = ( pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals );
+										//console.log( "difb:", pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals, fnorm[1], Math.abs( ( pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals ) - fnorm[1] ) );
+										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
+											if( fnorm[1] > 0 ) 
+												pointStateHolder[bi].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
+											else
+												pointStateHolder[bi].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
+										}else
+											pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
+									} else
+										pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
+
 									pointStateHolder[bi].normalBuffer[0] += fnorm[0];//*angle;
-									pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
+									//pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
 									pointStateHolder[bi].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[bi].normalAngle += angle;
 									pointStateHolder[bi].normals ++;
@@ -1343,9 +1380,35 @@ function meshCloud(data, dims) {
 									//pointStateHolder[ci].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
 									//pointStateHolder[ci].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[ci].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
+									pointStateHolder[ci].normalSources.push( fnorm.slice( 0, 2 ) );
 									angle = 1.0;
+									if( pointStateHolder[ci].normals ) {
+										const oldavglat = ( pointStateHolder[ci].normalBuffer[0] / pointStateHolder[ci].normals );
+										const oldavg = ( pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals );
+										if( oldavglat < Math.PI/4 ) {
+												const q1 = new lnQuat( {lat:oldavglat, lng:oldavg} );
+												const q2 = new lnQuat( {lat:fnorm[0],  lng:fnorm[1]} );
+												q1.x = (q1.x+q2.x)/2;
+												q1.y = (q1.y+q2.y)/2;
+												q1.z = (q1.z+q2.z)/2;
+												q1.dirty = true; q1.update();
+												
+										} else if( oldavg > oldavglat > Math.PI*3/4 ) {
+										} else {
+										}
+										//console.log( "difc:", pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals, fnorm[1], Math.abs( ( pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals ) - fnorm[1] ) );
+										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
+											if( fnorm[1] > 0 ) 
+												pointStateHolder[ci].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
+											else
+												pointStateHolder[ci].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
+										}else
+											pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
+									} else
+										pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
+
 									pointStateHolder[ci].normalBuffer[0] += fnorm[0];//*angle;
-									pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
+									//pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
 									pointStateHolder[ci].normalBuffer[2] += fnorm[2];//*angle;
 									pointStateHolder[ci].normalAngle += angle;
 									pointStateHolder[ci].normals ++;
@@ -1361,27 +1424,103 @@ function meshCloud(data, dims) {
 	// normalize the normals.
 	for( var ps = 0; ps < pointStateHolder.length; ps++ ) {
 		const pointstate = pointStateHolder[ps];
-		pointstate.normalBuffer[0] /= pointstate.normals;
-		pointstate.normalBuffer[1] /= pointstate.normals;
-		pointstate.normalBuffer[2] /= pointstate.normals;
+		if( !pointstate.normals ) continue;
+		let count = 0
+		let count2 = 0
+		let count3 = 0
+		let count4 = 0
+		let zz;
+		for( zz = 0; zz < pointstate.normalSources.length; zz++ ) {
+			if( pointstate.normalSources[zz][0] < Math.PI/4 ) {
+				count++;
+			}
+			if( pointstate.normalSources[zz][0] > Math.PI*3/4 ) {
+				count2++;
+			}
+			if( pointstate.normalSources[zz][1] < 0 ) {
+				count3++;
+			}
+			if( pointstate.normalSources[zz][1] > Math.PI*2 ) {
+				count4++;
+			}
+		}
+
+	
+		if( false && count2 > zz / 2 ) {
+			for( zz = 0; zz < pointstate.normals; zz++ ) {
+				const lnQ = new lnQuat( { lat: pointstate.normalSources[zz][0], lng:pointstate.normalSources[zz][1] }, false );
+				pointstate.normalBuffer[0] += lnQ.x;
+				pointstate.normalBuffer[1] += lnQ.y;
+				pointstate.normalBuffer[2] += lnQ.z;
+			}
+			pointstate.normalBuffer[0] /= pointstate.normals;
+			pointstate.normalBuffer[1] /= pointstate.normals;
+			pointstate.normalBuffer[2] /= pointstate.normals;
+	/*		
+			const lnQ = new lnQuat( { lat: pointstate.normalBuffer[0], lng:-pointstate.normalBuffer[1] }, true );
+			const basis = lnQ.getBasis();
+			//pointstate.normalBuffer[0] *= -s;
+			//pointstate.normalBuffer[1] *= -s;
+			//pointstate.normalBuffer[2] *= -s;
+			pointstate.normalBuffer[0] = basis.up.x;
+			pointstate.normalBuffer[1] = basis.up.y;
+			pointstate.normalBuffer[2] = basis.up.z;
+	*/
+		} else {
+			pointstate.normalBuffer[0] = 0;
+			pointstate.normalBuffer[1] = 0;
+			pointstate.normalBuffer[2] = 0;
+			if( count3 && count3 < pointstate.normals ) {
+				for( zz = 0; zz < pointstate.normals; zz++ ) {
+					//pointstate.normalBuffer[0] += pointstate.normalSources[zz][0];
+					if( pointstate.normalSources[zz][1] < 0.4 )
+						pointstate.normalSources[zz][1] += 2*Math.PI;
+				}
+				
+			}
+			//console.log( "something(before):", pointstate.normalBuffer );
+			
+			for( zz = 0; zz < pointstate.normals; zz++ ) {
+				pointstate.normalBuffer[0] += pointstate.normalSources[zz][0];
+				pointstate.normalBuffer[1] += pointstate.normalSources[zz][1];
+			}
+			pointstate.normalBuffer[0] /= pointstate.normals;
+			pointstate.normalBuffer[1] /= pointstate.normals;
+
+			const lnQ = new lnQuat( { lat: pointstate.normalBuffer[0], lng:pointstate.normalBuffer[1] }, false );
+			const basis = lnQ.getBasis();
+			//console.log( "something:", pointstate.normalBuffer );
+			//pointstate.normalBuffer[0] *= -s;
+			//pointstate.normalBuffer[1] *= -s;
+			//pointstate.normalBuffer[2] *= -s;
+			pointstate.normalBuffer[0] = basis.up.x;
+			pointstate.normalBuffer[1] = basis.up.y;
+			pointstate.normalBuffer[2] = basis.up.z;
+	
+		}
+
+		
+	//if( pointstate.normals )
+	//	console.log( "Points:", count, count2, count3, count4, pointstate.normals, pointstate.normalSources );
 
 	/*
 		const s = 1/Math.sqrt(pointstate.normalBuffer[0]*pointstate.normalBuffer[0]+pointstate.normalBuffer[1]*pointstate.normalBuffer[1]+pointstate.normalBuffer[2]*pointstate.normalBuffer[2] );
 		if( s === Infinity ) { 
 			pointstate.valid = false;
-			console.log( "Failed pointState buffer is:", pointstate.normalBuffer );
+			console.log( "Failed pointstate buffer is:", pointstate.normalBuffer );
 			continue;
 			//debugger;
 		}
 	*/
-		const lnQ = new lnQuat( { lat: pointstate.normalBuffer[0], lng:pointstate.normalBuffer[1] }, false );
-		const basis = lnQ.getBasis();
+
+		//const lnQ = new lnQuat( { lat: pointstate.normalBuffer[0], lng:pointstate.normalBuffer[1] }, true );
+		//const basis = lnQ.getBasis();
 		//pointstate.normalBuffer[0] *= -s;
 		//pointstate.normalBuffer[1] *= -s;
 		//pointstate.normalBuffer[2] *= -s;
-		pointstate.normalBuffer[0] = basis.up.x;
-		pointstate.normalBuffer[1] = basis.up.y;
-		pointstate.normalBuffer[2] = basis.up.z;
+		//pointstate.normalBuffer[0] = basis.up.x;
+		//pointstate.normalBuffer[1] = basis.up.y;
+		//pointstate.normalBuffer[2] = basis.up.z;
 
 
 		//if( isNaN(pointstate.normalBuffer[0] )) debugger;
@@ -1389,9 +1528,9 @@ function meshCloud(data, dims) {
 			//const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
 			//const basis = lnQ.getBasis();
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
-			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + basis.up.x,pointstate.vertBuffer[1] + basis.up.y,pointstate.vertBuffer[2] + basis.up.z ));
-			normalColors.push( new THREE.Color( 0.5,0.9,0 ))
-			normalColors.push( new THREE.Color( 0.5,0.9,0 ))
+			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + pointstate.normalBuffer[0],pointstate.vertBuffer[1] + pointstate.normalBuffer[1],pointstate.vertBuffer[2] + pointstate.normalBuffer[2] ));
+			normalColors.push( new THREE.Color( 0.2,0.5,0.3 ))
+			normalColors.push( new THREE.Color( 0.2,0.5,0.3 ))
 
 /*
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
@@ -1412,7 +1551,12 @@ function meshCloud(data, dims) {
 		// for all bounday crossed points, generate the faces from the intersection points.
 		for( var y = 0; y < dim1; y++ ) {
 			for( var x = 0; x < dim0; x++ ) {
-
+/*
+if( x > 3 ) continue;
+//if( x < 8 ) continue;
+if( z < (dim2/2-1) ) continue
+if( z > (dim2/2) ) continue
+ */
 				const normOffset = (x + (y*dim0) + z*dim0*dim1)*5;
 				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
 				let tetSkip = 0;
