@@ -197,53 +197,61 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						alignZero(this);
 
 					}
-					if( theta.lng >= Math.PI )
-						yaw( this.update(), twistDelta + Math.PI*2/*+ angle*/ );
-					else if( theta.lng <= -Math.PI )
+
+					if( theta.lng > Math.PI ) {
+						if( theta.lng <= Math.PI*2 )
+							yaw( this.update(), twistDelta + Math.PI*2/*+ angle*/ );
+						else
+							if( theta.lng <= Math.PI*3 )
+								yaw( this.update(), twistDelta - Math.PI*2/*+ angle*/ );
+							else 
+								yaw( this.update(), twistDelta - Math.PI*4/*+ angle*/ );
+					} else if( theta.lng <= -Math.PI )
 						yaw( this.update(), twistDelta - Math.PI*2/*+ angle*/ );
 					else
 						if( twistDelta ) {
 							yaw( this.update(), twistDelta /*+ angle*/ );
 						}
 
+				if(0){
 					if( theta.lat >= Math.PI ) {
 						if( theta.lat >= Math.PI*2 ) {
-							lnQ.x = lnQ.x;
-							lnQ.y = lnQ.y;
-							lnQ.z = lnQ.z;
-							lnQ.dirty = true;
-							lnQ.update();
+							this.x = this.x;
+							this.y = this.y;
+							this.z = this.z;
+							this.dirty = true;
+							this.update();
 						} else {
 							if( theta.lat >= Math.PI*2 ) {
 								
 							}else {
-								lnQ.x = -lnQ.x;
-								lnQ.y = lnQ.y;
-								lnQ.z = -lnQ.z;
-								lnQ.dirty = true;
-								lnQ.update();
+								this.x = this.x;
+								this.y = this.y+Math.PI*2;
+								this.z = -this.z;
+								this.dirty = true;
+								this.update();
 							}
 						}
 					}
 					if( theta.lat < 0 ) {
 						if( theta.lat >= -Math.PI ) {
-							lnQ.x = -lnQ.x;
-							lnQ.y = lnQ.y;
-							lnQ.z = -lnQ.z;
-							lnQ.dirty = true;
-							lnQ.update();
+							this.x = this.x;
+							this.y = this.y;
+							this.z = -this.z;
+							this.dirty = true;
+							this.update();
 						}else {
 							if( theta.lat >= -Math.PI*2 ) {
-								lnQ.x = lnQ.x;
-								lnQ.y = lnQ.y;
-								lnQ.z = lnQ.z;
-								lnQ.dirty = true;
-								lnQ.update();
+								this.x = this.x;
+								this.y = this.y;
+								this.z = this.z;
+								this.dirty = true;
+								this.update();
 							} else {
 							}
 						}
 					}
-
+				}
 					return;
 				}
 				if( "a" in theta ) {
@@ -1133,7 +1141,7 @@ function yaw( q, th ) {
 	const ax = ( cny*q.nx ) - s*q.nz;
 	const ay = ( cny*q.ny ) + c1;
 	const az = ( cny*q.nz ) + s*q.nx;
-
+	//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
