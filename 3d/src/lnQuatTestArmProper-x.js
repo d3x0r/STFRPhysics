@@ -254,7 +254,9 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	function deg2rad(n) { return n * Math.PI/180 }
 	let twist = 0;
+
 	function drawGrid(normalVertices,normalColors, curSliders) {
+		const merge = document.getElementById( "additiveMerge" )?.checked;
 		const lnQ = new lnQuat();
 		const lnQ2 = new lnQuat();
 		const lnQx = new lnQuat();
@@ -276,6 +278,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			
 			gamline = 0;
 			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
+				const g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				const t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				lnQ.x = lnQ.y = lnQ.z = 0;
 				lnQ.nx = lnQ.nz = 0;
 				lnQ.ny = 0;
@@ -283,20 +287,24 @@ function drawDigitalTimeArm(curSliders, slerp) {
 				lnQ.qw = 1;
 				lnQ.s = 0;
 				lnQ.dirty = false;
-				lnQ.freeSpin( theta, {x:1,y:0,z:0} );
-				lnQ2.x = lnQ2.y = lnQ2.z = 0;
-				lnQ2.nx = lnQ2.nz = 0;
-				lnQ2.ny = 0;
-				lnQ2.θ = 0;
-				lnQ2.qw = 1;
-				lnQ2.s = 0;
-				lnQ2.dirty = false;
-				lnQ2.freeSpin( gamma, {x:0,y:0,z:1} );
-				lnQ.x += lnQ2.x;
-				lnQ.y += lnQ2.y;
-				lnQ.z += lnQ2.z;
-				lnQ.dirty = true;
-				lnQ.update();
+				lnQ.freeSpin( t2, {x:1,y:0,z:0} );
+				if( merge ) {
+					lnQ2.x = lnQ2.y = lnQ2.z = 0;
+					lnQ2.nx = lnQ2.nz = 0;
+					lnQ2.ny = 0;
+					lnQ2.θ = 0;
+					lnQ2.qw = 1;
+					lnQ2.s = 0;
+					lnQ2.dirty = false;
+					lnQ2.freeSpin( g2, {x:0,y:0,z:1} );
+					lnQ.x += lnQ2.x;
+					lnQ.y += lnQ2.y;
+					lnQ.z += lnQ2.z;
+					lnQ.dirty = true;
+					lnQ.update();
+				} else {
+					lnQ.freeSpin( g2, {x:0,y:0,z:1} );
+				}
 				//lnQ.add( offset, 1 )
 				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
 				
@@ -323,20 +331,24 @@ function drawDigitalTimeArm(curSliders, slerp) {
 				lnQ.qw = 1;
 				lnQ.s = 0;
 				lnQ.dirty = false;
-				lnQ.freeSpin( theta, {x:0,y:0,z:1} );
-				lnQ2.x = lnQ2.y = lnQ2.z = 0;
-				lnQ2.nx = lnQ2.nz = 0;
-				lnQ2.ny = 0;
-				lnQ2.θ = 0;
-				lnQ2.qw = 1;
-				lnQ2.s = 0;
-				lnQ2.dirty = false;
-				lnQ2.freeSpin( gamma, {x:1,y:0,z:0} );
-				lnQ.x += lnQ2.x;
-				lnQ.y += lnQ2.y;
-				lnQ.z += lnQ2.z;
-				lnQ.dirty = true;
-				lnQ.update();
+				lnQ.freeSpin( t2, {x:0,y:0,z:1} );
+				if( merge ) {
+					lnQ2.x = lnQ2.y = lnQ2.z = 0;
+					lnQ2.nx = lnQ2.nz = 0;
+					lnQ2.ny = 0;
+					lnQ2.θ = 0;
+					lnQ2.qw = 1;
+					lnQ2.s = 0;
+					lnQ2.dirty = false;
+					lnQ2.freeSpin( g2, {x:1,y:0,z:0} );
+					lnQ.x += lnQ2.x;
+					lnQ.y += lnQ2.y;
+					lnQ.z += lnQ2.z;
+					lnQ.dirty = true;
+					lnQ.update();
+				} else {
+					lnQ.freeSpin( g2, {x:1,y:0,z:0} );
+				}
 				//lnQ.freeSpin( gamma, {x:1,y:0,z:0} );
 				//lnQ.freeSpin( deg2rad(90 ), offset);
 				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );

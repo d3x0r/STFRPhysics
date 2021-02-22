@@ -102,8 +102,8 @@
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
 		 - Apply Accel: <input type="checkbox" id="applyAccel">
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
-		 Interpolate
-		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
+		 <span style="visibility:visible"> Interpolate
+		 - Add composite: <input type="checkbox" id="additiveMerge" ></span>
 
 		 - SLERP: <input type="checkbox" id="useSLERP" >
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
@@ -346,14 +346,8 @@
 				}else
 					is.style.display = "none";
 			}
-
-
 		}
 
-		if( document.getElementById( "add2Norm" )?.checked ) {
-			addN2 = true;
-		}else 			
-			addN2 = false;
 
 
 		if( document.getElementById( "useSLERP" )?.checked ) {
@@ -728,7 +722,7 @@ function blurSlider( slider ) {
 				is = document.getElementById( "drawRawRot" ).checked = true;
 				updateMesh();
 			}
-			is = document.getElementById( "add2Norm" );
+			is = document.getElementById( "additiveMerge" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERP" );
 			is.oninput = updateMesh;
