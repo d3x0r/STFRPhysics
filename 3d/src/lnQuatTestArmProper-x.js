@@ -268,7 +268,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 		//const offset = { x:A, y:B, z:C };
 		//const offset = { x:0.707, y:0.4, z:-0.707 };
-		const range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*2 )/Math.PI * 30 + 10 );
+		const range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*3 )/Math.PI * 30 + 10 );
 		const step = range/16;
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 			lnQx.x = theta;
@@ -285,33 +285,23 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				}
-				lnQ.x = lnQ.y = lnQ.z = 0;
-				lnQ.nx = lnQ.nz = 0;
-				lnQ.ny = 0;
-				lnQ.θ = 0;
-				lnQ.qw = 1;
-				lnQ.s = 0;
-				lnQ.dirty = false;
-				lnQ.freeSpin( t2, {x:1,y:0,z:0} );
+
 				if( merge ) {
-					lnQ2.x = lnQ2.y = lnQ2.z = 0;
-					lnQ2.nx = lnQ2.nz = 0;
-					lnQ2.ny = 0;
-					lnQ2.θ = 0;
-					lnQ2.qw = 1;
-					lnQ2.s = 0;
-					lnQ2.dirty = false;
-					lnQ2.freeSpin( g2, {x:0,y:0,z:1} );
-					lnQ.x += lnQ2.x;
-					lnQ.y += lnQ2.y;
-					lnQ.z += lnQ2.z;
+					lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
 					lnQ.dirty = true;
-					lnQ.update();
 				} else {
+					lnQ.nx = lnQ.nz = 0;
+					lnQ.ny = 0;
+					lnQ.θ = 0;
+					lnQ.qw = 1;
+					lnQ.s = 0;
+					lnQ.dirty = false;
+					lnQ.freeSpin( t2, {x:1,y:0,z:0} );
 					lnQ.freeSpin( g2, {x:0,y:0,z:1} );
 				}
+
 				//lnQ.add( offset, 1 )
-				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+				lnQ.update().freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
 				
 				const basis = lnQ.update().getBasis();
 	
@@ -328,35 +318,23 @@ function drawDigitalTimeArm(curSliders, slerp) {
 				}else 
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 	
-				lnQ.x = lnQ.y = lnQ.z = 0;
-				lnQ.x = lnQ.y = lnQ.z = 0;
-				lnQ.nx = lnQ.nz = 0;
-				lnQ.ny = 1;
-				lnQ.θ = 0;
-				lnQ.qw = 1;
-				lnQ.s = 0;
-				lnQ.dirty = false;
-				lnQ.freeSpin( t2, {x:0,y:0,z:1} );
 				if( merge ) {
-					lnQ2.x = lnQ2.y = lnQ2.z = 0;
-					lnQ2.nx = lnQ2.nz = 0;
-					lnQ2.ny = 0;
-					lnQ2.θ = 0;
-					lnQ2.qw = 1;
-					lnQ2.s = 0;
-					lnQ2.dirty = false;
-					lnQ2.freeSpin( g2, {x:1,y:0,z:0} );
-					lnQ.x += lnQ2.x;
-					lnQ.y += lnQ2.y;
-					lnQ.z += lnQ2.z;
+					lnQ.x = gamma; lnQ.y = 0; lnQ.z = theta;
 					lnQ.dirty = true;
-					lnQ.update();
 				} else {
+					lnQ.x = lnQ.y = lnQ.z = 0;
+					lnQ.nx = lnQ.nz = 0;
+					lnQ.ny = 1;
+					lnQ.θ = 0;
+					lnQ.qw = 1;
+					lnQ.s = 0;
+					lnQ.dirty = false;
+					lnQ.freeSpin( t2, {x:0,y:0,z:1} );
 					lnQ.freeSpin( g2, {x:1,y:0,z:0} );
 				}
-				//lnQ.freeSpin( gamma, {x:1,y:0,z:0} );
-				//lnQ.freeSpin( deg2rad(90 ), offset);
-				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+
+
+				lnQ.update().freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
 		
 				const basis2 = lnQ.update().getBasis();
 				if( draw2 ) {
