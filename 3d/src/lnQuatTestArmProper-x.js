@@ -257,6 +257,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
+		const _1norm = document.getElementById( "oneNormal" )?.checked;
 		const lnQ = new lnQuat();
 		const lnQ2 = new lnQuat();
 		const lnQx = new lnQuat();
@@ -264,7 +265,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const p = [];
 		const p2 = [];
 		let gamline ;
-		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true ).yaw(curSliders.lnQZ[0]*Math.PI);//.update();
+		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true ).yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 		//const offset = { x:A, y:B, z:C };
 		//const offset = { x:0.707, y:0.4, z:-0.707 };
 		const range = deg2rad((2*Math.PI+twist )/Math.PI * 30 + 10 );
@@ -278,8 +279,12 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			
 			gamline = 0;
 			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
-				const g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-				const t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				if( _1norm ) {
+					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				}
 				lnQ.x = lnQ.y = lnQ.z = 0;
 				lnQ.nx = lnQ.nz = 0;
 				lnQ.ny = 0;
@@ -317,8 +322,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					oldp.x = basis.up.x;
 					oldp.y = basis.up.y;
 					oldp.z = basis.up.z;
-					normalColors.push( new THREE.Color( 0,1.0 * gamma * 2,0,255 ))
-					normalColors.push( new THREE.Color( 0,1.0 * gamma*2,0,255 ))
+					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 					//doDrawBasis( lnQ, 1, 1 );
 				}else 
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
@@ -362,8 +367,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					oldp.y = basis2.up.y;
 					oldp.z = basis2.up.z;
 	
-					normalColors.push( new THREE.Color( 1.0,0,0,255 ))
-					normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 				}else 
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
 			}

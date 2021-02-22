@@ -213,45 +213,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							yaw( this.update(), twistDelta /*+ angle*/ );
 						}
 
-				if(0){
-					if( theta.lat >= Math.PI ) {
-						if( theta.lat >= Math.PI*2 ) {
-							this.x = this.x;
-							this.y = this.y;
-							this.z = this.z;
-							this.dirty = true;
-							this.update();
-						} else {
-							if( theta.lat >= Math.PI*2 ) {
-								
-							}else {
-								this.x = this.x;
-								this.y = this.y+Math.PI*2;
-								this.z = -this.z;
-								this.dirty = true;
-								this.update();
-							}
-						}
-					}
-					if( theta.lat < 0 ) {
-						if( theta.lat >= -Math.PI ) {
-							this.x = this.x;
-							this.y = this.y;
-							this.z = -this.z;
-							this.dirty = true;
-							this.update();
-						}else {
-							if( theta.lat >= -Math.PI*2 ) {
-								this.x = this.x;
-								this.y = this.y;
-								this.z = this.z;
-								this.dirty = true;
-								this.update();
-							} else {
-							}
-						}
-					}
-				}
 					return this;
 				}
 				if( "a" in theta ) {
