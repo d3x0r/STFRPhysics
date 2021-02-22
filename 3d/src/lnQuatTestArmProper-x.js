@@ -252,6 +252,112 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	}
 
 
+	function deg2rad(n) { return n * Math.PI/180 }
+	let twist = 0;
+	function drawGrid(normalVertices,normalColors, curSliders) {
+		const lnQ = new lnQuat();
+		const lnQ2 = new lnQuat();
+		const lnQx = new lnQuat();
+		const spaceScale = 45;
+		const p = [];
+		const p2 = [];
+		let gamline ;
+		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true ).yaw(curSliders.lnQZ[0]*Math.PI);//.update();
+		//const offset = { x:A, y:B, z:C };
+		//const offset = { x:0.707, y:0.4, z:-0.707 };
+		const range = deg2rad((2*Math.PI+twist )/Math.PI * 30 + 10 );
+		const step = range/16;
+		for( let theta = -(range); theta <= (range); theta += (step) ){
+			lnQx.x = theta;
+			lnQx.dirty = true;
+	
+			const draw = p.length;
+			const draw2 = p2.length;
+			
+			gamline = 0;
+			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
+				lnQ.x = lnQ.y = lnQ.z = 0;
+				lnQ.nx = lnQ.nz = 0;
+				lnQ.ny = 0;
+				lnQ.θ = 0;
+				lnQ.qw = 1;
+				lnQ.s = 0;
+				lnQ.dirty = false;
+				lnQ.freeSpin( theta, {x:1,y:0,z:0} );
+				lnQ2.x = lnQ2.y = lnQ2.z = 0;
+				lnQ2.nx = lnQ2.nz = 0;
+				lnQ2.ny = 0;
+				lnQ2.θ = 0;
+				lnQ2.qw = 1;
+				lnQ2.s = 0;
+				lnQ2.dirty = false;
+				lnQ2.freeSpin( gamma, {x:0,y:0,z:1} );
+				lnQ.x += lnQ2.x;
+				lnQ.y += lnQ2.y;
+				lnQ.z += lnQ2.z;
+				lnQ.dirty = true;
+				lnQ.update();
+				//lnQ.add( offset, 1 )
+				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+				
+				const basis = lnQ.update().getBasis();
+	
+				if( draw ) {
+					const oldp = p[gamline];
+					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					oldp.x = basis.up.x;
+					oldp.y = basis.up.y;
+					oldp.z = basis.up.z;
+					normalColors.push( new THREE.Color( 0,1.0 * gamma * 2,0,255 ))
+					normalColors.push( new THREE.Color( 0,1.0 * gamma*2,0,255 ))
+					//doDrawBasis( lnQ, 1, 1 );
+				}else 
+					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+	
+				lnQ.x = lnQ.y = lnQ.z = 0;
+				lnQ.x = lnQ.y = lnQ.z = 0;
+				lnQ.nx = lnQ.nz = 0;
+				lnQ.ny = 1;
+				lnQ.θ = 0;
+				lnQ.qw = 1;
+				lnQ.s = 0;
+				lnQ.dirty = false;
+				lnQ.freeSpin( theta, {x:0,y:0,z:1} );
+				lnQ2.x = lnQ2.y = lnQ2.z = 0;
+				lnQ2.nx = lnQ2.nz = 0;
+				lnQ2.ny = 0;
+				lnQ2.θ = 0;
+				lnQ2.qw = 1;
+				lnQ2.s = 0;
+				lnQ2.dirty = false;
+				lnQ2.freeSpin( gamma, {x:1,y:0,z:0} );
+				lnQ.x += lnQ2.x;
+				lnQ.y += lnQ2.y;
+				lnQ.z += lnQ2.z;
+				lnQ.dirty = true;
+				lnQ.update();
+				//lnQ.freeSpin( gamma, {x:1,y:0,z:0} );
+				//lnQ.freeSpin( deg2rad(90 ), offset);
+				lnQ.freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+		
+				const basis2 = lnQ.update().getBasis();
+				if( draw2 ) {
+					const oldp = p2[gamline];
+					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (basis2.up.x)*spaceScale ,(basis2.up.y)*spaceScale    , (basis2.up.z)*spaceScale ))
+					oldp.x = basis2.up.x;
+					oldp.y = basis2.up.y;
+					oldp.z = basis2.up.z;
+	
+					normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+					normalColors.push( new THREE.Color( 1.0,0,0,255 ))
+				}else 
+					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
+			}
+		}
+	
+	}
 
 
 function drawAnalogArm(curSliders,slerp) {
@@ -1309,7 +1415,7 @@ function computeBall( normalVertices,normalColors ) {
 	function deg2rad(x) { return x * Math.PI / 180.0 }
 	const drawCoords = document.getElementById( "showNormalBallCoords")?.checked;
 
-	const size = 16;
+	const size = 8;
 	const lnQ = new lnQuat();
 	const v = { x:0,y:1,z:0};
 	
@@ -1410,6 +1516,7 @@ function computeBall( normalVertices,normalColors ) {
 
 function DrawNormalBall(normalVertices,normalColors) {
 	return computeBall( normalVertices, normalColors );
+return;
   drawNormalBall = true;
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 30;
@@ -1597,7 +1704,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	{
 			let td = Number(document.getElementById( "twistDelta" ).value);
 		
-		const twistDelta = ( (td/500)-1 ) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8 ;
+		const twistDelta =twist= ( (td/500)-1 ) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8 ;
 		document.getElementById( "twistDeltaValue" ).textContent = twistDelta.toFixed(4);
 
 		lnQuat.setTwistDelta( twistDelta );
@@ -1808,6 +1915,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		if( check )
 			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 		
+			drawGrid( normalVertices,normalColors, curSliders);
 		DrawNormalBall(normalVertices,normalColors);
 	        
 		drawCoordinateGrid();

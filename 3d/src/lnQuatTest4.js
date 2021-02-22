@@ -24,13 +24,15 @@ let stepy = {x:0, y:0.02, z:0 };
 let stepz = {x:0, y:0, z:0.02 };
 let stepxyz = {x:0.02, y:0.02, z:0.02 };
 
+
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
-	var priorHere;
 	const spaceScale = 5;
 	const normal_del = 0.5;
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	var fibre;
 	let prior = null;
+
+	
 	if( showTrajectories ) {
 		priorPosx.x = 0;
 		priorPosx.y = 0;

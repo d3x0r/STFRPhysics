@@ -133,7 +133,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 		if( "function" === typeof theta  ){
 // what is passed is a function to call during apply
 			this.refresh = theta;
-			return;
+			return this;
 		}
 		if( theta instanceof lnQuat ) {
 // clone an existing lnQuat
@@ -147,7 +147,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			this.s = theta.s;
 			this.qw = theta.qw;
 			this.dirty = theta.dirty;
-			return;
+			return this;
 		}
 		if( "undefined" !== typeof a ) {
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
@@ -186,7 +186,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					if( !theta.lat ) {
 						this.x = 0; this.z = 0; this.y = theta.lng;
 						this.dirty = true; 
-						return this;
+						return this.update();
 					}
 					const x = Math.sin(theta.lng);
 					const z = Math.cos(theta.lng);
@@ -252,7 +252,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						}
 					}
 				}
-					return;
+					return this;
 				}
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
@@ -263,7 +263,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						this.y = theta.b * l1 / l3;
 						this.z = theta.c * l1 / l3;
 					}
-					return;
+					return this;
 				}
 				else if( "x" in theta )
 				{
@@ -356,7 +356,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							}
 						}
 					}
-					return;
+					return this;
 				}
 			}
 
@@ -368,7 +368,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 				this.y = d.y * θ;
 				this.z = d.z * θ;
 				this.update();
-				return;
+				return this;
 			}
 		}
 	}
@@ -674,7 +674,7 @@ lnQuat.prototype.apply = function( v ) {
 		const result = new lnQuat(
 			function() {
 				this_.update(); 
-	                        return finishRodrigues( v.update(), 0, this_.nx, this_.ny, this_.nz, this_.θ );
+	            return finishRodrigues( v.update(), 0, this_.nx, this_.ny, this_.nz, this_.θ );
 			}
 		);
 		return result.refresh();
@@ -1143,6 +1143,21 @@ function yaw( q, th ) {
 	const az = ( cny*q.nz ) + s*q.nx;
 	//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
 	return finishRodrigues( q, 0, ax, ay, az, th );
+}
+
+lnQuat.prototype.up = function() {
+	
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+	return {x: c*q.nx*q.ny - s*q.nz
+		, y: c1 + c*( q.ny*q.ny )
+		, z: s*q.nx      + c*q.ny*q.nz
+		} 	
+
 }
 
 // rotate the passed vector 'from' this space
