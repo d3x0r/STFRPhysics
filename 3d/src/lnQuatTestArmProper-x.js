@@ -265,10 +265,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const p = [];
 		const p2 = [];
 		let gamline ;
-		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true ).yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 		//const offset = { x:A, y:B, z:C };
 		//const offset = { x:0.707, y:0.4, z:-0.707 };
-		const range = deg2rad((2*Math.PI+twist )/Math.PI * 30 + 10 );
+		const range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*2 )/Math.PI * 30 + 10 );
 		const step = range/16;
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 			lnQx.x = theta;
