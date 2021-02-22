@@ -103,9 +103,10 @@
 		 - Apply Accel: <input type="checkbox" id="applyAccel">
 		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		 <span style="visibility:visible"> Interpolate
-		 - Add composite: <input type="checkbox" id="additiveMerge" ></span>
+		 - Add composite: <input type="checkbox" id="additiveMerge" checked ></span>
 
-		 - SLERP: <input type="checkbox" id="useSLERP" >
+		 <span style="visibility:visible"> - Add 1-norm: <input type="checkbox" id="oneNormal" ></span>
+
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
@@ -175,11 +176,11 @@
 		<tr style="visibility:visible"><td style="color:red">1</td><td>
 			<input type="checkbox" id="showX1" checked>
 		</td><td> 
-		<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
+		<input type="range" id="lnQX1" min="0"  max="1000"  value="503"> 
 		</td><td>
 		<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
 		</td><td>
-		<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> 
+		<input type="range" id="lnQZ1" min="0"  max="1000" value="504"> 
 		</td></tr>
 
 		<tr><td> </td><td>
@@ -280,6 +281,7 @@
 
 	<script type="text/javascript">
 
+		var SLERP = false;
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
@@ -349,11 +351,6 @@
 		}
 
 
-
-		if( document.getElementById( "useSLERP" )?.checked ) {
-			SLERP = true;
-		}else 			
-			SLERP = false;
 
 		if( document.getElementById( "useSLERPBasis" )?.checked ) {
 			SLERPbasis = true;
@@ -724,7 +721,7 @@ function blurSlider( slider ) {
 			}
 			is = document.getElementById( "additiveMerge" );
 			is.oninput = updateMesh;
-			is = document.getElementById( "useSLERP" );
+			is = document.getElementById( "oneNormal" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERPBasis" );
 			is.oninput = updateMesh;
