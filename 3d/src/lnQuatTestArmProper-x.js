@@ -287,14 +287,11 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
 					//lnQ.dirty = true;
-		const qx = x;
-		const qy = 0;
-		const qz = y;
 		const qlen = Math.sqrt(x*x + y*y);
 
-		const qnx = qlen?qx / qlen:0;
-		const qny = qlen?qy / qlen:1;
-		const qnz = qlen?qz / qlen:0;
+		const qnx = qlen?x / qlen:0;
+		const qny = qlen?0:1;
+		const qnz = qlen?y / qlen:0;
 
 		const ax = o.nx
 		const ay = o.ny
@@ -425,11 +422,11 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 
-					if( 0 ) {
+					if( _1norm ) {
 						const xy = backConvert( lnQx, basis.up, range );
 
 						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (0)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (5)*spaceScale ))
 						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 					}
@@ -469,11 +466,11 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 
-					if(0) {
+					if(_1norm) {
 						const xy = backConvert( lnQx, oldp, range );
 
 						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (0)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (5)*spaceScale ))
 						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 					}
