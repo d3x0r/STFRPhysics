@@ -257,7 +257,6 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	function backConvert(q, v, range ){
 
-		q.update();
 		const s  = q.s;
 		const qw = q.qw;
 		
@@ -275,21 +274,13 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const vyOut = v.y + qw * ty + ( qz * tx - tz * qx );
 		const vzOut = v.z + qw * tz + ( qx * ty - tx * qy );
 
-
-			   const l3 = Math.sqrt(vxOut*vxOut+vyOut*vyOut+vzOut*vzOut);
-			   //if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
-			   
-			   const tmpy = vyOut /l3; // square normal
-			   const cosTheta = Math.acos( tmpy ); // 1->-1 (angle from pole around this circle.
-			   const norm1 = Math.sqrt(vxOut*vxOut+vzOut*vzOut);
-			   // get square normal...
-			   return {x: (vzOut/norm1 * cosTheta/range), y: (-vxOut/norm1 * cosTheta)/range };
-
-			   //this.θ = cosTheta;							
-			   //this.x = this.nx*cosTheta;
-			   //this.z = this.nz*cosTheta;
-							  
-	
+		{ // convert normal to x/0/z normal
+			const l3 = Math.sqrt(vxOut*vxOut+vyOut*vyOut+vzOut*vzOut);
+			const tmpy = vyOut /l3; // square normal
+			const cosTheta = Math.acos( tmpy ); // 1->-1 (angle from pole around this circle.
+			const norm1 = Math.sqrt(vxOut*vxOut+vzOut*vzOut);
+			return {x: (vzOut/norm1 * cosTheta/range), y: (-vxOut/norm1 * cosTheta)/range };
+		}
 	}
 
 	function pMake(q, x, y, o ){
@@ -384,13 +375,12 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const p2 = [];
 		let gamline ;
 		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+		lnQx.update();
 		//const offset = { x:A, y:B, z:C };
 		//const offset = { x:0.707, y:0.4, z:-0.707 };
 		const range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*3*1.414 )/Math.PI * 30 + 10 );
 		const step = range/16;
 		for( let theta = -(range); theta <= (range); theta += (step) ){
-			lnQx.x = theta;
-			lnQx.dirty = true;
 	
 			const draw = p.length;
 			const draw2 = p2.length;
@@ -480,7 +470,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 
 					if(0) {
-						const xy = backConvert( lnQx, basis.up, range );
+						const xy = backConvert( lnQx, oldp, range );
 
 						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
 						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (0)*spaceScale ))
