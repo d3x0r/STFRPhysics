@@ -921,9 +921,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
 
-	const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
-			       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
-	const dAng = acos( temp ) * 2;
+	//const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
+	//		       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
+	//const dAng = acos( temp ) * 2;
 
 	if( ang ) {      // as bc     bs ac       as bs
 		const sxmy = Math.sin(xmy);
