@@ -7,6 +7,23 @@ var SLERP = false;
 var SLERPbasis = false;
 const abs = (x)=>Math.abs(x);
 
+const np = -Math.PI;
+const pp = Math.PI;
+const p2 = 2*Math.PI;
+//           4-3 3-2 2-1 1-0  0  0-1 1-2 2-3 3-4
+const grid =[[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ] // -4- -3
+			,[np, np, pp, pp,p2, np, np, pp, pp ] // 3-2
+			,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ] // 2-1
+			,[pp, pp, np, np, 0, pp, pp, np, np ] // 1-0
+
+			,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-1
+
+			,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
+			,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
+			,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ]  //2-3
+			,[pp, pp, np, np,p2, pp, pp, np, np ]  //3-4
+			];
+
 // 'fixed' acos for inputs > 1
 function acos(x) {
 	// uncomment this line to cause failure for even 1/2 rotations(at the limit of the other side)
@@ -209,9 +226,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						this.dirty = true; 
 						return this.update();
 					}
-					const np = -Math.PI;
-					const pp = Math.PI;
-					const p2 = 2*Math.PI;
 
 					const gridlat = 
 						( lat < -Math.PI*3 ) ?0
@@ -234,19 +248,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						:( lng > Math.PI*1 ) ?6
 						:/*( lng > Math.PI*0 ) ?*/ 5;
 
-					//           4-3 3-2 2-1 1-0  0  0-1 1-2 2-3 3-4
-					const grid =[[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ] // -4- -3
-					            ,[np, np, pp, pp,p2, np, np, pp, pp ] // 3-2
-					            ,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ] // 2-1
-					            ,[pp, pp, np, np, 0, pp, pp, np, np ] // 1-0
-
-					            ,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-1
-
-					            ,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
-					            ,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
-					            ,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ]  //2-3
-					            ,[pp, pp, np, np,p2, pp, pp, np, np ]  //3-4
-								];
 
 					if( lat < 0 ) {
 						if( lat < -Math.PI*3 ) {
@@ -269,8 +270,8 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							lng += Math.PI;
 							lat = Math.PI*2-lat;
 						}else{
+							// 0 to Math.PI (no adjustment)
 						}
-						// 0 to Math.PI (no adjustment)
 					}
 					spin = grid[gridlat][gridlng];
 
