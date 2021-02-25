@@ -325,6 +325,7 @@ function mkQuat( a,b,c,d ){
 					lnQ.freeSpin( t2, {x:1,y:0,z:0} );
 					lnQ.freeSpin( g2, {x:0,y:0,z:1} );
 					lnQ.update().freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+					doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
 				}
 
 				//lnQ.add( offset, 1 )
