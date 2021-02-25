@@ -184,51 +184,36 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 				}
 				if( "lat" in theta ) {
 					let spin = 0;
-					let lat = theta.lat;
-					let lng = theta.lng
-					lat = lat % Math.PI*4;
+					let lat = theta.lat % Math.PI*4;
+					let lng = theta.lng % Math.PI*4
+
 					if( !lat ) {
 						this.x = 0; this.z = 0; this.y = lng;
 						this.dirty = true; 
 						return this.update();
 					}
+					let lsec = 0;
 					if( lat < 0 ) {
 						if( lat < -Math.PI*3 ) {
+							lsec = -4;
 							lat += Math.PI*4;
 							spin = 0;
-							//lng += Math.PI;
-							//lat = Math.PI*2-lat;
-
 						} else if( lat < -Math.PI*2 ) {
+							lsec = -3;
 							// 
 							if( lng < 0 ) {
 								spin = Math.PI;
-								lng = lng;
 								lat = Math.PI*2+lat;
 							}else {
 								spin = -Math.PI;
-								lng = lng;
 								lat = Math.PI*2+lat;
-								
 							}
-
-							//spin = -Math.PI*3;
-							// -2pi to -pi  
-							// -pi is Math.pi
-							// 
-							//lng = Math.PI;
-							//lat = Math.PI*2+lat;
-							// -2pi to -3pi
 						} else if( lat < -Math.PI ) {
+							lsec = -2;
 							spin = -Math.PI*2;
-							// -2pi to -pi  
-							// -pi is Math.pi
-							// 
-							//lng = Math.PI;
 							lat = (Math.PI-(lat+Math.PI));
-							//lat = Math.PI*2- lat;
 						}else {
-							// 0 to -Math.PI
+							lsec = -1;
 							spin = -Math.PI;
 							lng += Math.PI;
 							lat = -lat;
@@ -237,34 +222,42 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 					else {
 						if( lat > Math.PI*3 ) {
+							lsec = 3;
 							if( lng < 0 ) {
 								spin = -Math.PI;
-								lng = lng;
 								lat -= Math.PI*4;
 							}else {
 								spin = Math.PI;
-								lng = lng;
 								lat -= Math.PI*4;
 
 							}
 						}
 						else if( lat > Math.PI*2 ) {
+							lsec = 2;
 							spin = -Math.PI*2;
-							lng = lng;
-							lat = lat-Math.PI*2;
-						}
-						else if( lat > Math.PI*2 ) {
-							spin = 0;
-							lng = lng;
 							lat = lat-Math.PI*2;
 						}
 						else if( lat > Math.PI ) {
+							lsec = 1;
 							spin = Math.PI;
 							lng += Math.PI;
 							lat = Math.PI*2-lat;
 						}
 						// 0 to Math.PI (no adjustment)
 					}
+
+					if( lng > Math.PI ) {
+						//if( lsec)
+						if( lng >= Math.PI*3) ;//lng += Math.PI*4;
+						else
+							spin += Math.PI*2;
+					} else if( lng <= -Math.PI ){
+						if( lng <= -Math.PI*3) ;
+						else
+							spin += Math.PI*2;
+					}
+							
+
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
@@ -276,16 +269,23 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 					}
 					
-					if( lng > Math.PI ) {
+					if( false && lng > Math.PI ) {
 						if( lng <= Math.PI*2 )
-							yaw( this.update(), twistDelta + spin+Math.PI*2/*+ angle*/ );
+							yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
 						else
-							if( theta.lng <= Math.PI*3 )
-								yaw( this.update(), twistDelta - spin+Math.PI*2/*+ angle*/ );
-							else 
-								yaw( this.update(), twistDelta - spin+Math.PI*4/*+ angle*/ );
-					} else if( theta.lng <= -Math.PI )
-						yaw( this.update(), twistDelta - spin+Math.PI*2/*+ angle*/ );
+							if( lng <= Math.PI*3 )
+								yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
+							else { 
+								lng -= Math.PI*4;
+								yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
+							}
+					} else if( false && lng <= -Math.PI )
+						if( lng <= -Math.PI*3 )
+							yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
+						else if( lng <= -Math.PI*2 )
+							yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
+						else
+							yaw( this.update(), twistDelta + spin +Math.PI*2/*+ angle*/ );
 					else
 						if( twistDelta ) {
 							yaw( this.update(), spin+twistDelta /*+ angle*/ );

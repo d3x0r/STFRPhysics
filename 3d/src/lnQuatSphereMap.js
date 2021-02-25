@@ -297,7 +297,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const ax = o.nx
 		const ay = o.ny
 		const az = o.nz
-		const th = o.θ
+		const th = o.θ;
 
 		{ // finish rodrigues
 			const AdotB = (qnx*ax + /*q.ny*ay +*/ qnz*az);
@@ -364,10 +364,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const p = [];
 		const p2 = [];
 		let gamline ;
-		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI*1.5}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 		lnQx.update();
 
-		range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*3*1.414 )/Math.PI * 30 + 10 );
+		range = deg2rad( curSliders.lnQZ[0] );
 		const step = range/16;
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 	
@@ -1588,7 +1588,7 @@ function computeBall( normalVertices,normalColors ) {
 
 
 function DrawNormalBall(normalVertices,normalColors) {
-	return computeBall( normalVertices, normalColors );
+	//return computeBall( normalVertices, normalColors );
 return;
   drawNormalBall = true;
 	const v = { x:0,y:1,z:0};
@@ -1789,9 +1789,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			if( n === 1 ) {
 			        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			}
-			curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-			curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQX[n-1] = (lnQX / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQY[n-1] = (lnQY / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+
 			let lnQ;
 		       	switch(n) {
 			case 1:
@@ -1846,7 +1847,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
 				}
 			}               
-			const xyr = lnQ.θ;
+
+
+            const xyr = lnQ.θ;
 			const xyl = lnQ.θ;
 			const showInterpolant = document.getElementById( "drawInterp"+n)
 			if( showInterpolant )  
@@ -1876,7 +1879,15 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			
 	        
 		}
-	        
+
+        curSliders.lnQX[0] = (curSliders.lnQX[0] * 4.25*Math.PI)/4;
+        curSliders.lnQY[0] = (curSliders.lnQY[0] * 4.25*Math.PI)/4;
+        curSliders.lnQZ[0] = (curSliders.lnQZ[0] +1) * 100 + 10;
+
+        document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]*4/Math.PI).toFixed(4) + "π";
+        document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]*4/Math.PI).toFixed(4) + "π";
+        document.getElementById( "lnQZval1").textContent = ( curSliders.lnQZ[0]).toFixed(4) ;
+
 		timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);
 		document.getElementById( "timeScalarValue" ).textContent = timeScale.toFixed(4);
 	        
