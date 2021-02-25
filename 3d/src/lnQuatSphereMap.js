@@ -296,6 +296,7 @@ function mkQuat( a,b,c,d ){
 		lnQzText.textContent = (lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
 		const step = range/16;
+		
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 	
 			const draw = p.length;
@@ -360,10 +361,9 @@ function mkQuat( a,b,c,d ){
 					lnQ.freeSpin( t2, {x:0,y:0,z:1} );
 					lnQ.freeSpin( g2, {x:1,y:0,z:0} );
 					lnQ.update().freeSpin( lnQx.θ, {x:lnQx.nx, y:lnQx.ny, z:lnQx.nz} );
+
 				}
 
-
-		
 				const basis2 = lnQ.update().getBasis();
 				if( draw2 ) {
 					const oldp = p2[gamline];
@@ -375,11 +375,25 @@ function mkQuat( a,b,c,d ){
 	
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+
+
 				}else 
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
 			}
 		}
-	
+
+		if(0){
+			lnQx.set( {lat:curSliders.lnQX[0]+Math.PI*2,lng:curSliders.lnQY[0]}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			lnQx.update();
+
+			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
+			lnQx.set( {lat:curSliders.lnQX[0]+Math.PI*2,lng:curSliders.lnQY[0]+Math.PI*2}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			lnQx.update();
+			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
+			lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]+Math.PI*2}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			lnQx.update();
+			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
+		}
 	}
 
 
@@ -951,12 +965,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	        
 		}
 
-        curSliders.lnQX[0] = (curSliders.lnQX[0] * 4.25*Math.PI)/4;
-        curSliders.lnQY[0] = (curSliders.lnQY[0] * 4.25*Math.PI)/4;
+        curSliders.lnQX[0] = (curSliders.lnQX[0] * 4.25*Math.PI);
+        curSliders.lnQY[0] = (curSliders.lnQY[0] * 4.25*Math.PI);
         curSliders.lnQZ[0] = (curSliders.lnQZ[0] +1) * 100 + 10;
 
-        document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]*4/Math.PI).toFixed(4) + "π";
-        document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]*4/Math.PI).toFixed(4) + "π";
+        document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]/Math.PI).toFixed(4) + "π";
+        document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]/Math.PI).toFixed(4) + "π";
         document.getElementById( "lnQZval1").textContent = ( curSliders.lnQZ[0]).toFixed(4) ;
 
 		timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);

@@ -201,8 +201,8 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 				}
 				if( "lat" in theta ) {
 					let spin = 0;
-					let lat = theta.lat % Math.PI*4;
-					let lng = theta.lng % Math.PI*4
+					let lat = theta.lat % (Math.PI*4);
+					let lng = theta.lng % (Math.PI*4)
 					
 					if( !lat ) {
 						this.x = 0; this.z = 0; this.y = lng+twistDelta;
@@ -255,7 +255,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							lat = Math.PI*2+lat;
 						} else if( lat < -Math.PI ) {
 							lat = (Math.PI-(lat+Math.PI));
-						}else {
+						} else {
 							lng += Math.PI;
 							lat = -lat;
 						}
@@ -263,11 +263,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					else {
 						if( lat > Math.PI*3 ) {
 							lat -= Math.PI*4;
-						}
-						else if( lat > Math.PI*2 ) {
+						} else if( lat > Math.PI*2 ) {
 							lat = lat-Math.PI*2;
-						}
-						else if( lat > Math.PI ) {
+						} else if( lat > Math.PI ) {
 							lng += Math.PI;
 							lat = Math.PI*2-lat;
 						}else{
