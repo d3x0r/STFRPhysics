@@ -385,7 +385,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
-					doDrawBasis( lnQ, 1, 1, null, null, 1 );
+					doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
 					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
 					//lnQ.dirty = true;
 				} else {
