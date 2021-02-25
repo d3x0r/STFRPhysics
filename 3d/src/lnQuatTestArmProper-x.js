@@ -44,6 +44,9 @@ let totalNormal = 0;
 let drawWorldAxles = false;
 let mountOrder = 0;
 
+let lnQx = new lnQuat();
+let range = Math.PI;
+
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * θ / nR
 let shownL = true;  //  p / nL
@@ -285,8 +288,6 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	function pMake(q, x, y, o ){
 
-					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
-					//lnQ.dirty = true;
 		const qlen = Math.sqrt(x*x + y*y);
 
 		const qnx = qlen?x / qlen:0;
@@ -318,22 +319,16 @@ function drawDigitalTimeArm(curSliders, slerp) {
 				const ss2 = sxpy - sxmy
 				const cc1 = cxmy - cxpy
 		
-				const sAng = Math.sin(ang/2);
 				// these have q.ny terms remove - q.ny is 0.
-				const crsX = (ay*qnz);
-				const Cx = ( crsX * cc1 +  ax * ss1 + qnx * ss2 );
-
-				const crsY = (az*qnx-ax*qnz);
-				const Cy = ( crsY * cc1 +  ay * ss1 );
-
-				const crsZ = (-ay*qnx);
-				const Cz = ( crsZ * cc1 +  az * ss1 + qnz * ss2 );
+				const Cx = ( (ay*qnz       ) * cc1 +  ax * ss1 + qnx * ss2 );
+				const Cy = ( (az*qnx-ax*qnz) * cc1 +  ay * ss1             );
+				const Cz = ( (      -ay*qnx) * cc1 +  az * ss1 + qnz * ss2 );
 
 				const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 				
 				q.θ  = ang;
 				q.qw = cosCo2;
-				q.s  = sAng;
+				q.s  = Math.sin(ang/2);
 				q.nx = Cx*Clx;
 				q.ny = Cy*Clx;
 				q.nz = Cz*Clx;
@@ -365,17 +360,14 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		const _1norm = document.getElementById( "oneNormal" )?.checked;
 		const lnQ = new lnQuat();
-		const lnQ2 = new lnQuat();
-		const lnQx = new lnQuat();
-		const spaceScale = 45;
+		const spaceScale = 20;
 		const p = [];
 		const p2 = [];
 		let gamline ;
 		lnQx.set( {lat:curSliders.lnQX[0]*Math.PI*1.5,lng:curSliders.lnQY[0]*Math.PI}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 		lnQx.update();
-		//const offset = { x:A, y:B, z:C };
-		//const offset = { x:0.707, y:0.4, z:-0.707 };
-		const range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*3*1.414 )/Math.PI * 30 + 10 );
+
+		range = deg2rad((2*Math.PI+curSliders.lnQZ[0]*Math.PI*3*1.414 )/Math.PI * 30 + 10 );
 		const step = range/16;
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 	
@@ -392,7 +384,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 				}
 
 				if( merge ) {
-					pMake( lnQ, theta, gamma, lnQx);
+					pMake( lnQ, t2, g2, lnQx);
+					doDrawBasis( lnQ, 1, 1, null, null, 1 );
 					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
 					//lnQ.dirty = true;
 				} else {
@@ -421,22 +414,11 @@ function drawDigitalTimeArm(curSliders, slerp) {
 					oldp.z = basis.up.z;
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-
-					if( _1norm ) {
-						const xy = backConvert( lnQx, basis.up, range );
-
-						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (5)*spaceScale ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-					}
-
-					//doDrawBasis( lnQ, 1, 1 );
 				}else 
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 	
 				if( merge ) {
-					pMake( lnQ, gamma, theta, lnQx );
+					pMake( lnQ, g2, t2, lnQx );
 					//lnQ.x = gamma; lnQ.y = 0; lnQ.z = theta;
 					//lnQ.dirty = true;
 				} else {
@@ -465,16 +447,6 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-
-					if(_1norm) {
-						const xy = backConvert( lnQx, oldp, range );
-
-						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( 3*(xy.x)*spaceScale ,3*(xy.y)*spaceScale    , (5)*spaceScale ))
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-					}
-
 				}else 
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
 			}
@@ -802,55 +774,23 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 							normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
 							normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + (lnQ2.dθ*lnQ2.dnx) * 2.0,  (y)*pointScalar*spaceScale + (lnQ2.dθ*lnQ2.dny) * 2.0  , (z)*pointScalar*spaceScale + (lnQ2.dθ*lnQ2.dnz) * 2.0  ))
 							if( showRotationCurve_ === "X" ){
-							normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
-							normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))		
+								normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))
+								normalColors.push( new THREE.Color( 1.0,1.0,0,255 ))		
 							}
 							if( showRotationCurve_ === "Y" ){
-							normalColors.push( new THREE.Color( 0.0,1.0,1.0,255 ))
-							normalColors.push( new THREE.Color( 0.0,1.0,1.0,255 ))		
+								normalColors.push( new THREE.Color( 0.0,1.0,1.0,255 ))
+								normalColors.push( new THREE.Color( 0.0,1.0,1.0,255 ))		
 							}
 							if( showRotationCurve_ === "Z" ){
-							normalColors.push( new THREE.Color( 1.0,0.0,1.0,255 ))
-							normalColors.push( new THREE.Color( 1.0,0.0,1.0,255 ))		
+								normalColors.push( new THREE.Color( 1.0,0.0,1.0,255 ))
+								normalColors.push( new THREE.Color( 1.0,0.0,1.0,255 ))		
 							}
 						}
 					})
 				}
-				
-
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 
-	/*
-			// this does a range around the curves - but it's a lot of segments...
-			for( var t = -Math.PI; t<= Math.PI; t+=0.1 ) {
-				for( var s = -Math.PI/8; s < Math.PI/8; s+= 0.05 ) {
-				for( var u = -Math.PI/8; u < Math.PI/8; u+= 0.05 ) {
-					let lnQ1;
-					if( showRotationCurve_ == "X" )
-						lnQ1 = mkQuat().yaw(s+curSliders.lnQY[showRotationCurveSegment-1])
-							.pitch( t +curSliders.lnQX[showRotationCurveSegment-1])
-							.roll( u +curSliders.lnQZ[showRotationCurveSegment-1])
-
-					if( showRotationCurve_ == "Y" )
-						lnQ1 = mkQuat().yaw(t+curSliders.lnQY[showRotationCurveSegment-1])
-							.pitch( u +curSliders.lnQX[showRotationCurveSegment-1])
-							.roll( s +curSliders.lnQZ[showRotationCurveSegment-1])
-
-					if( showRotationCurve_ == "Z" )
-						lnQ1 = mkQuat().yaw( u+curSliders.lnQY[showRotationCurveSegment-1])
-							.pitch( s +curSliders.lnQX[showRotationCurveSegment-1])
-							.roll( t +curSliders.lnQZ[showRotationCurveSegment-1])
-
-					if( fixAxleRotation )
-						lnQ1.freeSpin( lnQ.θ, lnQ )
-					lnQ1.add( lnQBase );
-					doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
-				}
-				}
-			}
-
-          */
 		}
 	}
 	}
@@ -1630,7 +1570,17 @@ function computeBall( normalVertices,normalColors ) {
 			normalColors.push( new THREE.Color( 0,0.6*s,0,0.6*s ))
 			normalColors.push( new THREE.Color( 0,0,0.6*s,0.6*s))
 			normalColors.push( new THREE.Color( 0,0,0.6*s,0.6*s ))
-			
+			if(0)
+			{
+				const xy = backConvert( lnQx, new_v, range );
+				if( xy.x >= -1 && xy.x <= 1 && xy.y >= -1 && xy.y <= 1) {
+					normalVertices.push( new THREE.Vector3( (new_v.x)*spaceScale ,(new_v.y)*spaceScale    , (new_v.z)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( 5*(xy.x)*spaceScale ,5*(xy.y)*spaceScale    , (8)*spaceScale ))
+					normalColors.push( new THREE.Color( 0,1.0 ,0,255 ))
+					normalColors.push( new THREE.Color( 0,1.0 ,0,255 ))
+				}
+			}
+
 	
 	}
 
