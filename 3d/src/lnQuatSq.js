@@ -205,7 +205,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					let lng = theta.lng % Math.PI*4
 					
 					if( !lat ) {
-						this.x = 0; this.z = 0; this.y = lng;
+						this.x = 0; this.z = 0; this.y = lng+twistDelta;
 						this.dirty = true; 
 						return this.update();
 					}
