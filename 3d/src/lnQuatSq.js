@@ -86,24 +86,41 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 		const c = 1- Math.cos( cosTheta ); // double angle substituted
 		
 		// determinant coordinates
-		const angle = acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
+		let angle = txn===1?acos( ( ty )  )
+				:acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
 		
+		//console.log( "Q:", q, txn, tzn, ty, angle)
+
 		// compute the axis
 		const yz = s * q.nx;
 		const xz = ( 2 - c * (q.nx*q.nx + q.nz*q.nz)) * tzn;
-		const xy = s * q.nx * tzn  
-		         + s * q.nz * (1-txn);
-		
-		const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
-		q.nx = yz *tmp;
-		q.ny = xz *tmp;
-		q.nz = xy *tmp;
+		const xy = txn===1?(s * q.nx * tzn  
+			+ s * q.nz * (1) )
+			:(s * q.nx * tzn  
+		         + s * q.nz * (1-txn) );
+
+		//if( txn === 1 ) angle += Math.PI*2;
+
+		const newlen = Math.sqrt(yz*yz + xz*xz + xy*xy );
+		if( Math.abs(newlen)>0.00000001){
+			const tmp = 1 /newlen;
+			q.nx = yz *tmp;
+			q.ny = xz *tmp;
+			q.nz = xy *tmp;
+		}else{
+			q.nx = 0;
+			q.ny = 1;
+			q.nz = 0;
+
+		}
 		
 		const lNorm = angle;
 		q.x = q.nx * lNorm;
 		q.y = q.ny * lNorm;
 		q.z = q.nz * lNorm;
 		
+		//console.log( "post Q:", q )
+
 		// the remining of this is update()
 		q.θ = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 		q.s = Math.sin( q.θ/2);
@@ -186,7 +203,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					let spin = 0;
 					let lat = theta.lat % Math.PI*4;
 					let lng = theta.lng % Math.PI*4
-
+					
 					if( !lat ) {
 						this.x = 0; this.z = 0; this.y = lng;
 						this.dirty = true; 
@@ -232,6 +249,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								if( lng > 2*Math.PI){
 									spin = Math.PI;
 								}else{
+									if( lng == 0 )
+									spin = 2*Math.PI;
+									else
 									spin = -Math.PI;
 								}
 							}
@@ -255,8 +275,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							lsec = -2;
 							lat = (Math.PI-(lat+Math.PI));
 						}else {
-
-							if( lng > 0 ) {
+							if( lng == 0 ){
+								spin = 0;
+							} else if( lng > 0 ) {
 								if( lng > Math.PI*2 ) {
 									spin = -Math.PI;
 
@@ -265,7 +286,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							}else {
 								if( lng < -Math.PI*2)
 									spin = Math.PI;
-								else
+								else 
 									spin = -Math.PI;
 
 							}
@@ -278,7 +299,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					else {
 						if( lat > Math.PI*3 ) {
 							lsec = 3;
-							if( lng < 0 ) {
+							if( lng === 0 )
+								spin = 0;
+							else if( lng < 0 ) {
 								if( lng < -3*Math.PI ) {
 									spin = Math.PI;//2*Math.PI;
 								}else if( lng < -2*Math.PI ) {
@@ -319,7 +342,10 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							lat = lat-Math.PI*2;
 						}
 						else if( lat > Math.PI ) {
-							if( lng > 0 ){
+							if( lng === 0 ) {
+								spin = 2*Math.PI;
+							}
+							else if( lng > 0 ){
 								if( lng > 2*Math.PI){
 									spin = Math.PI;
 								}else{
