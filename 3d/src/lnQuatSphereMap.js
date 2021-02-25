@@ -67,8 +67,8 @@ let lnQ4_current;
 let lnQ5_current;
 
 let normalVertices,normalColors;
-	const spaceScale = 1.5;
-	const normal_del = 0.4;
+	const spaceScale = 0.70;
+	const normal_del = 0.14;
 
 function makeQuat(p,y,r) {
 	switch( mountOrder ) {
@@ -282,7 +282,7 @@ function mkQuat( a,b,c,d ){
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		const _1norm = document.getElementById( "oneNormal" )?.checked;
 		const lnQ = new lnQuat();
-		const spaceScale = 20;
+		const spaceScale = 18;
 		const p = [];
 		const p2 = [];
 		let gamline ;
@@ -381,19 +381,6 @@ function mkQuat( a,b,c,d ){
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
 			}
 		}
-
-		if(0){
-			lnQx.set( {lat:curSliders.lnQX[0]+Math.PI*2,lng:curSliders.lnQY[0]}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
-			lnQx.update();
-
-			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
-			lnQx.set( {lat:curSliders.lnQX[0]+Math.PI*2,lng:curSliders.lnQY[0]+Math.PI*2}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
-			lnQx.update();
-			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
-			lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]+Math.PI*2}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
-			lnQx.update();
-			doDrawBasis( lnQx, lnQx, 1, 1, null, 1 );
-		}
 	}
 
 
@@ -423,18 +410,7 @@ function drawCoordinateGrid() {
 					const py = cy+y;
 					const pz = cz+z;
 					const lr = Math.sqrt( px*px+py*py+pz*pz );
-//					if( Math.abs( ll - Math.abs(totalNormal) ) > 0.05 ) continue;
-			if(0)
-					if( Math.abs( (Math.abs(z)+Math.abs(x)) - Math.abs(totalNormal) ) > 0.1 
-								|| Math.abs(y) > 0.1 ) continue;
-					//if( Math.abs( Math.abs(x) - Math.abs(totalNormal) ) > 0.1
-					//			|| Math.abs(y) > 0.1 ) continue;
-					//if( Math.abs( Math.abs(y) - Math.abs(totalNormal) ) > 0.2 ) continue;
-					//if( Math.abs( Math.abs(z) - Math.abs(totalNormal) ) > 0.2 ) continue;
 				if( (lr) > range ) continue;
-
-				//if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
-
 					const lnQ = new lnQuat( 0,px,py,pz );
 					simpleBasis( lnQ );	
 				}
@@ -444,20 +420,9 @@ function drawCoordinateGrid() {
 		}
 	
 		function simpleBasis(lnQ) {
-					const basis = lnQ.update().getBasis( );
-	if(0)
-				if(!(  (Math.abs( basis.up.z - curSliders.lnQX[1]) < 0.001 )
-					&&  (Math.abs( basis.up.x - curSliders.lnQX[1] ) < 0.001 )
-					&&  (basis.up.y > 0) ) ) return;
-			if(0)
-				if(  (Math.abs( basis.up.x ) + Math.abs(basis.up.z )) > 0.01 || basis.up.y < 0) return;
+				const basis = lnQ.update().getBasis( );
+
 				// the original normal direction; projected offset of sphere (linear scaled)
-				//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
-				//normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-		
-				//const pointScalar = 2/ Math.PI;
 				const ox = pointScalar*(unscaled?lnQ.x:(invert?lnQ.x:(lnQ.θ*lnQ.nx)));
 				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y:(lnQ.θ*lnQ.ny)));
 				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z:(lnQ.θ*lnQ.nz)));
@@ -1086,7 +1051,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		
 		drawGrid( normalVertices,normalColors, curSliders);
 	        
-		//drawCoordinateGrid();
+		drawCoordinateGrid();
 	        
 		// squares is calculated in analog arm.
 	}
