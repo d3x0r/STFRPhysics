@@ -327,8 +327,10 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								}
 
 							}else {
-								if( lng < -Math.PI) {
+								if( lng < -2*Math.PI) {
 									spin = -Math.PI;
+								}else if( lng < -Math.PI) {
+									spin = Math.PI;
 								}else {
 									spin = Math.PI;
 								}

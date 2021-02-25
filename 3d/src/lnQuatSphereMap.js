@@ -1777,7 +1777,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	{
 			let td = Number(document.getElementById( "twistDelta" ).value);
 		
-		const twistDelta =twist= ( (td/500)-1 ) * Math.PI * (scalar?6:1)*(scalar2?0.25:1)*8 ;
+		const twistDelta =twist= ( (td/500)-1 ) * Math.PI * 4.25;
 		document.getElementById( "twistDeltaValue" ).textContent = twistDelta.toFixed(4);
 
 		lnQuat.setTwistDelta( twistDelta );
