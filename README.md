@@ -60,10 +60,10 @@ from the origin is the same rotation axle, with a different angular speed.
 ## Some included Images
 
 This is a map fo the rotation states; each cube represents +/-2pi rotations, and the other related cubes of rotation near them.
-![Rotation States][rotationStates.png]
+![Rotation States](rotationStates.png)
 
 This is a sketch of trying to compute the vector for the twist operation of the normal ball shown in the demos... (`A`/`X` slider, with show normal ball checked)
-![Rotation States][twist-notes.png]
+![Rotation States](twist-notes.png)
 
 
 ## Glossary
