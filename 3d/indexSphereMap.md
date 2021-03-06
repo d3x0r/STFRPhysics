@@ -15,7 +15,7 @@ shows the grid for x/y/z for a range of +/- 2pi... the effective rotations never
 that are at the surface of the sphere are the same orientation.... 
 so there's a infinite choice to go back along any other rotation path.
 
-![Control Sample](control sample.png)
+![Control Sample](control_sample.png)
 
 ## What this is showing
 
