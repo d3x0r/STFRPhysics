@@ -216,6 +216,14 @@ function mkQuat( a,b,c,d ){
 		const qny = qlen?0:1;
 		const qnz = qlen?y / qlen:0;
 
+	/*	
+		q.x = x+o.x;
+		q.y = 0+o.y;
+		q.z = y+o.z;
+		q.dirty = true;
+		return q;
+	*/
+
 		const ax = o.nx
 		const ay = o.ny
 		const az = o.nz
@@ -278,6 +286,7 @@ function mkQuat( a,b,c,d ){
 	}
 
 
+	const tmpPoint = { x:0, y:0, z:0 };
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		const _1norm = document.getElementById( "oneNormal" )?.checked;
@@ -291,9 +300,9 @@ function mkQuat( a,b,c,d ){
 		const lnQxText = document.getElementById( "lnQXval1q" );
 		const lnQyText = document.getElementById( "lnQYval1q" );
 		const lnQzText = document.getElementById( "lnQZval1q" );
-		lnQxText.textContent = (lnQx.x/Math.PI).toFixed(4) + "π";
-		lnQyText.textContent = (lnQx.y/Math.PI).toFixed(4) + "π";
-		lnQzText.textContent = (lnQx.z/Math.PI).toFixed(4) + "π";
+		lnQxText.textContent = "qX:"+(lnQx.x/Math.PI).toFixed(4) + "π";
+		lnQyText.textContent = "qY:"+(lnQx.y/Math.PI).toFixed(4) + "π";
+		lnQzText.textContent = "qZ:"+(lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
 		const step = range/16;
 		
@@ -313,7 +322,7 @@ function mkQuat( a,b,c,d ){
 
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
-					doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
+					//doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
 					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
 					//lnQ.dirty = true;
 				} else {
@@ -332,7 +341,10 @@ function mkQuat( a,b,c,d ){
 				//lnQ.add( offset, 1 )
 				
 				const basis = lnQ.update().getBasis();
-	
+				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
+				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
+				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
+					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1 );
 				if( draw ) {
 
 					const oldp = p[gamline];
@@ -605,7 +617,7 @@ const normal_del = 3;
 		s = s/Math.PI;
 		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.θ:1;
-	if( t != lnQ2 && showArms )  {
+	if( t != lnQ2 || showArms )  {
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
 		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
 																				   
