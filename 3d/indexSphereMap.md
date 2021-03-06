@@ -10,6 +10,9 @@ The sliders at the bottom control Lat(itude), Long(itude), and Size.  Size is th
 is shown below the slider in degrees.  The other slider, the 'Twist Delta' controls the spin of the patch.  Every point
 is also roughly aligned with forward and right vectors at that point aligned with the grid.  
 
+In the initial position, the change in longitude looks exactly like the change in twist; example gimbal lock.  Really 
+when the latitude is near either pole, changing the latitude overlaps the twist.
+
 The rotation X/Y/Z coordinate of the angle-angle-angle is shown in its own space.  The top checkbox, 'Show Basis Map' 
 shows the grid for x/y/z for a range of +/- 2pi... the effective rotations never exceed this sphere.  All of the rotations
 that are at the surface of the sphere are the same orientation.... 
