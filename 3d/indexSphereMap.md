@@ -23,6 +23,10 @@ This demo started as a test to map a rectangular grid onto a sphere using latitu
 from a single 'orientation point'.  The 'orientation point' is at a specific latitude and longitude on the ball, with
 a spin/twist setting to control the 'heading' of the patch.  
 
+I wa going to apply this grid to locally define layouts on a sphere with variable geometry....
+
+![Variable Geometry Mapping](variable-geometry-mapping.jpg)
+
 I then plotted the rotation coordinate and its basis frame, and then there was a lot of discontinuity in output.
 Adding fixups internally on the point already in the rotation space.  
 
