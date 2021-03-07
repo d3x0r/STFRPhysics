@@ -281,19 +281,78 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					const z = Math.cos(lng);
 					this.x = x * lat; this.y = 0; this.z = z * lat;
 					this.dirty = true;
-					if( d ) {
+					if(d)
+					{
+						const q = this;
+
+						const ty = Math.cos( lat );
+						const txn = -z;
+						
+						{
+							const s = Math.sin( lat ); // double angle substituted
+							const c = 1- Math.cos( lat ); // double angle substituted
+							
+							// determinant coordinates
+							let angle = txn===1?acos( ( ty )  )
+									:acos( ( ty + 1 ) * ( 1 + z ) / 2 - 1 );
+							
+							// compute the axis
+							const yz = s * x;
+							const xz = ( 2 - c * (x*x + z*z)) * x;
+							const xy = txn===1?(s * x * x + s * z * (1) )
+								              :(s * x * x + s * z * (1+z) );
+		               
+							const newlen = Math.sqrt(yz*yz + xz*xz + xy*xy );
+							if( Math.abs(newlen)>0.00000001){
+								const tmp = 1 /newlen;
+								q.nx = yz *tmp;
+								q.ny = xz *tmp;
+								q.nz = xy *tmp;
+							}else{
+								q.nx = 0;
+								q.ny = 1;
+								q.nz = 0;
+							}
+							
+							q.x = q.nx * angle;
+							q.y = q.ny * angle;
+							q.z = q.nz * angle;
+		               
+							// the remining of this is update()
+							q.θ = angle;
+							q.s = Math.sin( q.θ/2);
+							q.qw = Math.cos( q.θ/2);
+							q.dirty = false;
+
+							{
+								// input angle...
+								const s = Math.sin( angle ); // double angle sin
+								const c1 = Math.cos( angle ); // sin/cos are the function of exp()
+								const c = 1-c1;
+								const cny = c * this.ny;
+								const ax = (cny*this.nx) - s*this.nz;
+								const ay = (cny*this.ny) + c1;
+								const az = (cny*this.nz) + s*this.nx;
+								//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
+								return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+							}
+						}
+					}else {
 						this.update();
-						alignZero(this);
 
+						{
+							// input angle...
+							const s = Math.sin( this.θ ); // double angle sin
+							const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
+							const c = 1-c1;
+							const cny = c * this.ny;
+							const ax = (cny*this.nx) - s*this.nz;
+							const ay = (cny*this.ny) + c1;
+							const az = (cny*this.nz) + s*this.nx;
+							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
+							return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+						}
 					}
-
-					if( twistDelta ) {
-						yaw( this.update(), spin+twistDelta /*+ angle*/ );
-					}
-					else
-						yaw( this.update(), spin /*+ angle*/ );
-
-					return this;
 				}
 				if( "a" in theta ) {
 // angle-angle-angle  {a:,b:,c:}
