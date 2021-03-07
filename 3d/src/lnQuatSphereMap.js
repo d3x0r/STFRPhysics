@@ -43,6 +43,7 @@ let showSliderCurves = false;
 let totalNormal = 0;
 let drawWorldAxles = false;
 let mountOrder = 0;
+let currentOctave = 0;
 
 let lnQx = new lnQuat();
 let range = Math.PI;
@@ -238,10 +239,10 @@ function mkQuat( a,b,c,d ){
 			const cxpy = Math.cos(xpy);
 			const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 		
-			let ang = Math.acos( cosCo2 )*2;
+			let ang = Math.acos( cosCo2 )*2 + (currentOctave * Math.PI*4);
 			// only good for rotations between 0 and pi.
 		
-			if( ang ) {
+			if( ang && ang != Math.PI*2 ) {
 				const sxmy = Math.sin(xmy); // sin x minus y
 				const sxpy = Math.sin(xpy); // sin x plus y
 		
@@ -513,14 +514,14 @@ function drawCoordinateGrid() {
 			drawN( new lnQuat( {a:-x, b:0, c:-z } ) );
 			drawN( new lnQuat( {a:-x, b:0, c:z } ) );
 			if(1){
-			drawN( new lnQuat( {a:x,  b:z, c:0 } ) );
-			drawN( new lnQuat( {a:x,  b:-z, c:0 } ) );
-			drawN( new lnQuat( {a:-x, b:-z, c:0 } ) );
-			drawN( new lnQuat( {a:-x, b:z, c:0 } ) );
-			drawN( new lnQuat( {a:0,  b:z , c:x  } ) );
-			drawN( new lnQuat( {a:0,  b:-z, c:x  } ) );
-			drawN( new lnQuat( {a:0, b:-z , c:-x } ) );
-			drawN( new lnQuat( {a:0, b:z  , c:-x } ) );
+				drawN( new lnQuat( {a:x,  b:z, c:0 } ) );
+				drawN( new lnQuat( {a:x,  b:-z, c:0 } ) );
+				drawN( new lnQuat( {a:-x, b:-z, c:0 } ) );
+				drawN( new lnQuat( {a:-x, b:z, c:0 } ) );
+				drawN( new lnQuat( {a:0,  b:z , c:x  } ) );
+				drawN( new lnQuat( {a:0,  b:-z, c:x  } ) );
+				drawN( new lnQuat( {a:0, b:-z , c:-x } ) );
+				drawN( new lnQuat( {a:0, b:z  , c:-x } ) );
 			}
 		}
 	if(0)	
@@ -668,7 +669,7 @@ const normal_del = 3;
 				}
 			}
 
-		if( showCoords || 1 ) {
+		{
 			if( !showScaledPoints  ) {
 				const r = Math.sqrt(x*x+y*y+z*z);
 				const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
@@ -677,31 +678,29 @@ const normal_del = 3;
 				z *= r / l;
 			}
 
-		//console.log( "Draw point:", x, y, z );
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
-																			       
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.up.x*normal_del*s     ,(y)*pointScalar*spaceScale + basis.up.y*normal_del *s    , (z)*pointScalar*spaceScale + basis.up.z*normal_del*s     ))
-																			       
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale				))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.forward.x*normal_del*s,(y)*pointScalar*spaceScale + basis.forward.y*normal_del*s, (z)*pointScalar*spaceScale + basis.forward.z*normal_del*s ))
+			//console.log( "Draw point:", x, y, z );
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
+																				       
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.up.x*normal_del*s     ,(y)*pointScalar*spaceScale + basis.up.y*normal_del *s    , (z)*pointScalar*spaceScale + basis.up.z*normal_del*s     ))
+																				       
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale				))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.forward.x*normal_del*s,(y)*pointScalar*spaceScale + basis.forward.y*normal_del*s, (z)*pointScalar*spaceScale + basis.forward.z*normal_del*s ))
+		   
+			{
+				//const s = t / (Math.PI*4);
+				const s = colorS;
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			}
+		   
 
-
-
-		{
-			//const s = t / (Math.PI*4);
-			const s = colorS;
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 		}
-
-
-	}
 
 
 
@@ -843,6 +842,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		document.getElementById( "twistDeltaValue" ).textContent = (twistDelta/Math.PI).toFixed(4)+ "π";
 
 		lnQuat.setTwistDelta( twistDelta );
+		currentOctave = Number(document.getElementById( "octave" ).value);
 
 		for( var n = 1; n <= 5; n++ ) {
 			let lnQX = Number(document.getElementById( "lnQX"+n ).value);
