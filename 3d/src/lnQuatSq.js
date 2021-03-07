@@ -11,17 +11,17 @@ const np = -Math.PI;
 const pp = Math.PI;
 const p2 = 2*Math.PI;
 //           4-3 3-2 2-1 1-0  0  0-1 1-2 2-3 3-4
-const grid =[[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ] // -4- -3
-			,[np, np, pp, pp,p2, np, np, pp, pp ] // 3-2
-			,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ] // 2-1
-			,[pp, pp, np, np, 0, pp, pp, np, np ] // 1-0
+const grid =[[ 0, p2, p2, 0,  0,  0, p2, p2,  0 ] // -4- -3
+			   ,[np, np, pp, pp,p2, np, np, pp, pp ] // 3-2
+			   ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ] // 2-1
+			   ,[pp, pp, np, np, 0, pp, pp, np, np ] // 1-0
 
-			,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-1
+			   ,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-1
 
-			,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
-			,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
-			,[p2,  0,  0, p2, 0, p2,  0,  0, p2 ]  //2-3
-			,[pp, pp, np, np,p2, pp, pp, np, np ]  //3-4
+			   ,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
+			   ,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
+			   ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ]  //2-3
+			   ,[pp, pp, np, np, 0, pp, pp, np, np ]  //3-4
 			];
 
 // 'fixed' acos for inputs > 1
@@ -217,7 +217,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					return this.fromBasis( theta );
 				}
 				if( "lat" in theta ) {
-					let spin = 0;
 					let lat = theta.lat % (Math.PI*4);
 					let lng = theta.lng % (Math.PI*4)
 					
@@ -248,32 +247,35 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						:( lng > Math.PI*1 ) ?6
 						:/*( lng > Math.PI*0 ) ?*/ 5;
 
-
-					if( lat < 0 ) {
-						if( lat < -Math.PI*3 ) {
-							lat += Math.PI*4;
-						} else if( lat < -Math.PI*2 ) {
-							lat = Math.PI*2+lat;
-						} else if( lat < -Math.PI ) {
+					switch( gridlat ) {
+					case 0: // -3
+						lat += Math.PI*4;
+						break;
+					case 1: // -2
+						lat = Math.PI*2+lat;
+						break;
+					case 2:  // -1
 							lat = (Math.PI-(lat+Math.PI));
-						} else {
+							break;
+					case 3: // < 0
 							lng += Math.PI;
 							lat = -lat;
-						}
-					}
-					else {
-						if( lat > Math.PI*3 ) {
-							lat -= Math.PI*4;
-						} else if( lat > Math.PI*2 ) {
-							lat = lat-Math.PI*2;
-						} else if( lat > Math.PI ) {
+							break;
+					case 4: // == 0
+					case 5: // > 0
+							break;
+					case 6: // > 1
 							lng += Math.PI;
 							lat = Math.PI*2-lat;
-						}else{
-							// 0 to Math.PI (no adjustment)
-						}
+							break;
+					case 7: // > 2
+							lat = lat-Math.PI*2;
+							break;
+					case 8: // > 3
+							lat -= Math.PI*4;
+							break;
 					}
-					spin = grid[gridlat][gridlng];
+					const spin = grid[gridlat][gridlng];
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
