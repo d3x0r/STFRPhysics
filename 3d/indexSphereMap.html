@@ -159,7 +159,11 @@
 
 		<tr id="twist" style="visibility:visible"><td colspan=5>
 		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
-		</td></tr>
+		</td>
+		<td>
+			Octave:<input type="range" id="octave" min="0"  max="10" value="0">
+		</td>
+		</tr>
 		<tr><td> 
 		</td><td> 
 		</td><td> X
@@ -717,6 +721,8 @@ function blurSlider( slider ) {
 			is = document.getElementById( "timeScalar" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "twistDelta" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "octave" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
