@@ -592,7 +592,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 
-	//*
+	/*
 			// this does a range around the curves - but it's a lot of segments...
 			for( var t = -Math.PI; t<= Math.PI; t+=0.1 ) {
 				for( var s = -Math.PI/8; s < Math.PI/8; s+= 0.05 ) {
@@ -621,7 +621,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				}
 			}
 
-      //    */
+          */
 		}
 	}
 	}
@@ -1435,6 +1435,35 @@ function tickQuat( shapes ) {
 
 }
 
+function focusSlider( slider, path, n ) {
+	showRotationCurve = path;
+	showRotationCurveSegment = n;
+	updateMesh();
+	
+}
+
+function blurSlider( slider ) {
+	//showRotationCurve = null;
+	//showRotationCurveSegment = -1;
+	//updateMesh();
+}
+			for( var n = 1; n <= 5; n++ ) {
+			let is;
+				is = document.getElementById( "lnQX"+n );
+				//is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
+				is = document.getElementById( "lnQY"+n );
+				//is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
+				is = document.getElementById( "lnQZ"+n);
+				//is.oninput = updateMesh;
+				is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
+				is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
+			}
+
+
 window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	normalVertices = normalVertices_
@@ -1697,6 +1726,8 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			showLineSeg[4] = check.checked;
 		}
 	        
+
+
 	        
 		check = document.getElementById( "normalizeTangents");
 		if( check )

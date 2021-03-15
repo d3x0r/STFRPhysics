@@ -210,6 +210,8 @@ function mkQuat( a,b,c,d ){
 	}
 
 	function pMake(q, x, y, o ){
+	}
+	function pMake(q, x, y, o ){
 
 		const qlen = Math.sqrt(x*x + y*y);
 
@@ -217,13 +219,13 @@ function mkQuat( a,b,c,d ){
 		const qny = qlen?0:1;
 		const qnz = qlen?y / qlen:0;
 
-	/*	
+		
 		q.x = x+o.x;
 		q.y = 0+o.y;
 		q.z = y+o.z;
 		q.dirty = true;
 		return q;
-	*/
+	
 
 		const ax = o.nx
 		const ay = o.ny

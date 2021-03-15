@@ -847,8 +847,8 @@ lnQuat.prototype.apply = function( v ) {
 		// v is unmodified.	
 		return new vectorType( v.x, v.y, v.z ); // 1.0
 	} else {
-		const nst = q.s; // normal * sin_theta
-		const qw = q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		const nst = Math.sin(q.θ/2);//q.s; // normal * sin_theta
+		const qw = Math.cos(q.θ/2);//q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 
 		const qx = q.nx*nst;
 		const qy = q.ny*nst;
