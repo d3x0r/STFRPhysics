@@ -592,7 +592,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				doDrawBasis( lnQ1, lnQ1, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
 
-	/*
+	//*
 			// this does a range around the curves - but it's a lot of segments...
 			for( var t = -Math.PI; t<= Math.PI; t+=0.1 ) {
 				for( var s = -Math.PI/8; s < Math.PI/8; s+= 0.05 ) {
@@ -621,7 +621,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				}
 			}
 
-          */
+      //    */
 		}
 	}
 	}
