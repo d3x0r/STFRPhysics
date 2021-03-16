@@ -125,10 +125,29 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
-	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
-	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
-	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
-	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
+
+//	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
+//	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
+//	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
+//	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
+	const tmp = {x:0,y:0,z:0};
+	
+	tmp.x = lnQ2.x;	tmp.y = lnQ2.y;	tmp.z = lnQ2.z;
+	let tmpRot = lnQ1.applyDel( tmp, timeScale*0.5 );	
+	const t2_ts = fixAxleRotation?new lnQuat(0,lnQ1.x+tmpRot.x,lnQ1.y+tmpRot.y,lnQ1.z+tmpRot.z):new lnQuat(lnQ2);
+
+	tmp.x = lnQ3.x;	tmp.y = lnQ3.y;	tmp.z = lnQ3.z;
+	tmpRot = t2_ts.applyDel( tmp, timeScale*0.5 );
+	const t3_ts = fixAxleRotation?new lnQuat(0,t2_ts.x+tmpRot.x,t2_ts.y+tmpRot.y,t2_ts.z+tmpRot.z):new lnQuat(lnQ3);
+
+	tmp.x = lnQ4.x;	tmp.y = lnQ4.y;	tmp.z = lnQ4.z;
+	tmpRot = t3_ts.applyDel( tmp, timeScale*0.5 );
+	const t4_ts = fixAxleRotation?new lnQuat(0,t3_ts.x+tmpRot.x,t3_ts.y+tmpRot.y,t3_ts.z+tmpRot.z):new lnQuat(lnQ4);
+	                                                   
+	tmp.x = lnQ5.x;	tmp.y = lnQ5.y;	tmp.z = lnQ5.z;
+	tmpRot = t4_ts.applyDel( tmp, timeScale*0.5 );
+	const t5_ts = fixAxleRotation?new lnQuat(0,t4_ts.x+tmpRot.x,t4_ts.y+tmpRot.y,t4_ts.z+tmpRot.z):new lnQuat(lnQ5);
+
 
 	if( applyAccel ) {
 		t2_ts.add( lnQ1 );
@@ -161,7 +180,9 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const R_ts  = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
 	//const Rz_ts = [lnQ1,t2__ts,t3__ts,t4__ts,t5__ts];
 	const Rw_ts = [lnQ1,t2_ts,t3_ts,t4_ts,t5_ts];
+
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
+
 	const A_R_ts = [A1_R_ts,A2_R_ts,A3_R_ts,A4_R_ts,A5_R_ts];
 
 
@@ -1514,8 +1535,30 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	if( !scalar2 && scalar ) pointScalar = ( Math.PI/2);
 
 
-	let axis = document.getElementById( "showAxis")?.checked;
+	let showAxis = document.getElementById( "showAxis")?.checked;
+	let showQuat = document.getElementById( "showQuat")?.checked;
 	let degrees = document.getElementById( "showDegrees")?.checked;
+
+	if( showQuat ) {
+		let tmp = document.getElementById( "labelC1");
+		if( tmp ) tmp.textContent = "W";
+		tmp = document.getElementById( "labelC2");
+		if( tmp ) tmp.textContent = "X";
+		tmp = document.getElementById( "labelC3");
+		if( tmp ) tmp.textContent = "Y";
+		tmp = document.getElementById( "labelC4");
+		if( tmp ) tmp.textContent = "Z";
+	}else {
+		let tmp = document.getElementById( "labelC1");
+		if( tmp ) tmp.textContent = "X";
+		tmp = document.getElementById( "labelC2");
+		if( tmp ) tmp.textContent = "Y";
+		tmp = document.getElementById( "labelC3");
+		if( tmp ) tmp.textContent = "Z";
+		tmp = document.getElementById( "labelC4");
+		if( tmp ) tmp.textContent = "Angle";
+	}
+	
 
 	{
 			let td = Number(document.getElementById( "twistDelta" ).value);
@@ -1572,10 +1615,17 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			lnQ.update();
 	        
 			const len = lnQ.θ;
-			if( axis ) {
+			if( showAxis && !showQuat ) {
 				document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
 				document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
 				document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
+			}else if( showQuat ) {
+				const qw = Math.cos( lnQ.θ/2 );
+				const s = Math.sin( lnQ.θ/2 );
+				document.getElementById( "lnQXval"+n).textContent = (qw).toFixed(4);
+				document.getElementById( "lnQYval"+n).textContent = (lnQ.nx*s).toFixed(4);
+				document.getElementById( "lnQZval"+n).textContent = (lnQ.ny*s).toFixed(4);
+				document.getElementById( "lnQAngle"+n).textContent = (lnQ.nz*s).toFixed(4);
 			}else {
 				// normalize the output angle... 
 				const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
@@ -1606,11 +1656,13 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			if( degrees ) {
 				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
 				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+				if( !showQuat )
+					document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
 			} else {
 				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
 				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+				if( !showQuat )
+					document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
 			}
 			if( degrees ) {
 			} else {
