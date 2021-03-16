@@ -56,6 +56,7 @@ from the origin is the same rotation axle, with a different angular speed.
  - [Arm Additive](https://d3x0r.github.io/STFRPhysics/3d/indexArm.html) 5 segment arm, with 5 rotation settings, added rotations; shows the curvatures over time too; the 'correct' additions would actually be calculated not arbitrary.
  - [Arm Proper](https://d3x0r.github.io/STFRPhysics/3d/indexArmProper.html) 5 segment arm, with 5 rotation settings, rotation frames applied relative to prior rotation; more what a robot arm would actually do.
  - [Relative Rotations](https://d3x0r.github.io/STFRPhysics/3d/indexRelative.html) 5 Rotations, showing the curvature from 0.0-1.0 in 0.01 increment steps; shows differential rotations...
+ - [Grid to Sphere Map](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap.html) Builds a regular x/y grid that projects onto a sphere... [More Information](https://github.com/d3x0r/STFRPhysics/blob/master/3d/indexSphereMap.md#mapping-rectangles-on-spheres).
 
 ## Some included Images
 
