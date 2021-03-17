@@ -847,6 +847,27 @@ lnQuat.prototype.apply = function( v ) {
 		// v is unmodified.	
 		return new vectorType( v.x, v.y, v.z ); // 1.0
 	} else {
+            	// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+            	// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
+		const c = Math.cos(q.θ);//
+		const s = Math.sin(q.θ);//
+
+		const qx = q.nx, qy = q.ny, qz = q.nz;
+		const vx = v.x , vy = v.y , vz = v.z;
+                // sin theta * cross
+		const cx =  s*(qy * vz - qz * vy);
+		const cy =  s*(qz * vx - qx * vz);
+		const cz =  s*(qx * vy - qy * vx);
+                // (1-cos theta) * dot
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		// v *cos(theta) + cross*sin(theta) + q * dot * (1-c)
+                return new vectorType(
+        		  v.x*c + cx + qx * dot
+               		, v.y*c + cy + qy * dot
+			, v.z*c + cz + qz * dot );
+
+	/*
+        	// this is a conversion to quaternion (basically) and then doing the math.
 		const nst = Math.sin(q.θ/2);//q.s; // normal * sin_theta
 		const qw = Math.cos(q.θ/2);//q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 
@@ -861,6 +882,7 @@ lnQuat.prototype.apply = function( v ) {
 		return new vectorType(  v.x + qw * tx + ( qy * tz - ty * qz )
 		       , v.y + qw * ty + ( qz * tx - tz * qx )
 		       , v.z + qw * tz + ( qx * ty - tx * qy ) );
+        */
 	} 
 }
 
