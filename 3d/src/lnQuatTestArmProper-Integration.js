@@ -13,6 +13,7 @@ let drawNormalBall = false;
 let normalizeNormalTangent = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
+let internalAccel = false;
 let twistCount = 2;
 let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angle
 let showCoords = false;
@@ -373,17 +374,30 @@ function drawAnalogArm(curSliders,slerp) {
 				// this is really the correct integration... over a time 0-1
 				// the end is the rule of rotating around an externally directed rotation
 				// axis.
-				tmpA = tmpQ.applyDel( av, -1 );
+				if( internalAccel ) // delta angle is from an internal source
+					tmpA = tmpQ.applyDel( av, 1 );
+				else
+					tmpA = tmpQ.applyDel( av, -1 );
+
+				// rotate the frame around the axis-angle of the acceleration
+				tmpQ.freeSpin( Math.sqrt(tmpA.x*tmpA.x+ tmpA.y*tmpA.y+ tmpA.z*tmpA.z)/100, tmpA);
+				if(0)
+				{
 				tmpQ.x += tmpA.x * timeScale/100.0;
 				tmpQ.y += tmpA.y * timeScale/100.0;
 				tmpQ.z += tmpA.z * timeScale/100.0;
 				tmpQ.dirty = true;
 				tmpQ.update();
+				}
             }
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			normalVertices.push( new THREE.Vector3( (A[n].x + delta.x)*spaceScale   ,( A[n].y + delta.y)*spaceScale      , (A[n].z + delta.z)*spaceScale  ))
 			pushNColor(n, 1);
+
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+			normalVertices.push( new THREE.Vector3( (A[n].x + tmpA.x)*spaceScale   ,( A[n].y + tmpA.y)*spaceScale      , (A[n].z + tmpA.z)*spaceScale  ))
+			pushNColor(n, 1.5);
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			normalVertices.push( new THREE.Vector3( (A[n].x + tmpQ.x)*spaceScale   ,( A[n].y + tmpQ.y)*spaceScale      , (A[n].z + tmpQ.z)*spaceScale  ))
@@ -1535,6 +1549,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	curSliders.lnQX = [];
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
+	internalAccel = document.getElementById( "internalAccel")?.checked;
 	drawRawRot = document.getElementById( "drawRawRot")?.checked;
         mountOrder = document.getElementById( "mountNone")?.checked?6
         	: document.getElementById( "mountYRP")?.checked?5
