@@ -373,7 +373,7 @@ function drawAnalogArm(curSliders,slerp) {
 				// this is really the correct integration... over a time 0-1
 				// the end is the rule of rotating around an externally directed rotation
 				// axis.
-				tmpA = tmpQ.applyDel( av, -0.5 );
+				tmpA = tmpQ.applyDel( av, -1 );
 				tmpQ.x += tmpA.x * timeScale/100.0;
 				tmpQ.y += tmpA.y * timeScale/100.0;
 				tmpQ.z += tmpA.z * timeScale/100.0;
