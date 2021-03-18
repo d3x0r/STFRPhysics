@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Rotation Space Explorer</title>
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+
+		<script type="module" src="./src/customShaderLoader2.js"></script>
+		<script src="./src/three.js/three.min.js"></script>
+		<script type="module" src="./src/lnQuatSq.js"></script>
+		<script type="module" src="./src/Quat.js"></script>
+		<script type="module" src="./src/lnQuatTestArmProper-Integration.js"></script>
+		<!--script src="./src/TrackballControls.js"></script-->
+		<script src="./src/Detector.js"></script>
+		<script src="./src/Stats.js"></script>
+
+		<script src="./src/THREEx.screenshot.js"></script>
+		<script src="./src/THREEx.FullScreen.js"></script>
+		<script src="./src/THREEx.WindowResize.js"></script>
+		<script src="./src/threex.dragpancontrols.js"></script>
+		<script src="./src/three.js/THREE.MeshLine.js"></script>
+		<script src="./src/three.js/ls.js" type="module" ></script>
+
+	<style>
+
+/*
+#sliders tr td:nth-child(9), #sliders th:nth-child(9) {
+    display: none;
+}
+#sliders tr td:nth-child(10), #sliders th:nth-child(10) {
+    display: none;
+}
+#sliders tr td:nth-child(11), #sliders th:nth-child(11) {
+    display: none;
+}
+#sliders tr td:nth-child(6), #sliders th:nth-child(6) {
+    display: none;
+}
+#sliders tr td:nth-child(7), #sliders th:nth-child(7) {
+    display: none;
+}
+#sliders tr td:nth-child(8), #sliders th:nth-child(8) {
+    display: none;
+}
+*/
+	</style>
+	<!--Mesh algorithms-->
+
+		<link href="./src/main.css" rel="stylesheet">
+	</head>
+<body>
+	<!-- three.js container -->
+		<div id="container"></div>
+	<!-- info on screen display -->
+	<div id="info">
+		<div class="top">
+			Rotation Space Explorer
+		</div>
+		<div class="bottom" id="inlineDoc">
+			- <i><a href="https://www.github.com/d3x0r/STFRPhysics">https://www.github.com/d3x0r/STFRPhysics</a></i>
+			- <i>p</i> for screenshot
+		- <i>f</i> for fullscreen</div>
+	  <div class="controls">
+		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
+		<p style="display:none">Input Data:</p>
+		<p style="display:none"><select id="datasource"></select></p>
+		<p style="display:none">Algorithm:</p>
+		<p style="display:none"><select id="mesher"></select></p>
+		<p style="display:none">Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
+		<p style="display:none">Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
+		<p style="display:none">Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
+		 - Show Grid: <input type="checkbox" id="showGrid" checked>
+		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
+		<p>
+		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
+		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
+		<p style="display:none">Vertex count: <input type="text" id="vertcount" value="0"> </p>
+		<p style="display:none">Face count: <input type="text" id="facecount" value="0"> </p>
+		<p style="display:none">(Approx.) Time:<input type="text" id="meshtime" value="0"> </p>
+		<p style="display:none">Inflation:<input type="range" id="inflation" value="50"> </p>
+		<p style="display:none">none: <input type="radio" name="inflationMode" id="noInflation" value="checked"> 
+			Maximize: <input type="radio" name="inflationMode" id="maximize" > 
+			1:1<input type="radio" name="inflationMode" id="midify" > 
+			10:1<input type="radio" name="inflationMode" id="harden">
+			1:10<input type="radio" name="inflationMode" id="brick">
+			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
+		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
+
+
+		<p id ="advancedControls" style="display:none" >
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked">
+		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
+		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
+			<br>
+		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
+		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
+
+		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
+		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
+		     <br>
+		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
+		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
+		 - Apply Accel: <input type="checkbox" id="applyAccel">
+		 - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
+		 Interpolate
+		 - Add 2-norm: <input type="checkbox" id="add2Norm" >
+
+		 - SLERP: <input type="checkbox" id="useSLERP" >
+		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
+		<br>
+		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
+		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
+		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > <br>
+		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
+		 - Arm From Y<input type="radio" name="drawFrom" id="drawArmFromY"  >
+		 - Arm From Z<input type="radio" name="drawFrom" id="drawArmFromZ"  checked >
+		<br>
+
+			<p style="display:none">Show Q(x,y,z): <input type="checkbox" id="showRaw" checked>
+			   Show Q(x,y,z)/nR*nL: <input type="checkbox" id="shownRnL" checked>
+			   Show Q(x,y,z)/nR: <input type="checkbox" id="shownR" checked>
+			   Show Q(x,y,z)/nL: <input type="checkbox" id="shownL" checked>
+			</p>
+
+		</p>
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" checked> 
+		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
+
+		 - Draw Rotation Squares: <input style="display:none" type="checkbox" id="drawSquares" checked >
+
+		 show X-Y <input type="radio" name="drawMode" id="drawSquaresXY"  >
+		 - show Y-X <input type="radio" name="drawMode" id="drawSquaresYX" >
+		 - Mechanical: <input type="radio" name="drawMode" id="drawMechanicalRot" >
+		 - real: <input type="radio" name="drawMode" id="drawRawRot" checked >
+		 - none <input type="radio" name="drawMode" id="drawSquaresNone" ><br>
+		 - Show Iteration: <input type="checkbox" id="drawRawRotIter" >
+                 - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
+		<p>
+		Show Axis/Angles Values: <input type="checkbox" id="showAxis" >  
+      <span title="Only changes the output, the sliders still set angles" > Show Quaternion Value: <input type="checkbox" id="showQuat" title="Only changes the output, the sliders still set angles" > </span>
+		Set Raw Angles:<input type="checkbox" id="rawAngles"> Show Degrees: <input type="checkbox" id="showDegrees" checked> 
+		<br>Rotation Mount (R)oll/(Y)aw/(P)itch: RYP<input type="radio" name="drawModeOrder" id="mountRYP" checked > 
+			 - RPY<input type="radio" name="drawModeOrder" id="mountRPY" >
+			 - PYR<input type="radio" name="drawModeOrder" id="mountPYR" >
+			 - PRY<input type="radio" name="drawModeOrder" id="mountPRY" >
+			 - YPR<input type="radio" name="drawModeOrder" id="mountYPR" >
+			 - YRP<input type="radio" name="drawModeOrder" id="mountYRP" >
+			 - free<input type="radio" name="drawModeOrder" id="mountNone" >
+		<table id="sliders">
+			<!--col><col><col><col>
+			<col style="width:0">
+			<col style="width:0">
+			<col style="width:0">
+			<col style="width:0">
+			<col style="width:0"-->
+		<tr id="time"><td colspan=5>
+		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
+		</td></tr>
+
+		<tr id="twist"><td colspan=5>
+		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
+		</td></tr>
+		<tr><td> 
+		</td><td> 
+		</td><td ID="labelC1"> X
+		</td><td ID="labelC2"> Y
+		</td><td ID="labelC3"> Z
+		</td><td ID="labelC4" class="header"> Angle
+		</td><td class="header"> Step Scalar
+		</td><td class="header"> (Use)
+		</td><td class="header"> Mech. XRot
+		</td><td class="header"> Mech. YRot
+		</td><td class="header"> Iterations
+		</td></tr>
+
+		<tr><td style="color:red">1</td><td>
+			<input type="checkbox" id="showX1" checked>
+		</td><td> 
+		<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> 
+		</td></tr>
+
+		<tr><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval1">-0-</SPAN></td><td><SPAN id="lnQYval1">-0-</SPAN></td><td><SPAN id="lnQZval1">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle1">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar1">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep1" >
+		</td><td class="right"><SPAN id="xRot1">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot1">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp1" min=0 max=250 value=25 >
+		</td></tr>
+		
+		<tr id="arm2" style="color:green"><td>2</td><td>
+			<input type="checkbox" id="showX2" checked>
+		</td><td> 
+		<input type="range" id="lnQX2" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY2" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ2" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm2val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td><SPAN id="lnQZval2">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle2">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar2">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep2" >
+		</td><td class="right"><SPAN id="xRot2">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot2">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp2" min=0 max=250 value=25>
+		</td></tr>
+
+		<tr id="arm3" style="color:blue"><td>3</td><td>
+			<input type="checkbox" id="showX3" checked>
+		</td><td> 
+		<input type="range" id="lnQX3" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY3" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ3" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm3val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td><SPAN id="lnQZval3">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle3">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar3">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep3" >
+		</td><td class="right"><SPAN id="xRot3">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot3">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp3" min=0 max=250 value=25>
+		</td></tr>
+
+		<tr id="arm4" style="color:cyan"><td>4</td><td>
+			<input type="checkbox" id="showX4" checked>
+		</td><td> 
+		<input type="range" id="lnQX4" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY4" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ4" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm4val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval4">-0-</SPAN></td><td><SPAN id="lnQYval4">-0-</SPAN>
+		</td><td><SPAN id="lnQZval4">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle4">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar4">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep4" >
+		</td><td class="right"><SPAN id="xRot4">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot4">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp4" min=0 max=250 value=25>
+		</td></tr>
+
+		<tr id="arm5" style="color:yellow"><td>5</td><td>
+			<input type="checkbox" id="showX5" checked>
+		</td><td> 
+		<input type="range" id="lnQX5" min="0"  max="1000"  value="500"> 
+		</td><td>
+		<input type="range" id="lnQY5" min="0"  max="1000" value="501"> 
+		</td><td>
+		<input type="range" id="lnQZ5" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="arm5val"><td> </td><td>
+		</td><td>
+		<SPAN id="lnQXval5">-0-</SPAN></td><td><SPAN id="lnQYval5">-0-</SPAN></td><td><SPAN id="lnQZval5">-0-</SPAN> 
+		</td><td><SPAN id="lnQAngle5">-0-</SPAN> 
+		</td><td class="right"><SPAN id="stepScalar5">-0-</SPAN> 
+		</td><td ><INPUT type="checkbox" id="useStep5" >
+		</td><td class="right"><SPAN id="xRot5">-0-</SPAN> 
+		</td><td class="right"><SPAN id="yRot5">-0-</SPAN> 
+		</td><td class="right"><input type="range" id="drawInterp5" min=0 max=250 value=25>
+		</td></tr>
+		</table>
+
+	  </div>
+	</div>
+
+	<script type="text/javascript">
+
+		var stats, scene, renderer, composer;
+		var camera, cameraControl;
+		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
+		let canvasWidth = 640;
+		let canvasHeight = 480;
+
+		var testdata = {};
+		var testelements = {};
+		var material	= null;
+		const shapes = [];
+		var tickCallback= null;
+	
+		//makeShapes();
+		function makeShapes() {
+			for( var i = 0; i < 5; i++ ) {
+				geometry = new THREE.CubeGeometry( 1, 1, 1 );
+				material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+				cube = new THREE.Mesh( geometry, material );
+				shapes.push(cube);
+				//here is the funcion defined and attached to the  object
+				cube.setColor = function(color){
+				     cube.material.color.set(color);
+				}
+				cube.position.set( i*2 - 4,0,0);
+
+				cube.setColor(0xFFFFFF)  //change color using hex value or
+				cube.setColor("blue")    //set material color by using color name
+
+			}
+		}
+
+		
+
+		function updateMesh() {
+
+		  scene.remove( surfacemesh );
+		  scene.remove( wiremesh );
+		  scene.remove( lineSegments );
+
+		var is;
+		const tis = document.getElementById( "drawSquaresNone" );
+		if( tis.checked ) {
+			let is = document.getElementById( "drawSquares" );
+			is.checked = false;
+		}else{
+			let is = document.getElementById( "drawSquares" );
+			is.checked = true;
+		}
+		
+		let showAdvanced = false;
+		is = document.getElementById( "showAdvanced" );
+		if( is ) is.onchange = updateMesh;
+		if( is && is.checked ) {
+			showAdvanced = true;
+		}
+
+		{
+			var names = ["time","arm3val", "arm3","arm4val", "arm4","arm5val", "arm5","advancedControls" ]
+			for( var name of names ) {
+				let is = document.getElementById( name );
+			
+				if( is) if( showAdvanced ) {
+					is.style.display = "";
+				}else
+					is.style.display = "none";
+			}
+
+
+		}
+
+		if( document.getElementById( "add2Norm" )?.checked ) {
+			addN2 = true;
+		}else 			
+			addN2 = false;
+
+
+		if( document.getElementById( "useSLERP" )?.checked ) {
+			SLERP = true;
+		}else 			
+			SLERP = false;
+
+		if( document.getElementById( "useSLERPBasis" )?.checked ) {
+			SLERPbasis = true;
+		}else 			
+			SLERPbasis = false;
+
+
+			 var geometryHelper ;
+					const geometryNormalsvertices= [];
+					const geometryNormalsfaces= [];
+					const geometryNormalscolors= [];
+
+			if( document.getElementById("showNormals").checked ) {
+					geometryNormals	= new THREE.Geometry();
+					geometryNormals.vertices.length = 0;
+					geometryNormals.faces.length = 0;
+					geometryNormals.colors.length = 0;
+					//geometryNormals	= new THREE.LineSegmentsGeometry2();
+					geometryNormalsvertices.length = 0;
+					geometryNormalsfaces.length = 0;
+					geometryNormalscolors.length = 0;
+			}else geometryNormals = null;
+
+
+					
+	 		
+
+			var start = (new Date()).getTime();
+
+	        	if( geometryNormals  ) 
+				tickCallback = window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+		
+	          var opts = {
+        	          elements : null,
+	        	  minimize : document.getElementById( "minimize" ).checked,
+			  maximize : document.getElementById( "maximize" ).checked,
+			  inflation : 0,
+			  vertices : null, //geometry.vertices,
+			  faces : null, //geometry.faces,
+			  normalVertices : geometryNormals && geometryNormals.vertices,
+			  normalColors : geometryNormals && geometryNormals.colors,
+			  smoothShade : document.getElementById( "smoothShade" ).checked,
+			  showGrid : document.getElementById( "showGrid").checked,
+			  geometryHelper : geometryHelper,
+			};
+		  var end = (new Date()).getTime();
+		
+	          document.getElementById("meshtime").value = (end - start) / 1000.0;
+		
+
+	 	 	 // geometry.verticesNeedUpdate = true;
+	 	 	 // geometry.elementsNeedUpdate = true;
+	 	 	 // geometry.normalsNeedUpdate = true;
+			if( geometryNormals ) {
+				const arr = [];
+				for( let p of geometryNormals.vertices ) {	
+					arr.push(p.x);arr.push(p.y);arr.push(p.z);
+				}
+				const arrc = [];
+				for( let p of geometryNormals.colors ) {	
+					arrc.push(p.r);arrc.push(p.g);arrc.push(p.b);
+				}
+				const newgeometryNormals	= new THREE.LineSegmentsGeometry2();
+				//const tmplineSegments =  new THREE.LineSegments( geometryNormals, linematerial );
+
+
+				newgeometryNormals.setPositions( arr );
+				
+				newgeometryNormals.setColors( arrc );
+				/*
+				var linematerial2 = new MeshLineMaterial({
+					color : 0xffffff
+				   , lineWidth : 0.1
+				  , vertexColors: THREE.VertexColors
+					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
+				});
+		        
+				for( var i = 0; i < geometryNormals.vertices.length; i+=2 ) {
+					const arr = [geometryNormals.vertices[i*2+0],geometryNormals.vertices[i*2+1]];
+					const ml = new MeshLine();
+					ml.setGeometry( arr );
+		        
+				}
+		                  */
+//				var linematerial = new THREE.LineBasicMaterial({
+				var linematerial = new THREE.LineMaterial2({
+					color : 0xffffffff
+				   , linewidth : 2.75
+				  , vertexColors: THREE.VertexColors
+					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
+				});
+				lineSegments = new THREE.LineSegments2( newgeometryNormals, linematerial );
+				//lineSegments = new THREE.Mesh( ml.geometry, linematerial2 );
+				scene.add( lineSegments );
+			}
+
+		//scene.add( wiremesh );
+
+		}
+	
+		window.doInit = ()=>{
+			if( !init() )	animate();
+		}
+		// init the scene
+		function init(){
+
+			var canvas = document.createElement( 'canvas' );
+			canvasWidth = canvas.width = window.innerWidth;
+			canvasHeight = canvas.height = window.innerHeight;
+			var context = canvas.getContext( 'webgl', { alpha: false, antialias: true } );
+			if( Detector.webgl ){
+				renderer = new THREE.WebGLRenderer({
+					canvas: canvas, context: context,
+					antialias		: true,	// to get smoother output
+					preserveDrawingBuffer	: true	// to allow screenshot
+				});
+				//console.log( "YES?", renderer );
+				renderer.setClearColor( 0xBBBBBB, 1 );
+			}else{
+			  renderer = new THREE.WebGLRenderer({
+					canvas: canvas, context: context,
+					canvas : undefined,
+					context : undefined,
+				});
+			}
+
+			canvas.addEventListener( "mousemove", (evt)=>{
+				if( material && material.uniforms && material.uniforms.cursorRayNormal ) {
+					var pRect = canvas.getBoundingClientRect();
+					var x = evt.clientX - pRect.left;
+					var y = evt.clientY - pRect.top;
+					var x = ( (evt.x - pRect.left) / pRect.width ) * 2.0 - 1.0;
+					var y = ( (evt.y - pRect.top) / pRect.height ) * 2.0 - 1.0;
+					x = -x;
+					y = y;
+					var v = new THREE.Vector3( 0, 0, -1 );
+					v.unproject( camera );
+
+					var rc = new THREE.Raycaster();
+					rc.setFromCamera( new THREE.Vector2( x, y ), camera );
+
+					material.uniforms.cursorRayNormal.value.set( -x, -y, (pRect.width/2350)*camera.aspect )  ;
+
+				}
+			} );
+
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.getElementById('container').appendChild(canvas);
+
+			// add Stats.js - https://github.com/mrdoob/stats.js
+			stats = new Stats();
+			stats.domElement.style.position	= 'absolute';
+			stats.domElement.style.bottom	= '0px';
+			document.body.appendChild( stats.domElement );
+
+			// create a scene
+			scene = new THREE.Scene();
+
+			// put a camera in the scene
+			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			camera.position.set(0, 0, 80);
+			scene.add(camera);
+
+			// create a camera contol
+			cameraControls	= new THREE.TrackballControls( camera, document.getElementById('container') )
+
+			// transparently support window resize
+			THREEx.WindowResize.bind(renderer, camera);
+			// allow 'p' to make screenshot
+			THREEx.Screenshot.bindKey(renderer);
+			// allow 'f' to go fullscreen where this feature is supported
+			if( THREEx.FullScreen.available() ){
+				THREEx.FullScreen.bindKey();
+				document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
+			}
+
+			// here you add your objects
+			// - you will most likely replace this part by your own
+			var light	= new THREE.AmbientLight( 0.7 * 0xffffff );
+			scene.add( light );
+			var light	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light.position.multiplyScalar(20);
+			scene.add( light );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = -light2.position.z;
+			light2.position.y = -light2.position.y;
+			light2.position.x = -light2.position.x;
+			scene.add( light2 );
+
+
+	if(0){
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 5.0;
+			light2.position.y = 0;
+			light2.position.x = 0;
+			scene.add( light2 );
+	}
+			for( let shape of shapes ) {
+				scene.add(shape );
+			}
+/*
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 40;
+			light2.position.y = 0;
+			light2.position.x = 0;
+			scene.add( light2 );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 0;
+			light2.position.y = 40;
+			light2.position.x = 0;
+			scene.add( light2 );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 0;
+			light2.position.y = 0;
+			light2.position.x = 40;
+			scene.add( light2 );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = -40;
+			light2.position.y = 0;
+			light2.position.x = 0;
+			scene.add( light2 );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 0;
+			light2.position.y = -40;
+			light2.position.x = 0;
+			scene.add( light2 );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = 0;
+			light2.position.y = 0;
+			light2.position.x = -40;
+			scene.add( light2 );
+*/
+
+			//Initialize dom elements
+
+			document.getElementById("showfacets").checked = true;
+			document.getElementById("showedges").checked  = false;
+
+			var is;
+			is = document.getElementById("showNormals");
+			is.onchange = updateMesh;
+			is.checked  = true;
+
+			is = document.getElementById("keepInertia");
+			if( is ) is.onchange = updateMesh;
+			is = document.getElementById("applyAccel");
+			if( is ) is.onchange = updateMesh;
+
+			is = document.getElementById("drawArmFromX");
+			if( is ) is.onchange = updateMesh;
+			is = document.getElementById("drawArmFromY");
+			if( is ) is.onchange = updateMesh;
+			is = document.getElementById("drawArmFromZ");
+			if( is ) is.onchange = updateMesh;
+
+
+			is = document.getElementById("showRaw");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownRnL");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownR");
+			is.onchange = updateMesh;
+			is = document.getElementById("shownL");
+			is.onchange = updateMesh;
+                                                      
+			["mountRYP","mountRPY","mountYPR","mountYRP","mountPYR","mountPRY","mountNone"].forEach( (m)=>{
+				is = document.getElementById(m);
+				is.onchange = updateMesh;
+			})
+
+			is = document.getElementById("rawAngles");
+			is.onchange = ()=>{
+				is = document.getElementById( "showScaled" ).checked = !document.getElementById( "rawAngles" ).checked;
+				updateMesh();
+			}
+			is = document.getElementById("showAxis");
+			is.onchange = updateMesh;
+			is = document.getElementById("showQuat");
+			is.onchange = updateMesh;
+
+			is = document.getElementById("showDegrees");
+			is.onchange = updateMesh;
+
+	
+function focusSlider( slider, path, n ) {
+	showRotationCurve = path;
+	showRotationCurveSegment = n;
+	updateMesh();
+	
+}
+
+function blurSlider( slider ) {
+	//showRotationCurve = null;
+	//showRotationCurveSegment = -1;
+	//updateMesh();
+}
+			for( var n = 1; n <= 5; n++ ) {
+				is = document.getElementById( "lnQX"+n );
+				is.oninput = updateMesh;
+				//is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
+				//is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
+				is = document.getElementById( "lnQY"+n );
+				is.oninput = updateMesh;
+				//is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
+				//is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
+				is = document.getElementById( "lnQZ"+n);
+				is.oninput = updateMesh;
+				//is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
+				//is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
+
+				is = document.getElementById( "showX"+n);
+				is.oninput = updateMesh;
+				is = document.getElementById( "useStep"+n);
+				is.oninput = updateMesh;
+
+				is = document.getElementById( "drawInterp"+n);
+				is.oninput = updateMesh;
+
+			}
+
+			is = document.getElementById( "timeScalar" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "twistDelta" );
+			is.oninput = updateMesh;
+			//is.value = 500;
+			//is.range = 1000;
+
+			is = document.getElementById( "showArm");
+			if( is ) is.onchange=()=>{
+				let is = document.getElementById( "drawRawRotIter" );
+				is = document.getElementById( "drawRawRot" ).checked = true;
+				updateMesh();
+			}
+			is = document.getElementById( "add2Norm" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "useSLERP" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "useSLERPBasis" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "inflation" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "noInflation" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "minimize" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "maximize" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "midify" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "harden" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "brick" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "smoothShade" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showNormal" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showSliderCurves" );
+			is.onchange = updateMesh;
+
+
+			{
+				const is2 = document.getElementById( "showCoordinateGrid" );
+				is2.onchange = updateMesh;
+				const is= document.getElementById( "showRawCoordinateGrid" );
+				is.onchange = ()=>{
+					if( is2.checked )
+						document.getElementById( "showScaled" ).checked = !is.checked;
+
+					updateMesh();
+				} 
+			}
+
+			is = document.getElementById( "showGrid" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawRotationAxles" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "drawWorldAxles" );
+			is.onchange = updateMesh;
+
+			is = document.getElementById( "drawRotationAllAxles" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "sharpenTransition" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showInvCoordinateGrid" );
+			is.onchange = updateMesh;
+
+
+			is = document.getElementById( "showCoords" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showScaled" );
+			is.onchange = updateMesh;
+
+
+			is = document.getElementById( "drawNormalBall" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "pickRandomNormals" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "normalizeTangents" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "showNormalBallCoords" );
+			is.onchange = updateMesh;
+			
+
+			is = document.getElementById( "largeRange" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "fineRange" );
+			is.onchange = updateMesh;
+
+			const is5 = document.getElementById( "fixAxleRotation" );
+			is5.onchange = ()=>{
+				document.getElementById( "keepInertia" ).checked = !is5.checked;
+				document.getElementById( "applyAccel" ).checked = false;
+				updateMesh();
+			}
+
+			const changefunc = (evt)=>{
+				document.getElementById( "rawAngles" ).checked = is1.checked || is2.checked || is3.checked;
+				document.getElementById( "fixAxleRotation" ).checked = !(is1.checked || is2.checked || is3.checked);
+				document.getElementById( "keepInertia" ).checked = (is1.checked || is2.checked || is3.checked);
+				document.getElementById( "applyAccel" ).checked = !(is1.checked || is2.checked || is3.checked);
+
+				document.getElementById( "showScaled" ).checked = is4.checked;
+				updateMesh();
+			}
+
+                                                       
+			is = document.getElementById( "drawRotIter" );
+			is.onchange = updateMesh;
+			const is3 = document.getElementById( "drawMechanicalRot" );
+			is3.onchange = changefunc;
+			is = document.getElementById( "drawRawRotIter" );
+			is.onchange = updateMesh;
+			const is4 = document.getElementById( "drawRawRot" );
+			is4.onchange = changefunc;
+			is = document.getElementById( "drawSquares" );
+			is.onchange = updateMesh;
+			const is1 = document.getElementById( "drawSquaresXY" );
+			is1.onchange = changefunc
+			const is2 = document.getElementById( "drawSquaresYX" );
+			is2.onchange = changefunc
+                                               
+			is = document.getElementById( "drawSquaresNone" );
+			is.onchange = changefunc;
+
+
+
+			is = document.getElementById( "fillOutside" );
+			is.onchange = updateTestData;
+			is = document.getElementById( "fillInside" );
+			is.onchange = updateTestData;
+			is = document.getElementById( "fillOpen" );
+			is.onchange = updateTestData;
+
+			function updateTestData() {
+				testdata = window.createTestData( document.getElementById("fillOutside").checked?-1
+			          :document.getElementById("fillInside").checked?1
+			          :0);
+				testelements = createTestElementData( );
+				updateMesh();
+			}
+
+			//Update mesh
+			updateMesh();
+
+			return false;
+		}
+
+		// animation loop
+		function animate() {
+		        if( shapes.length && tickCallback )
+				tickCallback( shapes );
+			// loop on request animation loop
+			// - it has to be at the begining of the function
+			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+
+			// update stats
+			stats.update();
+		}
+
+		// render the scene
+		function render() {
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var PIseconds	= Date.now() * Math.PI;
+
+			// update camera controls
+			cameraControls.update();
+		if( material && material.uniforms && material.uniforms.cursorIconUp ) {
+          			material.uniforms.cursorIconUp.value.copy( camera.up ); // this should update to the camera up 
+          			material.uniforms.cursorRayOrigin.value.copy( camera.position ); // this should update to the camera up 
+	}
+
+
+	  //surfacemesh.visible = document.getElementById("showfacets").checked;
+	  //wiremesh.visible = document.getElementById("showedges").checked;
+
+			// actually render the scene
+			renderer.render( scene, camera );
+		}
+	</script>
+
+</body></html>
