@@ -210,6 +210,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					this.update();
 					alignZero(this);
 				}
+                                return this;
 			}
 
 		}else {
