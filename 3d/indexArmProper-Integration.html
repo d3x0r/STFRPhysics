@@ -61,7 +61,7 @@
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
-		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
+		   Show Advanced: <input type="checkbox" id="showAdvanced" unchecked>Show Arms: <input type="checkbox" id="showArm" checked ><br>
 		<p style="display:none">Input Data:</p>
 		<p style="display:none"><select id="datasource"></select></p>
 		<p style="display:none">Algorithm:</p>
@@ -92,11 +92,11 @@
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
-		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
+		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" checked >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" >
-		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
+		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" unchecked> 
 		     <br>
 		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
 		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
@@ -109,7 +109,7 @@
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
-		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
+		 - Scale 2-norm: <input type="checkbox" id="showScaled" checked> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" unchecked> <br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > <br>
 		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
@@ -124,29 +124,29 @@
 			</p>
 
 		</p>
-		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" checked> 
-		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" checked ><br>
+		 - Fixed Arms: <input type="checkbox" id="fixAxleRotation" > 
+		 - Finer Range(1/4x)<input type="checkbox" id="fineRange" unchecked ><br>
 
 		 - Draw Rotation Squares: <input style="display:none" type="checkbox" id="drawSquares" checked >
 
 		 show X-Y <input type="radio" name="drawMode" id="drawSquaresXY"  >
 		 - show Y-X <input type="radio" name="drawMode" id="drawSquaresYX" >
 		 - Mechanical: <input type="radio" name="drawMode" id="drawMechanicalRot" >
-		 - real: <input type="radio" name="drawMode" id="drawRawRot" checked >
-		 - none <input type="radio" name="drawMode" id="drawSquaresNone" ><br>
+		 - real: <input type="radio" name="drawMode" id="drawRawRot" >
+		 - none <input type="radio" name="drawMode" id="drawSquaresNone"  checked ><br>
 		 - Show Iteration: <input type="checkbox" id="drawRawRotIter" >
                  - Draw Composite Iteration: <input type="checkbox" id="drawRotIter" >
 		<p>
 		Show Axis/Angles Values: <input type="checkbox" id="showAxis" >  
       <span title="Only changes the output, the sliders still set angles" > Show Quaternion Value: <input type="checkbox" id="showQuat" title="Only changes the output, the sliders still set angles" > </span>
-		Set Raw Angles:<input type="checkbox" id="rawAngles"> Show Degrees: <input type="checkbox" id="showDegrees" checked> 
-		<br>Rotation Mount (R)oll/(Y)aw/(P)itch: RYP<input type="radio" name="drawModeOrder" id="mountRYP" checked > 
+		Set Raw Angles:<input type="checkbox" id="rawAngles" checked> Show Degrees: <input type="checkbox" id="showDegrees" > 
+		<br>Rotation Mount (R)oll/(Y)aw/(P)itch: RYP<input type="radio" name="drawModeOrder" id="mountRYP" > 
 			 - RPY<input type="radio" name="drawModeOrder" id="mountRPY" >
 			 - PYR<input type="radio" name="drawModeOrder" id="mountPYR" >
 			 - PRY<input type="radio" name="drawModeOrder" id="mountPRY" >
 			 - YPR<input type="radio" name="drawModeOrder" id="mountYPR" >
 			 - YRP<input type="radio" name="drawModeOrder" id="mountYRP" >
-			 - free<input type="radio" name="drawModeOrder" id="mountNone" >
+			 - free<input type="radio" name="drawModeOrder" id="mountNone" checked >
 		<table id="sliders">
 			<!--col><col><col><col>
 			<col style="width:0">
