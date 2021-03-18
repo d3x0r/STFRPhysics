@@ -147,6 +147,8 @@
 			 - YPR<input type="radio" name="drawModeOrder" id="mountYPR" >
 			 - YRP<input type="radio" name="drawModeOrder" id="mountYRP" >
 			 - free<input type="radio" name="drawModeOrder" id="mountNone" checked >
+		<br>Apply Internal Velocity: <input type="checkbox" id="internalAccel" >
+		
 		<table id="sliders">
 			<!--col><col><col><col>
 			<col style="width:0">
@@ -661,6 +663,8 @@
 				is = document.getElementById( "showScaled" ).checked = !document.getElementById( "rawAngles" ).checked;
 				updateMesh();
 			}
+			is = document.getElementById("internalAccel");
+			is.onchange = updateMesh;
 			is = document.getElementById("showAxis");
 			is.onchange = updateMesh;
 			is = document.getElementById("showQuat");
