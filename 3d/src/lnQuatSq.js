@@ -59,7 +59,7 @@ var twistDelta = 0;
 // lnQuat( {x:, y:, z: }, {x:, y:, z: } )  - set as lookAt; forward, up vectors
 // lnQuat( {x:, y:, z: }, null )           - set as lookAt; forward, automatic 'up'
 function lnQuat( theta, d, a, b, e ){
-	this.w = 0; // unused, was angle of axis-angle, then was length of angles(n)...
+	//this.w = 0; // unused, was angle of axis-angle, then was length of angles(n)...
 	this.x = 0;  // these could become wrap counters....
 	this.y = 0;  // total rotation each x,y,z axis.
 	this.z = 0;
@@ -68,14 +68,15 @@ function lnQuat( theta, d, a, b, e ){
 	this.ny = 1;  // 
 	this.nz = 0;
 
-	this.dθ = 0;
-	this.dnx = 0;  // default normal
-	this.dny = 1;  // 
-	this.dnz = 0;
+// slope at the point... (which slope?)
+//	this.dθ = 0;
+//	this.dnx = 0;  // default normal
+//	this.dny = 1;  // 
+//	this.dnz = 0;  //
 
 	// temporary sign/cos/normalizers
-	this.s = 0;  // sin(composite theta)
-	this.qw = 1; // cos(composite theta)
+//	this.s = 0;  // sin(composite theta)
+//	this.qw = 1; // cos(composite theta)
 	this.θ = 0; // length
 	this.refresh = null;
 	this.dirty = true; // whether update() has to do work.
@@ -142,8 +143,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 		// the remining of this is update()
 		q.θ = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
-		q.s = Math.sin( q.θ/2);
-		q.qw = Math.cos( q.θ/2);
 		q.dirty = false;
 		/*
 		// the above is this;  getBasis(up), compute new forward and cross right
@@ -321,12 +320,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							q.y = q.ny * angle;
 							q.z = q.nz * angle;
 		               
-							// the remining of this is update()
-							//q.θ = angle;
-							//q.s = Math.sin( q.θ/2);
-							//q.qw = Math.cos( q.θ/2);
-							//q.dirty = false;
-
 							{
 								// input angle...
 								const s = Math.sin( angle ); // double angle sin
@@ -371,8 +364,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 									const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
 									q.θ  = ang;
-									q.qw = cosCo2;
-									q.s  = sAng;
 									q.nx = Cx*Clx;
 									q.ny = Cy*Clx;
 									q.nz = Cz*Clx;
@@ -491,25 +482,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					        
 								// the remining of this is update()
 								this.θ = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-								this.s = Math.sin( this.θ/2);
-								this.qw = Math.cos( this.θ/2);
 								this.dirty = false;
-								/*
-								// the above is this;  getBasis(up), compute new forward and cross right
-								// and restore from basis.
-								const trst = this.getBasis();
-								const fN = 1/Math.sqrt( tz*tz+tx*tx );
-	                                                        
-								trst.forward.x = tz*fN;
-								trst.forward.y = 0;
-								trst.forward.z = -tx*fN;
-								trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-								trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-								trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-	                                                        
-								this.fromBasis( trst );
-								this.update();						
-								*/
 							}
 					        
 							if( twistDelta ) {
@@ -770,8 +743,6 @@ lnQuat.prototype.update = function() {
 		this.ny = 1;
 		this.nz = 0;
 	}
-	this.s  = Math.sin(this.θ/2); // only want one half wave...  0-pi total.
-	this.qw = Math.cos(this.θ/2);
 
 	return this;
 }
@@ -826,8 +797,68 @@ lnQuat.prototype.getFrameFunctions = function( lnQvel ) {
 }
 
 
-// https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
-// 
+lnQuat.prototype.accel = function( v, steps, internal ) {
+	const del = 1/steps;
+	const vθ = Math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z);
+	if( !vθ ) return this; // no modification.
+	
+	const vθd = vθ * del;
+	const vx = v.x / vθ,    vy = v.y / vθ,    vz = v.z / vθ;
+
+	let qθ = this.θ;
+	let qx = this.nx,       qy = this.ny,    qz = this.nz;
+	
+	for( let step = 0; step < 1.0; step += del ) {
+		// .apply() ...
+		const c = cos( (internal?1:-1) * qθ );
+		const s = sin( (internal?1:-1) * qθ );
+        
+		const dot = (qx*vx + qy*vy + qz*vz);
+		const dotv = dot *(1-c);
+		const ax = (vx*c + s*(qy * vz - qz * vy) + qx * dotv)
+		const ay = (vy*c + s*(qz * vx - qx * vz) + qy * dotv)
+		const az = (vz*c + s*(qx * vy - qy * vx) + qz * dotv)
+
+		// .freespin()... RRF R x ( A x R )
+
+		const xmy = ( vθd - qθ ) / 2
+		const xpy = ( vθd + qθ ) / 2
+		const cxmy = cos(xmy);
+		const cxpy = cos(xpy);
+
+		const qθ = Math.acos( ( ( 1-dot) * cxmy + (1+dot) * cxpy )/2 )*2;
+
+        // if !qθ, this doesn't need to be processed.
+		const sxmy = sin(xmy);
+		const sxpy = sin(xpy);
+
+		const Cx = ( (ay*qz-az*qy) * (cxmy - cxpy) +  ax * (sxmy + sxpy) + qx * (sxpy - sxmy) );
+		const Cy = ( (az*qx-ax*qz) * (cxmy - cxpy) +  ay * (sxmy + sxpy) + qy * (sxpy - sxmy) );
+		const Cz = ( (ax*qy-ay*qx) * (cxmy - cxpy) +  az * (sxmy + sxpy) + qz * (sxpy - sxmy) );
+
+		const Clx = sqrt(Cx*Cx+Cy*Cy+Cz*Cz)
+		if( Clx ) {
+			qx = Cx*Clx;
+			qy = Cy*Clx;
+			qz = Cz*Clx;
+		} else {
+			// leave the axis alone.
+		}
+	}
+	
+	this.qx = qx;
+	this.qy = qy;
+	this.qz = qz;
+	this.θ  = qθ;
+	this.x  = qx * qθ;
+	this.y  = qy * qθ;
+	this.z  = qz * qθ;
+	this.s = Math.sin( qθ/2 );
+	this.qw = Math.sin( qθ/2 );
+	this.dirty = false;
+	return this;
+}
+
 lnQuat.prototype.apply = function( v ) {
 	//return this.applyDel( v, 1.0 );
 	if( v instanceof lnQuat ) {
@@ -848,42 +879,20 @@ lnQuat.prototype.apply = function( v ) {
 		// v is unmodified.	
 		return new vectorType( v.x, v.y, v.z ); // 1.0
 	} else {
-            	// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
-            	// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
-		const c = Math.cos(q.θ);//
-		const s = Math.sin(q.θ);//
+		// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+		// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
+		const c = Math.cos(q.θ);
+		const s = Math.sin(q.θ);
 
 		const qx = q.nx, qy = q.ny, qz = q.nz;
 		const vx = v.x , vy = v.y , vz = v.z;
-                // sin theta * cross
-		const cx =  s*(qy * vz - qz * vy);
-		const cy =  s*(qz * vx - qx * vz);
-		const cz =  s*(qx * vy - qy * vx);
-                // (1-cos theta) * dot
+		// (1-cos theta) * dot
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		// v *cos(theta) + cross*sin(theta) + q * dot * (1-c)
-                return new vectorType(
-        		  v.x*c + cx + qx * dot
-               		, v.y*c + cy + qy * dot
-			, v.z*c + cz + qz * dot );
-
-	/*
-        	// this is a conversion to quaternion (basically) and then doing the math.
-		const nst = Math.sin(q.θ/2);//q.s; // normal * sin_theta
-		const qw = Math.cos(q.θ/2);//q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
-
-		const qx = q.nx*nst;
-		const qy = q.ny*nst;
-		const qz = q.nz*nst;
-
-		//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
-		const tx = 2 * (qy * v.z - qz * v.y); // v.cross(p)*w*2
-		const ty = 2 * (qz * v.x - qx * v.z);
-		const tz = 2 * (qx * v.y - qy * v.x);
-		return new vectorType(  v.x + qw * tx + ( qy * tz - ty * qz )
-		       , v.y + qw * ty + ( qz * tx - tz * qx )
-		       , v.z + qw * tz + ( qx * ty - tx * qy ) );
-        */
+		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
+		return new vectorType(
+			  v.x*c + s*(qy * vz - qz * vy) + qx * dot
+			, v.y*c + s*(qz * vx - qx * vz) + qy * dot
+			, v.z*c + s*(qx * vy - qy * vx) + qz * dot );
 	} 
 }
 
@@ -907,7 +916,7 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 	if( 'undefined' === typeof del ) del = 1.0;
 	this.update();
 	// 3+2 +sqrt+exp+sin
-        if( !(q.θ*del) && !q2 ) {
+	if( !(q.θ*del) && !q2 ) {
 		// v is unmodified.	
 		if( result2 ) 
 			result2.portion = this;
@@ -952,8 +961,8 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			if( !θ ) {
 				return {x:v.x, y:v.y, z:v.z }; // 1.0
 			}
-			const s  = Math.sin( θ/2 );//q.s;
-			const nst = θ?s/θ:1; // sin(theta)/r    normal * sin_theta
+			const s  = Math.sin( θ/2 );  //;
+			const nst = θ?s/θ:1;         // sin(theta)/r    normal * sin_theta
 			const qw = Math.cos( θ/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 		        
 			const qx = θ?ax*nst:q2?q2.nx:0;
@@ -986,26 +995,20 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 		if( !θ ) {
 			return new vectorType( v.x, v.y, v.z )
 		}
-		const s  = Math.sin( θ/2 );//q.s;
-		const nst = s/θ; // sin(theta)/r    normal * sin_theta
-		const qw = Math.cos( θ/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+		
+		const c = Math.cos(q.θ*del);
+		const s = Math.sin(q.θ*del);
 
-		const qx = ax*nst;
-		const qy = ay*nst;
-		const qz = az*nst;
-
-		const tx = 2 * (qy * v.z - qz * v.y);
-		const ty = 2 * (qz * v.x - qx * v.z);
-		const tz = 2 * (qx * v.y - qy * v.x);
-		return new vectorType( v.x + qw * tx + ( qy * tz - ty * qz )
-		       , v.y + qw * ty + ( qz * tx - tz * qx )
-		       , v.z + qw * tz + ( qx * ty - tx * qy ) );
-		//    3 registers (temp variables, caculated with sin/cos/sqrt,...)
-		// 18+12 (30)   12(2)+(3) (17 parallel)
+		const qx = q.nx, qy = q.ny, qz = q.nz;
+		const vx = v.x , vy = v.y , vz = v.z;
+		// (1-cos theta) * dot
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
+		return new vectorType(
+			  v.x*c + s*(qy * vz - qz * vy) + qx * dot
+			, v.y*c + s*(qz * vx - qx * vz) + qy * dot
+			, v.z*c + s*(qx * vy - qy * vx) + qz * dot );
 	}
-
-	// total 
-	// 21 mul + 9 add  (+ some; not updated)
 }
 
 lnQuat.prototype.slerpRel = function( q2, del ) {
@@ -1061,30 +1064,7 @@ lnQuat.prototype.slerp = function( q2, del ) {
 
 
 lnQuat.prototype.applyInv = function( v ) {
-	//x y z w l
-	const q = this;
-        if( !q.θ ) {
-		// v is unmodified.	
-		return {x:v.x, y:v.y, z:v.z }; // 1.0
-	}
-	const s  = q.s;
-	const qw = q.qw;
-	
-	const dqw = s/q.θ; // sin(theta)/r
-
-	const qx = -q.x * dqw;
-	const qy = -q.y * dqw;
-	const qz = -q.z * dqw;
-
-	const tx = 2 * (qy * v.z - qz * v.y);
-	const ty = 2 * (qz * v.x - qx * v.z);
-	const tz = 2 * (qx * v.y - qy * v.x);
-
-	return new vectorType(  v.x + qw * tx + ( qy * tz - ty * qz )
-	       ,  v.y + qw * ty + ( qz * tx - tz * qx )
-	       ,  v.z + qw * tz + ( qx * ty - tx * qy ) );
-	// total 
-	// 21 mul + 9 add
+	return this.applyDel( v, -1 );
 }
 
 function getPitchDirection( q, th ) 
@@ -1138,14 +1118,12 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
 	const cxmy = Math.cos(xmy);
 	const cxpy = Math.cos(xpy);
+	// this is a portion from zero to 2 (-1  2+0,  0  1+1,  1  0+2 ).
+	// sin(angle between the two)
 	const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 
 	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
 	// only good for rotations between 0 and pi.
-
-	//const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
-	//		       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
-	//const dAng = acos( temp ) * 2;
 
 	if( ang ) {      // as bc     bs ac       as bs
 		const sxmy = Math.sin(xmy);
@@ -1167,19 +1145,12 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-		//const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
-		//			- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
-		//			+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
+
 		const crsY = (az*q.nx-ax*q.nz);
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-		//const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
-		//			- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
-		//			+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
+
 		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-		//const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
-		//			- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
-		//			+ az * Math.cos(q.θ/2) * Math.cos(th/2);
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
 		//const Clx = 1/Math.sin( sAng/2);//Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
@@ -1188,17 +1159,10 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		//const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
 
 		q.θ  = ang;
-		q.qw = cosCo2;
-		q.s  = sAng;
 		q.nx = Cx*Clx;
 		q.ny = Cy*Clx;
 		q.nz = Cz*Clx;
 
-		//q.dnx = dCx*dClx;
-		//q.dny = dCy*dClx;
-		//q.dnz = dCz*dClx;
-		//q.dθ = dAng; 
-		
 		q.x  = q.nx*ang;
 		q.y  = q.ny*ang;
 		q.z  = q.nz*ang;
@@ -1236,8 +1200,8 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
 
 	//-------- apply rotation to the axle... (put axle in this basis)
-	const nst = q.s; // normal * sin_theta
-	const qw = q.qw;  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+	const nst = Math.sin(q.θ/2); // normal * sin_theta
+	const qw = Math.cos(q.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 	
 	const qx = C.nx*nst;
 	const qy = C.ny*nst;
@@ -1345,7 +1309,7 @@ lnQuat.prototype.up = function() {
 
 // rotate the passed vector 'from' this space
 lnQuat.prototype.sub2 = function( q ) {
-	const qRes = new lnQuat(this.w, this.x, this.y, this.z).addConj( q );
+	const qRes = new lnQuat( this ).addConj( q );
 	return qRes;//.update();
 }
 
@@ -1366,9 +1330,9 @@ function deg2rad(n) { return n * Math.PI/180 }
 // range is the expected distance... (should? only return +/-1 range)
 // q.applyInverse( v ) and then use the result as a new normal and compute x/z relative 
 function SphereToXY( q, v, range ){
-
-	const s  = q.s;
-	const qw = q.qw;
+	
+	const s  = Math.sin( q.θ/2 );
+	const qw = Math.cos( q.θ/2 );
 	
 	const dqw = s/q.θ; // sin(theta)/r
 	// inverse
@@ -1438,8 +1402,6 @@ function updateGridXY(q, x, y, o ){
 			const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 			
 			q.θ  = ang;
-			q.qw = cosCo2;
-			q.s  = Math.sin(ang/2);
 			q.nx = Cx*Clx;
 			q.ny = Cy*Clx;
 			q.nz = Cz*Clx;
