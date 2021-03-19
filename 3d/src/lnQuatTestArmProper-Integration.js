@@ -549,6 +549,241 @@ function drawAnalogArm(curSliders,slerp) {
 
 }
 
+function old_drawAnalogArm(curSliders,slerp) {
+
+	const origin = {x:0,y:0,z:0};
+let keepInertia = false;
+let applyAccel = false;
+let fixAxleRotation = true;
+	const arm = armPrimary==0?{x:2,y:0,z:0}
+		     :armPrimary==1?{x:0,y:0.1,z:0}
+			:{x:0,y:0,z:2};
+	const shortArm = armPrimary==0?{x:2/100,y:0,z:0}
+		     :armPrimary==1?{x:0,y:2/100,z:0}
+			:{x:0,y:0,z:2/100};
+	const tmpShortArm = armPrimary==0?{x:2/100,y:0,z:0}
+		     :armPrimary==1?{x:0,y:2/100,z:0}
+			:{x:0,y:0,z:2/100};
+	const v = { x:0,y:1,z:0};
+
+	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
+		let fixAxleRotation = zz===1;
+		let keepInertia = zz=== 0;
+
+	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
+	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
+	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3, timeScale ):new lnQuat(lnQ4);
+	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4, timeScale ):new lnQuat(lnQ5);
+
+	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
+
+	if( applyAccel ) {
+		t2.add( lnQ1 );
+		t3.add( t2 );
+		t4.add( t3 );
+		t5.add( t4 );
+	}
+	if( keepInertia ) {
+		t2.add( lnQ1 );
+		t3.add( t2 );
+		t4.add( t3 );
+		t5.add( t4 );
+	}
+	lnQ_current[0] = lnQ1;
+	lnQ_current[1] = t2;
+	lnQ_current[2] = t3;
+	lnQ_current[3] = t4;
+	lnQ_current[4] = t5;
+
+	// compute non-inertial differential
+	const r2_d = t2.sub2( Ro[0] );
+	const r3_d = t3.sub2( Ro[1] );
+	const r4_d = t4.sub2( Ro[2] );
+	const r5_d = t5.sub2( Ro[3] );
+
+	// compute non-inertial differential
+	const r2_ = t2.sub2( lnQ1 );
+	const r3_ = t3.sub2( t2 );
+	const r4_ = t4.sub2( t3 );
+	const r5_ = t5.sub2( t4 );
+
+	// 
+	const A1 = lnQ1.applyDel( arm );
+	const A2 = t2.applyDel( arm );
+	const A3 = t3.applyDel( arm );
+	const A4 = t4.applyDel( arm );
+	const A5 = t5.applyDel( arm );
+
+	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
+	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
+	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
+	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
+	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
+
+	// { a,      b,	    c,		       d,				   e }  no accel
+	// { a,    a+b,	a+b+c,		 a+b+c+d,			   a+b+c+d+e }  accel/keep inertia
+	// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }  accel+keep inertia
+	// { a,2a +b,3a+2b +c,		    4a+3b+2c +d,		       5a+4b+3c+2d+e }  accel+keep inertia
+	if( showSliderCurves )
+		drawRotationCurve( R, Ro, curSliders, Rb );
+
+	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
+	let prior = origin;
+	for( var n = 0; n < 5; n++ ) {
+		if( showLineSeg[n] && drawRotationSquares ) {
+			drawSquare( n, Rm[n], R[n-1] );
+		}
+		if( n ) {
+			A[n].x = A[n-1].x
+			A[n].y = A[n-1].y
+			A[n].z = A[n-1].z
+		}
+		var s;
+		var scalar = 100;
+		const result = { portion : null };
+		
+		// start from either the end of the previous
+		//	   or from the end of the sum of the previous
+		//   add either relative rotation itself (to the end of rotations)
+		//   or add the translated rotation (to the end of the sum of rotations)
+		const from = n?(R[n-1]):lnQ0;
+		const delta = Rm[n];
+
+		for( s = 0; s <= 100; s++ ) {
+			result.portion = null;
+			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
+			draw( result.portion, from, delta, s*timeScale/100.0 );
+		}
+		// draw the long segment to match digital arm.
+		if( showArms )
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+
+		R[n] = result.portion;
+		//Rz[n] = result.portion;
+		A[n].x += prior.x*scalar;
+		A[n].y += prior.y*scalar;
+		A[n].z += prior.z*scalar;
+
+		if( showArms){
+			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+			pushNColor(n, zz/3+0.4);
+		}
+
+		function draw(q,from,to,delta)
+		{
+			if( ( s % 3 ) === 0 )  {
+				if(drawNormalBall) {
+					// draw on normal ball...
+					drawN( q );
+					
+					function drawN( lnQ )
+					{
+						const spaceScale = 3;
+						const new_v = lnQ.apply( v );
+						const normal_del = 0.25;
+						const basis = lnQ.getBasis( );
+					
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
+					
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			,new_v.y*spaceScale			, new_v.z*spaceScale ))
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
+					
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			     ,new_v.y*spaceScale			     , new_v.z*spaceScale ))
+						normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
+					
+						normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
+						normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
+						normalColors.push( new THREE.Color( 0,1.0,0,1.0 ))
+						normalColors.push( new THREE.Color( 0,1.0,0,1.0 ))
+						normalColors.push( new THREE.Color( 0,0,1.0,1.0))
+						normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
+
+
+					}
+				}
+			
+				if( from ) {
+					doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
+				} else {
+					doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
+				}	
+
+			}
+
+				if( from ) {
+				const delta2 = delta - timeScale/100.0;
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x + to.x * delta2)*spaceScale ,pointScalar*( from.y  + to.y * delta2)*spaceScale    , pointScalar*(from.z  + to.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x+ to.x * delta)*spaceScale   ,pointScalar*( from.y + to.y * delta)*spaceScale      , pointScalar*(from.z + to.z * delta)*spaceScale  ))
+				} else {
+				const delta2 = delta - timeScale/100.0;
+				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta2)*spaceScale   ,pointScalar*( 0 * (1-delta2) + to.y * delta2)*spaceScale      , pointScalar*(0 * (1-delta2) + to.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta)*spaceScale   ,pointScalar*( 0 * (1-delta) + to.y * delta)*spaceScale      , pointScalar*(0 * (1-delta) + to.z * delta)*spaceScale  ))
+				}	
+				pushNColor( n );
+
+			if( showArms )
+			{
+				if( s == 50 && delta || ( drawRotationAllAxles ) ){
+					if( drawRotationAxles ) {
+						if( SLERP || addN2 ) {
+							normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
+						}else {
+
+								let  nx;
+								let  ny;
+								let  nz;
+							if( drawWorldAxles ) {
+								const ax = to.x + from.x * delta;
+								const ay = to.y + from.y * delta;
+								const az = to.z + from.z * delta;
+					
+								const l = ax*ax + ay*ay + az*az;
+						
+								const s = Math.sqrt(l);
+
+								 nx = ax/s;
+								 ny = ay/s;
+								 nz = az/s;
+							 }else {
+								nx = to.nx;
+								ny = to.ny;
+								nz = to.nz;
+							}
+							normalVertices.push( new THREE.Vector3( (A[n].x - 2*nx)*spaceScale   ,( A[n].y - 2 * ny)*spaceScale      , (A[n].z- 2*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 0*nx)*spaceScale   ,( A[n].y + 0 * ny)*spaceScale      , (A[n].z+ 0*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x - 0*nx)*spaceScale   ,( A[n].y - 0 * ny)*spaceScale      , (A[n].z- 0*nz)*spaceScale  ))
+							normalVertices.push( new THREE.Vector3( (A[n].x + 2*nx)*spaceScale   ,( A[n].y + 2 * ny)*spaceScale      , (A[n].z+ 2*nz)*spaceScale  ))
+						}
+						pushN2(n,4.9,0.2);
+						pushN2(n,0.2,4.9);
+						
+					}
+					
+				}
+
+				normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+				A[n].x += prior.x;
+				A[n].y += prior.y;
+				A[n].z += prior.z;
+
+				normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
+				pushNColor(n,1.3);
+			}
+		}
+		
+	}
+	}
+	
+	return;
+
+
+}
+
+
 // { a,      b,	    c,		       d,				   e }
 // { a,    a+b,	a+b+c,		 a+b+c+d,			   a+b+c+d+e }
 // { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
@@ -1859,6 +2094,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		drawDigitalTimeArm( curSliders, slerp );
 	        
 		// squares is calculated in analog arm.
+		old_drawAnalogArm( curSliders, slerp ); 
 		drawAnalogArm( curSliders, slerp ); 
 	}
 
