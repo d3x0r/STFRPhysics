@@ -1490,9 +1490,9 @@ function drawCoordinateGrid() {
 
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
 		if(oct){
-			x = lnQ2.nx * ( lnQ2.θ + Math.PI * 2)
-			y = lnQ2.ny * ( lnQ2.θ + Math.PI * 2)
-			z = lnQ2.nz * ( lnQ2.θ + Math.PI * 2)
+			x = lnQ2.nx * ( lnQ2.θ + oct*Math.PI * 2)
+			y = lnQ2.ny * ( lnQ2.θ + oct*Math.PI * 2)
+			z = lnQ2.nz * ( lnQ2.θ + oct*Math.PI * 2)
 		}
 			if( from ) {
 
@@ -1586,7 +1586,7 @@ function DrawNormalBall(normalVertices,normalColors, curSliders) {
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
-		for( let h = -Math.PI*2; h < Math.PI*2; h+= 1.2*3.1/25 ) {
+		for( let h = -Math.PI*2; h < Math.PI*3; h+= 1.2*3.1/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			for( let t = -Math.PI*2; t < Math.PI*2; t+= 1.2*0.25/2 ){
 				//if( t > (Math.PI + 0.5) ) continue;
@@ -1595,16 +1595,17 @@ function DrawNormalBall(normalVertices,normalColors, curSliders) {
 
 				drawN( lnQ );
 				if( drawCoords ) {
-					lnQ2.x = lnQ2.nx * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
-					lnQ2.y = lnQ2.ny * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
-					lnQ2.z = lnQ2.nz * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
+					const oct = Math.floor(h / Math.PI);
+					lnQ2.x = lnQ2.nx * ( lnQ2.θ + oct*Math.PI * 2)
+					lnQ2.y = lnQ2.ny * ( lnQ2.θ + oct*Math.PI * 2)
+					lnQ2.z = lnQ2.nz * ( lnQ2.θ + oct*Math.PI * 2)
 					lnQ2.dirty = false;
 					let c = 0.2;
 					if( Math.abs( h - (curSliders.lnQX[0]*12) ) < 0.1 )
 						c = 1;
 					if( Math.abs( t - (curSliders.lnQY[0]*12) ) < 0.1 )
 						c = 1;
-					doDrawBasis( lnQ, lnQ, 1, 1, undefined, c, Math.abs(h)>Math.PI );
+					doDrawBasis( lnQ, lnQ, 1, 1, undefined, c, oct );
 				}
 			}
 		}
