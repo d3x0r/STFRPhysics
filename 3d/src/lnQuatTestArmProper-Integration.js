@@ -344,52 +344,18 @@ function drawAnalogArm(curSliders,slerp) {
 		const from = n?(R[n-1]):lnQ0;
 		const delta = Rm[n];
 		const av = {x:delta.x,y:delta.y,z:delta.z};
+
+		const avLen =  delta.θ/100;
+
+		if( internalAccel ) // delta angle is from an internal source
+			tmpA = tmpQ.applyDel( av, 1 );
+		else
+			tmpA = av;
+
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
 
-			// this is an angular velocity value, it's not really a
-                        // linear velocity....
-			if(0) {
-				// angular velocity is NOT itself a rotation...
-				avQ.set( 0, delta.x, delta.y, delta.z ).update();
-				avQ.freeSpin( -tmpQ.θ, tmpQ );
-				tmpQ.freeSpin( avQ.θ * timeScale / 100, avQ  );
-			}
-
-
-			if(0) {
-				// rotate tmpQ by this portion of the rotation.
-				tmpA = tmpQ.applyDel( av, -1 );
-				tmpQ2.x = tmpA.x;
-				tmpQ2.y = tmpA.y;
-				tmpQ2.z = tmpA.z;
-				tmpQ2.dirty = true;
-				tmpQ2.update();
-                tmpQ.freeSpin( tmpQ2.θ * timeScale / 100, tmpQ2  );
-			}
-
-			if(1) {
-				// add this portion of the angular velocity to tmpQ.
-
-				// this is really the correct integration... over a time 0-1
-				// the end is the rule of rotating around an externally directed rotation
-				// axis.
-				if( internalAccel ) // delta angle is from an internal source
-					tmpA = tmpQ.applyDel( av, 1 );
-				else
-					tmpA = tmpQ.applyDel( av, -1 );
-
-				// rotate the frame around the axis-angle of the acceleration
-				tmpQ.freeSpin( Math.sqrt(tmpA.x*tmpA.x+ tmpA.y*tmpA.y+ tmpA.z*tmpA.z)/100, tmpA);
-				if(0)
-				{
-				tmpQ.x += tmpA.x * timeScale/100.0;
-				tmpQ.y += tmpA.y * timeScale/100.0;
-				tmpQ.z += tmpA.z * timeScale/100.0;
-				tmpQ.dirty = true;
-				tmpQ.update();
-				}
-            }
+			tmpQ.freeSpin( avLen, tmpA);
 
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
 			normalVertices.push( new THREE.Vector3( (A[n].x + delta.x)*spaceScale   ,( A[n].y + delta.y)*spaceScale      , (A[n].z + delta.z)*spaceScale  ))
@@ -552,9 +518,10 @@ function drawAnalogArm(curSliders,slerp) {
 function old_drawAnalogArm(curSliders,slerp) {
 
 	const origin = {x:0,y:0,z:0};
-let keepInertia = false;
-let applyAccel = false;
-let fixAxleRotation = true;
+	let keepInertia = false;
+	let applyAccel = false;
+	let fixAxleRotation = true;
+	
 	const arm = armPrimary==0?{x:2,y:0,z:0}
 		     :armPrimary==1?{x:0,y:0.1,z:0}
 			:{x:0,y:0,z:2};
@@ -570,10 +537,21 @@ let fixAxleRotation = true;
 		let fixAxleRotation = zz===1;
 		let keepInertia = zz=== 0;
 
-	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
-	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
-	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3, timeScale ):new lnQuat(lnQ4);
-	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4, timeScale ):new lnQuat(lnQ5);
+	/*
+		const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
+		const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( (( internalAccel )?1:-1)*t2.θ, t2, timeScale ):new lnQuat(lnQ3);
+		const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( (( internalAccel )?1:-1)*t3.θ, t3, timeScale ):new lnQuat(lnQ4);
+		const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( (( internalAccel )?1:-1)*t4.θ, t4, timeScale ):new lnQuat(lnQ5);
+	*/
+	
+	const qq2 = lnQ1.applyDel( { x:lnQ2.x,y:lnQ2.y,z:lnQ2.z },  internalAccel?1:0 )
+	const t2 = new lnQuat( 0, lnQ1.x,lnQ1.y,lnQ1.z).update().freeSpin( lnQ2.θ, qq2, timeScale );
+	const qq3 = t2.applyDel( { x:lnQ3.x,y:lnQ3.y,z:lnQ3.z }, internalAccel?1:0 )
+	const t3 = new lnQuat( 0, t2.x,t2.y,t2.z).update().freeSpin( lnQ3.θ, qq3, timeScale );
+	const qq4 = t3.applyDel( { x:lnQ4.x,y:lnQ4.y,z:lnQ4.z }, internalAccel?1:0 )
+	const t4 = new lnQuat( 0, t3.x,t3.y,t3.z).update().freeSpin( lnQ4.θ, qq4, timeScale );
+	const qq5 = t4.applyDel( { x:lnQ5.x,y:lnQ5.y,z:lnQ5.z }, internalAccel?1:0 )
+	const t5 = new lnQuat( 0, t4.x,t4.y,t4.z).update().freeSpin( lnQ5.θ, qq5, timeScale );
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
 
@@ -596,36 +574,16 @@ let fixAxleRotation = true;
 	lnQ_current[4] = t5;
 
 	// compute non-inertial differential
-	const r2_d = t2.sub2( Ro[0] );
-	const r3_d = t3.sub2( Ro[1] );
-	const r4_d = t4.sub2( Ro[2] );
-	const r5_d = t5.sub2( Ro[3] );
-
-	// compute non-inertial differential
 	const r2_ = t2.sub2( lnQ1 );
 	const r3_ = t3.sub2( t2 );
 	const r4_ = t4.sub2( t3 );
 	const r5_ = t5.sub2( t4 );
-
-	// 
-	const A1 = lnQ1.applyDel( arm );
-	const A2 = t2.applyDel( arm );
-	const A3 = t3.applyDel( arm );
-	const A4 = t4.applyDel( arm );
-	const A5 = t5.applyDel( arm );
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
 	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
-
-	// { a,      b,	    c,		       d,				   e }  no accel
-	// { a,    a+b,	a+b+c,		 a+b+c+d,			   a+b+c+d+e }  accel/keep inertia
-	// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }  accel+keep inertia
-	// { a,2a +b,3a+2b +c,		    4a+3b+2c +d,		       5a+4b+3c+2d+e }  accel+keep inertia
-	if( showSliderCurves )
-		drawRotationCurve( R, Ro, curSliders, Rb );
 
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
