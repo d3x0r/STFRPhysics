@@ -1578,7 +1578,7 @@ function drawCoordinateGrid() {
 
 
 
-function DrawNormalBall(normalVertices,normalColors) {
+function DrawNormalBall(normalVertices,normalColors, curSliders) {
 	const v = { x:0,y:1,z:0};
 	const spaceScale = 3;
 	const normal_del = 0.25;
@@ -1599,7 +1599,12 @@ function DrawNormalBall(normalVertices,normalColors) {
 					lnQ2.y = lnQ2.ny * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
 					lnQ2.z = lnQ2.nz * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
 					lnQ2.dirty = false;
-					doDrawBasis( lnQ, lnQ, 1, 1, undefined, undefined, Math.abs(h)>Math.PI );
+					let c = 0.2;
+					if( Math.abs( h - (curSliders.lnQX[0]*8) ) < 0.1 )
+						c = 1;
+					if( Math.abs( t - (curSliders.lnQY[0]*8) ) < 0.1 )
+						c = 1;
+					doDrawBasis( lnQ, lnQ, 1, 1, undefined, c, Math.abs(h)>Math.PI );
 				}
 			}
 		}
@@ -1791,7 +1796,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	if( scalar2 && !scalar ) pointScalar = (12/ Math.PI);
 	if( !scalar2 && !scalar ) pointScalar = (3/ Math.PI);
 	if( scalar2 && scalar ) pointScalar = (2/ Math.PI);
-	if( !scalar2 && scalar ) pointScalar = ( Math.PI/2);
+	if( !scalar2 && scalar ) pointScalar = ( 3/Math.PI);
 
 
 	let showAxis = document.getElementById( "showAxis")?.checked;
@@ -2057,7 +2062,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		if( check )
 			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 		
-		DrawNormalBall(normalVertices,normalColors);
+		DrawNormalBall(normalVertices,normalColors, curSliders);
 	        
 		drawCoordinateGrid();
 		drawDigitalTimeArm( curSliders, slerp );
