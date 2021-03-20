@@ -61,7 +61,7 @@ const lnQ_current = [];
 
 let normalVertices,normalColors;
 	const spaceScale = 5;
-	const normal_del = 1;
+	let normal_del = 1;
 
 function makeQuat(p,y,r) {
 	switch( mountOrder ) {
@@ -1586,9 +1586,9 @@ function DrawNormalBall(normalVertices,normalColors, curSliders) {
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
-		for( let h = -Math.PI*2; h < Math.PI*2; h+= 3.1/25 ) {
+		for( let h = -Math.PI*2; h < Math.PI*2; h+= 1.2*3.1/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
-			for( let t = -Math.PI*2; t < Math.PI*2; t+= 0.25/2 ){
+			for( let t = -Math.PI*2; t < Math.PI*2; t+= 1.2*0.25/2 ){
 				//if( t > (Math.PI + 0.5) ) continue;
 				const h_ = h;//-(1/1)*Math.PI + h;// - 1*Math.PI/2 - Math.PI/4;
 				const lnQ = new lnQuat( { lat: h_, lng:t }, normalizeNormalTangent );
@@ -1600,9 +1600,9 @@ function DrawNormalBall(normalVertices,normalColors, curSliders) {
 					lnQ2.z = lnQ2.nz * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
 					lnQ2.dirty = false;
 					let c = 0.2;
-					if( Math.abs( h - (curSliders.lnQX[0]*8) ) < 0.1 )
+					if( Math.abs( h - (curSliders.lnQX[0]*12) ) < 0.1 )
 						c = 1;
-					if( Math.abs( t - (curSliders.lnQY[0]*8) ) < 0.1 )
+					if( Math.abs( t - (curSliders.lnQY[0]*12) ) < 0.1 )
 						c = 1;
 					doDrawBasis( lnQ, lnQ, 1, 1, undefined, c, Math.abs(h)>Math.PI );
 				}
@@ -1793,10 +1793,19 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let scalar = document.getElementById( "largeRange")?.checked;
 	let scalar2 = document.getElementById( "fineRange")?.checked;
 
+	normal_del = 4;
 	if( scalar2 && !scalar ) pointScalar = (12/ Math.PI);
-	if( !scalar2 && !scalar ) pointScalar = (3/ Math.PI);
-	if( scalar2 && scalar ) pointScalar = (2/ Math.PI);
-	if( !scalar2 && scalar ) pointScalar = ( 3/Math.PI);
+	if( !scalar2 && !scalar ) {
+		pointScalar = (3/ Math.PI);
+		normal_del = 2.5;
+	}
+	if( scalar2 && scalar ) {
+		pointScalar = (2/ Math.PI);
+	}
+	if( !scalar2 && scalar ) {
+		pointScalar = ( 3/Math.PI);
+		normal_del = 2.5;
+	}
 
 
 	let showAxis = document.getElementById( "showAxis")?.checked;
