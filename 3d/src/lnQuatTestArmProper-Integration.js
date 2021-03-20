@@ -1461,7 +1461,7 @@ function drawCoordinateGrid() {
 	}
 
 
-	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
+	function doDrawBasis(lnQ2,t,s,Del,from,colorS, oct ) {
 		const basis = lnQ2.update().getBasisT( Del,from );
 		if( !s ) s = 1.0;
 		s = s/Math.PI;
@@ -1489,6 +1489,11 @@ function drawCoordinateGrid() {
 	}
 
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
+		if(oct){
+			x = lnQ2.nx * ( lnQ2.θ + Math.PI * 2)
+			y = lnQ2.ny * ( lnQ2.θ + Math.PI * 2)
+			z = lnQ2.nz * ( lnQ2.θ + Math.PI * 2)
+		}
 			if( from ) {
 
 				if( SLERP ) {
@@ -1581,7 +1586,7 @@ function DrawNormalBall(normalVertices,normalColors) {
 	const pickRandomNormals = document.getElementById( "pickRandomNormals" )?.checked;
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
-		for( let h = 0; h < Math.PI; h+= 3.1/25 ) {
+		for( let h = -Math.PI*2; h < Math.PI*2; h+= 3.1/25 ) {
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
 			for( let t = -Math.PI*2; t < Math.PI*2; t+= 0.25/2 ){
 				//if( t > (Math.PI + 0.5) ) continue;
@@ -1589,8 +1594,13 @@ function DrawNormalBall(normalVertices,normalColors) {
 				const lnQ = new lnQuat( { lat: h_, lng:t }, normalizeNormalTangent );
 
 				drawN( lnQ );
-				if( drawCoords )
-					doDrawBasis( lnQ, lnQ, 1, 1 );
+				if( drawCoords ) {
+					lnQ2.x = lnQ2.nx * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
+					lnQ2.y = lnQ2.ny * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
+					lnQ2.z = lnQ2.nz * ( lnQ2.θ + ((Math.abs(h)>0*Math.PI)?Math.PI * 2:0))
+					lnQ2.dirty = false;
+					doDrawBasis( lnQ, lnQ, 1, 1, undefined, undefined, Math.abs(h)>Math.PI );
+				}
 			}
 		}
 
@@ -1878,6 +1888,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			}else {
 				// normalize the output angle... 
 				const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
+				const nR = lnQ.θ;
 				if( showAxis ) {
 					if( degrees ) {
 						document.getElementById( "lnQXval"+n).textContent = (lnQ.nx*180/Math.PI).toFixed(4);
@@ -1890,13 +1901,13 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 					}
 				}else {
 					if( degrees ) {
-						document.getElementById( "lnQXval"+n).textContent = (lnQ.x*180/Math.PI).toFixed(4);
-						document.getElementById( "lnQYval"+n).textContent = (lnQ.y*180/Math.PI).toFixed(4);
-						document.getElementById( "lnQZval"+n).textContent = (lnQ.z*180/Math.PI).toFixed(4);
+						document.getElementById( "lnQXval"+n).textContent = (nR/nL*lnQ.x*180/Math.PI).toFixed(4);
+						document.getElementById( "lnQYval"+n).textContent = (nR/nL*lnQ.y*180/Math.PI).toFixed(4);
+						document.getElementById( "lnQZval"+n).textContent = (nR/nL*lnQ.z*180/Math.PI).toFixed(4);
 					}else{
-						document.getElementById( "lnQXval"+n).textContent = (lnQ.x/Math.PI).toFixed(4) + "π";
-						document.getElementById( "lnQYval"+n).textContent = (lnQ.y/Math.PI).toFixed(4) + "π";
-						document.getElementById( "lnQZval"+n).textContent = (lnQ.z/Math.PI).toFixed(4) + "π";
+						document.getElementById( "lnQXval"+n).textContent = (nR/nL*lnQ.x/Math.PI).toFixed(4) + "π";
+						document.getElementById( "lnQYval"+n).textContent = (nR/nL*lnQ.y/Math.PI).toFixed(4) + "π";
+						document.getElementById( "lnQZval"+n).textContent = (nR/nL*lnQ.z/Math.PI).toFixed(4) + "π";
 					}
 				}
 			}               
