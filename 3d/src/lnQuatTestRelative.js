@@ -1,3 +1,4 @@
+import {lnQuat,slerp} from "./lnQuatSq.js"
 
 let A,B,C,D,E;  // slider values
 let xRot, yRot, zRot;
@@ -9,6 +10,11 @@ let drawNormalBall = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 2;
+let showRaw = false;
+let shownRnL = false;
+let shownR = false;
+let shownL = false;
+let normalizeNormalTangent = false;
 
 
 function drawArm(curSliders,normalVertices,normalColors) {
@@ -462,6 +468,8 @@ function DrawQuatNormals(normalVertices,normalColors) {
 
 
 }
+
+window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices,normalColors) {
         let curSliders = {
 	};

@@ -1144,12 +1144,12 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
+		const crsY = (az*q.nx-ax*q.nz);
+		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
 
-		const crsY = (az*q.nx-ax*q.nz);
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 
-		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
