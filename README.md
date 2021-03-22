@@ -57,6 +57,7 @@ from the origin is the same rotation axle, with a different angular speed.
  - [Arm Proper](https://d3x0r.github.io/STFRPhysics/3d/indexArmProper.html) 5 segment arm, with 5 rotation settings, rotation frames applied relative to prior rotation; more what a robot arm would actually do.
  - [Relative Rotations](https://d3x0r.github.io/STFRPhysics/3d/indexRelative.html) 5 Rotations, showing the curvature from 0.0-1.0 in 0.01 increment steps; shows differential rotations...
  - [Grid to Sphere Map](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap.html) Builds a regular x/y grid that projects onto a sphere... [More Information](https://github.com/d3x0r/STFRPhysics/blob/master/3d/indexSphereMap.md#mapping-rectangles-on-spheres).
+ - [Integration Test](https://d3x0r.github.io/STFRPhysics/3d/indexArmProper-Integration.html) Test of integration of internal and external rotations.
 
 ## Some included Images
 
@@ -74,8 +75,6 @@ This is a sketch of trying to compute the vector for the twist operation of the 
  - lnQuat - short for 'quaternion in natural log mapping'  (lnQuats for plural); may also be said as 'log-quaternion' or 'Log Quat'.
  - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later).
  - Quat - the type `class Quat`.
- - principalling - the updating of a lnQuaternion to its prinicpal angles and the associated rate. There is a method `principle()` which sets a lnQuaternion to its principal angles.
-
 
 ## Frame Computation Using Dual Log-Quaternions
 
@@ -116,8 +115,6 @@ Also bodies, that spin very slowly don't need to apply corrections very often.
 
 However, computing a chain from a fixed point like the base of a robot arm it will be more proper to maintain the full spin count (to prevent the robot manipulator from spinning 3 times just because; say on a 
 long chain of actuators; but this scenario is also likely to not overflow rotation accumulation.
-
-Principalling of lnQuats can be done with `lnQuat.exp().log()` or `const principal = lnQuat.principal();`.
 
 
 ## Inertial Frame Relavence.
