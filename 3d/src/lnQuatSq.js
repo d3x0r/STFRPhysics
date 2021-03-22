@@ -887,6 +887,10 @@ lnQuat.prototype.apply = function( v ) {
 		const qx = q.nx, qy = q.ny, qz = q.nz;
 		const vx = v.x , vy = v.y , vz = v.z;
 		// (1-cos theta) * dot
+		// 1-cos theta * cos(angle between vectors)
+		// // (1-cos(x))cos(y)
+		// //  = 2 cos(y) sin^2(x/2)
+		// //  = 1/2 (-cos(x - y) + 2 cos(y) - cos(x + y))
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
@@ -1067,42 +1071,84 @@ lnQuat.prototype.applyInv = function( v ) {
 	return this.applyDel( v, -1 );
 }
 
-function getPitchDirection( q, th ) 
-{
-	const s  = Math.sin( q.θ ); // sin/cos are the function of exp()
-	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
-	const c = 1- c1;
-
-	const cnx = c*q.nx
-	const ax = ( cnx*q.nx + c1 );
-	const ay = ( cnx*q.ny + s*q.nz );
-	const az = ( cnx*q.nz - s*q.ny );
-
-	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
-
-	const temp =  (-AdotB * Math.sin(q.θ/2)* Math.cos(th/2) 
-			       - Math.cos(q.θ/2) *Math.sin(th/2)) / 2;
-	const dAng = acos( temp ) * 2;
-
-	if( dAng ) {      // as bc     bs ac       as bs
-		const crsX = (ay*q.nz-az*q.ny);
-		const dCx = crsX * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.nx * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ ax * Math.cos(q.θ/2) * Math.cos(th/2);
-		const crsY = (az*q.nx-ax*q.nz);
-		const dCy = crsY * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.ny * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ ay * Math.cos(q.θ/2) * Math.cos(th/2);
-		const crsZ = (ax*q.ny-ay*q.nx);
-		const dCz = crsZ * Math.sin(q.θ/2)*Math.cos(th/2) 
-					- q.nz * Math.sin(q.θ/2)*Math.sin(th/2)
-					+ az * Math.cos(q.θ/2) * Math.cos(th/2);
-
-		const dClx = dAng/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
-		return new vectorType(dCx*dClx, dCy*dClx,dCz*dClx );
-	} 
-	return new vectorType(0,0,0);
+lnQuat.prototype.slerp2 = function( p, t, target, oct ) {
+	return slerp2( this, p, t, target, oct )
 }
+// q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
+function slerp2( q, p, t, target, oct ) {
+	// A dot B   = cos( angle A->B )
+	// cross product of the rotations is a rotation perpendicular to the two
+	// with an arc length of arccos( q x p ), scaled by 0-1 passed in as T.
+	const ax_cos = q.ny * p.nz - q.nz * p.ny;
+	const ay_cos = q.nz * p.nx - q.nx * p.nz;
+	const az_cos = q.nx * p.ny - q.ny * p.nx;
+	const a_cos = Math.sqrt(ax_cos*ax_cos+ay_cos*ay_cos+az_cos*az_cos);
+	const th = acos( a_cos ) * t;
+	const ax = ax_cos / a_cos;
+	const ay = ay_cos / a_cos;
+	const az = az_cos / a_cos;
+
+	// in this case it will alwasy be 0.
+	const AdotB = 0;//(q.nx*ax + q.ny*ay + q.nz*az);
+
+	const xmy = (th - q.θ)/2; // X - Y  (x minus y)
+	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
+	const cxmy = Math.cos(xmy);
+	const cxpy = Math.cos(xpy);
+	// this is a portion from zero to 2 (-1  2+0,  0  1+1,  1  0+2 ).
+	// sin(angle between the two)
+	const cosCo2 = ( cxmy + cxpy )/2;
+
+	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
+	// only good for rotations between 0 and pi.
+
+	if( ang ) {      // as bc     bs ac       as bs
+		const sxmy = Math.sin(xmy);
+		const sxpy = Math.sin(xpy);
+		// vector rotation is just...
+		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
+		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
+		// when both are large, cross product is dominant (pi/2)
+
+		const ss1 = sxmy + sxpy
+		const ss2 = sxpy - sxmy
+		const cc1 = cxmy - cxpy
+
+		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
+		// the following expression is /2 (has to be normalized anyway keep 1 bit)
+		// and is not normalized with sin of angle/2.
+		const crsX = (ay*q.nz-az*q.ny);
+		const crsY = (az*q.nx-ax*q.nz);
+		const crsZ = (ax*q.ny-ay*q.nx);
+		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
+		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
+		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
+
+		// this is NOT /sin(theta);  it is, but only in some ranges...
+		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+
+		target.θ  = ang;
+		target.nx = Cx*Clx;
+		target.ny = Cy*Clx;
+		target.nz = Cz*Clx;
+
+		target.x  = target.nx*ang;
+		target.y  = target.ny*ang;
+		target.z  = target.nz*ang;
+
+		target.dirty = false;
+	} else {
+		// two axles are coincident, add...
+		target.θ = 0;
+		target.x = 0;
+		target.y = 0;
+		target.z = 0;
+		q.dirty = true;
+	}
+	return target;
+}
+
+
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
 function finishRodrigues( q, oct, ax, ay, az, th ) {
@@ -1111,9 +1157,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
 	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
 	//const angleMax = ( q.θ + Math.abs(th) );
-
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
 
+	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
 	const xmy = (th - q.θ)/2; // X - Y  (x minus y)
 	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
 	const cxmy = Math.cos(xmy);
@@ -1133,27 +1179,21 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
 		// when both are large, cross product is dominant (pi/2)
 
-		const ss1 = sxmy + sxpy
-		const ss2 = sxpy - sxmy
-		const cc1 = cxmy - cxpy
-
-		const sAng = Math.sin(ang/2);
+		const ss1 = sxmy + sxpy  // 2 cos(y) sin(x)
+		const ss2 = sxpy - sxmy  // 2 cos(x) sin(y)
+		const cc1 = cxmy - cxpy  // 2 sin(x) sin(y)
 
 		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
-
 		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
 		const crsX = (ay*q.nz-az*q.ny);
 		const crsY = (az*q.nx-ax*q.nz);
 		const crsZ = (ax*q.ny-ay*q.nx);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
-		//const Clx = 1/Math.sin( sAng/2);//Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
 		//const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
@@ -1292,8 +1332,7 @@ function yaw( q, th ) {
 	return finishRodrigues( q, 0, ax, ay, az, th );
 }
 
-lnQuat.prototype.up = function() {
-	
+lnQuat.prototype.up = function() {	
 	const q = this;
 	if( q.dirty ) q.update();
 	// input angle...
