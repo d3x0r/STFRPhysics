@@ -17,12 +17,12 @@ const grid =[[ 0, p2, p2, 0,  0,  0, p2, p2,  0 ] // -4- -3
 			   ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ] // 2-1
 			   ,[pp, pp, np, np, 0, pp, pp, np, np ] // 1-0
 
-			   ,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-1
+			   ,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-0
 
 			   ,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
 			   ,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
 			   ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ]  //2-3
-			   ,[0,  p2,  0, 0, 0, 0,  0,  p2, 0 ]  //2-3
+			   ,[0,  p2, p2, 0, 0, 0,   p2, p2, 0 ]    //3-4
 			  // ,[pp, pp, np, np, 0, pp, pp, np, np ]  //3-4
 			];
 
@@ -1152,33 +1152,47 @@ function slerp2( q, p, t, target, oct ) {
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
 function finishRodrigues( q, oct, ax, ay, az, th ) {
+	oct = oct || 0;
 	// A dot B   = cos( angle A->B )
 	// cos( C/2 ) 
 	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
 	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
 	//const angleMax = ( q.θ + Math.abs(th) );
+	//  cos(angle between the two rotation axii)
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
+	/*
+	// oribtal hopping mechanic... 
+	if( AdotB > 0.99 ) {
+		if( q.θ + th > Math.PI*4 )
+			oct++;
+	} else if( cosCo2 < -0.99 ){
+		if( q.θ - th < -Math.PI*4 )
+			oct--;
+	}
+	*/
 
 	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
-	const xmy = (th - q.θ)/2; // X - Y  (x minus y)
-	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
+	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
+	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
+	const xmy = (th - q.θ)/2; // X - Y  ('x' 'm'inus 'y')
+	const xpy = (th + q.θ)/2  // X + Y  ('x' 'p'lus 'y' )
 	const cxmy = Math.cos(xmy);
 	const cxpy = Math.cos(xpy);
-	// this is a portion from zero to 2 (-1  2+0,  0  1+1,  1  0+2 ).
-	// sin(angle between the two)
-	const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 
-	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
-	// only good for rotations between 0 and pi.
+	// cos(angle result)
+	//const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
+	const cosCo2 = ( ( AdotB )*(cxpy - cxmy) + cxmy + cxpy )/2;
+	//   (1-cos(A))cos(x-y)+(1+cos(A))cos(x+y)
+	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
+	// octive should have some sort of computation that gets there...
+	// would have to be a small change
+	let ang = acos( cosCo2 )*2 + oct * (Math.PI*4);
 
-	if( ang ) {      // as bc     bs ac       as bs
+	if( ang ) {
 		const sxmy = Math.sin(xmy);
 		const sxpy = Math.sin(xpy);
 		// vector rotation is just...
-		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
-		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
 		// when both are large, cross product is dominant (pi/2)
-
 		const ss1 = sxmy + sxpy  // 2 cos(y) sin(x)
 		const ss2 = sxpy - sxmy  // 2 cos(x) sin(y)
 		const cc1 = cxmy - cxpy  // 2 sin(x) sin(y)
@@ -1196,8 +1210,6 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		// this is NOT /sin(theta);  it is, but only in some ranges...
 		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 
-		//const dClx = 1/Math.sqrt(dCx*dCx+dCy*dCy+dCz*dCz);
-
 		q.θ  = ang;
 		q.nx = Cx*Clx;
 		q.ny = Cy*Clx;
@@ -1209,17 +1221,12 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 		q.dirty = false;
 	} else {
-		// two axles are coincident, add...
-		if( AdotB > 0 ) {
-			q.x = q.nx * (q.θ+th);
-			q.y = q.ny * (q.θ+th);
-			q.z = q.nz * (q.θ+th);
-		}else {
-			q.x = q.nx * (q.θ-th);
-			q.y = q.ny * (q.θ-th);
-			q.z = q.nz * (q.θ-th);
-		}
-		q.dirty = true;
+		// result angle is 0
+		q.θ  = ang;
+		q.x = (q.nx=1) * 0;
+		q.y = (q.ny=0) * 0;
+		q.z = (q.nz=0) * 0;
+		q.dirty = false;
 	}
 	return q;
 }

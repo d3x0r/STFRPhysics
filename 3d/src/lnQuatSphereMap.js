@@ -320,7 +320,6 @@ function mkQuat( a,b,c,d ){
 					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				}
-
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
 					//doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
