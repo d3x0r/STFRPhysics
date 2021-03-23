@@ -248,30 +248,30 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						:/*( lng > Math.PI*0 ) ?*/ 5;
 
 					switch( gridlat ) {
-					case 0: // -3
+					case 0: // >-4 to -3   becomes 0 to 1
 						lat += Math.PI*4;
 						break;
-					case 1: // -2
+					case 1: // >-3 to -2   moves to -1 to 0
 						lat = Math.PI*2+lat;
 						break;
-					case 2:  // -1
-							lat = Math.PI*2+lat;
-							break;
-					case 3: // < 0
-							lng += Math.PI;
-							lat = -lat;
-							break;
+					case 2:  // >-2 to -1  moves to 0 to 1
+						lat = Math.PI*2+lat;
+						break;
+					case 3: // > -1 to < 0  moves to 1 to 0 (but inverts longitude)
+						lng += Math.PI; // passing north pole backwards flips lng
+						lat = -lat;
+						break;
 					case 4: // == 0
-					case 5: // > 0
+					case 5: // > 0 to 1
 							break;
-					case 6: // > 1
-							lng += Math.PI;
+					case 6: // > 1 to 2  moves to 1 to 0 (and inverts longitude)
+							lng += Math.PI;  // passing south pole, flips lng
 							lat = Math.PI*2-lat;
 							break;
-					case 7: // > 2
+					case 7: // > 2 to 3 moves to 0 to 1
 							lat = lat-Math.PI*2;
 							break;
-					case 8: // > 3
+					case 8: // > 3 to 4  moves to -1 -> 0
 							lat -= Math.PI*4;
 							break;
 					}
