@@ -1572,21 +1572,25 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			lnQ.update();
 	        
 			const len = lnQ.θ;
+			const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
+			const nR = lnQ.θ;
 			if( axis ) {
 				document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
 				document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
 				document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
 			}else {
 				// normalize the output angle... 
-				const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
 				if( degrees ) {
-					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4);
-					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4);
-					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4);
+					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.x*180/Math.PI).toFixed(4) + "°";
+					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.y*180/Math.PI).toFixed(4) + "°";
+					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.z*180/Math.PI).toFixed(4) + "°";
 				}else{
-					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ).toFixed(4);
-					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ).toFixed(4);
-					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
+					//document.getElementById( "lnQXval"+n).textContent = (nR/nL*lnQ.x/Math.PI).toFixed(4) + "π";
+					//document.getElementById( "lnQYval"+n).textContent = (nR/nL*lnQ.y/Math.PI).toFixed(4) + "π";
+					//document.getElementById( "lnQZval"+n).textContent = (nR/nL*lnQ.z/Math.PI).toFixed(4) + "π";
+					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.x/Math.PI).toFixed(4) + "π";
+					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.y/Math.PI).toFixed(4) + "π"
+					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.z/Math.PI).toFixed(4) + "π"
 				}
 			}               
 			const xyr = lnQ.θ;
@@ -1606,11 +1610,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			if( degrees ) {
 				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
 				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
+				document.getElementById( "lnQAngle"+n).innerHTML = (len*180/Math.PI).toFixed(4) + "°";
 			} else {
 				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
 				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
+
+				document.getElementById( "lnQAngle"+n).innerHTML = (len/Math.PI).toFixed(4) + "π<br>" + (len*nR/nL/Math.PI).toFixed(4) + "π";
 			}
 			if( degrees ) {
 			} else {
