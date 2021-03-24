@@ -10,6 +10,12 @@ from https://en.wikipedia.org/wiki/Euler%27s_rotation_theorem
   to kinematics yields the concept of instant axis of rotation, a line of fixed points.
 ```
 
+## Notation
+
+```
+    A ∙ B   indicates dot product
+    A × B   indicates cross product
+```
 
 ## Rotating a Rotation(A RRF B)
 
@@ -24,19 +30,18 @@ https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_composition_o
 	the following rotates A around B.
 
 
-  A` = cos(a/2) + sin(a/2)A
-  B` = cos(b/2) + sin(b/2)B
-  
   result Angle = cos^-1 ( cos(b/2)cos(a/2)-sin(b/2)sin(a/2) ( A ∙ B ) ) * 2
   
-  tmp_axis = sin(b/2)cos(b/2)B + sin(a/2)cos(b/2)A + sin(a/2)sin(b/2)( A × B )
+  tmp_axis = sin(b/2)cos(b/2)B 
+           + sin(a/2)cos(b/2)A 
+           + sin(a/2)sin(b/2)( A × B )
   result_axis = tmp_axis / ||tmp_axis||
   
   
   - or -
 
 
-  result Angle = cos^-1 ( 1/2 ((1 - A ∙ B) cos(a/2 - b/2) + (1 + A ∙ B) cos(a/2 + b/2)) ) * 2
+  result Angle = cos^-1 ( 1/2 ((1 - A ∙ B) cos((a - b)/2) + (1 + A ∙ B) cos((a + b)/2)) ) * 2
   
   tmp_axis = 1/2 ( 
          (-sin((a - b)/2) + sin((a + b)/2)) B 
