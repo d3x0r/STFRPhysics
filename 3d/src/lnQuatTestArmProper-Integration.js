@@ -491,8 +491,6 @@ function drawAnalogArm(curSliders,slerp) {
 function old_drawAnalogArm(curSliders,slerp) {
 
 	const origin = {x:0,y:0,z:0};
-	let keepInertia = false;
-	let applyAccel = false;
 	let fixAxleRotation = true;
 	
 	const arm = armPrimary==0?{x:2,y:0,z:0}
@@ -506,9 +504,9 @@ function old_drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-	for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) {
+	//for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) 
+	{
 		let fixAxleRotation = zz===1;
-		let keepInertia = zz=== 0;
 
 	/*
 		const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
@@ -528,18 +526,6 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
 
-	if( applyAccel ) {
-		t2.add( lnQ1 );
-		t3.add( t2 );
-		t4.add( t3 );
-		t5.add( t4 );
-	}
-	if( keepInertia ) {
-		t2.add( lnQ1 );
-		t3.add( t2 );
-		t4.add( t3 );
-		t5.add( t4 );
-	}
 	lnQ_current[0] = lnQ1;
 	lnQ_current[1] = t2;
 	lnQ_current[2] = t3;
@@ -1748,8 +1734,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
 	showArms = document.getElementById( "showArm")?.checked;
 	rawAngles = document.getElementById( "rawAngles")?.checked;
-	keepInertia = document.getElementById( "keepInertia" )?.checked;
-	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
 

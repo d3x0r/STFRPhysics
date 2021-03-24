@@ -109,18 +109,6 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
 		const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
 
-		if( applyAccel ) {
-			t2_ts.add( lnQ1 );
-			t3_ts.add( t2_ts );
-			t4_ts.add( t3_ts );
-			t5_ts.add( t4_ts );
-		}
-		if( keepInertia ) {
-			t2_ts.add( lnQ1 );
-			t3_ts.add( t2_ts );
-			t4_ts.add( t3_ts );
-			t5_ts.add( t4_ts );
-		}
 
 		const tmpR = { portion:null };
 		const A1_ts = lnQ1.applyDel( arm, timeScale, null, 0, tmpR );
@@ -249,7 +237,7 @@ function drawAnalogArm(curSliders,slerp) {
 	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4, timeScale ):new lnQuat(lnQ5);
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
-
+/*
 	if( applyAccel ) {
 		t2.add( lnQ1 );
 		t3.add( t2 );
@@ -262,15 +250,10 @@ function drawAnalogArm(curSliders,slerp) {
 		t4.add( t3 );
 		t5.add( t4 );
 	}
-
-	// compute non-inertial differential
-	const r2_ = t2.sub2( lnQ1 );
-	const r3_ = t3.sub2( t2 );
-	const r4_ = t4.sub2( t3 );
-	const r5_ = t5.sub2( t4 );
-
+*/
+	
 	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
-	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
+	const Rm = Ro;
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 
@@ -305,13 +288,13 @@ function drawAnalogArm(curSliders,slerp) {
 		const delta = Rm[n];
 		const to = R[n];
 
-		if(0)
+		if(1)
 			for( s = 0; s <= 100; s++ ) {
 				result.portion = null;
 				prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
 				draw( result.portion, from, delta, s*timeScale/100.0 );
 			}
-		if(1) {
+		if(0) {
 			for( s = 0; s <= 100; s++ ) {
 				from.slerp( to, (s+1)/100, tmpQ, 0 );
 				prior = tmpQ.applyDel( shortArm );
@@ -477,6 +460,7 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 				,from.y = curSliders.lnQY[showRotationCurveSegment-1]
 				,from.z = curSliders.lnQZ[showRotationCurveSegment-1])
 		}
+
 		  const lnQ = spinOnly[showRotationCurveSegment-2]||lnQ0;
 		  const lnQBase = base[showRotationCurveSegment-1];
 
@@ -497,7 +481,8 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 
 				if( fixAxleRotation )
 					lnQ2.update().freeSpin( lnQ.θ, lnQ )
-				lnQ2.add( lnQBase );
+
+				//lnQ2.add( lnQBase );
 				if( Math.abs( t )  < 0.11 ) {
 					if( lnQ2.dθ ){
 						const x = lnQ.x;
@@ -509,7 +494,6 @@ function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 						normalColors.push( new THREE.Color( 1.0*s,1.0*s,0,255 ))		
 					}
 				}
-
 
 				doDrawBasis( lnQ2, lnQ2, 1, 1, null, (showRotationCurve_===origShow)?1:0.5 );
 			}
@@ -1357,8 +1341,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
 	showArms = document.getElementById( "showArm")?.checked;
 	rawAngles = document.getElementById( "rawAngles")?.checked;
-	keepInertia = document.getElementById( "keepInertia" )?.checked;
-	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
 

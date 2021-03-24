@@ -629,16 +629,16 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 	if( "undefined" === typeof del ) del = 1.0;
 	const ax= q.nx, ay= q.ny, az= q.nz;
 
-	const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
+	//const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
 
-	const nt = sqlen * del;
+	const nt = q.θ * del;
 	const s  = Math.sin( nt ); // sin/cos are the function of exp()
 	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
-	const qx = sqlen?ax/sqlen:0; // normalizes the imaginary parts
-	const qy = sqlen?ay/sqlen:1; // set the sin of their composite angle as their total
-	const qz = sqlen?az/sqlen:0; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const qx = this.nx; // normalizes the imaginary parts
+	const qy = this.ny; // set the sin of their composite angle as their total
+	const qz = this.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
 
 	const cnx = c*qx;
 	const cny = c*qy;
