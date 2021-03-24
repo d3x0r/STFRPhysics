@@ -3,7 +3,7 @@ const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
-var SLERP = false;
+export let SLERP = false;
 var SLERPbasis = false;
 const abs = (x)=>Math.abs(x);
 
@@ -73,8 +73,6 @@ function lnQuat( theta, d, a, b, e ){
 //	this.dnz = 0;  //
 
 	// temporary sign/cos/normalizers
-//	this.s = 0;  // sin(composite theta)
-//	this.qw = 1; // cos(composite theta)
 	this.θ = 0; // length
 	this.refresh = null;
 	this.dirty = true; // whether update() has to do work.
@@ -177,8 +175,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			this.ny = theta.ny;
 			this.nz = theta.nz;
 			this.θ = theta.θ;
-			this.s = theta.s;
-			this.qw = theta.qw;
 			this.dirty = theta.dirty;
 			return this;
 		}
@@ -514,7 +510,7 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	//console.log( "FB t is:", t, basis.right.x, basis.up.y, basis.forward.z );
 
 	//	if( t > 1 || t < -1 )
-	// 1,1,1 -1 = 2;/2 = 1
+	//  1,1,1 -1 = 2;/2 = 1
 	// -1-1-1 -1 = -4 /2 = -2;
 	/// okay; but a rotation matrix never gets back to the full rotation? so 0-1 is enough?  is that why evertyhing is biased?
 	//  I thought it was more that sine() - 0->pi is one full positive wave... where the end is the same as the start
@@ -525,23 +521,9 @@ lnQuat.prototype.fromBasis = function( basis ) {
 		//console.log( "primary rotation is '0'", t, angle, this.θ, basis.right.x, basis.up.y, basis.forward.z );
 		this.x = this.y = this.z = this.nx = this.ny = this.nz = this.θ = 0;
 		this.ny = 1; // axis normal.
-		this.s = 0;
-		this.qw = 1;
 		this.dirty = false;
 		return this;
 	}
-/*
-	if( !this.octave ) this.octave = 1;
-	if( tzz == 0 ) {
-		this.bias = -this.octave * 2*Math.PI;
-	}else {
-		this.bias = (this.octave-1) * 2*Math.PI
-	}
-	//angle += this.bias
-	tzz++;
-	this.i = tzz;
-	if( tzz >= 2 ) tzz = 0;
-*/
 	/*
 	https://stackoverflow.com/a/12472591/4619267
 	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
@@ -577,8 +559,42 @@ lnQuat.prototype.exp = function() {
 
 
 // return the difference in spins
-lnQuat.prototype.spinDiff = function( q ) {
-	return Math.abs(this.x - q.x) + Math.abs(this.y - q.y) + Math.abs(this.z - q.z);
+// the resulting spin can be used to rotate Q(this) to P...
+// or to iterate to the new frame... this is 1/2 of the work of slerp2.
+// which is probably done fewer times than the second part which is just q.freespin(result);
+lnQuat.prototype.spinDiff = function( p, target ) {
+	target = target || new lnQuat();
+	const external = false;
+	const q = this;
+	if( !q.θ) {
+		// the difference is just directly to P.
+		target.nx = p.nx;
+		target.ny = p.ny;
+		target.nz = p.nz;
+		target.θ = t * p.θ;
+		target.x = target.nx * target.θ;
+		target.y = target.ny * target.θ;
+		target.z = target.nz * target.θ;
+		return target;
+	}
+	// the difference is P inverse rotated by Q as a frame
+	target.set( p );
+	// remove the rotation of q from p...
+	finishRodrigues( target, Math.floor( q.θ/(Math.PI*2)), q.nx, q.ny, q.nz, -q.θ );
+	// which sets target as the initial P rotation.
+	
+	axisTemp.x = target.nx;
+	axisTemp.y = target.ny;
+	axisTemp.z = target.nz;
+	let tmpA;
+	if( !external ) { // delta angle is from an internal source
+		tmpA = q.applyDel( av, 1 );
+	}else
+		tmpA = axisTemp;
+	target.x = (target.nx = tmpA.x) * target.θ;
+	target.y = (target.ny = tmpA.y) * target.θ;
+	target.z = (target.nz = tmpA.z) * target.θ;
+	return target;
 }
 
 lnQuat.prototype.add = function( q2, t ) {
@@ -606,85 +622,16 @@ function lnQuatAdd( q, q2, s ) {
 	return q;
 }
 
-
-// returns the number of complete rotations removed; updates this to principal angle values.
-lnQuat.prototype.prinicpal = function() {
-	this.update();
-	return new lnQuat( { a:this.x
-	                   , b:this.y
-	                   , c:this.z} );
-}
-
-lnQuat.prototype.getTurns =  function() {
-	const q = new lnQuat();
-	const r = this.θ;
-	const rMod  = Math.mod( r, (2*Math.PI) );
-	const rDrop = ( r - rMod ) / (2*Math.PI);
-	return rDrop;
-}
-
-// this applies turns passed as if turns is a fraction of the current rate.
-// this scales the rate of the turn... adding 0.1 turns adds 36 degrees.
-// adding 3 turns adds 1920 degrees.
-// turns is 0-1 for 0 to 100% turn.
-// turns is from 0 to 1 turn; most turns should be between -0.5 and 0.5.
-lnQuat.prototype.turn = function( turns ) {
-	console.log( "This will have to figure out the normal, and apply turns factionally to each axis..." );
-	const q = this;
-	// proper would, again, to use the current values to scale how much gets inceased...
-	this.x += (turns*2*Math.PI) /3;
-	this.y += (turns*2*Math.PI) /3;
-	this.z += (turns*2*Math.PI) /3;
-	return this;
-}
-
-
-// this increases the rotation, by an amount in a certain direction
-// by euler angles even!
-// turns is from 0 to 1 turn; most turns should be between -0.5 and 0.5.
-lnQuat.prototype.torque = function( direction, turns ) {
-	const q = this;
-	const r  = direction.r;
-
-	const rDiv = (turns*2*Math.PI)/r;
-	this.x += direction.x*rDiv;
-	this.y += direction.y*rDiv;
-	this.z += direction.z*rDiv;
-	return this;
-}
-
-
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, from, right) {
 	const q = this;
 	//this.update();
 	if( "undefined" === typeof del ) del = 1.0;
-	let ax, ay, az;
-	if( SLERPbasis ) {
-		if( from ) {
-			const target = {x:this.x+from.x, y:this.y+from.y, z:this.z+from.z };
-			const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-			const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
-			
-		        
-			const r = longslerp( from, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, θ:targetAng  }, del );
-			ax = r.x;
-			ay = r.y;
-			az = r.z;
-		} else {
-			const r = longslerp( {nx:0,ny:0,nz:0, θ:0}, this, del );
-			ax = r.x;
-			ay = r.y;
-			az = r.z;
-		}
-	} else {
-		ax = (from?from.x:0) + (q.x*del);
-		ay = (from?from.y:0) + (q.y*del);
-		az = (from?from.z:0) + (q.z*del);
-	}
+	const ax= q.nx, ay= q.ny, az= q.nz;
+
 	const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
 
-	const nt = sqlen;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
+	const nt = sqlen * del;
 	const s  = Math.sin( nt ); // sin/cos are the function of exp()
 	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
 	const c = 1- c1;
@@ -851,8 +798,6 @@ lnQuat.prototype.accel = function( v, steps, internal ) {
 	this.x  = qx * qθ;
 	this.y  = qy * qθ;
 	this.z  = qz * qθ;
-	this.s = Math.sin( qθ/2 );
-	this.qw = Math.sin( qθ/2 );
 	this.dirty = false;
 	return this;
 }
@@ -886,9 +831,6 @@ lnQuat.prototype.apply = function( v ) {
 		const vx = v.x , vy = v.y , vz = v.z;
 		// (1-cos theta) * dot
 		// 1-cos theta * cos(angle between vectors)
-		// // (1-cos(x))cos(y)
-		// //  = 2 cos(y) sin^2(x/2)
-		// //  = 1/2 (-cos(x - y) + 2 cos(y) - cos(x + y))
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
@@ -900,7 +842,13 @@ lnQuat.prototype.apply = function( v ) {
 
 //-------------------------------------------
 
-lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
+// this, 
+//   v ector input to rotate.  (or value)
+//  del is the amount of this to apply 
+// if q2 is specified, then the delta is between q2 and this (q)
+// del2 is the amount of Q2 to apply to (timescalar)
+
+lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 	if( v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
@@ -929,47 +877,27 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			let ax = 0;
 			let ay = 0;
 			let az = 0;
-/*************** 
- * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
-   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
-   by the sin( ||Q2||_1 + ||Q1||_2 *del )
-#*/
-			if( SLERP ) {
-				const target = {x:this.x+q2.x, y:this.y+q2.y, z:this.z+q2.z };
-				const targetLen = Math.sqrt( target.x*target.x + target.y*target.y + target.z*target.z );
-				const targetAng = targetLen;//Math.abs( target.x )+Math.abs( target.y )+Math.abs( target.z );
-				
+			const target = new lnQuat();
+			slerp2( q2, q, del, target).update();
 
-				const r = longslerp( q2, {nx:target.x/targetLen, ny:target.y/targetLen, nz:target.z/targetLen, θ:targetAng  }, del );
-				if( result2 ) 
-					result2.portion = r;
-				ax = r.x;
-				ay = r.y;
-				az = r.z;
-			}
-			else 
-//****************************************/
-			{
-				ax = this.x * del + q2.x * del2;
-				ay = this.y * del + q2.y * del2;
-				az = this.z * del + q2.z * del2;
-			}
-
+			ax = target.nx;
+			ay = target.ny;
+			az = target.nz;
+			
 			if( result2 && !result2.portion )
-				result2.portion = new lnQuat( 0, ax, ay, az );
+				result2.portion = target;
 
-			const θ = Math.sqrt(ax*ax+ay*ay+az*az);
+			const θ = target.θ;
 
 			if( !θ ) {
 				return {x:v.x, y:v.y, z:v.z }; // 1.0
 			}
 			const s  = Math.sin( θ/2 );  //;
-			const nst = θ?s/θ:1;         // sin(theta)/r    normal * sin_theta
 			const qw = Math.cos( θ/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 		        
-			const qx = θ?ax*nst:q2?q2.nx:0;
-			const qy = θ?ay*nst:q2?q2.ny:1;
-			const qz = θ?az*nst:q2?q2.nz:0;
+			const qx = ax*s;
+			const qy = ay*s;
+			const qz = az*s;
 		        
 			const tx = 2 * (qy * v.z - qz * v.y);
 			const ty = 2 * (qz * v.x - qx * v.z);
@@ -979,16 +907,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, del2, result2 ) {
 			       , v.z + qw * tz + ( qx * ty - tx * qy ) );
 		}
 		else {
-			if( SLERP ) {
-				const r = longslerp( {nx:0,ny:0,nz:0,θ:0}, this, del );
-				ax = r.x;
-				ay = r.y;
-				az = r.z;
-			} else {
-				ax = this.x * del;
-				ay = this.y * del;
-				az = this.z * del;
-			}
+			ax = this.x * del;
+			ay = this.y * del;
+			az = this.z * del;
 		}
 		if( result2 && !result2.portion )
 			result2.portion = new lnQuat( 0, ax, ay, az );
@@ -1019,131 +940,52 @@ lnQuat.prototype.slerpRel = function( q2, del ) {
 	return result;
 }
 
-lnQuat.prototype.slerp = function( q2, del ) {
-	const q = this;
-	if( 'undefined' === typeof del ) del = 1.0;
-	this.update();
-	// 3+2 +sqrt+exp+sin
-        if( !(q.θ*del) && !q2 ) {
-		// v is unmodified.
-		return new lnQuat( this )
-	} else  {
-		if( q2 ) {
-
-			let ax = 0;
-			let ay = 0;
-			let az = 0;
-/*************** 
- * Okay; look, I made short attempt at slerp... it requires going to a quaternion...
-   ||Q||_2 * sin(||Q||_1) and then using the cos slerp to get the angle and divide back out
-   by the sin( ||Q2||_1 + ||Q1||_2 *del )
-#*/
-			if( SLERP ) {
-				return longslerp( this, q2, del );
-			}
-			else 
-//****************************************/
-			{
-				ax = this.x * (1-del) + (del)*q2.x;
-				ay = this.y * (1-del) + (del)*q2.y;
-				az = this.z * (1-del) + (del)*q2.z;
-			}
-	
-			return new lnQuat( 0, ax, ay, az );
-		}
-		else {
-			if( SLERP ) {
-				return longslerp( {nx:0,ny:0,nz:0,θ:0}, this, del );
-			} else {
-				ax = this.x * del;
-				ay = this.y * del;
-				az = this.z * del;
-			}
-		}
-		return new lnQuat( 0, ax, ay, az );
-	}
-}
-
 
 lnQuat.prototype.applyInv = function( v ) {
 	return this.applyDel( v, -1 );
 }
 
-lnQuat.prototype.slerp2 = function( p, t, target, oct ) {
+lnQuat.prototype.slerp = function( p, t, target, oct ) {
+	if( SLERP ) {
+		return longslerp( this, p, t,target );
+	}
+
 	return slerp2( this, p, t, target, oct )
 }
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
-function slerp2( q, p, t, target, oct ) {
+const axisTemp = {x:0,y:0,z:0};
+function slerp2( q, p, t, target, external ) {
+	external = external || 0;
 	// A dot B   = cos( angle A->B )
 	// cross product of the rotations is a rotation perpendicular to the two
 	// with an arc length of arccos( q x p ), scaled by 0-1 passed in as T.
-	const ax_cos = q.ny * p.nz - q.nz * p.ny;
-	const ay_cos = q.nz * p.nx - q.nx * p.nz;
-	const az_cos = q.nx * p.ny - q.ny * p.nx;
-	const a_cos = Math.sqrt(ax_cos*ax_cos+ay_cos*ay_cos+az_cos*az_cos);
-	const th = acos( a_cos ) * t;
-	const ax = ax_cos / a_cos;
-	const ay = ay_cos / a_cos;
-	const az = az_cos / a_cos;
-
-	// in this case it will alwasy be 0.
-	const AdotB = 0;//(q.nx*ax + q.ny*ay + q.nz*az);
-
-	const xmy = (th - q.θ)/2; // X - Y  (x minus y)
-	const xpy = (th + q.θ)/2  // X + Y  (x plus y )
-	const cxmy = Math.cos(xmy);
-	const cxpy = Math.cos(xpy);
-	// this is a portion from zero to 2 (-1  2+0,  0  1+1,  1  0+2 ).
-	// sin(angle between the two)
-	const cosCo2 = ( cxmy + cxpy )/2;
-
-	let ang = acos( cosCo2 )*2 + ((oct|0)) * (Math.PI*4);
-	// only good for rotations between 0 and pi.
-
-	if( ang ) {      // as bc     bs ac       as bs
-		const sxmy = Math.sin(xmy);
-		const sxpy = Math.sin(xpy);
-		// vector rotation is just...
-		// when atheta is small, aaxis is small pi/2 cos is 0 so this is small
-		// when btheta is small, baxis is small pi/2 cos is 0 so this is small
-		// when both are large, cross product is dominant (pi/2)
-
-		const ss1 = sxmy + sxpy
-		const ss2 = sxpy - sxmy
-		const cc1 = cxmy - cxpy
-
-		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
-		// the following expression is /2 (has to be normalized anyway keep 1 bit)
-		// and is not normalized with sin of angle/2.
-		const crsX = (ay*q.nz-az*q.ny);
-		const crsY = (az*q.nx-ax*q.nz);
-		const crsZ = (ax*q.ny-ay*q.nx);
-		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-
-		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-
-		target.θ  = ang;
-		target.nx = Cx*Clx;
-		target.ny = Cy*Clx;
-		target.nz = Cz*Clx;
-
-		target.x  = target.nx*ang;
-		target.y  = target.ny*ang;
-		target.z  = target.nz*ang;
-
-		target.dirty = false;
-	} else {
-		// two axles are coincident, add...
-		target.θ = 0;
-		target.x = 0;
-		target.y = 0;
-		target.z = 0;
-		q.dirty = true;
+	if( !q.θ) {
+		target.nx = p.nx;
+		target.ny = p.ny;
+		target.nz = p.nz;
+		target.θ = t * p.θ;
+		target.x = target.nx * target.θ;
+		target.y = target.ny * target.θ;
+		target.z = target.nz * target.θ;
+		return target;
 	}
-	return target;
+
+	target.set( p );
+	// remove the rotation of q from p...
+	finishRodrigues( target, Math.floor( q.θ/(Math.PI*2)), q.nx, q.ny, q.nz, -q.θ );
+	// which sets target as the initial P rotation.
+	
+	axisTemp.x = target.nx;
+	axisTemp.y = target.ny;
+	axisTemp.z = target.nz;
+	let tmpA;
+	if( !external ) // delta angle is from an internal source
+		tmpA = q.applyDel( axisTemp, 1 );
+	else
+		tmpA = axisTemp;
+	const angle = target.θ;
+	target.set(q);
+	return finishRodrigues( target, Math.floor( q.θ/(Math.PI*2)), tmpA.x, tmpA.y, tmpA.z, angle*t );
 }
 
 
@@ -1168,7 +1010,6 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 			oct--;
 	}
 	*/
-
 	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
 	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
 	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
@@ -1179,6 +1020,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 	// cos(angle result)
 	//const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
+	// ( 2 cos(x) cos(y) - 2 A sin(x) sin(y) ) / 2
 	const cosCo2 = ( ( AdotB )*(cxpy - cxmy) + cxmy + cxpy )/2;
 	//   (1-cos(A))cos(x-y)+(1+cos(A))cos(x+y)
 	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
@@ -1338,6 +1180,7 @@ function yaw( q, th ) {
 }
 
 lnQuat.prototype.up = function() {	
+	// just go ahead and get the basis!
 	const q = this;
 	if( q.dirty ) q.update();
 	// input angle...
@@ -1405,8 +1248,8 @@ function SphereToXY( q, v, range ){
 // x/y is an angle to map... 
 function updateGridXY(q, x, y, o ){
 
-				//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
-				//lnQ.dirty = true;
+	//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
+	//lnQ.dirty = true;
 	const qlen = Math.sqrt(x*x + y*y);
 
 	const qnx = qlen?x / qlen:0;
@@ -1560,12 +1403,6 @@ class EulerRotor {
 			const t4 = this.z.update().freeSpin( t3.θ, t3 );
 
 			return t4;	
-
-			const z = this.lnQuat.update();
-			const a = this.x.freeSpin( this.z.θ/2, this.z );
-			const b = this.y.freeSpin( a.θ/2, a );
-			const c = this.z.freeSpin( b.θ/2, b );
-			return new EulerRotor( c.x, c.y, c.z );
 		}
 						
 		const a = this.x.apply( v );
@@ -1583,7 +1420,7 @@ class EulerRotor {
 lnQuat.quatToLogQuat = quatToLogQuat;
 
 // Accept any generalized quaternion {w,x,y,z}
-function quatToLogQuat( q ) {
+function quatToLogQuat( q, target ) {
 	const w = q.w;
 	const r = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 	if( ASSERT )
@@ -1595,32 +1432,30 @@ function quatToLogQuat( q ) {
 	
 	const ang = acos(w/bal)*2;
 	const s = bal*Math.sin(ang/2);
+	target = target || new lnQuat();
 	if( !s ) {
 		if( r )
-			return new lnQuat( 0, q.x/r, q.y/r, q.z/r ).update();	
+			return target.set( 0, q.x/r, q.y/r, q.z/r ).update();	
 		else
-			return new lnQuat( 0, 0, 0, 0 ).update();	
+			return target.set( 0, 0, 0, 0 ).update();	
 	}
-	return new lnQuat( ang, q.x/s, q.y/s, q.z/s ).update();
+	return target.set( ang, q.x/s, q.y/s, q.z/s ).update();
 }
 
-function quatArrayToLogQuat( q ) {
-		return quatToLogQuat( {x:q[0],y:q[1],z:q[2],w:q[3]} );
- }
-//module.exports = exports = lnQuat
+function quatArrayToLogQuat( q, target ) {
+	return quatToLogQuat( {x:q[0],y:q[1],z:q[2],w:q[3]} );
+}
 
 
-
-
-
-function longslerp(a, b, t ) {
-	
+function longslerp(a, b, t, target ) {
 	const u = [ a.nx*a.θ, a.ny*a.θ, a.nz* a.θ]
 	const v = [ b.nx*b.θ, b.ny*b.θ, b.nz* b.θ]
 	var p = axisAngleToQuaternion(u);
 	var q = axisAngleToQuaternion(v);
+	// do proper quaternion slerp thanks to  Richard Copley <buster at buster dot me dot uk>
 	var r = slerp(p, q, t);
-	return quatArrayToLogQuat( r );		
+	// and set the target to the back-converted result.
+	return quatArrayToLogQuat( r, target );		
 }
 
 // -*- coding: utf-8; -*-

@@ -392,7 +392,7 @@
 			var start = (new Date()).getTime();
 
 	        	if( geometryNormals  ) 
-				tickCallback = window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+					tickCallback = window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 		
 	          var opts = {
         	          elements : null,
@@ -857,7 +857,7 @@ function blurSlider( slider ) {
 		// animation loop
 		function animate() {
 		        if( shapes.length && tickCallback )
-				tickCallback( shapes );
+					tickCallback( shapes );
 			// loop on request animation loop
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating

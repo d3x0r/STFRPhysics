@@ -88,19 +88,6 @@ function makeQuat(p,y,r) {
 	}
 }
 
-function test1() {
-	// this test fails... although I would think that Y and PQ5 should be close
-	const P = new lnQuat( 0, 0.1, 0.2, 0.3 ).update();
-	const Q = new lnQuat( 0, -0.3, -0.1, 0.2 ).update();
-	const PQ1 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ, Q );
-	const PQ5 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ*0.5, Q );
-	SLERP=true;
-	const X = P.slerp( PQ1, 0.5 );
-	SLERP=false;
-	const Y = P.slerp( PQ1, 0.5 );
-	console.log( "Things:", X, Y, PQ5 );
-}
-//test1();
 
 function mkQuat( a,b,c,d ){
 	//const scalar = Math.sqrt(a*a+b*b+c*c+d*d);
@@ -289,12 +276,6 @@ function drawAnalogArm(curSliders,slerp) {
 		t5.add( t4 );
 	}
 
-	// compute non-inertial differential
-	const r2_ = new lnQuat(t2);
-	const r3_ = new lnQuat(t3);
-	const r4_ = new lnQuat(t4);
-	const r5_ = new lnQuat(t5);
-
 	if( keepInertia ) {
 		//t2.add( lnQ1 );
 		//t3.add( t2 );
@@ -304,7 +285,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
-	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
+	const Rm = Ro;
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 
@@ -318,10 +299,8 @@ function drawAnalogArm(curSliders,slerp) {
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
 	const tmpQ = new lnQuat();
-	const tmpQ2= new lnQuat();
 	let tmpA;
 	const startAt = new lnQuat( );
-	const avQ = new lnQuat( );
 
 	for( var n = 0; n < 5; n++ ) {
 		if( showLineSeg[n] && drawRotationSquares ) {
@@ -376,13 +355,7 @@ function drawAnalogArm(curSliders,slerp) {
 			//prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
 			//draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
-		/*
-		startAt.x += tmpQ.x;
-		startAt.y += tmpQ.y;
-		startAt.z += tmpQ.z;
-		startAt.dirty = true;
-		startAt.update();
-		*/
+
 		// draw the long segment to match digital arm.
 		if( showArms )
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
@@ -574,14 +547,14 @@ function old_drawAnalogArm(curSliders,slerp) {
 	lnQ_current[4] = t5;
 
 	// compute non-inertial differential
-	const r2_ = t2.sub2( lnQ1 );
-	const r3_ = t3.sub2( t2 );
-	const r4_ = t4.sub2( t3 );
-	const r5_ = t5.sub2( t4 );
+	//const r2_ = t2.sub2( lnQ1 );
+	//const r3_ = t3.sub2( t2 );
+	//const r4_ = t4.sub2( t3 );
+	//const r5_ = t5.sub2( t4 );
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
 	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
-	const Rm = [ lnQ1,  r2_,  r3_,  r4_,  r5_];
+	const Rm = Ro;
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 
@@ -609,7 +582,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
-			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
+			prior = delta.applyDel( shortArm, 1, from, s*timeScale/100.0, result );
 			draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
