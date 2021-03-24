@@ -504,16 +504,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-	//for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) 
 	{
-		let fixAxleRotation = zz===1;
-
-	/*
-		const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
-		const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( (( internalAccel )?1:-1)*t2.θ, t2, timeScale ):new lnQuat(lnQ3);
-		const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( (( internalAccel )?1:-1)*t3.θ, t3, timeScale ):new lnQuat(lnQ4);
-		const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( (( internalAccel )?1:-1)*t4.θ, t4, timeScale ):new lnQuat(lnQ5);
-	*/
 	
 	const qq2 = lnQ1.applyDel( { x:lnQ2.x,y:lnQ2.y,z:lnQ2.z },  internalAccel?1:0 )
 	const t2 = new lnQuat( 0, lnQ1.x,lnQ1.y,lnQ1.z).update().freeSpin( lnQ2.θ, qq2, timeScale );
@@ -568,7 +559,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
-			prior = delta.applyDel( shortArm, 1, from, s*timeScale/100.0, result );
+			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
 			draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
@@ -583,7 +574,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 		if( showArms){
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			pushNColor(n, zz/3+0.4);
+			pushNColor(n, 0.4);
 		}
 
 		function draw(q,from,to,delta)
