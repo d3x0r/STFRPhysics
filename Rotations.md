@@ -80,9 +80,9 @@ a scalar(T) of 0 to 1.
    
    R  = Q RRF (P` * T) ; result Q rotated by P` scaled from 0 to 1.  
    
-    - or -
+    - or as a single complete step -
 	
-   R = P RRF Q         ; rotate the frame P into Q-1
+   R = P RRF Q         ; rotate the frame P into Q
                        ;  (is this also PT RRF Q)?
 ```	
 
@@ -102,4 +102,17 @@ axis-angle to the starting frame.
    
    R   = Q RRF (P`` * T) ; result Q rotated by P`` scaled from 0 to 1.
 ```
+
+
+## Caveats
+
+This system is itself self consistent, and converts to quaternion or matrix easily.  When computing
+rotation factors from physics, such as an impact generting a torque on a 3D body, the result of that 
+calculation is a cross product, and is scaled both by the length of the vectors from the bodie's center
+of gravity and velocity of the strike, and by the sin of the angle.  `||A|| ||B|| sin(theta) N` ends
+up with the rotational velocity already scaled by the sin of the angle, like the vector part(i,j,k) 
+of a quaternion.  This makes the physics calculations and this system fairly incompatible; and such 
+cross products would have to be represented as a different type to carry its `angle` or `sin(angle)`
+as a separate scalar from its direction normal.
+
 
