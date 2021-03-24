@@ -43,10 +43,12 @@ https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_composition_o
 
   result Angle = cos^-1 ( 1/2 ((1 - A ∙ B) cos((a - b)/2) + (1 + A ∙ B) cos((a + b)/2)) ) * 2
   
-  tmp_axis = 1/2 ( 
-         (-sin((a - b)/2) + sin((a + b)/2)) B 
-       + ( sin((a - b)/2) + sin((a + b)/2)) A 
-       + ( cos((a - b)/2) - cos((a + b)/2))( A × B ) )
+    - this version of the axis computation has a (* 1/2), but since it's being 
+      normalized anyway, can skip the multiplication by a constant
+      
+  tmp_axis = (-sin((a - b)/2) + sin((a + b)/2)) B 
+           + ( sin((a - b)/2) + sin((a + b)/2)) A 
+           + ( cos((a - b)/2) - cos((a + b)/2))( A × B ) )
   
   result_axis = tmp_axis / ||tmp_axis||
   
