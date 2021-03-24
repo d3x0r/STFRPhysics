@@ -52,7 +52,7 @@ https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_composition_o
   
   result_axis = tmp_axis / ||tmp_axis||
   
-``
+``'
 
 ## Rotating a vector (V RV Q)
 
