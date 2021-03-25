@@ -258,8 +258,6 @@ function mkQuat( a,b,c,d ){
 				const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 				
 				q.θ  = ang;
-				q.qw = cosCo2;
-				q.s  = Math.sin(ang/2);
 				q.nx = Cx*Clx;
 				q.ny = Cy*Clx;
 				q.nz = Cz*Clx;
