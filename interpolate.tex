@@ -1,0 +1,166 @@
+http://mathb.in/51301
+
+//http://mathb.in/51298
+
+
+Rotate vector V to V'
+---
+###given
+ $V$ is a vector representing a point in space to be rotated around an axis
+
+($A$, $a$) defining the axis and angle to rota- te; this is also a definition of a frame...
+
+###result
+ $V'$ is a vector rotated by the scaled frame.
+ 
+
+
+---
+
+- $ V' =  \cos(a) V + \sin( a )( V \times A) + (1-\cos( a )) ( A \cdot V ) A $
+
+### notes:
+ - To apply inverse multiply $a$ by $-1$.  The axis might also be multiplied by -1; the result is the same, computationally it's fewer operations to just modify the angle.
+ - to apply a partial timestep scale $a$ by $dT$
+
+
+---
+## Rotate A around B
+
+###given
+A frame defined by ($A$, $a$) as the Axis and Angle, or  $(x,y,z)$ unit vector, and $\theta$. 
+
+Another frame ($B$, $b$) as the Axis and Angle  $(x,y,z)$ unit vector, and $\theta$.
+
+###result 
+
+($R'$,$\theta$) that is the composite frame rotating A around B.
+
+---
+
+- $  \theta = 2 \cos^{-1} ( \cos\frac b 2\cos\frac a 2-\sin\frac b 2\sin\frac a 2 ( A \cdot B ) )  $
+  
+- $   R = (\sin\frac b 2\cos\frac b 2)B 
+           + (\sin\frac a 2\cos\frac b 2)A 
+           + (\sin\frac a 2\sin\frac b 2)( A \times B )$
+
+- $  R' = \frac R {||R||} $  
+
+or
+
+- $\theta = 2 \cos^{-1} ( \frac { (1 - A \cdot B) \cos( \frac {a - b} 2) + (1 + A \cdot B) \cos(\frac {a + b} 2) } 2 ) $
+
+
+      
+- $  R = (\sin \frac {a + b} 2 - \sin \frac {a - b} 2) B 
+           + ( \sin\frac {a - b} 2 + \sin\frac {a + b} 2) A 
+           + ( \cos\frac {a - b} 2 - \cos\frac {a + b} 2)( A × B ) )$
+
+  - this version of the axis computation has a divide by $2$, but since it's being  normalized anyway, can skip the multiplication by a constant
+
+- $  R' = \frac R {||R||} $  
+
+### notes:
+ - To apply inverse multiply $a$ by $-1$ 
+ - to apply a partial timestep scale $a$ by $dT$
+
+
+
+
+
+---
+
+# Interpolation
+
+### Given
+- A frame $Q$ as $(Q,q)$
+- Another frame $P$ and $(P,p)$
+- A scalar $D$ from $0$ to $1$ of the orientation between the two frames to compute.
+
+### result
+
+- $Q'$ as a step 
+
+## Operations
+
+- Apply `Rotate A around B` to rotate $P$ around the $Q$ inversed, result with ($T$, $t$);
+- Apply `Rotate vector V to V' ` to rotate $T$ around $Q$, result with $T'$
+- use `Rotate A around B` to rotate $Q$ around ($T'$,$t \cdot D$).  The angle may have a scalar applied between 0,1.  Result with $Q'$  as $(Q',q')$
+
+
+# Integration
+
+(to be reveiwed)
+---
+
+- `Q.freeSpin(P) // update the frame Q by rotating around P`
+- `newV = Q.apply(V,dt) // rotates vector V into frame scaled by dT(for example +/-1)  `
+
+Angular Velocity is considered as an axis-angle frame rotation.
+
+$R = [x,y,z]$ as a quaternion $\cos(\frac {||R||} 2) + sin(\frac {||R||} 2)( xi + yj + zk )$
+
+$A = [a,b,c]$ as a quaternion $ 0 + ai + bj + ck$
+
+$A \times Q$ or $Q \times A$ results as a vector which is used as angle-axis, or rotation quaternion
+
+## External Force 
+
+- `R_0 = R.freeSpin( R.apply( A, -1 ) );`
+- `R_N = R_[N-1].freeSpin( R_[N-1].apply( A, -1 ) );`
+
+
+$R_0 = R \times( A \times R ) )$
+
+$R_N = R_{(N-1)} \times(  A_ \times R_{(N-1)} ) )$
+
+## Internal force
+
+- `R_0 = R.freeSpin( R.apply( A, 1 ) );`
+- `R_N = R_[N-1].freeSpin( R_[N-1].apply( A, 1 ) );`
+
+$R_0 = R \times( R \times A ) )$
+
+$R_N = R_{(N-1)} \times(  R_{(N-1)} \times A ) )$
+
+
+
+## Rodrigues' Rotation Formula Composite 
+
+given 
+
+- ${Q} = [n,\theta]$ n is a normal vector/axis of rotation
+- ${P} = [n,\theta]$ $\theta$ is the angle of rotation - often positive.
+
+- 
+
+ - $ A = Q_n \cdot P_n $
+ - $ dA = d(A \cdot B) = 1 \cdot B dA + A \cdot 1 dB $
+
+ - $ B = \cos \frac {{ Q_\theta} + P_{\theta}} 2 $  
+ - $ dB = d(cos(a + b)) = -sin(a + b) da - sin(a + b) db$
+
+ - $ C = \cos \frac {{ Q_\theta} - P_{\theta}} 2 $
+ - $ dC = d(cos(a - b)) = -sin(a - b) da + sin(a - b) db $
+
+ - $ D = \frac { C( 1 - A )  + B(1+A) } 2 $
+ - $ dD = d(1/2 ((1 + A) B + C(1 - A))) = 1/2 (B - C'(1 - A)) dA + 1/2 (1 + A) dB $
+
+ - $ {Result}_{\theta} = 2 \arccos( D ) $
+
+- 
+ - $ E = \sin \frac {{ Q_\theta} + P_{\theta}} 2 $
+ - $ dE = d(sin(a + b)) = cos(a + b) da + cos(a + b) db $
+
+ - $ F = \sin \frac {{ Q_\theta} - P_{\theta}} 2 $
+ - $ dF = d(sin(a - b)) = cos(a - b) da - cos(a - b) db $
+
+ - $ G = ( Q_n \times P_n ) (C-B) + P_n (E+F) + Q_n (E-F) $
+ - $ d(A \cross B) = 1\cross B dA + A\cross 1 dB $
+
+ - $ {Result}_n = \frac G  {||G||} $
+ 
+
+$ {Result} = Result_{\theta} {Result}_n  $
+
+

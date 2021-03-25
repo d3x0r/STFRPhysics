@@ -430,7 +430,7 @@ function drawAnalogArm(curSliders,slerp) {
 			{
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
 					if( drawRotationAxles ) {
-						if( SLERP || addN2 ) {
+						if( lnQuat.SLERP || addN2 ) {
 							normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
@@ -2014,6 +2014,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		}
 	        
 
+		if( document.getElementById( "useSLERP" )?.checked ) {
+			lnQuat.SLERP = true;
+		}else 			
+			lnQuat.SLERP = false;
 
 	        
 		check = document.getElementById( "normalizeTangents");

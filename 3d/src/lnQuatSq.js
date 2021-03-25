@@ -3,8 +3,7 @@ const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
 const ASSERT = false;
-export let SLERP = false;
-var SLERPbasis = false;
+
 const abs = (x)=>Math.abs(x);
 
 const np = -Math.PI;
@@ -78,6 +77,9 @@ function lnQuat( theta, d, a, b, e ){
 	this.dirty = true; // whether update() has to do work.
 	this.set( theta,d,a,b,e);
 }
+
+lnQuat.SLERP = false;
+lnQuat.sinNormal = true;
 
 lnQuat.setTwistDelta = function(t) {
 	twistDelta = t;
@@ -862,7 +864,6 @@ lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 		return result.refresh();
 	}
 	const q = this;
-	let ax, ay, az;
 	if( 'undefined' === typeof del ) del = 1.0;
 	this.update();
 	// 3+2 +sqrt+exp+sin
@@ -877,8 +878,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 			let ax = 0;
 			let ay = 0;
 			let az = 0;
+
 			const target = new lnQuat();
-			slerp2( q2, q, del, target).update();
+			q2.slerp( q, del, target).update();
 
 			ax = target.nx;
 			ay = target.ny;
@@ -892,33 +894,25 @@ lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 			if( !θ ) {
 				return {x:v.x, y:v.y, z:v.z }; // 1.0
 			}
-			const s  = Math.sin( θ/2 );  //;
-			const qw = Math.cos( θ/2 );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
-		        
-			const qx = ax*s;
-			const qy = ay*s;
-			const qz = az*s;
-		        
-			const tx = 2 * (qy * v.z - qz * v.y);
-			const ty = 2 * (qz * v.x - qx * v.z);
-			const tz = 2 * (qx * v.y - qy * v.x);
-			return new vectorType( v.x + qw * tx + ( qy * tz - ty * qz )
-			       , v.y + qw * ty + ( qz * tx - tz * qx )
-			       , v.z + qw * tz + ( qx * ty - tx * qy ) );
-		}
-		else {
-			ax = this.x * del;
-			ay = this.y * del;
-			az = this.z * del;
+
+			// this is still the half-angle quaternion rotate.
+			const s = Math.sin( θ );  //;
+			const c = Math.cos( θ );  // quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+			
+			const qx = ax, qy = ay, qz = az;
+			const vx = v.x , vy = v.y , vz = v.z;
+			// (1-cos theta) * dot
+			const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+			// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
+			return new vectorType(
+				  vx*c + s*(qy * vz - qz * vy) + qx * dot
+				, vy*c + s*(qz * vx - qx * vz) + qy * dot
+				, vz*c + s*(qx * vy - qy * vx) + qz * dot );
 		}
 		if( result2 && !result2.portion )
-			result2.portion = new lnQuat( 0, ax, ay, az );
+			result2.portion = new lnQuat( 0, q.x*del, q.y*del, q.z * del );
 
-		const θ = Math.sqrt(ax*ax+ay*ay+az*az);
-		if( !θ ) {
-			return new vectorType( v.x, v.y, v.z )
-		}
-		
+		// rodrigues full angle multiply
 		const c = Math.cos(q.θ*del);
 		const s = Math.sin(q.θ*del);
 
@@ -928,9 +922,9 @@ lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
-			  v.x*c + s*(qy * vz - qz * vy) + qx * dot
-			, v.y*c + s*(qz * vx - qx * vz) + qy * dot
-			, v.z*c + s*(qx * vy - qy * vx) + qz * dot );
+			  vx*c + s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
 	}
 }
 
@@ -946,7 +940,7 @@ lnQuat.prototype.applyInv = function( v ) {
 }
 
 lnQuat.prototype.slerp = function( p, t, target, oct ) {
-	if( SLERP ) {
+	if( lnQuat.SLERP ) {
 		return longslerp( this, p, t,target );
 	}
 
@@ -995,13 +989,11 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	oct = oct || 0;
 	// A dot B   = cos( angle A->B )
 	// cos( C/2 ) 
-	// this is also spherical cosines... cos(c)=cos(a)*cos(b)+sin(a)sin(b) cos(C)
-	// or this is also spherical cosines... -cos(C) = cos(A)*cos(B)-sin(A)sin(B) cos(c)
-	//const angleMax = ( q.θ + Math.abs(th) );
 	//  cos(angle between the two rotation axii)
 	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
 	/*
-	// oribtal hopping mechanic... 
+	// orbital hopping mechanic... 
+	// hypothetical relation mass to orbital
 	if( AdotB > 0.99 ) {
 		if( q.θ + th > Math.PI*4 )
 			oct++;
@@ -1010,6 +1002,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 			oct--;
 	}
 	*/
+
 	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
 	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
 	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
@@ -1048,8 +1041,17 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
 		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-
+		const Clx = (lnQuat.sinNormal)
+		          ?(1/(2*Math.sin( ang/2 )))
+		          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		if(0) {
+			// this normalizes the rotation so there's no overflows.
+			const other = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+			if( Math.abs( other - Clx ) > 0.001 ) {
+				console.log( "Compare A and B:", Clx, other, th, q.θ );
+			}
+		}
+		q.rn = Clx; // I'd like to save this to see what the normal actually was
 		q.θ  = ang;
 		q.nx = Cx*Clx;
 		q.ny = Cy*Clx;
@@ -1421,6 +1423,7 @@ lnQuat.quatToLogQuat = quatToLogQuat;
 
 // Accept any generalized quaternion {w,x,y,z}
 function quatToLogQuat( q, target ) {
+	target = target || new lnQuat();
 	const w = q.w;
 	const r = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 	if( ASSERT )
@@ -1432,30 +1435,25 @@ function quatToLogQuat( q, target ) {
 	
 	const ang = acos(w/bal)*2;
 	const s = bal*Math.sin(ang/2);
-	target = target || new lnQuat();
 	if( !s ) {
 		if( r )
 			return target.set( 0, q.x/r, q.y/r, q.z/r ).update();	
 		else
 			return target.set( 0, 0, 0, 0 ).update();	
 	}
-	return target.set( ang, q.x/s, q.y/s, q.z/s ).update();
+	return target.set( 0, ang*q.x/s, ang*q.y/s, ang*q.z/s ).update();
 }
 
 function quatArrayToLogQuat( q, target ) {
-	return quatToLogQuat( {x:q[0],y:q[1],z:q[2],w:q[3]} );
+	return quatToLogQuat( {x:q[0],y:q[1],z:q[2],w:q[3]}, target );
 }
 
 
 function longslerp(a, b, t, target ) {
-	const u = [ a.nx*a.θ, a.ny*a.θ, a.nz* a.θ]
-	const v = [ b.nx*b.θ, b.ny*b.θ, b.nz* b.θ]
-	var p = axisAngleToQuaternion(u);
-	var q = axisAngleToQuaternion(v);
+	var p = axisAngleToQuaternion([ a.x, a.y, a.z]);
+	var q = axisAngleToQuaternion([ b.x, b.y, b.z]);
 	// do proper quaternion slerp thanks to  Richard Copley <buster at buster dot me dot uk>
-	var r = slerp(p, q, t);
-	// and set the target to the back-converted result.
-	return quatArrayToLogQuat( r, target );		
+	return quatArrayToLogQuat( slerp(p, q, t), target );		
 }
 
 // -*- coding: utf-8; -*-
