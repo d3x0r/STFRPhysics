@@ -6,21 +6,12 @@ const ASSERT = false;
 
 const abs = (x)=>Math.abs(x);
 
-const np = -Math.PI;
-const pp = Math.PI;
 const p2 = 2*Math.PI;
-//       -4-3 -3-2 -2-1 -1-0  0  0-1 1-2 2-3 3-4
-const grid =[[ 0, p2, p2, 0,  0,  0, p2, p2,  0 ] // -4 - -3
-            ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ] // -3 - -2
-            ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ] // -2 - -1
-            ,[pp, pp, np, np, 0, pp, pp, np, np ] // -1-0
-
-            ,[ 0,  0,  0,  0, 0,  0,  0,  0,  0 ]  //0-0
-
-            ,[ 0, p2, p2,  0, 0,  0, p2, p2,  0 ]  //0-1
-            ,[np, np, pp, pp,p2, np, np, pp, pp ]  //1-2
-            ,[p2,  0,  0, p2,p2, p2,  0,  0, p2 ]  //2-3
-            ,[0,  p2, p2, 0, 0, 0,   p2, p2, 0 ]   //3-4
+//            0-1 1-2 2-3 3-4
+const grid =[[ 0, p2, p2,  0 ]  //>0 - 1
+            ,[p2,  0,  0, p2 ]  //1-2
+            ,[p2,  0,  0, p2 ]  //2-3
+            ,[ 0, p2, p2,  0 ]   //3-4
          ];
 
 // 'fixed' acos for inputs > 1
@@ -224,62 +215,15 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						return this.update();
 					}
 
-					const gridlat = 
-						( lat < -Math.PI*3 ) ?0
-						:( lat < -Math.PI*2 ) ?1
-						:( lat < -Math.PI*1 ) ?2
-						:( lat < 0 ) ?3
-						:( lat === 0 ) ?4
-						:( lat > Math.PI*3 ) ?8
-						:( lat > Math.PI*2 ) ?7
-						:( lat > Math.PI*1 ) ?6
-						:/*( lat > Math.PI*0 ) ?*/ 5;
-					const gridlng = 
-						( lng < -Math.PI*3 ) ?0
-						:( lng < -Math.PI*2 ) ?1
-						:( lng < -Math.PI*1 ) ?2
-						:( lng < 0 ) ?3
-						:( lng === 0 ) ?4
-						:( lng > Math.PI*3 ) ?8
-						:( lng > Math.PI*2 ) ?7
-						:( lng > Math.PI*1 ) ?6
-						:/*( lng > Math.PI*0 ) ?*/ 5;
-
-					switch( gridlat ) {
-					case 0: // >-4 to -3   becomes 0 to 1
-						lat += Math.PI*4;
-						break;
-					case 1: // >-3 to -2   moves to -1 to 0
-						lat = Math.PI*2+lat;
-						break;
-					case 2:  // >-2 to -1  moves to 0 to 1
-						lat = Math.PI*2+lat;
-						break;
-					case 3: // > -1 to < 0  moves to 1 to 0 (but inverts longitude)
-						lng += Math.PI; // passing north pole backwards flips lng
-						lat = -lat;
-						break;
-					case 4: // == 0
-					case 5: // > 0 to 1
-							break;
-					case 6: // > 1 to 2  moves to 1 to 0 (and inverts longitude)
-							lng += Math.PI;  // passing south pole, flips lng
-							lat = Math.PI*2-lat;
-							break;
-					case 7: // > 2 to 3 moves to 0 to 1
-							lat = lat-Math.PI*2;
-							break;
-					case 8: // > 3 to 4  moves to -1 -> 0
-							lat -= Math.PI*4;
-							break;
-					}
+					const gridlat = Math.floor( Math.abs( lat ) / Math.PI );
+					const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
 					const spin = grid[gridlat][gridlng];
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
 					this.x = x * lat; this.y = 0; this.z = z * lat;
 					this.dirty = true;
-					if(d)
+					if(d) // D is a boolean to further align the tangents.
 					{
 						const q = this;
 
@@ -345,8 +289,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 									const ss1 = sxmy + sxpy
 									const ss2 = sxpy - sxmy
 									const cc1 = cxmy - cxpy
-
-									const sAng = Math.sin(ang/2);
 
 									const crsX = (ay*q.nz-az*q.ny);
 									const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );

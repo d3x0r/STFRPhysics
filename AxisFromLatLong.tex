@@ -1,0 +1,55 @@
+http://mathb.in/51335
+
+This assumes that 'up' or the 'normal to the sphere' is the $Y$ axis.
+
+For a given orientation, latitude and longitude are a simple way to specify the direction of a normal.  
+
+In axis-angle representation, the angle is generally positive.
+
+An additional specified spin may be additionally added to align the grid properly.
+
+There is a lookup table of basically negations; without supporting an additional spin, the calculation could probably be reduced using the constants specified.
+
+js
+
+	function setWithLatLongSpin( q, lat, long, extraSpin )
+
+	{
+		          //  0-1 1-2 2-3 3-4
+		const grid =[[ 0, p2, p2,  0 ]  //0 to <1
+		            ,[p2,  0,  0, p2 ]  //1 to <2
+		            ,[p2,  0,  0, p2 ]  //2 to <3
+		            ,[ 0, p2, p2,  0 ]  //3 to <4
+		            ];
+
+		const gridlat = Math.floor( Math.abs( lat ) / Math.PI );
+		const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
+		const spin = grid[gridlat][gridlng];
+		const x = Math.sin(lng);
+		const z = Math.cos(lng);
+		q.x = x * lat; 
+		q.y = 0;
+		q.z = z * lat;
+
+		q.freeSpin( spin + extraSpin, q.up() );
+	}
+
+---
+
+This is the equivalent of `q.freeSpin( spin, q.up() )`; `q.up()` returns rotating the up vector $(0,1,0)$ around(into) the current frame.  After getting the 'up' axis in global coordinates, rotate the computed $Q$ by `spin` around this new axis.
+
+js
+
+	// compute the 'up' of the basis frame; ie rotate (0,1,0) by Q
+	// finally - rotate Q by 'spin' computed above.
+	{
+		const s = Math.sin( this.? );
+		const c1 = Math.cos( this.? );
+		const c = 1-c1;
+		const cny = c * this.ny;
+		const ax = (cny*this.nx) - s*this.nz;
+		const ay = (cny*this.ny) + c1;
+		const az = (cny*this.nz) + s*this.nx;
+
+		return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+	}
