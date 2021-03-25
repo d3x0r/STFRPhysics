@@ -295,7 +295,7 @@ function mkQuat( a,b,c,d ){
 		const p2 = [];
 		let gamline ;
 		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
-		lnQx.update();
+
 		const lnQxText = document.getElementById( "lnQXval1q" );
 		const lnQyText = document.getElementById( "lnQYval1q" );
 		const lnQzText = document.getElementById( "lnQZval1q" );

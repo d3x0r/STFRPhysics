@@ -217,12 +217,15 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 					const gridlat = Math.floor( Math.abs( lat ) / Math.PI );
 					const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
-					const spin = grid[gridlat][gridlng];
+					const gridlatoct = gridlat>>2;
+					const gridlngoct = gridlng>>2;
+					const spin = grid[gridlat][gridlng]+ ((gridlatoct+gridlngoct) * Math.PI*4);
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
-					this.x = x * lat; this.y = 0; this.z = z * lat;
-					this.dirty = true;
+					this.x = (this.nx =x) * (lat+spin); this.y = (this.ny =0); this.z = (this.nz =z) * (lat+spin);
+					this.θ = lat+spin
+					this.dirty = false;
 					if(d) // D is a boolean to further align the tangents.
 					{
 						const q = this;
@@ -328,20 +331,16 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							return this;
 						}
 					}else {
-						this.update();
-
-						{
-							// input angle...
-							const s = Math.sin( this.θ ); // double angle sin
-							const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
-							const c = 1-c1;
-							const cny = c * this.ny;
-							const ax = (cny*this.nx) - s*this.nz;
-							const ay = (cny*this.ny) + c1;
-							const az = (cny*this.nz) + s*this.nx;
-							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-							return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
-						}
+						// input angle...
+						const s = Math.sin( this.θ ); // double angle sin
+						const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
+						const c = 1-c1;
+						const cny = c * this.ny;
+						const ax = (cny*this.nx) - s*this.nz;
+						const ay = (cny*this.ny) + c1;
+						const az = (cny*this.nz) + s*this.nx;
+						//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
+						return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
 					}
 				}
 				if( "a" in theta ) {
