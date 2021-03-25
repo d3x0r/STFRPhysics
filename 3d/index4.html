@@ -50,6 +50,8 @@
 			<br>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" value="unchecked">
+		 - Force Normalize RRF: <input type="checkbox" id="SinNormalizeRRF">
+			
 		</p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p style="display:none">Resolution: <input type="text" id="resolution" value="0"> </p>
@@ -365,6 +367,9 @@
 			is.onchange = updateMesh;
 			is.checked  = true;
 
+			is = document.getElementById( "SinNormalizeRRF" );
+			is.oninput = updateMesh;
+                        
 			is = document.getElementById( "lnQA" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQX" );

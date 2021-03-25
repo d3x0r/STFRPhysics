@@ -426,6 +426,8 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 	tmp = document.getElementById( "stepCounter" );
 	stepCount = tmp.value * 250 ;
 
+	lnQuat.sinNormal = !document.getElementById( "SinNormalizeRRF" )?.checked;
+
 	check = document.getElementById( "normalizeTangents");
 	if( check )
 		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
