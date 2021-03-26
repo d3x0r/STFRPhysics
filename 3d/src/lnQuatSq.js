@@ -14,6 +14,18 @@ const grid =[[ 0, p2, p2,  0 ]  //>0 - 1
             ,[ 0, p2, p2,  0 ]   //3-4
          ];
 
+const grid2=[[ 0, p2, p2,  0 ]  //>0 - 1
+            ,[p2,  0,  0, p2 ]  //1-2
+            ,[p2*2, p2*2, p2*2,  p2*2 ]  //2-3
+            ,[p2*2,  0,  0, p2*2 ]   //3-4
+         ];
+//            0-1 1-2 2-3 3-4
+const gridn =[[ 1,  1, 1, 1 ]  //>0 - 1
+             ,[ 1,  1, 1, 1 ]  //1-2
+             ,[ 1, 1,  1, 1 ]  //2-3
+             ,[ 1, 1,  1,  1 ]   //3-4
+          ];
+
 // 'fixed' acos for inputs > 1
 function acos(x) {
 	// uncomment this line to cause failure for even 1/2 rotations(at the limit of the other side)
@@ -219,11 +231,12 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
 					const gridlatoct = gridlat>>2;
 					const gridlngoct = gridlng>>2;
-					const spin = grid[gridlat%4][gridlng%4]+ ((gridlatoct+gridlngoct) * Math.PI*4);
+					const spin = ((d)?grid:grid2)[gridlat%4][gridlng%4] + ((gridlatoct+gridlngoct) * Math.PI*4);
+					const latmul = (!d)?gridn[gridlat%4][gridlng%4]:1;
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
-					this.θ = (lat<0)?(lat-spin):(lat+spin);
+					this.θ = (latmul*lat+spin);
 					this.x = (this.nx =x) * (this.θ); this.y = (this.ny =0); this.z = (this.nz =z) * (this.θ);
 					this.dirty = false;
 					if(d) // D is a boolean to further align the tangents.
@@ -325,7 +338,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							return this;
 						}
 					}else {
-						if( twistDelta ) {
+						if( 1 || twistDelta ) {
 							// input angle...
 							const s = Math.sin( this.θ ); // double angle sin
 							const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
