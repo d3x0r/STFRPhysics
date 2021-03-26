@@ -37,7 +37,7 @@ let drawMechanicalRot= false;
 let drawRotIter= false;
 let showArms = true;
 let rawAngles = false;
-let keepInertia = document.getElementById( "keepInertia" )?.checked;
+let normalizeTangents = false;
 let applyAccel = document.getElementById( "applyAccel" )?.checked;
 let showSliderCurves = false;
 let totalNormal = 0;
@@ -210,7 +210,7 @@ function mkQuat( a,b,c,d ){
 	}
 
 	function pMake(q, x, y, o ){
-
+		
 		const qlen = Math.sqrt(x*x + y*y);
 
 		const qnx = qlen?x / qlen:0;
@@ -228,7 +228,7 @@ function mkQuat( a,b,c,d ){
 		const ax = o.nx
 		const ay = o.ny
 		const az = o.nz
-		const th = o.θ;
+		const th = o.θ % (Math.PI*2);
 
 		{ // finish rodrigues
 			const AdotB = (qnx*ax + /*q.ny*ay +*/ qnz*az);
@@ -268,17 +268,12 @@ function mkQuat( a,b,c,d ){
 		
 				q.dirty = false;
 			} else {
-				// two axles are coincident, add...
-				if( AdotB > 0 ) {
-					q.x = qnx * (qlen+th);
-					q.y = qny * (qlen+th);
-					q.z = qnz * (qlen+th);
-				}else {
-					q.x = qnx * (qlen-th);
-					q.y = qny * (qlen-th);
-					q.z = qnz * (qlen-th);
-				}
-				q.dirty = true;
+				// result is 0 angular rotation... normal doesn't matter.
+				q.x = q.y = q.z = 0;
+				q.nx = q.nz = 0;
+				q.ny = 1;
+				q.θ = 0;
+				q.dirty = false;
 			}
 		}
 		return q;
@@ -294,7 +289,7 @@ function mkQuat( a,b,c,d ){
 		const p = [];
 		const p2 = [];
 		let gamline ;
-		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, true );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 		const lnQxText = document.getElementById( "lnQXval1q" );
 		const lnQyText = document.getElementById( "lnQYval1q" );
@@ -804,7 +799,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
 	showArms = document.getElementById( "showArm")?.checked;
 	rawAngles = document.getElementById( "rawAngles")?.checked;
-	keepInertia = document.getElementById( "keepInertia" )?.checked;
+	normalizeTangents = document.getElementById( "normalizeTangents" )?.checked;
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;

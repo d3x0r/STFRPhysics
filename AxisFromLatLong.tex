@@ -1,4 +1,4 @@
-http://mathb.in/51335
+http://mathb.in/51336
 
 This assumes that 'up' or the 'normal to the sphere' is the $Y$ axis.
 
@@ -42,6 +42,7 @@ js
 
 	// compute the 'up' of the basis frame; ie rotate (0,1,0) by Q
 	// finally - rotate Q by 'spin' computed above.
+        if( spin )
 	{
 		const s = Math.sin( this.? );
 		const c1 = Math.cos( this.? );
@@ -50,6 +51,67 @@ js
 		const ax = (cny*this.nx) - s*this.nz;
 		const ay = (cny*this.ny) + c1;
 		const az = (cny*this.nz) + s*this.nx;
+		
+		//return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+                
+                
+                
+	// A dot B   = cos( angle A->B )
+	// cos( C/2 ) 
+	//  cos(angle between the two rotation axii)
+	const AdotB = 0;
 
-		return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
+	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
+	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
+	const xmy = (2pi - q.θ)/2; // X - Y  ('x' 'm'inus 'y')
+	const xpy = (2pi + q.θ)/2  // X + Y  ('x' 'p'lus 'y' )
+	const cxmy = Math.cos(xmy);
+	const cxpy = Math.cos(xpy);
+
+	//const cosCo2 =  0;
+	let ang = Math.PI;
+
+	if( ang ) {
+		const sxmy = Math.sin(xmy);
+		const sxpy = Math.sin(xpy);
+		// vector rotation is just...
+		// when both are large, cross product is dominant (pi/2)
+		const ss1 = 0;
+		const ss2 = 2*sin(q.θ)
+		const cc1 = 0;
+
+		const Cx = ( q.nx * ss2 );
+		const Cy = ( q.ny * ss2 );
+		const Cz = ( q.nz * ss2 );
+
+		// this is NOT /sin(theta);  it is, but only in some ranges...
+		const Clx = (lnQuat.sinNormal)
+		          ?(1/(2*Math.sin( ang/2 )))
+		          :ss2;
+                          
+		q.rn = Clx; // I'd like to save this to see what the normal actually was
+		q.θ  = ang;
+		q.nx = Cx*Clx;
+		q.ny = Cy*Clx;
+		q.nz = Cz*Clx;
+
+		q.x  = q.nx*ang;
+		q.y  = q.ny*ang;
+		q.z  = q.nz*ang;
+
+		q.dirty = false;
+	} else {
+		// result angle is 0
+		q.θ  = ang;
+		q.x = (q.nx=1) * 0;
+		q.y = (q.ny=0) * 0;
+		q.z = (q.nz=0) * 0;
+		q.dirty = false;
 	}
+                
+                
+	}
+
+
+

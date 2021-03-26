@@ -95,11 +95,12 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 
-		 <span>- Normalize Tangents: <input type="checkbox" id="normalizeTangents" ></span>
+		 <span>- Normalize Tangents: <input type="checkbox" id="normalizeTangents_old" ></span>
 		 - Show Rot. Coords: <input type="checkbox" id="showNormalBallCoords" checked> 
 		     <br>
 		 - Show Rotation Axis At Every Frame: <input type="checkbox" id="drawRotationAllAxles" > <BR>
-		 - Keep Inertia: <input type="checkbox" id="keepInertia" >
+			<span style="visibility:visible">
+		 - Normalize Tangents: <input type="checkbox" id="normalizeTangents" checked></span>
 		 - Apply Accel: <input type="checkbox" id="applyAccel">
 		   - Larger Range(6x)<input type="checkbox" id="largeRange" ><br>
 		Interpolate
@@ -644,7 +645,7 @@
 			is.onchange = updateMesh;
 			is.checked  = true;
 
-			is = document.getElementById("keepInertia");
+			is = document.getElementById("normalizeTangents");
 			if( is ) is.onchange = updateMesh;
 			is = document.getElementById("applyAccel");
 			if( is ) is.onchange = updateMesh;

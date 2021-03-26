@@ -206,8 +206,8 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					return this.fromBasis( theta );
 				}
 				if( "lat" in theta ) {
-					let lat = theta.lat % (Math.PI*4);
-					let lng = theta.lng % (Math.PI*4)
+					let lat = theta.lat;// % (Math.PI*4);
+					let lng = theta.lng;// % (Math.PI*4)
 					
 					if( !lat ) {
 						this.x = 0; this.z = 0; this.y = lng+twistDelta;
@@ -219,12 +219,12 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
 					const gridlatoct = gridlat>>2;
 					const gridlngoct = gridlng>>2;
-					const spin = grid[gridlat][gridlng]+ ((gridlatoct+gridlngoct) * Math.PI*4);
+					const spin = grid[gridlat%4][gridlng%4]+ ((gridlatoct+gridlngoct) * Math.PI*4);
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
-					this.x = (this.nx =x) * (lat+spin); this.y = (this.ny =0); this.z = (this.nz =z) * (lat+spin);
-					this.θ = lat+spin
+					this.θ = (lat<0)?(lat-spin):(lat+spin);
+					this.x = (this.nx =x) * (this.θ); this.y = (this.ny =0); this.z = (this.nz =z) * (this.θ);
 					this.dirty = false;
 					if(d) // D is a boolean to further align the tangents.
 					{
@@ -331,16 +331,19 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							return this;
 						}
 					}else {
-						// input angle...
-						const s = Math.sin( this.θ ); // double angle sin
-						const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
-						const c = 1-c1;
-						const cny = c * this.ny;
-						const ax = (cny*this.nx) - s*this.nz;
-						const ay = (cny*this.ny) + c1;
-						const az = (cny*this.nz) + s*this.nx;
-						//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-						return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+						if( twistDelta ) {
+							// input angle...
+							const s = Math.sin( this.θ ); // double angle sin
+							const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
+							const c = 1-c1;
+							const cny = c * this.ny;
+							const ax = (cny*this.nx) - s*this.nz;
+							const ay = (cny*this.ny) + c1;
+							const az = (cny*this.nz) + s*this.nx;
+							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
+							return finishRodrigues( this, 0, ax, ay, az, twistDelta );
+						}
+						return this;
 					}
 				}
 				if( "a" in theta ) {
