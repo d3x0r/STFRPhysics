@@ -161,7 +161,7 @@
 		</td></tr>
 
 		<tr id="twist"><td colspan=5>
-		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
+		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN>  <button id="animateDown"><<</button> <button id="animateStop">[&nbsp;]</button> <button id="animateUp">>></button>
 		</td></tr>
 		<tr><td> 
 		</td><td> 
@@ -179,11 +179,11 @@
 		<tr><td style="color:red">1</td><td>
 			<input type="checkbox" id="showX1" checked>
 		</td><td> 
-		<input type="range" id="lnQX1" min="0"  max="1000"  value="500"> 
+		<input type="range" id="lnQX1" min=0  max=1000  value=500> 
 		</td><td>
-		<input type="range" id="lnQY1" min="0"  max="1000" value="501"> 
+		<input type="range" id="lnQY1" min=0  max="1000" value=501> 
 		</td><td>
-		<input type="range" id="lnQZ1" min="0"  max="1000" value="500"> 
+		<input type="range" id="lnQZ1" min=0  max="1000" value=500> 
 		</td></tr>
 
 		<tr><td> </td><td>
@@ -289,6 +289,7 @@
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		let canvasWidth = 640;
 		let canvasHeight = 480;
+		let animateTwist = 0;
 
 		var testdata = {};
 		var testelements = {};
@@ -332,7 +333,6 @@
 			let is = document.getElementById( "drawSquares" );
 			is.checked = true;
 		}
-		
 		let showAdvanced = false;
 		is = document.getElementById( "showAdvanced" );
 		if( is ) is.onchange = updateMesh;
@@ -458,6 +458,21 @@
 				lineSegments = new THREE.LineSegments2( newgeometryNormals, linematerial );
 				//lineSegments = new THREE.Mesh( ml.geometry, linematerial2 );
 				scene.add( lineSegments );
+			}
+
+			if( animateTwist ) {
+				const slider = document.getElementById( "twistDelta" );
+				let val = Number(slider.value);
+				if( animateTwist > 0 && val < 1000 ){
+					val++;
+					slider.value = val;
+					setTimeout( updateMesh, 0 );
+				}
+				if( animateTwist < 0 && val > 0 ){
+					val--;
+					slider.value = val;
+					setTimeout( updateMesh, 0 );
+				}
 			}
 
 		//scene.add( wiremesh );
@@ -630,6 +645,24 @@
 			is = document.getElementById("showNormals");
 			is.onchange = updateMesh;
 			is.checked  = true;
+
+
+			is = document.getElementById( "animateDown" );
+			is.addEventListener( "click", ()=>{
+				animateTwist = -1;
+				updateMesh();
+			})
+			is = document.getElementById( "animateStop" );
+			is.addEventListener( "click", ()=>{
+				animateTwist = 0;
+			})
+			is = document.getElementById( "animateUp" );
+			is.addEventListener( "click", ()=>{
+				animateTwist = 1;
+				updateMesh();
+			})
+
+
 
 			is = document.getElementById("keepInertia");
 			if( is ) is.onchange = updateMesh;
