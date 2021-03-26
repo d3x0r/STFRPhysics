@@ -264,14 +264,14 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 		               
 							{
 								// input angle...
-								const s = Math.sin( angle ); // double angle sin
-								const c1 = Math.cos( angle ); // sin/cos are the function of exp()
+								const s = Math.sin( angle ); 
+								const c1 = Math.cos( angle );
 								const c = 1-c1;
 								const cny = c * this.ny;
+								// compute the 'up' for the current frame
 								const ax = (cny*this.nx) - s*this.nz;
 								const ay = (cny*this.ny) + c1;
 								const az = (cny*this.nz) + s*this.nx;
-								//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
 
 								const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
 
@@ -282,8 +282,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 
 								let ang = acos( cosCo2 )*2;
-								// only good for rotations between 0 and pi.
-								ang += ((gridlatoct+gridlngoct) * Math.PI*4);
 
 								if( ang ) {
 									const sxmy = Math.sin(xmy);
@@ -303,7 +301,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 									const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
 									const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+									if( spin ) {
 
+									}
 									q.θ  = ang;
 									q.nx = Cx*Clx;
 									q.ny = Cy*Clx;
@@ -335,7 +335,17 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							const ay = (cny*this.ny) + c1;
 							const az = (cny*this.nz) + s*this.nx;
 							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-							return finishRodrigues( this, 0, ax, ay, az, twistDelta );
+							return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+						}else {
+							//if(this.θ < 0 )
+								this.θ = lat;
+
+							this.x  = this.nx*this.θ;
+							this.y  = this.ny*this.θ;
+							this.z  = this.nz*this.θ;
+
+							this.dirty = false;
+					
 						}
 						return this;
 					}

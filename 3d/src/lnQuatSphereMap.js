@@ -217,18 +217,10 @@ function mkQuat( a,b,c,d ){
 		const qny = qlen?0:1;
 		const qnz = qlen?y / qlen:0;
 
-		/*
-		q.x = x+o.x;
-		q.y = 0+o.y;
-		q.z = y+o.z;
-		q.dirty = true;
-		return q;
-	*/
-
 		const ax = o.nx
 		const ay = o.ny
 		const az = o.nz
-		const oct = Math.floor( o.θ / (Math.PI*4) ); 
+		const oct = 0;//Math.floor( o.θ / (Math.PI*2) ); 
 		const th = o.θ % (Math.PI*2);
 
 		{ // finish rodrigues
@@ -240,7 +232,7 @@ function mkQuat( a,b,c,d ){
 			const cxpy = Math.cos(xpy);
 			const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 		
-			let ang = Math.acos( cosCo2 )*2 + ((currentOctave +oct)* Math.PI*4);
+			let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*4 + oct*Math.PI*2);
 			// only good for rotations between 0 and pi.
 		
 			if( ang && ang != Math.PI*2 ) {
