@@ -240,7 +240,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							// determinant coordinates
 							let angle = txn===1?acos( ( ty )  )
 									:acos( ( ty + 1 ) * ( 1 + z ) / 2 - 1 );
-							
 							// compute the axis
 							const yz = s * x;
 							const xz = ( 2 - c * (x*x + z*z)) * x;
@@ -284,6 +283,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 								let ang = acos( cosCo2 )*2;
 								// only good for rotations between 0 and pi.
+								ang += ((gridlatoct+gridlngoct) * Math.PI*4);
 
 								if( ang ) {
 									const sxmy = Math.sin(xmy);
@@ -315,17 +315,11 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 
 									q.dirty = false;
 								} else {
-									// two axles are coincident, add...
-									if( AdotB > 0 ) {
-										q.x = q.nx * (q.θ+spin+twistDelta);
-										q.y = q.ny * (q.θ+spin+twistDelta);
-										q.z = q.nz * (q.θ+spin+twistDelta);
-									}else {
-										q.x = q.nx * (q.θ-spin+twistDelta);
-										q.y = q.ny * (q.θ-spin+twistDelta);
-										q.z = q.nz * (q.θ-spin+twistDelta);
-									}
-									q.dirty = true;
+									q.θ  = 0;
+									q.x = q.nx=0 * 0;
+									q.y = q.ny=1 * 0;
+									q.z = q.nz=0 * 0;
+									q.dirty = false;
 								}
 							}
 							return this;
