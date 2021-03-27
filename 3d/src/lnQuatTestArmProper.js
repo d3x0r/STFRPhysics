@@ -55,6 +55,7 @@ let lnQ2;
 let lnQ3;
 let lnQ4;
 let lnQ5;
+const lnQ = [];
 
 
 let normalVertices,normalColors;
@@ -440,10 +441,6 @@ function drawAnalogArm(curSliders,slerp) {
 
 }
 
-// { a,      b,	    c,		       d,				   e }
-// { a,    a+b,	a+b+c,		 a+b+c+d,			   a+b+c+d+e }
-// { a,a + a+b,a+a+b + a+b+c, a+a+b + a+b+c + a+b+c+d, a+a+b + a+b+c + a+b+c+d + a+b+c+d+e }
-
 function drawRotationCurve( arr, spinOnly,  curSliders, base ) {
 	const origShow = showRotationCurve;
 	for( let i = 0; i < 3; i++ ) {
@@ -571,29 +568,27 @@ function drawSquare( n, q, qPrior ) {
 		//console.log( "Using xy prior" );
 	}
 	
-	const next = q.add2( qPrior).update();
+	const next = q;
 
 	//console.log( "Prior:", qPrior, q, next );
-
+	const qo = lnQ[n];
 	// q.x and q.nx*q.θ are equivalent
 	// the total rotation si still q.nl.
-	const qx = qPrior.apply(new lnQuat( 0, q.x ,   0 ,   0));
-	const qy = qPrior.apply(new lnQuat( 0,   0 , q.y ,   0));
-	const qz = qPrior.apply(new lnQuat( 0,   0 ,   0 , q.z));
+	const qx = qPrior.apply(new lnQuat( 0, qo.x ,   0 ,   0));
+	const qy = qPrior.apply(new lnQuat( 0,   0 , qo.y ,   0));
+	const qz = qPrior.apply(new lnQuat( 0,   0 ,   0 , qo.z));
 
-	const qxy = drawRawRot?qPrior.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)))
-			:priorComposite.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)))
+	const qxy = drawRawRot?qPrior.apply(new lnQuat(0, qo.x ,   0 ,   0).apply(new lnQuat(0,   0 , qo.y ,   0)))
+			:priorComposite.apply(new lnQuat(0, qo.x ,   0 ,   0).apply(new lnQuat(0,   0 , qo.y ,   0)))
 			;
-	const qyx = drawRawRot?qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)))
-			:priorComposite.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)));
+	const qyx = drawRawRot?qPrior.apply(new lnQuat(0,   0 , qo.y ,   0).apply(new lnQuat(0, qo.x ,   0 ,   0)))
+			:priorComposite.apply(new lnQuat(0,   0 , qo.y ,   0).apply(new lnQuat(0, qo.x ,   0 ,   0)));
 
-	const qxyz = drawRawRot?qPrior.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
-			:priorComposite.apply(new lnQuat(0, q.x ,   0 ,   0).apply(new lnQuat(0,   0 , q.y ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
+	const qxyz = drawRawRot?qPrior.apply(new lnQuat(0, qo.x ,   0 ,   0).apply(new lnQuat(0,   0 , qo.y ,   0)).apply(new lnQuat(0,   0 , 0, qo.z)))
+			:priorComposite.apply(new lnQuat(0, qo.x ,   0 ,   0).apply(new lnQuat(0,   0 , qo.y ,   0)).apply(new lnQuat(0,   0 , 0, qo.z)))
 			;
-	const qyxz = drawRawRot?qPrior.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, q.z)))
-			:priorComposite.apply(new lnQuat(0,   0 , q.y ,   0).apply(new lnQuat(0, q.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, q.z)));
-
-	priorComposite = drawRotationSquaresYX?qyxz:qxyz;
+	const qyxz = drawRawRot?qPrior.apply(new lnQuat(0,   0 , qo.y ,   0).apply(new lnQuat(0, qo.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, qo.z)))
+			:priorComposite.apply(new lnQuat(0,   0 , qo.y ,   0).apply(new lnQuat(0, qo.x ,   0 ,   0)).apply(new lnQuat(0,   0 , 0, qo.z)));
 
 	{
 		const p1 =  qPrior.applyDel({x:one, y:one, z:0 }, timeScale) ;
@@ -1474,7 +1469,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			
 	        
 		}
-	        
+		lnQ.length = 0;
+	    lnQ.push( lnQ1 );
+	    lnQ.push( lnQ2 );
+	    lnQ.push( lnQ3 );
+	    lnQ.push( lnQ4 );
+	    lnQ.push( lnQ5 );
 		timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);
 		document.getElementById( "timeScalarValue" ).textContent = timeScale.toFixed(4);
 	        

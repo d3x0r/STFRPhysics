@@ -105,14 +105,16 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		      :armPrimary==1?{x:0,y:2,z:0}
 			:{x:0,y:0,z:2};
 
-	for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) {
-		let fixAxleRotation = zz===1;
-		let keepInertia = zz=== 0;
+	//for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) 
+	{
+		let fixAxleRotation =true;
+		let keepInertia = false;
 
-//	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
-//	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
-//	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
-//	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
+	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
+	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
+	const t4_ts = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3_ts.θ, t3_ts, timeScale ):new lnQuat(lnQ4);
+	const t5_ts = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4_ts.θ, t4_ts, timeScale ):new lnQuat(lnQ5);
+	/*
 	const tmp = {x:0,y:0,z:0};
 	
 	tmp.x = lnQ2.x;	tmp.y = lnQ2.y;	tmp.z = lnQ2.z;
@@ -130,7 +132,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	tmp.x = lnQ5.x;	tmp.y = lnQ5.y;	tmp.z = lnQ5.z;
 	tmpRot = t4_ts.applyDel( tmp, -timeScale*0.5 );
 	const t5_ts = new lnQuat(0,tmpRot.x,tmpRot.y,tmpRot.z);
-
+*/
+	if(0)
 	if( applyAccel ) {
 		t2_ts.add( lnQ1 );
 		t3_ts.add( t2_ts );
@@ -139,10 +142,10 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	}
 	if( keepInertia ) {		
 		// expecing to keep inertia (previous rotation, plus new rotation)
-		t2_ts.add( lnQ1 );
-		t3_ts.add( t2_ts );
-		t4_ts.add( t3_ts );
-		t5_ts.add( t4_ts );
+		//t2_ts.add( lnQ1 );
+		//t3_ts.add( t2_ts );
+		//t4_ts.add( t3_ts );
+		//t5_ts.add( t4_ts );
 		
 	}
 
@@ -173,7 +176,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
 			normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
 	
-			pushNColor(n, zz/3+0.4);
+			pushNColor(n, 0.4);
 		}
 	}
 	}	
@@ -258,9 +261,9 @@ function drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-	for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) {
-		let fixAxleRotation = zz===1;
-		let keepInertia = zz=== 0;
+	//for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) 
+	{
+		let fixAxleRotation = true;
 
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
@@ -269,23 +272,8 @@ function drawAnalogArm(curSliders,slerp) {
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
 
-	if( applyAccel ) {
-		t2.add( lnQ1 );
-		t3.add( t2 );
-		t4.add( t3 );
-		t5.add( t4 );
-	}
-
-	if( keepInertia ) {
-		//t2.add( lnQ1 );
-		//t3.add( t2 );
-		//t4.add( t3 );
-		//t5.add( t4 );
-	}
-
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
-	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
-	const Rm = Ro;
+	const Rb = [ lnQ1, lnQ2, lnQ3, lnQ4, lnQ5 ];
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 
@@ -304,7 +292,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 	for( var n = 0; n < 5; n++ ) {
 		if( showLineSeg[n] && drawRotationSquares ) {
-			drawSquare( n, Rm[n], R[n-1] );
+			drawSquare( n, Ro[n], Ro[n-1] );
 		}
 		if( n ) {
 			// start current position accumulator at previous end.
@@ -321,7 +309,7 @@ function drawAnalogArm(curSliders,slerp) {
 		//   add either relative rotation itself (to the end of rotations)
 		//   or add the translated rotation (to the end of the sum of rotations)
 		const from = n?(R[n-1]):lnQ0;
-		const delta = Rm[n];
+		const delta = Rb[n];
 		const av = {x:delta.x,y:delta.y,z:delta.z};
 
 		const avLen =  delta.θ/100;
@@ -348,7 +336,7 @@ function drawAnalogArm(curSliders,slerp) {
 			normalVertices.push( new THREE.Vector3( (A[n].x + tmpQ.x)*spaceScale   ,( A[n].y + tmpQ.y)*spaceScale      , (A[n].z + tmpQ.z)*spaceScale  ))
 			pushNColor(n, 1.9);
 
-			prior = tmpQ.applyDel( shortArm, 1 );
+			prior = tmpQ.applyDel( shortArm, 1, null, 0, result );
 			
 			draw( tmpQ, startAt, tmpQ, 1 );
 
@@ -368,7 +356,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 		if( showArms){
 			normalVertices.push( new THREE.Vector3( (A[n].x)*spaceScale   ,( A[n].y)*spaceScale      , (A[n].z)*spaceScale  ))
-			pushNColor(n, zz/3+0.4);
+			pushNColor(n, 0.4);
 		}
 
 		function draw(q,from,to,delta)
@@ -539,7 +527,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
 		if( showLineSeg[n] && drawRotationSquares ) {
-			drawSquare( n, Rm[n], R[n-1] );
+			//drawSquare( n, Rm[n], R[n-1] );
 		}
 		if( n ) {
 			A[n].x = A[n-1].x
@@ -850,11 +838,11 @@ function drawSquare( n, q, qPrior ) {
 		priorComposite = lnQ0;
 	}
 	if( !drawRawRot ){ 
-		qPrior = priorComposite;
+		//qPrior = priorComposite;
 		//console.log( "Using xy prior" );
 	}
 	
-	const next = q.add2( qPrior).update();
+	const next = q;
 
 	//console.log( "Prior:", qPrior, q, next );
 
