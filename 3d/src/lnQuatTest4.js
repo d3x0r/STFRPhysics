@@ -69,16 +69,17 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const subSteps = turnCount;//Math.sqrt(steps);
 		prior = null;
 
-       const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC );
+	 const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
+                //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
 		fibre = nTotal * ( 4*Math.PI ) / ( steps );
-		const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
+                const fiberPart =((fibre + 2*Math.PI)/(Math.PI*4) %(1/subSteps));
+		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
-		const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
 
 		const lnQ = new lnQuat( lnQ0 )
-                    	.freeSpin( fibre, {x:AxRot,y:AyRot,z:AzRot} )
-                        .freeSpin( t, {x:xRot, y:yRot, z:zRot } );
+                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
+                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
 
 		//const lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
 		//const lnQ    = new lnQuat( T    , lnQrot.apply( { x: A, y:B, z:C } ) );
