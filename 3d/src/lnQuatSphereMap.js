@@ -20,6 +20,7 @@ let showCoords = false;
 let bisectAnalog = false;
 let trisectAnalog = false;
 let timeScale = 1.5;
+let twistDelta = 0.0;
 let drawRotationAxles = true;
 let drawRotationAllAxles = true;
 let drawRotationSquares = true;
@@ -509,11 +510,23 @@ function drawCoordinateGrid() {
 			let y_ = 0;
 			let z_ = 0;
 			let first = true;
+
+			let color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
 			const lnQ = new lnQuat();
 			range = deg2rad( curSliders.lnQZ[0] );
+			let minofs, maxofs;
+
+			if( showRotationCurve === "X") {
+				minofs = -(maxofs = Math.PI*2);
+				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
+			} else {
+				minofs = -(maxofs = Math.PI/2);
+				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
+			}
+			first = true;
 
 			if( 1 || showRotationCurve === "X" )
-			for( let latPlus = -Math.PI*2; latPlus <= Math.PI*2; latPlus += (Math.PI*4)/20 ){
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
 				lnQx2.set( {lat:curSliders.lnQX[0] + latPlus,lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
@@ -542,18 +555,23 @@ function drawCoordinateGrid() {
 						normalVertices.push( new THREE.Vector3( (x_)*pointScalar*spaceScale			       ,(y_)*pointScalar*spaceScale			       , (z_)*pointScalar*spaceScale			       ))
 						normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                 ,(y)*pointScalar*spaceScale  , (z)*pointScalar*spaceScale  ))
 																								
-						{
-							//const s = t / (Math.PI*4);
-							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
-							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
-						}
+						normalColors.push( color)
+						normalColors.push( color)
 					}
 					x_ = x; y_ = y; z_ = z;
 
 			}
 
+			if( showRotationCurve === "Y") {
+				minofs = -(maxofs = Math.PI*2);
+				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
+			} else {
+				minofs = -(maxofs = Math.PI/2);
+				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
+			}
+			first = true;
 			if( 1 || showRotationCurve === "Y" )
-			for( let latPlus = -Math.PI*2; latPlus <= Math.PI*2; latPlus += (Math.PI*4)/20 ){
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
 				lnQx2.set( {lat:curSliders.lnQX[0] ,lng:curSliders.lnQY[0]+ latPlus}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
@@ -582,16 +600,61 @@ function drawCoordinateGrid() {
 						normalVertices.push( new THREE.Vector3( (x_)*pointScalar*spaceScale			       ,(y_)*pointScalar*spaceScale			       , (z_)*pointScalar*spaceScale			       ))
 						normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                 ,(y)*pointScalar*spaceScale  , (z)*pointScalar*spaceScale  ))
 																								
-						{
-							//const s = t / (Math.PI*4);
-							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
-							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
-						}
+						normalColors.push(color)
+						normalColors.push(color)
 					}
 					x_ = x; y_ = y; z_ = z;
 
 			}
 
+			if( showRotationCurve === "Z") {
+				minofs = -(maxofs = Math.PI*2);
+				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
+			} else {
+				minofs = -(maxofs = Math.PI/2);
+				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
+				
+			}
+			first = true;
+			if( 1 || showRotationCurve === "Z" )
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
+				lnQuat.setTwistDelta( twistDelta + latPlus );
+				lnQx2.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+
+				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				if( _1norm ) {
+					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				}
+				//if( merge ) {
+					pMake( lnQ, t2, g2, lnQx2);
+
+					let x = lnQ.x;
+					let y = lnQ.y;
+					let z = lnQ.z;
+					if( !showScaledPoints  ) {
+						const r = Math.sqrt(x*x+y*y+z*z);
+						const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
+						x *= r / l;
+						y *= r / l;
+						z *= r / l;
+					}
+					if( first ) {
+						first = false;
+					}else {
+						//console.log( "Draw point:", x, y, z );
+						normalVertices.push( new THREE.Vector3( (x_)*pointScalar*spaceScale			       ,(y_)*pointScalar*spaceScale			       , (z_)*pointScalar*spaceScale			       ))
+						normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                 ,(y)*pointScalar*spaceScale  , (z)*pointScalar*spaceScale  ))
+																								
+						normalColors.push( color)
+						normalColors.push( color)
+					}
+					x_ = x; y_ = y; z_ = z;
+
+			}
+
+			lnQuat.setTwistDelta( twistDelta );
 
 
 
@@ -711,9 +774,12 @@ function blurSlider( slider ) {
 	//showRotationCurveSegment = -1;
 	//updateMesh();
 }
+let is;
+is = document.getElementById( "twistDelta" );
+is.onfocus = ((is,n)=>()=>focusSlider( is, "Z", n ))(is,n);
+
 
 for( var n = 1; n <= 5; n++ ) {
-	let is;
 		is = document.getElementById( "lnQX"+n );
 		//is.oninput = updateMesh;
 		is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
@@ -722,9 +788,8 @@ for( var n = 1; n <= 5; n++ ) {
 		//is.oninput = updateMesh;
 		is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
 	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
-		is = document.getElementById( "lnQZ"+n);
-		//is.oninput = updateMesh;
-		is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
+		//is = document.getElementById( "lnQZ"+n);
+		//is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
 	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
 	}
 
@@ -756,6 +821,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showRotationCurves = showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
+	//showFullRange = document.getElementById( "showSliderCurves" )?.checked;
 
 	let rotateXArm = document.getElementById( "drawArmFromX" )?.checked;
 	let rotateYArm = document.getElementById( "drawArmFromY" )?.checked;
@@ -783,7 +849,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	{
 			let td = Number(document.getElementById( "twistDelta" ).value);
 		
-		const twistDelta =twist= ( (td/500)-1 ) * Math.PI * 4.25;
+		 twistDelta =twist= ( (td/500)-1 ) * Math.PI * 4.25;
 		document.getElementById( "twistDeltaValue" ).textContent = (twistDelta/Math.PI).toFixed(4)+ "π";
 
 		lnQuat.setTwistDelta( twistDelta );
