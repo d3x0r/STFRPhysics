@@ -111,7 +111,7 @@
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
-		 <span style="visibility:visible">- Scale 2-norm: <input type="checkbox" id="showScaled" checked ></span> - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked> <br>
+		 <span style="visibility:visible">- Scale 2-norm: <input type="checkbox" id="showScaled" checked > - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked>  </span><br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > <br>
 		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
@@ -682,32 +682,13 @@
 			is = document.getElementById("showDegrees");
 			is.onchange = updateMesh;
 
-	
-function focusSlider( slider, path, n ) {
-	showRotationCurve = path;
-	showRotationCurveSegment = n;
-	updateMesh();
-	
-}
-
-function blurSlider( slider ) {
-	//showRotationCurve = null;
-	//showRotationCurveSegment = -1;
-	//updateMesh();
-}
 			for( var n = 1; n <= 5; n++ ) {
 				is = document.getElementById( "lnQX"+n );
 				is.oninput = updateMesh;
-				is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
-				is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
 				is = document.getElementById( "lnQY"+n );
 				is.oninput = updateMesh;
-				is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
-				is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
 				is = document.getElementById( "lnQZ"+n);
 				is.oninput = updateMesh;
-				is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
-				is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
 
 				is = document.getElementById( "showX"+n);
 				is.oninput = updateMesh;

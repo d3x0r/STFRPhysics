@@ -1484,28 +1484,34 @@ function drawCoordinateGrid() {
 
 		//console.log( "Draw point:", x, y, z );
 		if(1) {
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
-																			       
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.up.x*normal_del*s     ,(y)*pointScalar*spaceScale + basis.up.y*normal_del *s    , (z)*pointScalar*spaceScale + basis.up.z*normal_del*s     ))
-																			       
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale				))
-		normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.forward.x*normal_del*s,(y)*pointScalar*spaceScale + basis.forward.y*normal_del*s, (z)*pointScalar*spaceScale + basis.forward.z*normal_del*s ))
+			if(1){
+				// reverse to UV Axis and Angle.
+				x = 2*(acos(1-lnQ2.ny) + Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
+				y = 2*(acos(1-lnQ2.nz/Math.cos(x/2))+ Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
+				z = 2*(lnQ2.θ);
+			}
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.right.x*normal_del*s  ,(y)*pointScalar*spaceScale + basis.right.y*normal_del*s  , (z)*pointScalar*spaceScale + basis.right.z*normal_del*s  ))
+																					
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.up.x*normal_del*s     ,(y)*pointScalar*spaceScale + basis.up.y*normal_del *s    , (z)*pointScalar*spaceScale + basis.up.z*normal_del*s     ))
+																					
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale				))
+			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale + basis.forward.x*normal_del*s,(y)*pointScalar*spaceScale + basis.forward.y*normal_del*s, (z)*pointScalar*spaceScale + basis.forward.z*normal_del*s ))
 
 
 
-		{
-			//const s = t / (Math.PI*4);
-			const s = colorS;
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			{
+				//const s = t / (Math.PI*4);
+				const s = colorS;
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			}
 		}
-	}
 
 	}
 

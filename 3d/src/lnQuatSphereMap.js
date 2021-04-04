@@ -8,6 +8,7 @@ let xRot, yRot, zRot;
 let AxRot, AyRot, AzRot;
 let turnCount = 12;
 let stepCount = 1000;
+let _1norm = false;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let normalizeNormalTangent = false;
@@ -27,6 +28,7 @@ let drawRotationSquaresYX = true;
 let drawRotationSquareLimit = 1;
 let showLineSeg = [true,false,false,false,false];
 let fixAxleRotation= true;
+let showRotationCurves = false;
 let showRotationCurve = "X";
 let showRotationCurveSegment = -1;
 let stepScalar = [false,false,false,false,false];
@@ -46,6 +48,7 @@ let mountOrder = 0;
 let currentOctave = 0;
 
 let lnQx = new lnQuat();
+let lnQx2 = new lnQuat();
 let range = Math.PI;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
@@ -66,6 +69,8 @@ let lnQ2_current;
 let lnQ3_current;
 let lnQ4_current;
 let lnQ5_current;
+let curSliders = {
+};
 
 let normalVertices,normalColors;
 	const spaceScale = 0.70;
@@ -276,7 +281,7 @@ function mkQuat( a,b,c,d ){
 	const tmpPoint = { x:0, y:0, z:0 };
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
-		const _1norm = document.getElementById( "oneNormal" )?.checked;
+		 _1norm = document.getElementById( "oneNormal" )?.checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
 		const p = [];
@@ -308,9 +313,6 @@ function mkQuat( a,b,c,d ){
 				}
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
-					//doDrawBasis( lnQ, lnQ, 1, 1, null, 1 );
-					//lnQ.x = theta; lnQ.y = 0; lnQ.z = gamma;
-					//lnQ.dirty = true;
 				} else {
 					lnQ.nx = lnQ.nz = 0;
 					lnQ.ny = 0;
@@ -330,7 +332,7 @@ function mkQuat( a,b,c,d ){
 				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
-					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1 );
+					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
 				if( draw ) {
 
 					const oldp = p[gamline];
@@ -473,156 +475,127 @@ function drawCoordinateGrid() {
 
 
 	// graph of location to rotation... 
-	function drawRangeOnBall( cx,cy,cz,range,steps, minr, unscaled, invert ) {
-		
-		if( !minr ) minr = 0;
-		const normLen = 0.5*(steps/range);
 
-		if(0)
-		for( let z = -range; z <= range;  z += (range)/steps ) {
-			const lnQ = new lnQuat( {a:totalNormal, b:0, c:totalNormal-z } );
-			drawN( lnQ );
-			simpleBasis( lnQ );	
-			
-			//drawN( new lnQuat( {a:totalNormal, b:0, c:-z } ) );
-			//drawN( new lnQuat( {a:-totalNormal, b:0, c:-z } ) );
-			//drawN( new lnQuat( {a:-totalNormal, b:0, c:z } ) );
-			
-		}
-		// this just gives the solid ring around for the same total...
-		if(1)
-		for( let t = 0; t <= 1.0;  t += 1/steps ) {
-			const x = totalNormal * (1.0-t);
-			const z = totalNormal * t;
-			drawN( new lnQuat( {a:x, b:0, c:z } ) );
-			drawN( new lnQuat( {a:x, b:0, c:-z } ) );
-			drawN( new lnQuat( {a:-x, b:0, c:-z } ) );
-			drawN( new lnQuat( {a:-x, b:0, c:z } ) );
-			if(1){
-				drawN( new lnQuat( {a:x,  b:z, c:0 } ) );
-				drawN( new lnQuat( {a:x,  b:-z, c:0 } ) );
-				drawN( new lnQuat( {a:-x, b:-z, c:0 } ) );
-				drawN( new lnQuat( {a:-x, b:z, c:0 } ) );
-				drawN( new lnQuat( {a:0,  b:z , c:x  } ) );
-				drawN( new lnQuat( {a:0,  b:-z, c:x  } ) );
-				drawN( new lnQuat( {a:0, b:-z , c:-x } ) );
-				drawN( new lnQuat( {a:0, b:z  , c:-x } ) );
-			}
-		}
-	if(0)	
-		for( let x = -range; x <= range;  x += (2*range)/steps ) {
-			for( let y = -range; y <= range;  y += (2*range)/steps ) {
-				for( let z = -range; z <= range; z += (2*range)/steps ) {
-					const ll = Math.abs(cx+x)+Math.abs(cy+y)+Math.abs(cz+z);
-//					if( Math.abs( ll - Math.abs(totalNormal) ) > 0.05 ) continue;
-			if(0)
-					if( Math.abs( (Math.abs(z)+Math.abs(x)) - Math.abs(totalNormal) ) > 0.1 
-								|| Math.abs(y) > 0.1 ) continue;
-					//if( Math.abs( Math.abs(x) - Math.abs(totalNormal) ) > 0.1
-					//			|| Math.abs(y) > 0.1 ) continue;
-					//if( Math.abs( Math.abs(y) - Math.abs(totalNormal) ) > 0.2 ) continue;
-					//if( Math.abs( Math.abs(z) - Math.abs(totalNormal) ) > 0.2 ) continue;
-				if( (ll) > range ) continue;
-
-				if( (Math.abs(z)+Math.abs(y)+Math.abs(x)) < minr ) continue;
-
-					const lnQ = new lnQuat( {a:cx+x, b:cy+y, c:cz+z } );
-					simpleBasis( lnQ );	
-				}
-				
-			}
-			
-		}
-	
-		function simpleBasis(lnQ) {
-					const basis = lnQ.getBasis( );
-		
-				// the original normal direction; projected offset of sphere (linear scaled)
-				//normalVertices.push( new THREE.Vector3( x*spaceScale,0*spaceScale, z*spaceScale ))
-				//normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del,0*spaceScale + 1*normal_del,z*spaceScale + 1*normal_del ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-				//normalColors.push( new THREE.Color( 255,0,255,255 ))
-		
-				const pointScalar = 2/ Math.PI;
-				const ox = pointScalar*lnQ.x;
-				const oy = pointScalar*lnQ.y;
-				const oz = pointScalar*lnQ.z;
-		
-		                //drawN( lnQ );
-				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/normLen  ,oy*spaceScale + basis.right.y*normal_del /normLen , oz*spaceScale + basis.right.z*normal_del/normLen ))
-																				
-				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.up.x*normal_del/normLen     ,oy*spaceScale + basis.up.y*normal_del/normLen     , oz*spaceScale + basis.up.z*normal_del/normLen ))
-																				
-				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.forward.x*normal_del/normLen,oy*spaceScale + basis.forward.y*normal_del/normLen, oz*spaceScale + basis.forward.z*normal_del/normLen ))
-		
-				normalColors.push( new THREE.Color( 255,0,0,0.25 ))
-				normalColors.push( new THREE.Color( 255,0,0,0.25 ))
-				normalColors.push( new THREE.Color( 0,255,0,0.25 ))
-				normalColors.push( new THREE.Color( 0,255,0,0.25 ))
-				normalColors.push( new THREE.Color( 0,0,0.9,0.25))
-				normalColors.push( new THREE.Color( 0,0,0.9,0.25 ))
-				
-		}
-
-	function drawN( lnQ )
-	{
-	const v = { x:0,y:1,z:0};
-			simpleBasis(lnQ);
-			const new_v = lnQ.apply( v );
-			const basis = lnQ.getBasis( );
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			,new_v.y*spaceScale			, new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			     ,new_v.y*spaceScale			     , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
-
-			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
-			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0,0.6,0.6))
-			normalColors.push( new THREE.Color( 0,0,0.6,0.6 ))
-			
-	
-	}
-	}
-
-
-	function doDrawBasis(lnQ2,t,s,Del,from,colorS ) {
+	function doDrawBasis(lnQ2,t,s,Del,from,colorS, gamma, theta	 ) {
 
 		const basis = lnQ2.update().getBasisT( Del,from );
-const normal_del = 3;
+		const normal_del = 3;
 		if( !s ) s = 1.0;
 		s = s/Math.PI;
 		if( !colorS ) colorS = s;
 		const l = 1;//(t instanceof lnQuat)?1/t.θ:1;
-	if( t != lnQ2 || showArms )  {
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
-																				   
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.up.x*normal_del*s     ,(t.y/l)*spaceScale + basis.up.y*normal_del *s    , (t.z/l)*spaceScale + basis.up.z*normal_del*s     ))
-																				   
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale				))
-		normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.forward.x*normal_del*s,(t.y/l)*spaceScale + basis.forward.y*normal_del*s, (t.z/l)*spaceScale + basis.forward.z*normal_del*s ))
+		if( t != lnQ2 || showArms )  {
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.right.x*normal_del*s  ,(t.y/l)*spaceScale + basis.right.y*normal_del*s  , (t.z/l)*spaceScale + basis.right.z*normal_del*s  ))
+																					
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale			       ))
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.up.x*normal_del*s     ,(t.y/l)*spaceScale + basis.up.y*normal_del *s    , (t.z/l)*spaceScale + basis.up.z*normal_del*s     ))
+																					
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale			       ,(t.y/l)*spaceScale			       , (t.z/l)*spaceScale				))
+			normalVertices.push( new THREE.Vector3( (t.x/l)*spaceScale + basis.forward.x*normal_del*s,(t.y/l)*spaceScale + basis.forward.y*normal_del*s, (t.z/l)*spaceScale + basis.forward.z*normal_del*s ))
 
-		{
-			normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
-			normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
-			normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
+			{
+				normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0*colorS,0,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*colorS,0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
+			}
 		}
+		if( showRotationCurves )
+		{
+			let x_ = 0;
+			let y_ = 0;
+			let z_ = 0;
+			let first = true;
+			const lnQ = new lnQuat();
+			range = deg2rad( curSliders.lnQZ[0] );
 
-	}
+			if( 1 || showRotationCurve === "X" )
+			for( let latPlus = -Math.PI*2; latPlus <= Math.PI*2; latPlus += (Math.PI*4)/20 ){
+				lnQx2.set( {lat:curSliders.lnQX[0] + latPlus,lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+
+				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				if( _1norm ) {
+					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				}
+				//if( merge ) {
+					pMake( lnQ, t2, g2, lnQx2);
+
+					let x = lnQ.x;
+					let y = lnQ.y;
+					let z = lnQ.z;
+					if( !showScaledPoints  ) {
+						const r = Math.sqrt(x*x+y*y+z*z);
+						const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
+						x *= r / l;
+						y *= r / l;
+						z *= r / l;
+					}
+					if( first ) {
+						first = false;
+					}else {
+						//console.log( "Draw point:", x, y, z );
+						normalVertices.push( new THREE.Vector3( (x_)*pointScalar*spaceScale			       ,(y_)*pointScalar*spaceScale			       , (z_)*pointScalar*spaceScale			       ))
+						normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                 ,(y)*pointScalar*spaceScale  , (z)*pointScalar*spaceScale  ))
+																								
+						{
+							//const s = t / (Math.PI*4);
+							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
+							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						}
+					}
+					x_ = x; y_ = y; z_ = z;
+
+			}
+
+			if( 1 || showRotationCurve === "Y" )
+			for( let latPlus = -Math.PI*2; latPlus <= Math.PI*2; latPlus += (Math.PI*4)/20 ){
+				lnQx2.set( {lat:curSliders.lnQX[0] ,lng:curSliders.lnQY[0]+ latPlus}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+
+				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				if( _1norm ) {
+					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				}
+				//if( merge ) {
+					pMake( lnQ, t2, g2, lnQx2);
+
+					let x = lnQ.x;
+					let y = lnQ.y;
+					let z = lnQ.z;
+					if( !showScaledPoints  ) {
+						const r = Math.sqrt(x*x+y*y+z*z);
+						const l = Math.abs(x)+Math.abs(y)+Math.abs(z);
+						x *= r / l;
+						y *= r / l;
+						z *= r / l;
+					}
+					if( first ) {
+						first = false;
+					}else {
+						//console.log( "Draw point:", x, y, z );
+						normalVertices.push( new THREE.Vector3( (x_)*pointScalar*spaceScale			       ,(y_)*pointScalar*spaceScale			       , (z_)*pointScalar*spaceScale			       ))
+						normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale                 ,(y)*pointScalar*spaceScale  , (z)*pointScalar*spaceScale  ))
+																								
+						{
+							//const s = t / (Math.PI*4);
+							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
+							normalColors.push( new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						}
+					}
+					x_ = x; y_ = y; z_ = z;
+
+			}
+
+
+
+
+		}
 
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
 			if( from ) {
@@ -703,20 +676,6 @@ function setMatrix( n, q, m ) {
 	const me = m.elements;
 	const b = q.getBasis();
 	//console.log( "M:", m );
-/*
-	m.elements[0+0] = b.right.x;
-	m.elements[4+0] = b.right.y;
-	m.elements[8+0] = b.right.z;
-	//m.elements[0+3] = 0;
-	m.elements[0+1] = b.up.x;
-	m.elements[4+1] = b.up.y;
-	m.elements[8+1] = b.up.z;
-	//m.elements[4+3] = 0;
-	m.elements[0+2] = b.forward.x;
-	m.elements[4+2] = b.forward.y;
-	m.elements[8+2] = b.forward.z;
-	//m.elements[8+3] = 0;
-*/
 	m.elements[0+0] = b.right.x;
 	m.elements[0+1] = b.right.y;
 	m.elements[0+2] = b.right.z;
@@ -736,43 +695,44 @@ function setMatrix( n, q, m ) {
 }
 
 function tickQuat( shapes ) {
-	const end = Date.now();
-	if( !start ) {
-		start = end - 15;
-		for( let n = 0; n < shapes.length; n++ ) {
-			curPos.push( new lnQuat() );
-		}
-	}
-	const delta = ( end - start ) / 1000;
-	clock += ( end - start ) / 1000;
-	start = end;
-
-	for( let n = 0; n < shapes.length; n++ ) {
-		const offset = Math.floor(clock );
-		if( clock % 2 > 1 ) {
-			//clock -= 1;
-		}
-		if( n+offset < lnQ_current.length )
-			curPos[n].add( lnQ_current[n+offset], delta );
-		const shape = shapes[n];
-		shape.matrixAutoUpdate = false;
-		setMatrix( n, curPos[n], shape.matrix );
-	}
-
-	if( clock > 7 ) { 
-		clock = 0;
-		curPos.length = 0;
-		start = 0;
-	}
+	
 
 }
+
+function focusSlider( slider, path, n ) {
+	showRotationCurve = path;
+	showRotationCurveSegment = n;
+	updateMesh();
+	
+}
+
+function blurSlider( slider ) {
+	//showRotationCurve = null;
+	//showRotationCurveSegment = -1;
+	//updateMesh();
+}
+
+for( var n = 1; n <= 5; n++ ) {
+	let is;
+		is = document.getElementById( "lnQX"+n );
+		//is.oninput = updateMesh;
+		is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
+	//	is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
+		is = document.getElementById( "lnQY"+n );
+		//is.oninput = updateMesh;
+		is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
+	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
+		is = document.getElementById( "lnQZ"+n);
+		//is.oninput = updateMesh;
+		is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
+	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
+	}
+
 
 window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_
-	let curSliders = {
-	};
 	curSliders.lnQX = [];
 	curSliders.lnQY = [];
 	curSliders.lnQZ = [];
@@ -795,7 +755,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	normalizeTangents = document.getElementById( "normalizeTangents" )?.checked;
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
-	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
+	showRotationCurves = showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
 
 	let rotateXArm = document.getElementById( "drawArmFromX" )?.checked;
 	let rotateYArm = document.getElementById( "drawArmFromY" )?.checked;

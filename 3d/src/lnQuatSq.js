@@ -590,18 +590,15 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 	const q = this;
 	//this.update();
 	if( "undefined" === typeof del ) del = 1.0;
-	const ax= q.nx, ay= q.ny, az= q.nz;
-
-	//const sqlen = Math.sqrt(ax*ax+ay*ay+az*az);
 
 	const nt = q.θ * del;
 	const s  = Math.sin( nt ); // sin/cos are the function of exp()
 	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
-	const qx = this.nx; // normalizes the imaginary parts
-	const qy = this.ny; // set the sin of their composite angle as their total
-	const qz = this.nz; // output = 1(unit vector) * sin  in  x,y,z parts.
+	const qx = this.nx;
+	const qy = this.ny;
+	const qz = this.nz;
 
 	const cnx = c*qx;
 	const cny = c*qy;
@@ -621,12 +618,12 @@ lnQuat.prototype.getBasisT = function(del, from, right) {
 
 	const basis = { right  :{ x : c1 + xx, y : wz + xy, z : xz - wy }
 	              , up     :{ x : xy - wz, y : c1 + yy, z : wx + yz }
-		      , forward:{ x : wy + xz, y : yz - wx, z : c1 + zz }
+	              , forward:{ x : wy + xz, y : yz - wx, z : c1 + zz }
 	              };
-	return basis;	
-	
 
+	return basis;	
 }
+
 
 lnQuat.prototype.getRelativeBasis = function( q2 ) {
 	const q = this;
@@ -1076,7 +1073,7 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const ay_ = axis.y;
 	const az_ = axis.z;
 	// make sure it's normalized
-	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
+	const aLen = 1;//Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
 	if( aLen ) {
 		const ax = ax_/aLen;
 		const ay = ay_/aLen;
@@ -1150,12 +1147,46 @@ lnQuat.prototype.up = function() {
 	const s = Math.sin( q.θ ); // double angle sin
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	const c = 1- c1;
-	return {x: c*q.nx*q.ny - s*q.nz
-		, y: c1 + c*( q.ny*q.ny )
-		, z: s*q.nx      + c*q.ny*q.nz
-		} 	
-
+	const cn = c*q.ny;
+	return new vectorType( 
+	        -s*q.nz  + cn*q.nx
+	       , c1      + cn*q.ny  //( c + (1-c)yy =  c +yy-cyy  =  c(1-yy)+yy
+	       , s*q.nx  + cn*q.nz
+	       );
 }
+
+lnQuat.prototype.right = function() {	
+	// just go ahead and get the basis!
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+	const cn = c*q.nx;
+	return new vectorType( 
+	         c1      + cn*q.nx
+	       , s*q.nz  + cn*q.ny
+	       ,-s*q.ny  + cn*q.nz
+	       );
+}
+
+lnQuat.prototype.forward = function() {	
+	// just go ahead and get the basis!
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+	const cn = c*q.nz;
+	return new vectorType( 
+	         s*q.ny + cn*q.nx
+	       ,-s*q.nx + cn*q.ny
+	       , c1     + cn*q.nz
+	       );
+}
+
 
 // rotate the passed vector 'from' this space
 lnQuat.prototype.sub2 = function( q ) {

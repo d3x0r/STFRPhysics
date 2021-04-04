@@ -73,7 +73,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
                 //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
 		fibre = nTotal * ( 4*Math.PI ) / ( steps );
-                const fiberPart =((fibre + 2*Math.PI)/(Math.PI*4) %(1/subSteps));
+                const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
 		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
 
