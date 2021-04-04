@@ -1073,7 +1073,7 @@ lnQuat.prototype.freeSpin = function(th,axis){
 	const ay_ = axis.y;
 	const az_ = axis.z;
 	// make sure it's normalized
-	const aLen = 1;//Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
+	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
 	if( aLen ) {
 		const ax = ax_/aLen;
 		const ay = ay_/aLen;
@@ -1154,6 +1154,87 @@ lnQuat.prototype.up = function() {
 	       , s*q.nx  + cn*q.nz
 	       );
 }
+
+
+lnQuat.prototype.yaw2 = function( th ) {	
+	// just go ahead and get the basis!
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const ths = Math.sin(th);
+	const thc = Math.cos(th);
+	const c = 1- c1;
+	const cn = c*q.ny;
+
+	ax = -s*q.nz  + cn*q.nx
+	ay = c1      + cn*q.ny  //( c + (1-c)yy =  c +yy-cyy  =  c(1-yy)+yy
+	az = s*q.nx  + cn*q.nz
+
+// x = th
+// y = q.theta
+	const cosCo2 = thc * c1 -   q.ny *( ths * s)
+
+	//const cosCo2 = ( ( AdotB )*(cxpy - cxmy) + cxmy + cxpy )/2;
+	//   (1-cos(A))cos(x-y)+(1+cos(A))cos(x+y)
+	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
+	// octive should have some sort of computation that gets there...
+	// would have to be a small change
+	let ang = acos( cosCo2 )*2 + oct * (Math.PI*4);
+
+	if( ang ) {
+		const sxmy = Math.sin(xmy);
+		const sxpy = Math.sin(xpy);
+		// vector rotation is just...
+		// when both are large, cross product is dominant (pi/2)
+		const ss1 = 2*c1*ths;//sxmy + sxpy  // 2 cos(y) sin(x)
+		const ss2 = 2*thc*s;//sxpy - sxmy  // 2 cos(x) sin(y)
+		const cc1 = 2*ths*s;//cxmy - cxpy  // 2 sin(x) sin(y)
+
+		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
+		// the following expression is /2 (has to be normalized anyway keep 1 bit)
+		// and is not normalized with sin of angle/2.
+		const crsX = (ay*q.nz-az*q.ny);
+		const crsY = (az*q.nx-ax*q.nz);
+		const crsZ = (ax*q.ny-ay*q.nx);
+		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
+		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
+		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
+
+		// this is NOT /sin(theta);  it is, but only in some ranges...
+		const Clx = (lnQuat.sinNormal)
+		          ?(1/(2*Math.sin( ang/2 )))
+		          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		if(0) {
+			// this normalizes the rotation so there's no overflows.
+			const other = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+			if( Math.abs( other - Clx ) > 0.001 ) {
+				console.log( "Compare A and B:", Clx, other, th, q.θ );
+			}
+		}
+		q.rn = Clx; // I'd like to save this to see what the normal actually was
+		q.θ  = ang;
+		q.nx = Cx*Clx;
+		q.ny = Cy*Clx;
+		q.nz = Cz*Clx;
+
+		q.x  = q.nx*ang;
+		q.y  = q.ny*ang;
+		q.z  = q.nz*ang;
+
+		q.dirty = false;
+	} else {
+		// result angle is 0
+		q.θ  = ang;
+		q.x = (q.nx=1) * 0;
+		q.y = (q.ny=0) * 0;
+		q.z = (q.nz=0) * 0;
+		q.dirty = false;
+	}
+	return q;
+}
+
 
 lnQuat.prototype.right = function() {	
 	// just go ahead and get the basis!
