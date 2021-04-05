@@ -14,10 +14,10 @@ const grid =[[ 0, p2, p2,  0 ]  //>0 - 1
             ,[ 0, p2, p2,  0 ]   //3-4
          ];
 
-const grid2=[[ 0, p2, p2,  0 ]  //>0 - 1
+const grid2=[[ 0, p2, 0,  0 ]  //>0 - 1
             ,[p2,  0,  0, p2 ]  //1-2
-            ,[p2*2, p2*2, p2*2,  p2*2 ]  //2-3
-            ,[p2*2,  0,  0, p2*2 ]   //3-4
+            ,[0, 0, 0,  p2*2 ]  //2-3
+            ,[0,  0,  0, p2*2 ]   //3-4
          ];
 //            0-1 1-2 2-3 3-4
 const gridn =[[ 1,  1, 1, 1 ]  //>0 - 1
@@ -232,7 +232,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					const gridlatoct = gridlat>>2;
 					const gridlngoct = gridlng>>2;
 					const spin = ((d)?grid:grid2)[gridlat%4][gridlng%4] + ((gridlatoct+gridlngoct) * Math.PI*4);
-					const latmul = (!d)?gridn[gridlat%4][gridlng%4]:1;
+					const latmul = 1;//(!d)?gridn[gridlat%4][gridlng%4]:1;
 
 					const x = Math.sin(lng);
 					const z = Math.cos(lng);
@@ -248,10 +248,9 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						
 						{
 							const s = Math.sin( lat ); // double angle substituted
-							const c = 1- Math.cos( lat ); // double angle substituted
+							const c = 1-ty; // double angle substituted
 							
-							// determinant coordinates
-							let angle = txn===1?acos( ( ty )  )
+							let angle = txn===1?lat
 									:acos( ( ty + 1 ) * ( 1 + z ) / 2 - 1 );
 							// compute the axis
 							const yz = s * x;
@@ -286,7 +285,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								const ay = (cny*this.ny) + c1;
 								const az = (cny*this.nz) + s*this.nx;
 
-								const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
+								const AdotB = q.ny;
 
 								const xmy = (spin+twistDelta - angle)/2; // X - Y  (x minus y)
 								const xpy = (spin+twistDelta + angle)/2  // X + Y  (x plus y )

@@ -1486,8 +1486,8 @@ function drawCoordinateGrid() {
 		if(1) {
 			if(1){
 				// reverse to UV Axis and Angle.
-				x = 2*(acos(1-lnQ2.ny) + Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
-				y = 2*(acos(1-lnQ2.nz/Math.cos(x/2))+ Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
+				x = 2*(Math.acos(1-lnQ2.ny) + Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
+				y = 2*(Math.acos(1-lnQ2.nz/Math.cos(x/2))+ Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
 				z = 2*(lnQ2.θ);
 			}
 			normalVertices.push( new THREE.Vector3( (x)*pointScalar*spaceScale			       ,(y)*pointScalar*spaceScale			       , (z)*pointScalar*spaceScale			       ))

@@ -388,14 +388,6 @@ function mkQuat( a,b,c,d ){
 
 
 
-function drawCoordinateGrid() {
-	if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
-		const range = (2 ) * Math.PI;
-		const minRange = (0) * Math.PI;
-		drawRange( 0,0,0, range, 30, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
-	}
-
-}
 	// graph of location to rotation... 
 	function drawRange( cx,cy,cz,range,steps, minr, unscaled, invert ) {
 		
@@ -1073,9 +1065,14 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 		
 		drawGrid( normalVertices,normalColors, curSliders);
-	        
-		drawCoordinateGrid();
-	        
+		
+		// show basis map
+		if( showCoordinateGrid || showInvCoordinateGrid || showRawCoordinateGrid ) {
+			const range = (2) * Math.PI;
+			const minRange = (0) * Math.PI;
+			drawRange( 0,0,0, range, 60, minRange, showRawCoordinateGrid, showInvCoordinateGrid );
+		}
+				
 		// squares is calculated in analog arm.
 	}
 
