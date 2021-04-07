@@ -355,7 +355,7 @@ function drawAnalogArm(curSliders,slerp) {
 
 			prior = tmpQ.applyDel( shortArm, 1, null, 0, result );
 			
-			draw( tmpQ, startAt, tmpQ, 1 );
+			draw( tmpQ, startAt, delta, 1 );
 
 			//prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
 			//draw( result.portion, from, delta, s*timeScale/100.0 );
@@ -376,7 +376,7 @@ function drawAnalogArm(curSliders,slerp) {
 			pushNColor(n, 0.4);
 		}
 
-		function draw(q,from,to,delta)
+		function draw(q,from,around,delta)
 		{
 			if( ( s % 3 ) === 0 )  {
 				if(drawNormalBall) {
@@ -422,19 +422,19 @@ function drawAnalogArm(curSliders,slerp) {
 
 				if( from ) {
 				const delta2 = delta - timeScale/100.0;
-				normalVertices.push( new THREE.Vector3( pointScalar*(from.x + to.x * delta2)*spaceScale ,pointScalar*( from.y  + to.y * delta2)*spaceScale    , pointScalar*(from.z  + to.z * delta2)*spaceScale  ))
-				normalVertices.push( new THREE.Vector3( pointScalar*(from.x+ to.x * delta)*spaceScale   ,pointScalar*( from.y + to.y * delta)*spaceScale      , pointScalar*(from.z + to.z * delta)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x + q.x * delta2)*spaceScale ,pointScalar*( from.y  + q.y * delta2)*spaceScale    , pointScalar*(from.z  + q.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*(from.x+ q.x * delta)*spaceScale   ,pointScalar*( from.y + q.y * delta)*spaceScale      , pointScalar*(from.z + q.z * delta)*spaceScale  ))
 				} else {
 				const delta2 = delta - timeScale/100.0;
-				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta2)*spaceScale   ,pointScalar*( 0 * (1-delta2) + to.y * delta2)*spaceScale      , pointScalar*(0 * (1-delta2) + to.z * delta2)*spaceScale  ))
-				normalVertices.push( new THREE.Vector3( pointScalar*( to.x * delta)*spaceScale   ,pointScalar*( 0 * (1-delta) + to.y * delta)*spaceScale      , pointScalar*(0 * (1-delta) + to.z * delta)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*( q.x * delta2)*spaceScale   ,pointScalar*( 0 * (1-delta2) + q.y * delta2)*spaceScale      , pointScalar*(0 * (1-delta2) + q.z * delta2)*spaceScale  ))
+				normalVertices.push( new THREE.Vector3( pointScalar*( q.x * delta)*spaceScale   ,pointScalar*( 0 * (1-delta) + q.y * delta)*spaceScale      , pointScalar*(0 * (1-delta) + q.z * delta)*spaceScale  ))
 				}	
 				pushNColor( n );
 
 			if( showArms )
 			{
 				{
-					const xyz = {x:to.nx, y:to.ny, z:to.nz};
+					const xyz = {x:around.nx, y:around.ny, z:around.nz};
 					const delxyz = q.applyDel( xyz, -1 );
 
 					normalVertices.push( new THREE.Vector3( (5  )*spaceScale   ,( n*4)*spaceScale      , (0)*spaceScale  ))
@@ -454,9 +454,9 @@ function drawAnalogArm(curSliders,slerp) {
 								let  ny;
 								let  nz;
 							if( drawWorldAxles ) {
-								const ax = to.x + from.x * delta;
-								const ay = to.y + from.y * delta;
-								const az = to.z + from.z * delta;
+								const ax = around.x + from.x * delta;
+								const ay = around.y + from.y * delta;
+								const az = around.z + from.z * delta;
 					
 								const l = ax*ax + ay*ay + az*az;
 						
@@ -466,9 +466,9 @@ function drawAnalogArm(curSliders,slerp) {
 								 ny = ay/s;
 								 nz = az/s;
 							 }else {
-								nx = to.nx;
-								ny = to.ny;
-								nz = to.nz;
+								nx = around.nx;
+								ny = around.ny;
+								nz = around.nz;
 							}
 							normalVertices.push( new THREE.Vector3( (A[n].x - 2*nx)*spaceScale   ,( A[n].y - 2 * ny)*spaceScale      , (A[n].z- 2*nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 0*nx)*spaceScale   ,( A[n].y + 0 * ny)*spaceScale      , (A[n].z+ 0*nz)*spaceScale  ))
