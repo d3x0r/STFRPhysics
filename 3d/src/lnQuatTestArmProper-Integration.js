@@ -107,8 +107,8 @@ function drawDigitalTimeArm(curSliders, slerp) {
 
 	//for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) 
 	{
-		let fixAxleRotation =true;
-		let keepInertia = false;
+		//let fixAxleRotation =true;
+		//let keepInertia = false;
 
 	const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
 	const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
@@ -152,15 +152,23 @@ function drawDigitalTimeArm(curSliders, slerp) {
 	const tmpR = { portion:null };
 	
 	const A1_ts = lnQ1.applyDel( arm, timeScale );
+	const A2_ts = t2_ts.applyDel( A1_ts, timeScale );
+	const A3_ts = t3_ts.applyDel( A2_ts, timeScale);
+	const A4_ts = t4_ts.applyDel( A3_ts, timeScale );
+	const A5_ts = t5_ts.applyDel( A4_ts, timeScale );
+
+	/*
 	const A2_ts = t2_ts.applyDel( arm, timeScale );
 	const A3_ts = t3_ts.applyDel( arm, timeScale);
 	const A4_ts = t4_ts.applyDel( arm, timeScale );
 	const A5_ts = t5_ts.applyDel( arm, timeScale );
+	*/
 
 	const A__ts = [A1_ts,A2_ts,A3_ts,A4_ts,A5_ts];
 	const A_R_ts = [lnQ1, t2_ts, t3_ts, t4_ts, t4_ts ];
 
 	for( var n = 0; n < 5; n++ ) {
+		if(1)
 		if( (n+1) < 5 ) {
 			A__ts[n+1].x += A__ts[n].x;
 			A__ts[n+1].y += A__ts[n].y;
@@ -174,7 +182,17 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		if( showArms )
 		{
 			normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
+			if( isNaN( normalVertices[normalVertices.length-1].x ) 
+			||isNaN( normalVertices[normalVertices.length-1].y ) 
+			||isNaN( normalVertices[normalVertices.length-1].z ) 
+			)
+			debugger;
 			normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
+			if( isNaN( normalVertices[normalVertices.length-1].x ) 
+			||isNaN( normalVertices[normalVertices.length-1].y ) 
+			||isNaN( normalVertices[normalVertices.length-1].z ) 
+			)
+			debugger;
 	
 			pushNColor(n, 0.4);
 		}
@@ -263,7 +281,6 @@ function drawAnalogArm(curSliders,slerp) {
 
 	//for( let zz = (keepInertia)?0:0; zz < (fixAxleRotation?2:1); zz++ ) 
 	{
-		let fixAxleRotation = true;
 
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
@@ -416,6 +433,14 @@ function drawAnalogArm(curSliders,slerp) {
 
 			if( showArms )
 			{
+				{
+					const xyz = {x:to.nx, y:to.ny, z:to.nz};
+					const delxyz = to.applyDel( xyz, -1 );
+
+					normalVertices.push( new THREE.Vector3( (5  )*spaceScale   ,( n*4)*spaceScale      , (0)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (5 + delxyz.x*3)*spaceScale   ,( n*4+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
+					pushNColor( n, 1.1 + (s/100*0.8) );
+				}
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
 					if( drawRotationAxles ) {
 						if( lnQuat.SLERP || addN2 ) {
@@ -477,9 +502,8 @@ function drawAnalogArm(curSliders,slerp) {
 }
 
 function old_drawAnalogArm(curSliders,slerp) {
-
-	const origin = {x:0,y:0,z:0};
-	let fixAxleRotation = true;
+//return;
+	//let fixAxleRotation = true;
 	
 	const arm = armPrimary==0?{x:2,y:0,z:0}
 		     :armPrimary==1?{x:0,y:0.1,z:0}
@@ -518,7 +542,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 	//const r5_ = t5.sub2( t4 );
 
 	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
-	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
+	const Rb = [ Ro[0].sub2(lnQ0), Ro[1].sub2(Ro[0]), Ro[2].sub2(Ro[1]), Ro[3].sub2(Ro[2]), Ro[4].sub2(Ro[3])];
 	const Rm = Ro;
 	const R  = [ lnQ1,   t2,   t3,   t4,   t5];
 	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
@@ -526,9 +550,6 @@ function old_drawAnalogArm(curSliders,slerp) {
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
 	for( var n = 0; n < 5; n++ ) {
-		if( showLineSeg[n] && drawRotationSquares ) {
-			//drawSquare( n, Rm[n], R[n-1] );
-		}
 		if( n ) {
 			A[n].x = A[n-1].x
 			A[n].y = A[n-1].y
@@ -543,11 +564,12 @@ function old_drawAnalogArm(curSliders,slerp) {
 		//   add either relative rotation itself (to the end of rotations)
 		//   or add the translated rotation (to the end of the sum of rotations)
 		const from = n?(R[n-1]):lnQ0;
-		const delta = Rm[n];
+		const delta = Rb[n];
 
+		
 		for( s = 0; s <= 100; s++ ) {
 			result.portion = null;
-			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, 1, result );
+			prior = delta.applyDel( shortArm, s*timeScale/100.0, from, true, result );
 			draw( result.portion, from, delta, s*timeScale/100.0 );
 		}
 		// draw the long segment to match digital arm.
@@ -620,6 +642,14 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 			if( showArms )
 			{
+				{
+					const xyz = {x:to.nx, y:to.ny, z:to.nz};
+					const delxyz = to.applyDel( xyz, -1 );
+
+					normalVertices.push( new THREE.Vector3( (-5  )*spaceScale   ,(n*4+ 0)*spaceScale      , (0)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (-5 + delxyz.x*3)*spaceScale   ,( n*4+0+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
+					pushNColor(n,1.3);
+				}
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
 					if( drawRotationAxles ) {
 						if( SLERP || addN2 ) {
@@ -832,7 +862,7 @@ function drawSquare( n, q, qPrior ) {
 	const onef2 = (1 - n*0.1 - 0.01 )*4;
 	const onef3 = (1 - n*0.1 - 0.02 )*4;
 
-
+	
 	if( !qPrior ) {
 		qPrior = lnQ0;
 		priorComposite = lnQ0;
@@ -1432,6 +1462,7 @@ function drawCoordinateGrid() {
 			y = lnQ2.ny * ( lnQ2.θ + oct*Math.PI * 2)
 			z = lnQ2.nz * ( lnQ2.θ + oct*Math.PI * 2)
 		}
+		if(0)
 			if( from ) {
 
 				if( SLERP ) {
@@ -1484,7 +1515,7 @@ function drawCoordinateGrid() {
 
 		//console.log( "Draw point:", x, y, z );
 		if(1) {
-			if(1){
+			if(0){
 				// reverse to UV Axis and Angle.
 				x = 2*(Math.acos(1-lnQ2.ny) + Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
 				y = 2*(Math.acos(1-lnQ2.nz/Math.cos(x/2))+ Math.PI*2*(Math.floor(lnQ2.θ/(Math.PI*2))));
