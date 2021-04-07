@@ -14,6 +14,9 @@ const grid =[[ 0, p2, p2,  0 ]  //>0 - 1
             ,[ 0, p2, p2,  0 ]   //3-4
          ];
 
+// it's hard to see this because they're all in the same plane...
+// not sure this is really needed, because the twist is just around this
+// same axis.		
 const grid2=[[ 0, p2, 0,  0 ]  //>0 - 1
             ,[p2,  0,  0, p2 ]  //1-2
             ,[0, 0, 0,  p2*2 ]  //2-3
@@ -807,7 +810,7 @@ lnQuat.prototype.apply = function( v ) {
 // if q2 is specified, then the delta is between q2 and this (q)
 // del2 is the amount of Q2 to apply to (timescalar)
 
-lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
+lnQuat.prototype.applyDel = function( v, del, q2, linear, result2 ) {
 	if( v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
@@ -837,7 +840,15 @@ lnQuat.prototype.applyDel = function( v, del, q2, unuseddel2, result2 ) {
 			let az = 0;
 
 			const target = new lnQuat();
-			q2.slerp( q, del, target).update();
+			if( linear === true ) {
+				target.x = q2.x + this.x*del
+				target.y = q2.y + this.y*del
+				target.z = q2.z + this.z*del
+				target.dirty = true; 
+				target.update();
+			} else {
+				q2.slerp( q, del, target).update();
+			}
 
 			ax = target.nx;
 			ay = target.ny;
