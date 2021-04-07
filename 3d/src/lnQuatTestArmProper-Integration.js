@@ -435,7 +435,7 @@ function drawAnalogArm(curSliders,slerp) {
 			{
 				{
 					const xyz = {x:to.nx, y:to.ny, z:to.nz};
-					const delxyz = to.applyDel( xyz, -1 );
+					const delxyz = q.applyDel( xyz, -1 );
 
 					normalVertices.push( new THREE.Vector3( (5  )*spaceScale   ,( n*4)*spaceScale      , (0)*spaceScale  ))
 					normalVertices.push( new THREE.Vector3( (5 + delxyz.x*3)*spaceScale   ,( n*4+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
@@ -644,11 +644,11 @@ function old_drawAnalogArm(curSliders,slerp) {
 			{
 				{
 					const xyz = {x:to.nx, y:to.ny, z:to.nz};
-					const delxyz = to.applyDel( xyz, -1 );
+					const delxyz = q.applyDel( xyz, -1 );
 
 					normalVertices.push( new THREE.Vector3( (-5  )*spaceScale   ,(n*4+ 0)*spaceScale      , (0)*spaceScale  ))
 					normalVertices.push( new THREE.Vector3( (-5 + delxyz.x*3)*spaceScale   ,( n*4+0+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
-					pushNColor(n,1.3);
+					pushNColor( n, 1.1 + (s/100*0.8) );
 				}
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
 					if( drawRotationAxles ) {
