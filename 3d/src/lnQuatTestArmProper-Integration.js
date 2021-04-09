@@ -620,12 +620,16 @@ function old_drawAnalogArm(curSliders,slerp) {
 
 					}
 				}
-			
-				if( from ) {
-					doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
-				} else {
-					doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
-				}	
+				// point along the arm...
+					if( from ) {
+						doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
+					} else {
+						doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
+					}	
+					
+				// point in rotation space
+				doDrawBasis( q, q, 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
+				//function doDrawBasis(lnQ2,t,s,Del,from,colorS, oct ) {
 
 			}
 
@@ -650,7 +654,7 @@ function old_drawAnalogArm(curSliders,slerp) {
 					normalVertices.push( new THREE.Vector3( (-5 + delxyz.x*3)*spaceScale   ,( n*4+0+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
 					pushNColor( n, 1.1 + (s/100*0.8) );
 				}
-				if( s == 50 && delta || ( drawRotationAllAxles ) ){
+				if( s == 50 && delta || ( drawRotationAllAxles ) ) {
 					if( drawRotationAxles ) {
 						if( SLERP || addN2 ) {
 							normalVertices.push( new THREE.Vector3( (A[n].x - 2*q.nx)*spaceScale   ,( A[n].y - 2 * q.ny)*spaceScale      , (A[n].z-2*q.nz)*spaceScale  ))
@@ -658,10 +662,9 @@ function old_drawAnalogArm(curSliders,slerp) {
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
 						}else {
-
-								let  nx;
-								let  ny;
-								let  nz;
+							let  nx;
+							let  ny;
+							let  nz;
 							if( drawWorldAxles ) {
 								const ax = to.x + from.x * delta;
 								const ay = to.y + from.y * delta;

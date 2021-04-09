@@ -1037,9 +1037,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		}else {
 			q.θ  = q.θ+th;
 		}
-		q.x = (q.nx=1) * q.θ;
-		q.y = (q.ny=0) * q.θ;
-		q.z = (q.nz=0) * q.θ;
+		q.x = (q.nx) * q.θ;
+		q.y = (q.ny) * q.θ;
+		q.z = (q.nz) * q.θ;
 		q.dirty = false;
 	}
 	return q;

@@ -232,6 +232,7 @@ function drawAnalogArm(curSliders,slerp) {
 	//	let fixAxleRotation = zz===1;
 	//	let keepInertia = zz=== 0;
 
+
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
 	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3, timeScale ):new lnQuat(lnQ4);
@@ -375,6 +376,15 @@ function drawAnalogArm(curSliders,slerp) {
 
 			if( showArms )
 			{
+				{
+					const xyz = {x:to.nx, y:to.ny, z:to.nz};
+					const delxyz = to.applyDel( xyz, -1 );
+
+					normalVertices.push( new THREE.Vector3( (0  )*spaceScale   ,( 0)*spaceScale      , (0)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (0 + delxyz.x*3)*spaceScale   ,( 0+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
+					pushN2(n,4.9,0.2);
+				}
+
 				if( s == 50 && delta || ( drawRotationAllAxles ) ){
 					if( drawRotationAxles ) {
 						if( lnQuat.SLERP || addN2 ) {
@@ -382,6 +392,7 @@ function drawAnalogArm(curSliders,slerp) {
 							normalVertices.push( new THREE.Vector3( (A[n].x + 0*q.nx)*spaceScale   ,( A[n].y + 0 * q.ny)*spaceScale      , (A[n].z+ 0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x - 0*q.nx)*spaceScale   ,( A[n].y - 0 * q.ny)*spaceScale      , (A[n].z-0*q.nz)*spaceScale  ))
 							normalVertices.push( new THREE.Vector3( (A[n].x + 2*q.nx)*spaceScale   ,( A[n].y + 2 * q.ny)*spaceScale      , (A[n].z+ 2*q.nz)*spaceScale  ))
+							pushN2(n,0.2,4.9);
 						}else {
 
 								let  nx;
