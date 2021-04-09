@@ -1032,10 +1032,14 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		q.dirty = false;
 	} else {
 		// result angle is 0
-		q.θ  = ang;
-		q.x = (q.nx=1) * 0;
-		q.y = (q.ny=0) * 0;
-		q.z = (q.nz=0) * 0;
+		if( AdotB > 0 ) {
+			q.θ  = q.θ+th;
+		}else {
+			q.θ  = q.θ+th;
+		}
+		q.x = (q.nx=1) * q.θ;
+		q.y = (q.ny=0) * q.θ;
+		q.z = (q.nz=0) * q.θ;
 		q.dirty = false;
 	}
 	return q;
