@@ -83,7 +83,7 @@ Quaternions have a natural logarithm function, and the natural log quaternion ha
 
 Although natural log means, for multiplication of scalars that `exp(ln(A)+ln(B))=A+B`, and this is as much true here,
 the actual operation of rotation is actually a cross product, and not multiplication, hence `exp(ln(Q) ⨯ ln(P)) = Q⨯P`.
-And although this system does become additive, it only applies for virtual object rotations (SLERP), and velocity/acceleration.
+And although this system does become additive, it only applies for virtual object rotations (in a full time step), and velocity/acceleration.
 A difference or differential does give the shortest path between two rates of rotation; and can compare relatively the similarity
 of two rotations, which can be used to synchronize rotation.  The ability to rotate in any direction is often constrained by
 physical limitations, such as a rocket's engine is on a certain rigid point, and the thrust direction varies with the rotation of the
@@ -101,12 +101,11 @@ and be simply manipulated with addition and subtraction.  (721 degrees is the sa
 
 ## SLERP Comparison
 
-This engine will use lnQuats as the native computation; this lets the engine always directly linearly scale in a spherical path and then expoenentiate
-only when applied; in comparison SLERP does `lnQuat.exp( Quat.log() + delta )`, where the same SLERP on lnQuat is just `lnQuat + delta`.
+SLERP is an accurate interpolation between two frames by an internal rotation force.  Linear interpolation of axis-angle (log-quaternion)
+works more like a rotation of an external exis, but does not follow the path of any single compoition- but rather the required force would have to change with time in order to form a straight line.
 
-Well... it's almost that easy; if the chain is calculated from a fixed point, it would be best to direct subtract; 
-
-The prinicpal angle form of lnQuat should be used.  The `principal()` utility function updates the quaternion to its princpal angle values, and returns the number of wraps removed.
+However, recovering the rotation between two frames and then applying that in some fraction is also computable.  Take the target frame, rotate the starting frame out of it (apply start frame inversed), using
+a axis-angle rotated by axis-angle; and then rotate that result back into the starting frame as a (x/y/z) vector that moves the direction, but keeps the angle.
 
 Free Bodies may run a long accumulation of rotation to get the orientation; application of 
 a quaternion with many turns still results in a minimal unit-quaternion representation; although if the accumulator gets too big, loss of precision may 
@@ -115,6 +114,20 @@ Also bodies, that spin very slowly don't need to apply corrections very often.
 
 However, computing a chain from a fixed point like the base of a robot arm it will be more proper to maintain the full spin count (to prevent the robot manipulator from spinning 3 times just because; say on a 
 long chain of actuators; but this scenario is also likely to not overflow rotation accumulation.
+
+## Internal VS External rotations
+
+When a rotation force is applied to change the direction of another axis-angle rotation, the force may be mounted within the frame that
+the axis-angle represent; this is called an 'internal' rotation.  The effective direction of the rotation axis changes with time, and is an
+integration using the base frame through it's rotational step.
+
+The other source of torque is located outside of that frame, in a global space, and is called an external rotation.  The direction of this force does not change with time, and is constant within the frame
+itself, every point in the frame along that line will remain the same, leaving any view of that rotation axis also the same.
+
+SLERP is an internal rotation between A and B, and getting the `spinDiff()` axis-angle and applying that is the same... but it does not 
+reflect what the actual rotation required to get there was based on.
+
+
 
 
 ## Inertial Frame Relavence.
