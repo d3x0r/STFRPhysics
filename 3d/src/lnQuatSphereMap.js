@@ -16,6 +16,7 @@ let normalizeNormalTangent = false;
 let showInvCoordinateGrid = false;
 let showRawCoordinateGrid = false;
 let twistCount = 2;
+let weylGroup = false;
 let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angle
 let showCoords = false;
 let bisectAnalog = false;
@@ -108,65 +109,88 @@ function makeQuat(p,y,r) {
 
 	function deg2rad(n) { return n * Math.PI/180 }
 	let twist = 0;
-
+	const bP = new lnQuat();
 	function pMake(q, x, y, o ){
 		
-		const qlen = Math.sqrt(x*x + y*y);
+		if( weylGroup ) {
+			q.x = x;
+			q.y = 0;
+			q.z = 0;
+			q.dirty = true;
+			q.update(); 
+			q.freeSpin( o.θ, o );
 
-		const qnx = qlen?x / qlen:0;
-		const qny = qlen?0:1;
-		const qnz = qlen?y / qlen:0;
+			bP.x = 0;
+			bP.y = 0;
+			bP.z = y;
+			bP.dirty = true;
+			bP.update(); 
+			bP.freeSpin( o.θ, o );
 
-		const ax = o.nx
-		const ay = o.ny
-		const az = o.nz
-		const oct = 0;//Math.floor( o.θ / (Math.PI*2) ); 
-		const th = o.θ % (Math.PI*2);
+			q.x += bP.x;
+			q.y += bP.y;
+			q.z += bP.z;
+			q.dirty = true;
+			q.update(); 
+		} else {
+			// use parameters to directly transform a point without 3 function calls
+			const qlen = Math.sqrt(x*x + y*y);
 
-		{ // finish rodrigues
-			const AdotB = (qnx*ax + /*q.ny*ay +*/ qnz*az);
-		
-			const xmy = (th - qlen)/2; // X - Y  (x minus y)
-			const xpy = (th + qlen)/2  // X + Y  (x plus y )
-			const cxmy = Math.cos(xmy);
-			const cxpy = Math.cos(xpy);
-			const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
-		
-			let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*4 + oct*Math.PI*2);
-			// only good for rotations between 0 and pi.
-		
-			if( ang && ang != Math.PI*2 ) {
-				const sxmy = Math.sin(xmy); // sin x minus y
-				const sxpy = Math.sin(xpy); // sin x plus y
-		
-				const ss1 = sxmy + sxpy
-				const ss2 = sxpy - sxmy
-				const cc1 = cxmy - cxpy
-		
-				// these have q.ny terms remove - q.ny is 0.
-				const Cx = ( (ay*qnz       ) * cc1 +  ax * ss1 + qnx * ss2 );
-				const Cy = ( (az*qnx-ax*qnz) * cc1 +  ay * ss1             );
-				const Cz = ( (      -ay*qnx) * cc1 +  az * ss1 + qnz * ss2 );
+			const qnx = qlen?x / qlen:0;
+			const qny = qlen?0:1;
+			const qnz = qlen?y / qlen:0;
 
-				const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-				
-				q.θ  = ang;
-				q.nx = Cx*Clx;
-				q.ny = Cy*Clx;
-				q.nz = Cz*Clx;
-				
-				q.x  = q.nx*ang;
-				q.y  = q.ny*ang;
-				q.z  = q.nz*ang;
-		
-				q.dirty = false;
-			} else {
-				// result is 0 angular rotation... normal doesn't matter.
-				q.x = q.y = q.z = 0;
-				q.nx = q.nz = 0;
-				q.ny = 1;
-				q.θ = 0;
-				q.dirty = false;
+			const ax = o.nx
+			const ay = o.ny
+			const az = o.nz
+			const oct = 0;//Math.floor( o.θ / (Math.PI*2) ); 
+			const th = o.θ % (Math.PI*2);
+
+			{ // finish rodrigues
+				const AdotB = (qnx*ax + /*q.ny*ay +*/ qnz*az);
+			
+				const xmy = (th - qlen)/2; // X - Y  (x minus y)
+				const xpy = (th + qlen)/2  // X + Y  (x plus y )
+				const cxmy = Math.cos(xmy);
+				const cxpy = Math.cos(xpy);
+				const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
+			
+				let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*4 + oct*Math.PI*2);
+				// only good for rotations between 0 and pi.
+			
+				if( ang && ang != Math.PI*2 ) {
+					const sxmy = Math.sin(xmy); // sin x minus y
+					const sxpy = Math.sin(xpy); // sin x plus y
+			
+					const ss1 = sxmy + sxpy
+					const ss2 = sxpy - sxmy
+					const cc1 = cxmy - cxpy
+			
+					// these have q.ny terms remove - q.ny is 0.
+					const Cx = ( (ay*qnz       ) * cc1 +  ax * ss1 + qnx * ss2 );
+					const Cy = ( (az*qnx-ax*qnz) * cc1 +  ay * ss1             );
+					const Cz = ( (      -ay*qnx) * cc1 +  az * ss1 + qnz * ss2 );
+
+					const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+					
+					q.θ  = ang;
+					q.nx = Cx*Clx;
+					q.ny = Cy*Clx;
+					q.nz = Cz*Clx;
+					
+					q.x  = q.nx*ang;
+					q.y  = q.ny*ang;
+					q.z  = q.nz*ang;
+			
+					q.dirty = false;
+				} else {
+					// result is 0 angular rotation... normal doesn't matter.
+					q.x = q.y = q.z = 0;
+					q.nx = q.nz = 0;
+					q.ny = 1;
+					q.θ = 0;
+					q.dirty = false;
+				}
 			}
 		}
 		return q;
@@ -178,6 +202,8 @@ function makeQuat(p,y,r) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
 		 mapPolar = document.getElementById( "mapPolar" )?.checked;
+		 weylGroup = document.getElementById( "weylGroup" )?.checked;
+		 const showGrid = document.getElementById( "showGrid").checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
 		const p = [];
@@ -252,7 +278,7 @@ function makeQuat(p,y,r) {
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
 					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
-				if( draw ) {
+				if( showGrid && draw ) {
 
 					const oldp = p[gamline];
 					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
@@ -284,7 +310,7 @@ function makeQuat(p,y,r) {
 				}
 
 				const basis2 = lnQ.update().getBasis();
-				if( draw2 ) {
+				if( showGrid && draw2 ) {
 					const oldp = p2[gamline];
 					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
 					normalVertices.push( new THREE.Vector3( (basis2.up.x)*spaceScale ,(basis2.up.y)*spaceScale    , (basis2.up.z)*spaceScale ))

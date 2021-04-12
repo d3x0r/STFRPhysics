@@ -69,7 +69,6 @@
 		<p style="display:none">Show facets: <input type="checkbox" id="showfacets" value="checked"></p>
 		<p style="display:none">Show edges: <input type="checkbox" id="showedges" value="checked"> Show normals: <input type="checkbox" id="showNormals" value="checked"></p>
 		<p style="display:none">Smooth Shade: <input type="checkbox" id="smoothShade" checked=0>
-		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" value="checked">
 		<p>
 		<p style="display:none">Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
@@ -92,6 +91,10 @@
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
+		 <span style="visibility:visible">- Show Grid Lines: <input type="checkbox" id="showGrid" checked></span>
+		 <br>
+		 <span style="visibility:visible">- OA+OB (else O(A+B)): <input type="checkbox" id="weylGroup" value="checked"></span>
+		 <span style="visibility:visible">- Use Polar Map: <input type="checkbox" id="mapPolar" value="checked"></span>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 			
@@ -111,7 +114,7 @@
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
 		 - Show Rotation Coordinates: <input type="checkbox" id="showCoords" checked>
-		 <span style="visibility:visible">- Scale 2-norm: <input type="checkbox" id="showScaled" checked > - Show Slider Curves: <input type="checkbox" id="showSliderCurves" checked>  </span><br>
+		 <span style="visibility:visible">- Scale 2-norm: <input type="checkbox" id="showScaled" checked > - Show Slider Curves: <input type="checkbox" id="showSliderCurves" unchecked>  </span><br>
 		 - Draw Rotation Axes: <input type="checkbox" id="drawRotationAxles" checked> 
 		 - Draw World Axes: <input type="checkbox" id="drawWorldAxles" > <br>
 		 - Arm From X<input type="radio" name="drawFrom" id="drawArmFromX"  >
@@ -721,27 +724,14 @@
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERPBasis" );
 			is.oninput = updateMesh;
-			is = document.getElementById( "inflation" );
-			is.oninput = updateMesh;
-			is = document.getElementById( "noInflation" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "minimize" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "maximize" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "midify" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "harden" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "brick" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "smoothShade" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "showNormal" );
-			is.onchange = updateMesh;
-			is = document.getElementById( "showSliderCurves" );
-			is.onchange = updateMesh;
 
+			["showNormal", "showSliderCurves","smoothShade" ,
+				"weylGroup","mapPolar"
+			].forEach( (control)=>{
+				const is = document.getElementById( control );
+				is.onchange = updateMesh;
+
+			})
 
 			{
 				const is2 = document.getElementById( "showCoordinateGrid" );
