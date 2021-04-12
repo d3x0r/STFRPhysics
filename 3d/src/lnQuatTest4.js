@@ -29,7 +29,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const spaceScale = 5;
 	const normal_del = 0.5;
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
-	var fibre;
 	let prior = null;
 
 	
@@ -71,9 +70,9 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 
 	 const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
-                //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		fibre = nTotal * ( 4*Math.PI ) / ( steps );
-                const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
+        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
+		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
+        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
 		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
 
@@ -81,12 +80,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
                     	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
                         .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
 
-		//const lnQrot = new lnQuat( fibre, {x:AxRot,y:AyRot,z:AzRot} );
-		//const lnQ    = new lnQuat( T    , lnQrot.apply( { x: A, y:B, z:C } ) );
 
-		//lnQ.spin( t, {x:xRot, y:yRot, z:zRot }, E/3 );
-                //lnQ1.freeSpin( t, {x:xRot, y:yRot, z:zRot } );
-                //const lnQ = lnQ1;
 		if( showTrajectories ) {
 			const newDelx = lnQ.apply( stepx );
 			const newDely = lnQ.apply( stepy );
@@ -183,7 +177,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	
 	}
 
-	function doDrawBasis(lnQ2,t,n ) {
+	function doDrawBasis(lnQ2, fibre ) {
 		const basis = lnQ2.update().getBasis( );
 		normalVertices.push( new THREE.Vector3( (lnQ2.x)*spaceScale                             ,((lnQ2.y))*spaceScale                             , ((lnQ2.z))*spaceScale ))
 		normalVertices.push( new THREE.Vector3( (lnQ2.x)*spaceScale + basis.right.x*normal_del  ,((lnQ2.y))*spaceScale + basis.right.y*normal_del  , ((lnQ2.z))*spaceScale + basis.right.z*normal_del ))
@@ -210,8 +204,13 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			const s = (fibre ) / (Math.PI*2);
 			normalVertices.push( new THREE.Vector3( ((prior.x))*spaceScale ,(prior.y)*spaceScale    , (prior.z)*spaceScale ))
 			normalVertices.push( new THREE.Vector3( ((lnQ2.x))*spaceScale   ,(lnQ2.y)*spaceScale    , (lnQ2.z)*spaceScale  ))
-			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
+			if( lnQ2.θ > Math.PI ) {
+				normalColors.push( new THREE.Color( 1.0*s,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 1.0*s,1.0*s,0,255 ))
+			}else {
+				normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,1.0*s,255 ))
+			}
 			prior.θ = lnQ2.θ;
 			prior.nx = lnQ2.nx;
 			prior.ny = lnQ2.ny;
@@ -305,14 +304,14 @@ function DrawQuatNormals(normalVertices,normalColors) {
 
 
 	if(0)
-	for( let h = -1; h <= 1; h+= 0.25 ) {
-		if( h < 0.6 ) continue;
-	for( let t = Math.PI; t < Math.PI*3/2; t+= 0.25 ){
-			let x = Math.sin(t );
-			const z = Math.cos(t);
-			const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
-		drawN( lnQ );
-	}
+		for( let h = -1; h <= 1; h+= 0.25 ) {
+			if( h < 0.6 ) continue;
+		for( let t = Math.PI; t < Math.PI*3/2; t+= 0.25 ){
+				let x = Math.sin(t );
+				const z = Math.cos(t);
+				const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
+			drawN( lnQ );
+		}
 	}
 
 

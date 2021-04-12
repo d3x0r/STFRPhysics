@@ -9,6 +9,7 @@ let AxRot, AyRot, AzRot;
 let turnCount = 12;
 let stepCount = 1000;
 let _1norm = false;
+let mapPolar= false;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
 let normalizeNormalTangent = false;
@@ -77,6 +78,10 @@ let normalVertices,normalColors;
 	const spaceScale = 0.70;
 	const normal_del = 0.14;
 
+function mkQuat( a,b,c,d ){
+	return new lnQuat( a, b, c, d );
+}
+	
 function makeQuat(p,y,r) {
 	switch( mountOrder ) {
 	case 0:
@@ -94,126 +99,15 @@ function makeQuat(p,y,r) {
 	case 5:
 	return mkQuat().yaw(y).roll(r).pitch(p);
 	case 6:{
-		const l2 = Math.sqrt(p*p+y*y);
-		const l3 = Math.sqrt(p*p+y*y+r*r);
-		//return mkQuat(0,p,y/l2,r/l3);
 		return mkQuat(0,p,y,r);
 	}
 	}
 }
 
-function test1() {
-	// this test fails... although I would think that Y and PQ5 should be close
-	const P = new lnQuat( 0, 0.1, 0.2, 0.3 ).update();
-	const Q = new lnQuat( 0, -0.3, -0.1, 0.2 ).update();
-	const PQ1 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ, Q );
-	const PQ5 = new lnQuat(0,P.x,P.y,P.z).freeSpin( Q.θ*0.5, Q );
-	SLERP=true;
-	const X = P.slerp( PQ1, 0.5 );
-	SLERP=false;
-	const Y = P.slerp( PQ1, 0.5 );
-	console.log( "Things:", X, Y, PQ5 );
-}
-//test1();
-
-function mkQuat( a,b,c,d ){
-	//const scalar = Math.sqrt(a*a+b*b+c*c+d*d);
-	//const lin = Math.abs(a)+Math.abs(b)+Math.abs(c)+Math.abs(d);
-	//return new lnQuat( a*scalar/lin, b*scalar/lin ,c*scalar/lin,d*scalar/lin );
-	//return new lnQuat( a*lin/scalar, b*lin/scalar ,c*lin/scalar,d*lin/scalar );
-	return new lnQuat( a, b, c, d );
-}
-
-
-
-	function pushN2(n,s1,s2){
-		let c1 = Math.floor(s1)/10;
-		s1 = s1 % 1;
-		let c2 = Math.floor(s2)/10;
-		s2 = s2 % 1;
-		switch( n ) {
-		case 0:
-			normalColors.push( new THREE.Color( 1.0*s1,1.0*c1,1.0*c1,255 ))
-			normalColors.push( new THREE.Color( 1.0*s2,1.0*c2,1.0*c2,255 ))
-			break;
-		case 1:
-			normalColors.push( new THREE.Color( 1.0*c1,1.0*s1,1.0*c1,255 ))
-			normalColors.push( new THREE.Color( 1.0*c2,1.0*s2,1.0*c2,255 ))
-			break;
-		case 2:
-			normalColors.push( new THREE.Color( 1.0*c1,1.0*c1,1.0*s1,255 ))
-			normalColors.push( new THREE.Color( 1.0*c2,1.0*c2,1.0*s2,255 ))
-			break;
-		case 3:
-			normalColors.push( new THREE.Color( 1.0*c1,1.0*s1,1.0*s1,255 ))
-			normalColors.push( new THREE.Color( 1.0*c2,1.0*s2,1.0*s2,255 ))
-			break;
-		case 4:
-			normalColors.push( new THREE.Color( 1.0*s1,1.0*s1,1.0*c1,255 ))
-			normalColors.push( new THREE.Color( 1.0*s2,1.0*s2,1.0*c2,255 ))
-			break;
-		}
-	}
-
-	function pushN(n,s){
-		if( !s ) s = 0.99;
-		let c = Math.floor(s)/10;
-		s = s % 1;
-		switch( n ) {
-		case 0:
-			normalColors.push( new THREE.Color( 1.0*s,1.0*c,1.0*c,255 ))
-			normalColors.push( new THREE.Color( 1.0*s,1.0*c,1.0*c,255 ))
-			break;
-		case 1:
-			normalColors.push( new THREE.Color( 1.0*c,1.0*s,1.0*c,255 ))
-			normalColors.push( new THREE.Color( 1.0*c,1.0*s,1.0*c,255 ))
-			break;
-		case 2:
-			normalColors.push( new THREE.Color( 1.0*c,1.0*c,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 1.0*c,1.0*c,1.0*s,255 ))
-			break;
-		case 3:
-			normalColors.push( new THREE.Color( 1.0*c,1.0*s,1.0*s,255 ))
-			normalColors.push( new THREE.Color( 1.0*c,1.0*s,1.0*s,255 ))
-			break;
-		case 4:
-			normalColors.push( new THREE.Color( 1.0*s,1.0*s,1.0*c,255 ))
-			normalColors.push( new THREE.Color( 1.0*s,1.0*s,1.0*c,255 ))
-			break;
-		}
-	}
 
 
 	function deg2rad(n) { return n * Math.PI/180 }
 	let twist = 0;
-
-	function backConvert(q, v, range ){
-
-		const s  = q.s;
-		const qw = q.qw;
-		
-		const dqw = s/q.θ; // sin(theta)/r
-	
-		const qx = -q.x * dqw;
-		const qy = -q.y * dqw;
-		const qz = -q.z * dqw;
-	
-		const tx = 2 * (qy * v.z - qz * v.y);
-		const ty = 2 * (qz * v.x - qx * v.z);
-		const tz = 2 * (qx * v.y - qy * v.x);
-	
-		const vxOut = v.x + qw * tx + ( qy * tz - ty * qz );
-		const vyOut = v.y + qw * ty + ( qz * tx - tz * qx );
-		const vzOut = v.z + qw * tz + ( qx * ty - tx * qy );
-
-		{ // convert normal to x/0/z normal
-			const l3 = Math.sqrt(vxOut*vxOut+vyOut*vyOut+vzOut*vzOut);
-			const tmpy = vyOut /l3; // square normal
-			const cosTheta = Math.acos( tmpy ); // 1->-1 (angle from pole around this circle.
-			const norm1 = Math.sqrt(vxOut*vxOut+vzOut*vzOut);
-			return {x: (vzOut/norm1 * cosTheta/range), y: (-vxOut/norm1 * cosTheta)/range };
-		}
-	}
 
 	function pMake(q, x, y, o ){
 		
@@ -283,6 +177,7 @@ function mkQuat( a,b,c,d ){
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
+		 mapPolar = document.getElementById( "mapPolar" )?.checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
 		const p = [];
@@ -308,9 +203,32 @@ function mkQuat( a,b,c,d ){
 			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
 				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+
+				if( mapPolar ) {
+					g2 = gamma*Math.sin(theta/range*Math.PI);
+					t2 = gamma*Math.cos(theta/range*Math.PI);
+				}
+
+				/*
+				  // limit to more of a circular patch...
+				if( theta*theta+gamma*gamma > range*range ) 
+				{
+					if( !draw )
+						p.push( {x:0,y:0,z:0} );
+					if( !draw2 ) {
+						p2.push( {x:0,y:0,z:0} )
+
+					}
+					continue;
+				}
+				*/
 				if( _1norm ) {
-					g2 = 1.414*gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					//t2 /= (Math.abs(g2)+Math.abs(t2));
+					//g2 /= (Math.abs(g2)+Math.abs(t2));
+
+					g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+
 				}
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
@@ -420,7 +338,7 @@ function mkQuat( a,b,c,d ){
 				const oy = pointScalar*(unscaled?lnQ.y:(invert?lnQ.y:(lnQ.θ*lnQ.ny)));
 				const oz = pointScalar*(unscaled?lnQ.z:(invert?lnQ.z:(lnQ.θ*lnQ.nz)));
 		
-		                //drawN( lnQ );
+		        //drawN( lnQ );
 				normalVertices.push( new THREE.Vector3( ox*spaceScale			     ,oy*spaceScale			     , oz*spaceScale ))
 				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/normLen  ,oy*spaceScale + basis.right.y*normal_del /normLen , oz*spaceScale + basis.right.z*normal_del/normLen ))
 																				
@@ -439,31 +357,6 @@ function mkQuat( a,b,c,d ){
 				
 		}
 
-	function drawN( lnQ )
-	{
-	const v = { x:0,y:1,z:0};
-			simpleBasis(lnQ);
-			const new_v = lnQ.apply( v );
-			const basis = lnQ.getBasis( );
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale,new_v.y*spaceScale, new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.right.x*normal_del,new_v.y*spaceScale + basis.right.y*normal_del,new_v.z*spaceScale + basis.right.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			,new_v.y*spaceScale			, new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.up.x*normal_del,new_v.y*spaceScale + basis.up.y*normal_del,new_v.z*spaceScale + basis.up.z*normal_del ))
-
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale			     ,new_v.y*spaceScale			     , new_v.z*spaceScale ))
-			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
-
-			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
-			normalColors.push( new THREE.Color( 0.6,0,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0.6,0,0.6 ))
-			normalColors.push( new THREE.Color( 0,0,0.6,0.6))
-			normalColors.push( new THREE.Color( 0,0,0.6,0.6 ))
-			
-	
-	}
 	}
 
 
@@ -711,43 +604,10 @@ function mkQuat( a,b,c,d ){
 				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 			}
-		   
-
 		}
-
-
-
 	}
 
 
-
-
-
-let clock = 0.0;
-let start = 0;
-const curPos = [new lnQuat(),];
-
-function setMatrix( n, q, m ) {
-	const me = m.elements;
-	const b = q.getBasis();
-	//console.log( "M:", m );
-	m.elements[0+0] = b.right.x;
-	m.elements[0+1] = b.right.y;
-	m.elements[0+2] = b.right.z;
-	//m.elements[0+3] = 0;
-	m.elements[4+0] = b.up.x;
-	m.elements[4+1] = b.up.y;
-	m.elements[4+2] = b.up.z;
-	//m.elements[4+3] = 0;
-	m.elements[8+0] = b.forward.x;
-	m.elements[8+1] = b.forward.y;
-	m.elements[8+2] = b.forward.z;
-	//m.elements[8+3] = 0;
-	m.elements[12+0] = n*2-4;
-	m.elements[12+1] = 0;
-	m.elements[12+2] = 0;
-	//m.elements[12+3] = b.forward.x;
-}
 
 function tickQuat( shapes ) {
 	
@@ -773,16 +633,9 @@ is.onfocus = ((is,n)=>()=>focusSlider( is, "Z", n ))(is,n);
 
 for( var n = 1; n <= 5; n++ ) {
 		is = document.getElementById( "lnQX"+n );
-		//is.oninput = updateMesh;
 		is.onfocus = ((is,n)=>()=>focusSlider( is, "X", n ))(is,n);
-	//	is.onblur = ((is,n)=>()=>blurSlider( is,"X", n ))(is,n);
 		is = document.getElementById( "lnQY"+n );
-		//is.oninput = updateMesh;
 		is.onfocus = ((is,n)=>()=>focusSlider( is,"Y", n ))(is,n);
-	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Y", n ))(is,n);
-		//is = document.getElementById( "lnQZ"+n);
-		//is.onfocus = ((is,n)=>()=>focusSlider( is,"Z", n ))(is,n);
-	//	is.onblur = ((is,n)=>()=>blurSlider( is,"Z", n ))(is,n);
 	}
 
 
@@ -947,7 +800,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
         curSliders.lnQX[0] = (curSliders.lnQX[0] * 4.25*Math.PI);
         curSliders.lnQY[0] = (curSliders.lnQY[0] * 4.25*Math.PI);
-        curSliders.lnQZ[0] = (curSliders.lnQZ[0] +1) * 100 + 10;
+        curSliders.lnQZ[0] = (curSliders.lnQZ[0] +1) * 180  + 10;
 
         document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]/Math.PI).toFixed(4) + "π";
         document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]/Math.PI).toFixed(4) + "π";
@@ -1076,81 +929,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		// squares is calculated in analog arm.
 	}
 
-	// tick needs lnQ?_current
-	start = 0;
-	clock = 0;
-	curPos.length = 0;
 	return tickQuat;
 
 }
 
-
-
-
-/*
-  // bisect and trisect algorithms - testing half of half of  half ....
-		if( trisectAnalog ) {
-			const pointList = [];
-			function doLevel( l, P, Q, mn, mx ) {
-				if( Math.abs( mx-mn ) < 0.001 ) debugger;
-				if( l > 4 ) return;
-				let x1 = mn + (mx-mn)/3;
-				let x2 = mn + (2*(mx-mn)/3);
-				
-				const mid1 = P.slerp( Q, 0.33 );
-				const mid2 = P.slerp( Q, 0.66 );
-
-				doLevel( l+1, P, mid1, mn, x1 );
-				pointList.push( mid1 );
-				doLevel( l+1, mid1, mid2, x1, x2 );
-				pointList.push( mid2 );
-				doLevel( l+1, mid2, Q, x2, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R:Rz)[n];
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(timeScale * pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			result.portion = pointList[pointList.length-1];
-		} else if( bisectAnalog ) {
-			const pointList = [];
-			function doLevel( n, P, Q, mn, mx ) {
-				if( n > 6 ) return;
-				let x = (mx+mn)/2;
-				const mid = P.slerp( Q, timeScale*0.5 );
-
-				doLevel( n+1, P, mid, mn, x );
-				pointList.push( mid );
-				//console.log( "Add point:", n, x );
-				doLevel( n+1, mid, Q, x, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R[n]:Rz[n]);
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			
-			result.portion = pointList[pointList.length-1];
-			
-
-*/

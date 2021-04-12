@@ -43,6 +43,7 @@ let showSliderCurves = false;
 let totalNormal = 0;
 let drawWorldAxles = false;
 let mountOrder = 0;
+let matchOrder = 0;
 
 let showRaw = true;  // just raw x/y/z at x/y/z
 let shownRnL = true;  // p * θ / nR
@@ -62,6 +63,10 @@ let normalVertices,normalColors;
 	const spaceScale = 5;
 	const normal_del = 1;
 
+function mkQuat( a,b,c,d ){
+	return new lnQuat( a, b, c, d );
+}
+	
 function makeQuat(p,y,r) {
 	switch( mountOrder ) {
 	case 0:
@@ -87,13 +92,52 @@ function makeQuat(p,y,r) {
 	}
 }
 
-function mkQuat( a,b,c,d ){
-	//const scalar = Math.sqrt(a*a+b*b+c*c+d*d);
-	//const lin = Math.abs(a)+Math.abs(b)+Math.abs(c)+Math.abs(d);
-	//return new lnQuat( a*scalar/lin, b*scalar/lin ,c*scalar/lin,d*scalar/lin );
-	//return new lnQuat( a*lin/scalar, b*lin/scalar ,c*lin/scalar,d*lin/scalar );
-	return new lnQuat( a, b, c, d );
+function makeMatchQuat(from,to) {
+	let newQuat = mkQuat();
+	let p = to.x - from.x;
+	let y = to.y - from.y;
+	let r = to.z - from.z;
+	for( let iter = 0; iter < 2; iter++ ) {
+
+		switch( matchOrder ) {
+			case 0:
+				newQuat.set(0,0,0,0).roll(r).yaw(y).pitch(p);
+				break;
+			case 1:
+				newQuat.set(0,0,0,0).roll(r).pitch(p).yaw(y);
+				break;
+			case 2:
+				newQuat.set(0,0,0,0).pitch(p).yaw(y).roll(r);
+				break;
+			case 3:
+				newQuat.set(0,0,0,0).pitch(p).roll(r).yaw(y);
+				break;
+			case 4:
+				newQuat.set(0,0,0,0).yaw(y).pitch(p).roll(r);
+				break;
+			case 5:
+				newQuat.set(0,0,0,0).yaw(y).roll(r).pitch(p);
+				break;
+			case 6:
+				newQuat.set(0,p,y,r);
+				break;
+		}
+		
+		let delp = to.x - newQuat.x;
+		let dely = to.y - newQuat.y;
+		let delr = to.z - newQuat.z;
+		if( ( Math.abs(delp) + Math.abs(dely) + Math.abs(delr) ) < 0.0000001 )
+		{
+			break;
+		}
+		p += delp;
+		y += dely;
+		r += delr;
+	}
 }
+
+
+
 
 function drawDigitalTimeArm(curSliders, slerp) {
 	
@@ -101,9 +145,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 		      :armPrimary==1?{x:0,y:2,z:0}
 			:{x:0,y:0,z:2};
 
-	for( let zz = 0; zz < 1; zz++ ) {
-		//let fixAxleRotation = zz===1;
-		//let keepInertia = zz=== 0;
+	{
 		
 		const t2_ts = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale   ):new lnQuat(lnQ2);
 		const t3_ts = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2_ts.θ, t2_ts, timeScale ):new lnQuat(lnQ3);
@@ -135,15 +177,12 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			
 			if( n > 0 ){
 				doDrawBasis( A_R_ts[n], A__ts[n-1], 1.5, 1, null, 1.0 );
-
-
 			}
 
 			if( showArms )
 			{
 				normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
 				normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
-		
 				pushN(n, zz/3+0.4);
 			}
 		}
@@ -227,32 +266,14 @@ function drawAnalogArm(curSliders,slerp) {
 			:{x:0,y:0,z:2/100};
 	const v = { x:0,y:1,z:0};
 
-	//for( let zz = (keepInertia)?0:1; zz < (fixAxleRotation?2:1); zz++ ) 
 	{
-	//	let fixAxleRotation = zz===1;
-	//	let keepInertia = zz=== 0;
-
-
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ, lnQ1, timeScale ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ, t2, timeScale ):new lnQuat(lnQ3);
 	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ, t3, timeScale ):new lnQuat(lnQ4);
 	const t5 = fixAxleRotation?new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update().freeSpin( t4.θ, t4, timeScale ):new lnQuat(lnQ5);
 
 	const Ro = [lnQ1,new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
-/*
-	if( applyAccel ) {
-		t2.add( lnQ1 );
-		t3.add( t2 );
-		t4.add( t3 );
-		t5.add( t4 );
-	}
-	if( keepInertia ) {
-		t2.add( lnQ1 );
-		t3.add( t2 );
-		t4.add( t3 );
-		t5.add( t4 );
-	}
-*/
+
 	
 	const Rb = [ lnQ1.sub2(Ro[0]), t2.sub2(Ro[1]), t3.sub2(Ro[2]), t4.sub2(Ro[3]), t5.sub2(Ro[4])];
 	const Rm = Ro;
@@ -1342,6 +1363,15 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
                 : 6
                 ;
         
+        matchOrder = document.getElementById( "matchNone")?.checked?6
+        	: document.getElementById( "matchYRP")?.checked?5
+        	: document.getElementById( "matchYPR")?.checked?4
+        	: document.getElementById( "matchPRY")?.checked?3
+        	: document.getElementById( "matchPYR")?.checked?2
+        	: document.getElementById( "matchRPY")?.checked?1
+        	: document.getElementById( "matchRYP")?.checked?0
+                : 6
+                ;
 	drawRawRotIter = document.getElementById( "drawRawRotIter")?.checked;
 	drawRotIter = document.getElementById( "drawRotIter")?.checked;
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
@@ -1614,78 +1644,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		drawAnalogArm( curSliders, slerp ); 
 	}
 
-	// tick needs lnQ?_current
-	//return tickQuat;
-
 }
 
 
-
-
-/*
-  // bisect and trisect algorithms - testing half of half of  half ....
-		if( trisectAnalog ) {
-			const pointList = [];
-			function doLevel( l, P, Q, mn, mx ) {
-				if( Math.abs( mx-mn ) < 0.001 ) debugger;
-				if( l > 4 ) return;
-				let x1 = mn + (mx-mn)/3;
-				let x2 = mn + (2*(mx-mn)/3);
-				
-				const mid1 = P.slerp( Q, 0.33 );
-				const mid2 = P.slerp( Q, 0.66 );
-
-				doLevel( l+1, P, mid1, mn, x1 );
-				pointList.push( mid1 );
-				doLevel( l+1, mid1, mid2, x1, x2 );
-				pointList.push( mid2 );
-				doLevel( l+1, mid2, Q, x2, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R:Rz)[n];
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(timeScale * pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			result.portion = pointList[pointList.length-1];
-		} else if( bisectAnalog ) {
-			const pointList = [];
-			function doLevel( n, P, Q, mn, mx ) {
-				if( n > 6 ) return;
-				let x = (mx+mn)/2;
-				const mid = P.slerp( Q, timeScale*0.5 );
-
-				doLevel( n+1, P, mid, mn, x );
-				pointList.push( mid );
-				//console.log( "Add point:", n, x );
-				doLevel( n+1, mid, Q, x, mx );
-			}
-
-			const from = n?((keepInertia===0?R:Rz)[n-1]):lnQ0;
-			const to = (keepInertia===0?R[n]:Rz[n]);
-
-			pointList.push( from );
-			doLevel( 0, from, to, 0, 1*timeScale );
-
-			pointList.push( to );
-			scalar = pointList.length;
-			tmpShortArm.z = 2/(pointList.length);
-			for( s = 0; s < pointList.length; s++ ) {
-				const point = pointList[s]
-				prior = point.applyDel( tmpShortArm, 1.0 );
-				draw( point )
-			}
-			
-			result.portion = pointList[pointList.length-1];
-			
-
-*/

@@ -536,7 +536,7 @@ lnQuat.prototype.spinDiff = function( p, target ) {
 		target.nx = p.nx;
 		target.ny = p.ny;
 		target.nz = p.nz;
-		target.θ = t * p.θ;
+		target.θ = p.θ;
 		target.x = target.nx * target.θ;
 		target.y = target.ny * target.θ;
 		target.z = target.nz * target.θ;
@@ -553,7 +553,7 @@ lnQuat.prototype.spinDiff = function( p, target ) {
 	axisTemp.z = target.nz;
 	let tmpA;
 	if( !external ) { // delta angle is from an internal source
-		tmpA = q.applyDel( av, 1 );
+		tmpA = q.applyDel( axisTemp, 1 );
 	}else
 		tmpA = axisTemp;
 	target.x = (target.nx = tmpA.x) * target.θ;
@@ -811,7 +811,7 @@ lnQuat.prototype.apply = function( v ) {
 // del2 is the amount of Q2 to apply to (timescalar)
 
 lnQuat.prototype.applyDel = function( v, del, q2, linear, result2 ) {
-	if( v instanceof lnQuat ) {
+	if( 0 && v instanceof lnQuat ) {
 		const result = new lnQuat(
 			function() {
 				const q = v;
