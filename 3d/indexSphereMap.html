@@ -92,9 +92,12 @@
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
 		 <span style="visibility:visible">- Show Grid Lines: <input type="checkbox" id="showGrid" checked></span>
+		 <span style="visibility:visible">- Weyl Curvature: <input type="checkbox" id="weylCurvature" unchecked></span>
+		 <span style="visibility:visible">- Align Polar: <input type="checkbox" id="polarAligned" unchecked></span>
+		 
 		 <br>
 		 <span style="visibility:visible">- OA+OB (else O(A+B)): <input type="checkbox" id="weylGroup" value="checked"></span>
-		 <span style="visibility:visible">- Use Polar Map: <input type="checkbox" id="mapPolar" value="checked"></span>
+		 <span style="visibility:visible">- Use Polar Map: <input type="checkbox" id="mapPolar" checked></span>
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 			
@@ -725,7 +728,8 @@
 			is = document.getElementById( "useSLERPBasis" );
 			is.oninput = updateMesh;
 
-			["showNormal", "showSliderCurves","smoothShade" ,
+			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid", 
+			 "polarAligned",
 				"weylGroup","mapPolar"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
@@ -745,8 +749,6 @@
 				} 
 			}
 
-			is = document.getElementById( "showGrid" );
-			is.onchange = updateMesh;
 			is = document.getElementById( "drawRotationAxles" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawWorldAxles" );

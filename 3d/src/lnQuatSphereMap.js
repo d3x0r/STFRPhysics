@@ -1,6 +1,8 @@
 
 import {lnQuat,slerp} from "./lnQuatSq.js"
 let pointScalar = 12/ Math.PI;
+let  weylCurvature  = false;
+let polarAligned = false;
 
 let armPrimary = 1; // 0 = x, 1=y, 2=z
 let A,B,C,D,E;  // slider values
@@ -202,7 +204,8 @@ function makeQuat(p,y,r) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
 		 mapPolar = document.getElementById( "mapPolar" )?.checked;
-		 weylGroup = document.getElementById( "weylGroup" )?.checked;
+		 weylCurvature = document.getElementById( "weylCurvature" )?.checked;
+		 polarAligned= document.getElementById( "polarAligned" )?.checked;
 		 const showGrid = document.getElementById( "showGrid").checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
@@ -218,7 +221,10 @@ function makeQuat(p,y,r) {
 		lnQyText.textContent = "qY:"+(lnQx.y/Math.PI).toFixed(4) + "π";
 		lnQzText.textContent = "qZ:"+(lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
+		if( mapPolar ) range *= 2;
 		const step = range/16;
+
+		if( !mapPolar ) 
 		
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 	
@@ -230,10 +236,6 @@ function makeQuat(p,y,r) {
 				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
-				if( mapPolar ) {
-					g2 = gamma*Math.sin(theta/range*Math.PI);
-					t2 = gamma*Math.cos(theta/range*Math.PI);
-				}
 
 				/*
 				  // limit to more of a circular patch...
@@ -277,9 +279,8 @@ function makeQuat(p,y,r) {
 				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
-					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
-				if( showGrid && draw ) {
-
+				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
+				if( showGrid && draw  ) {
 					const oldp = p[gamline];
 					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
 					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
@@ -288,8 +289,9 @@ function makeQuat(p,y,r) {
 					oldp.z = basis.up.z;
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-				}else 
+				}else {
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+				}
 	
 				if( merge ) {
 					pMake( lnQ, g2, t2, lnQx );
@@ -322,10 +324,76 @@ function makeQuat(p,y,r) {
 					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 
 
-				}else 
+				}else {
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
+				}
 			}
 		}
+
+		let rline = 0;
+		if( mapPolar ) {
+
+		for( let r = 0.01; r <= (range); r += (step/ ( 4*range/(Math.PI))), rline++ ){
+	
+			const draw = p.length;
+			const draw2 = p2.length;
+			
+			gamline = 0;
+
+			for( let gamma = -Math.PI*2; gamma <= Math.PI; gamma += Math.PI/16, gamline++ ){
+				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+
+					g2 = r*Math.sin(gamma);
+					t2 = r*Math.cos(gamma);
+					pMake( lnQ, t2, g2, lnQx);
+					if( weylCurvature )
+						lnQ.yaw( gamma);
+					else if( polarAligned )
+						lnQ.yaw( -gamma);
+
+
+				//lnQ.add( offset, 1 )
+				
+				const basis = lnQ.update().getBasis();
+				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
+				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
+				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
+				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, r);
+
+				if( showGrid && draw ) {
+					const oldp = p[gamline];
+					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					oldp.x = basis.up.x;
+					oldp.y = basis.up.y;
+					oldp.z = basis.up.z;
+					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+				}else {
+					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+				}
+	
+				if( showGrid && draw2 && rline < p2.length ) {
+					const oldp = p2[rline];
+					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					oldp.x = basis.up.x;
+					oldp.y = basis.up.y;
+					oldp.z = basis.up.z;
+	
+					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+
+
+				}else {
+					p2.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+				}
+			}
+		}
+
+		}
+
 	}
 
 

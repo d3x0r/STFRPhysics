@@ -27,7 +27,7 @@ let drawRotationSquaresXY = true;
 let drawRotationSquaresYX = true;
 let drawRotationSquareLimit = 1;
 let showLineSeg = [true,false,false,false,false];
-let fixAxleRotation= true;
+let fixAxleRotation= false;
 let showRotationCurve = "X";
 let showRotationCurveSegment = -1;
 let stepScalar = [false,false,false,false,false];
@@ -509,11 +509,6 @@ const t5_base = lnQ5;
 const A_R_ts_ = [t1_base, t2_base, t3_base, t4_base, t5_base ];
 const A_R_ts = [ ];
 
-const Rb = [ A_R_ts_[0].sub2(lnQ0).update()
-		, A_R_ts_[1].sub2(A_R_ts_[0]).update()
-		, A_R_ts_[2].sub2(A_R_ts_[1]).update()
-		, A_R_ts_[3].sub2(A_R_ts_[2]).update()
-		, A_R_ts_[4].sub2(A_R_ts_[3]).update() ];
 
 
 	const tmpQ = new lnQuat();
@@ -528,53 +523,15 @@ const Rb = [ A_R_ts_[0].sub2(lnQ0).update()
 
 		//const avLen =  A_R_ts_[i].θ/100;
 
-		tmpQ.freeSpin( A_R_ts_[i].θ, tmpA);
+		//tmpQ.freeSpin( A_R_ts_[i].θ, tmpA);
+		tmpQ.set( 0, A_R_ts_[i].x, A_R_ts_[i].y, A_R_ts_[i].z );
 
 		//tmpQ.freeSpin( A_R_ts_[i].θ, tmpA);
 		A_R_ts.push( new lnQuat( tmpQ ) );
 
 	}
-/*
-	const qq2 = t1_base.applyDel( { x:del1.nx
-	                           , y:del1.ny
-	                           , z:del1.nz },  internalAccel?1:1 )
-//	const t2 = del1;//new lnQuat( 0, qq2.x, qq2.y, qq2.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const t2 = new lnQuat( 0, del1_.x, del1_.y, del1_.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
 
-	const qq3 = t2_base.applyDel( { x:del2.nx
-	                           , y:del2.ny
-	                           , z:del2.nz },  internalAccel?1:1 )
-//	const t3 = del2;//new lnQuat( 0, qq3.x, qq3.y, qq3.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const t3 = new lnQuat( 0, del2_.x, del2_.y, del2_.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const qq4 = t3_base.applyDel( { x:del3.nx
-	                           , y:del3.ny
-	                           , z:del3.nz },  internalAccel?1:1 )
-//	const t4 = del3;//new lnQuat( 0, qq4.x, qq4.y, qq4.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const t4 = new lnQuat( 0, del3_.x, del3_.y, del3_.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const qq5 = t4_base.applyDel( { x:del4.nx 
-	                           , y:del4.ny
-	                           , z:del4.nz },  internalAccel?1:1 )
-//	const t5 = del4;//new lnQuat( 0, qq5.x, qq5.y, qq5.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-	const t5 = new lnQuat( 0, del4_.x, del4_.y, del4_.z ).update();//.freeSpin( lnQ1.θ, qq2, timeScale*-1 );
-
-*/
-
-	//const Rdir = [new lnQuat(lnQ1),new lnQuat(qq2),new lnQuat(qq3),new lnQuat(qq4),new lnQuat(qq5)];
-//	const Ro = [new lnQuat(lnQ1),new lnQuat(t2),new lnQuat(t3),new lnQuat(t4),new lnQuat(t5)];
-
-//Rdir[0].freeSpin( )
-
-	// compute non-inertial differential
-	//const r2_ = t2.sub2( lnQ1 );
-	//const r3_ = t3.sub2( t2 );
-	//const r4_ = t4.sub2( t3 );
-	//const r5_ = t5.sub2( t4 );
-
-	//const R_ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5];
-	//const Rb = [ Ro[0].sub2(lnQ0), Ro[1].sub2(Ro[0]), Ro[2].sub2(Ro[1]), Ro[3].sub2(Ro[2]), Ro[4].sub2(Ro[3])];
-	//const Rm = Ro;
 	const R  = [ null,null,null,null,null];
-	//const Rz = [lnQ1,t2_,t3_,t4_,t5_];
 
 	const A = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 	let prior = origin;
@@ -592,7 +549,8 @@ const Rb = [ A_R_ts_[0].sub2(lnQ0).update()
 		const from = n?(A_R_ts[n-1]):lnQ0;
 
 		// this is the internal rotation between the targets
-		const slerpSpin = (n?A_R_ts[n-1]:lnQ0).spinDiff( A_R_ts[n] );
+		//const slerpSpin = (n?A_R_ts[n-1]:lnQ0).spinDiff( A_R_ts[n] );
+		const slerpSpin = A_R_ts[n];
 
 		for( s = 0; s <= 100; s++ ) {
 			current.freeSpin( slerpSpin.θ * timeScale/100, slerpSpin );
@@ -649,7 +607,7 @@ const Rb = [ A_R_ts_[0].sub2(lnQ0).update()
 				}
 				// point along the arm...
 					if( from ) {
-						doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
+						doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
 					} else {
 						doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
 					}	
