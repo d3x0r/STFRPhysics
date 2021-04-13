@@ -205,6 +205,7 @@ function makeQuat(p,y,r) {
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
 		 mapPolar = document.getElementById( "mapPolar" )?.checked;
 		 weylCurvature = document.getElementById( "weylCurvature" )?.checked;
+		 weylGroup = document.getElementById( "weylGroup" )?.checked;
 		 polarAligned= document.getElementById( "polarAligned" )?.checked;
 		 const showGrid = document.getElementById( "showGrid").checked;
 		const lnQ = new lnQuat();
@@ -221,7 +222,7 @@ function makeQuat(p,y,r) {
 		lnQyText.textContent = "qY:"+(lnQx.y/Math.PI).toFixed(4) + "π";
 		lnQzText.textContent = "qZ:"+(lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
-		if( mapPolar ) range *= 2;
+		
 		const step = range/16;
 
 		if( !mapPolar ) 
@@ -235,7 +236,6 @@ function makeQuat(p,y,r) {
 			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
 				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-
 
 				/*
 				  // limit to more of a circular patch...
@@ -348,7 +348,7 @@ function makeQuat(p,y,r) {
 					t2 = r*Math.cos(gamma);
 					pMake( lnQ, t2, g2, lnQx);
 					if( weylCurvature )
-						lnQ.yaw( gamma);
+						lnQ.yaw( gamma );
 					else if( polarAligned )
 						lnQ.yaw( -gamma);
 					else
@@ -896,7 +896,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
         curSliders.lnQX[0] = (curSliders.lnQX[0] * 4.25*Math.PI);
         curSliders.lnQY[0] = (curSliders.lnQY[0] * 4.25*Math.PI);
-        curSliders.lnQZ[0] = (curSliders.lnQZ[0] +1) * 180  + 10;
+        curSliders.lnQZ[0] = 2*( (curSliders.lnQZ[0] +1) * 180  + 10 ) ;
 
         document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]/Math.PI).toFixed(4) + "π";
         document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]/Math.PI).toFixed(4) + "π";
