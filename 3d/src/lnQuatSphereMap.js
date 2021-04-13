@@ -351,6 +351,8 @@ function makeQuat(p,y,r) {
 						lnQ.yaw( gamma);
 					else if( polarAligned )
 						lnQ.yaw( -gamma);
+					else
+						lnQ.yaw( r );
 
 
 				//lnQ.add( offset, 1 )
