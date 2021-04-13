@@ -7,7 +7,7 @@ const SIN_R_OVER_R_MIN = 0.00001
 // 
 //   x y z w -> i j k R
 
-function Quat( theta,d, a, b ) {
+export function Quat( theta,d, a, b ) {
 	if( "undefined" !== typeof theta ) {
 		if( "object" === typeof theta ) {
 			// normal-up 

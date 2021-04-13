@@ -1,4 +1,4 @@
-
+import {Quat} from "./Quat.js"
 import {lnQuat,slerp} from "./lnQuatSq.js"
 let pointScalar = 12/ Math.PI;
 let  weylCurvature  = false;
@@ -222,7 +222,46 @@ function makeQuat(p,y,r) {
 		lnQyText.textContent = "qY:"+(lnQx.y/Math.PI).toFixed(4) + "π";
 		lnQzText.textContent = "qZ:"+(lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
-		
+
+		{
+			const lnQwText = document.getElementById( "lnQWval1quat" );
+			const lnQxText = document.getElementById( "lnQXval1quat" );
+			const lnQyText = document.getElementById( "lnQYval1quat" );
+			const lnQzText = document.getElementById( "lnQZval1quat" );
+			const basis = lnQx.getBasis();
+			const w = Math.cos( lnQx.θ/2 );
+			const x = Math.sin( lnQx.θ/2 ) * lnQx.nx;
+			const y = Math.sin( lnQx.θ/2 ) * lnQx.ny;
+			const z = Math.sin( lnQx.θ/2 ) * lnQx.nz;
+			
+			const Q1 = new Quat( w, x, y, z );
+
+			const q2w = Math.cos( Math.PI/400 );
+			const q2x = Math.sin( Math.PI/400 ) * basis.up.x;
+			const q2y = Math.sin( Math.PI/400 ) * basis.up.y;
+			const q2z = Math.sin( Math.PI/400 ) * basis.up.z;
+
+			const Q2 = new Quat( q2w, q2x, q2y, q2z );
+
+			const Q3 = Q1.mul( Q2 )
+
+			lnQwText.textContent = "qW:"+(Q3.w).toFixed(4);
+			lnQxText.textContent = "qX:"+(Q3.x).toFixed(4);
+			lnQyText.textContent = "qY:"+(Q3.y).toFixed(4);
+			lnQzText.textContent = "qZ:"+(Q3.z).toFixed(4);
+
+			const th = Math.acos( Q3.w ) * 2;
+			const sn = Math.sin( th/ 2 );
+			{
+				const lnQxText = document.getElementById( "lnQXval1quatLn" );
+				const lnQyText = document.getElementById( "lnQYval1quatLn" );
+				const lnQzText = document.getElementById( "lnQZval1quatLn" );
+				lnQxText.textContent = "x:"+((Q3.x/sn*th)/Math.PI).toFixed(4) + "π";
+				lnQyText.textContent = "y:"+((Q3.y/sn*th)/Math.PI).toFixed(4) + "π";
+				lnQzText.textContent = "z:"+((Q3.z/sn*th)/Math.PI).toFixed(4) + "π";
+			}
+		}
+
 		const step = range/16;
 
 		if( !mapPolar ) 
