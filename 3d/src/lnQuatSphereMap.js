@@ -207,6 +207,7 @@ function makeQuat(p,y,r) {
 		 weylCurvature = document.getElementById( "weylCurvature" )?.checked;
 		 weylGroup = document.getElementById( "weylGroup" )?.checked;
 		 polarAligned= document.getElementById( "polarAligned" )?.checked;
+		 const stereoProject = document.getElementById( "stereoProject" )?.checked;
 		 const showGrid = document.getElementById( "showGrid").checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
@@ -245,20 +246,20 @@ function makeQuat(p,y,r) {
 
 			const Q3 = Q1.mul( Q2 )
 
-			lnQwText.textContent = "qW:"+(Q3.w).toFixed(4);
-			lnQxText.textContent = "qX:"+(Q3.x).toFixed(4);
-			lnQyText.textContent = "qY:"+(Q3.y).toFixed(4);
-			lnQzText.textContent = "qZ:"+(Q3.z).toFixed(4);
+			lnQwText.textContent = "qW:"+(Q1.w).toFixed(4);
+			lnQxText.textContent = "qX:"+(Q1.x).toFixed(4);
+			lnQyText.textContent = "qY:"+(Q1.y).toFixed(4);
+			lnQzText.textContent = "qZ:"+(Q1.z).toFixed(4);
 
-			const th = Math.acos( Q3.w ) * 2;
+			const th = Math.acos( Q1.w ) * 2;
 			const sn = Math.sin( th/ 2 );
 			{
 				const lnQxText = document.getElementById( "lnQXval1quatLn" );
 				const lnQyText = document.getElementById( "lnQYval1quatLn" );
 				const lnQzText = document.getElementById( "lnQZval1quatLn" );
-				lnQxText.textContent = "x:"+((Q3.x/sn*th)/Math.PI).toFixed(4) + "π";
-				lnQyText.textContent = "y:"+((Q3.y/sn*th)/Math.PI).toFixed(4) + "π";
-				lnQzText.textContent = "z:"+((Q3.z/sn*th)/Math.PI).toFixed(4) + "π";
+				lnQxText.textContent = "x:"+((Q1.x/sn*th)/Math.PI).toFixed(4) + "π";
+				lnQyText.textContent = "y:"+((Q1.y/sn*th)/Math.PI).toFixed(4) + "π";
+				lnQzText.textContent = "z:"+((Q1.z/sn*th)/Math.PI).toFixed(4) + "π";
 			}
 		}
 
@@ -401,8 +402,8 @@ function makeQuat(p,y,r) {
 						lnQ.yaw( gamma );
 					else if( polarAligned )
 						lnQ.yaw( -gamma);
-					else
-						lnQ.yaw( r );
+					else if( stereoProject )
+						lnQ.yaw( -r );
 					lnQ.θ +=  currentOctave * 4*Math.PI;
 					lnQ.x = lnQ.nx * lnQ.θ;
 					lnQ.y = lnQ.ny * lnQ.θ;
@@ -815,7 +816,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;
 	showArms = document.getElementById( "showArm")?.checked;
 	rawAngles = document.getElementById( "rawAngles")?.checked;
-	normalizeTangents = document.getElementById( "normalizeTangents" )?.checked;
+	//normalizeTangents = document.getElementById( "normalizeTangents" )?.checked;
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showRotationCurves = showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
@@ -1068,7 +1069,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	        
 		check = document.getElementById( "normalizeTangents");
 		if( check )
-			normalizeNormalTangent = check.checked; // global variable from lnQuat.js
+			normalizeNormalTangent = false && check.checked; // global variable from lnQuat.js
 		
 		drawGrid( normalVertices,normalColors, curSliders);
 		

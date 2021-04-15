@@ -92,6 +92,7 @@
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
 		 <span style="visibility:visible">- Show Grid Lines: <input type="checkbox" id="showGrid" checked></span>
+		 <span style="visibility:visible">- Stereo Projection: <input type="checkbox" id="stereoProject" checked></span>
 		 <span style="visibility:visible">- Weyl Curvature: <input type="checkbox" id="weylCurvature" unchecked></span>
 		 <span style="visibility:visible">- Align Polar: <input type="checkbox" id="polarAligned" unchecked></span>
 		 
@@ -740,7 +741,7 @@
 			is.oninput = updateMesh;
 
 			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid", 
-			 "polarAligned",
+			 "polarAligned", "stereoProject",
 				"weylGroup","mapPolar"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
