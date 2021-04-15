@@ -213,8 +213,11 @@ function makeQuat(p,y,r) {
 		const spaceScale = 18;
 		const p = [];
 		const p2 = [];
-		let gamline ;
-		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+		let gamline = 0;
+
+		lnQuat.setTwistDelta( 0 );
+		lnQx.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, false ).yaw(twistDelta);//.update();
+
 
 		const lnQxText = document.getElementById( "lnQXval1q" );
 		const lnQyText = document.getElementById( "lnQYval1q" );
@@ -224,6 +227,7 @@ function makeQuat(p,y,r) {
 		lnQzText.textContent = "qZ:"+(lnQx.z/Math.PI).toFixed(4) + "π";
 		range = deg2rad( curSliders.lnQZ[0] );
 
+		// convert to and from quaternion (display values)
 		{
 			const lnQwText = document.getElementById( "lnQWval1quat" );
 			const lnQxText = document.getElementById( "lnQXval1quat" );
@@ -236,15 +240,15 @@ function makeQuat(p,y,r) {
 			const z = Math.sin( lnQx.θ/2 ) * lnQx.nz;
 			
 			const Q1 = new Quat( w, x, y, z );
-
-			const q2w = Math.cos( Math.PI/400 );
-			const q2x = Math.sin( Math.PI/400 ) * basis.up.x;
-			const q2y = Math.sin( Math.PI/400 ) * basis.up.y;
-			const q2z = Math.sin( Math.PI/400 ) * basis.up.z;
-
-			const Q2 = new Quat( q2w, q2x, q2y, q2z );
-
-			const Q3 = Q1.mul( Q2 )
+			/*
+				const q2w = Math.cos( Math.PI/400 );
+				const q2x = Math.sin( Math.PI/400 ) * basis.up.x;
+				const q2y = Math.sin( Math.PI/400 ) * basis.up.y;
+				const q2z = Math.sin( Math.PI/400 ) * basis.up.z;
+				// make another small rotation, and make sure it survives...
+				const Q2 = new Quat( q2w, q2x, q2y, q2z );
+				const Q3 = Q1.mul( Q2 )
+			*/
 
 			lnQwText.textContent = "qW:"+(Q1.w).toFixed(4);
 			lnQxText.textContent = "qX:"+(Q1.x).toFixed(4);
@@ -384,73 +388,80 @@ function makeQuat(p,y,r) {
 		let rline = 0;
 		if( mapPolar ) {
 
-		for( let r = 0.01; r <= (range); r += (step/ ( 1.3*range/(Math.PI))), rline++ ){
-	
-			const draw = p.length;
-			const draw2 = p2.length;
-			
-			gamline = 0;
+			for( let r = 0.01; r <= (range); r += (step/ ( 1.3*range/(Math.PI))), rline++ ){
+		
+				const draw = p.length;
+				const draw2 = p2.length;
+				
+				gamline = 0;
 
-			for( let gamma = -Math.PI*2; gamma <= Math.PI; gamma += Math.PI/32, gamline++ ){
-				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-				let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				for( let gamma = -Math.PI*2; gamma <= Math.PI; gamma += Math.PI/32, gamline++ ){
+					let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
 					g2 = r*Math.sin(gamma);
 					t2 = r*Math.cos(gamma);
+					
 					pMake( lnQ, t2, g2, lnQx);
+
+					let spinDiff = 0;
 					if( weylCurvature )
 						lnQ.yaw( gamma );
 					else if( polarAligned )
 						lnQ.yaw( -gamma);
 					else if( stereoProject )
 						lnQ.yaw( -r );
+
+	
+
+
 					lnQ.θ +=  currentOctave * 4*Math.PI;
 					lnQ.x = lnQ.nx * lnQ.θ;
 					lnQ.y = lnQ.ny * lnQ.θ;
 					lnQ.z = lnQ.nz * lnQ.θ;
 
-				//lnQ.add( offset, 1 )
-				
-				const basis = lnQ.update().getBasis();
-				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
-				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
-				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
-				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, r);
-				const wraps = Math.floor( range / Math.PI ) * Math.PI;
-				if( showGrid && draw ) {
-					const oldp = p[gamline];
-					if( r > wraps ) {
-						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+					//lnQ.add( offset, 1 )
+					
+					const basis = lnQ.update().getBasis();
+					tmpPoint.x = basis.up.x * spaceScale*1.43 ;
+					tmpPoint.y = basis.up.y * spaceScale*1.43 ;
+					tmpPoint.z = basis.up.z * spaceScale*1.43 ;
+					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, r);
+					const wraps = Math.floor( range / Math.PI ) * Math.PI;
+					if( showGrid && draw ) {
+						const oldp = p[gamline];
+						if( r > wraps ) {
+							normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+							normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+							normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+							normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						}
+						oldp.x = basis.up.x;
+						oldp.y = basis.up.y;
+						oldp.z = basis.up.z;
+					}else {
+						p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 					}
-					oldp.x = basis.up.x;
-					oldp.y = basis.up.y;
-					oldp.z = basis.up.z;
-				}else {
-					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
-				}
-	
-				if( showGrid && draw2 && rline < p2.length ) {
-					const oldp = p2[rline];
-					if( r > wraps ) {
-						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-					}
-					oldp.x = basis.up.x;
-					oldp.y = basis.up.y;
-					oldp.z = basis.up.z;
-	
+		
+					if( showGrid && draw2 && rline < p2.length ) {
+						const oldp = p2[rline];
+						if( r > wraps ) {
+							normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+							normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+							normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+							normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+						}
+						oldp.x = basis.up.x;
+						oldp.y = basis.up.y;
+						oldp.z = basis.up.z;
+		
 
 
-				}else {
-					p2.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+					}else {
+						p2.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
+					}
 				}
 			}
-		}
 
 		}
 
@@ -693,7 +704,7 @@ function makeQuat(p,y,r) {
 
 			}
 
-			lnQuat.setTwistDelta( twistDelta );
+			//lnQuat.setTwistDelta( twistDelta );
 
 
 
