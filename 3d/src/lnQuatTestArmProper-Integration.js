@@ -607,7 +607,7 @@ const A_R_ts = [ ];
 				}
 				// point along the arm...
 					if( from ) {
-						doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
+						doDrawBasis( to, A[n], 1, delta, from, n === (showRotationCurveSegment-1)?0.8:0.3 );
 					} else {
 						doDrawBasis( q, A[n], 1, 1, null, n === (showRotationCurveSegment-1)?0.8:0.3 );
 					}	

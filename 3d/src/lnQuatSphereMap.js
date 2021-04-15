@@ -175,7 +175,7 @@ function makeQuat(p,y,r) {
 
 					const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 					
-					q.θ  = ang;
+					q.θ  = ang + currentOctave * 4*Math.PI;;
 					q.nx = Cx*Clx;
 					q.ny = Cy*Clx;
 					q.nz = Cz*Clx;
@@ -262,7 +262,7 @@ function makeQuat(p,y,r) {
 			}
 		}
 
-		const step = range/16;
+		const step = range/32;
 
 		if( !mapPolar ) 
 		
@@ -290,13 +290,19 @@ function makeQuat(p,y,r) {
 				}
 				*/
 				if( _1norm ) {
+					const bigger = (Math.abs(gamma) > Math.abs(theta) )?gamma:theta;
+					g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
+					t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
 					//t2 /= (Math.abs(g2)+Math.abs(t2));
 					//g2 /= (Math.abs(g2)+Math.abs(t2));
+					g2 = gamma / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
+					t2 = theta / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
 
-					g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-					t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					//g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+					//t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
 				}
+				const gridlen = Math.sqrt(g2*g2+t2*t2);
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
 				} else {
@@ -319,15 +325,18 @@ function makeQuat(p,y,r) {
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
 				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
+				const wraps = Math.floor( (range) / Math.PI ) * Math.PI;
 				if( showGrid && draw  ) {
 					const oldp = p[gamline];
-					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					if( ( gridlen) >= wraps ) {
+						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+					}
 					oldp.x = basis.up.x;
 					oldp.y = basis.up.y;
 					oldp.z = basis.up.z;
-					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 				}else {
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 				}
@@ -353,14 +362,16 @@ function makeQuat(p,y,r) {
 				const basis2 = lnQ.update().getBasis();
 				if( showGrid && draw2 ) {
 					const oldp = p2[gamline];
-					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-					normalVertices.push( new THREE.Vector3( (basis2.up.x)*spaceScale ,(basis2.up.y)*spaceScale    , (basis2.up.z)*spaceScale ))
+					if( ( gridlen) >= wraps ) {
+						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( (basis2.up.x)*spaceScale ,(basis2.up.y)*spaceScale    , (basis2.up.z)*spaceScale ))
+		
+						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+					}
 					oldp.x = basis2.up.x;
 					oldp.y = basis2.up.y;
 					oldp.z = basis2.up.z;
-	
-					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 
 
 				}else {
@@ -372,14 +383,14 @@ function makeQuat(p,y,r) {
 		let rline = 0;
 		if( mapPolar ) {
 
-		for( let r = 0.01; r <= (range); r += (step/ ( 4*range/(Math.PI))), rline++ ){
+		for( let r = 0.01; r <= (range); r += (step/ ( 1.3*range/(Math.PI))), rline++ ){
 	
 			const draw = p.length;
 			const draw2 = p2.length;
 			
 			gamline = 0;
 
-			for( let gamma = -Math.PI*2; gamma <= Math.PI; gamma += Math.PI/16, gamline++ ){
+			for( let gamma = -Math.PI*2; gamma <= Math.PI; gamma += Math.PI/32, gamline++ ){
 				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
@@ -392,7 +403,10 @@ function makeQuat(p,y,r) {
 						lnQ.yaw( -gamma);
 					else
 						lnQ.yaw( r );
-
+					lnQ.θ +=  currentOctave * 4*Math.PI;
+					lnQ.x = lnQ.nx * lnQ.θ;
+					lnQ.y = lnQ.ny * lnQ.θ;
+					lnQ.z = lnQ.nz * lnQ.θ;
 
 				//lnQ.add( offset, 1 )
 				
@@ -401,30 +415,34 @@ function makeQuat(p,y,r) {
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
 				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, r);
-
+				const wraps = Math.floor( range / Math.PI ) * Math.PI;
 				if( showGrid && draw ) {
 					const oldp = p[gamline];
-					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					if( r > wraps ) {
+						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+					}
 					oldp.x = basis.up.x;
 					oldp.y = basis.up.y;
 					oldp.z = basis.up.z;
-					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-					normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
 				}else {
 					p.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 				}
 	
 				if( showGrid && draw2 && rline < p2.length ) {
 					const oldp = p2[rline];
-					normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
-					normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+					if( r > wraps ) {
+						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
+						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
+						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+					}
 					oldp.x = basis.up.x;
 					oldp.y = basis.up.y;
 					oldp.z = basis.up.z;
 	
-					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-					normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
 
 
 				}else {
