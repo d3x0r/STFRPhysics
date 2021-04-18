@@ -99,6 +99,10 @@
 		 <br>
 		 <span style="visibility:visible">- OA+OB (else O(A+B)): <input type="checkbox" id="weylGroup" value="checked"></span>
 		 <span style="visibility:visible">- Use Polar Map: <input type="checkbox" id="mapPolar" checked></span>
+		 <br>
+
+		 <span style="visibility:visible">- Lie Product Iterations: <input type="checkbox" id="useIterations" unchecked> :<input type="range" id="subIterations" min=1  max=100  value=10> <SPAN id="subIterationsValue">10</SPAN></span> <br>
+		
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" >
 		 - Pick Random Normals: <input type="checkbox" id="pickRandomNormals" >
 			
@@ -742,7 +746,7 @@
 
 			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid", 
 			 "polarAligned", "stereoProject",
-				"weylGroup","mapPolar"
+				"weylGroup","mapPolar", "useIterations", "subIterations"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
 				is.onchange = updateMesh;

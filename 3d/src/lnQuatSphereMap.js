@@ -112,6 +112,10 @@ function makeQuat(p,y,r) {
 	function deg2rad(n) { return n * Math.PI/180 }
 	let twist = 0;
 	const bP = new lnQuat();
+	const xAxis = {x:1, y:0, z:0};
+	const zAxis = {x:0, y:0, z:1};
+	let useSub = false;
+	let subIterations = 10;
 	function pMake(q, x, y, o ){
 		
 		if( weylGroup ) {
@@ -135,13 +139,29 @@ function makeQuat(p,y,r) {
 			q.dirty = true;
 			q.update(); 
 		} else {
-			// use parameters to directly transform a point without 3 function calls
+			// use parameters to directly make and transform a point without 3 function calls
 			const qlen = Math.sqrt(x*x + y*y);
+			if( useSub ) {
+				const lnQTmp = q.set(0,0,0,0).update();
+				{
+					const xstep = x/subIterations;
+					const ystep = y/subIterations;
+					for( let n = 0; n < subIterations; n++ ) {
+						lnQTmp.freeSpin( xstep, xAxis )
+						lnQTmp.freeSpin( ystep, zAxis )
+					}
+					lnQTmp.freeSpin( o.θ, o );
+					return lnQTmp;
+				}
+			}
 
-			const qnx = qlen?x / qlen:0;
-			const qny = qlen?0:1;
+
+			const qnx = qlen?x / qlen:1;
+			//const qny = 0;
 			const qnz = qlen?y / qlen:0;
 
+			
+			// local 'finishRodrigues'
 			const ax = o.nx
 			const ay = o.ny
 			const az = o.nz
@@ -462,9 +482,7 @@ function makeQuat(p,y,r) {
 					}
 				}
 			}
-
 		}
-
 	}
 
 
@@ -1077,6 +1095,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			showLineSeg[4] = check.checked;
 		}
 	        
+		useSub = document.getElementById( "useIterations")?.checked;
+		subIterations = Number(document.getElementById( "subIterations")?.value);
+		document.getElementById( "subIterationsValue").textContent = subIterations;
 	        
 		check = document.getElementById( "normalizeTangents");
 		if( check )
