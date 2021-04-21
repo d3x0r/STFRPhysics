@@ -1,5 +1,7 @@
 
-# Development of Relativistic Rotations
+# Development of Relativistic Rotations 
+### Under Development; forgive me for asserting things I may not fully proven.
+
 
 <TBD>
 
@@ -9,17 +11,25 @@ Independant Studies
 
 ## Abstract
 
-There exists a coordinate space of rotations that is not self covering.  The essential function defining this rotation space map 
-is the exponential of a log-complex, and by extension a log-vector-complex.  This paper will define a notation of log
+There exists a coordinate space of rotation vectors; that is non-self covering map of so(3) matrices.  
+This paper presents the methods to work outside of so(3), (before the two identity points are merged to one (too much too soon?))
+
+Do I invent a new glossary to avoid any collision with existing systems?
+
+
+
+This paper will define a notation of log
 complex numbers, and modification to the exponential function, the extension from a single scalar to a scaled unit vector, 
 conversion to quaternion, define the cross product of two natural log vector complex numbers, get of the basis vectors of
 a rotation, apply log vector complex to a point to rotate, applications, comparison with existing methods and rotation 
 mappings, and additional experimental methods to try.
 
+
 ## Introduction
 
-The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
-of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
+The coordinate space of [rotation vectors](https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation#Rotation_vector), hence called 'rotation space' or 'rotation map', 
+is a continuous, infinite space consisiting
+of 3 perpendicular axles(axii) which together apply curvature to a space.  Curvature is a translation of a rectangular space around 1 or more axles;
 additional axles composite into a single composite axle, around which all space is translated or warped.  The coordinates of a curvature are
 in terms of `dTheta/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
 Velocity sums to a position, angular velocity sums to an angular position.  

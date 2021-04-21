@@ -52,4 +52,9 @@ Performing a vector addition using one of two values cannot result in a valid ou
 
 Therefore, this rule only applies if you truly know the axis-angle components of a paramter in so(3).
 
-## 
+## Why Does this matter?
+
+The direction you approach `(a,b,c)` matters, because on one of the coordinates you're approaching from (the bottom?), while on the opposing side it's approaching from the top.
+
+The direction of the change is not the same between `(a,b,c)` and `(a',b',c')`... This probably needs more elaboration. 
+
