@@ -29,8 +29,9 @@ There are (at least) 2 vector spaces, one for linear/directional representation,
 
 There are 3 degress of freedom in 2 units of turn and distance.  There's an additional axis which enables freedom in these 2 units. They are not entirely independant vector spaces, through physics thare ways to trasfer part of a coodinte of turn into distance, and vice versa, the current and projected orientation may also modify how a rotation vector is represented in linear space.  
 
-by my count, that makes us have a 3D world of, time, momentum, angular momentum.
+By my count, that makes us have a 3D world of, time, momentum, angular momentum.
 
+### Physical dimension vectors
 
 These vectors may be treated like, position, velocity and acceleration.  Position is a specific point at time, velocity is the change in position in time (the freedom to move), acceleration is a change
 in velocity in time.  They can be paramterized as:
