@@ -1,3 +1,5 @@
+ - this is a general scribble... an attempt to format/document 'yaw' sort of function....
+
 
 # Twist
 
@@ -23,10 +25,7 @@ The object `q` has the following fields
 
 ``` js
 // C is some angle-angle-angle quaternion, th is the angle to turn around it's normal(up)...
-function yaw( C, th ) {
-	// input angle...
-	const ac = Math.cos( th/2 );
-	const as = Math.sin( th/2 );
+function yaw( q, th ) {
 ```
 
 ---
@@ -42,23 +41,11 @@ is required for the general case of an external axis being specified...
 
 ``` js
 
-	const q = C;
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
 
-	const nt = q.nL;//Math.abs(q.x)+Math.abs(q.y)+Math.abs(q.z);
-	const s = Math.sin( nt ); 
-	const c = 1- Math.cos( nt ); 
-
-	const xy = c*q.nx*q.ny;  // 2*sin(t)*sin(t) * x * y / (xx+yy+zz):   1 - cos(2t)
-	const yz = c*q.ny*q.nz;  // 2*sin(t)*sin(t) * y * z / (xx+yy+zz):   1 - cos(2t)
-	//const xz = c*qx*qz;  // 2*sin(t)*sin(t) * x * z / (xx+yy+zz):   1 - cos(2t)
-	                          
-	const wx = s*q.nx;  // 2*cos(t)*sin(t) * x / sqrt(xx+yy+zz):   sin(2t)
-	//const wy = s*qy;  // 2*cos(t)*sin(t) * y / sqrt(xx+yy+zz):   sin(2t)
-	const wz = s*q.nz;  // 2*cos(t)*sin(t) * z / sqrt(xx+yy+zz):   sin(2t)
-	                          
-	const xx = c*q.nx*q.nx;  // 2*sin(t)*sin(t) * y * y / (xx+yy+zz):   1 - cos(2t)
-	//const yy = c*qy*qy;  // 2*sin(t)*sin(t) * x * x / (xx+yy+zz):   1 - cos(2t)
-	const zz = c*q.nz*q.nz;  // 2*sin(t)*sin(t) * z * z / (xx+yy+zz):   1 - cos(2t)
+	const cny = c * q.ny;
 
 ```
 
@@ -69,9 +56,9 @@ This completes the computation of the 'up' normal into `ax`, `ay`, and `az`.  Th
 
 ``` js
 	// ax, ay, az could be given; these are computed as the source quaternion normal
-	const ax = ( xy - wz );
-	const ay = 1 - ( zz + xx );
-	const az = ( wx + yz );
+	const ax = ( cny*q.nx ) - s*q.nz;
+	const ay = ( cny*q.ny ) + c1;
+	const az = ( cny*q.nz ) + s*q.nx;
 ```
 
 dot product of the axles of rotation, and compute the new resulting angle; which is like
@@ -82,6 +69,8 @@ https://www.geogebra.org/3d/pwjdwzrz This graph has `arccos( cos(x)cos(y)-sin(x)
 represending `A dot B` operation below. the result is always within +/-pi;
 
 ``` js
+	const ac = Math.cos( th );
+	const as = Math.cos( th );
 	// A dot B   = cos( angle A->B )
 	const AdB = q.nx*ax + q.ny*ay + q.nz*az;
 	// cos( C/2 ) 
@@ -154,18 +143,6 @@ Apply angle-fixup code so the result is in the expected range. This can cause a 
 
 ``` js
 	let fix = ( ang-(nt+th))
-	// nt is alwasy positive
-	// th can be negative, but is often a small adjustment?
-	// ang is -pi to pi... 
-	// so fix will more often be negative than positive
-	// and making the resulting angle larger reinforces that
-	// fix will be more negative next time.
-	/*
-	while( fix > Math.PI*2 ) {
-		ang -= Math.PI*2;
-		fix -= Math.PI*2;
-	} 
-	*/
 	while( fix < -Math.PI*4 ){
 		ang += Math.PI*4;
 		fix += Math.PI*2;

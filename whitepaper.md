@@ -11,15 +11,20 @@ Independant Studies
 
 ## Abstract
 
+Rodrigues rotation system.
+This describes from first princpals, _____, which is a system that works on [rotation vectors](https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation#Rotation_vector).  Efficient smooth
+differentiation is possible within this space.
+
+Abstractly this exists before matrix conversion of so(3) group of Lie Algebra.
+
+
+
 There exists a coordinate space of rotation vectors; that is non-self covering map of so(3) matrices.  
 This paper presents the methods to work outside of so(3), (before the two identity points are merged to one (too much too soon?))
 
-Do I invent a new glossary to avoid any collision with existing systems?
 
 
-
-This paper will define a notation of log
-complex numbers, and modification to the exponential function, the extension from a single scalar to a scaled unit vector, 
+he extension from a single scalar to a scaled unit vector, 
 conversion to quaternion, define the cross product of two natural log vector complex numbers, get of the basis vectors of
 a rotation, apply log vector complex to a point to rotate, applications, comparison with existing methods and rotation 
 mappings, and additional experimental methods to try.
@@ -102,7 +107,7 @@ __Figure H__
    (x,y,z)i =  sin(arcsin(x)/2)i + sin(arcsin(y)/2)j + sin(arcsin(z)/2)k;
 ```
 
-### Log Vector Complex to Quaternion conversion
+### Rotation Vector to Quaternion conversion
 
 The sum of the curvatures is the total rotation of the system, or is the angle around the axle to curve all
 other spacial points by.  `sqrt( x*x + y*y + z*z )` is the total rotation.  The axis of rotation is the same coordinates
@@ -111,7 +116,7 @@ while treating B as a vector (Figure G).
 
 __Figure G__
 ``` js
-  exp( A+(x,y,z)ε ) = exp(A) * cos( (|x|+|y|/|z|) ) 
+  exp( A+(x,y,z)ε ) = exp(A) * cos( x*x+y*y+z*z ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
@@ -123,14 +128,14 @@ If the log-quaternion has a 0 real part, as `exp(0)=1`, every nil log-quaternion
 
 __Figure H__
 ``` js
-  exp( 0 + (x,y,z)ε ) = 1 * cos( (|x|+|y|/|z|) ) 
+  exp( 0 + (x,y,z)ε ) = 1 * cos( sqrt(x*x+y*y+z*z)  ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
                       ) * 1 * sin( sqrt( x*x + y*y + z*z ) ) i
 
   -becomes-
-  exp( 0 + (x,y,z)ε ) = cos( (|x|+|y|/|z|) ) 
+  exp( 0 + (x,y,z)ε ) = cos( sqrt(x*x+y*y+z*z)  ) 
                     + ( x/sqrt(x*x+y*y+z*z) 
                       , y/sqrt(x*x+y*y+z*z)
                       , z/sqrt(x*x+y*y+z*z)
@@ -186,12 +191,12 @@ __Figure L__
 	θ = sqrt( x*x + y*y + z*z )
 	as = sin( θ )
 	ac = cos( θ )
-	q = { qw: cos( sqrt( x*x + y*y + z*z ) / 2 )
-            , s : sin( sqrt( x*x + y*y + z*z ) / 2 )
-	    , nL : sqrt( x*x + y*y + z*z )
-	    , nx : x / sqrt( x*x + y*y + z*z )
-	    , ny : y / sqrt( x*x + y*y + z*z )
-	    , nz : z / sqrt( x*x + y*y + z*z )
+	q = { qw: cos( θ / 2 )
+        , s : sin( θ / 2 )
+	    , θ : θ
+	    , nx : x / θ
+	    , ny : y / θ
+	    , nz : z / θ
 	    }
 
 	AdotB = q.nx*ax + q.ny*ay + q.nz*az;        // dot product of axles
