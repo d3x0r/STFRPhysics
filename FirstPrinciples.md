@@ -75,7 +75,7 @@ Rotating a rotating vector performs a co-mutation between the original rotation 
 
 ---
 
-## Physics First Principals
+## Physics First Principles
 
 
 Existing units of physics, mass(g), time(s), distance(m), etc are included.
@@ -93,7 +93,7 @@ Using this, and replacing into the 'Mass–energy relation' `e=m*c^2` represente
 
 ### Maybe instead?
 
-Revisiting the above, the principal dimensional units are time(s), distance(m), and turns(t); the units of mass(g) can be expressed entirely in terms of time, distance and turns.
+Revisiting the above, the principle dimensional units are time(s), distance(m), and turns(t); the units of mass(g) can be expressed entirely in terms of time, distance and turns.
 
 Time and distance are non-independant values, where you have motion, coordinates of distance are related to time (m/s).  Similary time and turns have a relationship thats a measure of angular velocity (t/s).  
 
@@ -101,7 +101,7 @@ Time and distance are non-independant values, where you have motion, coordinates
 
 Accelerations can happen either because of a transfer of distance to turn (throwing a ball into a water-sheel that can catch the ball's momentum and turn it into angular velocity), or turn to distance, 
 
-Photons transmit turns(an acceleration of torque) between principal entities.  It goes from an angular speed, to a linear transmission, and results in an acceleration of turns when interacting at a targer.
+Photons transmit turns(an acceleration of torque) between principle entities.  It goes from an angular speed, to a linear transmission, and results in an acceleration of turns when interacting at a targer.
 
 Gravity (photons) transmit distance; the source is linear(1/m?), becomes a turn(wave) and becomes a linear acceleartion.
 
