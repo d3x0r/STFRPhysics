@@ -513,13 +513,17 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	return this;
 }
 
-lnQuat.prototype.exp = function() {
+
+lnQuat.prototype.exp = function(target,t ) {
+	t = t || 1;
 	this.update();
 	const q = this;
-	const s  = this.s;
-	return { w: q.qw, x:q.nx* s, y:q.ny* s, z:q.nz * s };
-	console.log( "lnQuat exp() is disabled until integrated with a quaternion library." );
-	return null;//new Quat( this.qw, q.x *q.x* s, q.y *q.y* s, q.z *q.z * s );
+	const s  = Math.sin( q.θ/2 * t );
+	target.w = Math.cos( q.θ/2 * t );
+	target.x = q.nx*s;
+	target.y = q.ny*s;
+	target.z = q.nz*s;
+	return target;
 }
 
 
@@ -1049,24 +1053,22 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
 	if( "undefined" === typeof oct ) oct = 4;
-	const C = this;
-
-	const q = C;
+	if( this.dirty ) this.update();
 
 	// ax, ay, az could be given; these are computed as the source quaternion normal
-	const ax_ = axis.x;
-	const ay_ = axis.y;
-	const az_ = axis.z;
+	const aLen = Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z);
+	const ax_ = axis.x/aLen;
+	const ay_ = axis.y/aLen;
+	const az_ = axis.z/aLen;
 	// make sure it's normalized
-	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
 
 	//-------- apply rotation to the axle... (put axle in this basis)
-	const nst = Math.sin(q.θ/2); // normal * sin_theta
-	const qw = Math.cos(q.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+	const nst = Math.sin(this.θ/2); // normal * sin_theta
+	const qw = Math.cos(this.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 	
-	const qx = C.nx*nst;
-	const qy = C.ny*nst;
-	const qz = C.nz*nst;
+	const qx = this.nx*nst;
+	const qy = this.ny*nst;
+	const qz = this.nz*nst;
 	
 	//p┬Æ = (v*v.dot(p) + v.cross(p)*(w))*2 + p*(w*w ┬û v.dot(v))
 	const tx = 2 * (qy * az_ - qz * ay_); // v.cross(p)*w*2
@@ -1076,13 +1078,10 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( C, oct-4, ax, ay, az, th );
+	return finishRodrigues( this, oct-4, ax, ay, az, th );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis){
-	const C = this;
-	const q = C;
-
 	const ax_ = axis.x;
 	const ay_ = axis.y;
 	const az_ = axis.z;
@@ -1093,7 +1092,7 @@ lnQuat.prototype.freeSpin = function(th,axis){
 		const ay = ay_/aLen;
 		const az = az_/aLen;
 
-		return finishRodrigues( C, 0, ax, ay, az, th );
+		return finishRodrigues( this, 0, ax, ay, az, th );
 	}
 	return this;
 }
