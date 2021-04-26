@@ -1,12 +1,27 @@
 
+/*
+<script src="require.js"></script>
+<script src="three.js/build/three.js"></script>
+<script src="three.js/build/LoaderSupport.js"></script>
+<script src="three.js/build/OBJLoader2.js"></script>
+<script src="three.js/build/OBJLoader.js"></script>
+<script src="three.js/personalFill.js"></script>
 
+<script src="NaturalCamera.js"></script>
+*/
+import {NaturalCamera} from "./NaturalCamera.js"
+import {SaltyRNG} from "./salty_random_generator.js";
+import * as THREE from "../3d/src/three.js/three.module.js"
+import {THREE_consts,Motion} from "../3d/src/three.js/personalFill.mjs"
+
+import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 
 //var glow = require( './glow.renderer.js' );
 
 var l = 0;
-var SaltyRNG = require( "salty_random_generator.js" ).SaltyRNG;
-var lnQuat = require( "../lib/lnQuat.js" );
+//var SaltyRNG = require( "salty_random_generator.js" ).SaltyRNG;
+//var lnQuat = require( "../lib/lnQuat.js" );
 
 var RNG = SaltyRNG( (salt)=>{salt.push( Date.now() ) } );
 
@@ -119,13 +134,13 @@ function setMode3() {
 
 function setControls1() {
 	controls.disable();
-	camera.matrixAutoUpdate = false;
+	camera.matrixAutoUpdate = true;
 	controls = controlNatural;
 	controls.enable();
 }
 function setControls2() {
 	controls.disable();
-	camera.matrixAutoUpdate = false;  // current mode doesn't auto update
+	camera.matrixAutoUpdate = true;  // current mode doesn't auto update
 	controls = controlOrbit;
 	controls.enable();
 }
@@ -149,14 +164,14 @@ function setControls2() {
 };
 
 //const Accel1 = 2*Math.PI / 12;
-const Accel1 = 2*Math.PI / 120;
-const linAccel1 = 1;
+const Accel1 = 2*Math.PI / 24;
+const linAccel1 = 10;
 
 function handleKeyEvents( event, isDown ) {
 
-				switch ( event.keyCode ) {
+	switch ( event.keyCode ) {
 		default:
-		console.log( "key:", event.keyCode );
+			console.log( "key:", event.keyCode );
 			return;
 			break;
 		case keys.TILDE:
@@ -164,110 +179,118 @@ function handleKeyEvents( event, isDown ) {
 			break;
 		case keys.NUM2:
 			if( isDown )
-				myMover.matrix.motion.torque.x = Accel1;
+				myMotion.torque.x = -Accel1;
 			else
-				myMover.matrix.motion.torque.x = 0;
+				myMotion.torque.x = 0;
+			myMotion.torque.dirty = true;
 			break;
 		case keys.NUM8:
 			if( isDown )
-				myMover.matrix.motion.torque.x = -Accel1;
+				myMotion.torque.x = Accel1;
 			else
-				myMover.matrix.motion.torque.x = 0;
+				myMotion.torque.x = 0;
+			myMotion.torque.dirty = true;
 			break;
 
 		case keys.NUM4:
 			if( isDown )
-				myMover.matrix.motion.torque.y = Accel1;
+				myMotion.torque.y = Accel1;
 			else
-				myMover.matrix.motion.torque.y = 0;
+				myMotion.torque.y = 0;
+			myMotion.torque.dirty = true;
 			break;
 		case keys.NUM6:
 			if( isDown )
-				myMover.matrix.motion.torque.y = -Accel1;
+				myMotion.torque.y = -Accel1;
 			else
-				myMover.matrix.motion.torque.y = 0;
+				myMotion.torque.y = 0;
+			myMotion.torque.dirty = true;
 			break;
 
 		case keys.NUM7:
 			if( isDown )
-				myMover.matrix.motion.torque.z = Accel1;
+				myMotion.torque.z = -Accel1;
 			else
-				myMover.matrix.motion.torque.z = 0;
+				myMotion.torque.z = 0;
+			myMotion.torque.dirty = true;
 			break;
 		case keys.NUM9:
 			if( isDown )
-				myMover.matrix.motion.torque.z = -Accel1;
+				myMotion.torque.z = +Accel1;
 			else
-				myMover.matrix.motion.torque.z = 0;
+				myMotion.torque.z = 0;
+			myMotion.torque.dirty = true;
 			break;
 
 
 		case keys.NUM1:
 			if( isDown )
-				myMover.matrix.motion.acceleration.x = -linAccel1;
+				myMotion.acceleration.x = linAccel1;
 			else
-				myMover.matrix.motion.acceleration.x = 0;
+				myMotion.acceleration.x = 0;
 			break;
 		case keys.NUM3:
 			if( isDown )
-				myMover.matrix.motion.acceleration.x = linAccel1;
+				myMotion.acceleration.x = -linAccel1;
 			else
-				myMover.matrix.motion.acceleration.x = 0;
+				myMotion.acceleration.x = 0;
 			break;
 
 		case keys.NUM0:
 			if( isDown )
-				myMover.matrix.motion.acceleration.z = -linAccel1;
+				myMotion.acceleration.z = -linAccel1;
 			else
-				myMover.matrix.motion.acceleration.z = 0;
+				myMotion.acceleration.z = 0;
 			break;
 
 		case keys.NUMDOT:
 			if( isDown )
-				myMover.matrix.motion.acceleration.z = linAccel1;
+				myMotion.acceleration.z = linAccel1;
 			else
-				myMover.matrix.motion.acceleration.z = 0;
+				myMotion.acceleration.z = 0;
 			break;
 
 		case keys.NUM5:
 			if( isDown )
-				myMover.matrix.motion.acceleration.y = linAccel1;
+				myMotion.acceleration.y = linAccel1;
 			else
-				myMover.matrix.motion.acceleration.y = 0;
+				myMotion.acceleration.y = 0;
 			break;
 
 		case keys.ENTER:
 			if( isDown )
-				myMover.matrix.motion.acceleration.y = -linAccel1;
+				myMotion.acceleration.y = -linAccel1;
 			else
-				myMover.matrix.motion.acceleration.y = 0;
+				myMotion.acceleration.y = 0;
 			break;
 
             case keys.SPACE:
-                myMover.matrix.motion.speed.y = moveSpeed;
+                myMotion.speed.y = moveSpeed;
                 break;
             case keys.C:
-                myMover.matrix.motion.speed.y = -moveSpeed;
+                myMotion.speed.y = -moveSpeed;
 				break;
 			case keys.A:
-				myMover.matrix.motion.speed.x = -moveSpeed;
+				myMotion.speed.x = -moveSpeed;
 				break;
 			case keys.W:
-				myMover.matrix.motion.speed.z = moveSpeed;
+				myMotion.speed.z = moveSpeed;
 				break;
 			case keys.S:
-				myMover.matrix.motion.speed.z = -moveSpeed;
+				myMotion.speed.z = -moveSpeed;
 				break;
 			case keys.D:
-				myMover.matrix.motion.speed.x = moveSpeed;
+				myMotion.speed.x = moveSpeed;
 				break;
 		}
 	event.preventDefault();
-
+		//console.log( "myMotion:", myMotion.torque )
+		//console.log( "myMotion:", myMotion.rotation )
 }
 
 
 var myMover = null;
+var myMotion = null;
 var movers2 = [];
 var movers = [];
 var dirs = [];
@@ -286,12 +309,11 @@ var status_line;
 		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.001, 10000 );
 
 
-		camera.matrixAutoUpdate = false;
 		camera.position.z = 5;
-		camera.matrix.origin.z = 3;
+		//camera.matrix.origin.z = 3;
 		camera.matrixWorldNeedsUpdate = true;
 
-		camera.matrixAutoUpdate = false;
+		camera.matrixAutoUpdate = true;
 
 		 // for phong hello world test....
  		var light = new THREE.PointLight( 0xffFFFF, 1, 10000 );
@@ -307,7 +329,7 @@ var status_line;
 
 		document.body.appendChild( renderer.domElement );
 
-		controlNatural = new THREE.NaturalControls( camera, renderer.domElement );
+		controlNatural = new NaturalCamera( camera, renderer.domElement );
 		controlNatural.enable( handleKeyEvents  );
 
 		//controlOrbit = new THREE.OrbitControls( camera, renderer.domElement );
@@ -340,16 +362,16 @@ objectLoader.load("models/rock1.json", model=>{
 	for( var n = 0; n < 50; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
-		x.matrixAutoUpdate = false;
-		x.matrix.origin.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
-		x.matrix.origin.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
-		x.matrix.origin.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
-		var m = x.matrix.motion;
+		x.matrixAutoUpdate = true;
+		x.position.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
+		var m = new Motion( x );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.z = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		//m.speed.y = 1;
-		movers.push(x);
+		movers.push({x:x,m:m});
 
 
 		var material = new THREE.LineBasicMaterial({
@@ -363,7 +385,7 @@ objectLoader.load("models/rock1.json", model=>{
 		);
 	        
 		var line = new THREE.Line( geometry, material );
-		line.matrixAutoUpdate = false;
+		line.matrixAutoUpdate = true;
 		scene.add( line );
 
 		dirs.push( line );
@@ -379,22 +401,24 @@ function addModelToScene2(object) {
  //   var material = new THREE.MeshFaceMaterial(materials);
  //   var object = new THREE.Mesh(geometry, material);
 	var x;
+	var m;
 	for( var n = 0; n < 10; n++ ) {
 	    scene.add(x = object.clone());
-		x.matrixAutoUpdate = false;
-		x.matrix.origin.x = n * 5;
-		x.matrix.rotateRelative( 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-				, 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-				, 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-			)
-		var m = x.matrix.motion;
+		x.matrixAutoUpdate = true;
+		x.position.x = n * 5;
+
+		m = new Motion( x );
+		m.orientation.x =  2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+		m.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+		m.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		m.acceleration.z = -1;
-		movers2.push(x);
+		movers2.push({x:x,m:m});
 	}
 
 	scene.add(myMover = x = object);
-	movers2.push(x);
-	x.matrixAutoUpdate = false;
+	myMotion =  new Motion(x);
+	movers2.push({x:x,m:myMotion});
+	x.matrixAutoUpdate = true;
 	myMover.add( camera );
 	//camMat = camera.matrix;
 	//camera.matrix = myMover.matrix;
@@ -406,7 +430,7 @@ function addModelToScene(object) {
  //   var material = new THREE.MeshFaceMaterial(materials);
  //   var object = new THREE.Mesh(geometry, material);
     object.scale.set(10, 10, 10);
-	    scene.add(x = object);
+	    scene.add(object);
 }
 
 	}
@@ -425,24 +449,31 @@ var sumDel =0;
 function animate() {
 	var delta = clock.getDelta();
 
-	movers2.forEach( (m,idx)=>{
+//	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
+//		console.log( "MyMotion (before)", JSON.stringify(myMotion, null, '\t') );
+	movers2.forEach( (ent,idx)=>{
+		const motion = ent.m;
+		const m = ent.x;
+		//if( motion === myMotion ){
+		//	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
+		//		console.log( "TICK")
+		//}
+		motion.freemove(m.matrix,delta) 
 		
-		m.matrix.motion.freemove(m.matrix,delta) 
-		
-		var mot = m.matrix.motion;
-		var x1= m.matrix.origin.x ; 
-		var y= m.matrix.origin.y ; 
-		var z= m.matrix.origin.z ; 
+		var mot = motion;
+		var x1= m.position.x ; 
+		var y= m.position.y ; 
+		var z= m.position.z ; 
 		if( ( x1 < -100 || x1 > 100 ) 
 		  ||( y < -100 || y > 100 ) 
 		  ||( z < -100 || z > 100 ) ) {
-			m.matrix.origin.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
-			m.matrix.origin.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
-			m.matrix.origin.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
-			m.matrix.rotateRelative( 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-					, 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-					, 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 )
-				)
+			m.position.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
+			m.position.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
+			m.position.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
+			motion.orientation.x = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+			motion.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+			motion.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+				//)
 
 			mot.acceleration.z = -10;
 
@@ -456,7 +487,9 @@ function animate() {
 			mot.torque.x = 2*Math.PI/72;// * ( RNG.getBits( 11, true ) / 1024 );
 			mot.torque.y = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
 			mot.torque.z = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
+			mot.torque.dirty = true;
 		}
+		/*
 		if( m !== myMover )
 			if( sumDel > 1 ) {
 			
@@ -464,26 +497,30 @@ function animate() {
 				mot.torque.y = 2*Math.PI/4 * ( RNG.getBits( 11, true ) / 1024 );
 				mot.torque.z = 2*Math.PI/4 * ( RNG.getBits( 11, true ) / 1024 );
 			}	
-        
+        */
+
 
 	});
 
-	movers.forEach( (m,idx)=>{
-		m.matrix.motion.freemove(m.matrix,delta) 
-		var mot = m.matrix.motion;
-		//dirline.matrix.origin.copy( m.matrix.origin );
+//	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
+//	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
 
+	movers.forEach( (ent,idx)=>{
+		const m = ent.x;
+		const motion = ent.m;
+		motion.freemove(m.matrix,delta) 
 
-
+		
 		var dirLine = dirs[idx];
-		var o = new THREE.Vector3();
-		var q  = new THREE.Quaternion();
-		var s = new THREE.Vector3();
+		//var o = new THREE.Vector3();
+		//var q  = new THREE.Quaternion();
+		//var s = new THREE.Vector3();
 
-		m.matrix.decompose( o, q, s );
+		//m.matrix.decompose( o, q, s );
 
-		dirLine.matrix.lookAt( new THREE.Vector3(q.w,q.x,q.y), THREE.Vector3Zero, m.matrix.up );
-		dirLine.matrix.origin.copy( m.matrix.origin );
+		//dirLine.matrix.lookAt( motion.orientation, THREE_consts.Vector3Zero, m.matrix.up );
+		motion.rotation.exp( dirLine.quaternion );
+		dirLine.position.copy( m.position );
 		//dirLine.matrix.compose( o, q, s );
 		
 

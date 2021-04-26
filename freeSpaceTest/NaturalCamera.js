@@ -2,9 +2,15 @@
  * @author d3x0r / https://github.com/d3x0r
  */
 
-THREE.NaturalControls = function ( object, domElement ) {
+import * as THREE from "../3d/src/three.js/three.module.js"
+import {lnQuat} from "../3d/src/lnQuatSq.js"
+import {THREE_consts,Motion} from "../3d/src/three.js/personalFill.mjs"
+
+export function NaturalCamera( object, domElement ) {
 	var self = this;
 	this.object = object;
+	this.motion = new Motion(object);
+
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 
 	this.enabled = true;
@@ -61,7 +67,7 @@ THREE.NaturalControls = function ( object, domElement ) {
 
 		}
 
-		phiDelta -= angle;
+		phiDelta += angle;
 
 	};
 
@@ -73,31 +79,35 @@ THREE.NaturalControls = function ( object, domElement ) {
 
 		}
 
-		phiDelta += angle;
+		phiDelta -= angle;
 
 	};
 
 	this.update = function ( tick ) {
-    scope.object.matrixWorldNeedsUpdate = true;
-if( !scope.userRotate ) return;
-    touchUpdate();
+	    scope.object.matrixWorldNeedsUpdate = true;
+	    //scope.object.matrixNeedsUpdate = true;
+		if( !scope.userRotate ) return;
+		touchUpdate();
+		if( phiDelta || thetaDelta ){
+			//console.log( "rotation:", scope.motion.rotation, scope.motion.orientation )
+		}
+		scope.motion.rotation.x = -phiDelta;
+		scope.motion.rotation.y = thetaDelta;
+		scope.motion.rotation.dirty = true;
+		thetaDelta = 0;
+		phiDelta = 0;
 
-    scope.object.matrix.motion.rotation.x = -phiDelta;
-    scope.object.matrix.motion.rotation.y = thetaDelta;
-    scope.object.matrix.move( tick );
-    scope.object.matrix.rotateRelative( 0, 0, -scope.object.matrix.roll );
+		scope.motion.move( scope.object, tick );
+		
+		//scope.object.matrix.rotateRelative( 0, 0, -scope.object.matrix.roll );
 
-    scope.object.matrixWorldNeedsUpdate = true;
-
-    thetaDelta = 0;
-    phiDelta = 0;
 	};
 
 	
 
 	function onMouseDown( event ) {
 		if ( scope.enabled === false ) return;
-if( !scope.userRotate ) return;
+		if( !scope.userRotate ) return;
 
 		event.preventDefault();
 
@@ -114,7 +124,7 @@ if( !scope.userRotate ) return;
 
 		event.preventDefault();
 
-    rotateEnd.set( event.clientX, event.clientY );
+    	rotateEnd.set( event.clientX, event.clientY );
 		rotateDelta.subVectors( rotateEnd, rotateStart );
 
         rotateDelta.x = 32 * (rotateDelta.x / window.innerWidth)
@@ -172,33 +182,35 @@ if( !scope.userRotate ) return;
 	function onKeyDown( event ) {
 
 		if ( scope.enabled === false ) return;
-if( !scope.userRotate ) {
-	if( keyEvent )
-		keyEvent( event, true );
-	return;
-}
-				switch ( event.keyCode ) {
+
+			if( !scope.userRotate ) {
+				if( keyEvent )
+					keyEvent( event, true );
+				return;
+			}
+
+		switch ( event.keyCode ) {
 		default:
 			if( keyEvent )
 				keyEvent( event, true );
 			break;
             case scope.keys.SPACE:
-                scope.object.matrix.motion.speed.y = self.moveSpeed;
+                scope.motion.speed.y = self.moveSpeed;
                 break;
             case scope.keys.C:
-                scope.object.matrix.motion.speed.y = -self.moveSpeed;
+                scope.motion.speed.y = -self.moveSpeed;
 				break;
 			case scope.keys.A:
-				scope.object.matrix.motion.speed.x = -self.moveSpeed;
+				scope.motion.speed.x = self.moveSpeed;
 				break;
 			case scope.keys.W:
-				scope.object.matrix.motion.speed.z = +self.moveSpeed;
+				scope.motion.speed.z = -self.moveSpeed;
 				break;
 			case scope.keys.S:
-				scope.object.matrix.motion.speed.z = -self.moveSpeed;
+				scope.motion.speed.z = self.moveSpeed;
 				break;
 			case scope.keys.D:
-				scope.object.matrix.motion.speed.x = self.moveSpeed;
+				scope.motion.speed.x = -self.moveSpeed;
 				break;
 		}
 
@@ -213,23 +225,23 @@ if( !scope.userRotate ) return;
 				keyEvent( event, false );
 			break;
             case scope.keys.SPACE:
-                scope.object.matrix.motion.speed.y = 0;
+                scope.motion.speed.y = 0;
                 break;
             case scope.keys.C:
-                scope.object.matrix.motion.speed.y = 0;
+                scope.motion.speed.y = 0;
                 break;
 
             case scope.keys.A:
-                scope.object.matrix.motion.speed.x = 0;
+                scope.motion.speed.x = 0;
 				break;
 			case scope.keys.W:
-                scope.object.matrix.motion.speed.z = 0;
+                scope.motion.speed.z = 0;
 				break;
 			case scope.keys.S:
-                scope.object.matrix.motion.speed.z = 0;
+                scope.motion.speed.z = 0;
 				break;
 			case scope.keys.D:
-                scope.object.matrix.motion.speed.x = 0;
+                scope.motion.speed.x = 0;
 				break;
         }
 		//switch ( event.keyCode ) {
@@ -309,13 +321,13 @@ function onTouchEnd( e ) {
     }
 
     this.enable = function(cb) {
-	keyEvent = cb;
+		keyEvent = cb;
     	scope.domElement.addEventListener( 'contextmenu', ignore, false );
     	scope.domElement.addEventListener( 'mousedown', onMouseDown, false );
     	scope.domElement.addEventListener( 'mousewheel', onMouseWheel, false );
-      scope.domElement.addEventListener( 'touchstart', onTouchStart, false );
-      scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
-      scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
+      	scope.domElement.addEventListener( 'touchstart', onTouchStart, false );
+      	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
+      	scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
 
     	scope.domElement.addEventListener( 'DOMMouseScroll', onMouseWheel, false ); // firefox
     	window.addEventListener( 'keydown', onKeyDown, false );
@@ -327,4 +339,4 @@ function onTouchEnd( e ) {
 
 //THREE.NaturalCamera.
 
-THREE.NaturalControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+NaturalCamera.prototype = Object.create( THREE.EventDispatcher.prototype );
