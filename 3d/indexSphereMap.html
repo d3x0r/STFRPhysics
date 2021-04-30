@@ -118,6 +118,7 @@
 		<span style="visibility:visible">- Add composite: <input type="checkbox" id="additiveMerge" checked ></span>
 
 		 <span style="visibility:visible"> - Add 1-norm: <input type="checkbox" id="oneNormal" ></span>
+		 <span style="visibility:visible"> - Inverse 1-norm: <input type="checkbox" id="invOneNormal" ></span>
 
 		 - SLERP Basis: <input type="checkbox" id="useSLERPBasis" >
 		<br>
@@ -739,14 +740,13 @@
 			}
 			is = document.getElementById( "additiveMerge" );
 			is.oninput = updateMesh;
-			is = document.getElementById( "oneNormal" );
-			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERPBasis" );
 			is.oninput = updateMesh;
 
 			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid", 
 			 "polarAligned", "stereoProject",
-				"weylGroup","mapPolar", "useIterations", "subIterations"
+				"weylGroup","mapPolar", "useIterations", "subIterations",
+				"oneNormal", "invOneNormal"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
 				is.onchange = updateMesh;

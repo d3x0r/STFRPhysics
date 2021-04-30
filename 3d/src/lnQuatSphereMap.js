@@ -11,6 +11,7 @@ let AxRot, AyRot, AzRot;
 let turnCount = 12;
 let stepCount = 1000;
 let _1norm = false;
+let inv_1norm = false;
 let mapPolar= false;
 let showCoordinateGrid = false;
 let drawNormalBall = false;
@@ -223,6 +224,7 @@ function makeQuat(p,y,r) {
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
+		 inv_1norm = document.getElementById( "invOneNormal" )?.checked;
 		 mapPolar = document.getElementById( "mapPolar" )?.checked;
 		 weylCurvature = document.getElementById( "weylCurvature" )?.checked;
 		 weylGroup = document.getElementById( "weylGroup" )?.checked;
@@ -314,20 +316,21 @@ function makeQuat(p,y,r) {
 					continue;
 				}
 				*/
-				if( _1norm ) {
+				const gridlen = Math.sqrt(g2*g2+t2*t2);
+				if( inv_1norm || _1norm ) {
 					const bigger = (Math.abs(gamma) > Math.abs(theta) )?gamma:theta;
-					g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
-					t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
-					//t2 /= (Math.abs(g2)+Math.abs(t2));
-					//g2 /= (Math.abs(g2)+Math.abs(t2));
-					g2 = gamma / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
-					t2 = theta / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
+					if( inv_1norm) {
+						g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
+						t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
+						g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * gridlen;
+						t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * gridlen;
+					}else {
+						g2 = gamma / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
+						t2 = theta / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
+					}
 
-					//g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-					//t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
 				}
-				const gridlen = Math.sqrt(g2*g2+t2*t2);
 				if( merge ) {
 					pMake( lnQ, t2, g2, lnQx);
 				} else {

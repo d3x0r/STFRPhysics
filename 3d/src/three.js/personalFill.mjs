@@ -49,25 +49,6 @@ THREE.Vector4.prototype.delete = function() {
     return this;
 }
 
-
-/*
-	INLINEFUNC( void, Rotate, ( RCOORD dAngle, P_POINT vaxis1, P_POINT vaxis2 ) )
-	{
-	   _POINT v1, v2;
-	   _POINT vsave;
-	   RCOORD dsin = (RCOORD)SIN( dAngle )
-	   	  , dcos = (RCOORD)COS( dAngle );
-	   MemCpy( vsave, vaxis1, sizeof( _POINT ) );
-	   DOFUNC(scale)( v1, vaxis1, dcos );
-	   DOFUNC(scale)( v2, vaxis2, dsin );
-	   DOFUNC(sub)( vaxis1, v1, v2 );
-	   DOFUNC(scale)( v2, vsave, dsin );
-	   DOFUNC(scale)( v1, vaxis2, dcos );
-	   DOFUNC(add)( vaxis2, v2, v1 );
-	}
-*/
-
-
 const Vector3Unit = new      THREE.Vector3(  1,  1,  1 );
 const Vector3Zero = new      THREE.Vector3(  0,  0,  0 );
 const Vector3Right = new     THREE.Vector3( -1,  0,  0 );
@@ -102,23 +83,6 @@ const x = ["Vector3Unit"
 	Object.defineProperty(THREE_consts[key], "z", { writable: false })
 })
 
-
-var oldProto = THREE.Matrix4.prototype;
-var oldMatrixContructor = THREE.Matrix4.prototype.constructor;
-export function Matrix4x() {
-	this.elements = new Float32Array( [
-
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1
-
-	] );
-
-	Object.defineProperty(this, "elements", { writable:false } );
-
-
-}
 
 const tmpQ = new lnQuat();
 
@@ -218,39 +182,6 @@ export class Motion {
 					for( var n = 0; n < iterations; n++ ) {
 						m.rotateRelative( delx, dely, delz );
 					}
-					// delta = delta / 1000;
-					/*
-					   ** this is becoming a physics engine frame...
-					   ** might as well just add that.
-                	var delta_accel = this.acceleration.clone().multiplyScalar(delta);
-					if( ( this.rotation.x > ( Math.PI / 4 ) )
-					   ||( this.rotation.x < -( Math.PI / 4 ) )
-					   ||( this.rotation.y > ( Math.PI / 4 ) )
-					   ||( this.rotation.y < -( Math.PI / 4 ) )
-					   ||( this.rotation.z > ( Math.PI / 4 ) )
-					   ||( this.rotation.z < -( Math.PI / 4 ) )
-					   ){
-						   var max = this.rotation.x;
-						   if( max < this.rotation.y )
-						   	 max = this.rotation.y;
-						   if( max < this.rotation.z )
-						     max = this.rotation.z;
-						 var min = this.rotation.x;
-  						   if( min > this.rotation.y )
-  						   	 max = this.rotation.y;
-  						   if( min > this.rotation.z )
-  						     max = this.rotation.z;
-							if( min < 0 )
-								if( max < -min )
-									max = -min;
-							var t;
-							for( t = 1; t < 100; t++ )
-								if( ( max / t ) < ( Math.PI / 4 ))
-									break;
-
-							delta_accel.scale( 1 / t );
-					   }
-					  */
 				  }
 
 
@@ -287,40 +218,7 @@ export class Motion {
 				for( var n = 0; n < iterations; n++ ) {
 					m.rotateRelative( delx, dely, delz );
 				}
-				// delta = delta / 1000;
-				/*
-					 ** this is becoming a physics engine frame...
-					 ** might as well just add that.
-								var delta_accel = this.acceleration.clone().multiplyScalar(delta);
-				if( ( this.rotation.x > ( Math.PI / 4 ) )
-					 ||( this.rotation.x < -( Math.PI / 4 ) )
-					 ||( this.rotation.y > ( Math.PI / 4 ) )
-					 ||( this.rotation.y < -( Math.PI / 4 ) )
-					 ||( this.rotation.z > ( Math.PI / 4 ) )
-					 ||( this.rotation.z < -( Math.PI / 4 ) )
-					 ){
-						 var max = this.rotation.x;
-						 if( max < this.rotation.y )
-							 max = this.rotation.y;
-						 if( max < this.rotation.z )
-							 max = this.rotation.z;
-					 var min = this.rotation.x;
-							 if( min > this.rotation.y )
-								 max = this.rotation.y;
-							 if( min > this.rotation.z )
-								 max = this.rotation.z;
-						if( min < 0 )
-							if( max < -min )
-								max = -min;
-						var t;
-						for( t = 1; t < 100; t++ )
-							if( ( max / t ) < ( Math.PI / 4 ))
-								break;
-
-						delta_accel.scale( 1 / t );
-					 }
-					*/
-				}
+			}
 
 }
 
@@ -360,89 +258,6 @@ THREE.Matrix4.prototype.__defineGetter__( "origin", function(){
 
 
 
-THREE.Matrix4.prototype.rotateOrtho = function( angle, axis1, axis2 ) {
-		if( !angle ) return;
-		// 0 = x;  0
-		// 1 = y;  4
-		// 2 = z;  8
-		var te = this.elements;
-		var sa = Math.sin( angle );
-		var ca = Math.cos( angle );
-        switch( axis1 )	{
-			case 0: switch( axis2 ){
-				case 0:
-					throw new Error( "Invalid axis combination, cannot rotate axis toward itself")
-				break;
-				case 1:
-					var save1x = te[0], save1y = te[1], save1z = te[2];
-					var tmp1x = te[0] * ca, tmp1y = te[1] * ca, tmp1z = te[2] * ca;
-					var tmp2x = te[4] * sa, tmp2y = te[5] * sa, tmp2z = te[6] * sa;
-					te[0] = tmp1x - tmp2x; te[1] = tmp1y - tmp2y; te[2] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[4] * ca; tmp1y = te[5] * ca; tmp1z = te[6] * ca;
-					te[4] = tmp1x + tmp2x; te[5] = tmp1y + tmp2y; te[6] = tmp1z + tmp2z;
-					break;
-				case 2:
-					var save1x = te[0], save1y = te[1], save1z = te[2];
-					var tmp1x = te[0] * ca, tmp1y = te[1] * ca, tmp1z = te[2] * ca;
-					var tmp2x = te[8] * sa, tmp2y = te[9] * sa, tmp2z = te[10] * sa;
-					te[0] = tmp1x - tmp2x; te[1] = tmp1y - tmp2y; te[2] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[8] * ca; tmp1y = te[9] * ca; tmp1z = te[10] * ca;
-					te[8] = tmp1x + tmp2x; te[9] = tmp1y + tmp2y; te[10] = tmp1z + tmp2z;
-					break;
-			}
-			break;
-			case 1: switch( axis2 ){
-				case 0:
-					var save1x = te[4], save1y = te[5], save1z = te[6];
-					var tmp1x = te[4] * ca, tmp1y = te[5] * ca, tmp1z = te[6] * ca;
-					var tmp2x = te[0] * sa, tmp2y = te[1] * sa, tmp2z = te[2] * sa;
-					te[4] = tmp1x - tmp2x; te[5] = tmp1y - tmp2y; te[6] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[0] * ca; tmp1y = te[1] * ca; tmp1z = te[2] * ca;
-					te[0] = tmp1x + tmp2x; te[1] = tmp1y + tmp2y; te[2] = tmp1z + tmp2z;
-					break;
-				case 1:
-					throw new Error( "Invalid axis combination, cannot rotate axis toward itself")
-				break;
-				case 2:
-					var save1x = te[4], save1y = te[5], save1z = te[6];
-					var tmp1x = te[4] * ca, tmp1y = te[5] * ca, tmp1z = te[6] * ca;
-					var tmp2x = te[8] * sa, tmp2y = te[9] * sa, tmp2z = te[10] * sa;
-					te[4] = tmp1x - tmp2x; te[5] = tmp1y - tmp2y; te[6] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[8] * ca; tmp1y = te[9] * ca; tmp1z = te[10] * ca;
-					te[8] = tmp1x + tmp2x; te[9] = tmp1y + tmp2y; te[10] = tmp1z + tmp2z;
-				break;
-			}
-			break;
-			case 2: switch( axis2 ){
-				case 0:
-					var save1x = te[8], save1y = te[9], save1z = te[10];
-					var tmp1x = te[8] * ca, tmp1y = te[9] * ca, tmp1z = te[10] * ca;
-					var tmp2x = te[0] * sa, tmp2y = te[1] * sa, tmp2z = te[2] * sa;
-					te[8] = tmp1x - tmp2x; te[9] = tmp1y - tmp2y; te[10] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[0] * ca; tmp1y = te[1] * ca; tmp1z = te[2] * ca;
-					te[0] = tmp1x + tmp2x; te[1] = tmp1y + tmp2y; te[2] = tmp1z + tmp2z;
-				break;
-				case 1:
-					var save1x = te[8], save1y = te[9], save1z = te[10];
-					var tmp1x = te[8] * ca, tmp1y = te[9] * ca, tmp1z = te[10] * ca;
-					var tmp2x = te[4] * sa, tmp2y = te[5] * sa, tmp2z = te[6] * sa;
-					te[8] = tmp1x - tmp2x; te[9] = tmp1y - tmp2y; te[10] = tmp1z - tmp2z;
-					tmp2x = save1x * sa; tmp2y = save1y * sa; tmp2z = save1z * sa;
-					tmp1x = te[4] * ca; tmp1y = te[5] * ca; tmp1z = te[6] * ca;
-					te[4] = tmp1x + tmp2x; te[5] = tmp1y + tmp2y; te[6] = tmp1z + tmp2z;
-				break;
-				case 2:
-					throw new Error( "Invalid axis combination, cannot rotate axis toward itself")
-				break;
-			}
-			break;
-		}
-    };
 	THREE.Matrix4.prototype.Translate = function(x,y,z) {
 			this.origin.x = x;
 			this.origin.y = y;
