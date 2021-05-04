@@ -13,9 +13,11 @@ import {NaturalCamera} from "./NaturalCamera.js"
 import {SaltyRNG} from "./salty_random_generator.js";
 import * as THREE from "../3d/src/three.js/three.module.js"
 import {THREE_consts,Motion} from "../3d/src/three.js/personalFill.mjs"
+import {popups} from "./popups/popups.mjs"
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
+import {BrainForm} from "./brainBoard.mjs"
 
 //var glow = require( './glow.renderer.js' );
 
@@ -82,6 +84,8 @@ const BASE_COLOR_ORANGE = [150,128,0,255];
 
 
 
+var appContainer = document.getElementById( "Canvas" );
+var controlContainer = document.getElementById( "controls" );
 var mandelSurface = document.createElement( "canvas" );
 mandelSurface.width = 512;
 mandelSurface.height = 512;
@@ -296,17 +300,25 @@ var movers = [];
 var dirs = [];
 var camMat = null;
 var status_line;
-	function init() {
-	if( document.getElementById( "controls1") ) {
-		document.getElementById( "controls1").onclick = setControls1;
-		document.getElementById( "controls2").onclick = setControls2;
+
+function init() {
+        
+	const form = new BrainForm( controlContainer );
+        
+	let tmp;
+        tmp = document.getElementById( "Brains") ;
+        if( tmp ) {
+        	tmp.addEventListener( "click", (evt)=>{
+                	form.show();
+                } );
+        	
 	}
 		scene = new THREE.Scene();
 		scene2 = new THREE.Scene();
 		scene3 = new THREE.Scene();
 
 
-		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.001, 10000 );
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
 
 
 		camera.position.z = 5;
@@ -327,7 +339,7 @@ var status_line;
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 
-		document.body.appendChild( renderer.domElement );
+		appContainer.appendChild( renderer.domElement );
 
 		controlNatural = new NaturalCamera( camera, renderer.domElement );
 		controlNatural.enable( handleKeyEvents  );
@@ -380,12 +392,15 @@ objectLoader.load("models/rock1.json", model=>{
 	        
 		var geometry = new THREE.Geometry();
 		geometry.vertices.push(
-			new THREE.Vector3( 0, 0, -10 ),
-			new THREE.Vector3( 0, 0, 10 )
+			new THREE.Vector3( -m.rotation.x*2, -m.rotation.y*2, -m.rotation.z*2 ),
+			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
 		);
 	        
 		var line = new THREE.Line( geometry, material );
 		line.matrixAutoUpdate = true;
+		//const up = m.rotation;
+		
+		m.rotation.exp( line.quaternion );
 		scene.add( line );
 
 		dirs.push( line );
@@ -512,14 +527,7 @@ function animate() {
 
 		
 		var dirLine = dirs[idx];
-		//var o = new THREE.Vector3();
-		//var q  = new THREE.Quaternion();
-		//var s = new THREE.Vector3();
 
-		//m.matrix.decompose( o, q, s );
-
-		//dirLine.matrix.lookAt( motion.orientation, THREE_consts.Vector3Zero, m.matrix.up );
-		motion.rotation.exp( dirLine.quaternion );
 		dirLine.position.copy( m.position );
 		//dirLine.matrix.compose( o, q, s );
 		

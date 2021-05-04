@@ -1,0 +1,18 @@
+		<svg width="66" height="66" viewBox="-2 -2 68 68" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<defs>
+			<radialgradient id="gradient-0" gradientUnits="userSpaceOnUse" cx="-38.806" cy="-32.359" r="31.21" gradientTransform="matrix(0.556701, 0.060335, -0.061948, 0.571572, 35.942307, 40.952184)"><stop offset="0" style="stop-color: rgba(255, 249, 249, 0.72);"></stop><stop offset="1" style="stop-color: rgba(255, 255, 255, 0);"></stop></radialgradient>
+			<radialgradient id="gradient-1" gradientUnits="userSpaceOnUse" cx="7.916" cy="20.156" r="31.21" gradientTransform="matrix(1.665372, 0.004509, -0.004806, 1.773443, -10.723868, -25.421527)"><stop offset="0" style="stop-color: rgba(227, 227, 227, 0);"></stop><stop offset="1" style="stop-color: rgba(0, 0, 0, 0.45);"></stop></radialgradient>
+			<radialgradient id="gradient-2" gradientUnits="userSpaceOnUse" cx="5.259" cy="16.687" r="31.21" gradientTransform="matrix(1.490671, 0.00387, 0.00009, 1.829344, 1.658628, -19.147887)"><stop offset="0" style="stop-color: rgba(246, 243, 243, 0);"></stop><stop offset="1" style=""></stop></radialgradient>
+			<lineargradient id="gradient-4" gradientUnits="userSpaceOnUse" x1="17.355" y1="-22.732" x2="17.355" y2="44.298" gradientTransform="matrix(0.770686, -0.637215, 0.374193, 0.45257, 22.306562, 74.687881)"><stop offset="0" style="stop-color: rgba(227, 227, 227, 0.29);"></stop><stop offset="1" style="stop-color: rgba(0, 0, 0, 0.06);"></stop></lineargradient>
+		</defs>
+		<!--
+		<ellipse style="fill: rgb(255, 0, 255);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+		<ellipse style="fill: rgb(0, 0, 255);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+		<ellipse style="fill: rgb(128, 0, 0);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+		-->
+		<circle id="nodeColor" fill= "rgb(35, 232, 0)" cx="32" cy="32" r="30"></circle>
+		<circle fill="url(#gradient-2)"  fill-opacity="0.28" cx="39" cy="39" r="30" transform="matrix(1.062366, 0, 0, 1.046363, -8.38973, -7.437199)"></circle>
+		<circle fill="url(#gradient-0)" fill-opacity="0.78" cx="32" cy="32" r="30"></circle>
+		<circle fill="url(#gradient-1)" fill-opacity="0.68" cx="32" cy="32" r="30"></circle>
+		<circle fill="url(#gradient-4)" cx="32" cy="32" r="30" transform="matrix(1.00693, 0, 0, 0.99307, -0.224218, 0.3336)"></circle>
+	</svg>

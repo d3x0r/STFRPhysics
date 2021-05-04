@@ -1,0 +1,29 @@
+<svg width="66" height="66" viewBox="-10 0 150 150"  xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<defs>
+				<radialgradient id="gradient-0n" gradientUnits="userSpaceOnUse" cx="32.806" cy="38.359" r="31.21" gradientTransform="matrix(0.556701, 0.060335, -0.061948, 0.571572, 35.942307, 40.952184)"><stop offset="0" style="stop-color: rgba(255, 249, 249, 0.72);"></stop><stop offset="1" style="stop-color: rgba(255, 255, 255, 0);"></stop></radialgradient>
+				<radialgradient id="gradient-1n" gradientUnits="userSpaceOnUse" cx="37.916" cy="50.156" r="31.21" gradientTransform="matrix(1.665372, 0.004509, -0.004806, 1.773443, -10.723868, -25.421527)"><stop offset="0" style="stop-color: rgba(227, 227, 227, 0);"></stop><stop offset="1" style="stop-color: rgba(0, 0, 0, 0.45);"></stop></radialgradient>
+				<radialgradient id="gradient-2n" gradientUnits="userSpaceOnUse" cx="35.259" cy="46.687" r="31.21" gradientTransform="matrix(1.490671, 0.00387, 0.00009, 1.829344, 1.658628, -19.147887)"><stop offset="0" style="stop-color: rgba(246, 243, 243, 0);"></stop><stop offset="1" style=""></stop></radialgradient>
+				<lineargradient id="gradient-4n" gradientUnits="userSpaceOnUse" x1="47.355" y1="12.732" x2="47.355" y2="74.298" gradientTransform="matrix(0.770686, -0.637215, 0.374193, 0.45257, 22.306562, 74.687881)"><stop offset="0" style="stop-color: rgba(227, 227, 227, 0.29);"></stop><stop offset="1" style="stop-color: rgba(0, 0, 0, 0.06);"></stop></lineargradient>
+			</defs>
+			<!--
+			<ellipse style="fill: rgb(255, 0, 255);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+			<ellipse style="fill: rgb(0, 0, 255);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+			<ellipse style="fill: rgb(128, 0, 0);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+			<ellipse style="fill: rgb(0, 255, 68);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+			-->
+			<circle style="fill: rgb(225, 195, 135); fill-opacity:0.5" cx="63" cy="78" r="60"></circle>
+			<ellipse id="nodeColor" style="fill: rgb(192, 0, 0);" cx="63.354" cy="78.071" rx="30.93" ry="30.717"></ellipse>
+			<circle style="fill: url(&quot;#gradient-2n&quot;); fill-opacity: 0.68;" cx="69.539" cy="83.618" r="30.783" transform="matrix(1.062366, 0, 0, 1.046363, -8.38973, -7.437199)"></circle>
+			<circle style="fill: url(&quot;#gradient-0n&quot;); fill-opacity: 0.68;" cx="63.14" cy="78.072" r="30.783"></circle>
+			<!--
+			<circle style="fill: url(&quot;#gradient-1n&quot;); fill-opacity: 0.68;" cx="63.567" cy="77.218" r="30.783"></circle>
+			<circle style="fill: url(&quot;#gradient-4n&quot;);" cx="63.14" cy="78.925" r="30.783" transform="matrix(1.00693, 0, 0, 0.99307, -0.224218, 0.3336)"></circle>
+			-->
+		
+	<g id="iconColor" class="layer" stroke="#DDDD00" fill="#DDDD00" transform="translate( 36,27) scale( 0.60) ">
+	 <rect height="31" stroke-opacity="0" stroke-width="5" width="20" x="34.5" y="43.5"></rect>
+	 <path d="m44.125,98.54167c0,-1 -31.75,-25.25 -31.75,-25.25c0,0 65.25,-0.25 65.125,-0.29167c-0.125,-0.04167 -33.375,26.54167 -33.375,25.54167z" id="svg_4" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-opacity="0" stroke-width="5"></path>
+	 <rect fill="#000000" fill-opacity="0" height="11.25" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="3" width="25.5" x="31.125" y="106.70833"></rect>
+	 <rect fill="#000000" fill-opacity="0" height="0.25" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-width="3" width="66.5" x="9.625" y="117.95833"></rect>
+	</g>
+	</svg>

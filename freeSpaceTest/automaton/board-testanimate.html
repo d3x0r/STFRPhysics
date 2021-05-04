@@ -1,0 +1,128 @@
+<HTML>
+<HEAD>
+<STYLE>
+td{
+	color:white
+}
+svg{ 
+   height : 250;
+}
+path{
+  stroke: #2727e6;
+  stroke-width:10px;
+  stroke-linecap:round;
+  fill:none;
+}
+path#buttonPad {
+  stroke: #e62727;
+}
+</STYLE>
+</HEAD>
+<BODY>
+
+<DIV ID="gameGoals" style="display:inline-block;width:25vh;height:25vh;background:black;color:white">
+Game Goals?
+</DIV>
+
+<DIV ID="board" style="display:inline-block;width:25vh;height:25vh;background:black">
+</DIV>	
+
+
+<DIV ID="statusContainer" style="display:inline-block;width:25vh;height:25vh;background:black;color:white">
+	<TABLE width="100%">
+		<TR><TD>Neuron 1</TD><TD>100</TD><TD>34</TD></TD>
+	</TABLE>
+	TABLE OF SELECTED STATUSES?
+</DIV>	
+
+<DIV ID="notebookPanel" style="display:inline-block;background:#eeddaa;color:black">
+
+</DIV>	
+
+<SVG>
+   <path ID="zz" d="M10,10 L50,100 L90,50 "></path>
+ <g fill="grey"
+     transform="rotate(-10 50 100)
+                translate(-36 45.5)
+                skewX(40)
+                scale(1 0.5)">
+    <path id="heart" d="M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z" />
+  </g>
+	<circle cx="250" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+	
+	<circle ID="drivePivot" cx="250" cy="50" r="4" stroke="black" stroke-width="4" fill="none" />
+
+	<path ID="driveArm" d=" M250,50 L 250,90 "  />
+
+	<path ID="driveRod" d=" M250,50 L 250,90 "  />
+
+	<path ID="buttonPad" d=" M250,50 L 250,90 "  />
+
+
+ <use xlink:href="#heart" fill="none" stroke="red"/>
+<SVG>
+
+<SCRIPT>
+	function animator() {
+		var driveCenter = { x:250, y:50 };
+	
+		var xs = [];
+		var t = 0;
+		for( var i = 0; i < 500; i++ ) {
+			xs.push(30 + 20*Math.sin( 2*Math.PI * ( i / 120 ) ) );
+		}
+		
+		function animate() {
+			let path = "M0,"+xs[0];
+			for( var i = 0; i < 500; i++ ) {
+			
+				path += " L"+i+","+xs[(i+t)%xs.length];
+			}
+			t++;
+			document.querySelector( "path" ). setAttribute( "d", path );
+
+			//<circle cx="250" cy="50" r="4" stroke="black" stroke-width="4" fill="none" />
+			var svg = document.querySelector( "SVG" );
+			var pivot = svg.querySelector( "[ID='drivePivot']" );
+			var tm = Date.now() / 1000;
+			
+			var cx, cy;
+			pivot.setAttribute( "cx", cx = driveCenter.x + ( 20 * Math.sin( 0.25 * (Math.PI * 2) *( -tm % (1/0.25) ) ) ) )
+			pivot.setAttribute( "cy", cy = driveCenter.y + ( 20 * Math.cos( 0.25 * (Math.PI * 2) *(tm %(1/0.25) )) ) )
+			
+			var driveArm = svg.querySelector( "[ID='driveArm']" );
+			
+			// L = Math.sqrt(dx,dy);
+			// L^2 - dx^1
+			var dy = cy + Math.sqrt( (80*80) - ((cx-driveCenter.x)*(cx-driveCenter.x) ) )
+			path = `M${cx},${cy} L${driveCenter.x},${dy}`;
+			driveArm.setAttribute( "d", path );
+
+			var driveRod = svg.querySelector( "[ID='driveRod']" );
+			path = `M${driveCenter.x},${dy} L${driveCenter.x},${dy+ 10}`;
+			dy += 10;
+			driveRod.setAttribute( "d", path );
+
+
+			var buttonPad = svg.querySelector( "[ID='buttonPad']" );
+			var button = 140;
+			if( dy > button ) button = dy;
+			path = `M${driveCenter.x - 10},${button} L${driveCenter.x + 10 },${button}`;
+			buttonPad.setAttribute( "d", path );
+
+			requestAnimationFrame(animate);
+			//setTimeout( animate, 100 );
+		}
+		animate();
+	}
+	animator();
+</SCRIPT>
+
+</BODY>
+
+<SCRIPT  type="module" src="game.js">
+  //import * from "game.mjs";
+</SCRIPT>
+
+</HTML>
+

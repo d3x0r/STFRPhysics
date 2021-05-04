@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<STYLE>
+
+th{
+	color:white
+}
+
+td{
+	color:white
+}
+
+th.selected{
+	color:white
+	background:#003400;
+}
+
+td.selected{
+	color:white;
+	background:#003400;
+}
+tr.selected{
+	color:white;
+	background:#003400;
+}
+
+svg text {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+svg text::selection {
+    background: none;
+}
+path.switcher{
+  stroke: #2727e6;
+  stroke-width:10px;
+  stroke-linecap:round;
+  fill:none;
+}
+path#buttonPad {
+  stroke: #e62727;
+}
+
+div.mouseCatcher{
+    width: 100%;
+    height:100%;
+    position:absolute;
+    z-index : 45; /* under popup zindex; over all else */
+    visibility: hidden;
+}
+
+div.popup{
+	visibility:hidden;
+	/*right:0;*/
+        top:48px;
+	background-color: #666;
+	position:absolute;
+	z-index:50;
+	/*margin: 15px;*/
+	padding: 15px;
+	border-radius:10px;
+	border-color:white;
+	border-width:2;
+	border-style:solid;
+}
+/* Change the background color on mouse-over */
+.popup a:hover {
+  background-color: #ddd;
+  color: black;
+  text-decoration:underline;
+}
+
+.popup a {
+  background-color: #555;
+  color: white;
+}
+
+/* Style the active/current link*/
+.popup a.active {
+  background-color: dodgerblue;
+  color: white;
+}
+
+p.journal {
+}
+
+</STYLE>
+</HEAD>
+<BODY>
+
+  <div ID="mouseCatcher" class="mouseCatcher"></div>
+
+<DIV style = "position:relative;display:table">
+
+	<DIV style="vertical-align:top;position:relative;padding:5;border-color:#8d5d10;border-style:solid;border-width:5;width:280;height:320;display:table-cell;background:#eeddaa;color:black">
+	
+		<DIV ID="notebookPanel" style="position:absolute;width:97%;display:inline-block;background:#eeddaa;color:black">
+		
+		</DIV>	
+
+	</DIV>
+
+
+	<DIV style="display:inline-block;height:400" >
+		<DIV ID="boardToolsFrame" style="vertical-align:top;display:inline-block;width:200;height:200;background:blue">
+		</DIV>	
+		<DIV ID="boardMonitorFrame" style="z-index:3;display:inline-block;width:400;height:200;background:#003010">
+
+		</DIV>	
+		<DIV ID="boardFrame" style="z-index:2;display:block;position:relative;top:-60;width:600;height:600;background:#807755">
+		</DIV>	
+	</DIV>
+
+	<DIV ID="statusContainer" style="max-height:600;display:inline-block;vertical-align:top;background:black;color:white; width:270;overflow:auto">
+		<TABLE ID="statusTable" width="100%" style="vertical-align:top;display:inline-block;width:250">
+			<TR><TH>Name/Type</TH><TH>Thr / Gain</TH><TH>Output</TH></TR>
+			<TR><TD>Neuron 1</TD><TD>100</TD><TD>34</TD></TD></TR>
+		</TABLE>
+	</DIV>	
+
+
+</DIV>
+<!--
+<IMG SRC="./Untitled.png"></IMG>
+<IMG SRC="./Untitled2.png"></IMG>
+-->
+<DIV>
+Project is based on a clone of <A HREF="http://www.biologic.com.au/bugbrain/">Bug Brain</A>. A Windows game by Tom Morton.  Dialog by Tom Morton.
+Source is maintained with a generic JS repository on <A HREF="https://github.com/d3x0r/-/tree/master/automaton">Github</A>.
+</DIV>
+
+</BODY>
+
+<SCRIPT  type="module" src="game-min.js"></SCRIPT>
+
+</HTML>
+
