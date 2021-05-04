@@ -67,7 +67,9 @@ export class BrainForm extends Popup {
                                         itemMap.set( n, [newRow,newRow2] );
                                 }
                         }
-
+                        this.neuronTable.table.addEventListener( "mousedown", (evt)=>{
+                                evt.stopPropagation();
+                        })
                         this.neuronTable.table.className = "neuronTable"
                         this.divContent.appendChild( this.neuronTable.table );
                         const statuses = this.neuronTable;
