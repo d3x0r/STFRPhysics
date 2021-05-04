@@ -92,7 +92,13 @@ Classically, wavelength(m) * frequency(1/s) = C;  this is extended with turns to
 
 The energy of a wave is a direct relationship of its frequency; `E = hF`; where `h` is Plank's Constant that directly scaled turns per second.
 
-Using this, and replacing into the 'Mass–energy relation' `e=m*c^2` represented by  `t/s = g * t-t-m-m/s-s`, and reordering the terms `g-m/s = 1/t*1/m`  Or momentum equals one over turns times one over meters.  The smaller the radius that the turns happen in, the greater the mass. Alternatively this can be factored like `g = s/m-m-t` which is `g-m/s = 1/c 1/m`.  The smaller the radius, the greater the turns can be because there's less `m-t/s`.  (Maybe instead 1/c = g-m/s * m?)
+Using this, and replacing into the 'Mass–energy relation' `e=m*c^2` 
+represented by  `t/s = g * t-t-m-m/s-s`, and reordering the terms `g-m/s = 1/t*1/m`  
+Or momentum equals one over turns times one over meters.  
+~~The smaller the radius that the turns happen in, the greater the mass.~~(this requires additional investigation, specific directions might infer different properties?)
+Alternatively this can be factored like `g = s/m-m-t` which is `g-m/s = 1/c 1/m`.  
+The smaller the radius, the greater the turns can be because there's less `m-t/s`.  
+(Maybe instead 1/c = g-m/s * m?)
 
 ### Maybe instead?
 
@@ -177,4 +183,19 @@ mass* c = 1/c * turns!
 - Photons transmit torque.  (light, particles that are in a non material state)
 
 - Mass transmits linear momentum.
+
+---------
+
+particle physics indicates that neutrinos are tiny with a super tiny mass...
+
+but then they don't have a lot of spin?  it's the composition of spins not a single spin itself that makes for
+a particle.
+
+A linear twist has little bearing on size - if there's tangential rotation on top of that, it may fold backward
+into a closed loop; but then neutrinos are particles in motion - with their own linear velocity... 
+
+does the target have linear velocity?  gold leaf experiments have motion with static (internal spin)
+
+
+with nearly insignificant electric charge... 
 
