@@ -936,7 +936,8 @@ BackgroundMethods.prototype.OnRightClick = function(  psv,  x,  y )
 		this.brainboard.RebuildComponentPopups(this);
 		popup_x = x;
 		popup_y = y;
-		this.brainboard.hMenu.show( this.brainboard.board.mousePos.x, this.brainboard.board.mousePos.y, ()=>{
+
+		this.brainboard.hMenu.show( this.brainboard.board.mousePosScrn.x, this.brainboard.board.mousePosScrn.y, ()=>{
 			console.log( "Menu done?" )
 		} );
 		//, (result)=>{
@@ -1037,7 +1038,7 @@ OSCILLATOR_METHODS.prototype.constructor = NEURON_METHODS;
 
 OSCILLATOR_METHODS.prototype.Create = function(  psvExtra )
 	{
-		console.log( "Creating a new neuron (peice instance)");
+		console.log( "Creating a new oscillatorNeuron (peice instance)");
 		return this.brainboard.brain.Oscillator( );
 	}
 

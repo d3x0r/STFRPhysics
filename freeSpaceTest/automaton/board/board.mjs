@@ -27,31 +27,37 @@ export function Board( parent ) {
 	function mouseMove( evt ) {
 		evt.preventDefault();
 		evt.stopPropagation();
-		board.mousePos.x = evt.clientX;
-		board.mousePos.y = evt.clientY;
-		var pRect = parent.getBoundingClientRect();
+		var pRect = canvas.getBoundingClientRect();
+		board.mousePosScrn.x = evt.clientX;
+		board.mousePosScrn.y = evt.clientY;
+		board.mousePos.x = evt.clientX - pRect.left;
+		board.mousePos.y = evt.clientY - pRect.top;
 		
-		board.DoMouse( evt.offsetX * canvas.width/pRect.width, evt.offsetY* canvas.height/pRect.height, _buttons );
+		board.DoMouse( board.mousePos.x * canvas.width/pRect.width, board.mousePos.y* canvas.height/pRect.height, _buttons );
 	}
 	function mouseUp( evt ) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		_buttons = evt.buttons;
-		board.mousePos.x = evt.clientX;
-		board.mousePos.y = evt.clientY;
-		var pRect = parent.getBoundingClientRect();
+		var pRect = canvas.getBoundingClientRect();
+		board.mousePosScrn.x = evt.clientX;
+		board.mousePosScrn.y = evt.clientY;
+		board.mousePos.x = evt.clientX - pRect.left;
+		board.mousePos.y = evt.clientY - pRect.top;
 		
-		board.DoMouse( evt.offsetX * canvas.width/pRect.width, evt.offsetY* canvas.height/pRect.height, _buttons );
+		board.DoMouse( board.mousePos.x * canvas.width/pRect.width, board.mousePos.y* canvas.height/pRect.height, _buttons );
 	}
 	function mouseDown( evt ) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		_buttons = evt.buttons;
-		board.mousePos.x = evt.clientX;
-		board.mousePos.y = evt.clientY;
-		var pRect = parent.getBoundingClientRect();
+		var pRect = canvas.getBoundingClientRect();
+		board.mousePosScrn.x = evt.clientX;
+		board.mousePosScrn.y = evt.clientY;
+		board.mousePos.x = evt.clientX - pRect.left;
+		board.mousePos.y = evt.clientY - pRect.top;
 		
-		board.DoMouse( evt.offsetX * canvas.width/pRect.width, evt.offsetY* canvas.height/pRect.height, _buttons );
+		board.DoMouse( board.mousePos.x * canvas.width/pRect.width, board.mousePos.y* canvas.height/pRect.height, _buttons );
 	}
 
 	canvas.addEventListener( "mousemove", mouseMove );
@@ -95,6 +101,7 @@ export function Board( parent ) {
 	this.move_current_layer;
 
 	this.mousePos = { x:0, y:0 }; // physical mouse position on the canvas(broser)
+	this.mousePosScrn = { x:0, y:0 }; // physical mouse position on the canvas(broser)
 
 	this.xStart = 0; // Lock position for drag/slide/size
 	this.yStart = 0; // Lock position for drag/slide/size

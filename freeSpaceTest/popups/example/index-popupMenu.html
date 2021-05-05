@@ -1,0 +1,25 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../styles.css">
+<body>
+</body>
+<script type="module"> 
+import {popups} from "../popups.mjs"
+
+const menu = popups.createMenu();
+
+menu.addItem( "Option1", ()=>{
+} );
+
+menu.addItem( "Option3", ()=>{
+} );
+
+const menu2 = menu.addMenu( "SubMenu" );
+
+menu2.addItem( "Option5" );
+menu2.addItem( "Option7" );
+
+menu.show( 200, 200 );
+
+</script>
+</html>
