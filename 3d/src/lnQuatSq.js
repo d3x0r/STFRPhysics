@@ -594,7 +594,7 @@ function lnQuatAdd( q, q2, s ) {
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
 lnQuat.prototype.getBasisT = function(del, from, right) {
 	const q = this;
-	//this.update();
+	if( q.dirty ) q.update();
 	if( "undefined" === typeof del ) del = 1.0;
 
 	const nt = q.θ * del;
