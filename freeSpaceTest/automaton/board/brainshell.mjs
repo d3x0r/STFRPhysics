@@ -411,18 +411,23 @@ NERVE_METHODS.prototype.DrawCell = function(  peice, psvInstance,  surface,  fro
 
 	//var from = this.master.getcell( cellx, celly );
 	if( "range" in this.master.image ) {
-		if( synapse.gain >= 0 )
-			surface.drawImage( this.master.image.on, from.coords.x, from.coords.y, from.size.width, from.size.height
+		if( synapse.gain >= 0 ) {
+			const v = synapse.value;
+			const entry = Math.floor( (this.master.image.range.length-1) * (1+v)/2 );
+			surface.drawImage( this.master.image.range[entry], from.coords.x, from.coords.y, from.size.width, from.size.height
 				, x, y
 				, this.brainboard.board.cellSize.width
 				, this.brainboard.board.cellSize.height  
 			)
-		else
-			surface.drawImage( this.master.image.off, from.coords.x, from.coords.y, from.size.width, from.size.height
+		}else{
+			const v = synapse.value;
+			const entry = Math.floor( (this.master.image.range.length-1) * (1+v)/2 );
+			surface.drawImage( this.master.image.range[entry], from.coords.x, from.coords.y, from.size.width, from.size.height
 				, x, y
 				, this.brainboard.board.cellSize.width
 				, this.brainboard.board.cellSize.height  
 			)
+		}
 
 	} else {
 		if( synapse.gain >= 0 )
