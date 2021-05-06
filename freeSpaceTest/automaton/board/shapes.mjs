@@ -70,9 +70,9 @@
 		}
 		for( var n = 0; n < 8; n++ ) {
 			node.range[n] = makeOneNeuron();
-			node.range[n].setColor( `#${pad(0,2)}${pad(223 *(8-n)/8,2)}${pad(0,2)}`)
+			node.range[n].setColor( `#${pad(0,2)}${pad(Math.floor(223 *(8-n)/8),2)}${pad(0,2)}`)
 		}
-		node.off.setColor( "#707070" );
+		node.off.setColor( "#303030" );
 		return node;
 	}
  function makeOneNeuron() {
@@ -100,6 +100,7 @@
 	`;
 	svg.setColor = function( c ) {
 		var color = svg.children.nodeColor;
+		console.log( "Setting neuron color:", c );
 		if( color ){
 			color.style.fill = c;
 		}
