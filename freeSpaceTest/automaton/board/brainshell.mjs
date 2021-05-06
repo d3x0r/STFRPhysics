@@ -210,8 +210,8 @@ export function BrainBoard( _brain, container ) {
 				
 			InitMenus( brainshell );
 		}
-		brainshell.DefaultNeuron = brainshell.brain.Neuron();
-		brainshell.DefaultSynapse = brainshell.brain.Synapse();
+		brainshell.DefaultNeuron = new brainshell.brain.Neuron();
+		brainshell.DefaultSynapse = new brainshell.brain.Synapse();
 
 		
 	}       
@@ -717,18 +717,13 @@ NEURON_METHODS.prototype.DrawCell = function(  peice, psvInstance,  surface,  fr
 
 	//var from = this.master.getcell( cellx, celly );
 	if( "range" in this.master.image ) {
-		if( neuron.value )
-			surface.drawImage( this.master.image.on, from.coords.x, from.coords.y, from.size.width, from.size.height
-				, x, y
-				, this.brainboard.board.cellSize.width
-				, this.brainboard.board.cellSize.height  
-			)
-		else
-			surface.drawImage( this.master.image.off, from.coords.x, from.coords.y, from.size.width, from.size.height
-				, x, y
-				, this.brainboard.board.cellSize.width
-				, this.brainboard.board.cellSize.height  
-			)
+		const v = neuron.value;
+		const entry = Math.floor( (this.master.image.range.length-1) * (1+v)/2 );
+		surface.drawImage( this.master.image.range[entry], from.coords.x, from.coords.y, from.size.width, from.size.height
+			, x, y
+			, this.brainboard.board.cellSize.width
+			, this.brainboard.board.cellSize.height  
+		)
 
 	} else {
 		if( neuron.value )
