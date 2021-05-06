@@ -504,7 +504,7 @@ function render() {
 var sumDel =0;
 function animate() {
 	var delta = clock.getDelta();
-
+	
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //		console.log( "MyMotion (before)", JSON.stringify(myMotion, null, '\t') );
 	movers2.forEach( (ent,idx)=>{

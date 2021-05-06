@@ -3,7 +3,9 @@
  */
 
 import * as THREE from "../3d/src/three.js/three.module.js"
-import {lnQuat} from "../3d/src/lnQuatSq.js"
+
+// lnQuat is used in Motion, but not directly here
+//import {lnQuat} from "../3d/src/lnQuatSq.js"
 import {THREE_consts,Motion} from "../3d/src/three.js/personalFill.mjs"
 
 export function NaturalCamera( object, domElement ) {
@@ -21,58 +23,39 @@ export function NaturalCamera( object, domElement ) {
 
 	// internals
 	this.moveSpeed = 100* 12 * 0.0254;
-	var scope = this;
+	const scope = this;
+	
+	// 2d scaled screen point - prior position
+	const rotateStart = new THREE.Vector2();
+	// 2d scaled screen point - current
+	const rotateEnd = new THREE.Vector2();
+	// temp for rotation difference of start and end
+	const rotateDelta = new THREE.Vector2();
 
-	var rotateStart = new THREE.Vector2();
-	var rotateEnd = new THREE.Vector2();
-	var rotateDelta = new THREE.Vector2();
-
-	var phiDelta = 0;
-	var thetaDelta = 0;
-
+	let phiDelta = 0;
+	let thetaDelta = 0;
 
 	this.userRotate = true;
 
 	this.rotateLeft = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();
 		thetaDelta -= angle;
-
 	};
 
 	this.rotateRight = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();
 		thetaDelta += angle;
 
 	};
 
 	this.rotateUp = function ( angle ) {
-
-		if ( angle === undefined ) {
-
-			angle = getAutoRotationAngle();
-
-		}
-
+		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();
 		phiDelta += angle;
 
 	};
 
 	this.rotateDown = function ( angle ) {
-		if ( angle === undefined ) {
-			angle = getAutoRotationAngle();
-		}
+		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();
 		phiDelta -= angle;
 	};
 
@@ -83,8 +66,6 @@ export function NaturalCamera( object, domElement ) {
 		touchUpdate();
 		const rt = scope.motion.orientation.right();
 		if( phiDelta || thetaDelta || rt.y ){
-			//console.log( "rotation:", scope.motion.rotation, scope.motion.orientation )
-			
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
 
@@ -96,8 +77,7 @@ export function NaturalCamera( object, domElement ) {
 			thetaDelta = 0;
 			phiDelta = 0;
 
-			scope.motion.move( scope.object, tick );
-			
+			scope.motion.move( scope.object, tick );			
 		}
 
 	};
@@ -150,30 +130,14 @@ export function NaturalCamera( object, domElement ) {
 	function onMouseWheel( event ) {
 
 		if ( scope.enabled === false ) return;
-
+		/*
 		var delta = 0;
-
 		if ( event.wheelDelta ) { // WebKit / Opera / Explorer 9
-
 			delta = event.wheelDelta;
-
 		} else if ( event.detail ) { // Firefox
-
 			delta = - event.detail;
-
 		}
-
-	/*
-		if ( delta > 0 ) {
-
-			scope.zoomOut();
-
-		} else {
-
-			scope.zoomIn();
-
-		}
-	*/
+		*/
 	}
 
 	var keyEvent = null;
@@ -182,11 +146,11 @@ export function NaturalCamera( object, domElement ) {
 
 		if ( scope.enabled === false ) return;
 
-			if( !scope.userRotate ) {
-				if( keyEvent )
-					keyEvent( event, true );
-				return;
-			}
+		if( !scope.userRotate ) {
+			if( keyEvent )
+				keyEvent( event, true );
+			return;
+		}
 
 		switch ( event.keyCode ) {
 		default:
@@ -336,6 +300,6 @@ function onTouchEnd( e ) {
 
 };
 
-//THREE.NaturalCamera.
 
+// extend Object with a default event dispatcher
 NaturalCamera.prototype = Object.create( THREE.EventDispatcher.prototype );

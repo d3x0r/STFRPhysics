@@ -5,6 +5,9 @@ import {Popup} from "./popups/popups.mjs"
 import {BrainBoard} from "./automaton/board/brainshell.mjs"
 import {Brain} from "./automaton/brain/brain.mjs"
 import {Neuron} from "./automaton/brain/neuron.mjs"
+import Synapse from "./automaton/brain/synapse.mjs"
+
+
 
 export class BrainForm extends Popup {
 	board = null;
@@ -15,13 +18,24 @@ export class BrainForm extends Popup {
                 this.hide();
                 const brainBoard = this.board = new BrainBoard( this.brain, this.divContent );
 
-                
+                const This = this;
+                function brainTick() {
+                        This.brain.step();
+                        setTimeout( brainTick, 1 );
+                }
+                brainTick();
+
+                function boardTick() {
+                        This.board.board.BoardRefresh()
+                        requestAnimationFrame(boardTick);
+                }
+                requestAnimationFrame(boardTick);
 
                 this.board.addEventListener( "added", (p,n)=>{
-                        if( n instanceof this.brain.Neuron ) {
+                        if( n instanceof Neuron ) {
                                 this.neuronTable.addNeuron( p,n );
                         }
-                        if( n instanceof this.brain.Synapse )  {
+                        if( n instanceof Synapse )  {
                                 this.neuronTable.addSynapse( p, n);
                         }
                 })
