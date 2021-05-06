@@ -29,9 +29,7 @@ export function NaturalCamera( object, domElement ) {
 
 	var phiDelta = 0;
 	var thetaDelta = 0;
-	var scale = 1;
 
-	var lastPosition = new THREE.Vector3();
 
 	this.userRotate = true;
 
@@ -72,15 +70,10 @@ export function NaturalCamera( object, domElement ) {
 	};
 
 	this.rotateDown = function ( angle ) {
-
 		if ( angle === undefined ) {
-
 			angle = getAutoRotationAngle();
-
 		}
-
 		phiDelta -= angle;
-
 	};
 
 	this.update = function ( tick ) {
@@ -88,18 +81,24 @@ export function NaturalCamera( object, domElement ) {
 	    //scope.object.matrixNeedsUpdate = true;
 		if( !scope.userRotate ) return;
 		touchUpdate();
-		if( phiDelta || thetaDelta ){
+		const rt = scope.motion.orientation.right();
+		if( phiDelta || thetaDelta || rt.y ){
 			//console.log( "rotation:", scope.motion.rotation, scope.motion.orientation )
-		}
-		scope.motion.rotation.x = -phiDelta;
-		scope.motion.rotation.y = thetaDelta;
-		scope.motion.rotation.dirty = true;
-		thetaDelta = 0;
-		phiDelta = 0;
+			
+			scope.motion.rotation.x = -phiDelta;
+			scope.motion.rotation.y = thetaDelta;
 
-		scope.motion.move( scope.object, tick );
-		
-		//scope.object.matrix.rotateRelative( 0, 0, -scope.object.matrix.roll );
+			// always face 'up'
+			scope.motion.rotation.z = -Math.asin(rt.y)/tick;
+
+			scope.motion.rotation.dirty = true;
+			//scope.motion.rotation.yaw(  );
+			thetaDelta = 0;
+			phiDelta = 0;
+
+			scope.motion.move( scope.object, tick );
+			
+		}
 
 	};
 
