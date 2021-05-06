@@ -109,16 +109,23 @@ export class Motion {
 
 		const tmpDir = Vector3Pool.new();
 		tmpDir.subVectors( this.body.position, motion.body.position );
+		const l1 = tmpDir.length();
 
 
 		this.dipoleVec.x = this.dipole.x;
 		this.dipoleVec.y = this.dipole.y;
 		this.dipoleVec.z = this.dipole.z;
+		const l2 = this.dipoleVec.length();
+
+		const dot = ( tmpDir.x*this.dipoleVec.x + tmpDir.y*this.dipoleVec.y + tmpDir.z*this.dipoleVec.z )
+			/ (l1*l2);
+		const ofsAngle = Math.acos(dot);
+
 		const relPole = this.orientation.update().apply( this.dipoleVec );  
 		motion.dipoleVec.x = motion.dipole.x;
 		motion.dipoleVec.y = motion.dipole.y;
 		motion.dipoleVec.z = motion.dipole.z;
-		const otherPole = tmpDir;//motion.orientation.update().apply( motion.dipoleVec );
+		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 		tmp1.x = relPole.x;
 		tmp1.y = relPole.y;
 		tmp1.z = relPole.z;
@@ -129,11 +136,21 @@ export class Motion {
 		tmp2.dirty = true;
 		tmp1.update(); tmp2.update();
 
+		//tmp2.spin( ofsAngle*2, { x:torque.nx,y:torque.ny,z:torque.nz} )
+
 		//this.dipole.update();
 		//motion.dipole.update();
 		const torque = new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
-
 		tmp1.cross( tmp2, torque );
+
+		torque.θ = ofsAngle;// - torque.θ;
+		torque.x = torque.nx * torque.θ;
+		torque.y = torque.ny * torque.θ;
+		torque.z = torque.nz * torque.θ;
+		//const targetPole = torque.apply( otherPole );
+
+
+
 		const bodyDel = Vector3Pool.new().subVectors(  this.body.position, motion.body.position );
 		const rSq = bodyDel.lengthSq()/100;
 		bodyDel.delete();
