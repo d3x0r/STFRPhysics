@@ -467,6 +467,42 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 	}
 }
 
+lnQuat.prototype.cross = function( other, target ){
+	this.update();
+	other.update();
+	const dot =  this.nx*other.nx + this.ny*other.ny + this.nz*other.nz ;
+	const angle = Math.acos( dot );  // returns 0 to pi; 0 to 1/2 turn.
+
+	const norm = Math.sin( angle );
+	
+	const crsX = (this.ny*other.nz-this.nz*other.ny);
+	const crsY = (this.nz*other.nx-this.nx*other.nz);
+	const crsZ = (this.nx*other.ny-this.ny*other.nx);
+	if( norm ) {
+		target.θ = angle;
+		target.nx = crsX/norm;
+		target.ny = crsY/norm;
+		target.nz = crsZ/norm;
+	}else {
+		if( angle > Math.PI ) {
+			target.θ = angle;
+			target.nx = this.nx;
+			target.ny = this.ny;
+			target.nz = this.nz;
+		}else {
+			target.θ = angle;
+			target.nx = this.nx;
+			target.ny = this.ny;
+			target.nz = this.nz;
+		}
+
+	}
+	target.x = target.nx * target.θ;
+	target.y = target.ny * target.θ;
+	target.z = target.nz * target.θ;
+	target.dirt = false;
+	return target;
+}
 
 let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
@@ -592,7 +628,46 @@ function lnQuatAdd( q, q2, s ) {
 }
 
 lnQuat.prototype.getBasis = function(){return this.getBasisT(1.0) };
-lnQuat.prototype.getBasisT = function(del, from, right) {
+lnQuat.prototype.getBasisT = function(del) {
+	const q = this;
+	if( q.dirty ) q.update();
+	if( "undefined" === typeof del ) del = 1.0;
+
+	const nt = q.θ * del;
+	const s  = Math.sin( nt ); // sin/cos are the function of exp()
+	const c1 = Math.cos( nt ); // sin/cos are the function of exp()
+	const c = 1- c1;
+
+	const qx = this.nx;
+	const qy = this.ny;
+	const qz = this.nz;
+
+	const cnx = c*qx;
+	const cny = c*qy;
+	const cnz = c*qz;
+
+	const xy = cnx*qy;  // x * y / (xx+yy+zz) * (1 - cos(2t))
+	const yz = cny*qz;  // y * z / (xx+yy+zz) * (1 - cos(2t))
+	const xz = cnz*qx;  // x * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const wx = s*qx;     // x / sqrt(xx+yy+zz) * sin(2t)
+	const wy = s*qy;     // y / sqrt(xx+yy+zz) * sin(2t)
+	const wz = s*qz;     // z / sqrt(xx+yy+zz) * sin(2t)
+
+	const xx = cnx*qx;  // y * y / (xx+yy+zz) * (1 - cos(2t))
+	const yy = cny*qy;  // x * x / (xx+yy+zz) * (1 - cos(2t))
+	const zz = cnz*qz;  // z * z / (xx+yy+zz) * (1 - cos(2t))
+
+	const basis = { right  :{ x : c1 + xx, y : wz + xy, z : xz - wy }
+	              , up     :{ x : xy - wz, y : c1 + yy, z : wx + yz }
+	              , forward:{ x : wy + xz, y : yz - wx, z : c1 + zz }
+	              };
+
+	return basis;	
+}
+
+
+lnQuat.prototype.getBasisV = function(del) {
 	const q = this;
 	if( q.dirty ) q.update();
 	if( "undefined" === typeof del ) del = 1.0;
