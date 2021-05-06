@@ -12,7 +12,7 @@
 import {NaturalCamera} from "./NaturalCamera.js"
 import {SaltyRNG} from "./salty_random_generator.js";
 import * as THREE from "../3d/src/three.js/three.module.js"
-import {THREE_consts,Motion} from "../3d/src/three.js/personalFill.mjs"
+import {Motion} from "../3d/src/three.js/personalFill.mjs"
 import {popups} from "./popups/popups.mjs"
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
@@ -229,27 +229,27 @@ function handleKeyEvents( event, isDown ) {
 
 		case keys.NUM1:
 			if( isDown )
-				myMotion.acceleration.x = linAccel1;
+				myMotion.acceleration.x = -linAccel1;
 			else
 				myMotion.acceleration.x = 0;
 			break;
 		case keys.NUM3:
 			if( isDown )
-				myMotion.acceleration.x = -linAccel1;
+				myMotion.acceleration.x = +linAccel1;
 			else
 				myMotion.acceleration.x = 0;
 			break;
 
 		case keys.NUM0:
 			if( isDown )
-				myMotion.acceleration.z = -linAccel1;
+				myMotion.acceleration.z = +linAccel1;
 			else
 				myMotion.acceleration.z = 0;
 			break;
 
 		case keys.NUMDOT:
 			if( isDown )
-				myMotion.acceleration.z = linAccel1;
+				myMotion.acceleration.z = -linAccel1;
 			else
 				myMotion.acceleration.z = 0;
 			break;
@@ -332,10 +332,6 @@ function init() {
  		light.position.set( 0, 0, 1000 );
  		scene.add( light );
 
-		
-		 //initVoxelarium();
-
-
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -371,17 +367,22 @@ var protoRock;
 objectLoader.load("models/rock1.json", model=>{ 
 	protoRock=model
 
-	for( var n = 0; n < 50; n++ ) {
+	for( var n = 0; n < 5; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
-		x.position.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.x = 20 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.y = 20 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.z = 20 * ( RNG.getBits( 11, true ) / 1024 );
 		var m = new Motion( x );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.z = 2*Math.PI * RNG.getBits( 8, true ) /128;
+		m.dipole.x = m.rotation.x;
+		m.dipole.y = m.rotation.y;
+		m.dipole.z = m.rotation.z;
+		m.rotation.dirty = true;
+		m.dipole.dirty = true;
 		//m.speed.y = 1;
 		movers.push({x:x,m:m});
 
@@ -392,7 +393,7 @@ objectLoader.load("models/rock1.json", model=>{
 	        
 		var geometry = new THREE.Geometry();
 		geometry.vertices.push(
-			new THREE.Vector3( -m.rotation.x*2, -m.rotation.y*2, -m.rotation.z*2 ),
+			new THREE.Vector3( 0, 0, 0 ),
 			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
 		);
 	        
@@ -400,10 +401,47 @@ objectLoader.load("models/rock1.json", model=>{
 		line.matrixAutoUpdate = true;
 		//const up = m.rotation;
 		
-		m.rotation.exp( line.quaternion );
+		//m.rotation.exp( line.quaternion );
+		//x.add(line);
 		scene.add( line );
 
-		dirs.push( line );
+		//dirs.push( line );
+
+		var material2 = new THREE.LineBasicMaterial({
+			color: 0x00FF00
+		});
+		
+		geometry = new THREE.Geometry();
+		geometry.vertices.push(
+			new THREE.Vector3( 0, 0, 0 ),
+			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
+		);
+	        
+		var line2 = new THREE.Line( geometry, material2 );
+		line2.matrixAutoUpdate = true;
+		//const up = m.rotation;
+		
+		//m.rotation.exp( line.quaternion );
+		x.add(line2);
+
+		var material3 = new THREE.LineBasicMaterial({
+			color: 0xff0000
+		});
+		
+		geometry = new THREE.Geometry();
+		geometry.vertices.push(
+			new THREE.Vector3( 0, 0, 0 ),
+			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
+		);
+	        
+		var line3 = new THREE.Line( geometry, material3 );
+		line3.matrixAutoUpdate = true;
+		//const up = m.rotation;
+		
+		//m.rotation.exp( line.quaternion );
+		x.add(line3);
+		//scene.add( line2 );
+		dirs.push( {line:line,line2:line2,line3:line3} );
 	}
 
 } );
@@ -426,7 +464,10 @@ function addModelToScene2(object) {
 		m.orientation.x =  2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		m.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		m.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-		m.acceleration.z = -1;
+		const b = m.orientation.getBasis();
+		m.speed.x = b.forward.x * 5;
+		m.speed.y = b.forward.y * 5;
+		m.speed.z = b.forward.z * 5;
 		movers2.push({x:x,m:m});
 	}
 
@@ -488,21 +529,7 @@ function animate() {
 			motion.orientation.x = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-				//)
 
-			mot.acceleration.z = -10;
-
-			mot.speed.z = 0;
-
-			mot.rotation.x = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
-			mot.rotation.y = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
-			mot.rotation.z = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
-
-
-			mot.torque.x = 2*Math.PI/72;// * ( RNG.getBits( 11, true ) / 1024 );
-			mot.torque.y = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
-			mot.torque.z = 0;//2*Math.PI/12 * ( RNG.getBits( 11, true ) / 1024 );
-			mot.torque.dirty = true;
 		}
 		/*
 		if( m !== myMover )
@@ -519,15 +546,52 @@ function animate() {
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
-
 	movers.forEach( (ent,idx)=>{
+		ent.m.start();
+	});
+	movers.forEach( (ent,idx)=>{
+		for( let idx2= 0; idx2 < movers.length; idx2++ ){
+			if( idx === idx2 ) continue;
+			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
+		}
 		const m = ent.x;
 		const motion = ent.m;
+		
 		motion.freemove(m.matrix,delta) 
+		motion.orientation.update(); motion.dipole.update();
 
 		
-		var dirLine = dirs[idx];
+		var dirLines = dirs[idx];
+		var dirLine = dirLines.line;
+		var dirLine2 = dirLines.line2;
+		var dirLine3 = dirLines.line3;
+		var pt = {x:motion.eTorque.x*15, y:motion.eTorque.y*15, z:motion.eTorque.z*15 };
+		//if( idx == 1 )
+		//pt = motion.dipoleVec;
+		const newDir = pt;// idx==0?pt:motion.orientation.apply( pt );
+		const newDir2 = motion.dipoleVec;//motion.orientation.apply( motion.dipoleVec );
+		const newDir3 = motion.rotation;
 
+		dirLine.geometry.vertices[1].x = newDir.x*5;
+		dirLine.geometry.vertices[1].y = newDir.y*5;
+		dirLine.geometry.vertices[1].z = newDir.z*5;
+
+
+		dirLine2.geometry.vertices[1].x = newDir2.x*5;
+		dirLine2.geometry.vertices[1].y = newDir2.y*5;
+		dirLine2.geometry.vertices[1].z = newDir2.z*5;
+
+		dirLine3.geometry.vertices[1].x = newDir3.x*5;
+		dirLine3.geometry.vertices[1].y = newDir3.y*5;
+		dirLine3.geometry.vertices[1].z = newDir3.z*5;
+
+
+		//dirLine.geometry.vertices[1].x = motion.torque.x*5;
+		//dirLine.geometry.vertices[1].y = motion.torque.y*5;
+		//dirLine.geometry.vertices[1].z = motion.torque.z*5;
+		dirLine.geometry.verticesNeedUpdate = true;
+		dirLine2.geometry.verticesNeedUpdate = true;
+		dirLine3.geometry.verticesNeedUpdate = true;
 		dirLine.position.copy( m.position );
 		//dirLine.matrix.compose( o, q, s );
 		
