@@ -106,6 +106,46 @@ export class Motion {
 	affect( motion, inverse, delta ) {
 		const tmp1 = new lnQuat();
 		const tmp2 = new lnQuat();
+
+		const tmpDir = Vector3Pool.new();
+		tmpDir.subVectors( this.body.position, motion.body.position );
+
+
+		this.dipoleVec.x = this.dipole.x;
+		this.dipoleVec.y = this.dipole.y;
+		this.dipoleVec.z = this.dipole.z;
+		const relPole = this.orientation.update().apply( this.dipoleVec );  
+		motion.dipoleVec.x = motion.dipole.x;
+		motion.dipoleVec.y = motion.dipole.y;
+		motion.dipoleVec.z = motion.dipole.z;
+		const otherPole = tmpDir;//motion.orientation.update().apply( motion.dipoleVec );
+		tmp1.x = relPole.x;
+		tmp1.y = relPole.y;
+		tmp1.z = relPole.z;
+		tmp1.dirty = true;
+		tmp2.x = otherPole.x;
+		tmp2.y = otherPole.y;
+		tmp2.z = otherPole.z;
+		tmp2.dirty = true;
+		tmp1.update(); tmp2.update();
+
+		//this.dipole.update();
+		//motion.dipole.update();
+		const torque = new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
+
+		tmp1.cross( tmp2, torque );
+		const bodyDel = Vector3Pool.new().subVectors(  this.body.position, motion.body.position );
+		const rSq = bodyDel.lengthSq()/100;
+		bodyDel.delete();
+		tmpDir.delete();
+		this.eTorque.add( torque, 1/rSq );
+		//this.rotation.add( torque, delta/rSq );
+		//this.acceleration.add( bodyDel )
+	}
+	
+	affectAlignPoles( motion, inverse, delta ) {
+		const tmp1 = new lnQuat();
+		const tmp2 = new lnQuat();
 		this.dipoleVec.x = this.dipole.x;
 		this.dipoleVec.y = this.dipole.y;
 		this.dipoleVec.z = this.dipole.z;
