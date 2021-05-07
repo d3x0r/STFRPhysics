@@ -208,6 +208,7 @@ class Popup {
 	};
 	divFrame = document.createElement( "div" );
 	divCaption = document.createElement( "div" );
+	divTitle = document.createElement( "span" );
         divContent = document.createElement( "div" );
         divClose = document.createElement( "div" );
 	popup = this;
@@ -219,20 +220,26 @@ class Popup {
 		if( caption_ != "" )
 			this.divFrame.appendChild( this.divCaption );
 		this.divFrame.appendChild( this.divContent );
+		this.divCaption.appendChild( this.divTitle );
 		this.divCaption.appendChild( this.divClose );
 
 		this.divCaption.className = "frameCaption";
 		this.divContent.className = "frameContent";
-		this.divClose.className = "captionButton";
+		this.divClose.className = "captionButton closeButton";
         	popupTracker.addPopup( this );
-           this.caption = caption_;
-                parent = (parent&&parent.divContent) || parent || document.body;
-			parent.appendChild( this.divFrame );
 
-			addCaptionHandler( this.divCaption, this );
-      }
+		this.divClose.addEventListener( "click", (evt)=>{
+			this.hide();
+		} );
+
+		this.caption = caption_;
+			parent = (parent&&parent.divContent) || parent || document.body;
+		parent.appendChild( this.divFrame );
+
+		addCaptionHandler( this.divCaption, this );
+	}
 		set caption(val) {
-			this.divCaption.innerText = val;
+			this.divTitle.textContent = val;
 		}
 		center() {
 			var myRect = this.divFrame.getBoundingClientRect();
@@ -368,7 +375,7 @@ function makeButton( form, caption, onClick ) {
 	var buttonInner = document.createElement( "div" );
 	buttonInner.className = "buttonInner";
 	buttonInner.style.width = "max-content";
-	buttonInner.innerText = caption;
+	buttonInner.textContent = caption;
 
         button.appendChild(buttonInner);
 

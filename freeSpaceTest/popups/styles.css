@@ -1,6 +1,17 @@
 
+.closeButton {
+	background-image:url('./images/stop_button.png');
+	background-size: 100%;
+}
 
-	.inFrame {
+.closeButton:hover {
+	background-image: url("./images/stop_button-glow.png");
+}
+
+.closeButton:active {
+	background-image: url("./images/stop_button_pressed.png");
+}
+.inFrame {
 		visibility:visible;padding:0px;border-color:black;border-width:2px;
 		border-style:solid;z-index:100;position:absolute;
 		left:1024;top:25%;width:25%;height:25%
@@ -51,11 +62,11 @@
 
 
 .captionButton {
-	background-color: #122f31;
+	/*background-color: #122f31;*/
         color : gold;
         border-radius : 25%;
        	width : 1.5em;
-	/*height:1.1em;*/
+	height:1.5em;
 	text-align:center;
 	display:inline-block;     
 	float:right;   
