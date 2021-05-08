@@ -33,6 +33,7 @@ const popups = {
         makeCheckbox : makeCheckbox,
         makeNameInput : makeNameInput,  // form, object, field, text; popup to rename
         makeTextInput : makeTextInput,  // form, object, field, text
+        makeSlider : makeSlider,  // form, object, field, text
         makeTextField : makeTextField,
         makeButton : makeButton,
         makeChoiceInput : makeChoiceInput,// form, object, field, choiceArray, text
@@ -670,6 +671,68 @@ function makeCheckbox( form, o, field, text )
 		if( e.target===inputCountIncrement) return; e.preventDefault(); inputCountIncrement.checked = !inputCountIncrement.checked; })
 	inputCountIncrement.addEventListener( "change", (e)=>{ 
 		 o[field] = inputCountIncrement.checked; })
+	form.appendChild(binder );
+	binder.appendChild( textCountIncrement );
+	binder.appendChild( inputCountIncrement );
+	//form.appendChild( document.createElement( "br" ) );
+	return {
+		on(event,cb){
+			if( event === "change" ) onChange.push(cb);
+			inputCountIncrement.addEventListener(event,cb);
+		},
+		get checked() {
+			return inputCountIncrement.checked;
+		},
+		set checked(val) {
+			inputCountIncrement.checked = val;
+		},
+		get value() { return inputCountIncrement.checked; },
+		set value(val) { 
+			o[field] = val;
+			inputCountIncrement.checked = val;
+			onChange.forEach( cb=>cb());
+		 }
+                ,
+                reset(){
+                    o[field] = initialValue;
+                    inputCountIncrement.checked = initialValue;
+                },
+                changes() {
+                    if( o[field] !== initialValue ) {
+                        return text
+                            + popups.strings.get( " changed from " )
+                            + initialValue
+                            + popups.strings.get( " to " )
+                            + o[field];
+                    }
+                    return '';
+				},
+		get style() {
+			return binder.style;
+		}
+	}
+}
+
+function makeSlider( form, o, field, text ) 
+{
+	let initialValue = o[field];
+	var textCountIncrement = document.createElement( "SPAN" );
+	textCountIncrement.textContent = text;
+	var inputCountIncrement = document.createElement( "INPUT" );
+	inputCountIncrement.setAttribute( "type", "range");
+	inputCountIncrement.setAttribute( "min", 1);
+	inputCountIncrement.setAttribute( "max", 1000);
+	inputCountIncrement.className = "valueSlider rightJustify";
+	inputCountIncrement.value = o[field];
+	//textDefault.
+	var onChange = [];
+	var binder = document.createElement( "div" );
+	binder.className = "fieldUnit";
+	//binder.addEventListener( "click", (e)=>{ 
+	//	if( e.target===inputCountIncrement) return; e.preventDefault(); inputCountIncrement.checked = !inputCountIncrement.checked; })
+	inputCountIncrement.addEventListener( "change", (e)=>{ 
+		 o[field] = inputCountIncrement.value; 
+	})
 	form.appendChild(binder );
 	binder.appendChild( textCountIncrement );
 	binder.appendChild( inputCountIncrement );

@@ -1,5 +1,5 @@
 
-import {Popup} from "./popups/popups.mjs"
+import {Popup,popups} from "./popups/popups.mjs"
 
 
 import {BrainBoard} from "./automaton/board/brainshell.mjs"
@@ -8,13 +8,25 @@ import {Neuron} from "./automaton/brain/neuron.mjs"
 import Synapse from "./automaton/brain/synapse.mjs"
 
 
+export class ControlForm extends Popup {
+	
+	rotationRate = 0;
+
+	constructor( parent ) {
+		super( "Controls", parent );
+		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
+	}
+	
+
+}
 
 export class BrainForm extends Popup {
 	board = null;
         brain = new Brain();
         neuronTable = null;
-	constructor( parent, body ) {
+	constructor( parent ) {
         	super( "Brain 1", parent );
+		
                 this.hide();
 
                 const brainBoard = this.board = new BrainBoard( this.brain, this.divContent );
@@ -209,6 +221,11 @@ export class BrainForm extends Popup {
                 
 
         }
+
+	setBody( body ) {
+		
+	}
+
 }
 
 

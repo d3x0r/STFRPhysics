@@ -18,6 +18,7 @@ import {popups} from "./popups/popups.mjs"
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 import {BrainForm} from "./brainBoard.mjs"
+import {ControlForm} from "./brainBoard.mjs"
 
 //var glow = require( './glow.renderer.js' );
 
@@ -303,7 +304,10 @@ var status_line;
 
 function init() {
         
-	const form = new BrainForm( controlContainer );
+	const form = new BrainForm( controlContainer  );
+	const controlForm = new ControlForm( controlContainer, {
+		
+	}  );
         
 	let tmp;
         tmp = document.getElementById( "Brains") ;
@@ -367,7 +371,7 @@ var protoRock;
 objectLoader.load("models/rock1.json", model=>{ 
 	protoRock=model
 
-	for( var n = 0; n < 2; n++ ) {
+	for( var n = 0; n < 20; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
@@ -549,6 +553,10 @@ function animate() {
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
+		ent.m.rotation.θ = Math.PI/172;
+		ent.m.rotation.x = ent.m.rotation.nx * ent.m.rotation.θ;
+		ent.m.rotation.y = ent.m.rotation.ny * ent.m.rotation.θ;
+		ent.m.rotation.z = ent.m.rotation.nz * ent.m.rotation.θ;
 	});
 	movers.forEach( (ent,idx)=>{
 		for( let idx2= 0; idx2 < movers.length; idx2++ ){
@@ -574,7 +582,7 @@ function animate() {
 		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
 		const newDir2 = motion.lastCross;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
-		const newDir3 = motion.targetVec;
+		const newDir3 = motion.eTorque;
 
 		dirLine.geometry.vertices[1].x = newDir.x*5;
 		dirLine.geometry.vertices[1].y = newDir.y*5;
@@ -586,9 +594,9 @@ function animate() {
 		dirLine2.geometry.vertices[1].z = newDir2.z*5;
 		dirLine2.position.copy( m.position );
 
-		dirLine3.geometry.vertices[1].x = newDir3.x*5;
-		dirLine3.geometry.vertices[1].y = newDir3.y*5;
-		dirLine3.geometry.vertices[1].z = newDir3.z*5;
+		dirLine3.geometry.vertices[1].x = newDir3.x*15;
+		dirLine3.geometry.vertices[1].y = newDir3.y*15;
+		dirLine3.geometry.vertices[1].z = newDir3.z*15;
 		dirLine3.position.copy( m.position );
 
 
