@@ -371,13 +371,13 @@ var protoRock;
 objectLoader.load("models/rock1.json", model=>{ 
 	protoRock=model
 
-	for( var n = 0; n < 20; n++ ) {
+	for( var n = 0; n < 250; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
-		x.position.x = 20 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.y = 20 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.z = 20 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.x = 50 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.y = 50 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.z = 50 * ( RNG.getBits( 11, true ) / 1024 );
 		var m = new Motion( x );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
@@ -387,6 +387,7 @@ objectLoader.load("models/rock1.json", model=>{
 		m.dipole.z = m.rotation.z;
 		m.rotation.dirty = true;
 		m.dipole.dirty = true;
+		m.dipole.update();
 		//m.speed.y = 1;
 		movers.push({x:x,m:m});
 
@@ -553,10 +554,10 @@ function animate() {
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
-		ent.m.rotation.θ = Math.PI/172;
-		ent.m.rotation.x = ent.m.rotation.nx * ent.m.rotation.θ;
-		ent.m.rotation.y = ent.m.rotation.ny * ent.m.rotation.θ;
-		ent.m.rotation.z = ent.m.rotation.nz * ent.m.rotation.θ;
+		ent.m.rotation.θ = 0;//Math.PI/32;
+		ent.m.rotation.x = ent.m.dipole.nx * ent.m.rotation.θ;
+		ent.m.rotation.y = ent.m.dipole.ny * ent.m.rotation.θ;
+		ent.m.rotation.z = ent.m.dipole.nz * ent.m.rotation.θ;
 	});
 	movers.forEach( (ent,idx)=>{
 		for( let idx2= 0; idx2 < movers.length; idx2++ ){
