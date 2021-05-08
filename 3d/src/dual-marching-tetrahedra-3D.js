@@ -1158,57 +1158,7 @@ if( z > (dim2/2) ) continue
 								fnorm[2]=a       *tmp[1] - b       *tmp[0];
 								let ds;
 								if( (ds=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.000001 ){
-									//ds = 1/Math.sqrt(ds);
-									//fnorm[0] *= ds;fnorm[1] *= ds;fnorm[2] *= ds;
-									if( normalVertices ) {
-										/*
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
-										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
-										normalVertices.push( new THREE.Vector3( v3[0],v3[1],v3[2] ))
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v3[0],v3[1],v3[2] ))
-
-										normalColors.push( new THREE.Color( 255,0,0,255 ))
-										normalColors.push( new THREE.Color( 255,0,0,255 ))
-										normalColors.push( new THREE.Color( 0,255,0,255 ))
-										normalColors.push( new THREE.Color( 0,255,0,255 ))
-										normalColors.push( new THREE.Color( 0,0,255,255))
-										normalColors.push( new THREE.Color( 0,0,255,255 ))
-										*/
-										//normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										//normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
-										//normalColors.push( new THREE.Color( 255,255,255,255 ))
-										//normalColors.push( new THREE.Color( 255,255,255,255 ))
-
-									};
 								}else {
-									// basically never happens given the initial triangle characterization.
-									//console.log( "1Still not happy...", fnorm, ds,vA, vB, vC );
-									//continue;
-									// this is a sliver tri-face; really want to disregard this one.
-									if( normalVertices ) {
-									/*
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
-										normalVertices.push( new THREE.Vector3( v2[0],v2[1],v2[2] ))
-										normalVertices.push( new THREE.Vector3( v3[0],v3[1],v3[2] ))
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v3[0],v3[1],v3[2] ))
-
-										normalColors.push( new THREE.Color( 255,0,0,255 ))
-										normalColors.push( new THREE.Color( 255,0,0,255 ))
-										normalColors.push( new THREE.Color( 0,255,0,255 ))
-										normalColors.push( new THREE.Color( 0,255,0,255 ))
-										normalColors.push( new THREE.Color( 0,0,255,255))
-										normalColors.push( new THREE.Color( 0,0,255,255 ))
-									*/
-
-									//	normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-									//	normalVertices.push( new THREE.Vector3( v1[0] - fnorm[0]/2,v1[1] - fnorm[1]/2,v1[2] - fnorm[2]/2 ));
-									//	normalColors.push( new THREE.Color( 1,1,1,255 ))
-									//	normalColors.push( new THREE.Color( 1,1,1,255 ))
-									};
 
 									// b->A  c->A
 									fnorm[0] = vB[0]-vA[0];fnorm[1] = vB[1]-vA[1];fnorm[2] = vB[2]-vA[2];
@@ -1245,8 +1195,8 @@ if( z > (dim2/2) ) continue
 					//const z = Math.cos(theta.lng);
 								const l = ( lnQ.x * lnQ.x + lnQ.z * lnQ.z );
 								if( l ) {
-									const lat = Math.sqrt(l);
-									const lng = ( ( lnQ.nx < 0 ) ? -1 : 1 ) * Math.acos(lnQ.nz);
+									//const lat = Math.sqrt(l);
+									//const lng = ( ( lnQ.nx < 0 ) ? -1 : 1 ) * Math.acos(lnQ.nz);
 									
 									if(  normalVertices ) {
 										
@@ -1258,20 +1208,9 @@ if( z > (dim2/2) ) continue
 
 									}
 								
-
-									if(  normalVertices ) {
-										const lnQx = new lnQuat( { lat:lat, lng:lng}, false );
-										
-										const basis = lnQx.getBasis();
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
-										normalVertices.push( new THREE.Vector3( v1[0] + basis.up.x,v1[1] +basis.up.y,v1[2] +basis.up.z ));
-										normalColors.push( new THREE.Color( 255,55,255,255 ))
-										normalColors.push( new THREE.Color( 255,55,255,255 ))
-									}
-								   
-									fnorm[0] = lat;
-									fnorm[1] = lng;
-									fnorm[2] = 0;
+									fnorm[0] = lnQ.x;
+									fnorm[1] = 0;
+									fnorm[2] = lnQ.z;
 								//		console.log( "point:", x, y, z, "latlng:", lat, lng );
 								} else {								
 									fnorm[0] = 0;
