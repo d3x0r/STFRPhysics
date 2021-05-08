@@ -246,27 +246,80 @@ export class Motion {
 					this.torque.update();
 					if( this.torque.θ) {
 						//console.log( "Updating rotation:", this.rotation, this.torque )
-						tmpQ.set( this.torque ).freeSpin( -this.orientation.θ, this.orientation );
-						tmpQ.add( this.eTorque )
-						this.rotation.freeSpin( tmpQ.θ * delta, tmpQ );
+						//tmpQ.set( this.torque ).freeSpin( -this.orientation.θ, this.orientation );
+						//tmpQ.add( this.eTorque )
+						this.rotation.spin( this.torque.θ * delta, this.torque );
 					}
 					this.rotation.update();
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
 
+					
 					this.speed.addScaledVector( this.acceleration, delta );
 					var del = this.speed.clone().multiplyScalar( delta );
 					const basis = this.orientation.getBasis();
 					this.body.position.addScaledVector( basis.forward, del.z );
 					this.body.position.addScaledVector( basis.up, del.y );
 					this.body.position.addScaledVector( basis.right, -del.x );
+					del.delete();
+					
+						/*
+					var del = this.acceleration.clone().multiplyScalar( delta );
+					const basis = this.orientation.getBasis();
+					this.speed.addScaledVector( basis.forward, del.z );
+					this.speed.addScaledVector( basis.up, del.y );
+					this.speed.addScaledVector( basis.right, -del.x );
+
+					del.delete();
+
+					this.body.position.addScaledVector( this.speed, delta );
+						*/
+						
+					// this is applying internal torque.
+
+					//m.rotateRelative( this_move.x, this_move.y, this_move.z );
+					//this_move.delete();
+				}
+                inertialmove ( m, delta ) {
+
+					//this.orientation.spin( this.rotation.θ ,this.rotation.freeSpin( this.torque.θ * delta, this.torque ), delta ).exp( this.body.quaternion, 1 );
+					this.torque.update();
+					if( this.torque.θ) {
+						//console.log( "Updating rotation:", this.rotation, this.torque )
+						//tmpQ.set( this.torque ).freeSpin( -this.orientation.θ, this.orientation );
+						//tmpQ.add( this.eTorque )
+						this.rotation.spin( this.torque.θ * delta, this.torque );
+					}
+					this.rotation.update();
+					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
+							, y:this.rotation.ny
+							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
+
+					/*
+					this.speed.addScaledVector( this.acceleration, delta );
+					var del = this.speed.clone().multiplyScalar( delta );
+					const basis = this.orientation.getBasis();
+					this.body.position.addScaledVector( basis.forward, del.z );
+					this.body.position.addScaledVector( basis.up, del.y );
+					this.body.position.addScaledVector( basis.right, -del.x );
+					del.delete();
+					*/
+
+					var del = this.acceleration.clone().multiplyScalar( delta );
+					const basis = this.orientation.getBasis();
+					this.speed.addScaledVector( basis.forward, del.z );
+					this.speed.addScaledVector( basis.up, del.y );
+					this.speed.addScaledVector( basis.right, -del.x );
+
+					del.delete();
+
+					this.body.position.addScaledVector( this.speed, delta );
 
 					// this is applying internal torque.
 
 					//m.rotateRelative( this_move.x, this_move.y, this_move.z );
 					//this_move.delete();
-					del.delete();
 				}
                 freemove( m, delta ) {
 					

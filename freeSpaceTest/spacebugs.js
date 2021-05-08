@@ -520,7 +520,7 @@ function animate() {
 		//	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 		//		console.log( "TICK")
 		//}
-		motion.freemove(m.matrix,delta) 
+		motion.inertialmove(m.matrix,delta) 
 		
 		var mot = motion;
 		var x1= m.position.x ; 
