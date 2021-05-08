@@ -301,11 +301,11 @@ export class Motion {
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
-					if(1)
+					if(0)
 					this.orientation.spin( this.eTorque.θ * delta, {x:this.eTorque.nx
 							, y:this.eTorque.ny
 							, z:this.eTorque.nz } ).exp( this.body.quaternion, 1 );
-					if(0)
+					if(1)
 					this.orientation.spin( tmpQ.θ * delta, {x:tmpQ.nx
 						, y:tmpQ.ny
 						, z:tmpQ.nz } ).exp( this.body.quaternion, 1 );
