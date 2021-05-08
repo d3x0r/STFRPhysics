@@ -195,7 +195,7 @@ export class Motion {
 		tmp1.cross( tmp2, torque );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( torque, 100/(l1*l1) );
+		this.eTorque.add( torque, 50/(l1*l1) );
 
 	}
 	
@@ -352,15 +352,15 @@ export class Motion {
 					//this.rotation.spin( this.eTorque.θ * delta, this.eTorque ).update();
 					//this.rotation.add( this.eTorque,  delta ).update();
 
-					if(0)
+					if(1)
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
-					if(0)
-					this.orientation.spin( this.eTorque.θ * delta, {x:this.eTorque.nx
+					if(1)
+					this.orientation.freeSpin( this.eTorque.θ * delta, {x:this.eTorque.nx
 							, y:this.eTorque.ny
 							, z:this.eTorque.nz } ).exp( this.body.quaternion, 1 );
-					if(1)
+					if(0)
 					this.orientation.freeSpin( tmpQ.θ * delta, {x:tmpQ.nx
 						, y:tmpQ.ny
 						, z:tmpQ.nz } ).exp( this.body.quaternion, 1 );
