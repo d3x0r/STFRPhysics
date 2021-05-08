@@ -78,7 +78,7 @@ const x = ["Vector3Unit"
 	Object.defineProperty(THREE_consts[key], "y", { writable: false })
 	Object.defineProperty(THREE_consts[key], "z", { writable: false })
 })
-
+let maxlog = 0;
 
 const tmpQ = new lnQuat();
 
@@ -92,10 +92,16 @@ export class Motion {
 	rotation = new lnQuat();
 	torque = new lnQuat();
 	eTorque = new lnQuat();
-
+	lastCross = new lnQuat();
+	tmpDir = new THREE.Vector3();
+	
 	dipole = new lnQuat();
 	dipoleVec = new THREE.Vector3();
+	targetVec = new THREE.Vector3();
+	tmpDipole = null;
+	tmpOtherDipole = null;
 	mass = 1.0;
+
 
 
 	constructor( body ) {
@@ -107,55 +113,86 @@ export class Motion {
 		const tmp1 = new lnQuat();
 		const tmp2 = new lnQuat();
 
-		const tmpDir = Vector3Pool.new();
-		tmpDir.subVectors( this.body.position, motion.body.position );
+		const tmpDir = this.tmpDir;//Vector3Pool.new();
+		tmpDir.subVectors( motion.body.position, this.body.position );
 		const l1 = tmpDir.length();
-
 
 		this.dipoleVec.x = this.dipole.x;
 		this.dipoleVec.y = this.dipole.y;
 		this.dipoleVec.z = this.dipole.z;
-		const l2 = this.dipoleVec.length();
-
-		const dot = ( tmpDir.x*this.dipoleVec.x + tmpDir.y*this.dipoleVec.y + tmpDir.z*this.dipoleVec.z )
-			/ (l1*l2);
-		const ofsAngle = Math.acos(dot);
-
 		const relPole = this.orientation.update().apply( this.dipoleVec );  
+		this.tmpDipole = relPole;
+
 		motion.dipoleVec.x = motion.dipole.x;
 		motion.dipoleVec.y = motion.dipole.y;
 		motion.dipoleVec.z = motion.dipole.z;
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
-		tmp1.x = relPole.x;
-		tmp1.y = relPole.y;
-		tmp1.z = relPole.z;
+
+		this.tmpOtherDipole = otherPole;
+
+		const l2 = motion.dipoleVec.length();
+
+		const dot = ( tmpDir.x*otherPole.x + tmpDir.y*otherPole.y + tmpDir.z*otherPole.z )
+			/ (l1*l2);
+
+		const ofsAngle = Math.acos(dot)*2;
+
+		//tmp1.x = relPole.x;
+		//tmp1.y = relPole.y;
+		//tmp1.z = relPole.z;
+		tmp1.x = tmpDir.x;
+		tmp1.y = tmpDir.y;
+		tmp1.z = tmpDir.z;
 		tmp1.dirty = true;
+		//tmp2.x = tmpDir.x;
+		//tmp2.y = tmpDir.y;
+		//tmp2.z = tmpDir.z;
+
 		tmp2.x = otherPole.x;
 		tmp2.y = otherPole.y;
 		tmp2.z = otherPole.z;
 		tmp2.dirty = true;
-		tmp1.update(); tmp2.update();
+		tmp1.update();
+		tmp2.update();
 
 		//tmp2.spin( ofsAngle*2, { x:torque.nx,y:torque.ny,z:torque.nz} )
 
 		//this.dipole.update();
 		//motion.dipole.update();
-		const torque = new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
+		const torque = this.lastCross;//new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
 		tmp1.cross( tmp2, torque );
-
-		torque.θ = ofsAngle;// - torque.θ;
+		//const torque2 = this.orientation.applyDel( torque, -1 );
+		/*
+		torque.θ = ofsAngle ;
 		torque.x = torque.nx * torque.θ;
 		torque.y = torque.ny * torque.θ;
 		torque.z = torque.nz * torque.θ;
-		//const targetPole = torque.apply( otherPole );
+		*/
+		lnQuat.apply( -ofsAngle, torque, otherPole, 1, this.targetVec);
 
 
+		tmp1.x = relPole.x
+		tmp1.y = relPole.y
+		tmp1.z = relPole.z
 
-		const bodyDel = Vector3Pool.new().subVectors(  this.body.position, motion.body.position );
-		const rSq = bodyDel.lengthSq()/100;
-		bodyDel.delete();
-		tmpDir.delete();
-		this.eTorque.add( torque, 1/rSq );
+		tmp2.x = this.targetVec.x
+		tmp2.y = this.targetVec.y
+		tmp2.z = this.targetVec.z
+
+		tmp1.dirty = true;
+		tmp2.dirty = true;
+		tmp1.update();
+		tmp2.update();
+
+		tmp1.cross( tmp2, torque );
+
+		this.eTorque.add( torque, 1000/(l1*l1) );
+
+		if(0)
+		if( maxlog < 100 ) {
+			maxlog++;
+			console.log( "Torque:",ofsAngle,JSON.stringify(this.eTorque) );
+		}
 		//this.rotation.add( torque, delta/rSq );
 		//this.acceleration.add( bodyDel )
 	}
@@ -184,14 +221,13 @@ export class Motion {
 		//this.dipole.update();
 		//motion.dipole.update();
 		const torque = new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
-		if(  false && inverse )
-			tmp2.cross( tmp1, torque );
-		else
-			tmp1.cross( tmp2, torque );
+		tmp1.cross( tmp2, torque );
 		const bodyDel = Vector3Pool.new().subVectors(  this.body.position, motion.body.position );
-		const rSq = bodyDel.lengthSq()/100;
+		const rSq = bodyDel.lengthSq();
 		bodyDel.delete();
-		this.eTorque.add( torque, 1/rSq );
+		this.eTorque.add( torque, 100/rSq );
+
+		//console.log( "Torque:", this.eTorque );
 		//this.rotation.add( torque, delta/rSq );
 		//this.acceleration.add( bodyDel )
 	}
@@ -200,6 +236,7 @@ export class Motion {
 		this.eTorque.set( 0, 0, 0, 0 );
 		this.torque.set( 0, 0, 0, 0 );
 		this.acceleration.set( 0, 0, 0 );
+		
 	}
                 move ( m, delta ) {
 
@@ -253,16 +290,18 @@ export class Motion {
 						//this.rotation.freeSpin( tmpQ.θ * delta, tmpQ );
 						this.rotation.spin( this.torque.θ * delta, this.torque );
 					}
+					this.rotation.update();
 					this.eTorque.update();
 					tmpQ.set( 0, this.eTorque.x + this.rotation.x, this.eTorque.y + this.rotation.y, this.eTorque.z + this.rotation.z );
 					tmpQ.update();
 					//this.rotation.spin( this.eTorque.θ * delta, this.eTorque ).update();
 					//this.rotation.add( this.eTorque,  delta ).update();
-					
+
+					if(0)
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
-					
+					if(1)
 					this.orientation.spin( this.eTorque.θ * delta, {x:this.eTorque.nx
 							, y:this.eTorque.ny
 							, z:this.eTorque.nz } ).exp( this.body.quaternion, 1 );
