@@ -113,25 +113,29 @@ export class Motion {
 		const tmp1 = new lnQuat();
 		const tmp2 = new lnQuat();
 
-		const tmpDir = this.tmpDir;//Vector3Pool.new();
+		// compute a direction vector between this motion and motion target
+		const tmpDir = this.tmpDir;
 		tmpDir.subVectors( motion.body.position, this.body.position );
 		const l1 = tmpDir.length();
-
+		// compute my dispole in global coordinates (dipole is directly tied to orientation)
 		this.dipoleVec.x = this.dipole.x;
 		this.dipoleVec.y = this.dipole.y;
 		this.dipoleVec.z = this.dipole.z;
 		const relPole = this.orientation.update().apply( this.dipoleVec );  
 		this.tmpDipole = relPole;
 
+		// compute target dipole global coordinates (dipole is directly tied to orientation)
 		motion.dipoleVec.x = motion.dipole.x;
 		motion.dipoleVec.y = motion.dipole.y;
 		motion.dipoleVec.z = motion.dipole.z;
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
+		if( l1 > 10 ) return;
 
 		const l2 = motion.dipoleVec.length();
 
+		// compute angle of my position vs target dipole direction
 		const dot = ( tmpDir.x*otherPole.x + tmpDir.y*otherPole.y + tmpDir.z*otherPole.z )
 			/ (l1*l2);
 
@@ -140,19 +144,13 @@ export class Motion {
 		// at 180 degrees it's 360 degrees and up again.
 		const ofsAngle = Math.acos(dot)*2;
 
-		//tmp1.x = relPole.x;
-		//tmp1.y = relPole.y;
-		//tmp1.z = relPole.z;
 		// use lnQUat for directed distance, normal, length
 		tmp1.x = tmpDir.x;
 		tmp1.y = tmpDir.y;
 		tmp1.z = tmpDir.z;
 		tmp1.dirty = true;
-		//tmp2.x = tmpDir.x;
-		//tmp2.y = tmpDir.y;
-		//tmp2.z = tmpDir.z;
 
-		// use lnQUat for dipole axis and angle (strength of pole?)
+		// use lnQuat for dipole axis and angle (strength of pole?)
 		tmp2.x = otherPole.x;
 		tmp2.y = otherPole.y;
 		tmp2.z = otherPole.z;
@@ -160,30 +158,30 @@ export class Motion {
 		tmp1.update();
 		tmp2.update();
 
-		//tmp2.spin( ofsAngle*2, { x:torque.nx,y:torque.ny,z:torque.nz} )
-
-		//this.dipole.update();
-		//motion.sdipole.update();
-		const torque = this.lastCross;//new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
-
 		// cross product is a direction vector perpendicular to the direction and other pole
+		const torque = this.lastCross;
+		// this is the axis to rotate target dipole 
+		// effective orientation perpendicular to my direction and target dipole
+		// this IS unstable near identity....
 		tmp1.cross( tmp2, torque );
-		//const torque2 = this.orientation.applyDel( torque, -1 );
+
 		/*
 		torque.θ = ofsAngle ;
 		torque.x = torque.nx * torque.θ;
 		torque.y = torque.ny * torque.θ;
 		torque.z = torque.nz * torque.θ;
 		*/
+
 		// use static method to use torque axis
 		// and ofs angle to compute relative dipole (store in targetVec)
-		lnQuat.apply( ofsAngle, torque, otherPole, 1, this.targetVec);
+		lnQuat.apply( -ofsAngle, torque, otherPole, 1, this.targetVec);
 
 		// use temp to compute the cross of my pole and the expected target pole
 		tmp1.x = relPole.x
 		tmp1.y = relPole.y
 		tmp1.z = relPole.z
 
+		// this is what the desired dipole should look like
 		tmp2.x = this.targetVec.x
 		tmp2.y = this.targetVec.y
 		tmp2.z = this.targetVec.z
@@ -193,17 +191,12 @@ export class Motion {
 		tmp1.update();
 		tmp2.update();
 
+		// cross is a rotation that moves the axis of our dipole toward target dipole
 		tmp1.cross( tmp2, torque );
 
-		this.eTorque.add( torque, 10/(l1*l1) );
+		// scale by N/r^2 for distance falloff
+		this.eTorque.add( torque, 100/(l1*l1) );
 
-		if(0)
-		if( maxlog < 100 ) {
-			maxlog++;
-			console.log( "Torque:",ofsAngle,JSON.stringify(this.eTorque) );
-		}
-		//this.rotation.add( torque, delta/rSq );
-		//this.acceleration.add( bodyDel )
 	}
 	
 	affectAlignPoles( motion, inverse, delta ) {
