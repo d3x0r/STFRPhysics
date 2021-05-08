@@ -675,6 +675,11 @@ function makeCheckbox( form, o, field, text )
 	binder.appendChild( textCountIncrement );
 	binder.appendChild( inputCountIncrement );
 	//form.appendChild( document.createElement( "br" ) );
+
+        binder.addEventListener( "mousedown", (evt)=>{
+                evt.stopPropagation();
+        })
+
 	return {
 		on(event,cb){
 			if( event === "change" ) onChange.push(cb);
@@ -730,12 +735,18 @@ function makeSlider( form, o, field, text )
 	binder.className = "fieldUnit";
 	//binder.addEventListener( "click", (e)=>{ 
 	//	if( e.target===inputCountIncrement) return; e.preventDefault(); inputCountIncrement.checked = !inputCountIncrement.checked; })
-	inputCountIncrement.addEventListener( "change", (e)=>{ 
+	inputCountIncrement.addEventListener( "input", (e)=>{ 
 		 o[field] = inputCountIncrement.value; 
 	})
+
 	form.appendChild(binder );
 	binder.appendChild( textCountIncrement );
 	binder.appendChild( inputCountIncrement );
+
+        binder.addEventListener( "mousedown", (evt)=>{
+                evt.stopPropagation();
+        })
+
 	//form.appendChild( document.createElement( "br" ) );
 	return {
 		on(event,cb){
@@ -812,6 +823,11 @@ function makeTextInput( form, input, value, text, money, percent ){
 	form.appendChild(binder );
 	binder.appendChild( textMinmum );
 	binder.appendChild( inputControl );
+
+        binder.addEventListener( "mousedown", (evt)=>{
+                evt.stopPropagation();
+        })
+
 	return {
             	addEventListener(a,b) { return inputControl.addEventListener(a,b) },
 		get value () {

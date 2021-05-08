@@ -171,6 +171,7 @@ function setControls2() {
 //const Accel1 = 2*Math.PI / 12;
 const Accel1 = 2*Math.PI / 24;
 const linAccel1 = 10;
+let controlForm = null;
 
 function handleKeyEvents( event, isDown ) {
 
@@ -305,7 +306,7 @@ var status_line;
 function init() {
         
 	const form = new BrainForm( controlContainer  );
-	const controlForm = new ControlForm( controlContainer, {
+	controlForm = new ControlForm( controlContainer, {
 		
 	}  );
         
@@ -552,12 +553,18 @@ function animate() {
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
+	const rotation = ( ( controlForm.rotationRate ) / 1000 ) * Math.PI;
+
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
-		ent.m.rotation.θ = 0;//Math.PI/32;
-		ent.m.rotation.x = ent.m.dipole.nx * ent.m.rotation.θ;
-		ent.m.rotation.y = ent.m.dipole.ny * ent.m.rotation.θ;
-		ent.m.rotation.z = ent.m.dipole.nz * ent.m.rotation.θ;
+
+		
+
+		ent.m.rotation.θ = rotation;// + Math.PI/2;//Math.PI/32;
+		ent.m.rotation.x = (ent.m.rotation.nx = ent.m.dipole.nx) * ent.m.rotation.θ;
+		ent.m.rotation.y = (ent.m.rotation.ny = ent.m.dipole.ny) * ent.m.rotation.θ;
+		ent.m.rotation.z = (ent.m.rotation.nz = ent.m.dipole.nz) * ent.m.rotation.θ;
+		//ent.m.rotation.update();
 	});
 	movers.forEach( (ent,idx)=>{
 		for( let idx2= 0; idx2 < movers.length; idx2++ ){

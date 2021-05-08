@@ -11,6 +11,7 @@
 .closeButton:active {
 	background-image: url("./images/stop_button_pressed.png");
 }
+
 .inFrame {
 		visibility:visible;padding:0px;border-color:black;border-width:2px;
 		border-style:solid;z-index:100;position:absolute;

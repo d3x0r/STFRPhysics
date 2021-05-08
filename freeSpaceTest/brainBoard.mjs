@@ -11,10 +11,11 @@ import Synapse from "./automaton/brain/synapse.mjs"
 export class ControlForm extends Popup {
 	
 	rotationRate = 0;
-
+	toggle = false;
 	constructor( parent ) {
 		super( "Controls", parent );
 		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
+		popups.makeCheckbox( this, this, "toggle", "Toggle Me" );
 	}
 	
 
