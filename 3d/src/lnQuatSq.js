@@ -85,7 +85,7 @@ function lnQuat( theta, d, a, b, e ){
 }
 
 lnQuat.SLERP = false;
-lnQuat.sinNormal = true;
+lnQuat.sinNormal = false;
 
 lnQuat.setTwistDelta = function(t) {
 	twistDelta = t;
@@ -500,7 +500,7 @@ lnQuat.prototype.cross = function( other, target ){
 	target.x = target.nx * target.θ;
 	target.y = target.ny * target.θ;
 	target.z = target.nz * target.θ;
-	target.dirt = false;
+	target.dirty = false;
 	return target;
 }
 
@@ -972,6 +972,32 @@ lnQuat.prototype.applyDel = function( v, del, q2, linear, result2 ) {
 			  vx*c + s*(qy * vz - qz * vy) + qx * dot
 			, vy*c + s*(qz * vx - qx * vz) + qy * dot
 			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
+	}
+}
+
+lnQuat.apply = function( angle, axis, v, del, target ) {
+	target = target || new vectorType();
+
+	if( 'undefined' === typeof del ) del = 1.0;
+	//this.update();
+	// 3+2 +sqrt+exp+sin
+	if( !(angle*del) ) {
+		target.set( v.x, v.y, v.z );
+		return target; // 1.0
+	} else  {
+		const len = Math.sqrt( axis.x * axis.x + axis.y * axis.y + axis.z * axis.z );
+		const qx = axis.x / len, qy = axis.y / len, qz = axis.z / len;
+		// rodrigues full angle multiply
+		const c = Math.cos(angle*del);
+		const s = Math.sin(angle*del);
+
+		const vx = v.x , vy = v.y , vz = v.z;
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		target.set(
+			  vx*c + s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
+		return target;
 	}
 }
 
