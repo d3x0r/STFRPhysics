@@ -321,7 +321,7 @@ function init() {
 		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
 
 
-		camera.position.z = 5;
+		camera.position.z = 50;
 		//camera.matrix.origin.z = 3;
 		camera.matrixWorldNeedsUpdate = true;
 
@@ -367,7 +367,7 @@ var protoRock;
 objectLoader.load("models/rock1.json", model=>{ 
 	protoRock=model
 
-	for( var n = 0; n < 5; n++ ) {
+	for( var n = 0; n < 2; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
@@ -422,7 +422,8 @@ objectLoader.load("models/rock1.json", model=>{
 		//const up = m.rotation;
 		
 		//m.rotation.exp( line.quaternion );
-		x.add(line2);
+		//x.add(line2);
+		scene.add(line2);
 
 		var material3 = new THREE.LineBasicMaterial({
 			color: 0xff0000
@@ -439,8 +440,8 @@ objectLoader.load("models/rock1.json", model=>{
 		//const up = m.rotation;
 		
 		//m.rotation.exp( line.quaternion );
-		x.add(line3);
-		//scene.add( line2 );
+		//x.add(line3);
+		scene.add( line3 );
 		dirs.push( {line:line,line2:line2,line3:line3} );
 	}
 
@@ -558,7 +559,8 @@ function animate() {
 		const motion = ent.m;
 		
 		motion.freemove(m.matrix,delta) 
-		motion.orientation.update(); motion.dipole.update();
+		motion.orientation.update(); 
+		motion.dipole.update();
 
 		
 		var dirLines = dirs[idx];
@@ -568,22 +570,26 @@ function animate() {
 		var pt = {x:motion.eTorque.x*15, y:motion.eTorque.y*15, z:motion.eTorque.z*15 };
 		//if( idx == 1 )
 		//pt = motion.dipoleVec;
-		const newDir = pt;// idx==0?pt:motion.orientation.apply( pt );
-		const newDir2 = motion.dipoleVec;//motion.orientation.apply( motion.dipoleVec );
-		const newDir3 = motion.rotation;
+		const newDir = motion.tmpDipole;//pt;// idx==0?pt:motion.orientation.apply( pt );
+		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
+		const newDir2 = motion.lastCross;//motion.orientation.apply( motion.dipoleVec );
+		//const newDir3 = motion.lastCross;
+		const newDir3 = motion.targetVec;
 
 		dirLine.geometry.vertices[1].x = newDir.x*5;
 		dirLine.geometry.vertices[1].y = newDir.y*5;
 		dirLine.geometry.vertices[1].z = newDir.z*5;
-
+		dirLine.position.copy( m.position );
 
 		dirLine2.geometry.vertices[1].x = newDir2.x*5;
 		dirLine2.geometry.vertices[1].y = newDir2.y*5;
 		dirLine2.geometry.vertices[1].z = newDir2.z*5;
+		dirLine2.position.copy( m.position );
 
 		dirLine3.geometry.vertices[1].x = newDir3.x*5;
 		dirLine3.geometry.vertices[1].y = newDir3.y*5;
 		dirLine3.geometry.vertices[1].z = newDir3.z*5;
+		dirLine3.position.copy( m.position );
 
 
 		//dirLine.geometry.vertices[1].x = motion.torque.x*5;
@@ -592,13 +598,12 @@ function animate() {
 		dirLine.geometry.verticesNeedUpdate = true;
 		dirLine2.geometry.verticesNeedUpdate = true;
 		dirLine3.geometry.verticesNeedUpdate = true;
-		dirLine.position.copy( m.position );
 		//dirLine.matrix.compose( o, q, s );
 		
 
 	});
-if( sumDel > 1 ) sumDel = 0;
-	sumDel += delta;
+	if( sumDel > 1 ) sumDel = 0;
+		sumDel += delta;
 
 	controls.update(delta);
 

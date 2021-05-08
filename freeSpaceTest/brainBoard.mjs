@@ -13,9 +13,10 @@ export class BrainForm extends Popup {
 	board = null;
         brain = new Brain();
         neuronTable = null;
-	constructor( parent ) {
+	constructor( parent, body ) {
         	super( "Brain 1", parent );
                 this.hide();
+
                 const brainBoard = this.board = new BrainBoard( this.brain, this.divContent );
 
                 const This = this;

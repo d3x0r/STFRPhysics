@@ -286,7 +286,7 @@ export function BrainBoard( _brain, container ) {
 			function doZoom(result) {
 				brainboard.scale =  result - MNU_ZOOM;
 				brainboard.board.SetScale( result - MNU_ZOOM );
-				brainboard.board.BoardRefresh();
+				//brainboard.board.BoardRefresh();
 			}
 
 		}
