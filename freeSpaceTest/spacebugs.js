@@ -307,7 +307,9 @@ function init() {
         
 	const form = new BrainForm( controlContainer  );
 	controlForm = new ControlForm( controlContainer, {
-		
+		reInit() {
+			addDipoles()
+		}
 	}  );
         
 	let tmp;
@@ -371,14 +373,28 @@ objectLoader.load("models/aphod.json", addModelToScene2);
 var protoRock;
 objectLoader.load("models/rock1.json", model=>{ 
 	protoRock=model
+	addDipoles() ;
+} );
 
-	for( var n = 0; n < 250; n++ ) {
+
+function addDipoles() {
+	for( let body of movers ) {
+		scene.remove( body.x );
+	}
+	movers.length = 0;
+	for( let line of dirs ) {
+		scene.remove( line.line );
+		scene.remove( line.line2 );
+		scene.remove( line.line3 );
+	}
+	dirs.length  =0;
+	for( var n = 0; n < controlForm.objectCount; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
-		x.position.x = 50 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.y = 50 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.z = 50 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.x = 5 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.y = 5 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.z = -10 + 5 * ( RNG.getBits( 11, true ) / 1024 );
 		var m = new Motion( x );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
@@ -451,7 +467,7 @@ objectLoader.load("models/rock1.json", model=>{
 		dirs.push( {line:line,line2:line2,line3:line3} );
 	}
 
-} );
+} 
 
 
 		
@@ -553,8 +569,8 @@ function animate() {
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
-	const rotation = ( ( controlForm.rotationRate ) / 1000 ) * Math.PI;
-
+	const rotation = ( ( controlForm.rotationRate ) / 100 ) * Math.PI;
+	Motion.freeMoveAccel = controlForm.applyAccel;
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
 
@@ -567,7 +583,7 @@ function animate() {
 		//ent.m.rotation.update();
 	});
 	movers.forEach( (ent,idx)=>{
-		for( let idx2= 0; idx2 < movers.length; idx2++ ){
+		for( let idx2= 0; idx2 < (movers.length); idx2++ ){
 			if( idx === idx2 ) continue;
 			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
 		}
@@ -586,26 +602,38 @@ function animate() {
 		var pt = {x:motion.eTorque.x*15, y:motion.eTorque.y*15, z:motion.eTorque.z*15 };
 		//if( idx == 1 )
 		//pt = motion.dipoleVec;
+		if( !motion.tmpDipole ) {
+			motion.dipoleVec.x = motion.dipole.x;
+			motion.dipoleVec.y = motion.dipole.y;
+			motion.dipoleVec.z = motion.dipole.z;
+			const relPole = motion.orientation.update().apply( motion.dipoleVec );  
+			motion.tmpDipole = relPole;
+		}
+
 		const newDir = motion.tmpDipole;//pt;// idx==0?pt:motion.orientation.apply( pt );
 		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
 		const newDir2 = motion.lastCross;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
 		const newDir3 = motion.eTorque;
+		if( newDir ) {
 
 		dirLine.geometry.vertices[1].x = newDir.x*5;
 		dirLine.geometry.vertices[1].y = newDir.y*5;
 		dirLine.geometry.vertices[1].z = newDir.z*5;
 		dirLine.position.copy( m.position );
-
+		}
+		if( newDir2 ) {
 		dirLine2.geometry.vertices[1].x = newDir2.x*5;
 		dirLine2.geometry.vertices[1].y = newDir2.y*5;
 		dirLine2.geometry.vertices[1].z = newDir2.z*5;
 		dirLine2.position.copy( m.position );
-
+		}
+		if( newDir3 ) {
 		dirLine3.geometry.vertices[1].x = newDir3.x*15;
 		dirLine3.geometry.vertices[1].y = newDir3.y*15;
 		dirLine3.geometry.vertices[1].z = newDir3.z*15;
 		dirLine3.position.copy( m.position );
+			}
 
 
 		//dirLine.geometry.vertices[1].x = motion.torque.x*5;
