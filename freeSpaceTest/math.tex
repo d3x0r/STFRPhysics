@@ -1,0 +1,86 @@
+
+http://mathb.in/52755
+
+
+# motion
+
+A motion frame has the following parallel variables...
+
+### Linear components
+These are typically $(x,y,z)$ vectors.  They may be represeted with directed distance $D$ which has members $D_{direction}$ and $D_{distance}$
+
+- a position $P$, initial $P_0$, and final $P_1$ (or at $T=1$)
+- a velocity $V$, specific instances might be initial $V_0$ and final $V_1$
+- an acceleration $A$
+- Dipole moment $M$ (Current demo uses $M$ also as $R$ with the angle of $R$ able to be set).  This is just a direction vector at this time.
+  
+### Spin components 
+These are typically $(x,y,z)$ rotation vectors.  They may be represented with axis angle $S$ which has members $S_{axis}$ and $S_{angle}$.  There are times when the axis or direction is rotated without considering the angle. 
+
+- orientation $O$, with initial and final $O_0$, $O_1$
+- rotation $R$, with initial and final $R_0$, $R_1$
+- torque $T$
+  - internal $T_i$
+  - external $T_e$
+
+The cross product operator $\times$ is used such that the left hand term is modified by the right hand side, and the result is the left rotated around or by the second.  $ A \times B $ is $A$ curved by $B$. It is also overloaded, depending on the operands.
+
+- a spin axis crossed with a vector is a vector that has the angle between them.  
+- a spin component crossed with a spin component is a continuous update such that the original component and additional component co-mutate, and both change with time.
+- a direction, a linear vector, or rotation axis crossed with a spin component rotates that vector to a new location around the specified spin component.
+
+Vertical bar operator $|D|$ denotes magnitude, undirected length or angle, and is a positive number.
+
+the decimal or period operator references a field within a frame.  $\alpha.P$ is the position of the alpha frame. This is different than the dot product operator, for example: $(\alpha.P - \beta.P) \cdot \beta.M$.
+
+##Affect()
+
+Apply forces from body $\beta$ that affect body $\alpha$... Accumulate into $\alpha.A$ and external torque $\alpha.T_e$.
+
+- the difference between two bodies $D = \alpha.P - \beta.P$
+- $M_{\beta} = (\beta.M_{axis} \times \beta.O) $  rotate moment by beta's orientation.
+- $\theta = 2 cos^{-1}( \frac {D}  { |D| }  \cdot M_{\beta} }) $ angle between direction between centers and target global dipole; twice this angle is the rotation to rotate the target's global dipole additionally.
+- $Q =  D \times M_{\beta} $ compute axis between direction and target dipole to rotate target dipole to effective dipole orientation
+- $W = M_{\beta} \times (\theta,Q)  $ rotate beta global moment to effective target moment
+- $M_{\alpha} = \alpha.M_{axis} \times \alpha.O $ rotate axis of moment
+- $\alpha.T_e = \alpha.T_e + \frac { M_{\alpha} \times W } { |D|^2 }$ add torque to axis of rotation between global alpha moment and effective beta moment
+
+- $\alpha.A = \alpha.A + \frac {D} {|D|^2} $  add linear acceleration
+
+
+
+
+# freemove()
+
+A frame $A$ with the above parameters is updated, scaled by seconds $dT$ (or parts of a second expecting `90 fps = 16ms` or $0.016$ seconds for example)
+
+### position
+
+- $V_1 = V_0 + A{dT}$
+- $P_1 = P_0 + V_1{dT}$
+  - could be $P_1 = P_0 + \frac {V_0 + V_1} 2 {dT}$
+
+### orientation
+
+- $R_1 = R_0 \times T{dT}$
+- $O_1 = O_0 \times (R_1 + T_e){dT}$
+
+
+
+# intertialMove()
+Move with existing speed, change to velocity is the acceleration applied relative to current orientation.
+### orientation
+- $R_1 = R_0 \times T{dT}$
+- $O_1 = O_0 \times R_1{dT}$
+### position
+- $V_1 = V_0 +  A \times O_1{dT}$
+- $P_1 = P_0 + V_1{dT}$
+
+# cheatMove()
+Move forward by the direction being faced.
+### orientation
+- $R_1 = R_0 \times T{dT}$
+- $O_1 = O_0 \times R_1{dT}$
+### position
+- $V_1 = V_0 +  A{dT}$
+- $P_1 = P_0 + V_1 \times O_1{dT}$
