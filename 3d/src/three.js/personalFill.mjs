@@ -1,4 +1,4 @@
-
+	
 import * as THREE from "./three.module.js"
 import {lnQuat} from "../lnQuatSq.js"
 
@@ -100,6 +100,8 @@ export class Motion {
 	targetVec = new THREE.Vector3();
 	tmpDipole = null;
 	tmpOtherDipole = null;
+	affectors = 0;
+
 	mass = 1.0;
 
 
@@ -131,8 +133,8 @@ export class Motion {
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
-		if( l1 > 20 ) return;
-
+		//if( l1 > 20 ) return;
+		this.affectors++;
 		const l2 = motion.dipoleVec.length();
 
 		// compute angle of my position vs target dipole direction
@@ -196,7 +198,8 @@ export class Motion {
 		const accScalar = Math.cos( torque.θ );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( torque, 10/(l1*l1) );
+		this.eTorque.add( torque, 10/(l1*l1*l1) );
+if( Motion.freeMoveAccel )
 		this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
 	}
 	
@@ -236,6 +239,7 @@ export class Motion {
 	}
 	
 	start() {
+		this.affectors = 0;
 		this.eTorque.set( 0, 0, 0, 0 );
 		this.torque.set( 0, 0, 0, 0 );
 		this.acceleration.set( 0, 0, 0 );
@@ -348,26 +352,37 @@ export class Motion {
 						this.rotation.spin( this.torque.θ * delta, this.torque );
 					}
 					this.rotation.update();
-					this.eTorque.update();
-					tmpQ.set( 0, this.eTorque.x + this.rotation.x, this.eTorque.y + this.rotation.y, this.eTorque.z + this.rotation.z );
+					if( this.affectors ) {
+						this.eTorque.update();
+						this.eTorque.θ /= this.affectors;
+						this.eTorque.x = this.eTorque.nx * this.eTorque.θ;
+						this.eTorque.y = this.eTorque.ny * this.eTorque.θ;
+						this.eTorque.z = this.eTorque.nz * this.eTorque.θ;
+					}
+					const localRotation = Vector3Pool.new();
+					lnQuat.apply( this.orientation.θ, this.orientation, this.rotation, 1, localRotation );
+					tmpQ.set( 0, this.eTorque.x + localRotation.x, this.eTorque.y + localRotation.y, this.eTorque.z + localRotation.z );
 					tmpQ.update();
 					//this.rotation.spin( this.eTorque.θ * delta, this.eTorque ).update();
 					//this.rotation.add( this.eTorque,  delta ).update();
 
-					if(1)
+					if(0)
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
-					if(1)
+					if(0)
 					this.orientation.freeSpin( this.eTorque.θ * delta, {x:this.eTorque.nx
 							, y:this.eTorque.ny
 							, z:this.eTorque.nz } ).exp( this.body.quaternion, 1 );
-					if(0)
+					if(1)
 					this.orientation.freeSpin( tmpQ.θ * delta, {x:tmpQ.nx
 						, y:tmpQ.ny
 						, z:tmpQ.nz } ).exp( this.body.quaternion, 1 );
 	
-								
+					if( isNaN( this.orientation.θ ) ) {
+						console.log( "overflow orientation:", this.orientation, this.rotation, this.eTorque );
+						this.orientation.θ = 0;
+					}
 					//this.orientation.add( this.rotation.freeSpin( this.torque.θ * delta, this.torque ), delta ).exp( this.body.rotation, 1 );
 				}
 				rotate( m, delta ) {
@@ -443,3 +458,5 @@ export class Motion {
 
 }
 
+
+Motion.freeMoveAccel = false;
