@@ -131,7 +131,7 @@ export class Motion {
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
-		if( l1 > 10 ) return;
+		if( l1 > 20 ) return;
 
 		const l2 = motion.dipoleVec.length();
 
@@ -193,10 +193,11 @@ export class Motion {
 
 		// cross is a rotation that moves the axis of our dipole toward target dipole
 		tmp1.cross( tmp2, torque );
+		const accScalar = Math.cos( torque.θ );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( torque, 50/(l1*l1) );
-
+		this.eTorque.add( torque, 10/(l1*l1) );
+		this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
 	}
 	
 	affectAlignPoles( motion, inverse, delta ) {
@@ -324,10 +325,11 @@ export class Motion {
                 freemove( m, delta ) {
 					
 					var del = this.acceleration.clone().multiplyScalar( delta );
-					const basis = this.orientation.getBasis();
-					this.speed.addScaledVector( basis.forward, del.z );
-					this.speed.addScaledVector( basis.up, del.y );
-					this.speed.addScaledVector( basis.right, -del.x );
+					//const basis = this.orientation.getBasis();
+					this.speed.add( del );
+					//this.speed.addScaledVector( basis.forward, del.z );
+					//this.speed.addScaledVector( basis.up, del.y );
+					//this.speed.addScaledVector( basis.right, -del.x );
 
 					del.delete();
 
