@@ -19,7 +19,7 @@ import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 import {BrainForm} from "./brainBoard.mjs"
 import {ControlForm} from "./brainBoard.mjs"
-
+import {BrainStem,ref} from "./automaton/brain/brain.mjs"
 //var glow = require( './glow.renderer.js' );
 
 var l = 0;
@@ -296,6 +296,7 @@ function handleKeyEvents( event, isDown ) {
 
 
 var myMover = null;
+var myBrainBoard = null;
 var myMotion = null;
 var movers2 = [];
 var movers = [];
@@ -310,7 +311,9 @@ function init() {
 		reInit() {
 			addDipoles()
 		}
-	}  );
+	});
+	myBrainBoard = form;
+	
         
 	let tmp;
         tmp = document.getElementById( "Brains") ;
@@ -470,6 +473,48 @@ function addDipoles() {
 } 
 
 
+class SmartBody {
+	m = null;
+	x = null;
+	brain = null;
+	constructor( x, m ) {
+		this.m = m; // motion frame
+		this.x = x; // three.js body
+	
+	}
+
+	getInterface( ) {
+		const ntr_face = new BrainStem( "motion" );
+
+		ntr_face.addInput( "Pos X", new ref( this.x.position, "x" ), 1.0 );
+		ntr_face.addInput( "Pos Y", new ref( this.x.position, "y" ), 1.0 );
+		ntr_face.addInput( "Pos Z", new ref( this.x.position, "z" ), 1.0 );
+
+		ntr_face.addInput( "Speed X", new ref( this.m.rotation, "x" ), 1.0 );
+		ntr_face.addInput( "Speed Y", new ref( this.m.rotation, "y" ), 1.0 );
+		ntr_face.addInput( "Speed Z", new ref( this.m.rotation, "z" ), 1.0 );
+
+		ntr_face.addOutput( "Thrust X", new ref( this.m.acceleration, "x" ), 1.0 );
+		ntr_face.addOutput( "Thrust Y", new ref( this.m.acceleration, "y" ), 1.0 );
+		ntr_face.addOutput( "Thrust Z", new ref( this.m.acceleration, "z" ), 1.0 );
+
+
+		ntr_face.addInput( "Orient X", new ref( this.m.orientation, "x" ), 2*Math.PI/16 );
+		ntr_face.addInput( "Orient Y", new ref( this.m.orientation, "y" ), 2*Math.PI/16 );
+		ntr_face.addInput( "Orient Z", new ref( this.m.orientation, "z" ), 2*Math.PI/16 );
+
+		ntr_face.addInput( "Spin X", new ref( this.m.rotation, "x" ), 2*Math.PI/16 );
+		ntr_face.addInput( "Spin Y", new ref( this.m.rotation, "y" ), 2*Math.PI/16 );
+		ntr_face.addInput( "Spin Z", new ref( this.m.rotation, "z" ), 2*Math.PI/16 );
+
+		ntr_face.addOutput( "Torque X", new ref( this.m.torque, "x" ), 2*Math.PI/16 );
+		ntr_face.addOutput( "Torque Y", new ref( this.m.torque, "y" ), 2*Math.PI/16 );
+		ntr_face.addOutput( "Torque Z", new ref( this.m.torque, "z" ), 2*Math.PI/16 );
+
+		return ntr_face;
+		//brain.
+	}
+}
 		
 
 function addModelToScene2(object) {
@@ -491,16 +536,22 @@ function addModelToScene2(object) {
 		m.speed.x = b.forward.x * 5;
 		m.speed.y = b.forward.y * 5;
 		m.speed.z = b.forward.z * 5;
-		movers2.push({x:x,m:m});
+
+		const body = new SmartBody( x, m );
+
+		movers2.push(body);
 	}
 
 	scene.add(myMover = x = object);
 	myMotion =  new Motion(x);
-	movers2.push({x:x,m:myMotion});
+	const body = new SmartBody( x, myMotion );
+	movers2.push(body);
 	x.matrixAutoUpdate = true;
+	// attach the camera to one smart object.
 	myMover.add( camera );
-	//camMat = camera.matrix;
-	//camera.matrix = myMover.matrix;
+	body.brain = myBrainBoard.brain;
+	myBrainBoard.setBody( body )
+
 }
 
 		
@@ -532,6 +583,8 @@ function animate() {
 //		console.log( "MyMotion (before)", JSON.stringify(myMotion, null, '\t') );
 	movers2.forEach( (ent,idx)=>{
 		const motion = ent.m;
+		motion.torque.dirty = true;
+		motion.torque.update();
 		const m = ent.x;
 		//if( motion === myMotion ){
 		//	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))

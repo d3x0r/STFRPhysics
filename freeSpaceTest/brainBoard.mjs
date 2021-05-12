@@ -31,7 +31,7 @@ export class BrainForm extends Popup {
 	board = null;
         brain = new Brain();
         neuronTable = null;
-	constructor( parent ) {
+	constructor( parent, body ) {
         	super( "Brain 1", parent );
 		
                 this.hide();
@@ -224,13 +224,12 @@ export class BrainForm extends Popup {
                                 }
                                 neuronUpdateTick();
                         }
-                
-                
-
         }
 
 	setBody( body ) {
-		
+                const brainstem = body.getInterface();
+                this.brain.addModule( brainstem );
+                this.board.BuildBrainstemMenus( null, brainstem, [], [] )
 	}
 
 }

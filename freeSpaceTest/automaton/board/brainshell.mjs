@@ -111,6 +111,8 @@ export function BrainBoard( _brain, container ) {
 		this.input_methods      = new INPUT_METHODS(this);
 		this.button_input_methods = new BUTTON_INPUT_METHODS(this);
 		this.slider_input_methods = new SLIDER_INPUT_METHODS(this);
+		this.brain_stem_input = new BrainStemInput(this);
+		this.brain_stem_output = new BrainStemOutput(this);
 		this.light_output_methods = new LIGHT_OUTPUT_METHODS(this);
 		this.output_methods     = new OUTPUT_METHODS(this);
 		this.nerve_methods      = new NERVE_METHODS(this);
@@ -312,45 +314,77 @@ BrainBoard.prototype.addEventListener = function(name,cb) {
 	this.events[name] = cb;
 }
 
-BrainBoard.prototype.BuildBrainstemMenus = function (hMenuComponents, pbs, menus, connectors, idx) {
+// BuildBrainstemMenus( parentMenu, brainstem, [], [], )
+BrainBoard.prototype.BuildBrainstemMenus = function ( hMenuComponents, pbs, menus, connectors ) {
 	{
-		var n = 0;
-		//PBRAIN_STEM pbs;
-		this.comp_menu = popups.createMenu();
+		hMenuComponents = hMenuComponents || this.hMenuComponents;
 		var menu;
 		//for( pbs = brain.first(); pbs; pbs = brain.next() )
 		{
-			var idx;
 			var connector;
 			var module;
-			hMenuComponents.addItem(MF_STRING | MF_POPUP, comp_menu, pbs.name());
-			this.menus.push(comp_menu);
+			this.comp_menu = hMenuComponents.addMenu( pbs.name);
+			
+			this.menus.push(this.comp_menu);
 
-			comp_menu.addItem(MF_STRING | MF_POPUP, menu = popups.CreatePopup(), ("inputs"));
+			menu = this.comp_menu.addMenu( "inputs" );
 			this.menus.push(menu);
 
 
 			pbs.Inputs.list.forEach((connector) => {
 				connectors.push(connector);
-				menu.addItem(MF_STRING, MNU_ADD_INPUT_START + (connectors.lenght - 1), connector.name());
+
+				const inputPeice = this.board.CreatePeice( connector.name, shapes.makePowerOutput()
+					, peices.neuron.cells.width,  peices.neuron.cells.height
+					, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
+					, this.brain_stem_input );
+	
+	
+				menu.addItem( connector.name, ()=>{
+					// add_input_start
+					var newN = this.board.PutPeice( inputPeice,popup_x, popup_y, ()=>{
+						const v = connector.ref.value / connector.scalar;
+						return v;
+					} );
+					if( this.events["added"] )
+					this.events["added"]( inputPeice, newN );
+							
+				});
 			});
-			comp_menu.addItem(MF_STRING | MF_POPUP, menu = popups.CreatePopup(), ("outputs"));
+			menu = this.comp_menu.addMenu( "outputs")
+			//comp_menu.addItem(MF_STRING | MF_POPUP, menu = popups.CreatePopup(), ("outputs"));
 			this.menus.push(menu);
 
 			pbs.Outputs.list.forEach((connector) => {
 				connectors.push(connector);
-				menu.addItem(MF_STRING, MNU_ADD_OUTPUT_START + (connectors.length - 1), connector.name());
+				const inputPeice = this.board.CreatePeice( connector.name, shapes.makePowerOutput()
+					, peices.neuron.cells.width,  peices.neuron.cells.height
+					, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
+					, this.brain_stem_output );
+	
+	
+				menu.addItem( connector.name, ()=>{
+					// add_input_start
+					var newN = this.board.PutPeice( inputPeice,popup_x, popup_y, (value)=>{
+
+						return connector.ref.value = value * connector.scalar;
+					} );
+					if( this.events["added"] )
+						this.events["added"]( inputPeice, newN );
+							
+				});
+				// MNU_ADD_OUTPUT_START + (connectors.length - 1),
 			})
 		}
-		comp_menu.addItem(MF_STRING | MF_POPUP, (menu = popups.CreatePopup()), ("module"));
+		menu = this.comp_menu.addItem( "module" );
+
 		this.menus.push(menu);
 
-		for (module = pbs.first_module(); module; idx++, module = pbs.next_module()) {
-			BuildBrainstemMenus(menu, module, menus, connectors, idx);
-			//AppendPopupItem( menu, MF_STRING, MNU_ADD_OUTPUT_START + idx + ( n * 80 ), module.name() );
+		for (module = pbs.first_module(); module; module = pbs.next_module()) {
+			BuildBrainstemMenus(menu, module, menus, connectors);
+			//AppendPopupItem( menu, MF_STRING, MNU_ADD_OUTPUT_START + idx + ( n * 80 ), module.name );
 			//SetLink( &outputs, idx, (POINTER)connector );
 		}
-		n++;
 	}
 }
 
@@ -843,7 +877,7 @@ LIGHT_OUTPUT_METHODS.prototype.Create = function(  psvExtra )
 	{
 		//brainboard.create_input_type = (POUTPUT_INPUT)psvExtra;
 		//brainboard.create_input_type.flags.bOutput = 0;
-		console.log( ("Creating a new output (peice instance)") );
+		//console.log( ("Creating a new output (peice instance)") );
 		return new this.brainboard.brain.Exporter( this.brainboard.brain, psvExtra );
 	}
 
@@ -863,7 +897,7 @@ BUTTON_INPUT_METHODS.prototype.Create = function(  psvExtra )
 	{
 		//brainboard.create_input_type = (POUTPUT_INPUT)psvExtra;
 		//brainboard.create_input_type.flags.bOutput = 0;
-		console.log( ("Creating a new input (peice instance)") );
+		//console.log( ("Creating a new input (peice instance)") );
 		return new this.brainboard.brain.External( this.brainboard.brain, psvExtra );
 	}
 //---------------------------------------------------
@@ -882,10 +916,59 @@ SLIDER_INPUT_METHODS.prototype.Create = function(  psvExtra )
 	{
 		//brainboard.create_input_type = (POUTPUT_INPUT)psvExtra;
 		//brainboard.create_input_type.flags.bOutput = 0;
-		console.log( ("Creating a new input (peice instance)") );
+		//console.log( ("Creating a new input (peice instance)") );
 		return new this.brainboard.brain.External( this.brainboard.brain, psvExtra );
 	}
 
+
+//---------------------------------------------------
+
+class  BrainStemInput extends NEURON_METHODS {
+	constructor (newbrainboard)
+	{
+		super( newbrainboard );
+		//if( !(this instanceof BrainStemInput) ) return new BrainStemInput(newbrainboard);
+		//NEURON_METHODS.call( this, newbrainboard );
+		this.brainboard = newbrainboard;
+	}
+
+	Create (  psvExtra )
+	{
+		//brainboard.create_input_type = (POUTPUT_INPUT)psvExtra;
+		//brainboard.create_input_type.flags.bOutput = 0;
+		//console.log( ("Creating a new input (peice instance)") );
+		return new this.brainboard.brain.External( this.brainboard.brain, psvExtra );
+	}
+	ConnectEnd (  psv_to_instance,  x,  y
+		,  peice_from,  psv_from_instance ){
+			return false;
+	}
+}
+
+//---------------------------------------------------
+
+class   BrainStemOutput extends NEURON_METHODS {
+
+	constructor (newbrainboard)
+	{
+		super( newbrainboard );
+		//if( !(this instanceof BrainStemOutput) ) return new BrainStemOutput(newbrainboard);
+		//NEURON_METHODS.call( this, newbrainboard );
+		this.brainboard = newbrainboard;
+	}
+
+	Create(  psvExtra )
+	{
+		//brainboard.create_Output_type = (POUTPUT_Output)psvExtra;
+		//brainboard.create_Output_type.flags.bOutput = 0;
+		//console.log( ("Creating a new Output (peice instance)") );
+		return new this.brainboard.brain.Exporter( this.brainboard.brain, psvExtra );
+	}
+	ConnectBegin(  psv_to_instance,  x,  y
+		,  peice_from,  psv_from_instance ){
+			return false;
+	}
+}
 
 
 //---------------------------------------------------
@@ -940,79 +1023,6 @@ BackgroundMethods.prototype.OnRightClick = function(  psv,  x,  y )
 		this.brainboard.hMenu.show( this.brainboard.board.mousePosScrn.x, this.brainboard.board.mousePosScrn.y, ()=>{
 			console.log( "Menu done?" )
 		} );
-		//, (result)=>{
-		//	if( result === undefined ) return; // canceled.
-			//DebugBreak();
-
-
-			/*
-			if( result >= MNU_ADD_INPUT_START && result < MNU_ADD_OUTPUT_START )
-			{
-				console.log( ("Put input peice at %d,%d"), x, y );
-				var io_thing = new OUPUT_INPUT( brainboard );
-				//io_thing.brainboard = brainboard;
-				//io_thing.brain = io_thing.brainboard.brain;
-				io_thing.conn = brainboard.connectors[ result-MNU_ADD_INPUT_START ];// io_thing.pbs.getinput( (result-MNU_ADD_INPUT_START) %80 );
-
-				io_thing.neuron = io_thing.brain.GetInputNeuron( io_thing.conn );
-				//brainboard.create_input_type = GetLink( &brainboard.inputs, result-MNU_ADD_INPUT_START );
-
-				// really this only needs to pass the connector? or do I need to get a Input/Ouptut Neuron?
-				brainboard.board.PutPeice( brainboard.InputPeice, x, y, io_thing );
-			}
-			else if( result >= MNU_ADD_OUTPUT_START && result <= MNU_ADD_OUTPUT_LAST )
-			{
-				console.log( ("Put output peice at %d,%d"), x, y );
-				var io_thing = new OUPUT_INPUT( brainboard );
-				//io_thing.brainboard = brainboard;
-				//io_thing.brain = io_thing.brainboard.brain;
-				io_thing.conn = brainboard.connectors[ result-MNU_ADD_OUTPUT_START ];// io_thing.pbs.getoutput( (result-MNU_ADD_OUTPUT_START)%80 );
-
-				// really this only needs to pass the connector? or do I need to get a Input/Ouptut Neuron?
-				brainboard.board.PutPeice( brainboard.OutputPeice, x, y, io_thing );
-			}
-			else switch( result )
-			{
-			case MNU_ADDNEURON:
-			case MNU_ADDOSC:
-				console.log( ("Put osc peice at %d,%d"), x, y );
-				var newN = brainboard.board.PutPeice( brainboard.OscillatorPeice, x, y, 0 );
-				if( brainboard.events["added"] )
-					brainboard.events["added"]( brainboard.OscillatorPeice, newN );
-				return true;
-			case MNU_ADDTICKOSC:
-				console.log( ("Put tickosc peice at %d,%d"), x, y );
-				var newN = brainboard.board.PutPeice( brainboard.TickOscillatorPeice, x, y, 0 );
-				if( brainboard.events["added"] )
-					brainboard.events["added"]( brainboard.TickOscillatorPeice,newN );
-				return true;
-			case MNU_ZOOM:
-			case MNU_ZOOM+1:
-			case MNU_ZOOM+2:
-				brainboard.scale =  result - MNU_ZOOM;
-				brainboard.board.SetScale( result - MNU_ZOOM );
-				break;
-			case MNU_SAVE:
-			{
-							var name = PickBoardName( null, false );
-							if( name )
-								brainboard.board.Save( null, name );
-			}
-
-				break;
-			case MNU_LOAD:
-				{
-					var name = PickBoardName( null, true );
-					if( name )
-						brainboard.board.Load( null, name );
-				}
-				break;
-			case MNU_CLOSE:
-				//delete brainboard;
-				return false;
-			}
-		*/
-	//		} )
 		return true;
 	},
 BackgroundMethods.prototype.OnDoubleClick = function(  psv,  x,  y )

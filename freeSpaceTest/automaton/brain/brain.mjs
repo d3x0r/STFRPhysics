@@ -5,13 +5,92 @@
 import * as Neuron from './neuron.mjs';
 import Synapse from "./synapse.mjs";
 
-class BrainStem {
-	addInput( name, ref ) {
-
+export class ref {
+	o = null;
+	f = null;
+	constructor( o, f ) {
+		this.o = o;
+		this.f = f;
 	}
-	addOutput( name, ref ) {
+	get value() {
+		return this.o[this.f];
+	}
+	set value(value) {
+		 this.o[this.f] = value;
+	}
+
+	get() {
+		return this.o[this.f];
+	}
+	set(value) {
+		 this.o[this.f] = value;
+	}
+
+}
+
+class Connector {
+	name = "";
+	ref = null;
+	scalar = 1.0;
+	constructor( name, ref, scalar ) {
+		this.name = name;
+		this.ref = ref;
+		this.scalar = 0+scalar;
+	}
+}
+
+export class BrainStem {
+	#name = "";
+	Inputs = {
+		list : []
+	};
+	Outputs = {
+		list : []
+	};
+	Modules = {
+		list : []
+	}
+	#curModule = 0;
+
+	constructor( name ) {
+		this.#name = name;
+	}
+
+	get name() {
+		return this.#name;
+	}
+	addInput( name, ref, scalar ) {
+		this.Inputs.list.push( new Connector( name, ref, scalar ) );
+	}
+	addOutput( name, ref, scalar ) {
+		this.Outputs.list.push( new Connector( name, ref, scalar ) );
 		
 	}
+	addModule( pbs ) {
+		this.Modules.list.push( pbs );
+	}
+
+	// sub brainstems
+	first_module() {
+		this.#curModule = 0;
+		if( this.#curModule < this.Modules.list )
+			return this.Modules.list[this.#curModule];
+		return null;
+	}
+	next_module() {
+		if( this.#curModule < this.Modules.list ) {
+			this.#curModule++;
+			if( this.#curModule < this.Modules.list ) {
+				return this.Modules.list[this.#curModule];
+			}
+		}
+		return null;
+	}
+
+}
+
+BrainStem.makeRef = function makeRef( obj, field ) {
+	return new ref( obj, field );
 }
 
 export class Brain {
@@ -24,6 +103,9 @@ export class Brain {
 	Synapse = Synapse;
 	brainStems = [];
 
+	addModule( brainStem ){
+		
+	}
 		step() {
 			this.cycle++;
 			if( this.#changed ) {
@@ -82,8 +164,8 @@ export class Brain {
 		var types = Object.keys( Neuron );
 		types.forEach( key => {
 				this[key] = (function(key) {
-					return function() {
-						return new Neuron[key]( This );
+					return function(brain,psv) {
+						return new Neuron[key]( This, psv );
 					}
 				})(key);
 			} )

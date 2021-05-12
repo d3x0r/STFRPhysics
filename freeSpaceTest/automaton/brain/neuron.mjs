@@ -250,7 +250,7 @@ export class Exporter  extends Neuron{
 	}
 	output(n) { 
 		var outval = this.#cb(n); 
-		this.on = !!outval;
+		this.on = outval;
 		return outval;
 	};
 
