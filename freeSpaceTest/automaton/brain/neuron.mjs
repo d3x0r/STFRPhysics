@@ -33,6 +33,11 @@ export class Neuron {
 			if( out > MAX_OUTPUT_VALUE ) out = MAX_OUTPUT_VALUE;
 			if( out < 0 ) out = 0;
 			return out;
+		case Neuron.algo.direct:
+			var out = n - this.threshold;
+			if( out > MAX_OUTPUT_VALUE ) out = MAX_OUTPUT_VALUE;
+			if( out < -MAX_OUTPUT_VALUE ) out = -MAX_OUTPUT_VALUE;
+			return out;
 		case Neuron.algo.digital:
 			if( n > this.threshold )
 				return MAX_OUTPUT_VALUE;
@@ -131,6 +136,7 @@ export class Neuron {
 }
 
 Neuron.algo = {
+	direct : 3,
 	digital : 0,
 	analog : 1,
 	sigmoid : 2,
@@ -225,6 +231,7 @@ export class External extends Neuron {
 		super( brain );
 		this.type = "External";
 		this.#cb = cb;
+                this.threshold = -1.0;
 	}
 
 	output(n) { return n };

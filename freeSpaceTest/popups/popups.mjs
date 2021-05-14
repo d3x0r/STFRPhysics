@@ -1282,11 +1282,13 @@ function createPopupMenu() {
 				const value = createPopupMenu();
 				{
 					value.parent = this;
+                                       	this.items.push( value );
 					newItem.addEventListener( "mouseover", (evt)=>{
 						var r = newItem.getBoundingClientRect();
 						keepShow = true;
-						console.log( "Item is clicked show that.", evt.clientX, evt.clientY );
-						value.show( evt.clientX, r.top - 10, menu.cb );
+						console.log( "Item hover show that.", evt.clientX, evt.clientY );
+
+						value.show( evt.clientX + 25, r.top - 10, menu.cb );
 						menu.subOpen = value;
 					} );
 					newItem.addEventListener( "mouseout", (evt)=>{
@@ -1296,7 +1298,8 @@ function createPopupMenu() {
 							value.hide();
 					} );
 					newItem.addEventListener( "mousemove", (evt)=>{
-						if( this.subOpen ) this.subOpen.lastShow = Date.now();
+						if( this.subOpen )
+                                                	this.subOpen.lastShow = Date.now();
 					} );
 				}
 				return value;
@@ -1304,15 +1307,24 @@ function createPopupMenu() {
 		hide( all ) {
 			if( menu.lastShow ) return menuCloser();			
 			this.container.style.visibility = "hidden";
-			if( this.parent ) {
-				this.parent.subOpen = null; // should be the same as Me... 
-				if( all )
+                        const sub = this.subOpen;
+                        if( sub ) {
+                                this.subOpen = null;
+                        	sub.hide( all );
+                        }
+
+			if( this.parent && this.parent.subOpen ) {
+				if( all ) {
+                                	// close from here up
 					this.parent.hide( all );
+                                }
 			} else {
 				mouseCatcher.style.visibility = "hide"
 			}
 		},
 		show( x, y, cb ) {
+                    	if( this.parent )
+	                    	this.parent.subOpen = this;
 			menu.lastShow = Date.now();
 			//this.board = board;
 			menu.cb = cb;

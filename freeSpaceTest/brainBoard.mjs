@@ -137,25 +137,17 @@ export class BrainForm extends Popup {
                 
                                 var algoSelect = document.createElement( "select" );
                                 var opt;
-                
-                                algoSelect.add( opt = document.createElement( "option" ) );
-                                opt.text = "digital";
-                                opt.value = Neuron.algo.digital;
-                                algoSelect.appendChild( opt );
-                
-                                algoSelect.add( opt = document.createElement( "option" ) );
-                                opt.text = "analog";
-                                opt.value = Neuron.algo.analog;
-                                algoSelect.appendChild( opt );
-                
-                                algoSelect.add( opt = document.createElement( "option" ) );
-                                opt.text = "sigmoid";
-                                opt.value = Neuron.algo.sigmoid;
-                                algoSelect.appendChild( opt );
+                		for( let type in Neuron.algo ) {
+	                                algoSelect.add( opt = document.createElement( "option" ) );
+        	                        opt.text = type;
+	                                opt.value = Neuron.algo[type];
+        	                        algoSelect.appendChild( opt );
+                                        if( This.board.DefaultNeuron.algorithm === Neuron.algo[type] )
+                                        	opt.setAttribute("selected","selected");
+                        	}
                 
                                 algoSelect.addEventListener( "change", (evt)=>{	
                                         var op = evt.target.options[evt.target.selectedIndex];
-                                        console.log( "Right?", op );
                                         thisNeuron.algorithm = +op.value;
                                 } );
                                 underName.appendChild( algoSelect );

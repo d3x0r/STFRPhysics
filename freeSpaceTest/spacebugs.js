@@ -499,9 +499,9 @@ class SmartBody {
 		ntr_face.addOutput( "Thrust Z", new ref( this.m.acceleration, "z" ), 1.0 );
 
 
-		ntr_face.addInput( "Orient X", new ref( this.m.orientation, "x" ), 2*Math.PI/16 );
-		ntr_face.addInput( "Orient Y", new ref( this.m.orientation, "y" ), 2*Math.PI/16 );
-		ntr_face.addInput( "Orient Z", new ref( this.m.orientation, "z" ), 2*Math.PI/16 );
+		ntr_face.addInput( "Orient X", new ref( this.m.orientation, "x" ), 2*Math.PI );
+		ntr_face.addInput( "Orient Y", new ref( this.m.orientation, "y" ), 2*Math.PI );
+		ntr_face.addInput( "Orient Z", new ref( this.m.orientation, "z" ), 2*Math.PI );
 
 		ntr_face.addInput( "Spin X", new ref( this.m.rotation, "x" ), 2*Math.PI/16 );
 		ntr_face.addInput( "Spin Y", new ref( this.m.rotation, "y" ), 2*Math.PI/16 );
