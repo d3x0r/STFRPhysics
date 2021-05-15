@@ -1,5 +1,6 @@
 
-import {LINK_VIA_START,LINK_VIA_END,Layer,LayerPool} from "./layer.mjs";
+import {LINK_VIA_START,LINK_VIA_END,Layer,LayerPool, layerPathNode} from "./layer.mjs";
+import {JSOX} from "../../JSOX/lib/jsox.mjs "
 
 import * as peices from "./peice.mjs";
 
@@ -301,10 +302,10 @@ Board.prototype.EndPath = function(  x,  y )
 		{
 			pld = layer;
 			var connect_okay = pld.layer.peice.methods.ConnectEnd( pld.layer.psvInstance
-																				, (this.wX - layer.layer.x)
-																				, (this.wY - layer.layer.y)
-																				, this.route_current_layer.peice
-																				, this.route_current_layer.psvInstance );
+				, (this.wX - layer.layer.x)
+				, (this.wY - layer.layer.y)
+				, this.route_current_layer.peice
+  			   , this.route_current_layer.psvInstance );
 			if( connect_okay )
 			{
 				//DebugBreak();
@@ -378,7 +379,7 @@ Board.prototype.UnendPath = function( )
 
 
 
-Board.prototype.PutPeice = function(  peice, x, y, psv )
+Board.prototype.PutPeice = function(  peice, x, y )
 {
 	//uintptr_t psv = peice.Create();
 	// at some point I have to instance the peice to have a neuron...
@@ -393,7 +394,7 @@ Board.prototype.PutPeice = function(  peice, x, y, psv )
 				, hot.x, hot.y
 				, x-hot.x, y-hot.y
 				, x-hot.x+size.cols, y-hot.y+size.rows );
-	peice.psvCreate = psv; // kinda the wrong place for this but we abused this once upon a time.
+	//peice.psvCreate = psv; // kinda the wrong place for this but we abused this once upon a time.
 	
 	var pl = new Layer( this, peice, x, y, size.cols, size.rows, hot.x, hot.y );
 	// should be portioned...
@@ -464,6 +465,77 @@ Board.prototype.BoardRefresh = function(  )  // put current board on screen.
 		console.log( "(try again later) FAILED:", err ); 
 	}
 }
+
+Board.prototype.Save = function() {
+
+	if( this.rootLayer )
+	{
+            	const layerInfo = [];
+		var layer = this.rootLayer;
+                // this check also skips the root layer itself.
+		while( layer && (layer = layer.prior) )
+		{
+                    const layerMsg = {
+                        x: layer.x,
+                        y: layer.y,
+                       	path : [],
+                        r : layer.flags.bRoot,
+                        p : layer.peice.getMsg( layer.psvInstance ),
+                        pc : layer.peice.name, //this.GetPeice( layer.peice.name )?.name,
+                    };
+
+
+                    // this.PutPeice( this[someClassInstance.constructor.name], layer.x, layer.y,
+
+                    function addNode( n ) {
+                        layerMsg.path.push( { x: n.x, y:n.y,
+				BackDir:n.flags.BackDir,
+				ForeDir:n.flags.BackDir
+                        } );
+
+                    }
+		    if( layer.flags.bRoute )
+		    	layer.pds_path.forEach( addNode );
+
+                    layerInfo.push( layerMsg );
+                    layerMsg.path.length= 0;
+
+		}
+                return JSOX.stringify( layerInfo );
+	}
+
+}
+
+Board.prototype.Load = function( arg ) {
+
+
+	const layers = JSOX.parse( arg );
+        for( let layer of layers ) {
+		const peice = this.GetPeice( layer.pc );
+		const newInstance = this.PutPeice( peice, layer.x, layer.y );
+
+		const size = peice.getsize( );//&rows, &cols );
+		const hot = peice.gethotspot( );
+	
+		const pl = new Layer( this, peice, layer.x, layer.y, size.cols, size.rows, hot.x, hot.y );
+		// should be portioned...
+		pl.link_top(this.rootLayer);
+	
+
+
+                if( layer.path ) {
+                    for( let p of layer.path ) {
+                      const node = new layerPathNode( p.x, p.y, p );
+			pl.pds_path.push( node );
+
+                    }
+                }
+	}
+
+	this.BoardRefresh();
+
+}
+
 
 Board.prototype.LayPathTo = function(  wX, wY )
 {
@@ -672,10 +744,11 @@ Board.prototype.CreatePeice = function(  name //= ("A Peice")
 								,  hotspot_x
 								,  hotspot_y
 								,  methods //= null
-								,  psv
+								,  get
+                                       		, set
 								)
 {
-	var peice = peices.Peice( this, name, image, rows, cols, hotspot_x, hotspot_y, true, false, methods, psv );
+	var peice = peices.Peice( this, name, image, rows, cols, hotspot_x, hotspot_y, true, false, methods );
 	this.peices.push( peice );
 	return peice; // should be able to auto cast this...
 }

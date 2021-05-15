@@ -191,6 +191,11 @@ if( image )
 
 }
 
+
+Peice.prototype.getMsg = function( psvInstance ) {
+	return this.methods.getMsg( psvInstance );
+}
+
 Peice.prototype.getimage = function(  )
 {
 	return this.image;
@@ -429,163 +434,160 @@ Via.prototype.Stop=function(  ) { return 0; }
 
 //--------------------------- Default Methods ------------------------------------------
 
-export function DefaultMethods(peice) {
-	if( !(this instanceof DefaultMethods ) ) return new DefaultMethods();
-	this.master = peice;
-}
+export class DefaultMethods {
+    	master = null;
 
-DefaultMethods.prototype.Move = function() {
-	return false;
-}
-
-DefaultMethods.prototype.Stop = function() {
-	return false;
-}
-
-
-DefaultMethods.prototype.name  = function() { return "default methods"; }
-DefaultMethods.prototype.SetPeice = function(  peice )        { this.master = peice; }
-DefaultMethods.prototype.getimage = function()                { return this.master.getimage(); };
-DefaultMethods.prototype.getcell = function(  x,  y )         { return this.master.getcell(x,y); };
-DefaultMethods.prototype.getimage = function( scale)          { return this.master.getimage(scale); };
-DefaultMethods.prototype.getcell = function(  x,  y,  scale ) { return this.master.getcell(x,y,scale); };
-DefaultMethods.prototype.gethotspot = function(  )            { return this.master.gethotspot(); };
-DefaultMethods.prototype.getsize = function(  )               { return this.master.getsize(); };
-
-//class DEFAULT_METHODS:public PEICE_METHODS {
-DefaultMethods.prototype.Create = function( psvExtra )
-	{
-		return 0;
+	constructor (peice) {
+		this.master = peice;
 	}
-DefaultMethods.prototype.Disconnect = function(  psv1 /*, PIPEICE peice, uintptr_t psv2*/ )
-	{
-      return 0;
-	}
-DefaultMethods.prototype.Destroy = function( psv )
-	{
-	}
-
-DefaultMethods.prototype.Update = function(  psv,  cycle )
-	{
-		return; // do nothing to update...
-		// consider on failure
-		// Destroy( psv );
-	}
-DefaultMethods.prototype.OnMove = function(  psv )
-	{
-	}
-DefaultMethods.prototype.ConnectBegin  = function(  psv_to_instance,  x,  y
-											  , peice_from,  psv_from_instance )
-	{
-      return false;
-	}
-DefaultMethods.prototype.ConnectEnd  = function(  psv_to_instance,  x,  y
-											  ,  peice_from,  psv_from_instance )
-	{
-      return false;
-	}
-DefaultMethods.prototype.OnClick = function(  psv,  x,  y )
-	{
+	
+	Move() {
 		return false;
 	}
-DefaultMethods.prototype.OnRightClick = function(  psv,  x,  y )
-	{
+
+	Stop() {
 		return false;
 	}
-DefaultMethods.prototype.OnDoubleClick = function(  psv,  x,  y )
-	{
-		return false;
+
+	setMsg(msg) {  } // setMsg(msg) use msg to re-set any parameters for this peice.
+
+	// get a message describing this peice.
+	getMsg(instance) {
+	    return {}
 	}
-   /*
-	void PEICE_METHODS::Draw( uintptr_t psvInstance, Image surface, int x, int y, int cellx, int celly )
+
+	get name() { return "default methods"; }
+	SetPeice(  peice )        { this.master = peice; }
+	getimage()                { return this.master.getimage(); };
+	getcell(  x,  y )         { return this.master.getcell(x,y); };
+	getimage( scale)          { return this.master.getimage(scale); };
+	getcell(  x,  y,  scale ) { return this.master.getcell(x,y,scale); };
+	gethotspot(  )            { return this.master.gethotspot(); };
+	getsize(  )               { return this.master.getsize(); };
+
+	//class DEFAULT_METHODS:public PEICE_METHODS {
+	Create( psvExtra )
+		{
+			return 0;
+		}
+	Disconnect(  psv1 /*, PIPEICE peice, uintptr_t psv2*/ )
+		{
+	      return 0;
+		}
+	Destroy( psv )
+		{
+		}
+
+	Update(  psv,  cycle )
+		{
+			return; // do nothing to update...
+			// consider on failure
+			// Destroy( psv );
+		}
+	OnMove(  psv ) {
+	}
+	ConnectBegin (  psv_to_instance,  x,  y
+												  , peice_from,  psv_from_instance )
+		{
+	      return false;
+		}
+        ConnectEnd (  psv_to_instance,  x,  y
+												  ,  peice_from,  psv_from_instance )
+		{
+	      return false;
+        	}
+	OnClick(  psv,  x,  y )
+        	{
+			return false;
+		}
+	OnRightClick(  psv,  x,  y )
+		{
+        		return false;
+		}
+	OnDoubleClick(  psv,  x,  y )
+		{
+			return false;
+		}
+	   /*
+		void Draw( uintptr_t psvInstance, Image surface, int x, int y, int cellx, int celly )
+		{
+        		// first 0 is current scale.
+			lprintf( WIDE("Drawing peice instance %p cell: %d,%d at: %d,%d"), psvInstance, cellx, celly, x, y );
+			//lprintf( WIDE("Drawing %d by %d"), rows, cols );
+			BlotImage( surface
+						, master.getcell(cellx, celly)
+						, x, y
+						);
+		}
+	   */
+	Draw(  peice, psvInstance,  surface,   x,  y )
 	{
 		// first 0 is current scale.
-		lprintf( WIDE("Drawing peice instance %p cell: %d,%d at: %d,%d"), psvInstance, cellx, celly, x, y );
-		//lprintf( WIDE("Drawing %d by %d"), rows, cols );
-		BlotImage( surface
-					, master.getcell(cellx, celly)
-					, x, y
-					);
+		//lprintf( WIDE("Drawing peice instance %p"), psvInstance );
+        	//lprintf( WIDE("Drawing %d by %d"), rows, cols );
+
+	   surface.drawImage( peice.image, x, y, this.master.size.cols * this.brainboard.board.cellSize.width, this.master.size.rows * this.brainboard.board.cellSize.height )
+	//	BlotImageAlpha( surface
+						  //, peice
+						  //, x, y
+						  //, 1 );
 	}
-   */
-DefaultMethods.prototype.Draw = function(  peice, psvInstance,  surface,   x,  y )
-{
-	// first 0 is current scale.
-	//lprintf( WIDE("Drawing peice instance %p"), psvInstance );
-	//lprintf( WIDE("Drawing %d by %d"), rows, cols );
-
-   surface.drawImage( peice.image, x, y, this.master.size.cols * this.brainboard.board.cellSize.width, this.master.size.rows * this.brainboard.board.cellSize.height )
-//	BlotImageAlpha( surface
-					  //, peice
-					  //, x, y
-					  //, 1 );
+	DrawCell( peice, psvInstance,  surface,  from, x,  y )
+	{
+		if( "on" in this.master.image )
+			surface.drawImage( this.master.image.on
+				, from.coords.x, from.coords.y
+				, from.size.width, from.size.height
+				, x, y
+				, this.brainboard.board.cellSize.width
+				, this.brainboard.board.cellSize.height
+			)
+		 else
+        		surface.drawImage( this.master.image, from.coords.x, from.coords.y, from.size.width, from.size.height
+        			, x, y
+				, this.brainboard.board.cellSize.width
+				, this.brainboard.board.cellSize.height
+			)
+		//	BlotImageAlpha( surface
+						  //, peice
+						  //, x, y
+						  //, 1 );
+	}
 }
-DefaultMethods.prototype.DrawCell = function( peice, psvInstance,  surface,  from, x,  y )
-{
-	//surface.drawImage( this.master.image, 0, 0, 500, 500, 0, 0, 66, 66 )
-	//surface.drawImage( this.master.image, 0, 0, 500, 500, 0, 0, 66, 66 )
-
-	// first 0 is current scale.
-	//lprintf( WIDE("Drawing peice instance %p"), psvInstance );
-	//console.log( "Draw Cell: ", cellx, celly, x, y );
-	//var from = this.master.getcell( cellx, celly );
-	if( "on" in this.master.image )
-		surface.drawImage( this.master.image.on
-			, from.coords.x, from.coords.y
-			, from.size.width, from.size.height
-			, x, y
-			, this.brainboard.board.cellSize.width
-			, this.brainboard.board.cellSize.height  
-		)
-	 else
-		surface.drawImage( this.master.image, from.coords.x, from.coords.y, from.size.width, from.size.height
-			, x, y
-			, this.brainboard.board.cellSize.width
-			, this.brainboard.board.cellSize.height  
-		)
-//	BlotImageAlpha( surface
-					  //, peice
-					  //, x, y
-					  //, 1 );
-}
-
 //-------------------- DEFAULT VIA METHODS (a few more than PEICE_METHODS ) ----------------------------
 
-export function DefaultViaMethods() {
-	if( !(this instanceof DefaultViaMethods ) ) return new DefaultViaMethods();
+export class DefaultViaMethods extends DefaultMethods {
+	constructor() {
 	
-}
-
-DefaultViaMethods.prototype = new Object(  DefaultMethods.prototype );
-DefaultViaMethods.prototype.constructor = DefaultViaMethods();
+	}
 
 
-DefaultViaMethods.prototype.Move = function( )
-{
-      return 0;
-}
-DefaultViaMethods.prototype. Stop = function( )
-{
-      return 0;
-}
+	Move( )
+	{
+	      return 0;
+	}
+	Stop( )
+	{
+	      return 0;
+	}
 
 //-------------------- VIA METHODS ----------------------------------
 
 
-DefaultViaMethods.prototype.OnClick = function(  psv,  x,  y )
-{
-	console.log( "GENERATE DISCONNECT!" );
-	this.master.board.UnendPath( );
-	return 0;
-}
+	OnClick(  psv,  x,  y )
+	{
+		console.log( "GENERATE DISCONNECT!" );
+		this.master.board.UnendPath( );
+		return 0;
+	}
 
-DefaultViaMethods.prototype.OnRightClick = function(  psv,  x,  y )
-{
-	return 0;
-}
-DefaultViaMethods.prototype.OnDoubleClick = function(  psv,  x,  y )
-{
-	return 0;
-}
+	OnRightClick(  psv,  x,  y )
+	{
+		return 0;
+	}
+	OnDoubleClick(  psv,  x,  y )
+	{
+		return 0;
+	}
 
-
+}

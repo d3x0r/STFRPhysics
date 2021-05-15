@@ -37,15 +37,24 @@ function layerFlags() {
 
 //typedef void (CPROC *UpdateProc)( uintptr_t psv, CDATA colors[3] );
 
-function layerPathNode( ) {
-	return { x : 0,
-		y : 0,
-		cellx : 0,
-		celly : 0,
-		isAbove: null,
-		isBelow: null,
-		flags : layerFlags(),
-	}
+export class layerPathNode {
+	 x = 0;
+	 y = 0;
+	 isAbove= null;
+	 isBelow= null;
+	 flags = layerFlags();
+
+         constructor( x, y, flags ) {
+         	if( "number" === typeof x && "number" === typeof y ) {
+
+	             this.x = x;
+                     this.y = y;
+                     this.flags.BackDir = flags.BackDir;
+                     this.flags.ForeDir = flags.ForeDir;
+		}
+
+         }
+
 }
 
 
@@ -146,8 +155,6 @@ export function Layer( board, peice,  _x,  _y, _w,  _h,  ofsx,  ofsy )
 			var newLayerPathNode = new layerPathNode()
 			newLayerPathNode.x = this.x + x - this.peice.hot.x;
 			newLayerPathNode.y = this.y + y - this.peice.hot.y;
-			newLayerPathNode.cellx = x;
-			newLayerPathNode.celly = y;
 			this.pds_path.push( newLayerPathNode );
 			//this.board.addLayerPathNode( newLayerPathNode );
 		}
@@ -283,10 +290,7 @@ Layer.prototype.IsLayerAt = function( _x, _y ) {
 			var cell = board.GetCellSize( );
 			if( this.flags.bRoute )
 			{
-				var n;
-				//DebugBreak();
 				var viaset = this.peice;
-				var methods = viaset.via_methods;
 				this.pds_path.forEach( (node)=>{
 					var xofs, yofs;
 					var fill;
@@ -389,7 +393,7 @@ Layer.prototype.IsLayerAt = function( _x, _y ) {
 		Layer.prototype.BeginPath = function(  _x, _y, direction )
 		{
 			if( direction === undefined ) direction = peices.direction.NOWHERE;
-			var node= layerPathNode();
+			var node= new layerPathNode();
 			this.x = _x;
 			this.y = _y;
 			this.min_x = _x;

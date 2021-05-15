@@ -221,7 +221,7 @@ export class BrainForm extends Popup {
 	setBody( body ) {
                 const brainstem = body.getInterface();
                 this.brain.addModule( brainstem );
-                this.board.BuildBrainstemMenus( null, brainstem, [], [] )
+                this.board.BuildBrainstemMenus( null, brainstem, [], [], [] )
 	}
 
 }
