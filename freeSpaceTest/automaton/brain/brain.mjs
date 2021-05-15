@@ -104,7 +104,7 @@ export class Brain {
 	brainStems = [];
 
 	addModule( brainStem ){
-		
+		this.brainStems.push( brainStem );
 	}
 		step() {
 			this.cycle++;
