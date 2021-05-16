@@ -225,35 +225,38 @@ Board.prototype.SetBackground = function( peice )
 	});
 }
 
-Board.prototype.BeginPath = function( viaset, x, y, psv )
+Board.prototype.BeginPath = function( viaset, x, y, atLayer )
 {
-	if( this.mouse_current_layer )
+	atLayer = atLayer || this.mouse_current_layer;
+	x = ("undefined" === typeof x ) ? this.wX : x;
+	y = ("undefined" === typeof y ) ? this.wY : y;
+	if( atLayer )
 	{
 		var pl = new Layer( this, viaset );
 		pl.flags.bRoute = true;
-		var connect_okay = this.mouse_current_layer
+		var connect_okay = atLayer
 			.peice
 			.methods
-			.ConnectBegin( this.mouse_current_layer.psvInstance
-						, (this.wX - this.mouse_current_layer.x)
-						, (this.wY - this.mouse_current_layer.y)
+			.ConnectBegin( atLayer.psvInstance
+						, (x - atLayer.x)
+						, (y - atLayer.y)
 						, viaset
 						, pl.psvInstance );
 		if( !connect_okay )
 		{
 			return false;
 		}
-		this.mouse_current_layer.Link( pl, LINK_VIA_START
-										, (this.wX - this.mouse_current_layer.x)
-										, (this.wY - this.mouse_current_layer.y) );
+		atLayer.Link( pl, LINK_VIA_START
+										, (x - atLayer.x)
+										, (y - atLayer.y) );
 		this.route_current_layer = pl;
 		// set the via layer type, and direction, and stuff..
-		pl.BeginPath( this.wX, this.wY );
+		pl.BeginPath( x, y );
 
 		pl.link_top(this.rootLayer);
-
+		return pl;
 	}
-	return true;
+	return null;
 }
 
 Board.prototype.GetLayerAt = function( wX, wY, notlayer )
@@ -284,7 +287,7 @@ Board.prototype.GetLayerDataAt = function( wX, wY,  notlayer /*= null*/ )
 
 
 // viaset is implied by route_current_layer
-Board.prototype.EndPath = function(  x,  y )
+Board.prototype.EndPath = function(  force, x,  y, layer, toLayer )
 {
 	// really this is lay path also...
 	// however, this pays attention to mouse states
@@ -293,53 +296,52 @@ Board.prototype.EndPath = function(  x,  y )
 	//   mouse flags.bRight, bLeft
 	//   route_current_layer AND mouse_current_layer
 	//
-	var layer;
+	layer = layer || this.route_current_layer;
 	var pld;
+	x = ("undefined" === typeof x)?this.wX:x;
+	y = ("undefined" === typeof y)?this.wY:y;
 	// first layer should result and be me... check it.
-	if( layer = this.GetLayerAt( x, y, this.route_current_layer ) )
+	let foundLayer = null;
+	toLayer = ( toLayer || ( foundLayer = this.GetLayerAt( x, y, this.route_current_layer ) )?.layer );
+	if( toLayer )
 	{
-		if( this.flags.bLeftChanged )
+		pld = toLayer;
+		var connect_okay = pld.peice.methods.ConnectEnd( pld.psvInstance
+			, (x - toLayer.x)
+			, (y - toLayer.y)
+			, layer.peice
+			, layer.psvInstance );
+		if( connect_okay )
 		{
-			pld = layer;
-			var connect_okay = pld.layer.peice.methods.ConnectEnd( pld.layer.psvInstance
-				, (this.wX - layer.layer.x)
-				, (this.wY - layer.layer.y)
-				, this.route_current_layer.peice
-  			   , this.route_current_layer.psvInstance );
-			if( connect_okay )
-			{
-				//DebugBreak();
-				console.log( ("Heh guess we should do something when connect succeeds?") );
-				// keep route_current_layer;
-				layer.layer.Link( this.route_current_layer, LINK_VIA_END, (this.wX-layer.at.x), (this.wY-layer.at.y) );
-				this.route_current_layer = null;
-				return true;
-			}
-			else
-			{
-				this.route_current_layer.Unlink();
-				this.route_current_layer.isolate();
+			//DebugBreak();
+			console.log( ("Heh guess we should do something when connect succeeds?") );
+			// keep route_current_layer;
+			toLayer.Link( layer, LINK_VIA_END, (x - toLayer.x), (y - toLayer.y) );
+			this.route_current_layer = null;
+			return true;
+		}
+		else
+		{
+			this.route_current_layer.Unlink();
+			this.route_current_layer.isolate();
 
-				var disconnect_okay = this.route_current_layer
-						.peice
-						.methods
-						.Disconnect( this.route_current_layer.psvInstance );
+			var disconnect_okay = this.route_current_layer
+					.peice
+					.methods
+					.Disconnect( this.route_current_layer.psvInstance );
 
-				this.route_current_layer = null;
-				this.BoardRefresh();
-				//DebugBreak();
-				//delete route_current_layer;
-				//this.route_current_layer = null;
-				return false;
-			}
+			this.route_current_layer = null;
+			this.BoardRefresh();
+			//DebugBreak();
+			//delete route_current_layer;
+			//this.route_current_layer = null;
+			return false;
 		}
 	}
 	else
 	{
 		// right click anywhere to end this thing...
-		if( this.route_current_layer &&
-			this.flags.bLeftChanged &&
-			!this.flags.bLeft )
+		if( force )
 		{
 			//DebugBreak();
 			// also have to delete this layer.
@@ -379,7 +381,7 @@ Board.prototype.UnendPath = function( )
 
 
 
-Board.prototype.PutPeice = function(  peice, x, y )
+Board.prototype.AddLayer = function(  peice, x, y )
 {
 	//uintptr_t psv = peice.Create();
 	// at some point I have to instance the peice to have a neuron...
@@ -401,7 +403,13 @@ Board.prototype.PutPeice = function(  peice, x, y )
 	pl.link_top(this.rootLayer);
 	
 	this.BoardRefresh();
-	return pl.psvInstance;
+	return pl;
+}
+
+Board.prototype.PutPeice = function(  peice, x, y )
+{
+	const layer = this.AddLayer( peice, x, y );
+	return layer.psvInstance;
 }
 
 
@@ -470,38 +478,38 @@ Board.prototype.Save = function() {
 
 	if( this.rootLayer )
 	{
-            	const layerInfo = [];
+		const layerInfo = [];
+		const layers = [];
 		var layer = this.rootLayer;
                 // this check also skips the root layer itself.
 		while( layer && (layer = layer.prior) )
 		{
-                    const layerMsg = {
-                        x: layer.x,
-                        y: layer.y,
-                       	path : [],
-                        r : layer.flags.bRoot,
-                        p : layer.peice.getMsg( layer.psvInstance ),
-                        pc : layer.peice.name, //this.GetPeice( layer.peice.name )?.name,
-                    };
+			const layerMsg = {
+				x: layer.x,
+				y: layer.y,
+				path : [],
+				from : layers.findIndex( (l)=>( l === layer.route_start_layer.layer ) ),
+				to : layers.findIndex( (l)=>( l === layer.route_end_layer.layer ) ),
+				r : layer.flags.bRoot,
+				p : layer.peice.getMsg( layer.psvInstance ),
+				pc : layer.peice.name, //this.GetPeice( layer.peice.name )?.name,
+			};
 
-
-                    // this.PutPeice( this[someClassInstance.constructor.name], layer.x, layer.y,
-
-                    function addNode( n ) {
-                        layerMsg.path.push( { x: n.x, y:n.y,
-				BackDir:n.flags.BackDir,
-				ForeDir:n.flags.BackDir
-                        } );
-
-                    }
+			function addNode( n ) {
+				layerMsg.path.push( { x: n.x, y:n.y,
+					BackDir:n.flags.BackDir,
+					ForeDir:n.flags.ForeDir
+				} );
+			}
 		    if( layer.flags.bRoute )
 		    	layer.pds_path.forEach( addNode );
 
-                    layerInfo.push( layerMsg );
-                    layerMsg.path.length= 0;
+			// track layers in parallel with their message
+			layers.push( layer );
 
+			layerInfo.push( layerMsg );
 		}
-                return JSOX.stringify( layerInfo );
+		return JSOX.stringify( layerInfo );
 	}
 
 }
@@ -510,26 +518,30 @@ Board.prototype.Load = function( arg ) {
 
 
 	const layers = JSOX.parse( arg );
-        for( let layer of layers ) {
+    for( let layer of layers ) {
 		const peice = this.GetPeice( layer.pc );
-		const newInstance = this.PutPeice( peice, layer.x, layer.y );
+		
 
-		const size = peice.getsize( );//&rows, &cols );
-		const hot = peice.gethotspot( );
-	
-		const pl = new Layer( this, peice, layer.x, layer.y, size.cols, size.rows, hot.x, hot.y );
-		// should be portioned...
-		pl.link_top(this.rootLayer);
-	
+        if( layer.path.length ) {
 
+			//this.mouse_current_layer
+			const fromLayer = layers[layer.from].layer;
+			const toLayer = layers[layer.to].layer;
+			const viaLayer = this.BeginPath( peice, layer.x, layer.y, fromLayer )
 
-                if( layer.path ) {
-                    for( let p of layer.path ) {
-                      const node = new layerPathNode( p.x, p.y, p );
-			pl.pds_path.push( node );
+			let p;
+            for( p of layer.path ) {
+                const node = new layerPathNode( p.x, p.y, p );
+				viaLayer.pds_path.push( node );
 
-                    }
-                }
+			}
+
+			this.EndPath( false, layer.x+p.x, layer.y+p.y, viaLayer, toLayer );
+
+		}else {
+			layer.layer = this.AddLayer( peice, layer.x, layer.y );
+		}
+
 	}
 
 	this.BoardRefresh();
@@ -667,7 +679,11 @@ Board.prototype.DoMouse = function(  X,  Y,  b )
 				// get Next layer data... so we have something to connect to...
 				// okay end path is where all the smarts of this is...
 				// handles mouse changes in state, handles linking to the peice on the board under this route...
-				this.EndPath( this.wX, this.wY );
+				this.EndPath( 	( this.route_current_layer &&
+					this.flags.bLeftChanged &&
+					!this.flags.bLeft ),
+		
+					this.wX, this.wY );
 			}
 		}
 	}

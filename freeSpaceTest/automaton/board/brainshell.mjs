@@ -1,51 +1,11 @@
 
 
 
-const  MNU_ADDCOMPONENT = 2048
-const  MNU_MAXCOMPONENT = MNU_ADDCOMPONENT + 256
-
-
 const  MNU_ZOOM       = 1020 // 0, 1, 2 used...
-const  MNU_ENDZOOM    = 1030
 
-const  MNU_CLOSE      = 1040
-
-const  MNU_NEURON_DIG = 1013
-const  MNU_SIGMOID    = 1012
-const  MNU_ADDOSC     = 1011
-const  MNU_ADDTICKOSC = 1010
-const  MNU_SYNAPSE    = 1009 
-const  MNU_NEURON     = 1008
-const  MNU_PROPERTIES = 1007
-const  MNU_DELETE     = 1006
-const  MNU_LOAD       = 1005
-const  MNU_SAVE       = 1004        
-const  MNU_RESET      = 1003               
-const  MNU_RUN        = 1002
-const  MNU_ADDNEURON  = 1001
-
-const  MNU_ADD_INPUT_START  = 5000
-const  MNU_ADD_OUTPUT_START = 6000
-const  MNU_ADD_OUTPUT_LAST  = 6999
-
-const  LST_NEWBOARD = 1000
-const   BTN_CREATENAME = 1001
-
-const MF_STRING = 1;
-const MF_POPUP = 2;
-const MF_SEPARATOR = 4;
-//const MF_
 let popup_x = 0;
 let popup_y = 0;
-/*
-PRELOAD( register_control_ids )
-{
-	SimpleRegisterResource( LST_NEWBOARD, LISTBOX_CONTROL_NAME );
-	SimpleRegisterResource( BTN_CREATENAME, NORMAL_BUTTON_NAME );
-}
-*/
 
-import {JSOX} from "../../JSOX/lib/jsox.mjs "
 
 import peices from "./brain.peices.mjs";
 import {DirDeltaMap,DefaultMethods,DefaultViaMethods}  from "./peice.mjs";
@@ -277,15 +237,6 @@ export function BrainBoard( _brain, container ) {
 			} )
 		}
 		hMenu.separate(  );
-
-		//hMenu.addItem(  MF_STRING, MNU_RESET, ("Reset") );
-		//hMenu.addItem(  MF_STRING, MNU_RUN, ("RUN") );
-		//hMenu.addSeparator(  );
-
-		hMenu.addItem( "Save", ()=>{
-			brainboard.save();
-		} );
-
 		{
 			var hPopup;
 			hPopup = hMenu.addMenu( "Zoom" );
@@ -308,38 +259,33 @@ export function BrainBoard( _brain, container ) {
 			}
 
 		}
+		hMenu.separate(  );
+
+		//hMenu.addItem(  MF_STRING, MNU_RESET, ("Reset") );
+		//hMenu.addItem(  MF_STRING, MNU_RUN, ("RUN") );
+		//hMenu.addSeparator(  );
+
+		hMenu.addItem( "Load", ()=>{
+			
+			    const load = '[{from:-1,p:{},path:[],pc:"neuron",r:false,to:-1,x:1,y:3},{from:-1,p:{},path:[],pc:"oscil",r:false,to:-1,x:7,y:2},{from:1,p:{},path:[{BackDir:-1,ForeDir:-1,x:0,y:0},{BackDir:-1,ForeDir:5,x:0,y:0},{BackDir:1,ForeDir:5,x:-1,y:1},{BackDir:1,ForeDir:6,x:-2,y:2},{BackDir:2,ForeDir:6,x:-3,y:2},{BackDir:2,ForeDir:7,x:-4,y:2},{BackDir:3,ForeDir:-1,x:-5,y:1}],pc:"nerve",r:false,to:0,x:7,y:3},{from:-1,p:{},path:[],pc:"neuron",r:false,to:-1,x:5,y:7},{from:-1,p:{},path:[],pc:"oscil",r:false,to:-1,x:2,y:11},{from:4,p:{},path:[{BackDir:-1,ForeDir:2,x:0,y:0},{BackDir:6,ForeDir:1,x:1,y:0},{BackDir:5,ForeDir:0,x:2,y:-1},{BackDir:4,ForeDir:0,x:2,y:-2},{BackDir:4,ForeDir:-1,x:2,y:-3}],pc:"nerve",r:false,to:3,x:3,y:11},{from:-1,p:{},path:[],pc:"neuron",r:false,to:-1,x:7,y:12},{from:4,p:{},path:[{BackDir:-1,ForeDir:2,x:0,y:0},{BackDir:6,ForeDir:2,x:1,y:0},{BackDir:6,ForeDir:2,x:2,y:0},{BackDir:6,ForeDir:-1,x:3,y:0}],pc:"nerve",r:false,to:6,x:3,y:12}]';
+			brainboard.load( load );
+		} );
+
+		hMenu.addItem( "Save", ()=>{
+			const data = brainboard.save();
+			console.log( "Save brain:", data );
+		} );
         
-		//hMenu.addItem( MF_STRING, MNU_NEURON, ("Default Neuron") );
-		//hMenu.addItem( MF_STRING, MNU_SYNAPSE, ("Default Synapse") );
-		//hMenu.addItem( MF_STRING, MNU_SIGMOID, ("Sigmoid Constant") );
-		/*
-		hMenu.addItem( MF_STRING, MNU_SAVE, ("Save...") );
-		hMenu.addItem( MF_STRING, MNU_LOAD, ("Load...") );
-		hMenu.addItem( MF_SEPARATOR,0,0 );
-		hMenu.addItem( MF_STRING, MNU_CLOSE, ("Close") );
-        */
 	}
 
 }
 
 BrainBoard.prototype.save= function(  ) {
-
-    const load = "[{p:{},path:[],pc:'neuron',r:false,x:1,y:2},{p:{},path:[],pc:'oscil',r:false,x:8,y:2},{p:{},path:[],pc:'nerve',r:false,x:8,y:3}]";
-    this.load( load );
-
-    const msg = this.board.Save();
-
-
-	const String = JSOX.stringify( this );
-	console.log( 'This is not the thing?', String );
-
-	const brain = JSOX.stringify( this.brain );
-	console.log( "This is part of it?", brain );
-
+	return this.board.Save();
 }
 
 BrainBoard.prototype.load = function( msg ) {
-    	this.board.Load( msg );
+	return this.board.Load( msg );
 }
 
         
@@ -604,7 +550,7 @@ INPUT_METHODS.prototype.OnClick = function(  psv,  x, y )
 	}
 	else
 	{
-		if( !brainboard.board.BeginPath( brainboard.NervePeice, brainboard ) )
+		if( !brainboard.board.BeginPath( brainboard.NervePeice ) )
 		{
 			// attempt to grab existing path...
 			// current position, and current layer
@@ -709,7 +655,7 @@ ConnectEnd(  psv_to_instance,  x,  y
 		}
 		else
 		{
-			if( !this.brainboard.board.BeginPath( this.brainboard.NervePeice, brainboard ) )
+			if( !this.brainboard.board.BeginPath( this.brainboard.NervePeice ) )
 			{
 				// attempt to grab existing path...
 				// current position, and current layer
@@ -873,7 +819,7 @@ OnClick(  psv,  x,  y )
 	}
 	else
 	{
-		if( !this.brainboard.board.BeginPath( this.brainboard.NervePeice, this.brainboard ) )
+		if( !this.brainboard.board.BeginPath( this.brainboard.NervePeice ) )
 		{
 			// attempt to grab existing path...
 			// current position, and current layer

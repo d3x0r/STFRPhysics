@@ -51,12 +51,21 @@ export class BrainForm extends Popup {
                 }
                 requestAnimationFrame(boardTick);
 
-                this.board.addEventListener( "added", (p,n)=>{
+                this.board.addEventListener( "added", (n, psv)=>{
                         if( n instanceof Neuron ) {
-                                this.neuronTable.addNeuron( p,n );
+                                this.neuronTable.addNeuron( n,psv );
                         }
                         if( n instanceof Synapse )  {
-                                this.neuronTable.addSynapse( p, n);
+                                this.neuronTable.addSynapse( n,psv);
+                        }
+                })
+                
+                this.board.addEventListener( "removed", (p,n)=>{
+			const rows = itemMap.get( p );
+                        if( rows ) {
+	                        itemMap.delete( p );
+        	                rows[0].remove();
+        	                rows[1].remove();
                         }
                 })
                 
