@@ -134,7 +134,7 @@ export class Motion {
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
-		//if( l1 > 20 ) return;
+		if( l1 > 30 ) return;
 		this.affectors++;
 		const l2 = motion.dipoleVec.length();
 
@@ -199,7 +199,7 @@ export class Motion {
 		const accScalar = Math.cos( this.lastCross2.θ );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( this.lastCross2, 100/(l1*l1*l1) );
+		this.eTorque.add( this.lastCross2, 25/(l1*l1) );
 		
 		if( Motion.freeMoveAccel )
 			this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
