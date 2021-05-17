@@ -26,12 +26,12 @@ These are typically $(x,y,z)$ rotation vectors.  They may be represented with ax
 The cross product operator $\times$ is used such that the left hand term is modified by the right hand side, and the result is the left rotated around or by the second.  $ A \times B $ is $A$ curved by $B$. It is also overloaded, depending on the operands.
 
 - a spin axis crossed with a vector is a vector that has the angle between them.  
-- a spin component crossed with a spin component is a continuous update such that the original component and additional component co-mutate, and both change with time.
-- a direction, a linear vector, or rotation axis crossed with a spin component rotates that vector to a new location around the specified spin component.
+- a spin component crossed with a spin component is a continuous update such that the original component and additional component co-mutate, and both change with time.  This is like a rotation matrix crossed with a rotation matrix, or a quaternion crossed with a quaternion.
+- a direction, a linear component, or rotation axis crossed with a spin component rotates that vector to a new location around the specified spin component.
 
-Vertical bar operator $|D|$ denotes magnitude, undirected length or angle, and is a positive number.
+$|D|$ denotes magnitude, undirected length or angle, and is a positive number.
 
-the decimal or period operator references a field within a frame.  $\alpha.P$ is the position of the alpha frame. This is different than the dot product operator, for example: $(\alpha.P - \beta.P) \cdot \beta.M$.
+The decimal or period operator references a field within a frame.  Unfortunely math doesn't have structure support like many programming languages. $\alpha.P$ is the position of the alpha frame. This is different than the dot product operator, for example: $(\alpha.P - \beta.P) \cdot \beta.M$.
 
 ##Affect()
 
