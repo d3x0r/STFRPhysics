@@ -22,6 +22,8 @@ export function Board( parent ) {
 	//canvas.style.width = "100%";
 	//canvas.style.height = "100%";
 	this.ctx = canvas.getContext( "2d" );
+	this.events = {};
+
 	parent.appendChild( canvas );
 	var board = this;
 	var _buttons = 0;
@@ -330,6 +332,9 @@ Board.prototype.EndPath = function(  force, x,  y, layer, toLayer )
 					.methods
 					.Disconnect( this.route_current_layer.psvInstance );
 
+			if( this.events["removed"] )
+				this.events["removed"]( this.route_current_layer.peice, this.route_current_layer.psvInstance );
+
 			this.route_current_layer = null;
 			this.BoardRefresh();
 			//DebugBreak();
@@ -345,13 +350,15 @@ Board.prototype.EndPath = function(  force, x,  y, layer, toLayer )
 		{
 			//DebugBreak();
 			// also have to delete this layer.
-				this.route_current_layer.Unlink();
-				this.route_current_layer.isolate();
+			this.route_current_layer.Unlink();
+			this.route_current_layer.isolate();
 
-				var disconnect_okay = this.route_current_layer
-						.peice
-						.methods
-						.Disconnect( this.route_current_layer.psvInstance );
+			var disconnect_okay = this.route_current_layer
+					.peice
+					.methods
+					.Disconnect( this.route_current_layer.psvInstance );
+			if( this.events["removed"] )
+				this.events["removed"]( this.route_current_layer.peice, this.route_current_layer.psvInstance );
 
 				this.route_current_layer = null;
 			//delete this.route_current_layer;
@@ -520,14 +527,16 @@ Board.prototype.Load = function( arg ) {
 	const layers = JSOX.parse( arg );
     for( let layer of layers ) {
 		const peice = this.GetPeice( layer.pc );
-		
 
         if( layer.path.length ) {
 
 			//this.mouse_current_layer
 			const fromLayer = layers[layer.from].layer;
 			const toLayer = layers[layer.to].layer;
+
+			// begin path ends up calling the add row controls... callback
 			const viaLayer = this.BeginPath( peice, layer.x, layer.y, fromLayer )
+			viaLayer.peice.setMsg( viaLayer.psvInstance, layer.p );
 
 			let p;
             for( p of layer.path ) {
@@ -540,6 +549,9 @@ Board.prototype.Load = function( arg ) {
 
 		}else {
 			layer.layer = this.AddLayer( peice, layer.x, layer.y );
+			layer.layer.peice.setMsg( layer.layer.psvInstance, layer.p );
+			if( this.events["added"] )
+				this.events["added"]( peice, layer.layer.psvInstance );
 		}
 
 	}

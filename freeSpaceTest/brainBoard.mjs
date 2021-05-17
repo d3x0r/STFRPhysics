@@ -5,7 +5,7 @@ import {Popup,popups} from "./popups/popups.mjs"
 import {BrainBoard} from "./automaton/board/brainshell.mjs"
 import {Brain} from "./automaton/brain/brain.mjs"
 import {Neuron} from "./automaton/brain/neuron.mjs"
-import Synapse from "./automaton/brain/synapse.mjs"
+import {Synapse} from "./automaton/brain/synapse.mjs"
 
 
 export class ControlForm extends Popup {
@@ -52,18 +52,18 @@ export class BrainForm extends Popup {
                 requestAnimationFrame(boardTick);
 
                 this.board.addEventListener( "added", (n, psv)=>{
-                        if( n instanceof Neuron ) {
-                                this.neuronTable.addNeuron( n,psv );
+                        if( psv instanceof Neuron ) {
+                                this.neuronTable.addNeuron( psv,n );
                         }
-                        if( n instanceof Synapse )  {
-                                this.neuronTable.addSynapse( n,psv);
+                        if( psv instanceof Synapse )  {
+                                this.neuronTable.addSynapse( psv,n);
                         }
                 })
                 
                 this.board.addEventListener( "removed", (p,n)=>{
-			const rows = itemMap.get( p );
+			const rows = itemMap.get( n );
                         if( rows ) {
-	                        itemMap.delete( p );
+	                        itemMap.delete( n );
         	                rows[0].remove();
         	                rows[1].remove();
                         }
@@ -97,13 +97,13 @@ export class BrainForm extends Popup {
                                         }
                                         brainBoard.select( n );
                                 },
-                                addNeuron( p, n ) {
+                                addNeuron( n, p ) {
                                         var newRow = this.table.insertRow();
                                         var newRow2 = this.table.insertRow();
                                         neuron( newRow, newRow2, n, p );
                                         itemMap.set( n, [newRow,newRow2] );
                                 },
-                                addSynapse( p, n ) {
+                                addSynapse( n, p ) {
                                         var newRow = this.table.insertRow();
                                         var newRow2 = this.table.insertRow();
                                         synapse( newRow, newRow2, n, p );
@@ -151,7 +151,7 @@ export class BrainForm extends Popup {
         	                        opt.text = type;
 	                                opt.value = Neuron.algo[type];
         	                        algoSelect.appendChild( opt );
-                                        if( This.board.DefaultNeuron.algorithm === Neuron.algo[type] )
+                                        if( thisNeuron.algorithm === Neuron.algo[type] )
                                         	opt.setAttribute("selected","selected");
                         	}
                 

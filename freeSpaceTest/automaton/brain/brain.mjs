@@ -2,8 +2,8 @@
 //var Neuron = require( './neuron.js' );//import * as Neuron from ./neuron.js;
 //var Synapse = require( './synapse.js' );
 
-import * as Neuron from './neuron.mjs';
-import Synapse from "./synapse.mjs";
+import * as NeuronTypes from './neuron.mjs';
+import {Synapse} from "./synapse.mjs";
 
 export class ref {
 	o = null;
@@ -161,11 +161,11 @@ export class Brain {
 
 	constructor() {	
 		const This = this;
-		var types = Object.keys( Neuron );
+		var types = Object.keys( NeuronTypes );
 		types.forEach( key => {
 				this[key] = (function(key) {
 					return function(brain,psv) {
-						return new Neuron[key]( This, psv );
+						return new NeuronTypes[key]( This, psv );
 					}
 				})(key);
 			} )

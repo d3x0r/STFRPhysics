@@ -18,6 +18,21 @@ export class Neuron {
 		this.outputs = [];
 	}
 
+	setMsg(msg) {
+		this.threshold = msg.t;
+		this.algorithm = msg.a;
+		this.k = msg.k;
+	}	
+	getMsg() {
+		return {
+			t: this.threshold,
+			a: this.algorithm,
+			k : this.k,
+		}		
+	}
+
+
+
 	clone(){
 		var newNeuron = new Neuron( this.brain );
 		newNeuron.threshold = this.threshold;
@@ -27,6 +42,8 @@ export class Neuron {
 	}
 
 	output(n) {
+		//  convert N to the output level signal.
+		// N is gotten from the sum of input gains * input neuron value()s.
 		switch( this.algorithm ) {
 		case Neuron.algo.analog:
 			var out = n - this.threshold;
@@ -44,11 +61,11 @@ export class Neuron {
 			return 0;
 		case Neuron.algo.sigmoid:
 			 var out = (MAX_OUTPUT_VALUE/(1+Math.exp( -this.k * (n-this.threshold))));
-					 if( out <= 0 )
-						out = 0;  // trim bottom portion...
-					 else 
-						if( out > MAX_OUTPUT_VALUE )
-						   out = MAX_OUTPUT_VALUE; 
+			if( out <= 0 )
+			out = 0;  // trim bottom portion...
+			else 
+			if( out > MAX_OUTPUT_VALUE )
+				out = MAX_OUTPUT_VALUE; 
 			return out;
 		}
 	}
@@ -156,8 +173,18 @@ export  class Sigmoid extends Neuron {
 		this.type = "Sigmoid";
 		this.k = this.brain.k;
 	}
+	setMsg(msg) {
+		super.setMsg(msg);
+		this.k = msg.k;
+	}
+	getMsg() {
+		return Object.assign( super.getMsg(), {
+				k: this.k
+			} )
+	}
 
 	output(n) { 
+		debugger; // otuput is unused now
 		return n;
 	};
 
@@ -182,7 +209,18 @@ export class Oscillator extends Neuron {
 		this.freq = 1.0;
 	}
 
+	setMsg(msg) {
+		super.setMsg(msg);
+		this.freq = msg.freq;
+	}
+	getMsg() {
+		return Object.assign( super.getMsg(), {
+				freq: this.freq
+			} )
+	}
+
 	output(n) { 
+		debugger; // otuput is unused now
 		return Math.sin( this.brain.tick * this.freq );
 	 };
 
@@ -206,8 +244,20 @@ export class TickOscillator extends Neuron {
 		this.freq = ticks || 1000;
 	}
 	output(n) { 
+		debugger; // otuput is unused now
 		return 1/(1+Math.exp( -this.k ) ) 
 	}
+
+	setMsg(msg) {
+		super.setMsg(msg);
+		this.freq = msg.freq;
+	}
+	getMsg() {
+		return Object.assign( super.getMsg(), {
+				freq: this.freq
+			} )
+	}
+
 
 	get value(){ 
 		//console.log( "Math.sin( ( this.brain.cycle * 2* Math.PI / freq ) )", Math.sin( ( this.brain.cycle * 2* Math.PI / freq ) ) );

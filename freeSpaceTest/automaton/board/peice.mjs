@@ -191,6 +191,9 @@ if( image )
 
 }
 
+Peice.prototype.setMsg = function( psvInstance, msg ) {
+	return this.methods.setMsg( psvInstance, msg );
+}
 
 Peice.prototype.getMsg = function( psvInstance ) {
 	return this.methods.getMsg( psvInstance );
@@ -435,10 +438,10 @@ Via.prototype.Stop=function(  ) { return 0; }
 //--------------------------- Default Methods ------------------------------------------
 
 export class DefaultMethods {
-    	master = null;
+    master = null;
 
-	constructor (peice) {
-		this.master = peice;
+	constructor (_brainboard) {
+		this.brainboard = _brainboard;
 	}
 	
 	Move() {
@@ -449,12 +452,6 @@ export class DefaultMethods {
 		return false;
 	}
 
-	setMsg(msg) {  } // setMsg(msg) use msg to re-set any parameters for this peice.
-
-	// get a message describing this peice.
-	getMsg(instance) {
-	    return {}
-	}
 
 	get name() { return "default methods"; }
 	SetPeice(  peice )        { this.master = peice; }
@@ -553,12 +550,20 @@ export class DefaultMethods {
 						  //, x, y
 						  //, 1 );
 	}
+
+	setMsg( psvInstance, opts ) {
+		psvInstance.setMsg( opts );
+	}
+	getMsg(psvInstance ) {
+		return psvInstance.getMsg() ;
+	}
+
 }
 //-------------------- DEFAULT VIA METHODS (a few more than PEICE_METHODS ) ----------------------------
 
 export class DefaultViaMethods extends DefaultMethods {
 	constructor() {
-	
+		super( )
 	}
 
 
