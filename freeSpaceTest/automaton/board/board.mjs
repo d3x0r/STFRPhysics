@@ -1,6 +1,6 @@
 
 import {LINK_VIA_START,LINK_VIA_END,Layer,LayerPool, layerPathNode} from "./layer.mjs";
-import {JSOX} from "../../JSOX/lib/jsox.mjs "
+import {JSOX} from "../../jsox/lib/jsox.mjs "
 
 import * as peices from "./peice.mjs";
 

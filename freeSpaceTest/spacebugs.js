@@ -370,7 +370,7 @@ var     mesh = new THREE.Mesh( geometry, mandelMaterial );
 var objectLoader = new THREE.ObjectLoader();
 //var objectLoader = new THREE.OBJLoader();
 //var objectLoader = new THREE.OBJLoader2();
-objectLoader.load("models/model.json", addModelToScene);
+//objectLoader.load("models/model.json", addModelToScene);
 objectLoader.load("models/aphod.json", addModelToScene2);
 
 var protoRock;
@@ -529,7 +529,7 @@ function addModelToScene2(object) {
 		x.position.x = n * 5;
 
 		m = new Motion( x );
-		m.orientation.x =  2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
+		m.orientation.x = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		m.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		m.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		const b = m.orientation.getBasis();
@@ -544,6 +544,7 @@ function addModelToScene2(object) {
 
 	scene.add(myMover = x = object);
 	myMotion =  new Motion(x);
+	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
 	const body = new SmartBody( x, myMotion );
 	movers2.push(body);
 	x.matrixAutoUpdate = true;
@@ -623,6 +624,7 @@ function animate() {
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
 	const rotation = ( ( controlForm.rotationRate ) / 100 ) * Math.PI;
+	const now = (Date.now() % 29000)/29000;
 	Motion.freeMoveAccel = controlForm.applyAccel;
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
@@ -633,6 +635,23 @@ function animate() {
 		ent.m.rotation.x = (ent.m.rotation.nx = ent.m.dipole.nx) * ent.m.rotation.θ;
 		ent.m.rotation.y = (ent.m.rotation.ny = ent.m.dipole.ny) * ent.m.rotation.θ;
 		ent.m.rotation.z = (ent.m.rotation.nz = ent.m.dipole.nz) * ent.m.rotation.θ;
+		if(0)
+		switch( idx ) {
+			case 0:
+				ent.x.position.x = 0;
+				ent.x.position.y = 0;
+				ent.x.position.z = 5;
+				ent.m.orientation.x = 0;
+				ent.m.orientation.y = 0;
+				ent.m.orientation.z = 0;
+				ent.m.orientation.dirty = true;
+				break;
+			case 1:
+				ent.x.position.x = 5*Math.sin(now*Math.PI*2);
+				ent.x.position.y = 5*Math.cos(now*Math.PI*2);
+				ent.x.position.z = 5;
+				break;
+		}
 		//ent.m.rotation.update();
 	});
 	movers.forEach( (ent,idx)=>{
@@ -640,6 +659,7 @@ function animate() {
 			if( idx === idx2 ) continue;
 			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
 		}
+		ent.m.affect( myMotion, false, delta );
 		const m = ent.x;
 		const motion = ent.m;
 		
@@ -663,11 +683,13 @@ function animate() {
 			motion.tmpDipole = relPole;
 		}
 
-		const newDir = motion.tmpDipole;//pt;// idx==0?pt:motion.orientation.apply( pt );
+		//const newDir = motion.tmpDir;//pt;// idx==0?pt:motion.orientation.apply( pt );
+		const newDir = motion.targetVec;//pt;// idx==0?pt:motion.orientation.apply( pt );
 		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
 		const newDir2 = motion.lastCross;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
-		const newDir3 = motion.eTorque;
+		//const newDir3 = motion.targetVec;
+		const newDir3 = motion.tmpDipole;
 		if( newDir ) {
 
 		dirLine.geometry.vertices[1].x = newDir.x*5;
