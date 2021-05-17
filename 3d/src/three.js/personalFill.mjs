@@ -93,6 +93,7 @@ export class Motion {
 	torque = new lnQuat();
 	eTorque = new lnQuat();
 	lastCross = new lnQuat();
+	lastCross2 = new lnQuat();
 	tmpDir = new THREE.Vector3();
 	
 	dipole = new lnQuat();
@@ -144,7 +145,7 @@ export class Motion {
 		/// dot == 1 : 0 degrees, up to dot = -1 at pi (180 degrees) and then it's times 2  
 		// at 90 degrees a dipole is facing 180 degrees opposing, 
 		// at 180 degrees it's 360 degrees and up again.
-		const ofsAngle = Math.acos(dot)*2;
+		const ofsAngle = Math.PI*2 - Math.acos(dot)*2;
 
 		// use lnQUat for directed distance, normal, length
 		tmp1.x = tmpDir.x;
@@ -174,9 +175,9 @@ export class Motion {
 		torque.z = torque.nz * torque.θ;
 		*/
 
-		// use static method to use torque axis
+		// use static method to use torque axisd
 		// and ofs angle to compute relative dipole (store in targetVec)
-		lnQuat.apply( -ofsAngle, torque, otherPole, 1, this.targetVec);
+		lnQuat.apply( ofsAngle, torque, otherPole, 1, this.targetVec);
 
 		// use temp to compute the cross of my pole and the expected target pole
 		tmp1.x = relPole.x
@@ -194,13 +195,14 @@ export class Motion {
 		tmp2.update();
 
 		// cross is a rotation that moves the axis of our dipole toward target dipole
-		tmp1.cross( tmp2, torque );
-		const accScalar = Math.cos( torque.θ );
+		tmp1.cross( tmp2, this.lastCross2 );
+		const accScalar = Math.cos( this.lastCross2.θ );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( torque, 10/(l1*l1*l1) );
-if( Motion.freeMoveAccel )
-		this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
+		this.eTorque.add( this.lastCross2, 100/(l1*l1*l1) );
+		
+		if( Motion.freeMoveAccel )
+			this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
 	}
 	
 	affectAlignPoles( motion, inverse, delta ) {
