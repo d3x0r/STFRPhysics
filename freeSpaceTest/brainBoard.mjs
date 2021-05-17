@@ -18,8 +18,9 @@ export class ControlForm extends Popup {
 		super( "Controls", parent );
 		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
 		popups.makeCheckbox( this, this, "applyAccel", "Apply Accel" );
-		popups.makeTextInput( this, this, "objectCount", "Object Count" );
+		const input = popups.makeTextInput( this, this, "objectCount", "Object Count" );
 		popups.makeButton( this, "Re-init", ()=>{
+			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
 	}

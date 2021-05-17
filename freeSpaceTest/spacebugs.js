@@ -391,13 +391,17 @@ function addDipoles() {
 		scene.remove( line.line3 );
 	}
 	dirs.length  =0;
+	
+	const size = controlForm.objectCount > 3 
+		 ? (5 * Math.sqrt( controlForm.objectCount - 3 ) )
+		: 5;
 	for( var n = 0; n < controlForm.objectCount; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
 		x.matrixAutoUpdate = true;
-		x.position.x = 5 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.y = 5 * ( RNG.getBits( 11, true ) / 1024 );
-		x.position.z = -10 + 5 * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.x = size * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.y = size * ( RNG.getBits( 11, true ) / 1024 );
+		x.position.z = -10 + size * ( RNG.getBits( 11, true ) / 1024 );
 		var m = new Motion( x );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
@@ -659,7 +663,7 @@ function animate() {
 			if( idx === idx2 ) continue;
 			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
 		}
-		ent.m.affect( myMotion, false, delta );
+		//ent.m.affect( myMotion, false, delta );
 		const m = ent.x;
 		const motion = ent.m;
 		
@@ -692,9 +696,9 @@ function animate() {
 		const newDir3 = motion.tmpDipole;
 		if( newDir ) {
 
-		dirLine.geometry.vertices[1].x = newDir.x*5;
-		dirLine.geometry.vertices[1].y = newDir.y*5;
-		dirLine.geometry.vertices[1].z = newDir.z*5;
+		dirLine.geometry.vertices[1].x = newDir.x*1;
+		dirLine.geometry.vertices[1].y = newDir.y*1;
+		dirLine.geometry.vertices[1].z = newDir.z*1;
 		dirLine.position.copy( m.position );
 		}
 		if( newDir2 ) {
@@ -704,9 +708,9 @@ function animate() {
 		dirLine2.position.copy( m.position );
 		}
 		if( newDir3 ) {
-		dirLine3.geometry.vertices[1].x = newDir3.x*15;
-		dirLine3.geometry.vertices[1].y = newDir3.y*15;
-		dirLine3.geometry.vertices[1].z = newDir3.z*15;
+		dirLine3.geometry.vertices[1].x = newDir3.x*2;
+		dirLine3.geometry.vertices[1].y = newDir3.y*2;
+		dirLine3.geometry.vertices[1].z = newDir3.z*2;
 		dirLine3.position.copy( m.position );
 			}
 

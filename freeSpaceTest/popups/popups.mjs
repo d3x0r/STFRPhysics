@@ -830,6 +830,7 @@ function makeTextInput( form, input, value, text, money, percent ){
 
 	return {
             	addEventListener(a,b) { return inputControl.addEventListener(a,b) },
+		blur() { inputControl.blur() },
 		get value () {
 			if( money )
 				return utils.toD(inputControl.value);
