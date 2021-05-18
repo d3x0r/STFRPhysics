@@ -93,6 +93,7 @@ export class Motion {
 	torque = new lnQuat();
 	eTorque = new lnQuat();
 	lastCross = new lnQuat();
+        crossDipole = new lnQuat();
 	lastCross2 = new lnQuat();
 	tmpDir = new THREE.Vector3();
 	
@@ -134,13 +135,15 @@ export class Motion {
 		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
-		if( l1 > 30 ) return;
+		if( l1 > 50 ) return;
 		this.affectors++;
 		const l2 = motion.dipoleVec.length();
 
 		// compute angle of my position vs target dipole direction
 		const dot = ( tmpDir.x*otherPole.x + tmpDir.y*otherPole.y + tmpDir.z*otherPole.z )
 			/ (l1*l2);
+
+		
 
 		/// dot == 1 : 0 degrees, up to dot = -1 at pi (180 degrees) and then it's times 2  
 		// at 90 degrees a dipole is facing 180 degrees opposing, 
@@ -199,10 +202,48 @@ export class Motion {
 		const accScalar = Math.cos( this.lastCross2.θ );
 
 		// scale by N/r^2 for distance falloff
-		this.eTorque.add( this.lastCross2, 25/(l1*l1) );
+		this.eTorque.add( this.lastCross2, 50/(l1*l1) );
 		
-		if( Motion.freeMoveAccel )
-			this.acceleration.addScaledVector( tmpDir, 3*accScalar/(l1*l1) );
+		if( Motion.freeMoveAccel ) {
+
+                    if(0)
+                        if( l1 < 3 ) {
+                                tmp2.x = otherPole.x;
+                                tmp2.y = otherPole.y;
+                                tmp2.z = otherPole.z;
+                                tmp2.dirty = true;
+                                tmp1.cross( tmp2.update(), this.crossDipole );
+
+				const realDot = otherPole.x*relPole.x + otherPole.y*relPole.y + otherPole.z*relPole.z;
+				const ofsAngle2 = Math.acos(realDot)*2;
+
+				this.crossDipole.θ = ofsAngle2;
+				this.crossDipole.x = this.crossDipole.nx * this.crossDipole.θ;
+				this.crossDipole.y = this.crossDipole.ny * this.crossDipole.θ;
+				this.crossDipole.z = this.crossDipole.nz * this.crossDipole.θ;
+                               if(0)
+				if( dot < 0 ) {
+				        this.eTorque.add( this.crossDipole, 1 );
+                                }else {
+					this.eTorque.add( this.crossDipole, -1 );
+                                }
+
+                                ///  really ths is an acceleration around the body...
+                                // more because of a physical interaction and the nearness of one pole or the other.
+				
+                                // there is a raidcal change of force on the equator, it goes from absolute zero to maximal very quickly
+                                const speedNormal = ( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z )
+                                   	/ (this.speed.length() * tmpDir.length() );
+
+			        this.speed.x -= this.speed.x * speedNormal;
+			        this.speed.y -= this.speed.y * speedNormal;
+			        this.speed.z -= this.speed.z * speedNormal;
+
+				this.acceleration.addScaledVector( tmpDir, -1*speedNormal );
+                        }
+                        else
+				this.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
+                }
 	}
 	
 	affectAlignPoles( motion, inverse, delta ) {
