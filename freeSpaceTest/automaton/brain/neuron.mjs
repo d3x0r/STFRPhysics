@@ -297,6 +297,7 @@ export class External extends Neuron {
 
 //-------------------------------------------------------------------------------
 
+
 export class Exporter  extends Neuron{
 	#cb = null;
 	constructor( brain, cb ) {
@@ -304,6 +305,9 @@ export class Exporter  extends Neuron{
 
 		this.#cb = cb;
 		this.type = "Exporter";
+	}
+	setCb( cb ) {
+		this.#cb = cb;
 	}
 	output(n) { 
 		var outval = this.#cb(n); 

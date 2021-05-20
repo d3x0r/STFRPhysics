@@ -388,7 +388,7 @@ Board.prototype.UnendPath = function( )
 
 
 
-Board.prototype.AddLayer = function(  peice, x, y )
+Board.prototype.AddLayer = function(  peice, x, y, psv )
 {
 	//uintptr_t psv = peice.Create();
 	// at some point I have to instance the peice to have a neuron...
@@ -399,13 +399,15 @@ Board.prototype.AddLayer = function(  peice, x, y )
 
 	var size = peice.getsize( );//&rows, &cols );
 	var hot = peice.gethotspot( );
+
 	console.log( ("hotspot offset of created cell is %d,%d so layer covers from %d,%d to %d,%d,")
 				, hot.x, hot.y
 				, x-hot.x, y-hot.y
 				, x-hot.x+size.cols, y-hot.y+size.rows );
 	//peice.psvCreate = psv; // kinda the wrong place for this but we abused this once upon a time.
 	
-	var pl = new Layer( this, peice, x, y, size.cols, size.rows, hot.x, hot.y );
+	var pl = new Layer( this, peice, x, y, size.cols, size.rows, hot.x, hot.y, psv );
+
 	// should be portioned...
 	pl.link_top(this.rootLayer);
 	
@@ -413,9 +415,12 @@ Board.prototype.AddLayer = function(  peice, x, y )
 	return pl;
 }
 
-Board.prototype.PutPeice = function(  peice, x, y )
+Board.prototype.PutPeice = function(  peice, x, y, psv )
 {
-	const layer = this.AddLayer( peice, x, y );
+	const layer = this.AddLayer( peice, x, y, psv );
+	if( this.events["added"] )
+		this.events["added"]( peice, layer.psvInstance );
+
 	return layer.psvInstance;
 }
 

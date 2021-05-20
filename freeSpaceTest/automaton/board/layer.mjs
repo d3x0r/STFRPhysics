@@ -67,19 +67,18 @@ export const  LINK_VIA_END = 1
 
 
 //class LAYER
-export function Layer( board, peice,  _x,  _y, _w,  _h,  ofsx,  ofsy )
+export function Layer( board, peice,  _x,  _y, _w,  _h,  ofsx,  ofsy,psv )
 {
 	if(!(this instanceof Layer)) return new Layer(board,peice,_x,_y,_w,_h, ofsx,ofsy);
 	this.board = board;
 	this.peice = peice||null;
-	this.psvInstance = peice?peice.methods.Create( peice.psvCreate ):null;
-	//this.psvInstance = peice.methods.Create( peice.psvCreate );
+	this.psvInstance = peice?peice.methods.Create( psv ):null;
 
-	function SetPeice( peice )
+	function SetPeice( peice, psv )
 		{
 			this.peice = peice;
 			if( peice )
-				this.psvInstance = peice.methods.Create( peice.psvCreate );
+				this.psvInstance = peice.methods.Create( psv );
 			else
 				this.psvInstance = null;
 		}

@@ -6,7 +6,7 @@ const  MNU_ZOOM       = 1020 // 0, 1, 2 used...
 let popup_x = 0;
 let popup_y = 0;
 
-
+import {Neuron,Exporter,External} from "../brain/neuron.mjs"
 import peices from "./brain.peices.mjs";
 import {DirDeltaMap,DefaultMethods,DefaultViaMethods}  from "./peice.mjs";
 import { Board } from "./board.mjs";
@@ -200,9 +200,7 @@ export class BrainBoard {
 			_this.hMenu.addItem( "Add Neuron", addNeuron );
 			function addNeuron() {
 				console.log( ("Put neuron peice at %d,%d"), popup_x, popup_y );
-				var newN = brainboard.board.PutPeice( brainboard.NeuronPeice, popup_x, popup_y    );
-				if( brainboard.board.events["added"] )
-					brainboard.board.events["added"](  brainboard.NeuronPeice,newN );
+				brainboard.board.PutPeice( brainboard.NeuronPeice, popup_x, popup_y    );
 				return true;
 			}
 
@@ -212,17 +210,13 @@ export class BrainBoard {
 
 			_this.hMenu.addItem( "Add Oscillator", ()=>{
 				console.log( ("Put osc peice at %d,%d"), popup_x, popup_y );
-				var newN = brainboard.board.PutPeice( brainboard.OscillatorPeice,popup_x, popup_y );
-				if( brainboard.board.events["added"] )
-					brainboard.board.events["added"]( brainboard.OscillatorPeice, newN );
+				brainboard.board.PutPeice( brainboard.OscillatorPeice,popup_x, popup_y );
 				return true;
 
 			} );
 			_this.hMenu.addItem( "Add Tick Oscillator", ()=>{
 				console.log( ("Put tickosc peice at %d,%d"), popup_x, popup_y );
-				var newN = brainboard.board.PutPeice( brainboard.TickOscillatorPeice, popup_x, popup_y );
-				if( brainboard.board.events["added"] )
-					brainboard.board.events["added"]( brainboard.TickOscillatorPeice,newN );
+				brainboard.board.PutPeice( brainboard.TickOscillatorPeice, popup_x, popup_y );
 				return true;
 
 			} );
@@ -303,6 +297,7 @@ export class BrainBoard {
 	BuildBrainstemMenus  ( hMenuComponents, pbs, menus, connectors, pathName ) 
 	{
 		hMenuComponents = hMenuComponents || this.hMenuComponents;
+		const This = this;
 		var menu;
 		//for( pbs = brain.first(); pbs; pbs = brain.next() )
 		{
@@ -318,46 +313,75 @@ export class BrainBoard {
 
 
 			pbs.Inputs.list.forEach((connector) => {
-				const inputPeice = this.board.CreatePeice( connector.name, shapes.makePowerOutput()
-					, peices.neuron.cells.width,  peices.neuron.cells.height
-					, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
-					, this.brain_stem_input
-				);
-                                const path = pathName.concat( [ pbs.name, "Input", connector.name ] );
-                                this.peices.set( path.join('/'), inputPeice );
-                                this.peiceNames.set( inputPeice, path.join('/') );
-				connectors.push(connector);
-				menu.addItem( connector.name, ()=>{
-					// add_input_start
-					var newN = this.board.PutPeice( inputPeice, popup_x, popup_y );
-					if( this.board.events["added"] )
-						this.board.events["added"]( inputPeice, newN );
-							
-				});
+				let c = connectors.find( (c)=>{
+					if( c.module===pbs && c.connector===connector )
+						return c;
+				})
+				let item = c;
+				if( !c ) {
+				
+					const inputPeice = this.board.CreatePeice( connector.name, shapes.makePowerOutput()
+						, peices.neuron.cells.width,  peices.neuron.cells.height
+						, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
+						, this.brain_stem_input
+					);
+					item = {
+						module:pbs,
+						connector:connector,
+						peice:inputPeice,
+					}
+					const path = pathName.concat( [ pbs.name, "Input", connector.name ] );
+					this.peices.set( path.join('/'), inputPeice );
+					this.peiceNames.set( inputPeice, path.join('/') );
+					connectors.push(item);
+				}
+				//connectors.push(connector);
+				f( item )
+				function f(item) {
+					menu.addItem( connector.name, ()=>{
+						// add_input_start
+						This.board.PutPeice( inputPeice, popup_x, popup_y, item );								
+					});
+				}
 			});
 			menu = this.comp_menu.addMenu( "outputs")
 			//comp_menu.addItem(MF_STRING | MF_POPUP, menu = popups.CreatePopup(), ("outputs"));
 			this.menus.push(menu);
 
 			pbs.Outputs.list.forEach((connector) => {
-				const inputPeice = this.board.CreatePeice( connector.name, shapes.makePowerOutput()
-					, peices.neuron.cells.width,  peices.neuron.cells.height
-					, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
-					, this.brain_stem_output
-                        		);
+				let c = connectors.find( (c)=>{
+					if( c.module===pbs && c.connector===connector )
+						return c;
+				})
+				let item = c;
+				if( !c ) {
+					const inputPeice = this.board.CreatePeice( connector.name
+						, shapes.makePowerOutput()
+						, peices.neuron.cells.width,  peices.neuron.cells.height
+						, ((peices.neuron.cells.width-1)/2)|0, ((peices.neuron.cells.height-1)/2)|0
+						, this.brain_stem_output
+					);
+					item = {
+						module:pbs,
+						connector:connector,
+						peice:inputPeice,
+					}
 
-                                const path = pathName.concat( [ pbs.name, "Output", connector.name ] );
-                                this.peices.set( path.join('/'), inputPeice );
-                                this.peiceNames.set( inputPeice, path.join('/') );
+					const path = pathName.concat( [ pbs.name, "Output", connector.name ] );
+					this.peices.set( path.join('/'), item.peice );
+					this.peiceNames.set( item.peice, path.join('/') );
+		
+					connectors.push(item);
+				}
 
-				connectors.push(connector);
-				menu.addItem( connector.name, ()=>{
-					// add_input_start
-					var newN = this.board.PutPeice( inputPeice,popup_x, popup_y );
-					if( this.board.events["added"] )
-						this.board.events["added"]( inputPeice, newN );
-							
-				});
+				f( item )
+				function f(item) {
+					menu.addItem( item.connector.name, ()=>{
+						// add_input_start
+						var newN = This.board.PutPeice( item.peice,popup_x, popup_y, item );
+						
+					});
+				}
 				// MNU_ADD_OUTPUT_START + (connectors.length - 1),
 			})
 		}
@@ -912,7 +936,7 @@ class  BrainStemInput extends NEURON_METHODS {
 	setMsg() {
 
 	}	
-    getMsg() {
+    getMsg( connector ) {
 		return { connector:connector.name };
     }
 	ConnectEnd (  psv_to_instance,  x,  y,  peice_from,  psv_from_instance ){
@@ -922,8 +946,24 @@ class  BrainStemInput extends NEURON_METHODS {
 
 //---------------------------------------------------
 
-class   BrainStemOutput extends NEURON_METHODS {
+//---------------------------------------------------
+
+class BrainStemOutputNeuron extends Exporter {
 	#connector = null;
+	constructor( brain, connector ) {
+		super( brain );
+		super.setCb( this.getValue.bind( this ) );
+		this.#connector = connector;
+	}
+	getValue(value) {
+		return this.#connector.connector.ref.value = value * this.#connector.connector.scalar;
+	}
+	setConnector(c) {
+		this.#connector = c;
+	}
+}
+
+class   BrainStemOutput extends NEURON_METHODS {
 
 	constructor (newbrainboard)
 	{
@@ -933,19 +973,54 @@ class   BrainStemOutput extends NEURON_METHODS {
 		this.brainboard = newbrainboard;
 	}
 
-	Create(  psvExtra )
+	Create( connector )
 	{
 		//brainboard.create_Output_type = (POUTPUT_Output)psvExtra;
 		//brainboard.create_Output_type.flags.bOutput = 0;
 		//console.log( ("Creating a new Output (peice instance)") );
-		return new this.brainboard.brain.Exporter( this.brainboard.brain, (value)=>{
+		return { o : new BrainStemOutputNeuron( this.brainboard.brain, connector ),
+				 connector:connector }
+			
+	}
+	setMsg( psv, arg ) {
+		super.setMsg( psv.o, arg );
+		const bs = this.brainboard.brain.brainStems.find( (m)=>{
+			if( m.name === arg.bs )
+				return true;
+			return false;
+		});
+		if( bs ) {
+			const out = bs.Outputs.list.find( (o)=>{
+				if( o.name === arg.c )
+					return true;
+				return false;
+			})
+			if( out ) {
+				psv.connector = {
+					connector: out,
+					module: bs,
+					peice: this.master
+				}
+				psv.o.setConnector( psv.connector.connector );
+				//psv.connector.ref = out;
+				return psv;
+			}
+		}
+		console.log( "Export connector is not connected...");
+	}
+	getMsg( io ) {
 
-						return this.#connector.ref.value = value * this.#connector.scalar;
-					} );
+		return Object.assign( super.getMsg(io.o)
+			, { bs:io.connector.module.name, c:io.connector.connector.name } );
+		//return io
+	}
+	ConnectEnd(  psv_to_instance,  x,  y
+		,  peice_from,  psv_from_instance ){
+		return super.ConnectEnd( psv_to_instance.o, x, y, peice_from, psv_from_instance );
 	}
 	ConnectBegin(  psv_to_instance,  x,  y
 		,  peice_from,  psv_from_instance ){
-			return false;
+		return false;
 	}
 }
 

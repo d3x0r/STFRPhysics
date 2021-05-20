@@ -1336,6 +1336,10 @@ function createPopupMenu() {
 		},
 		reset() {
 			this.hide(true);
+			let  n;
+			while( n = menu.container.childNodes[0] ){
+				n.remove();
+			}
 			//console.log( "hide everything?" );	
 		}
 	};

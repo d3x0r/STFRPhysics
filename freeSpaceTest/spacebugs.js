@@ -393,7 +393,7 @@ function addDipoles() {
 	dirs.length  =0;
 	
 	const size = controlForm.objectCount > 3 
-		 ? (5 * Math.sqrt( controlForm.objectCount - 3 ) )
+		 ? (5 * Math.cbrt( controlForm.objectCount - 3 ) )
 		: 5;
 	for( var n = 0; n < controlForm.objectCount; n++ ) {
 		var x;
