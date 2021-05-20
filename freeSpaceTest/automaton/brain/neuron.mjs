@@ -16,6 +16,7 @@ export class Neuron {
 		this.type = "Neuron";
 		this.inputs = [],
 		this.outputs = [];
+		brain.addNode( this );
 	}
 
 	setMsg(msg) {
@@ -305,6 +306,7 @@ export class Exporter  extends Neuron{
 
 		this.#cb = cb;
 		this.type = "Exporter";
+		this.threshold = -Infinity;
 	}
 	setCb( cb ) {
 		this.#cb = cb;

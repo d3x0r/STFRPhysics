@@ -340,7 +340,7 @@ export class BrainBoard {
 				function f(item) {
 					menu.addItem( connector.name, ()=>{
 						// add_input_start
-						This.board.PutPeice( inputPeice, popup_x, popup_y, item );								
+						This.board.PutPeice( item.peice, popup_x, popup_y, item );								
 					});
 				}
 			});
@@ -912,35 +912,69 @@ class  SLIDER_INPUT_METHODS extends NEURON_METHODS {
 
 //---------------------------------------------------
 
+class BrainStemInputNeuron extends External {
+	#connector = null;
+	constructor( brain, connector ) {
+		super( brain );
+		super.setCb( this.#getValue.bind( this ) );
+		this.#connector = connector;
+	}
+	#getValue(value) {
+		if( this.#connector )
+			return this.#connector.connector.ref.value = value * this.#connector.connector.scalar;
+		return 0;
+	}
+	setConnector(c) {
+		this.#connector = c;
+	}
+}
+
 class  BrainStemInput extends NEURON_METHODS {
-	constructor (newbrainboard)
-	{
+	constructor (newbrainboard) {
 		super( newbrainboard );
-		//if( !(this instanceof BrainStemInput) ) return new BrainStemInput(newbrainboard);
-		//NEURON_METHODS.call( this, newbrainboard );
-		this.brainboard = newbrainboard;
 	}
 
-	Create (  psvExtra )
-	{
-		//brainboard.create_input_type = (POUTPUT_INPUT)psvExtra;
-		//brainboard.create_input_type.flags.bOutput = 0;
-		//console.log( ("Creating a new input (peice instance)") );
-		return new this.brainboard.brain.External( this.brainboard.brain
-                		, ()=>{
-							const v = connector.ref.value / connector.scalar;
-							return v;
-					} );
+	Create ( connector ) {
+		return { o : new BrainStemInputNeuron( this.brainboard.brain, connector ),
+			connector:connector }
 	}
 
-	setMsg() {
+	setMsg( io, arg ) {
+		super.setMsg( io, data)
+		const bs = this.brainboard.brain.brainStems.find( (m)=>{
+			if( m.name === arg.bs )
+				return true;
+			return false;
+		});
+		if( bs ) {
+			const input = bs.Inputs.list.find( (o)=>{
+				if( o.name === arg.c )
+					return true;
+				return false;
+			})
+			if( input ) {
+				io.connector = {
+					connector: input,
+					module: bs,
+					peice: this.master
+				}
+				io.o.setConnector( io.connector );
+				//psv.connector.ref = out;
+				return io;
+			}
+		}
 
 	}	
-    getMsg( connector ) {
-		return { connector:connector.name };
+    getMsg( io ) {
+		return Object.assign( super.getMsg(io.o)
+			, { bs:io.connector.module.name, c:io.connector.connector.name } );
     }
 	ConnectEnd (  psv_to_instance,  x,  y,  peice_from,  psv_from_instance ){
 			return false;
+	}
+	ConnectBegin(  psv_to_instance,  x,  y
+		,  peice_from,  psv_from_instance ){
+		return super.ConnectEnd( psv_to_instance.o, x, y, peice_from, psv_from_instance );
 	}
 }
 
@@ -952,11 +986,13 @@ class BrainStemOutputNeuron extends Exporter {
 	#connector = null;
 	constructor( brain, connector ) {
 		super( brain );
-		super.setCb( this.getValue.bind( this ) );
+		super.setCb( this.#setValue.bind( this ) );
 		this.#connector = connector;
 	}
-	getValue(value) {
-		return this.#connector.connector.ref.value = value * this.#connector.connector.scalar;
+	#setValue(value) {
+		if( this.#connector )
+			return this.#connector.connector.ref.value = value * this.#connector.connector.scalar;
+		return 0;
 	}
 	setConnector(c) {
 		this.#connector = c;
@@ -965,22 +1001,13 @@ class BrainStemOutputNeuron extends Exporter {
 
 class   BrainStemOutput extends NEURON_METHODS {
 
-	constructor (newbrainboard)
-	{
+	constructor (newbrainboard) {
 		super( newbrainboard );
-		//if( !(this instanceof BrainStemOutput) ) return new BrainStemOutput(newbrainboard);
-		//NEURON_METHODS.call( this, newbrainboard );
-		this.brainboard = newbrainboard;
 	}
 
-	Create( connector )
-	{
-		//brainboard.create_Output_type = (POUTPUT_Output)psvExtra;
-		//brainboard.create_Output_type.flags.bOutput = 0;
-		//console.log( ("Creating a new Output (peice instance)") );
+	Create( connector ) {
 		return { o : new BrainStemOutputNeuron( this.brainboard.brain, connector ),
 				 connector:connector }
-			
 	}
 	setMsg( psv, arg ) {
 		super.setMsg( psv.o, arg );
@@ -1001,7 +1028,7 @@ class   BrainStemOutput extends NEURON_METHODS {
 					module: bs,
 					peice: this.master
 				}
-				psv.o.setConnector( psv.connector.connector );
+				psv.o.setConnector( psv.connector );
 				//psv.connector.ref = out;
 				return psv;
 			}

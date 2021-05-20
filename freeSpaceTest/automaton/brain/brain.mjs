@@ -121,12 +121,12 @@ export class Brain {
 			else
 				this.#roots.forEach( n=>n.value );
 		}
-		dupNeuron(n){
-			var newN = n.clone();
-			this.#neurons.push( newN );
+		addNode(n) {
+			this.#neurons.push(n);
 			this.#changed = true;
-			return newN;
-
+		}
+		dupNeuron(n){
+			return n.clone();
 		}
 		dupSynapse(s) {
 			this.#changed = true;
