@@ -206,8 +206,14 @@ export class Motion {
 		
 		if( Motion.freeMoveAccel ) {
 
-                    if(0)
+			// for some distance R
+                    	//   if( l1 < R )
+                    	//      perOne = (R-l1)/l1  // fraction of l1 that is past R
+                    	//
                         if( l1 < 3 ) {
+
+                            	const perOuter = (3 - l1)/l1;
+                            	const perInner = (3 - l1)/3;
                                 tmp2.x = otherPole.x;
                                 tmp2.y = otherPole.y;
                                 tmp2.z = otherPole.z;
@@ -232,14 +238,18 @@ export class Motion {
                                 // more because of a physical interaction and the nearness of one pole or the other.
 				
                                 // there is a raidcal change of force on the equator, it goes from absolute zero to maximal very quickly
-                                const speedNormal = ( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z )
+                                const speedNormal =
+                                   	// remove speed in the direction of the origin.
+                                	( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z )
                                    	/ (this.speed.length() * tmpDir.length() );
 
 			        this.speed.x -= this.speed.x * speedNormal;
 			        this.speed.y -= this.speed.y * speedNormal;
 			        this.speed.z -= this.speed.z * speedNormal;
-
-				this.acceleration.addScaledVector( tmpDir, -1*speedNormal );
+                                this.body.position.x = motion.body.position.x - tmpDir.x * (1+perInner);
+                                this.body.position.y = motion.body.position.y - tmpDir.y * (1+perInner);
+                                this.body.position.z = motion.body.position.z - tmpDir.z * (1+perInner);
+			       // this.acceleration.addScaledVector( tmpDir, -1*speedNormal );
                         }
                         else
 				this.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
