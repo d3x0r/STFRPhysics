@@ -84,16 +84,24 @@ const tmpQ = new lnQuat();
 
 export class Motion {
 	body  = null;
-
-
+	// body.position is position
 	speed = new THREE.Vector3();
+
+	tmp_acceleration = new THREE.Vector3();
+	bs_acceleration = new THREE.Vector3();
 	acceleration = new THREE.Vector3();
+
 	orientation = new lnQuat();
 	rotation = new lnQuat();
+	tmp_torque = new lnQuat();
+	bs_torque = new lnQuat();
 	torque = new lnQuat();
+
 	eTorque = new lnQuat();
+
 	lastCross = new lnQuat();
-        crossDipole = new lnQuat();
+
+    crossDipole = new lnQuat();
 	lastCross2 = new lnQuat();
 	tmpDir = new THREE.Vector3();
 	
@@ -299,14 +307,23 @@ export class Motion {
 		
 	}
                 move ( m, delta ) {
+					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
+					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
+					this.tmp_torque.z = this.torque.z + this.bs_torque.z;
+					this.tmp_torque.dirty = true;
+					this.tmp_torque.update();
+			
+					const acc = this.orientation.apply( this.bs_acceleration, 1 );
+					this.tmp_acceleration.x = this.acceleration.x + acc.x;
+					this.tmp_acceleration.y = this.acceleration.y + acc.y;
+					this.tmp_acceleration.z = this.acceleration.z + acc.z;
 
 					//this.orientation.spin( this.rotation.θ ,this.rotation.freeSpin( this.torque.θ * delta, this.torque ), delta ).exp( this.body.quaternion, 1 );
-					this.torque.update();
-					if( this.torque.θ) {
+					if( this.tmp_torque.θ) {
 						//console.log( "Updating rotation:", this.rotation, this.torque )
 						//tmpQ.set( this.torque ).freeSpin( -this.orientation.θ, this.orientation );
 						//tmpQ.add( this.eTorque )
-						this.rotation.spin( this.torque.θ * delta, this.torque );
+						this.rotation.spin( this.tmp_torque.θ * delta, this.tmp_torque );
 					}
 					this.rotation.update();
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
@@ -314,7 +331,7 @@ export class Motion {
 							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
 
 					
-					this.speed.addScaledVector( this.acceleration, delta );
+					this.speed.addScaledVector( this.tmp_acceleration, delta );
 					var del = this.speed.clone().multiplyScalar( delta );
 					const basis = this.orientation.getBasis();
 					this.body.position.addScaledVector( basis.forward, del.z );
@@ -340,14 +357,23 @@ export class Motion {
 					//this_move.delete();
 				}
                 inertialmove ( m, delta ) {
+					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
+					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
+					this.tmp_torque.z = this.torque.z + this.bs_torque.z;
+					this.tmp_torque.dirty = true;
+					this.tmp_torque.update();
+			
+					const acc = this.orientation.apply( this.bs_acceleration, 1 );
+					this.tmp_acceleration.x = this.acceleration.x + acc.x;
+					this.tmp_acceleration.y = this.acceleration.y + acc.y;
+					this.tmp_acceleration.z = this.acceleration.z + acc.z;
 
 					//this.orientation.spin( this.rotation.θ ,this.rotation.freeSpin( this.torque.θ * delta, this.torque ), delta ).exp( this.body.quaternion, 1 );
-					this.torque.update();
-					if( this.torque.θ) {
+					if( this.tmp_torque.θ) {
 						//console.log( "Updating rotation:", this.rotation, this.torque )
 						//tmpQ.set( this.torque ).freeSpin( -this.orientation.θ, this.orientation );
 						//tmpQ.add( this.eTorque )
-						this.rotation.spin( this.torque.θ * delta, this.torque );
+						this.rotation.spin( this.tmp_torque.θ * delta, this.tmp_torque );
 					}
 					this.rotation.update();
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
@@ -364,7 +390,7 @@ export class Motion {
 					del.delete();
 					*/
 
-					var del = this.acceleration.clone().multiplyScalar( delta );
+					var del = this.tmp_acceleration.clone().multiplyScalar( delta );
 					const basis = this.orientation.getBasis();
 					this.speed.addScaledVector( basis.forward, del.z );
 					this.speed.addScaledVector( basis.up, del.y );
@@ -380,14 +406,24 @@ export class Motion {
 					//this_move.delete();
 				}
                 freemove( m, delta ) {
+					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
+					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
+					this.tmp_torque.z = this.torque.z + this.bs_torque.z;
+					this.tmp_torque.dirty = true;
+					this.tmp_torque.update();
+			
+					const acc = this.orientation.apply( this.bs_acceleration, 1 );
+					this.tmp_acceleration.x = this.acceleration.x + acc.x;
+					this.tmp_acceleration.y = this.acceleration.y + acc.y;
+					this.tmp_acceleration.z = this.acceleration.z + acc.z;
 					
-					var del = this.acceleration.clone().multiplyScalar( delta );
+					var del = this.tmp_acceleration.clone().multiplyScalar( delta );
 					//const basis = this.orientation.getBasis();
 					this.speed.add( del );
 					//this.speed.addScaledVector( basis.forward, del.z );
 					//this.speed.addScaledVector( basis.up, del.y );
 					//this.speed.addScaledVector( basis.right, -del.x );
-
+					
 					del.delete();
 
 					this.body.position.addScaledVector( this.speed, delta );
@@ -397,12 +433,12 @@ export class Motion {
 
 					//tmpQ.set( 0, gtorque.x, gtorque.y, gtorque.z );
 					//tmpQ.add( this.eTorque )
-					this.torque.update();
-					if( this.torque.θ) {
+					//this.tmp_torque.update();
+					if( this.tmp_torque.θ) {
 						//console.log( "Updating rotation:", this.rotation, this.torque )
 						///tmpQ.set( this.torque ).freeSpin( this.orientation.θ, this.orientation );
 						//this.rotation.freeSpin( tmpQ.θ * delta, tmpQ );
-						this.rotation.spin( this.torque.θ * delta, this.torque );
+						this.rotation.spin( this.tmp_torque.θ * delta, this.tmp_torque );
 					}
 					this.rotation.update();
 					if( this.affectors ) {
