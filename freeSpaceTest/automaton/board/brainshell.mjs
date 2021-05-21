@@ -919,9 +919,9 @@ class BrainStemInputNeuron extends External {
 		super.setCb( this.#getValue.bind( this ) );
 		this.#connector = connector;
 	}
-	#getValue(value) {
+	#getValue() {
 		if( this.#connector )
-			return this.#connector.connector.ref.value = value * this.#connector.connector.scalar;
+			return this.#connector.connector.ref.value * this.#connector.connector.scalar;
 		return 0;
 	}
 	setConnector(c) {
@@ -939,16 +939,16 @@ class  BrainStemInput extends NEURON_METHODS {
 			connector:connector }
 	}
 
-	setMsg( io, arg ) {
-		super.setMsg( io, data)
+	setMsg( io, data ) {
+		super.setMsg( io.o, data)
 		const bs = this.brainboard.brain.brainStems.find( (m)=>{
-			if( m.name === arg.bs )
+			if( m.name === data.bs )
 				return true;
 			return false;
 		});
 		if( bs ) {
 			const input = bs.Inputs.list.find( (o)=>{
-				if( o.name === arg.c )
+				if( o.name === data.c )
 					return true;
 				return false;
 			})
@@ -974,7 +974,7 @@ class  BrainStemInput extends NEURON_METHODS {
 	}
 	ConnectBegin(  psv_to_instance,  x,  y
 		,  peice_from,  psv_from_instance ){
-		return super.ConnectEnd( psv_to_instance.o, x, y, peice_from, psv_from_instance );
+		return super.ConnectBegin( psv_to_instance.o, x, y, peice_from, psv_from_instance );
 	}
 }
 

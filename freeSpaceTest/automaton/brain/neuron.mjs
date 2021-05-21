@@ -285,10 +285,15 @@ export class External extends Neuron {
                 this.threshold = -1.0;
 	}
 
+	setCb( cb ) {
+		this.#cb = cb;
+	}
 	output(n) { return n };
 
 	get value() {
-		return this.inputs = this.#cb() 
+		if( this.#cb )
+			return this.input = this.#cb() 
+		return 0;
 	}
 	clone() {
 		return new External( this.brain, this.cb );
