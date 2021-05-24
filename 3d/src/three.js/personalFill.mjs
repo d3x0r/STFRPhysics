@@ -1,6 +1,6 @@
 	
 import * as THREE from "./three.module.js"
-import {lnQuat} from "../lnQuatSq.js"
+import {directedDistance,lnQuat} from "../lnQuatSq.js"
 
 var vector3Pool = [];
 export const Vector3Pool = {
@@ -85,7 +85,7 @@ const tmpQ = new lnQuat();
 export class Motion {
 	body  = null;
 	// body.position is position
-	speed = new THREE.Vector3();
+	speed = new directedDistance();
 
 	tmp_acceleration = new THREE.Vector3();
 	bs_acceleration = new THREE.Vector3();
@@ -103,10 +103,10 @@ export class Motion {
 
     crossDipole = new lnQuat();
 	lastCross2 = new lnQuat();
-	tmpDir = new THREE.Vector3();
+	tmpDir = new lnQuat();
 	
 	dipole = new lnQuat();
-	dipoleVec = new THREE.Vector3();
+	dipoleVec = new lnQuat();
 	targetVec = new THREE.Vector3();
 	tmpDipole = null;
 	tmpOtherDipole = null;
@@ -125,33 +125,37 @@ export class Motion {
 		const tmp1 = new lnQuat();
 		const tmp2 = new lnQuat();
 
+		this.orientation.update();
 		// compute a direction vector between this motion and motion target
 		const tmpDir = this.tmpDir;
-		tmpDir.subVectors( motion.body.position, this.body.position );
-		const l1 = tmpDir.length();
+		tmpDir.x = motion.body.position.x - this.body.position.x;
+		tmpDir.y = motion.body.position.y - this.body.position.y;
+		tmpDir.z = motion.body.position.z - this.body.position.z;
+		tmpDir.dirty = true;
+		tmpDir.update();
+
+		const l1 = tmpDir.θ;
 		// compute my dispole in global coordinates (dipole is directly tied to orientation)
 		this.dipoleVec.x = this.dipole.x;
 		this.dipoleVec.y = this.dipole.y;
 		this.dipoleVec.z = this.dipole.z;
-		const relPole = this.orientation.update().apply( this.dipoleVec );  
+		const relPole = this.orientation.apply( this.dipoleVec );  
 		this.tmpDipole = relPole;
 
 		// compute target dipole global coordinates (dipole is directly tied to orientation)
 		motion.dipoleVec.x = motion.dipole.x;
 		motion.dipoleVec.y = motion.dipole.y;
 		motion.dipoleVec.z = motion.dipole.z;
-		const otherPole = motion.orientation.update().apply( motion.dipoleVec );
+		const otherPole = motion.orientation.apply( motion.dipoleVec );
 
 		this.tmpOtherDipole = otherPole;
 		if( l1 > 50 ) return;
 		this.affectors++;
-		const l2 = motion.dipoleVec.length();
+		const l2 = motion.dipoleVec.θ;//length();
 
 		// compute angle of my position vs target dipole direction
-		const dot = ( tmpDir.x*otherPole.x + tmpDir.y*otherPole.y + tmpDir.z*otherPole.z )
-			/ (l1*l2);
+		const dot = ( tmpDir.nx*otherPole.nx + tmpDir.ny*otherPole.ny + tmpDir.nz*otherPole.nz );
 
-		
 
 		/// dot == 1 : 0 degrees, up to dot = -1 at pi (180 degrees) and then it's times 2  
 		// at 90 degrees a dipole is facing 180 degrees opposing, 
@@ -218,15 +222,18 @@ export class Motion {
                     	//   if( l1 < R )
                     	//      perOne = (R-l1)/l1  // fraction of l1 that is past R
                     	//
-                        if( l1 < 3 ) {
+			const diff = 3;
+				// if length is less than sum of radii
+				// 
+			if( l1 < 3 ) {
 
-                            	const perOuter = (3 - l1)/l1;
-                            	const perInner = (3 - l1)/3;
-                                tmp2.x = otherPole.x;
-                                tmp2.y = otherPole.y;
-                                tmp2.z = otherPole.z;
-                                tmp2.dirty = true;
-                                tmp1.cross( tmp2.update(), this.crossDipole );
+				const perOuter = (3 - l1)/l1;
+				const perInner = (3 - l1)/3;
+				tmp2.x = otherPole.x;
+				tmp2.y = otherPole.y;
+				tmp2.z = otherPole.z;
+				tmp2.dirty = true;
+				tmp1.cross( tmp2.update(), this.crossDipole );
 
 				const realDot = otherPole.x*relPole.x + otherPole.y*relPole.y + otherPole.z*relPole.z;
 				const ofsAngle2 = Math.acos(realDot)*2;
@@ -235,33 +242,39 @@ export class Motion {
 				this.crossDipole.x = this.crossDipole.nx * this.crossDipole.θ;
 				this.crossDipole.y = this.crossDipole.ny * this.crossDipole.θ;
 				this.crossDipole.z = this.crossDipole.nz * this.crossDipole.θ;
-                               if(0)
+                               //if(0)
 				if( dot < 0 ) {
-				        this.eTorque.add( this.crossDipole, 1 );
-                                }else {
+					this.eTorque.add( this.crossDipole, 1 );
+                }else {
 					this.eTorque.add( this.crossDipole, -1 );
-                                }
+                }
 
-                                ///  really ths is an acceleration around the body...
-                                // more because of a physical interaction and the nearness of one pole or the other.
-				
-                                // there is a raidcal change of force on the equator, it goes from absolute zero to maximal very quickly
-                                const speedNormal =
-                                   	// remove speed in the direction of the origin.
-                                	( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z )
-                                   	/ (this.speed.length() * tmpDir.length() );
+					///  really ths is an acceleration around the body...
+					// more because of a physical interaction and the nearness of one pole or the other.
+	
+					// there is a raidcal change of force on the equator, it goes from absolute zero to maximal very quickly
+
+					const stopSpeed = ( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z );
+
+					const otherStopSpeed = (motion.speed.x * tmpDir.x +motion.speed.y * tmpDir.y +motion.speed.z * tmpDir.z );
+
+					const speedNormal =
+						// remove speed in the direction of the origin.
+						( this.speed.x * tmpDir.x +this.speed.y * tmpDir.y +this.speed.z * tmpDir.z )
+						/ (this.speed.θ /*length()*/ * tmpDir.θ );
 
 			        this.speed.x -= this.speed.x * speedNormal;
 			        this.speed.y -= this.speed.y * speedNormal;
 			        this.speed.z -= this.speed.z * speedNormal;
+
                                 this.body.position.x = motion.body.position.x - tmpDir.x * (1+perInner);
                                 this.body.position.y = motion.body.position.y - tmpDir.y * (1+perInner);
                                 this.body.position.z = motion.body.position.z - tmpDir.z * (1+perInner);
 			       // this.acceleration.addScaledVector( tmpDir, -1*speedNormal );
                         }
-                        else
-				this.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
-                }
+                     //else
+				//this.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
+        }
 	}
 	
 	affectAlignPoles( motion, inverse, delta ) {
@@ -337,7 +350,7 @@ export class Motion {
 					this.body.position.addScaledVector( basis.forward, del.z );
 					this.body.position.addScaledVector( basis.up, del.y );
 					this.body.position.addScaledVector( basis.right, -del.x );
-					del.delete();
+					//del.delete();
 					
 						/*
 					var del = this.acceleration.clone().multiplyScalar( delta );
@@ -392,6 +405,7 @@ export class Motion {
 
 					var del = this.tmp_acceleration.clone().multiplyScalar( delta );
 					const basis = this.orientation.getBasis();
+
 					this.speed.addScaledVector( basis.forward, del.z );
 					this.speed.addScaledVector( basis.up, del.y );
 					this.speed.addScaledVector( basis.right, -del.x );
