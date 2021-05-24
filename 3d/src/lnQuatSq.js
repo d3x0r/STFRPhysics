@@ -844,8 +844,24 @@ lnQuat.prototype.accel = function( v, steps, internal ) {
 }
 
 lnQuat.prototype.apply = function( v ) {
+	const q = this.update();
 	//return this.applyDel( v, 1.0 );
 	if( v instanceof lnQuat ) {
+
+		const c = Math.cos(q.θ);
+		const s = Math.sin(q.θ);
+
+		const qx = q.nx, qy = q.ny, qz = q.nz;
+		const vx = v.x , vy = v.y , vz = v.z;
+		// (1-cos theta) * dot
+		// 1-cos theta * cos(angle between vectors)
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
+		v.x = vx*c + s*(qy * vz - qz * vy) + qx * dot;
+		v.y = vy*c + s*(qz * vx - qx * vz) + qy * dot;
+		v.z = vz*c + s*(qx * vy - qy * vx) + qz * dot;
+		v.dirty = true;
+		return v.update();
 		const this_ = this;
 		const result = new lnQuat(
 			function() {
@@ -856,8 +872,6 @@ lnQuat.prototype.apply = function( v ) {
 		return result.refresh();
 	}
 
-	const q = this;
-	this.update();
 	// 3+2 +sqrt+exp+sin
 	if( !q.θ ) {
 		// v is unmodified.	
@@ -1806,6 +1820,27 @@ function longslerp(a, b, t, target ) {
       }
       return v;
     }
+
+export class directedDistance extends lnQuat {
+
+	addScaledVector( v, s ) {
+            this.x += v.x*s;
+            this.y += v.y*s;
+            this.z += v.z*s;
+            this.dirty = true;
+            return this;
+        }
+        multiplyScalar(s) {
+            this.x *= s;
+            this.y *= s;
+            this.z *= s;
+            this.dirty = true;
+            return this;
+            }
+        clone() {
+            return new directedDistance( this );
+        }
+}
 
 export {lnQuat}
 export {slerp}
