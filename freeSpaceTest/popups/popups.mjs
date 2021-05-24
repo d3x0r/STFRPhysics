@@ -72,20 +72,34 @@ function addCaptionHandler( c, popup_ ) {
 		function mouseMove(evt){
 			const state = globalMouseState.activeFrame;
 			if( state ) {
-   	  		if( state.dragging ) {
-				evt.preventDefault();
-				var pRect = state.frame.getBoundingClientRect();
-				//var x = evt.clientX - pRect.left;
-				//var y = evt.clientY - pRect.top;
-				var x = evt.x - pRect.left;
-				var y = evt.y - pRect.top;
-				state.frame.style.left =parseInt(state.frame.style.left) + (x-state.x);
-				state.frame.style.top= parseInt(state.frame.style.top) +(y-state.y);
-				if( state.frame.id ) {
-					localStorage.setItem( state.frame.id + "/x", popup.divFrame.style.left );
-					localStorage.setItem( state.frame.id + "/y", popup.divFrame.style.top );
+   	   	  		if( state.dragging ) {
+					evt.preventDefault();
+					var pRect = state.frame.getBoundingClientRect();
+					//var x = evt.clientX - pRect.left;
+					//var y = evt.clientY - pRect.top;
+					var x = evt.x - pRect.left;
+					var y = evt.y - pRect.top;
+					state.frame.style.left =parseInt(state.frame.style.left) + (x-state.x);
+					state.frame.style.top= parseInt(state.frame.style.top) +(y-state.y);
+					if( state.frame.id ) {
+						localStorage.setItem( state.frame.id + "/x", popup.divFrame.style.left );
+						localStorage.setItem( state.frame.id + "/y", popup.divFrame.style.top );
+					}
 				}
-			}
+   	   	  		if( state.sizing ) {
+					evt.preventDefault();
+					var pRect = state.frame.getBoundingClientRect();
+					//var x = evt.clientX - pRect.left;
+					//var y = evt.clientY - pRect.top;
+					var x = evt.x - pRect.left;
+					var y = evt.y - pRect.top;
+					state.frame.style.left =parseInt(state.frame.style.left) + (x-state.x);
+					state.frame.style.top= parseInt(state.frame.style.top) +(y-state.y);
+					if( state.frame.id ) {
+						localStorage.setItem( state.frame.id + "/x", popup.divFrame.style.left );
+						localStorage.setItem( state.frame.id + "/y", popup.divFrame.style.top );
+					}
+				}
 			}
 		}
 		function mouseDown(evt){
@@ -1351,6 +1365,422 @@ function createPopupMenu() {
 	//document.body.appendChild( menu.container );
 	return menu;
 }
+
+
+export class GraphicFrame extends Popup {
+
+    constructor () {
+    	//const defaultFont1 = "20px Arial";
+        super(null,null);
+
+        const appCanvas = this.divContent;
+
+var rect = appCanvas.getBoundingClientRect();
+appCanvas.width = rect.right-rect.left;//window.innerWidth;
+appCanvas.height = rect.bottom-rect.top;//window.innerHeight;
+var appSizing;
+var usingSection;
+var appDragging;
+
+
+appCanvas.addEventListener( "mousemove", mouseMove );
+appCanvas.addEventListener( "mouseup", mouseUp );
+appCanvas.addEventListener( "mousedown", mouseDown );
+
+var frames = [];
+
+var prior_buttons;
+const _MK_LBUTTON = 1;
+const _MK_RBUTTON = 2;
+const _MK_MBUTTON = 4;
+
+	var zz = 0;
+function drawScreen() {
+	appCtx.clearRect(0,0,appCanvas.width,appCanvas.height);
+	frames.forEach( frame=>{
+		appCtx.drawImage( frame.canvas, frame.x, frame.y );//, frame.width, frame.height, frame.w, frame.h, frame.width, frame.height );
+	} );
+}
+
+function mouse( x,y,b ) {
+	const rect = appCanvas.getBoundingClientRect();
+	const w = rect.right-rect.left;//window.innerWidth;
+	const h = rect.bottom-rect.top;//window.innerHeight;
+	const cx = (((x-rect.left)));
+	const cy = (((y-rect.top)));
+	const px = (((x-rect.left)-(w/2.0))) * 2;
+	const py = (((rect.bottom-y)-(h/2.0))) * 2;
+      
+
+	//console.log( "mouse:",cx, cy, b );
+	var wasMouse;
+	var onFrame;
+	if( appDragging ) {
+		var m = appDragging.getMouse( cx, cy );
+		appDragging.x += m.x - appDragging.startX;
+		appDragging.y += m.y - appDragging.startY;
+	}
+
+	if( ( onFrame = appSizing && ( ( wasMouse = appSizing.getMouse( cx, cy ) ), wasMouse.section = usingSection, appSizing ) ) 
+	  || ( onFrame = frames.find( frame=>wasMouse=frame.isMouse( cx, cy ) ) ) ) {
+		//console.log( "frameMouse:", wasMouse, x,y, b, prior_buttons );
+		
+		switch( wasMouse.section ) {
+		default: 
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appDragging = onFrame;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			}
+	                else if( !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				appDragging = null;
+			}
+			//console.log( "Section not found:", wasMouse.section );
+			break;
+		case 1:
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				// last left.
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+					onFrame.setWidth( onFrame.w - ( wasMouse.x - onFrame.startX ) );
+					onFrame.x += wasMouse.x - onFrame.startX;
+			}
+			break;
+		case 2: // right side, center
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				onFrame.setWidth( onFrame.w + ( wasMouse.x - onFrame.startX ) );
+				onFrame.startX = wasMouse.x;
+			}
+			break;
+		case 4:
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				// last left.
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				onFrame.setHeight( onFrame.h - (wasMouse.y - onFrame.startY) );
+				onFrame.y += wasMouse.y - onFrame.startY;
+			}
+			break;
+		case 8:
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				// last left.
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				onFrame.setHeight( onFrame.h + (wasMouse.y - onFrame.startY) );
+				onFrame.startY = wasMouse.y;
+			}
+			break;
+		case 1+4: // top left
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				// last left.
+				onFrame.setWidth( onFrame.w - ( wasMouse.x - onFrame.startX ) );
+				onFrame.setHeight( onFrame.h - (wasMouse.y - onFrame.startY ) );
+				onFrame.x += wasMouse.x - onFrame.startX;
+				onFrame.y += wasMouse.y - onFrame.startY;
+			}
+			break;
+		case 2 + 4: // right side, upper corner
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				onFrame.setWidth( onFrame.w + ( wasMouse.x - onFrame.startX ) );
+				onFrame.startX = wasMouse.x;
+
+				onFrame.setHeight( onFrame.h - ( wasMouse.y - onFrame.startY ) );
+				onFrame.y += wasMouse.y - onFrame.startY;
+			}
+			break;
+
+		case 1+8: // top left
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				// last left.
+				onFrame.setWidth( onFrame.w - ( wasMouse.x - onFrame.startX ) );
+				onFrame.setHeight( onFrame.h + wasMouse.y - onFrame.startY );
+				onFrame.x += wasMouse.x - onFrame.startX;
+				onFrame.startY = wasMouse.y;
+			}
+			break;
+		case 2 + 8: // right side, upper corner
+	                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = onFrame;
+				usingSection = wasMouse.section;
+				onFrame.startX = wasMouse.x;
+				onFrame.startY = wasMouse.y;
+			} else if( appSizing && !( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				appSizing = null;
+	                } else if( appSizing && ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+				onFrame.setWidth( onFrame.w + ( wasMouse.x - onFrame.startX ) );
+				onFrame.startX = wasMouse.x;
+				onFrame.setHeight( onFrame.h + (wasMouse.y - onFrame.startY) );
+				onFrame.startY = wasMouse.y;
+			}
+			break;
+		}
+		drawScreen();
+	}
+
+	if( !wasMouse.section && onFrame ) {
+		//onFrame.mouse(
+	}
+
+	{ // LEFT BTUTTON
+                if( ( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+			// start left.
+		}
+                else if( ( b & _MK_LBUTTON ) && (prior_buttons & _MK_LBUTTON ) ) {
+			// drag left.
+		}
+                else if( !( b & _MK_LBUTTON ) && !(prior_buttons & _MK_LBUTTON ) ) {
+			// last left.
+		}
+
+	}
+
+	prior_buttons = b;
+}
+
+var _buttons = 0;
+function mouseMove( evt ) {
+	evt.preventDefault();
+	mouse( evt.clientX, evt.clientY, _buttons );
+}
+function mouseUp( evt ) {
+	evt.preventDefault();
+	_buttons = evt.buttons;
+	mouse( evt.clientX, evt.clientY, _buttons );
+}
+function mouseDown( evt ) {
+	evt.preventDefault();
+	_buttons = evt.buttons;
+	mouse( evt.clientX, evt.clientY, _buttons );
+}
+
+
+
+//-----------------------------------------------------------------------
+
+function makeFrame( w, h, _mouse, _draw ) {
+	var frameFrame;
+	var leftWidth = 54;		
+	var topWidth = 54;
+	var rightWidth = 58;
+	var bottomWidth = 55;
+	var mouseSection = 0;
+	var draw = _draw;
+	var mouse = _mouse;
+	var frame = { canvas : document.createElement( "canvas" )
+		, ctx : null
+		, w: w
+		, h : h
+		, x: 0
+		, y : 0
+		, sx : leftWidth
+		, sy : topWidth
+		, sw : w - ( leftWidth+rightWidth )
+		, sh : h - ( topWidth+bottomWidth )
+		, sizing : false
+		, dragging : false
+		, startX : 0
+		, startY : 0
+		, write() {
+			appContext.drawImage( this.canvas, this.x, this.y );	
+		}
+		, setFrame( image ) {
+			var img = document.createElement( "IMG" );
+			img.src=image;
+			img.onload = function() {
+				frameFrame = img;
+				console.log( "have image loaded?" );
+				drawFrame();
+			}
+		}
+		, setWidth( w ) {
+			this.w = w;
+			this.sw = this.w - (leftWidth+rightWidth);
+			this.canvas.width = this.w;
+			drawFrame();
+		}
+		, setHeight( h ) {
+			this.h = h;
+			this.sh = this.h - (topWidth+bottomWidth);
+			this.canvas.height = this.h;
+			drawFrame();
+		}
+		, setDraw( cb ) { draw = cb }
+		, getMouse( x, y ) {
+			var sx, sy, tx, ty, farx = false, fary = false;
+
+			ty=y-this.y;
+			if( (tx=x-this.x) > leftWidth && (ty) > topWidth ) {
+				sx=tx-leftWidth;
+				sy=ty-topWidth;
+				if( (true,tx) < ( this.w - (leftWidth+rightWidth) )  && (true,ty) < ( this.h - (topWidth+bottomWidth) ) ) {
+					return { frame:false, x:tx, y:ty };
+				}
+			}
+			var section = 0;
+			if( tx < leftWidth )
+				section += 1;
+			else if( tx > this.w - leftWidth )
+				section += 2;
+
+			if( ty < topWidth )
+				section += 4;
+			else if( ty > this.h - topWidth )
+				section += 8;
+
+			return { frame:true, section:section, x:tx, y:ty };
+		}
+		, isMouse( x, y ) {
+			var sx, sy, tx, ty, farx = false, fary = false;
+			
+
+			if( x > this.x && y > this.y && x < (this.x+this.w) && y < (this.y+this.h) ) {
+				ty=y-this.y;
+				if( (tx=x-this.x) > leftWidth && (ty) > topWidth ) {
+					sx=tx-leftWidth;
+					sy=ty-topWidth;
+					if( (true,tx) < ( this.w - (leftWidth+rightWidth) )  && (true,ty) < ( this.h - (topWidth+bottomWidth) ) ) {
+						return { frame:false, x:tx, y:ty };
+					}
+				}
+				var section = 0;
+				if( tx < leftWidth )
+					section += 1;
+				else if( tx > this.w - leftWidth )
+					section += 2;
+
+				if( ty < topWidth )
+					section += 4;
+				else if( ty > this.h - topWidth )
+					section += 8;
+
+				return { frame:true, section:section, x:tx, y:ty };
+			}
+			return null;
+		}
+	};
+	frames.push( frame );
+	frame.canvas.width = w;
+	frame.canvas.height = h;
+	
+	frame.ctx = frame.canvas.getContext( "2d" );
+	frame.ctx.font = defaultFont1;
+	//frame.ctx.fillRect( 0,0,100,100 );
+	//appCtx.fillRect( 0,0,100,100 );
+
+	function drawFrame() {
+		if( !frameFrame )  return;
+		var src = frameFrame;
+		var ctx = frame.ctx;
+		var outCtx = appCtx;//frame.ctx;
+		//------------ corners ------------------
+
+		ctx.drawImage(frameFrame, 0, 0, leftWidth, topWidth, 0, 0, leftWidth, topWidth );
+		
+		ctx.drawImage(frameFrame, frameFrame.width-rightWidth, 0, leftWidth, topWidth, frame.canvas.width-rightWidth, 0, leftWidth, topWidth );
+
+		ctx.drawImage(frameFrame, 0, src.height-bottomWidth, leftWidth, topWidth, 0, frame.canvas.height - bottomWidth, leftWidth, bottomWidth );
+
+		ctx.drawImage(frameFrame, frameFrame.width-rightWidth, src.height-bottomWidth, rightWidth, bottomWidth
+			, frame.canvas.width-rightWidth, frame.canvas.height - bottomWidth, rightWidth, bottomWidth );
+
+		// top-bottom
+		ctx.drawImage(frameFrame, leftWidth, 0
+			, src.width-(leftWidth+rightWidth), topWidth
+			, leftWidth, 0, frame.canvas.width-(leftWidth+rightWidth), topWidth );
+
+		ctx.drawImage(frameFrame, leftWidth, src.height-bottomWidth
+			, src.width-(leftWidth+rightWidth), bottomWidth
+			, leftWidth, frame.canvas.height-bottomWidth
+			, frame.canvas.width-(leftWidth+rightWidth), bottomWidth );
+
+		// left-right
+		ctx.drawImage(frameFrame, 0, topWidth
+			, leftWidth, src.height-(topWidth+bottomWidth)
+			, 0, topWidth
+			, leftWidth, frame.canvas.height-(topWidth+bottomWidth) );
+
+		ctx.drawImage(frameFrame, src.width - rightWidth, topWidth
+			, rightWidth, src.height-(topWidth+bottomWidth)
+			, frame.canvas.width - rightWidth, topWidth
+			, rightWidth, frame.canvas.height-(topWidth+bottomWidth) );
+
+		ctx.drawImage(frameFrame
+			, leftWidth, topWidth, src.width-(leftWidth+rightWidth), src.height-(topWidth+bottomWidth)
+			, leftWidth, topWidth, frame.canvas.width-(leftWidth+rightWidth), frame.canvas.height-(topWidth+bottomWidth) );
+
+
+		renderLabel(ctx, "LABEL", 50, 75 );
+		
+		outCtx.drawImage( frame.canvas, frame.x, frame.y );//, frame.width, frame.height, frame.w, frame.h, frame.width, frame.height );
+	
+		if( draw )
+			draw();
+//		appCtx.drawImage( frameFrame, 0, 0 );
+	}
+}
+
+
+	}
+}
+
+/*
+ //-------------------------------------------------------------
+
+function makeApp() {
+	var widgets = makeFrame( 200, 500 );
+	var tools = makeFrame( 800, 600 );
+	tools.x = widgets.w;
+	widgets.setFrame( "WindowFrame-LightWoodFilled.png" );
+
+	tools.setFrame( "WindowFrame-LightWoodFilled.png" );
+
+	makeNameTray();
+}
+
+*/
 
 
 export {popups};

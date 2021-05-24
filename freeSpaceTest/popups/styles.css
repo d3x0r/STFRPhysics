@@ -104,7 +104,7 @@
 .formContainer {
 	visibility:visible;
 	padding:0px;border-color:black;border-width:2px;
-	border-style:solid;z-index:100;position:relative;
+	border-style:solid;z-index:100;position:absolute;
 	left:;
 	top:25%;
 	width:max-content;

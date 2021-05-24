@@ -19,10 +19,10 @@ export function NaturalCamera( object, domElement ) {
 
 	// 65 /*A*/, 83 /*S*/, 68 /*D*/
 	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40
-        , A:65, S:83, D:68, W:87, SPACE:32, C:67 };
+        , A:65, S:83, D:68, W:87, SPACE:32, C:67, E:69, Q:81 };
 
 	// internals
-	this.moveSpeed = 100* 12 * 0.0254;
+	this.moveSpeed = 10 * 12 * 0.0254;
 	const scope = this;
 	
 	// 2d scaled screen point - prior position
@@ -65,7 +65,7 @@ export function NaturalCamera( object, domElement ) {
 		if( !scope.userRotate ) return;
 		touchUpdate();
 		const rt = scope.motion.orientation.right();
-		if( phiDelta || thetaDelta || rt.y ){
+g		if( phiDelta || thetaDelta || rt.y ){
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
 
@@ -158,9 +158,11 @@ export function NaturalCamera( object, domElement ) {
 				keyEvent( event, true );
 			break;
             case scope.keys.SPACE:
+            case scope.keys.E:
                 scope.motion.speed.y = self.moveSpeed;
                 break;
             case scope.keys.C:
+            case scope.keys.Q:
                 scope.motion.speed.y = -self.moveSpeed;
 				break;
 			case scope.keys.A:
@@ -188,9 +190,11 @@ if( !scope.userRotate ) return;
 				keyEvent( event, false );
 			break;
             case scope.keys.SPACE:
+            case scope.keys.E:
                 scope.motion.speed.y = 0;
                 break;
             case scope.keys.C:
+            case scope.keys.Q:
                 scope.motion.speed.y = 0;
                 break;
 

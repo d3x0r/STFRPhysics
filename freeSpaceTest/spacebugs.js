@@ -51,7 +51,7 @@ var xorg = -0.5 + ( -0.5/16 ) + ( 0.5 / 3200 );
 var yorg = 0.5;
 var display_scale = 1.0/3200000.0;
 
-const 	moveSpeed = 10* 12 * 0.0254;
+const 	moveSpeed = 12 * 0.0254;
 
 
 var ofsx, ofsy;
@@ -271,9 +271,11 @@ function handleKeyEvents( event, isDown ) {
 			break;
 
             case keys.SPACE:
+            case keys.E:
                 myMotion.speed.y = moveSpeed;
                 break;
             case keys.C:
+            case keys.Q:
                 myMotion.speed.y = -moveSpeed;
 				break;
 			case keys.A:
@@ -331,7 +333,8 @@ function init() {
 		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
 
 
-		camera.position.z = 50;
+		camera.position.z = -1;
+		camera.position.y = 0.75;
 		//camera.matrix.origin.z = 3;
 		camera.matrixWorldNeedsUpdate = true;
 
@@ -339,7 +342,7 @@ function init() {
 
 		 // for phong hello world test....
  		var light = new THREE.PointLight( 0xffFFFF, 1, 10000 );
- 		light.position.set( 0, 0, 1000 );
+ 		light.position.set( 0, 0, 100 );
  		scene.add( light );
 
 		renderer = new THREE.WebGLRenderer();
@@ -349,6 +352,8 @@ function init() {
 
 		controlNatural = new NaturalCamera( camera, renderer.domElement );
 		controlNatural.enable( handleKeyEvents  );
+                controlNatural.motion.orientation.set( 0, 0, Math.PI, 0 ).update();
+                controlNatural.motion.orientation.exp( camera.quaternion );
 
 		//controlOrbit = new THREE.OrbitControls( camera, renderer.domElement );
 		//controlOrbit.enable();
@@ -498,9 +503,9 @@ class SmartBody {
 		ntr_face.addInput( "Speed Y", new ref( this.m.rotation, "y" ), 1.0 );
 		ntr_face.addInput( "Speed Z", new ref( this.m.rotation, "z" ), 1.0 );
 
-		ntr_face.addOutput( "Thrust X", new ref( this.m.acceleration, "x" ), 1.0 );
-		ntr_face.addOutput( "Thrust Y", new ref( this.m.acceleration, "y" ), 1.0 );
-		ntr_face.addOutput( "Thrust Z", new ref( this.m.acceleration, "z" ), 1.0 );
+		ntr_face.addOutput( "Thrust X", new ref( this.m.bs_acceleration, "x" ), 1.0 );
+		ntr_face.addOutput( "Thrust Y", new ref( this.m.bs_acceleration, "y" ), 1.0 );
+		ntr_face.addOutput( "Thrust Z", new ref( this.m.bs_acceleration, "z" ), 1.0 );
 
 
 		ntr_face.addInput( "Orient X", new ref( this.m.orientation, "x" ), 2*Math.PI );
@@ -511,9 +516,9 @@ class SmartBody {
 		ntr_face.addInput( "Spin Y", new ref( this.m.rotation, "y" ), 2*Math.PI/16 );
 		ntr_face.addInput( "Spin Z", new ref( this.m.rotation, "z" ), 2*Math.PI/16 );
 
-		ntr_face.addOutput( "Torque X", new ref( this.m.torque, "x" ), 2*Math.PI/16 );
-		ntr_face.addOutput( "Torque Y", new ref( this.m.torque, "y" ), 2*Math.PI/16 );
-		ntr_face.addOutput( "Torque Z", new ref( this.m.torque, "z" ), 2*Math.PI/16 );
+		ntr_face.addOutput( "Torque X", new ref( this.m.bs_torque, "x" ), 2*Math.PI/16 );
+		ntr_face.addOutput( "Torque Y", new ref( this.m.bs_torque, "y" ), 2*Math.PI/16 );
+		ntr_face.addOutput( "Torque Z", new ref( this.m.bs_torque, "z" ), 2*Math.PI/16 );
 
 		return ntr_face;
 		//brain.
@@ -549,6 +554,7 @@ function addModelToScene2(object) {
 	scene.add(myMover = x = object);
 	myMotion =  new Motion(x);
 	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
+        myMotion.orientation.set( 0, 0, -Math.PI, 0 );
 	const body = new SmartBody( x, myMotion );
 	movers2.push(body);
 	x.matrixAutoUpdate = true;
