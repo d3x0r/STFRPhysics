@@ -65,7 +65,7 @@ export function NaturalCamera( object, domElement ) {
 		if( !scope.userRotate ) return;
 		touchUpdate();
 		const rt = scope.motion.orientation.right();
-g		if( phiDelta || thetaDelta || rt.y ){
+		if( phiDelta || thetaDelta || rt.y ){
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
 
