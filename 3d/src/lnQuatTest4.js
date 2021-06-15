@@ -24,9 +24,9 @@ let stepy = {x:0, y:0.02, z:0 };
 let stepz = {x:0, y:0, z:0.02 };
 let stepxyz = {x:0.02, y:0.02, z:0.02 };
 
+const spaceScale = 5;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
-	const spaceScale = 5;
 	const normal_del = 0.5;
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	let prior = null;
@@ -273,7 +273,7 @@ function QuatPathing(q_, v, c,normalVertices,normalColors) {
 
 
 
-	const spaceScale = 5;
+	//const spaceScale = 5;
 	const normal_del = 0.25;
 	const v = { x:0,y:4,z:0};
 //	const v = { x:1,y:1,z:1};
@@ -348,7 +348,7 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	}
 
 window.DrawQuatPaths = DrawQuatPaths;
-function DrawQuatPaths(normalVertices_,normalColors_) {
+export function DrawQuatPaths(normalVertices_,normalColors_) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_;
 
@@ -459,3 +459,29 @@ function DrawQuatPaths(normalVertices_,normalColors_) {
 }
 
 
+export function updateShapes( shapes ) {
+	const atTick = Date.now();
+	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount;
+
+	const lATC = Math.sqrt(A*A+T*T+C*C);
+	const steps = stepCount;
+	const subSteps = turnCount;//Math.sqrt(steps);
+	
+	const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
+	
+        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
+		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
+        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
+		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
+		
+
+		const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
+		const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
+		const lnQ = new lnQuat( lnQ0 )
+                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
+                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
+
+	lnQ.exp( shapes[0].quaternion );
+	lnQ.exp( shapes[1].quaternion );
+	shapes[1].position.set( lnQ.x*spaceScale, lnQ.y*spaceScale, lnQ.z*spaceScale );
+}
