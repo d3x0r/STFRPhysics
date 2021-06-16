@@ -291,8 +291,25 @@
 		function makeShapes() {
 			for( var i = 0; i < 2; i++ ) {
 				geometry = new THREE.CubeGeometry( 1, 1, 1 );
-				material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+				material = new THREE.MeshBasicMaterial( { color: 0xffFFFF, vertexColors: true, wireframe: false } );
 				let cube = new THREE.Mesh( geometry, material );
+
+const red = new THREE.Color(1, 0, 0);
+const green = new THREE.Color(0, 1, 0);
+const blue = new THREE.Color(0, 0, 1);
+var colors = [red, green, blue];
+const red2 = new THREE.Color(1/2, 0, 0);
+const green2 = new THREE.Color(0, 1/2, 0);
+const blue2 = new THREE.Color(0, 0, 1/2);
+var colors2 = [red2, green2, blue2];
+{
+for (let i = 0; i < 3; i++) {
+    geometry.faces[4 * i].color = colors[i];
+    geometry.faces[4 * i + 1].color = colors[i];
+    geometry.faces[4 * i + 2].color = colors2[i];
+    geometry.faces[4 * i + 3].color = colors2[i];
+}
+}
 				scene.add( cube );
 				shapes.push(cube);
 				//here is the funcion defined and attached to the  object
@@ -302,7 +319,7 @@
 				cube.position.set( i*2 - 4,0,0);
 
 				//cube.setColor(0xFFFFFF)  //change color using hex value or
-				cube.setColor("blue")    //set material color by using color name
+				//cube.setColor("blue")    //set material color by using color name
 
 			}
 		}
