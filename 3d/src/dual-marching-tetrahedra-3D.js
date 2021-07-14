@@ -1202,22 +1202,18 @@ if( z > (dim2/2) ) continue
 					//const z = Math.cos(theta.lng);
 								const l = ( lnQ.x * lnQ.x + lnQ.z * lnQ.z );
 								if( l ) {
-									
 									if(  normalVertices ) {
 										
 										const basis = lnQ.getBasis();
-										for( let v1 of [vA,vB,vC]) {
-										normalVertices.push( new THREE.Vector3( v1[0],v1[1],v1[2] ))
+										for( let vn = 0; vn < 3; vn++ ){
+											const v1 = [vA,vB,vC][vn];
+										normalVertices.push( new THREE.Vector3( v1[0]+ vn*0.02,v1[1],v1[2] ))
 										normalVertices.push( new THREE.Vector3( v1[0] + basis.up.x*1.1,v1[1] +basis.up.y*1.1,v1[2] +basis.up.z*1.1 ));
 										// cyan is mostly right.
-										normalColors.push( new THREE.Color( 0.1,1.0,1.0 ))
-										normalColors.push( new THREE.Color( 0.1,1.0,1.0 ))
+										normalColors.push( new THREE.Color( 0.1,0.2+0.4*vn/3,1.0 ))
+										normalColors.push( new THREE.Color( 0.1,0.2+0.4*vn/3,1.0 ))
 										}
-										normalVertices.push( new THREE.Vector3( lnQ.x,lnQ.y,lnQ.z ))
-										normalVertices.push( new THREE.Vector3( lnQ.x + basis.up.x*0.1,lnQ.y +basis.up.y*0.1,lnQ.z +basis.up.z*0.1 ));
-										normalColors.push( new THREE.Color( 255,255,255,255 ))
-										normalColors.push( new THREE.Color( 255,0,0,255 ))
-
+										
 
 									}
 								
@@ -1256,29 +1252,6 @@ if( z > (dim2/2) ) continue
 									pointStateHolder[ai].normalSources2.push( fnormPreQ.slice( 0, 3 ) ); // copy fnorm array
 									pointStateHolder[ai].normalSources.push( fnorm.slice( 0, 3 ) ); // copy fnorm array
 
-									//pointStateHolder[ai].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
-									//pointStateHolder[ai].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
-									//pointStateHolder[ai].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
-									/*
-									if( pointStateHolder[ai].normals ) {
-										const oldavglat = ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals );
-										const oldavg = ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals );
-										//console.log( "difa:", pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals, fnorm[1], Math.abs( ( pointStateHolder[ai].normalBuffer[1] / pointStateHolder[ai].normals ) - fnorm[1] ) );
-										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
-											if( fnorm[1] > 0 ) 
-												pointStateHolder[ai].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
-											else
-												pointStateHolder[ai].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
-										}else
-											pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
-									} else
-										pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
-
-
-									pointStateHolder[ai].normalBuffer[0] += fnorm[0];//*angle;
-									//pointStateHolder[ai].normalBuffer[1] += fnorm[1];//*angle;
-									pointStateHolder[ai].normalBuffer[2] += fnorm[2];//*angle;
-									*/
 									pointStateHolder[ai].normalAngle += angle;
 									pointStateHolder[ai].normals ++;
 
@@ -1308,24 +1281,7 @@ if( z > (dim2/2) ) continue
 									}
 									pointStateHolder[bi].normalSources2.push( fnormPreQ.slice( 0, 3 ) ); // copy fnorm array
 									pointStateHolder[bi].normalSources.push( fnorm.slice( 0, 3 ) );
-									/*
-									if( pointStateHolder[bi].normals ) {
-										const oldavg = ( pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals );
-										//console.log( "difb:", pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals, fnorm[1], Math.abs( ( pointStateHolder[bi].normalBuffer[1] / pointStateHolder[bi].normals ) - fnorm[1] ) );
-										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
-											if( fnorm[1] > 0 ) 
-												pointStateHolder[bi].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
-											else
-												pointStateHolder[bi].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
-										}else
-											pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
-									} else
-										pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
 
-									pointStateHolder[bi].normalBuffer[0] += fnorm[0];//*angle;
-									//pointStateHolder[bi].normalBuffer[1] += fnorm[1];//*angle;
-									pointStateHolder[bi].normalBuffer[2] += fnorm[2];//*angle;
-									*/
 									pointStateHolder[bi].normalAngle += angle;
 									pointStateHolder[bi].normals ++;
 								}
@@ -1342,48 +1298,10 @@ if( z > (dim2/2) ) continue
 									//pointStateHolder[ci].normalBuffer[0] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[0]*angle;
 									//pointStateHolder[ci].normalBuffer[1] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[1]*angle;
 									//pointStateHolder[ci].normalBuffer[2] = pointStateHolder[ci].normalBuffer[0] * pointStateHolder[ci].normalAngle + fnorm[2]*angle;
-									if( pointStateHolder[ci].normalSources.length > 0){
-											let c = 0;
-										if( Math.abs( fnorm[0] - pointStateHolder[ci].normalSources[0][0] ) > Math.PI )
-											c ++;
-										if( Math.abs( fnorm[1] - pointStateHolder[ci].normalSources[0][1] ) > Math.PI )
-											c ++;
-										if( Math.abs( fnorm[2] - pointStateHolder[ci].normalSources[0][2] ) > Math.PI )
-											c ++;
-											//if( c > 1 ) debugger;
-									}
+
 									pointStateHolder[ci].normalSources2.push( fnormPreQ.slice( 0, 3 ) ); // copy fnorm array
 									pointStateHolder[ci].normalSources.push( fnorm.slice( 0, 3 ) );
-									//angle = 1.0;
-									/*
-									if( pointStateHolder[ci].normals ) {
-										const oldavglat = ( pointStateHolder[ci].normalBuffer[0] / pointStateHolder[ci].normals );
-										const oldavg = ( pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals );
-										if( oldavglat < Math.PI/4 ) {
-												const q1 = new lnQuat( {lat:oldavglat, lng:oldavg} );
-												const q2 = new lnQuat( {lat:fnorm[0],  lng:fnorm[1]} );
-												q1.x = (q1.x+q2.x)/2;
-												q1.y = (q1.y+q2.y)/2;
-												q1.z = (q1.z+q2.z)/2;
-												q1.dirty = true; q1.update();
-												
-										} else if( oldavg > oldavglat > Math.PI*3/4 ) {
-										} else {
-										}
-										//console.log( "difc:", pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals, fnorm[1], Math.abs( ( pointStateHolder[ci].normalBuffer[1] / pointStateHolder[ci].normals ) - fnorm[1] ) );
-										if( Math.abs( oldavg - fnorm[1] ) > Math.PI ) {
-											if( fnorm[1] > 0 ) 
-												pointStateHolder[ci].normalBuffer[1] += Math.PI*2 - fnorm[1];//*angle;
-											else
-												pointStateHolder[ci].normalBuffer[1] += fnorm[1] + Math.PI*2;//*angle;
-										}else
-											pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
-									} else
-										pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
-									pointStateHolder[ci].normalBuffer[0] += fnorm[0];//*angle;
-									//pointStateHolder[ci].normalBuffer[1] += fnorm[1];//*angle;
-									pointStateHolder[ci].normalBuffer[2] += fnorm[2];//*angle;
-										*/
+
 									pointStateHolder[ci].normalAngle += angle;
 									pointStateHolder[ci].normals ++;
 								}
@@ -1413,9 +1331,9 @@ if( z > (dim2/2) ) continue
 			lnQB.freeSpin( lnQA.θ, lnQA );
 			const newB2 = lnQA.applyDel( lnQB.up(), 1.0 );
 			
-			const b1 = b[0] = lnQB.x;
-			const b2 = b[1]= lnQB.y;
-			const b3 = b[2] = lnQB.z;
+			b[0] = lnQB.x;
+			b[1]= lnQB.y;
+			b[2] = lnQB.z;
 		}
 		
 	}
@@ -1424,55 +1342,29 @@ if( z > (dim2/2) ) continue
 		const pointstate = pointStateHolder[ps];
 		if( !pointstate.normals ) continue;
 		let zz;
-		{
-			const moveNear_old = (x,x2)=>{
-				// is past the middle... and might be closer with +PI
-				// y=\left\{\left(A-B\right)>\pi:2\pi-\left(A-B\right),\left(A-B\right)<-2\pi:\left(A-B\right)+\pi,\left(A-B\right)\right\}
-				// y=\left\{\left(x+A-B\right)>\pi:\left(x+A-B\right)-2\pi,\left(x+A-B\right)<-\pi:\left(x+A-B\right)+2\pi,\left(x+A-B\right)\right\}
 
-				//const delmod = (a) => ( (a)%(2*Math.PI)  > Math.PI ) ? (a)%(2*Math.PI) + 2*Math.PI :( (a)+(2*Math.PI) < -Math.PI ) ? (a)%(2*Math.PI)-2*Math.PI : (a);
-				const delmod = (a) => ( (a)  > Math.PI ) ? (a) + 2*Math.PI :( (a)+(2*Math.PI) < -Math.PI ) ? (a)-2*Math.PI : (a);
-					
-				const del = (a,b) => delmod(a-b);
-
-				const delX =  del(x, x2) ;
-				return x+delX;
-			}
-
-			let ns = pointstate.normalSources[0];
-			for( zz = 0; zz < pointstate.normals; zz++ ) {
-				moveNear( ns, pointstate.normalSources[zz] );
-				pointstate.normalBuffer[0] += ns[0];
-				pointstate.normalBuffer[1] += ns[1];
-				pointstate.normalBuffer[2] += ns[2];
-			}
-			ns[0] = 0;
-			ns[1] = 0;
-			ns[2] = 0;
-			pointstate.normalBuffer[0] /= pointstate.normals;
-			pointstate.normalBuffer[1] /= pointstate.normals;
-			pointstate.normalBuffer[2] /= pointstate.normals;
-
-			const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], 0, pointstate.normalBuffer[2] );
-			const basis = lnQ.getBasis();
-
-			// draw these where accumulated is... 
-			if(  normalVertices ) {
-
-				normalVertices.push( new THREE.Vector3( pointstate.normalBuffer[0],pointstate.normalBuffer[1],pointstate.normalBuffer[2] ))
-				normalVertices.push( new THREE.Vector3( pointstate.normalBuffer[0] + basis.up.x
-						,pointstate.normalBuffer[1] + basis.up.y
-						,pointstate.normalBuffer[2] + basis.up.z ));
-				normalColors.push( new THREE.Color( 0.4,0.1,0.0 ))
-				normalColors.push( new THREE.Color( 0.4,0.1,0.0 ))
-				}
-
-			pointstate.normalBuffer[0] = basis.up.x;
-			pointstate.normalBuffer[1] = basis.up.y;
-			pointstate.normalBuffer[2] = basis.up.z;
-
-	
+		let ns = pointstate.normalSources[0];
+		for( zz = 0; zz < pointstate.normals; zz++ ) {
+			if( pointstate.normalSources[zz][2] === -Math.PI  ) debugger;
+			moveNear( ns, pointstate.normalSources[zz] );
+			pointstate.normalBuffer[0] += ns[0];
+			pointstate.normalBuffer[1] += ns[1];
+			pointstate.normalBuffer[2] += ns[2];
 		}
+		ns[0] = 0;
+		ns[1] = 0;
+		ns[2] = 0;
+		pointstate.normalBuffer[0] /= pointstate.normals;
+		pointstate.normalBuffer[1] /= pointstate.normals;
+		pointstate.normalBuffer[2] /= pointstate.normals;
+
+		const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
+		const basis = lnQ.getBasis();
+
+		pointstate.normalBuffer[0] = basis.up.x;
+		pointstate.normalBuffer[1] = basis.up.y;
+		pointstate.normalBuffer[2] = basis.up.z;
+		// this is a new direction entirely; it's not the same as any source....
 
 
 		//if( isNaN(pointstate.normalBuffer[0] )) debugger;
@@ -1481,8 +1373,8 @@ if( z > (dim2/2) ) continue
 			//const basis = lnQ.getBasis();
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + pointstate.normalBuffer[0],pointstate.vertBuffer[1] + pointstate.normalBuffer[1],pointstate.vertBuffer[2] + pointstate.normalBuffer[2] ));
-			normalColors.push( new THREE.Color( 0.2,0.5,0.3 ))
-			normalColors.push( new THREE.Color( 0.2,0.5,0.3 ))
+			normalColors.push( new THREE.Color( 0.9,0.5,0.3 ))
+			normalColors.push( new THREE.Color( 0.9,0.5,0.3 ))
 
 		}
 
@@ -1864,6 +1756,7 @@ if( z > (dim2/2) ) continue
 	}
 
 	function outputFace( inv, n1, n2, n3, n4 ){
+		//inv = 0
 		const f = getFold( n1.n, n1.p, n2.p, n3.p, n4.p );
 		if( f >= 0 ) {
 			const p0 = addPoint( n1 );
@@ -1960,7 +1853,7 @@ if( z > (dim2/2) ) continue
 							}
 							added++;
 							switch( normDir.dir ) {
-								case 4: case 5: case 6: case 0:
+								case 4: case 5: case 6: case 0: case 7:
 									inv = 0;
 									break;
 								default:
