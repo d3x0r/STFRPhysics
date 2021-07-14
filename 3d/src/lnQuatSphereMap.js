@@ -300,12 +300,12 @@ function makeQuat(p,y,r) {
 			
 			gamline = 0;
 			for( let gamma = -(range); gamma <= (range); gamma += (step), gamline++ ){
-				let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
-				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
+				let g2 = gamma;// / (Math.abs(g2)+Math.abs(theta)) * Math.sqrt( g2*g2+theta*theta);
+				let t2 = theta;// / (Math.abs(g2)+Math.abs(theta)) * Math.sqrt( g2*g2+theta*theta);
 
 				/*
 				  // limit to more of a circular patch...
-				if( theta*theta+gamma*gamma > range*range ) 
+				if( t2*t2+g2*g2 > range*range ) 
 				{
 					if( !draw )
 						p.push( {x:0,y:0,z:0} );
@@ -318,15 +318,15 @@ function makeQuat(p,y,r) {
 				*/
 				const gridlen = Math.sqrt(g2*g2+t2*t2);
 				if( inv_1norm || _1norm ) {
-					const bigger = (Math.abs(gamma) > Math.abs(theta) )?gamma:theta;
+					const bigger = (Math.abs(g2) > Math.abs(t2) )?g2:t2;
 					if( inv_1norm) {
-						g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
-						t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * Math.abs(bigger);
-						g2 = gamma / (Math.abs(gamma)+Math.abs(theta)) * gridlen;
-						t2 = theta / (Math.abs(gamma)+Math.abs(theta)) * gridlen;
+						g2 = g2 / (Math.abs(g2)+Math.abs(t2)) * Math.abs(bigger);
+						t2 = t2 / (Math.abs(g2)+Math.abs(t2)) * Math.abs(bigger);
+						g2 = g2 / (Math.abs(g2)+Math.abs(t2)) * gridlen;
+						t2 = t2 / (Math.abs(g2)+Math.abs(t2)) * gridlen;
 					}else {
-						g2 = gamma / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
-						t2 = theta / Math.sqrt( gamma*gamma+theta*theta) * (Math.abs(gamma)+Math.abs(theta));
+						g2 = g2 / Math.sqrt( g2*g2+t2*t2) * (Math.abs(g2)+Math.abs(t2));
+						t2 = t2 / Math.sqrt( g2*g2+t2*t2) * (Math.abs(g2)+Math.abs(t2));
 					}
 
 
@@ -347,20 +347,23 @@ function makeQuat(p,y,r) {
 				}
 
 				//lnQ.add( offset, 1 )
-				
+				//lnQ.x = -lnQ.x;				
+				//lnQ.y = -lnQ.y;				
+				//lnQ.z = -lnQ.z;				
+
 				const basis = lnQ.update().getBasis();
 				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
-				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, theta );
+				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, g2, t2 );
 				const wraps = Math.floor( (range) / Math.PI ) * Math.PI;
 				if( showGrid && draw  ) {
 					const oldp = p[gamline];
 					if( ( gridlen) >= wraps ) {
 						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
 						normalVertices.push( new THREE.Vector3( (basis.up.x)*spaceScale ,(basis.up.y)*spaceScale    , (basis.up.z)*spaceScale ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
-						normalColors.push( new THREE.Color( 0,1.0 * (gamma+range)/range * 0.5,0,255 ))
+						normalColors.push( new THREE.Color( 0,1.0 * (g2+range)/range * 0.5,0,255 ))
+						normalColors.push( new THREE.Color( 0,1.0 * (g2+range)/range * 0.5,0,255 ))
 					}
 					oldp.x = basis.up.x;
 					oldp.y = basis.up.y;
@@ -371,7 +374,7 @@ function makeQuat(p,y,r) {
 	
 				if( merge ) {
 					pMake( lnQ, g2, t2, lnQx );
-					//lnQ.x = gamma; lnQ.y = 0; lnQ.z = theta;
+					//lnQ.x = g2; lnQ.y = 0; lnQ.z = t2;
 					//lnQ.dirty = true;
 				} else {
 					lnQ.x = lnQ.y = lnQ.z = 0;
@@ -394,8 +397,8 @@ function makeQuat(p,y,r) {
 						normalVertices.push( new THREE.Vector3( (oldp.x)*spaceScale ,(oldp.y)*spaceScale    , (oldp.z)*spaceScale ))
 						normalVertices.push( new THREE.Vector3( (basis2.up.x)*spaceScale ,(basis2.up.y)*spaceScale    , (basis2.up.z)*spaceScale ))
 		
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
-						normalColors.push( new THREE.Color( 1.0*(gamma+range)/range*0.5,0,0,255 ))
+						normalColors.push( new THREE.Color( 1.0*(g2+range)/range*0.5,0,0,255 ))
+						normalColors.push( new THREE.Color( 1.0*(g2+range)/range*0.5,0,0,255 ))
 					}
 					oldp.x = basis2.up.x;
 					oldp.y = basis2.up.y;
@@ -422,18 +425,20 @@ function makeQuat(p,y,r) {
 					let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 					let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
-					g2 = r*Math.sin(gamma);
-					t2 = r*Math.cos(gamma);
+					g2 = (r)*Math.sin(gamma);
+					t2 = (r)*Math.cos(gamma);
 					
 					pMake( lnQ, t2, g2, lnQx);
 
 					let spinDiff = 0;
 					if( weylCurvature )
 						lnQ.yaw( gamma );
-					else if( polarAligned )
+					else if( polarAligned && !stereoProject )
 						lnQ.yaw( -gamma);
-					else if( stereoProject )
+					else if( stereoProject && !polarAligned )
 						lnQ.yaw( -r );
+					else if( stereoProject && polarAligned )
+						lnQ.yaw( r );
 
 	
 
