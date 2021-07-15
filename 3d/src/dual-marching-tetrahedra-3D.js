@@ -188,6 +188,8 @@ const debug_ = false;
 	// temporary variables for moveNear
 	const lnQA = new lnQuat();
 	const lnQB = new lnQuat();
+	const tmpbuf = [0,0,0]; // temporary normal buffer;
+	
 
 	// a tetrahedra has 6 crossing values
 	// the result of this is the index into that ordered list of intersections (second triangle in comments at top)
@@ -544,9 +546,12 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 		tv.p[0] = (tv.p[0]+p[0])/2;
 		tv.p[1] = (tv.p[1]+p[1])/2;
 		tv.p[2] = (tv.p[2]+p[2])/2;
+
+		moveNear( n, tv.n );		
 		tv.n[0] = (tv.n[0]+n[0])/2;
 		tv.n[1] = (tv.n[1]+n[1])/2;
 		tv.n[2] = (tv.n[2]+n[2])/2;
+		
 		if( p1 !== tv.sources[0] && p1 !== tv.sources[1] && p1 !== tv.sources[0]  ){
 			tv.sources[3] = p1;
 			tv.elements[6] = p1.type1;
@@ -578,11 +583,12 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 	// average normals here for real... 
 	// buffer is still angular at this point.
 	let ns = p1.normalBuffer;
-	let tmpbuf;
 	n[0] = p1.normalBuffer[0];
 	n[1] = p1.normalBuffer[1];
 	n[2] = p1.normalBuffer[2];
-	tmpbuf = p2.normalBuffer.slice(0,3);
+	tmpbuf[0] = p2.normalBuffer[0];
+	tmpbuf[1] = p2.normalBuffer[1];
+	tmpbuf[2] = p2.normalBuffer[2];
 	moveNear( ns, tmpbuf );
 	n[0] += tmpbuf[0];
 	n[1] += tmpbuf[1];
@@ -599,10 +605,6 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 	n[1] /= 3;
 	n[2] /= 3;
 
-
-	//n[0] = p1.normalBuffer[0];
-	//n[1] = p1.normalBuffer[1];
-	//n[2] = p1.normalBuffer[2];
 
 	if( tv ) return updateTV();
 	return { id:0,p:p,n:n,sources:[p1, p2, p3, null], elements:[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0], eleDels:[ p1.typeDelta, p2.typeDelta,p3.typeDelta,0 ] };
@@ -1329,39 +1331,16 @@ if( z > (dim2/2) ) continue
 		pointstate.normalBuffer[0] /= pointstate.normals;
 		pointstate.normalBuffer[1] /= pointstate.normals;
 		pointstate.normalBuffer[2] /= pointstate.normals;
-
-		/*
-		const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
-		const basis = lnQ.getBasis();
-
-		pointstate.normalBuffer[0] = basis.up.x;
-		pointstate.normalBuffer[1] = basis.up.y;
-		pointstate.normalBuffer[2] = basis.up.z;
-		*/
-		// this is a new direction entirely; it's not the same as any source....
-
-
-		//if( isNaN(pointstate.normalBuffer[0] )) debugger;
-		if(  false && normalVertices ) {
-			//const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
-			//const basis = lnQ.getBasis();
-			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
-			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0] + pointstate.normalBuffer[0],pointstate.vertBuffer[1] + pointstate.normalBuffer[1],pointstate.vertBuffer[2] + pointstate.normalBuffer[2] ));
-			normalColors.push( new THREE.Color( 0.9,0.5,0.3 ))
-			normalColors.push( new THREE.Color( 0.9,0.5,0.3 ))
-
-		}
-
 	}
 
 
 	for( var z = 0; z < dim2; z++ ) {
-		//if( z > 2 ) continue;
 		let odd = 0;
 		let zOdd = z & 1;
-
+		if( z < dim2-3 || z > dim2-3 )continue;
 		// for all bounday crossed points, generate the faces from the intersection points.
 		for( var y = 0; y < dim1; y++ ) {
+			if( y > 2 ) continue;
 			for( var x = 0; x < dim0; x++ ) {
 /*
 if( x > 3 ) continue;
