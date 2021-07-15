@@ -185,6 +185,10 @@ const debug_ = false;
 	const v_a1t = new THREE.Vector3();
 	const v_a2t = new THREE.Vector3();
 
+	// temporary variables for moveNear
+	const lnQA = new lnQuat();
+	const lnQB = new lnQuat();
+
 	// a tetrahedra has 6 crossing values
 	// the result of this is the index into that ordered list of intersections (second triangle in comments at top)
 
@@ -535,17 +539,6 @@ function measureTriFace( p1,p2,p3){
 
 
 function TetVert( p, n, p1, p2, p3, tv ) {
-	const del1 = [p2.normalBuffer[0]-p1.normalBuffer[0],p2.normalBuffer[1]-p1.normalBuffer[1],p2.normalBuffer[2]-p1.normalBuffer[2] ];
-	const del2 = [p3.normalBuffer[0]-p2.normalBuffer[0],p3.normalBuffer[1]-p2.normalBuffer[1],p3.normalBuffer[2]-p2.normalBuffer[2] ];
-	const del3 = [p1.normalBuffer[0]-p3.normalBuffer[0],p1.normalBuffer[1]-p3.normalBuffer[1],p1.normalBuffer[2]-p3.normalBuffer[2] ];
-
-	const l1 = del1[0]+del1[1] +del1[2];
-	const l2 = del2[0]+del2[1] +del2[2];
-	const l3 = del3[0]+del3[1] +del3[2];
-	//var l1 = Math.sqrt( del1[0]*del1[0]+del1[1]*del1[1] +del1[2]*del1[2] );
-	//var l2 = Math.sqrt( del2[0]*del2[0]+del2[1]*del2[1] +del2[2]*del2[2] );
-	//var l3 = Math.sqrt( del3[0]*del3[0]+del3[1]*del3[1] +del3[2]*del3[2] );
-	var l = l1+l2+l3;
 
 	function updateTV() {
 		tv.p[0] = (tv.p[0]+p[0])/2;
@@ -554,10 +547,6 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 		tv.n[0] = (tv.n[0]+n[0])/2;
 		tv.n[1] = (tv.n[1]+n[1])/2;
 		tv.n[2] = (tv.n[2]+n[2])/2;
-		const nlen = 1/Math.sqrt(tv.n[0]*tv.n[0]+tv.n[1]*tv.n[1]+tv.n[2]*tv.n[2] );
-		tv.n[0] *= nlen;
-		tv.n[1] *= nlen;
-		tv.n[2] *= nlen;
 		if( p1 !== tv.sources[0] && p1 !== tv.sources[1] && p1 !== tv.sources[0]  ){
 			tv.sources[3] = p1;
 			tv.elements[6] = p1.type1;
@@ -579,127 +568,44 @@ function TetVert( p, n, p1, p2, p3, tv ) {
 		return tv;
 	}
 
-	// bigger than the grey circle; which puts them all co-linear.
-	if( l > 0.1 ) {
+	// there's barely even a surface here to have a point.
+	// the normals are basically all in the same plane, but not parallel.
+	// plane intersections would result in at most 3 parallel lines between the 3 planes.
+	p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3;
+	p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3;
+	p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3;
 
-		var a = [0,0,0];
-		cross(a, del1, del2 );
-		const asqr = Math.sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2])/2
-		const nA = asqr * MagicScalar;
-		if( nA < 0.1 ) { // normalized relative area 0-0.6 is a sliver of a triangle... above this is a reasonable spread.
-			// there's barely even a surface here to have a point.
-			// the normals are basically all in the same plane, but not parallel.
-			// plane intersections would result in at most 3 parallel lines between the 3 planes.
-			p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3;
-			p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3;
-			p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3;
-			n[0] = p1.normalBuffer[0];
-			n[1] = p1.normalBuffer[1];
-			n[2] = p1.normalBuffer[2];
+	// average normals here for real... 
+	// buffer is still angular at this point.
+	let ns = p1.normalBuffer;
+	let tmpbuf;
+	n[0] = p1.normalBuffer[0];
+	n[1] = p1.normalBuffer[1];
+	n[2] = p1.normalBuffer[2];
+	tmpbuf = p2.normalBuffer.slice(0,3);
+	moveNear( ns, tmpbuf );
+	n[0] += tmpbuf[0];
+	n[1] += tmpbuf[1];
+	n[2] += tmpbuf[2];
+	tmpbuf[0] = p3.normalBuffer[0];
+	tmpbuf[1] = p3.normalBuffer[1];
+	tmpbuf[2] = p3.normalBuffer[2];
+	moveNear( ns, tmpbuf );
+	n[0] += tmpbuf[0];
+	n[1] += tmpbuf[1];
+	n[2] += tmpbuf[2];
 
-			if( tv ) return updateTV();
-			return { id:0,p:p,n:n,sources:[p1, p2, p3, null], elements:[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0], eleDels:[ p1.typeDelta, p2.typeDelta,p3.typeDelta,0 ] };
+	n[0] /= 3;
+	n[1] /= 3;
+	n[2] /= 3;
 
-		}else {
-			// intersection of planes with normals specified should result in 2 point...
-			// no matter which point we choose; but we choose to calculate using the
-			// two longest sides for the cross product.
-			const tmp = [0,0,0];
-			const tmp2 = [0,0,0];
-			const t = [0,0];
-			var use_n1 = p1;
-			var use_n2 = p2;
-			var use_n3 = p3;
-			if( l1 < l2 ) {  //  p2->p1 ratio vs perimeter - want the shortest opposing side.
-				if( l1 < l3 ) { // p3->p2 ratio vs perimeter - want the shortest opposing side.
-				        // shortest between 1,2.
-					// n3 is the furthest.
-					// intersect planes.
-					// 1 is least - use p3->p2,  p1->p3
-					use_n1 = p3;
-					use_n2 = p1;
-					use_n3 = p2;
-				}else
-				{ 
-					// 3 is least - use p1->p2, p3->p2
-					// 	
-					use_n1 = p2;
-					use_n2 = p3;
-					use_n3 = p1;
-				}
-			} else {
-				if( l2 < l3 ) { // p3->p2 ratio vs perimeter - want the shortest opposing side.
-					// 2 is least - use p2->p1, p1->p3
-				}else
-				{ 
-					// 3 is least - use p1->p2, p3->p2
-					// 	
-					use_n1 = p2;
-					use_n2 = p3;
-					use_n3 = p1;
-				}
-			} 
-			cross( tmp, use_n1.normalBuffer, use_n2.normalBuffer );  // slope of line intersecting these
-			cross( tmp2, use_n1.normalBuffer, tmp ); // normal of the plane of N3-N2
-			IntersectLineWithPlane( tmp2, use_n2.vertBuffer, use_n1.normalBuffer, use_n1.vertBuffer, t );
-			tmp2[0] = use_n1.vertBuffer[0]+use_n1.normalBuffer[0]*t[1];
-			tmp2[1] = use_n1.vertBuffer[1]+use_n1.normalBuffer[1]*t[1];
-			tmp2[3] = use_n1.vertBuffer[2]+use_n1.normalBuffer[2]*t[1];
-			IntersectLineWithPlane( tmp, tmp2, use_n3.normalBuffer, use_n3.vertBuffer, t );
-			p[0] = use_n3.vertBuffer[0]+use_n3.normalBuffer[0]*t[1];
-			p[1] = use_n3.vertBuffer[1]+use_n3.normalBuffer[1]*t[1];
-			p[2] = use_n3.vertBuffer[2]+use_n3.normalBuffer[2]*t[1];
 
-			// scale each normal, by the inner angle of this face's vert...
-			ScaleNormalsByAngle( n, use_n1.normalBuffer, use_n1.vertBuffer, use_n2.vertBuffer, use_n3.vertBuffer );
-			ScaleNormalsByAngle( n, use_n2.normalBuffer, use_n2.vertBuffer, use_n3.vertBuffer, use_n1.vertBuffer );
-			ScaleNormalsByAngle( n, use_n3.normalBuffer, use_n3.vertBuffer, use_n1.vertBuffer, use_n2.vertBuffer );
+	//n[0] = p1.normalBuffer[0];
+	//n[1] = p1.normalBuffer[1];
+	//n[2] = p1.normalBuffer[2];
 
-			// linear naive average  normals
-			//n[0] = use_n1.normalBuffer[0]+use_n2.normalBuffer[0]+use_n3.normalBuffer[0]
-			//n[1] = use_n1.normalBuffer[1]+use_n2.normalBuffer[1]+use_n3.normalBuffer[1]
-			//n[2] = use_n1.normalBuffer[2]+use_n2.normalBuffer[2]+use_n3.normalBuffer[2]
-			const nLen = 1/Math.sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
-			n[0] *= nLen;
-			n[1] *= nLen;
-			n[2] *= nLen;
-
-			if( tv ){
-				tv.p[0] = (tv.p[0]+p[0])/2;
-				tv.p[1] = (tv.p[1]+p[1])/2;
-				tv.p[2] = (tv.p[2]+p[2])/2;
-				tv.n[0] = (tv.n[0]+n[0])/2;
-				tv.n[1] = (tv.n[1]+n[1])/2;
-				tv.n[2] = (tv.n[2]+n[2])/2;
-				const nlen = 1/Math.sqrt(tv.n[0]*tv.n[0]+tv.n[1]*tv.n[1]+tv.n[2]*tv.n[2] );
-				tv.n[0] *= nlen;
-				tv.n[1] *= nlen;
-				tv.n[2] *= nlen;
-				return tv;
-			}
-			if( tv ) return updateTV();
-			return { id:0,p:p,n:n,sources:[p1, p2,p3], elements:[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2], eleDels:[ p1.typeDelta, p2.typeDelta,p3.typeDelta ] };
-			
-		}
-	}else {
-		// all normals are co-linear.... 
-		// all should also be in the same direction, and normal to the face; it would be hard to imagine computing 
-		// a surface with a skewed/sheared normal.
-		p[0] = (p1.vertBuffer[0]+p2.vertBuffer[0]+p3.vertBuffer[0])/3;
-		p[1] = (p1.vertBuffer[1]+p2.vertBuffer[1]+p3.vertBuffer[1])/3;
-		p[2] = (p1.vertBuffer[2]+p2.vertBuffer[2]+p3.vertBuffer[2])/3;
-		n[0] = p1.normalBuffer[0] + p2.normalBuffer[0] + p3.normalBuffer[0];
-		n[1] = p1.normalBuffer[1] + p2.normalBuffer[1] + p3.normalBuffer[1];
-		n[2] = p1.normalBuffer[2] + p2.normalBuffer[2] + p3.normalBuffer[2];
-		const nLen = 1/Math.sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
-		n[0] *= nLen;
-		n[1] *= nLen;
-		n[2] *= nLen;
-
-		if( tv ) return updateTV();
-		return { id:0,p:p,n:n,sources:[p1, p2,p3], elements:[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2], eleDels:[ p1.typeDelta, p2.typeDelta,p3.typeDelta ] };
-
-	}
+	if( tv ) return updateTV();
+	return { id:0,p:p,n:n,sources:[p1, p2, p3, null], elements:[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0], eleDels:[ p1.typeDelta, p2.typeDelta,p3.typeDelta,0 ] };
 
 }
 
@@ -831,6 +737,27 @@ function ScaleNormalsByAngle( n, fnorm, v1, v2, v3 ) {
 	n += fnorm[2]*angle;
 }
 
+function  moveNear(a,b){
+	const d1 = 2*(b[0]-a[0]);
+	const d2 = 2*(b[1]-a[1]);
+	const d3 = 2*(b[2]-a[2]);
+	const dlen = Math.sqrt(d1*d1+d2*d2+d3*d3);
+	if( dlen > Math.PI ) {
+		lnQA.set( 0, a[0], a[1], a[2] ).update();
+		lnQB.set( 0, b[0], b[1], b[2] ).update();
+		const newB = lnQA.applyDel( lnQB.up(), -1.0 );
+		lnQB.set( newB, false ).update();
+		lnQB.freeSpin( lnQA.θ, lnQA );
+		const newB2 = lnQA.applyDel( lnQB.up(), 1.0 );
+		
+		b[0] = lnQB.x;
+		b[1] = lnQB.y;
+		b[2] = lnQB.z;
+	}
+	
+}
+
+
 
 function meshCloud(data, dims) {
 
@@ -936,6 +863,7 @@ function meshCloud(data, dims) {
 				const lineArray = linesMin[odd];
 				bits[baseOffset] = 0;
 				//console.log( "Set bits to 0", baseOffset)
+				let bits_ = 0;
 
 				for( let l = 0; l < 6; l++ ) {
 					const p0 = lineArray[l][0];
@@ -1021,6 +949,7 @@ function meshCloud(data, dims) {
 							points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
 						}
+						bits_++;
 						//console.log( "Set Used:", x, y, z, odd, baseOffset, baseOffset*5, bits[baseOffset], l);
 						crosses[baseHere+l] = 1;
 						//bits[baseOffset] = 1; // set any 1 bit is set here.
@@ -1030,8 +959,74 @@ function meshCloud(data, dims) {
 						crosses[baseHere+l] = 0;
 					}
 				}
-			}
-		}
+
+				if(0)
+				if( normalVertices && bits_ ) {
+					cellOrigin[0] += 0.5;
+					cellOrigin[1] += 0.5;
+					cellOrigin[2] += 0.5;
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.2,1.0 ))
+					normalColors.push( new THREE.Color( 0.1,0.2,1.0 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ));
+
+					
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ));
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalColors.push( new THREE.Color( 0.6,0.2,1.0 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+					normalColors.push( new THREE.Color( 0.1,0.6,1.0 ))
+
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.2,0.6,0.2 ))
+					normalColors.push( new THREE.Color( 0.2,0.6,0.2 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] +0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.2,0.6,0.2 ))
+					normalColors.push( new THREE.Color( 0.2,0.6,0.2 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]+0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.6,0.2 ))
+					normalColors.push( new THREE.Color( 0.1,0.6,0.2 ))
+
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]-0.5 ))
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] -0.5, cellOrigin[1]-0.5,cellOrigin[2]+0.5 ));
+					normalColors.push( new THREE.Color( 0.1,0.6,0.2 ))
+					normalColors.push( new THREE.Color( 0.1,0.6,0.2 ))
+
+
+					// cyan is mostly right.
+					normalColors.push( new THREE.Color( 0.1,0.4,1.0 ))
+					normalColors.push( new THREE.Color( 0.1,0.4,1.0 ))
+					cellOrigin[0] -= 0.5;
+					cellOrigin[1] -= 0.5;
+					cellOrigin[2] -= 0.5;
+					}
+				}
+	}
 	}
 
 	const dbgNorms = [];
@@ -1202,7 +1197,7 @@ if( z > (dim2/2) ) continue
 					//const z = Math.cos(theta.lng);
 								const l = ( lnQ.x * lnQ.x + lnQ.z * lnQ.z );
 								if( l ) {
-									if(  normalVertices ) {
+									if(  false && normalVertices ) {
 										
 										const basis = lnQ.getBasis();
 										for( let vn = 0; vn < 3; vn++ ){
@@ -1315,29 +1310,6 @@ if( z > (dim2/2) ) continue
 
 	// normalize the normals.
 	//const delmod = (a) => ( (a)  > Math.PI ) ? (a) + 2*Math.PI :( (a)+(2*Math.PI) < -Math.PI ) ? (a)-2*Math.PI : (a);
-	const delmod = (a) => ( a-2*Math.PI );
-	const lnQA = new lnQuat();
-	const lnQB = new lnQuat();
-	const moveNear = (a,b)=>{
-		const d1 = 2*(b[0]-a[0]);
-		const d2 = 2*(b[1]-a[1]);
-		const d3 = 2*(b[2]-a[2]);
-		const dlen = Math.sqrt(d1*d1+d2*d2+d3*d3);
-		if( dlen > Math.PI ) {
-			lnQA.set( 0, a[0], a[1], a[2] ).update();
-			lnQB.set( 0, b[0], b[1], b[2] ).update();
-			const newB = lnQA.applyDel( lnQB.up(), -1.0 );
-			lnQB.set( newB, false ).update();
-			lnQB.freeSpin( lnQA.θ, lnQA );
-			const newB2 = lnQA.applyDel( lnQB.up(), 1.0 );
-			
-			b[0] = lnQB.x;
-			b[1]= lnQB.y;
-			b[2] = lnQB.z;
-		}
-		
-	}
-
 	for( var ps = 0; ps < pointStateHolder.length; ps++ ) {
 		const pointstate = pointStateHolder[ps];
 		if( !pointstate.normals ) continue;
@@ -1347,9 +1319,9 @@ if( z > (dim2/2) ) continue
 		for( zz = 0; zz < pointstate.normals; zz++ ) {
 			if( pointstate.normalSources[zz][2] === -Math.PI  ) debugger;
 			moveNear( ns, pointstate.normalSources[zz] );
-			pointstate.normalBuffer[0] += ns[0];
-			pointstate.normalBuffer[1] += ns[1];
-			pointstate.normalBuffer[2] += ns[2];
+			pointstate.normalBuffer[0] +=  pointstate.normalSources[zz][0];
+			pointstate.normalBuffer[1] +=  pointstate.normalSources[zz][1];
+			pointstate.normalBuffer[2] +=  pointstate.normalSources[zz][2];
 		}
 		ns[0] = 0;
 		ns[1] = 0;
@@ -1358,17 +1330,19 @@ if( z > (dim2/2) ) continue
 		pointstate.normalBuffer[1] /= pointstate.normals;
 		pointstate.normalBuffer[2] /= pointstate.normals;
 
+		/*
 		const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
 		const basis = lnQ.getBasis();
 
 		pointstate.normalBuffer[0] = basis.up.x;
 		pointstate.normalBuffer[1] = basis.up.y;
 		pointstate.normalBuffer[2] = basis.up.z;
+		*/
 		// this is a new direction entirely; it's not the same as any source....
 
 
 		//if( isNaN(pointstate.normalBuffer[0] )) debugger;
-		if(  normalVertices ) {
+		if(  false && normalVertices ) {
 			//const lnQ = new lnQuat( 0, pointstate.normalBuffer[0], pointstate.normalBuffer[1], pointstate.normalBuffer[2] );
 			//const basis = lnQ.getBasis();
 			normalVertices.push( new THREE.Vector3( pointstate.vertBuffer[0],pointstate.vertBuffer[1],pointstate.vertBuffer[2] ))
@@ -1382,7 +1356,7 @@ if( z > (dim2/2) ) continue
 
 
 	for( var z = 0; z < dim2; z++ ) {
-	
+		//if( z > 2 ) continue;
 		let odd = 0;
 		let zOdd = z & 1;
 
@@ -1410,6 +1384,7 @@ if( z > (dim2/2) ) continue
 					let useFace = 0;
 
 					// this is 'valid combinations' check.
+
 					if( crosses[ baseOffset+edgeToComp[odd][tet][0] ] ) {
 						//console.log( `Output: odd:${odd} tet:${tet} x:${x} y:${y} a:${JSON.stringify(a)}` );
 						if( crosses[ baseOffset+edgeToComp[odd][tet][1] ] ) {
@@ -1468,28 +1443,18 @@ if( z > (dim2/2) ) continue
 							//console.log( "vertices", tet, useFace, tri, "odd:",odd, "invert:", invert, "pos:", x, y, z, "dels:", pointStateHolder[ai].typeDelta, pointStateHolder[bi].typeDelta, pointStateHolder[ci].typeDelta, "a:", pointStateHolder[ai].invert, pointStateHolder[ai].type1, pointStateHolder[ai].type2, "b:", pointStateHolder[bi].invert, pointStateHolder[bi].type1, pointStateHolder[bi].type2, "c:", pointStateHolder[ci].invert, pointStateHolder[ci].type1, pointStateHolder[ci].type2 );
 							const p = [0,0,0], n = [0,0,0];
 							const tv = TetVert( p, n, psh1=pointStateHolder[ai], psh2=pointStateHolder[bi], psh3=pointStateHolder[ci] );
-							if(0 && normalVertices) {
-								normalVertices.push( new THREE.Vector3( psh1.vertBuffer[0],psh1.vertBuffer[1],psh1.vertBuffer[2] ))
-								normalVertices.push( new THREE.Vector3( psh2.vertBuffer[0],psh2.vertBuffer[1],psh2.vertBuffer[2] ));
-								normalColors.push( new THREE.Color( 255,0,0,255 ))
-								normalColors.push( new THREE.Color( 255,0,0,255 ))
-								normalVertices.push( new THREE.Vector3( psh1.vertBuffer[0],psh1.vertBuffer[1],psh1.vertBuffer[2] ))
-								normalVertices.push( new THREE.Vector3( psh3.vertBuffer[0],psh3.vertBuffer[1],psh3.vertBuffer[2] ));
-								normalColors.push( new THREE.Color( 0,255,0,255 ))
-								normalColors.push( new THREE.Color( 0,255,0,255 ))
 
-								normalVertices.push( new THREE.Vector3( p[0],p[1],p[2] ))
-								normalVertices.push( new THREE.Vector3( p[0] + n[0]/2,p[1] + n[1]/2,p[2] + n[2]/2 ));
-								normalColors.push( new THREE.Color( 255,255,255,255 ))
-								normalColors.push( new THREE.Color( 255,255,255,255 ))
-							}
-							const nlen = 1/Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2] );
-							n[0] *= nlen;
-							n[1] *= nlen;
-							n[2] *= nlen;
+							const lnQ = new lnQuat( 0, n[0], n[1], n[2] );
+							const up = lnQ.up();
+						
+							n[0] = up.x;
+							n[1] = up.y;
+							n[2] = up.z;
+								
+						
 							normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1, psh2,psh3], i:invert};
 							//console.log( "Setting normal:", x, y, z, dataOffset, normOffset, tet, bits[dataOffset] );
-				                }else {
+				        } else {
 							const ai = points[baseOffset+fpi[0][0]];
 							const bi = points[baseOffset+fpi[0][1]];
 							const ci = points[baseOffset+fpi[0][2]];
@@ -1524,31 +1489,16 @@ if( z > (dim2/2) ) continue
 							const p2 = [0,0,0], n2 = [0,0,0];
 							// tv2 should be tv with updated p
 							// (what about elements? there's really 4!)
-							const tv2 = TetVert( p2, n2, psh1 = pointStateHolder[ai2], psh2 = pointStateHolder[bi2], psh3 = pointStateHolder[ci2],tv );
+							TetVert( p2, n2, psh1 = pointStateHolder[ai2], psh2 = pointStateHolder[bi2], psh3 = pointStateHolder[ci2], tv );
 	
-							if(0 && normalVertices){
-								normalVertices.push( new THREE.Vector3( psh1.vertBuffer[0],psh1.vertBuffer[1],psh1.vertBuffer[2] ))
-							normalVertices.push( new THREE.Vector3( psh2.vertBuffer[0],psh2.vertBuffer[1],psh2.vertBuffer[2] ));
-							normalColors.push( new THREE.Color( 0,0,255,255 ))
-							normalColors.push( new THREE.Color( 0,0,255,255 ))
-							normalVertices.push( new THREE.Vector3( psh1.vertBuffer[0],psh1.vertBuffer[1],psh1.vertBuffer[2] ))
-							normalVertices.push( new THREE.Vector3( psh3.vertBuffer[0],psh3.vertBuffer[1],psh3.vertBuffer[2] ));
-							normalColors.push( new THREE.Color( 0,255,0,255 ))
-							normalColors.push( new THREE.Color( 0,255,0,255 ))
-
-							normalVertices.push( new THREE.Vector3( p2[0],p2[1],p2[2] ))
-							normalVertices.push( new THREE.Vector3( p2[0] + n2[0]/2,p2[1] + n2[1]/2,p2[2] + n2[2]/2 ));
-							normalColors.push( new THREE.Color( 255,255,0,255 ))
-							normalColors.push( new THREE.Color( 255,255,0,255 ))
-							}
-
+							const lnQ = new lnQuat( 0, n[0], n[1], n[2] );
+							const up = lnQ.up();
+						
+							n[0] = up.x;
+							n[1] = up.y;
+							n[2] = up.z;
+								
 							
-							if(0){
-							normalVertices.push( new THREE.Vector3( p[0],p[1],p[2] ))
-							normalVertices.push( new THREE.Vector3( p[0] + n[0]/2,p[1] + n[1]/2,p[2] + n[2]/2 ));
-							normalColors.push( new THREE.Color( 0,255,255,255 ))
-							normalColors.push( new THREE.Color( 0,255,255,255 ))
-							}
 							//console.log( "Setting normal:", x, y, z, dataOffset, normOffset, tet, bits[dataOffset] )
 							normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1,psh2,psh3], i:invert};
 						}
@@ -1810,14 +1760,15 @@ if( z > (dim2/2) ) continue
 
 
 	for( var z = 0; z < dim2; z++ ) {
-		//if( z > 3 ) continue;
+		//if(!( z > (dim2-4) )) continue;
 		let odd = 0;
 		let zOdd = z & 1;
-
+		//if( z > 2 ) break;
 		// for all bounday crossed points, generate the faces from the intersection points.
 		for( var y = 0; y < dim1; y++ ) {
 			//if( y > 3 ) continue;
 			for( var x = 0; x < dim0; x++ ) {
+				//if( x > 3 ) continue;
 				outX = x; outY = y; outZ = z;
 				const odd = (x+y+z)&1;
 				const offset = (x + (y*dim0) + z*dim0*dim1);
@@ -2094,6 +2045,7 @@ if( z > (dim2/2) ) continue
 					else {
 						// all 5 gets - solid quad emit.
 						added++;
+						if(1)
 						{
 							const l = normDir.largest;
 							inv = 0;
@@ -2454,7 +2406,7 @@ if( z > (dim2/2) ) continue
 										// nothing above, must be... this.
 										added++;
 										inv = 0;//n4.i;
-
+											if(1)
 										switch(normDir.dir  ){
 											case 7: case 5:
 												inv = 1-inv;
@@ -2464,6 +2416,7 @@ if( z > (dim2/2) ) continue
 													inv = 1-inv;
 												break;
 											case 2: case 0:
+												//inv = 1-inv;
 												break;
 											case 6: case 4:
 												if( normDir.largest === 2 || normDir.largest === 5 || normDir.largest === 4 ) 
@@ -2637,7 +2590,7 @@ if( z > (dim2/2) ) continue
 										inv = 0;
 								break;
 								default:
-									break;;
+									break;
 							}
 							outputFace( inv, n0, n1, n2, n3 );
 						}
