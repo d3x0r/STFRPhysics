@@ -365,8 +365,8 @@ The math is like `(A*B)+((1-A)*C)` and the value of A is always between 0 and 1 
 
 https://www.geogebra.org/3d/cytxuen9
 
-![0 dot](SoME1/Rodrigues Angle result.png) 
-![-0.8 dot](SoME1/Rodrigues Angle result-1.png) 
+![0 dot](Rodrigues Angle result.png) 
+![-0.8 dot](Rodrigues Angle result-1.png) 
 
 #### The direction vector
 
@@ -380,7 +380,7 @@ the error is lost later when the axis is normalized - otherwise the non-unit nor
 
 https://www.geogebra.org/3d/rjq9hx7s
 
-![angle demo](/SoME1/Rodrigues Axis result.png)
+![angle demo](RodriguesAxisResult.png)
 
 
 ``` js
