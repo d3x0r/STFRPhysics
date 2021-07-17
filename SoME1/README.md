@@ -365,8 +365,8 @@ The math is like `(A*B)+((1-A)*C)` and the value of A is always between 0 and 1 
 
 https://www.geogebra.org/3d/cytxuen9
 
-![0 dot](Rodrigues Angle result.png) 
-![-0.8 dot](Rodrigues Angle result-1.png) 
+![0 dot](RodriguesAngleResult.png) 
+![-0.8 dot](RodriguesAngleResult-1.png) 
 
 #### The direction vector
 
