@@ -607,7 +607,7 @@ function PointState(v,type1,type2,typeDelta) {
 		type1:type1,
 		type2:type2,
 		typeDelta:typeDelta, // saved just as meta for later
-        }
+    }
 	pointStateHolder.push(result );
 	return result;
 }
@@ -1026,7 +1026,7 @@ function meshCloud(data, dims) {
 							const vA = pointStateHolder[ai].vertBuffer;
 							const vB = pointStateHolder[bi].vertBuffer;
 							const vC = pointStateHolder[ci].vertBuffer;
-
+							
 							let v1, v2, v3;
 							const AisB =  ( ( vA[0] === vB[0] ) && ( vA[1] === vB[1]  ) && ( vA[2] === vB[2]  ) );
 							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
@@ -1072,12 +1072,12 @@ function meshCloud(data, dims) {
 									//	console.log( "3Still not happy...", ds, vA, vB, vC );
 								}
 							}
-							//const fnormPreQ = fnorm.slice(0,3);
-							const lnQ = new lnQuat( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
+							// convert normal to a rotation of 'up'
+							lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
 						
-							fnorm[0] = lnQ.x;
+							fnorm[0] = lnQA.x;
 							fnorm[1] = 0; // y is always 0
-							fnorm[2] = lnQ.z;
+							fnorm[2] = lnQA.z;
 
 
 							pCenter[0] = (vA[0]+vB[0]+vC[0])/3;
@@ -1124,9 +1124,11 @@ function meshCloud(data, dims) {
 	//direction is 0-7 .. (1,1,1), (-1,1,1), (1,-1,1), (-1,-1,1), (1,1,-1), (-1,1,-1), (1,-1,-1), (-1,-1,1)
 
 	function getNormalState( s, baseNormal ) {
-		let bnx = baseNormal[0];
-		let bny = baseNormal[1];
-		let bnz = baseNormal[2];
+		const norm = lnQA.set( 0, baseNormal.n[0],baseNormal.n[1], baseNormal.n[2] ).update().up();
+					
+		let bnx = norm.x;
+		let bny = norm.y;
+		let bnz = norm.z;
 		s.dir = 0;
 		if( bnx < 0 ) { s.dir |= 1; bnx = -bnx; }
 		if( bny < 0 ) { s.dir |= 2; bny = -bny; }
@@ -1406,12 +1408,12 @@ function meshCloud(data, dims) {
 
 				let n0,n1,n2,n3,n4;
 				if( baseNormal = normals[baseOffset+4] ) {
+					// goes through the center.
 
 					const normDir = { dir:0, largest:0 };
 					let inv = 0;
 					//console.log( "Has Center.",content[baseOffset+0],content[baseOffset+1],content[baseOffset+2],content[baseOffset+3] );
 					getNormalState( normDir, baseNormal.n );
-					// goes through the center.
 					if( !content[baseOffset+0] ) {
 						// sanity check that 1 2 and 3 are good?
 						// big slice from here... which is not 0, even.
