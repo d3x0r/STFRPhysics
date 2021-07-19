@@ -75,6 +75,33 @@ function createTestData() {
 	}
 
 	
+	result['Pyramid'] = makeVolume(
+		[[-1, 1, 0.125],
+		 [-1, 1, 0.125],
+		 [-1, 1, 0.125]],
+		function(x,y,z) {
+			var ROOT_3 = Math.sqrt(3);
+
+			var planes = [[-ROOT_3, ROOT_3, -ROOT_3],
+							      [-ROOT_3, ROOT_3,  ROOT_3],
+							      [ ROOT_3, ROOT_3, -ROOT_3],
+							      [ ROOT_3, ROOT_3,  ROOT_3]];
+			var planeOffsets = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+
+			return distanceFromConvexPlanes(planes, planeOffsets, x, y, z);
+		}
+	);
+
+	result['Asteroid'] = makeVolume(
+		[[-1, 1, 0.08],
+		 [-1, 1, 0.08],
+		 [-1, 1, 0.08]],
+		function(x,y,z) {
+			return (x*x + y*y + z*z) - PerlinNoise.noise(x*2,y*2,z*2);
+		}
+	);
+
+	
 	result['Sine Waves'] = makeVolume(
 		[[-Math.PI*2, Math.PI*2, Math.PI/8],
 		 [-Math.PI*2, Math.PI*2, Math.PI/8],
@@ -126,15 +153,6 @@ function createTestData() {
                  //if( eZ = 
 			//[02:23:27] <rain1> I find that if e(b) = 1 then f(a+b)=e(2ab/n)e(b^2/n)f(a)
 */
-
-	result['Asteroid'] = makeVolume(
-		[[-1, 1, 0.08],
-		 [-1, 1, 0.08],
-		 [-1, 1, 0.08]],
-		function(x,y,z) {
-			return (x*x + y*y + z*z) - PerlinNoise.noise(x*2,y*2,z*2);
-		}
-	);
 
 	result['dot'] = makeVolume(
 		[[0, 0, 0.5],
@@ -295,23 +313,6 @@ function createTestData() {
 
 		return maxDistance;
 	}
-
-	result['Pyramid'] = makeVolume(
-		[[-1, 1, 0.125],
-		 [-1, 1, 0.125],
-		 [-1, 1, 0.125]],
-		function(x,y,z) {
-			var ROOT_3 = Math.sqrt(3);
-
-			var planes = [[-ROOT_3, ROOT_3, -ROOT_3],
-							      [-ROOT_3, ROOT_3,  ROOT_3],
-							      [ ROOT_3, ROOT_3, -ROOT_3],
-							      [ ROOT_3, ROOT_3,  ROOT_3]];
-			var planeOffsets = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-
-			return distanceFromConvexPlanes(planes, planeOffsets, x, y, z);
-		}
-	);
 
 	result['1/2 Offset Pyramid'] = makeVolume(
 		[[-1, 1, 0.125],
