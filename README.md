@@ -6,8 +6,10 @@ Mostly this project is just about exploring the rotation space of log-quaternion
 
 ## Preface
 
-So there's new or unusual about adding rotations, and log(quaternion) is actually correct in itself.
-https://en.wikipedia.org/wiki/Lie_product_formula 
+This is a study of rotation vectors... rotation vectors add similar to the terms here... https://en.wikipedia.org/wiki/Lie_product_formula that each 
+is applied in parallel steps until the end.
+
+
 
 ### Old Preface
 
