@@ -128,8 +128,8 @@ const _debug_output = true;
 	// every other cell has a different direction of the diagonals.
 
 	// low left, front up, left diag, bot front, front diag, bottom diag, front diag
-	const linesEvenMin = [ [0,2],[0,4],[2,4],  [0,1],[1,2],[1,4]  ];
-	const linesOddMin =  [ [0,2],[0,4],[0,6],  [0,1],[0,3],[0,5]  ];
+	const linesEvenMin = [ [0,2],[0,4],[0,1],[2,4],[1,2],[1,4]  ];
+	const linesOddMin =  [ [0,2],[0,4],[0,1],[0,6],[0,3],[0,5]  ];
 	
 	//const lineEvenAlts = [ [ [1,4], [1,2], [0,1],[0,4],[0,2] ],
 	//						[    ]  ];
@@ -161,18 +161,18 @@ const _debug_output = true;
 	const tetPointInversions =
 		[
 			[  // the computed halfpoints are inverted from these tet's perspective.
-				[ 0,0,0,0,0,0],
-				[ 1, 1, 1, 1,1,1 ],
-				[ 0,1,1,1,1,1 ],
-				[ 1,0,1,1, 1,1],
-				[ 0,0,0,0,1,0],
+				[ 0,0,0  ,0,0,0],
+				[ 1,1,0  ,1,1,1 ],
+				[ 0,1,1  ,1,1,1 ],
+				[ 1,0,1  ,1,1,1],
+				[ 0,0,0  ,0,1,0],
 			],
 			[
-				[ 1,0,0,0,0,1],
-				[ 0, 0,1,1, 1, 0 ],
-				[ 1,1,1,0,1,1 ],
-				[ 0, 1, 0, 1, 0, 1],
-				[ 0,0,0,1,0,1 ],
+				[ 1,0,0     ,0,0,1],
+				[ 0,1,0     ,1, 1, 0 ],
+				[ 1,1,1     ,0,1,1 ],
+				[ 0,1,0     , 1, 0, 1],
+				[ 0,0,0     ,1,0,1 ],
 			]
 
 		];
@@ -501,19 +501,20 @@ const tetCentroidFacet =[
 	//   [tet] [edge] 
 	// edges are also the lines...
 	const edgeToComp = [
-		[ [                      0,                          1,                              3,                    2,                    4,                    5  ] // lower left forward even
-		, [      cellOffset[4] + 0,          cellOffset[2] + 1,              cellOffset[6] + 3,                    2,    cellOffset[4] + 4,   cellOffset[2] +  5  ]
-		, [      cellOffset[5] + 0,          cellOffset[1] + 1,              cellOffset[4] + 3,    cellOffset[1] + 2,    cellOffset[4] + 4,                    5  ]
-		, [      cellOffset[1] + 0,          cellOffset[3] + 1,              cellOffset[2] + 3,    cellOffset[1] + 2,                    4,   cellOffset[2] +  5  ]
-		, [                      5,          cellOffset[1] + 2,                              4,    cellOffset[4] + 4,    cellOffset[0] + 2,   cellOffset[2] +  5  ]
+		[    
+			 [                 0,                   1,                   2,                  3,                  4,                    5  ] // lower left forward even
+		   , [ cellOffset[4] + 0,   cellOffset[2] + 1,   cellOffset[6] + 2,                  3,  cellOffset[4] + 4,   cellOffset[2] +  5  ]
+		   , [ cellOffset[5] + 0,   cellOffset[1] + 1,   cellOffset[4] + 2,  cellOffset[1] + 3,  cellOffset[4] + 4,                    5  ]
+		   , [ cellOffset[1] + 0,   cellOffset[3] + 1,   cellOffset[2] + 2,  cellOffset[1] + 3,                  4,   cellOffset[2] +  5  ]
+		   , [                 5,   cellOffset[1] + 3,                   4,  cellOffset[4] + 4,  cellOffset[0] + 3,   cellOffset[2] +  5  ]
 		]
 
 		,[
-			 [                   0,           cellOffset[2]  + 3,        cellOffset[2] + 1,                 4,                 2,  cellOffset[2] + 5 ]
-			,[   cellOffset[4] + 0,           cellOffset[4]  + 3,                        1, cellOffset[4] + 4,                 2,                  5 ]
-			,[   cellOffset[5] + 0,           cellOffset[6]  + 3,        cellOffset[3] + 1, cellOffset[4] + 4, cellOffset[1] + 2,  cellOffset[2] + 5 ]
-			,[   cellOffset[1] + 0,                            3,        cellOffset[1] + 1,                 4, cellOffset[1] + 2,                  5 ]
-		 	,[                   4,                            2,        cellOffset[0] + 5, cellOffset[2] + 5, cellOffset[1] + 2, cellOffset[4] + 4 ] // center.
+			 [                   0, cellOffset[2]  + 2,  cellOffset[2] + 1,                 4,                 3,  cellOffset[2] + 5 ]
+			,[   cellOffset[4] + 0, cellOffset[4]  + 2,                  1, cellOffset[4] + 4,                 3,                  5 ]
+			,[   cellOffset[5] + 0, cellOffset[6]  + 2,  cellOffset[3] + 1, cellOffset[4] + 4, cellOffset[1] + 3,  cellOffset[2] + 5 ]
+			,[   cellOffset[1] + 0,                  2,  cellOffset[1] + 1,                 4, cellOffset[1] + 3,                  5 ]
+		 	,[                   4,                  3,  cellOffset[0] + 5, cellOffset[2] + 5, cellOffset[1] + 3,  cellOffset[4] + 4 ] // center.
 		 ]
 		];
 
@@ -939,11 +940,15 @@ function meshCloud(data, dims) {
 								// lower left tet. // source point is 0
 								useFace = 1;								
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0;
+								if( tetPointInversions[odd][tet][0] )
+									invert = 1-invert;
 							} else {
 								if( crosses[ baseOffset+edgeToComp[odd][tet][4] ] && crosses[ baseOffset+edgeToComp[odd][tet][5] ]) {
 									// source point is 2? 1?   (0?3?)
 									useFace = 2;
 									invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0 ;
+									if( tetPointInversions[odd][tet][0] )
+										invert = 1-invert;
 								}
 							}
 						} else {
@@ -951,10 +956,14 @@ function meshCloud(data, dims) {
 								// source point is ? 1? 3?   (0? 2?)
 								useFace = 3;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0  ;
+								if( tetPointInversions[odd][tet][0] )
+									invert = 1-invert;
 							}else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][4] ] ) {
 								// source point is 1
 								useFace = 4;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0
+								if( tetPointInversions[odd][tet][0] )
+									invert = 1-invert;
 							}
 						}
 					} else {
@@ -963,20 +972,29 @@ function meshCloud(data, dims) {
 								// 0?1?   2?3?
 								useFace = 5;
 								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 )  ?1:0
+								if( tetPointInversions[odd][tet][1] )
+									invert = 1-invert;
 							} else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
 								// source point is 2
 								useFace = 6;
 								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 ) ?1:0
+								if( tetPointInversions[odd][tet][1] )
+									invert = 1-invert;
 							}
 						} else {
 							if( crosses[ baseOffset+edgeToComp[odd][tet][2] ] && crosses[ baseOffset+edgeToComp[odd][tet][4]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
 								// source point is 3
 								useFace = 7;
 								invert = ( data[dataOffset+vertToData[odd][tet][2]] >= 0 ) ?1:0
+								if( tetPointInversions[odd][tet][2] )
+									invert = 1-invert;
 							}
 						}
 					}
 
+					if( odd == 0 && tet == 0 && invert ) {
+						console.log( "adding a tet...", x,y,z,odd, tet, invert, useFace );
+					}
 					if( false && !useFace && usedTets ) {
 						console.log( "Didn't find a face in a tet (sometimes OK)", x, y, z, odd, tet, baseOffset
 								,"CRS:"
@@ -1092,6 +1110,14 @@ function meshCloud(data, dims) {
 							} else {
 								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
 							}
+
+							if( odd == 0 && tet == 0 && invert && normalVertices){
+								const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+								normalVertices.push( new THREE.Vector3( tv.p[0],tv.p[1]+0.02,tv.p[2]+0.02 ))
+								normalVertices.push( new THREE.Vector3( tv.p[0]+up.x*1.3,tv.p[1]+up.y*1.3,tv.p[2]+up.z*1.3));
+								normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
+								normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
+							}
 							usedTets = true;
 						}
 						bits[dataOffset] = 1;
@@ -1124,7 +1150,7 @@ function meshCloud(data, dims) {
 	//direction is 0-7 .. (1,1,1), (-1,1,1), (1,-1,1), (-1,-1,1), (1,1,-1), (-1,1,-1), (1,-1,-1), (-1,-1,1)
 
 	function getNormalState( s, baseNormal ) {
-		const norm = lnQA.set( 0, baseNormal.n[0],baseNormal.n[1], baseNormal.n[2] ).update().up();
+		const norm = lnQA.set( 0, baseNormal[0],baseNormal[1], baseNormal[2] ).update().up();
 					
 		let bnx = norm.x;
 		let bny = norm.y;

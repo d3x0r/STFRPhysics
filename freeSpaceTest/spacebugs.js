@@ -640,11 +640,12 @@ function animate() {
 		ent.m.start();
 
 		
-
-		ent.m.rotation.θ = rotation;// + Math.PI/2;//Math.PI/32;
-		ent.m.rotation.x = (ent.m.rotation.nx = ent.m.dipole.nx) * ent.m.rotation.θ;
-		ent.m.rotation.y = (ent.m.rotation.ny = ent.m.dipole.ny) * ent.m.rotation.θ;
-		ent.m.rotation.z = (ent.m.rotation.nz = ent.m.dipole.nz) * ent.m.rotation.θ;
+		if(0) {
+			ent.m.rotation.θ = rotation;// + Math.PI/2;//Math.PI/32;
+			ent.m.rotation.x = (ent.m.rotation.nx = ent.m.dipole.nx) * ent.m.rotation.θ;
+			ent.m.rotation.y = (ent.m.rotation.ny = ent.m.dipole.ny) * ent.m.rotation.θ;
+			ent.m.rotation.z = (ent.m.rotation.nz = ent.m.dipole.nz) * ent.m.rotation.θ;	
+		}
 		if(0)
 		switch( idx ) {
 			case 0:
@@ -669,7 +670,7 @@ function animate() {
 			if( idx === idx2 ) continue;
 			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
 		}
-		//ent.m.affect( myMotion, false, delta );
+		ent.m.affect( myMotion, false, delta );
 		const m = ent.x;
 		const motion = ent.m;
 		
@@ -696,7 +697,7 @@ function animate() {
 		//const newDir = motion.tmpDir;//pt;// idx==0?pt:motion.orientation.apply( pt );
 		const newDir = motion.targetVec;//pt;// idx==0?pt:motion.orientation.apply( pt );
 		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
-		const newDir2 = motion.lastCross;//motion.orientation.apply( motion.dipoleVec );
+		const newDir2 = motion.lastCross2;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
 		//const newDir3 = motion.targetVec;
 		const newDir3 = motion.tmpDipole;
