@@ -161,13 +161,22 @@ const _debug_output = true;
 	const tetPointInversions =
 		[
 			[  // the computed halfpoints are inverted from these tet's perspective.
-				[ 0,0,0  ,0,0,0],
+				[ 1,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,0,0,0,0],
 				[ 1,1,0  ,1,1,1 ],
 				[ 0,1,1  ,1,1,1 ],
 				[ 1,0,1  ,1,1,1],
 				[ 0,0,0  ,0,1,0],
 			],
 			[
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,1,0,0,0],
+				[ 0,0,0  ,0,0,0,0],
 				[ 1,0,0     ,0,0,1],
 				[ 0,1,0     ,1, 1, 0 ],
 				[ 1,1,1     ,0,1,1 ],
@@ -225,23 +234,23 @@ const _debug_output = true;
 	// these are edge numbers; a tet has 6 edges.
 	const facePointIndexesOriginal = [
 			[
-				[[1,0,2]],    // vert 0
-				[[1,0,4],[5,1,4]],
+				[[0,1,2]],    // vert 0
+				[[0,1,4],[1,5,4]],
 				[[5,0,3],[2,0,5]],
-				[[4,0,3]],    // vert 1
+				[[0,4,3]],    // vert 1
 				[[2,1,4],[4,1,3]],
-				[[5,1,3]],    // vert 2
-				[[4,2,5]]     // vert 3
+				[[1,5,3]],    // vert 2
+				[[2,4,5]]     // vert 3
 			],
 			// invert
 			[
-				[[0,1,2]],    // vert 0
-				[[0,1,4],[1,5,4]],
+				[[0,2,1]],    // vert 0
+				[[1,0,4],[5,1,4]],
 				[[0,5,3],[0,2,5]],
-				[[0,4,3]],    // vert 1
+				[[4,0,3]],    // vert 1
 				[[1,2,4],[1,4,3]],
-				[[1,5,3]],    // vert 2
-				[[2,4,5]]     // vert 3
+				[[5,1,3]],    // vert 2
+				[[4,2,5]]     // vert 3
 			],
 	];
 
@@ -735,7 +744,7 @@ function meshCloud(data, dims) {
 		let zOdd = z & 1;
 		cellOrigin[2] = z-dim2/2;
 
-		//if( z < 13 || z > 15 )continue;
+		//if( z < 0 || z > 10 )continue;
 		//if( z < 16 || z > 18 ) continue;
 		
 		// compute one layer (x by y) intersections (cross from inside to outside).
@@ -749,8 +758,9 @@ function meshCloud(data, dims) {
 			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 			//	if( x < 7 || x > 10 ) continue;
-		//		if( x < 25 || x > 27 ) continue;
+		//		if( x < 6 || x > 9 ) continue;
 				odd = (( x + y ) &1) ^ zOdd;
+			//	if( x > 10  ) continue;
 		//		if( x < 12 || x > 15 ) continue;
 				cellOrigin[0] = x-dim0/2;
 	
@@ -947,7 +957,7 @@ function meshCloud(data, dims) {
 									// source point is 2? 1?   (0?3?)
 									useFace = 2;
 									invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0 ;
-									if( tetPointInversions[odd][tet][0] )
+									if( tetPointInversions[odd][tet][1] )
 										invert = 1-invert;
 								}
 							}
@@ -956,13 +966,13 @@ function meshCloud(data, dims) {
 								// source point is ? 1? 3?   (0? 2?)
 								useFace = 3;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0  ;
-								if( tetPointInversions[odd][tet][0] )
+								if( tetPointInversions[odd][tet][2] )
 									invert = 1-invert;
 							}else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][4] ] ) {
 								// source point is 1
 								useFace = 4;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0
-								if( tetPointInversions[odd][tet][0] )
+								if( tetPointInversions[odd][tet][3] )
 									invert = 1-invert;
 							}
 						}
@@ -971,14 +981,14 @@ function meshCloud(data, dims) {
 							if( crosses[ baseOffset+edgeToComp[odd][tet][2] ] && crosses[ baseOffset+edgeToComp[odd][tet][3] ] && crosses[ baseOffset+edgeToComp[odd][tet][4] ]) {
 								// 0?1?   2?3?
 								useFace = 5;
-								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 )  ?1:0
-								if( tetPointInversions[odd][tet][1] )
+								invert = ( data[dataOffset+vertToData[odd][tet][1]] < 0 )  ?1:0
+								if( tetPointInversions[odd][tet][4] )
 									invert = 1-invert;
 							} else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
 								// source point is 2
 								useFace = 6;
 								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 ) ?1:0
-								if( tetPointInversions[odd][tet][1] )
+								if( tetPointInversions[odd][tet][5] )
 									invert = 1-invert;
 							}
 						} else {
@@ -986,13 +996,13 @@ function meshCloud(data, dims) {
 								// source point is 3
 								useFace = 7;
 								invert = ( data[dataOffset+vertToData[odd][tet][2]] >= 0 ) ?1:0
-								if( tetPointInversions[odd][tet][2] )
+								if( tetPointInversions[odd][tet][6] )
 									invert = 1-invert;
 							}
 						}
 					}
-
-					if( odd == 0 && tet == 0 && invert ) {
+					//if( useFace != ) continue;
+					if( odd >= 0 && tet == 4 && invert ) {
 						console.log( "adding a tet...", x,y,z,odd, tet, invert, useFace );
 					}
 					if( false && !useFace && usedTets ) {
@@ -1053,9 +1063,9 @@ function meshCloud(data, dims) {
 								//console.log( "zero size tri-face", x, y, z, odd, tet, tri, useFace, AisB,AisC,BisC );
 								continue;
 							}
-							v1 = vB;
-							v2 = vC;
-							v3 = vA;
+							v1 = vA;
+							v2 = vB;
+							v3 = vC;
 
 							fnorm[0] = v2[0]-v1[0];fnorm[1] = v2[1]-v1[1];fnorm[2] = v2[2]-v1[2];
 							tmp[0] = v3[0]-v1[0];tmp[1] = v3[1]-v1[1];tmp[2] = v3[2]-v1[2];
@@ -1111,7 +1121,8 @@ function meshCloud(data, dims) {
 								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
 							}
 
-							if( odd == 0 && tet == 0 && invert && normalVertices){
+							if(  normalVertices){
+								console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
 								const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
 								normalVertices.push( new THREE.Vector3( tv.p[0],tv.p[1]+0.02,tv.p[2]+0.02 ))
 								normalVertices.push( new THREE.Vector3( tv.p[0]+up.x*1.3,tv.p[1]+up.y*1.3,tv.p[2]+up.z*1.3));
@@ -1400,7 +1411,7 @@ function meshCloud(data, dims) {
 	}
 
 
-	//const drawToggle = 0xFFFFFFFF;
+	const drawToggle = 0xFFFFFFFF;
 	//const drawToggle = 0xFFff;
 	//const drawToggle = 0xFF00;
 	//const drawToggle = 0x10;
@@ -1408,7 +1419,7 @@ function meshCloud(data, dims) {
 	//const drawToggle = 0xFF;
 	//const drawToggle = 0xF0;
 	//const drawToggle = 0xc0;
-	const drawToggle = 0xff;
+	//const drawToggle = 0xff;
 	const ifDraw = (n)=>drawToggle & (1<<n)
 
 	for( var z = 0; z < dim2; z++ ) {
