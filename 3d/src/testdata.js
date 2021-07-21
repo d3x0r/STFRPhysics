@@ -55,8 +55,10 @@ function createTestData() {
 					else if( fill > 0 )
 						volume[n] = -2.3 * Math.random();
 					else n--;
-				}else
+				}else {
 					volume[n] = f(x,y,z);
+					if( volume[n] === 0 ) volume[n] -= 0.001
+				}
 			}
 			if( fill )
 			for( k=k; k < res[2]; k++ )
@@ -67,9 +69,9 @@ function createTestData() {
 				if( fill > 0 )
 					volume[n] = -2.3 * Math.random();
 			}
-			res[0] = res[0];
-			res[1] = res[1];
-			res[2] = res[2];
+			//res[0] = res[0];
+			//res[1] = res[1];
+			//res[2] = res[2];
 			return {data: volume, dims:res};
 		});
 	}
