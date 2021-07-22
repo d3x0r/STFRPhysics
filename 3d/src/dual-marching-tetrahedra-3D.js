@@ -756,12 +756,12 @@ function meshCloud(data, dims) {
 		// 3 intersections per cell after the first layer can be copied; but shift in position (moving from the top to the bottom)
 		// 
 		for( var y = 0; y < dim1-1; y++ ) {
-		//	if( y < 2 || y > 3 ) continue;
+		//if( y < 4 || y > 6 ) continue;
 		//	if( y > 3 ) continue;
 			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 			//	if( x < 7 || x > 10 ) continue;
-		//		if( x < 10 || x > 20 ) continue;
+		//		if( x < 0 || x > 10 ) continue;
 				odd = (( x + y ) &1) ^ zOdd;
 			//	if( x > 10  ) continue;
 		//		if( x < 12 || x > 15 ) continue;
@@ -1082,8 +1082,10 @@ function meshCloud(data, dims) {
 								, useFace, AisB,AisC,BisC 
 								, vA, vB, vC
 								);
-								continue;
-							}
+								fnorm[0] = lnQA.x;
+								fnorm[1] = 0; // y is always 0
+								fnorm[2] = lnQA.z;
+							}else {
 							v1 = vA;
 							v2 = vB;
 							v3 = vC;
@@ -1140,7 +1142,7 @@ function meshCloud(data, dims) {
 							fnorm[0] = lnQA.x;
 							fnorm[1] = 0; // y is always 0
 							fnorm[2] = lnQA.z;
-
+							}
 
 							pCenter[0] = (vA[0]+vB[0]+vC[0])/3;
 							pCenter[1] = (vA[1]+vB[1]+vC[1])/3;
@@ -1445,7 +1447,7 @@ function meshCloud(data, dims) {
 	//const drawToggle = 0xFF;
 	//const drawToggle = 0xF0;
 	//const drawToggle = 0xc0;
-	const drawToggle = 0x3fff;
+	const drawToggle = 0xFFFF;
 	const ifDraw = (n)=>drawToggle & (1<<n)
 
 	function emitHex(offset,p, dir, cIndx) {
@@ -1790,9 +1792,9 @@ function meshCloud(data, dims) {
 						}
 					}
 
-					if( ( p[3] = normals[baseOffset + tetOffset[2] + 2]  )
+					if( ( p[1] = normals[baseOffset + tetOffset[2] + 2]  )
 						&&( p[2] = normals[baseOffset + tetOffset[3] + 1]  )
-						&&( p[1] = normals[baseOffset + tetOffset[1] + 1]  )
+						&&( p[3] = normals[baseOffset + tetOffset[1] + 1]  )
 						){
 						// around top right to back line
 						if(ifDraw(11)){
