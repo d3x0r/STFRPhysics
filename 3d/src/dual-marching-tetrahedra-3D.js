@@ -432,10 +432,11 @@ const tetCentroidFacet =[
 	
 
 	class TetVertBase{ 
-		constructor( p, n, invert, p1, p2, p3 ) {
+		constructor( p, n, invert, p1, p2, p3, face ) {
 			this.invert = invert;
 			this.p = p;
 			this.n = n;
+			this.face = face;
 			//console.log( "set normal to:", this.n );
 			this. sources=[p1, p2, p3, null]
 			this.elements=[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0]
@@ -1014,10 +1015,11 @@ function meshCloud(data, dims) {
 							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
 							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
 							if( AisB || BisC || AisC ) {
+								if(0)
 								console.log( "zero size tri-face", x, y, z, odd, tet, tri
-								, useFace, AisB,AisC,BisC 
-								, vA, vB, vC
-								);
+									, useFace, AisB,AisC,BisC 
+									, vA, vB, vC
+									);
 								fnorm[0] = 0.6;
 								fnorm[1] = 0; // y is always 0
 								fnorm[2] = -0.6;
@@ -1094,7 +1096,7 @@ function meshCloud(data, dims) {
 							let tv = normals[normOffset+tet];
 							if( !tv )  {
 								tv = new TetVertBase( pCenter, fnorm.slice(0,3), invert
-									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] );
+									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], useFace );
 								normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1, psh2,psh3], i:invert};
 							} else {
 								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
@@ -1255,6 +1257,60 @@ function meshCloud(data, dims) {
 	const drawToggle = 0xffff;
 	const ifDraw = (n)=>drawToggle & (1<<n)
 
+
+	//https://en.wikipedia.org/wiki/Skew_lines#Nearest_Points
+
+	function getFold( faceNormal, p1, p2, p3, p4 ) {
+		//p1 = vertices[p1];
+		//p2 = vertices[p2];
+		//p3 = vertices[p3];
+		//p4 = vertices[p4];
+
+		const del1 = [ p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2] ];
+
+		const d1 = [p1[0]-p3[0], p1[1]-p3[1], p1[2]-p3[2] ];
+		const d2 = [p2[0]-p4[0], p2[1]-p4[1], p2[2]-p4[2] ];
+		
+		const l1 = 1/Math.sqrt( d1[0]*d1[0] + d1[1]*d1[1] + d1[2]*d1[2]);
+		const l2 = 1/Math.sqrt( d2[0]*d2[0] + d2[1]*d2[1] + d2[2]*d2[2]);
+		const n1 = [d1[0]*l1,d1[1]*l1,d1[2]*l1];
+		const n2 = [d2[0]*l2,d2[1]*l2,d2[2]*l2];
+		const c = [0,0,0];
+		cross(c,n1,n2);
+		const c1 = [0,0,0];
+		cross(c1,n1,c);
+		const c2 = [0,0,0];
+		cross(c2,n2,c);
+	
+		const dot1 = del1[0]*c2[0] + del1[1]*c2[1] + del1[2]*c2[2] ;
+		const dot2 = n1[0]*c2[0] + n1[1]*c2[1] + n1[2]*c2[2];
+		if( dot2 ){ // if !dot2, the lines are parallel and all pionts are parallel.
+			// dot1/dot2 with dot2 === 1 is a fault... just a guess at handling this.
+			const closeP1 = [p1[0] + (( dot1/dot2  )*n1[0]),p1[1] + (( dot1/dot2  )*n1[1]),p1[2] + (( dot1/dot2  )*n1[2])]
+		        
+			const dot3 = -del1[0]*c1[0] + -del1[1]*c1[1] + -del1[2]*c1[2] ;
+			const dot4 = n2[0]*c1[0] + n2[1]*c1[1] + n2[2]*c1[2];
+		        
+			const closeP2 = [p2[0] + (( dot3/dot4  )*n2[0]),p2[1] + (( dot3/dot4  )*n2[1]),p2[2] + (( dot3/dot4  )*n2[2])]
+		        
+			const crossDel = [closeP1[0]-closeP2[0],closeP1[1]-closeP2[1],closeP1[2]-closeP2[2]];
+			if( ( crossDel[0] * faceNormal.x + crossDel[1] * faceNormal.y + crossDel[2] * faceNormal.z ) > 0 )
+				return 1;
+			return 0;
+
+		}
+		return -1;
+
+		// compare the length, and prefer to fold on the shorter one.
+		if( d1[0]*d1[0]+d1[1]*d1[1]+d1[2]*d1[2] < d2[0]*d2[0]+d2[1]*d2[1]+d2[2]*d2[2] ) {
+			//console.log( "YES")
+			return 1;
+		}
+		//console.log( "NO", d1, d2)
+		return 0;
+	}
+
+
 	function emitHex(offset,p, dir, cIndx) {
 		const n= [0,0,0];//p[0].n.slice(0,3);
 		const pn = p[0].n;					
@@ -1271,7 +1327,7 @@ function meshCloud(data, dims) {
 		
 		const psh = pointStateHolder[ points[(offset + dataOffset[dir]) *6 + cIndx ] ];
 		if( !psh ) {
-			console.log( "edge is bad..." );
+			//console.log( "edge is bad..." );
 			if(  normalVertices){
 				const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 				normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
@@ -1281,6 +1337,7 @@ function meshCloud(data, dims) {
 			}
 			return;
 		}
+		const up = lnQA.set( 0, n[0],n[1],n[2]).update().up();
 		const vpc = addPoint( {p:psh.vertBuffer, n:n, id:0} );
 		const vp0 = addPoint( p[0] );
 		const vp1 = addPoint( p[1] );
@@ -1291,34 +1348,96 @@ function meshCloud(data, dims) {
 		//_debug_output && console.log( "E?" );
 		//console.log( "Doing hex..." );
 		if( !psh.invert  ) {
-			addFace( vpc, vp1, vp0 );
-			addFace( vpc, vp2, vp1 );
-			addFace( vpc, vp3, vp2 );
-			addFace( vpc, vp4, vp3 );
-			addFace( vpc, vp5, vp4 );
-			addFace( vpc, vp0, vp5 );
+
+			let fold = getFold( up, vpc.p, vp0.p, vp1.p, vp2.p );
+			if( fold >= 0) {
+				addFace( vpc, vp1, vp0 );
+				addFace( vpc, vp2, vp1 );
+			}else {
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp1, vp0 );
+				addFace( vpc, vp2, vp1 );
+
+			}
+
+			fold = getFold( up, vpc.p, vp2.p, vp3.p, vp4.p );
+			if( fold >= 0) {
+				addFace( vpc, vp3, vp2 );
+				addFace( vpc, vp4, vp3 );
+			}else{
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp3, vp2 );
+				addFace( vpc, vp4, vp3 );
+
+			}
+
+			fold = getFold( up, vpc.p, vp4.p, vp5.p, vp0.p );
+			if( fold >= 0) {
+				addFace( vpc, vp5, vp4 );
+				addFace( vpc, vp0, vp5 );
+			}else {
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp5, vp4 );
+				addFace( vpc, vp0, vp5 );
+			}
 		}else {
-			addFace( vpc, vp0, vp1 );
-			addFace( vpc, vp1, vp2 );
-			addFace( vpc, vp2, vp3 );
-			addFace( vpc, vp3, vp4 );
-			addFace( vpc, vp4, vp5 );
-			addFace( vpc, vp5, vp0 );
+
+			let fold = getFold( up, vpc.p, vp0.p, vp1.p, vp2.p );
+			if( fold >= 0) {
+				addFace( vpc, vp0, vp1 );
+				addFace( vpc, vp1, vp2 );
+				}else {
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp0, vp1 );
+				addFace( vpc, vp1, vp2 );
+	
+			}
+
+			fold = getFold( up, vpc.p, vp2.p, vp3.p, vp4.p );
+			if( fold >= 0) {
+				addFace( vpc, vp2, vp3 );
+				addFace( vpc, vp3, vp4 );
+			}else{
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp2, vp3 );
+				addFace( vpc, vp3, vp4 );
+	
+			}
+
+			fold = getFold( up, vpc.p, vp4.p, vp5.p, vp0.p );
+			if( fold >= 0) {
+				addFace( vpc, vp4, vp5 );
+				addFace( vpc, vp5, vp0 );
+			}else {
+				console.log( "This is a pinch fix?");
+				addFace( vpc, vp4, vp5 );
+				addFace( vpc, vp5, vp0 );
+			}
+
 		}
 
 	}
 
 	function emitSquare(p, offset, dir, edge) {
 
+		const n= [0,0,0];//p[0].n.slice(0,3);
+		const pnsrc = p[0].n;					
+		for( let pn = 0; pn < 4; pn++){
+			const p_ = p[pn];
+			moveNear( pnsrc, p_.n );
+			n[0] += p_.n[0];
+			n[1] += p_.n[1];
+			n[2] += p_.n[2];
+		}
+		n[0] /= 4;
+		n[1] /= 4;
+		n[2] /= 4;
+		const up = lnQA.set( 0, n[0],n[1],n[2]).update().up();
+		
 		const psh = pointStateHolder[ points[(offset + dataOffset[dir]) *6 + edge ] ];
 
-		const vp0 = addPoint( p[0] );
-		const vp1 = addPoint( p[1] );
-		const vp2 = addPoint( p[2] );
-		const vp3 = addPoint( p[3] );
-		//_debug_output && console.log( "S?" );
 		if( !psh ) {
-			console.log( "edge is bad..." );
+			//console.log( "edge is bad..." );
 			if(  normalVertices){
 				const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 				normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
@@ -1326,15 +1445,57 @@ function meshCloud(data, dims) {
 				normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
 				normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
 			}
+			return;
 		}
+		if(  normalVertices){
+			const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
+			normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
+			normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
+			normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
+			normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
+		}
+	
+		const vpc = addPoint( {p:psh.vertBuffer, n:n, id:0} );
+		const vp0 = addPoint( p[0] );
+		const vp1 = addPoint( p[1] );
+		const vp2 = addPoint( p[2] );
+		const vp3 = addPoint( p[3] );
+		const fold = getFold( up, vp0.p, vp1.p, vp2.p, vp3.p );
+		//_debug_output && console.log( "S?" );
 		if( psh && psh.invert  ) {
 			//console.log( "sq face 1", dir, edge, faces.length)
-			addFace( vp0, vp2, vp1 );
-			addFace( vp0, vp3, vp2 );
+			//return;
+			if(0) {
+			addFace( vpc, vp1, vp0 );
+			addFace( vpc, vp2, vp1 );
+			addFace( vpc, vp3, vp2 );
+			addFace( vpc, vp0, vp3 );
+			}
+			if( fold >= 0 ) {
+				addFace( vp3, vp1, vp0 );
+				addFace( vp3, vp2, vp1 );
+			}else {
+				addFace( vp0, vp2, vp1 );
+				addFace( vp0, vp3, vp2 );
+							
+			}
 		}else {
 			//console.log( "sq face 2", dir,edge, faces.length)
-			addFace( vp0, vp1, vp2 );
-			addFace( vp0, vp2, vp3 );
+			//return;
+			if(0) {
+			addFace( vpc, vp0, vp1 );
+			addFace( vpc, vp1, vp2 );
+			addFace( vpc, vp2, vp3 );
+			addFace( vpc, vp3, vp0 );
+			}
+			if( fold >= 0 ) {
+				addFace( vp3, vp0, vp1 );
+				addFace( vp3, vp1, vp2 );
+			}else {
+				addFace( vp0, vp1, vp2 );
+				addFace( vp0, vp2, vp3 );
+
+			}
 		}
 }
 
@@ -1394,9 +1555,16 @@ function meshCloud(data, dims) {
 								normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
 								normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
 							}
-		
+						let drawOk = true;
+						{
+							const fc = p[0].face;
+							if( fc == 1 ) drawOk = false;
+							else if( fc == 3 ) drawOk = false;
+							else if( fc == 5 ) drawOk = false;
+						}
+				
 							// back top square
-						if(ifDraw(0)) {
+						if(ifDraw(0)&& drawOk ) {
 							emitSquare(p, offset, 6, 2 );
 							ffQueue( x, y, z+1 )							
 							ffQueue( x, y+1, z )							
@@ -1439,7 +1607,9 @@ function meshCloud(data, dims) {
 						&&(p[3] = normals[baseOffset + tetOffset[4] + 3]  )
 						){
 						// around back right vertical
-						if(ifDraw(3)) {
+						let drawOk = true;
+						if( p[0].face >= 4 ) drawOk = false;
+						if(ifDraw(3) && drawOk ) {
 							emitSquare(p, offset, 5, 0 );  // edge not tet
 							ffQueue( x+1, y, z )
 							ffQueue( x, y, z+1 )
@@ -1482,7 +1652,14 @@ function meshCloud(data, dims) {
 						&&(p[2] = normals[baseOffset + tetOffset[3] + 0] )
 						){
 						// around back right top to back vertical
-						if(ifDraw(5)) {
+						let drawOk = true;
+						{
+							const fc = p[0].face;
+							if( fc == 2 ) drawOk = false;
+							else if( fc == 3 ) drawOk = false;
+							else if( fc == 6 ) drawOk = false;
+						}
+						if(ifDraw(5)&&drawOk) {
 							emitSquare(p, offset, 3, 1 );
 							ffQueue( x+1, y, z )
 							ffQueue( x, y+1, z )
@@ -1540,7 +1717,15 @@ function meshCloud(data, dims) {
 						&&( p[1] = normals[baseOffset + tetOffset[4] + 3]  )
 						){
 						// around back right top to back horizontal
-						if(ifDraw(8)) {
+						let drawOk = true;
+						
+						{// edge 2 is tet line 1 here...
+							const fc = p[0].face;
+							if( fc == 2 ) drawOk = false;
+							else if( fc == 3 ) drawOk = false;
+							else if( fc == 6 ) drawOk = false;
+						}
+						if(ifDraw(8)&&drawOk) {
 							emitSquare(p, offset, 6, 2 );
 							ffQueue( x, y+1, z )
 							ffQueue( x, y, z+1 )
@@ -1553,7 +1738,10 @@ function meshCloud(data, dims) {
 						&&( p[1] = normals[baseOffset + tetOffset[1] + 1]  )
 						){
 						// around back right vertical line
-						if(ifDraw(9)) {
+						let drawOk = true;
+						if( p[0].face >= 4 ) drawOk = false;
+						
+						if(ifDraw(9)&&drawOk) {
 							emitSquare(p, offset, 5, 0 );
 							ffQueue( x+1, y, z )
 							ffQueue( x, y, z+1 )
@@ -1566,7 +1754,14 @@ function meshCloud(data, dims) {
 						&&( p[3] = normals[baseOffset + tetOffset[1] + 1]  )
 						){
 						// around top right to back line
-						if(ifDraw(11)){
+						let drawOk = true;
+						{
+							const fc = p[0].face;
+							if( fc == 1 ) drawOk = false;
+							else if( fc == 3 ) drawOk = false;
+							else if( fc == 5 ) drawOk = false;
+						}
+						if(ifDraw(11)&&drawOk){
 							emitSquare(p, offset, 3, 1 );
 							ffQueue( x, y+1, z )
 							ffQueue( x+1, y, z )
