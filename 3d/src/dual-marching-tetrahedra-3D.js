@@ -88,7 +88,7 @@ this is the vertex references on the right, and which 'vert N' applies.
 */
 
 import {lnQuat} from "./lnQuatSq.js"
-
+lnQuat.setVectorType( THREE.Vector3 )
 var DualMarchingTetrahedra3 = window.DualMarchingTetrahedra3 = (function() {
 const debug_ = false;
 const _debug_output = true;
@@ -531,41 +531,6 @@ const tetCentroidFacet =[
 
 
 
-	// these are the possible edges formed from each tet to each other near tet.
-	// [odd] [tet] [face]
-	const referenceTetEdgeFormations =[ [  [ [0, (1*dim1*dim0)*tetCount+0], [0,(-1*dim0)*tetCount+2], [0,(-1)*tetCount+3],   [0,4] ]
-					     , [ [1, ( 1 )*tetCount+0] [1,4], [1,(-1*dim0*dim1)*tetCount+3], [1,(-1*dim0)*tetCount+1] ]
-					    , [ [2, (1*dim0)*tetCount+0], [2,(-1) +1], [2,(-1*dim0*dim1)*tetCount+2], [2,4] ]
-					    , [ [3, (1*dim0*dim1)*tetCount+1], [3,4], [3,(1*dim0)*tetCount+3], [3,( 1 )*tetCount+2] ]
-					    , [ [4, 0], [4,1], [4,2], [4,3] ]
-					    ],
-					    [ [ [ 0, (-1)*tetCount+1], [0, (-1*dim0)*tetCount+2], [0,(-1*dim0*dim1)*tetCount+0], [0,4] ]
-					    , [ [ 1, ( 1 )*tetCount+2], [1, (1*dim0)*tetCount+1], [1, (1*dim0*dim1)*tetCount+3], [1,4] ]
-					    , [ [ 2, (1*dim0*dim1)*tetCount+2], [2, (-1)*tetCount+3], [2, (1*dim0)*tetCount+0], [2,4] ]
-					    , [ [ 3, (1*dim0*dim1)*tetCount+1], [3, (-1*dim0)*tetCount+3], [3, 4], [3,( 1 )*tetCount+0] ]
-					    , [ [4, 0], [4,1], [4,2], [4,3] ]
-					    ]
-					];
-
-
-//	const referenceTetEdgeFormationsAroundTetEdges=[ [ [0],[1] ], [ [0],[2] ], [ [0], [3] ], [ [0], [4] ], [ [ 1],[2] ], [ [ 1], [3] ], [ [  2], [3]] 
-//						]
-	// this is, for even/odd, for each tet, for each edge, the other mating tet index (plus data offset)
-
-	const TetFaceMapping = [ [  [ ( 1 *dim0*dim1 ) * tetCount    + 0, (-1*dim0)*tetCount + 2, (-1)*tetCount           + 3, (0)*tetCount       + 4]
-			            ,  [ ( 1 ) * tetCount            + 0, (0)*tetCount       + 4, (-1*dim0*dim1)*tetCount + 3, (-1*dim0)*tetCount + 1]
-			            ,  [ ( 1 *dim0 ) * tetCount      + 0, (-1)*tetCount      + 1, (-1*dim0*dim1)*tetCount + 2, (0)*tetCount       + 4]
-			            ,  [ ( 1 *dim0*dim1 ) * tetCount + 1, (0)*tetCount       + 4, (1*dim0)*tetCount       + 3, ( 1 )*tetCount       + 2]
-			            ,  [ ( 0 ) * tetCount            + 0, (0)*tetCount       + 3, (0)*tetCount            + 2, (0)*tetCount       + 1]
-			            ]
-					/* Duplicated from above - this will be a bad map... */
-			          , [  [ ( -1 ) * tetCount           + 1, (-1*dim0)*tetCount + 2, (-1*dim0*dim1)*tetCount + 0, (0)*tetCount       + 4]
-			            ,  [ ( 1 ) * tetCount            + 2, (1*dim0)*tetCount  + 1, (-1*dim0*dim1)*tetCount + 3, (-1*dim0)*tetCount + 3]
-			            ,  [ ( 1 *dim0*dim1 ) * tetCount + 2, (-1)*tetCount      + 3, (1*dim0)*tetCount       + 1, (0)*tetCount       + 4]
-			            ,  [ ( 1 *dim0*dim1 ) * tetCount + 1, (-1*dim0)*tetCount + 3, (0)*tetCount            + 4, ( 1 )*tetCount       + 0]
-				    ,  [ ( 0 ) * tetCount            + 0, (0)*tetCount       + 3, (0)*tetCount            + 1, (0)*tetCount       + 2]
-			            ]	
-			          ];
 	
 	meshCloud( data,dims );
 	return null;
@@ -747,7 +712,7 @@ function meshCloud(data, dims) {
 		let zOdd = z & 1;
 		cellOrigin[2] = z-dim2/2;
 
-		//if( z < 10 || z > 20 )continue;
+		if( z < 10 || z > 20 )continue;
 		//if( z < 16 || z > 18 ) continue;
 		
 		// compute one layer (x by y) intersections (cross from inside to outside).
@@ -761,7 +726,7 @@ function meshCloud(data, dims) {
 			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 			//	if( x < 7 || x > 10 ) continue;
-		//		if( x < 0 || x > 10 ) continue;
+				if( x < 10 || x > 20 ) continue;
 				odd = (( x + y ) &1) ^ zOdd;
 			//	if( x > 10  ) continue;
 		//		if( x < 12 || x > 15 ) continue;
@@ -823,7 +788,7 @@ function meshCloud(data, dims) {
 								pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
 								//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
 
-								if(  normalVertices){
+								if( 0 && normalVertices){
 									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
 									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
 									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
@@ -880,7 +845,7 @@ function meshCloud(data, dims) {
 								pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
 								pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
 								//console.log( "new point(2):", pointOutputHolder );
-								if(  normalVertices){
+								if( 0 && normalVertices){
 									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
 									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
 									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
@@ -1126,7 +1091,7 @@ function meshCloud(data, dims) {
 							// convert normal to a rotation of 'up'
 							lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
 
-							if(  normalVertices){
+							if( 0 && normalVertices){
 								if( !odd && tet == 2 ) {
 									for( let v of [vB]) {
 										console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
@@ -1170,47 +1135,6 @@ function meshCloud(data, dims) {
 		}
 	}
 
-	// 0 = Y X Z
-	// 1 = X Z Y
-	// 2 = Z X Y
-	// 3 = x y z
-	// 4 = y z x
-	// 5 = z y x
-
-	// X(biggest)   1 3
-	// y(biggest)   0 4
-	// z(biggest)   2 5
-	// y > x  0 4 5	
-	// x > y  1 2 3 
-	// y > z  0 3 4
-	// x > z  0 1 3
-	// z > x  2 4 5
-	// z > y  1 2 5
-
-	//direction is 0-7 .. (1,1,1), (-1,1,1), (1,-1,1), (-1,-1,1), (1,1,-1), (-1,1,-1), (1,-1,-1), (-1,-1,1)
-
-	function getNormalState( s, baseNormal ) {
-		const norm = lnQA.set( 0, baseNormal[0],baseNormal[1], baseNormal[2] ).update().up();
-					
-		let bnx = norm.x;
-		let bny = norm.y;
-		let bnz = norm.z;
-		s.dir = 0;
-		if( bnx < 0 ) { s.dir |= 1; bnx = -bnx; }
-		if( bny < 0 ) { s.dir |= 2; bny = -bny; }
-		if( bnz < 0 ) { s.dir |= 4; bnz = -bnz; }
-		if( bnx > bny )  // x > y
-			if( bnx > bnz ) // x > z
-				if( bny > bnz ) s.largest=0;//0*3+2; // y>z xmax  z min
-				else s.largest=1;//0*3+1; // xmax, ymin
-			else s.largest=2;//2*3+1; // z longest, x mid  y least
-		else if( bny > bnz ) // x < y, y > z   (y > x ) 
-			if( bnx>bnz ) s.largest=3;//1*3+2;  // x>z   z min
-			else s.largest=4;//1*3+0;  // y longest, z mid, x short
-		else s.largest = 5;//2*3 + 0; // z longest, y mid,  x min
-	}
-
-
 	// so at this point I've computed all the cross points
 	// all the normals
 	// all the centroid/offset points back to the dual phase
@@ -1225,22 +1149,9 @@ function meshCloud(data, dims) {
 		if( !n ){
 			if( smoothShade ) {
 				if( opts.geometryHelper ){
-					lnQA.set( 0,ai_.n[0],ai_.n[1],ai_.n[2] ).update();
-					const an = lnQA.up();
-					lnQA.set( 0,bi_.n[0],bi_.n[1],bi_.n[2] ).update();
-					const bn = lnQA.up();
-					lnQA.set( 0,ci_.n[0],ci_.n[1],ci_.n[2] ).update();
-					const cn = lnQA.up();
-					n = [[an.x,an.y,an.z],[cn.x,cn.y,cn.z],[bn.x,bn.y,bn.z]];
+					n = [ai_.n,ci_.n,bi_.n];
 				} else {
 					n = [faceNormals[ai],faceNormals[ci],faceNormals[bi]];// these are three.vectors isntead...
-					lnQA.set( 0,faceNormals[ai].x,faceNormals[ai].y,faceNormals[ai].z ).update();
-					const an = lnQA.up();
-					lnQA.set( 0,faceNormals[bi].x,faceNormals[bi].y,faceNormals[bi].z ).update();
-					const bn = lnQA.up();
-					lnQA.set( 0,faceNormals[ci].x,faceNormals[ci].y,faceNormals[ci].z ).update();
-					const cn = lnQA.up();
-					n = [an,cn,bn];
 				}
 			}else {
 				if( opts.geometryHelper )
@@ -1266,14 +1177,7 @@ function meshCloud(data, dims) {
 			}
 		}
 		else if( !opts.geometryHelper ){
-			//n = [faceNormals[ai],faceNormals[ci],faceNormals[bi]];// these are three.vectors isntead...
-			lnQA.set( 0,faceNormals[ai].x,faceNormals[ai].y,faceNormals[ai].z ).update();
-			const an = lnQA.up();
-			lnQA.set( 0,faceNormals[bi].x,faceNormals[bi].y,faceNormals[bi].z ).update();
-			const bn = lnQA.up();
-			lnQA.set( 0,faceNormals[ci].x,faceNormals[ci].y,faceNormals[ci].z ).update();
-			const cn = lnQA.up();
-			n = [an,cn,bn];
+			n = [faceNormals[ai],faceNormals[ci],faceNormals[bi]];// these are three.vectors isntead...
 		}else {
 			//let x = n[1];
 			//n[1] = n[2];
@@ -1302,7 +1206,9 @@ function meshCloud(data, dims) {
 					, [outX,outY,outZ]  // unit modulous of this point.
 					, false
 			);
-			faceNormals.push( p.n );
+			lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
+			const an = lnQA.up();
+			faceNormals.push( an );
 			p.id = normal.id+1;
 			return p;
 		}else {
@@ -1312,11 +1218,21 @@ function meshCloud(data, dims) {
 					if( n ) {
 						lnQA.set( 0,n[0],n[1],n[2] ).update();
 						const an = lnQA.up();
-						faceNormals.push( new THREE.Vector3( an.x,an.y,an.z ) );
+						faceNormals.push( an );
 					} else {
+						if( p.invert ) {
+							lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
+
+						}else
 						lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
 						const an = lnQA.up();
-						faceNormals.push( new THREE.Vector3( p.n[0], p.n[1], p.n[2] ) );
+						faceNormals.push( an );
+						if( p.invert && normalVertices){
+							normalVertices.push( new THREE.Vector3( p.p[0],p.p[1],p.p[2]+0.02 ))
+							normalVertices.push( new THREE.Vector3( p.p[0]+an.x*1.3,p.p[1]+an.y*1.3,p.p[2]+an.z*1.3));
+							normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
+							normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
+						}
 					}
 				}
 				return p;//p.id - 1;
@@ -1325,11 +1241,11 @@ function meshCloud(data, dims) {
 				if( n ) {
 					lnQA.set( 0,n[0],n[1],n[2] ).update();
 					const an = lnQA.up();
-					faceNormals.push( new THREE.Vector3( an.x,an.y,an.z ) );
+					faceNormals.push( an );
 				} else {
 					lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
 					const an = lnQA.up();
-					faceNormals.push( new THREE.Vector3( p.n[0], p.n[1], p.n[2] ) );
+					faceNormals.push( an );
 				}
 				p.id = newId;  // this will get updated dynamically
 				return p;
@@ -1337,106 +1253,6 @@ function meshCloud(data, dims) {
 		}
 	}
 	//https://en.wikipedia.org/wiki/Skew_lines#Nearest_Points
-
-	function getFold( faceNormal, p1, p2, p3, p4 ) {
-		//p1 = vertices[p1];
-		//p2 = vertices[p2];
-		//p3 = vertices[p3];
-		//p4 = vertices[p4];
-
-		const del1 = [ p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2] ];
-
-		const d1 = [p1[0]-p3[0], p1[1]-p3[1], p1[2]-p3[2] ];
-		const d2 = [p2[0]-p4[0], p2[1]-p4[1], p2[2]-p4[2] ];
-		
-		const l1 = 1/Math.sqrt( d1[0]*d1[0] + d1[1]*d1[1] + d1[2]*d1[2]);
-		const l2 = 1/Math.sqrt( d2[0]*d2[0] + d2[1]*d2[1] + d2[2]*d2[2]);
-		const n1 = [d1[0]*l1,d1[1]*l1,d1[2]*l1];
-		const n2 = [d2[0]*l2,d2[1]*l2,d2[2]*l2];
-		const c = [0,0,0];
-		cross(c,n1,n2);
-		const c1 = [0,0,0];
-		cross(c1,n1,c);
-		const c2 = [0,0,0];
-		cross(c2,n2,c);
-	
-		const dot1 = del1[0]*c2[0] + del1[1]*c2[1] + del1[2]*c2[2] ;
-		const dot2 = n1[0]*c2[0] + n1[1]*c2[1] + n1[2]*c2[2];
-		if( dot2 ){ // if !dot2, the lines are parallel and all pionts are parallel.
-			// dot1/dot2 with dot2 === 1 is a fault... just a guess at handling this.
-			const closeP1 = [p1[0] + (( dot1/dot2  )*n1[0]),p1[1] + (( dot1/dot2  )*n1[1]),p1[2] + (( dot1/dot2  )*n1[2])]
-		        
-			const dot3 = -del1[0]*c1[0] + -del1[1]*c1[1] + -del1[2]*c1[2] ;
-			const dot4 = n2[0]*c1[0] + n2[1]*c1[1] + n2[2]*c1[2];
-		        
-			const closeP2 = [p2[0] + (( dot3/dot4  )*n2[0]),p2[1] + (( dot3/dot4  )*n2[1]),p2[2] + (( dot3/dot4  )*n2[2])]
-		        
-			const crossDel = [closeP1[0]-closeP2[0],closeP1[1]-closeP2[1],closeP1[2]-closeP2[2]];
-			if( ( crossDel[0] * faceNormal[0] + crossDel[1] * faceNormal[1] + crossDel[2] * faceNormal[2] ) > 0 )
-				return 1;
-			return 0;
-
-		}
-		return -1;
-
-		// compare the length, and prefer to fold on the shorter one.
-		if( d1[0]*d1[0]+d1[1]*d1[1]+d1[2]*d1[2] < d2[0]*d2[0]+d2[1]*d2[1]+d2[2]*d2[2] ) {
-			//console.log( "YES")
-			return 1;
-		}
-		//console.log( "NO", d1, d2)
-		return 0;
-	}
-
-	function outputFace( inv, n1, n2, n3, n4 ){
-		//inv = 0
-		const f = getFold( n1.n, n1.p, n2.p, n3.p, n4.p );
-		if( f >= 0 ) {
-			const p0 = addPoint( n1 );
-			const p1 = addPoint( n2);
-			const p2 = addPoint( n3);
-			const p3 = addPoint( n4);
-			if( f ) 
-				if( inv ){
-					addFace( p0, p2, p1, (!smoothShade)?null:[n1.n,n3.n,n2.n] );
-					addFace( p0, p3, p2, (!smoothShade)?null:[n1.n,n4.n,n3.n] );
-				}else {
-					addFace( p0, p1, p2, (!smoothShade)?null:[n1.n,n2.n,n3.n] );
-					addFace( p0, p2, p3, (!smoothShade)?null:[n1.n,n3.n,n4.n] );
-				}
-			else
-				if( inv ){
-					addFace( p1, p3, p2, (!smoothShade)?null:[n2.n,n4.n,n3.n] );
-					addFace( p1, p0, p3, (!smoothShade)?null:[n2.n,n1.n,n4.n] );
-				}else {
-					addFace( p1, p2, p3, (!smoothShade)?null:[n2.n,n3.n,n4.n] );
-					addFace( p1, p3, p0, (!smoothShade)?null:[n2.n,n4.n,n1.n] );
-				}
-		}else {
-			let a = measureTriFace( n1.p, n2.p, n3.p );
-			if( a > 0.1 ){
-				console.log( "Recovered lost face?");
-				const p1 = addPoint( n1);
-				const p2 = addPoint( n2);
-				const p3 = addPoint( n3);
-				if( inv )
-					addFace( p1, p3, p2, (!smoothShade)?null:[n1.n,n3.n,n2.n] );
-				else
-					addFace( p1, p2, p3, (!smoothShade)?null:[n1.n,n2.n,n3.n] );
-			}
-			a = measureTriFace( n1.p, n3.p, n4.p );
-			if( a > 0.1 ){
-				console.log( "Recovered lost face?");
-				const p1 = addPoint( n1);
-				const p2 = addPoint( n3);
-				const p3 = addPoint( n4);
-				if( inv )
-					addFace( p1, p3, p2,(!smoothShade)?null:[n1.n,n3.n,n2.n] );
-				else
-					addFace( p1, p2, p3,(!smoothShade)?null:[n1.n,n2.n,n3.n] );
-			}
-		}
-	}
 
 
 	//const drawToggle = 0xFFFFFFFF;
@@ -1447,7 +1263,7 @@ function meshCloud(data, dims) {
 	//const drawToggle = 0xFF;
 	//const drawToggle = 0xF0;
 	//const drawToggle = 0xc0;
-	const drawToggle = 0xFFFF;
+	const drawToggle = 0x1;
 	const ifDraw = (n)=>drawToggle & (1<<n)
 
 	function emitHex(offset,p, dir, cIndx) {
@@ -1580,6 +1396,16 @@ function meshCloud(data, dims) {
 						&&(p[2] = normals[baseOffset + tetOffset[6] + 0] )
 						&&(p[3] = normals[baseOffset + tetOffset[2] + 1] )
 						){
+
+							if(  normalVertices){
+								//console.log( "Drawing line:", x, y, z, odd, 4 );
+								const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
+								normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2] ))
+								normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
+								normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
+								normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
+							}
+		
 							// back top square
 						if(ifDraw(0)) {
 							emitSquare(p, offset, 6, 2 );
@@ -1676,55 +1502,10 @@ function meshCloud(data, dims) {
 					}
 				}
 
-				if(0)
-				if( bits[offset] === 0x1f ) {
-					const inv = 0;
-					const l = normDir.largest;
-					p0=normals[baseOffset+4];
-					getNormalState( normDir, p0.n );
-					const p_0 = addPoint( p0 );
-					const p1 = addPoint( normals[baseOffset+(i1=tetCentroidFacet[odd][inv][normDir.dir][l][0])]);
-					const p2 = addPoint( normals[baseOffset+(i2=tetCentroidFacet[odd][inv][normDir.dir][l][1])]);
-					const p3 = addPoint( normals[baseOffset+(i3=tetCentroidFacet[odd][inv][normDir.dir][l][2])]);
-					const p4 = addPoint( normals[baseOffset+(i4=tetCentroidFacet[odd][inv][normDir.dir][l][3])]);
-
-					// console.log( "This is still soemtimes brokens... TODO FIXME")
-
-					addFace( p_0, p1, p2 );
-					addFace( p_0, p2, p3 );
-					addFace( p_0, p3, p4 );
-					addFace( p_0, p4, p1 );
-
-				}
-
 
 			}else if(1){
 
 				//const ffQueue = ()=>{};
-
-				if(0)
-				if( bits[offset] === 0x1f ) {
-					let inv = 0;
-					//console.log( "Has Center.",content[baseOffset+0],content[baseOffset+1],content[baseOffset+2],content[baseOffset+3] );
-					p0=normals[baseOffset+4];
-					getNormalState( normDir, p0.n );
-					{
-						const p_0 = addPoint( p0 );
-						const p1 = addPoint( normals[baseOffset+(i1=tetCentroidFacet[odd][inv][normDir.dir][normDir.largest][0])]);
-						const p2 = addPoint( normals[baseOffset+(i2=tetCentroidFacet[odd][inv][normDir.dir][normDir.largest][1])]);
-						const p3 = addPoint( normals[baseOffset+(i3=tetCentroidFacet[odd][inv][normDir.dir][normDir.largest][2])]);
-						const p4 = addPoint( normals[baseOffset+(i4=tetCentroidFacet[odd][inv][normDir.dir][normDir.largest][3])]);
-
-						// console.log( "This is still soemtimes brokens... TODO FIXME")
-						//usedTets[odd][inv][normDir.dir][l] = 1;
-
-						addFace( p_0, p1, p2 );
-						addFace( p_0, p2, p3 );
-						addFace( p_0, p3, p4 );
-						addFace( p_0, p4, p1 );
-					}
-				}
-
 				if( p[0] = normals[baseOffset+0] ) {
 
 
@@ -1741,14 +1522,14 @@ function meshCloud(data, dims) {
 						}
 
 					}
-					else { console.log( "missing one or more for this hex" ); }
+					else { 
+					//	console.log( "missing one or more for this hex" ); 
+					}
 
 				}
 
 
 				if( p[0] = normals[baseOffset+1] ) {
-
-
 					if( ( p[1] = normals[baseOffset + tetOffset[4] + 0]  )
 						&&( p[2] = normals[baseOffset + tetOffset[4] + 4]  )
 						&&( p[3] = normals[baseOffset + tetOffset[4] + 3]  )
@@ -1765,7 +1546,6 @@ function meshCloud(data, dims) {
 				}
 
 				if( p[0] = normals[baseOffset+2] ) {
-
 					if( ( p[3] = normals[baseOffset + tetOffset[2] + 2] )
 						&&( p[2] = normals[baseOffset + tetOffset[6] + 3]  )
 						&&( p[1] = normals[baseOffset + tetOffset[4] + 3]  )
@@ -1831,39 +1611,39 @@ function meshCloud(data, dims) {
 				if( normals[baseOffset+0]) {
 					// from even 0
 					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<3)) {
-						added.push( ffQueue( x-1, y, z ) );
+						( ffQueue( x-1, y, z ) );
 					}
 					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<0)) {
-						added.push( ffQueue( x, y-1, z ) );
+						( ffQueue( x, y-1, z ) );
 					}
 					if( z >0 && bits[offset - dataOffset[4] ] & ( 1<<1) ) {
-						added.push( ffQueue( x, y, z-1 ) );
+						( ffQueue( x, y, z-1 ) );
 					}
 				}
 
 				if( normals[baseOffset+1]) {
 					// from even 1
 					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<2)) {
-						added.push( ffQueue( x-1, y, z ) );
+						( ffQueue( x-1, y, z ) );
 					}
 					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<1)) {
-						added.push( ffQueue( x, y+1, z ) );
+						( ffQueue( x, y+1, z ) );
 					}
 					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<1) ) {
-						added.push( ffQueue( x, y, z+1 ) );
+						( ffQueue( x, y, z+1 ) );
 					}
 				}
 
 				if( normals[baseOffset+2]) {
 					// from even 2
 					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<1)) {
-						added.push( ffQueue( x+1, y, z ));
+						( ffQueue( x+1, y, z ));
 					}
 					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<2)) {
-						added.push( ffQueue( x, y-1, z ));
+						( ffQueue( x, y-1, z ));
 					}
 					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<3) ) {
-						added.push( ffQueue( x, y, z+1 ));
+						( ffQueue( x, y, z+1 ));
 					}
 				}
 
@@ -1871,13 +1651,13 @@ function meshCloud(data, dims) {
 				if( normals[baseOffset+3]) {
 					// from even 3
 					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<0)) {
-						added.push( ffQueue( x+1, y, z ));
+						( ffQueue( x+1, y, z ));
 					}
 					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<3)) {
-						added.push( ffQueue( x, y+1, z ));
+						( ffQueue( x, y+1, z ));
 					}
 					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<2) ) {
-						added.push( ffQueue( x, y, z-1 ));
+						( ffQueue( x, y, z-1 ));
 					}
 				}
 
@@ -1887,26 +1667,26 @@ function meshCloud(data, dims) {
 				if( normals[baseOffset+0]) {
 					// from odd 0
 					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<3)) {
-						added.push( ffQueue( x-1, y, z ));
+						( ffQueue( x-1, y, z ));
 					}
 					if( y < dim1-1 && bits[offset + dataOffset[2] ]  & ( 1<<0)) {
-						added.push( ffQueue( x, y+1, z ));
+						( ffQueue( x, y+1, z ));
 					}
 					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<1) ) {
-						added.push( ffQueue( x, y, z-1 ));
+						( ffQueue( x, y, z-1 ));
 					}
 				}
 
 				if( normals[baseOffset+1]) {
 					// from odd 0
 					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<2)) {
-						added.push( ffQueue( x-1, y, z ));
+						( ffQueue( x-1, y, z ));
 					}
 					if( y > 0  && bits[offset - dataOffset[2] ]  & ( 1<<1)) {
-						added.push( ffQueue( x, y-1, z ));
+						( ffQueue( x, y-1, z ));
 					}
 					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<0) ) {
-						added.push( ffQueue( x, y, z+1 ));
+						( ffQueue( x, y, z+1 ));
 					}
 				}
 
@@ -1914,28 +1694,28 @@ function meshCloud(data, dims) {
 					// from odd 2
 					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<1)) {
 						//console.log( "This should already have been dispatched?")
-						added.push( ffQueue( x+1, y, z ));
+						( ffQueue( x+1, y, z ));
 					}
 					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<2)) {
 						//console.log( "This should already have been dispatched?")
-						added.push( ffQueue( x, y+1, z ));
+						( ffQueue( x, y+1, z ));
 					}
 					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<3) ) {
 						//console.log( "This should already have been dispatched?")
-						added.push( ffQueue( x, y, z+1 ));
+						( ffQueue( x, y, z+1 ));
 					}
 				}
 
 				if( normals[baseOffset+3]) {
 					// from odd 3
 					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<0)) {
-						added.push( ffQueue( x+1, y, z ));
+						( ffQueue( x+1, y, z ));
 					}
 					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<3)) {
-						added.push( ffQueue( x, y-1, z ));
+						( ffQueue( x, y-1, z ));
 					}
 					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<2) ) {
-						added.push( ffQueue( x, y, z-1 ));
+						( ffQueue( x, y, z-1 ));
 					}
 				}
 				//console.log( "Added:", added.length, faces.length );
@@ -1959,1005 +1739,6 @@ function meshCloud(data, dims) {
 				}
 				console.log( "Follwoing from", x, y, z );
 				followFace( x, y, z );
-			}
-		}
-	}
-	if(0)
-	for( var z = 0; z < dim2; z++ ) {
-		//if(!( z > (dim2-4) )) continue;
-		//if( z < 9 || z > 18 ) continue;
-		// for all bounday crossed points, generate the faces from the intersection points.
-		for( var y = 0; y < dim1; y++ ) {
-			//if( y > 3 ) continue;
-			for( var x = 0; x < dim0; x++ ) {
-				//if( x < 4 || x > 11 ) continue;
-				let added = 0;
-				outX = x; outY = y; outZ = z;
-				const odd = (x+y+z)&1;
-				const offset = (x + (y*dim0) + z*dim0*dim1);
-				//if( !( x > 8 && x < 10 && y > 3 && y < 9 && z > 17 && z < 19 ))
-				//	continue;
-				//console.log( "scanning normal:", x, y, z, bits[offset], offset )
-				if( !normals[5*offset] ) {
-					continue
-				}
-				const baseOffset = offset*5;
-				let baseNormal;
-
-				let n0,n1,n2,n3,n4;
-				if( baseNormal = normals[baseOffset+4] ) {
-					// goes through the center.
-
-					const normDir = { dir:0, largest:0 };
-					let inv = 0;
-					//console.log( "Has Center.",content[baseOffset+0],content[baseOffset+1],content[baseOffset+2],content[baseOffset+3] );
-					getNormalState( normDir, baseNormal.n );
-					if( !odd ) {
-						if( !content[baseOffset+0] ) {
-						// sanity check that 1 2 and 3 are good?
-						// big slice from here... which is not 0, even.
-						// small slice from not 3, odd
-						if(ifDraw(0))
-							if( 0 || ( !content[baseOffset+1] )||( !content[baseOffset+2] )||( !content[baseOffset+3] ) )
-							{
-								//console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							switch( normDir.dir ) {
-								case 4: case 5: case 6: case 0: 
-									inv = 0;
-									break;
-								case 7:
-									inv = 1;
-									break;
-								default:
-									inv = 1;
-									
-							}
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( n1 = normals[baseOffset+1]);
-							const p2 = addPoint( n2 = normals[baseOffset+2]);
-							const p3 = addPoint( n3 = normals[baseOffset+3]);
-							_debug_output && console.log( "A?", normDir );
-							if( inv ){
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}else {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						} else {
-							if( 0 || ( !content[baseOffset+1] )||( !content[baseOffset+2] )||( !content[baseOffset+3] ) )
-							{
-								//console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-
-							switch( normDir.dir ){
-								case 0: case 1: case 2: case 4:
-									inv = 1;
-									break;
-								default:
-									inv = 0;
-							}
-
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( n1 = normals[baseOffset+1]);
-							const p2 = addPoint( n2 = normals[baseOffset+2]);
-							const p3 = addPoint( n3 = normals[baseOffset+3]);
-							if( inv ){
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-		
-							}else {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						}
-					}
-					else if( !content[baseOffset+1] ) {
-						if(ifDraw(1))
-						if( !odd ) {
-							if( ( !content[baseOffset+0] )||( !content[baseOffset+2] )||( !content[baseOffset+3] ) )
-							{
-								_debug_output && console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							switch( normDir.dir ){
-								case 1: case 0: case 5: case 3:
-									inv = 0;
-									break;
-								default:
-									inv = 1;
-							}
-
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( n1 = normals[baseOffset+0]);
-							const p2 = addPoint( n2 = normals[baseOffset+2]);
-							const p3 = addPoint( n3 = normals[baseOffset+3]);
-							_debug_output && console.log( "B?" );
-							if( inv ) {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else{
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						} else {
-							if( ( !content[baseOffset+0] )||( !content[baseOffset+2] )||( !content[baseOffset+3] ) )
-							{
-								console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							switch( normDir.dir ){
-								case 0: case 2: case 3: case 6:
-									inv = 0;
-									break;
-								default:
-									inv = 1;
-									break;
-							}
-
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( n1 = normals[baseOffset+0]);
-							const p2 = addPoint( n2 = normals[baseOffset+2]);
-							const p3 = addPoint( n3 = normals[baseOffset+3]);
-								
-							_debug_output && console.log( "B2?" );
-							if( inv ) {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else{
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}
-
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						}
-					}
-					else if( !content[baseOffset+2] ) {
-						if(ifDraw(2))
-						if( !odd ) {
-							if( ( !content[baseOffset+1] )||( !content[baseOffset+0] )||( !content[baseOffset+3] ) )
-							{
-								console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							inv = 0;
-							switch(normDir.dir ){
-								case 5:case 4:case 7:case 1:
-									break;
-								default:
-									inv = 1-inv;
-							}							
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( n1 = normals[baseOffset+0]);
-							const p2 = addPoint( n2 = normals[baseOffset+1]);
-							const p3 = addPoint( n3 = normals[baseOffset+3]);
-							if( inv ) {
-								_debug_output && console.log( "Ci?" );
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else {
-								_debug_output && console.log( "Cn?" );
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-		
-							}
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						}else {
-							if( ( !content[baseOffset+1] )||( !content[baseOffset+0] )||( !content[baseOffset+3] ) )
-							{
-								console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							inv = 0;
-							switch(normDir.dir ){
-								case 6:case 4:case 7:case 2:
-									break;
-								default:
-									inv = 1-inv;
-							}							
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( normals[baseOffset+0]);
-							const p2 = addPoint( n2 = normals[baseOffset+1]);
-							const p3 = addPoint( normals[baseOffset+3]);
-							_debug_output && console.log( "D?" );
-							if( inv ) {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else {
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}
-							usedTets[odd][inv][normDir.dir][normDir.largest] = 1;
-						}
-					}
-					else if( !content[baseOffset+3] ) {
-						if(ifDraw(3))
-						if( !odd ) {
-							if( ( !content[baseOffset+1] )||( !content[baseOffset+2] )||( !content[baseOffset+0] ) )
-							{
-								console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							inv = 0;
-							switch( normDir.dir) {
-								case 0: case 2: case 1: case 4: 
-									inv = 1-inv;
-									break;
-								default:
-									//if( !(normDir.dir & 4) )inv = 1-inv;
-									break;
-							}
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( normals[baseOffset+0]);
-							const p2 = addPoint( n2 = normals[baseOffset+1]);
-							const p3 = addPoint( normals[baseOffset+2]);
-							_debug_output && console.log( "E?" );
-
-							if( inv ) {
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else {
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}
-
-						} else {
-							if( ( !content[baseOffset+1] )||( !content[baseOffset+2] )||( !content[baseOffset+0] ) )
-							{
-								console.log( "Bad computation, missing a required intersection if the surface is here..." );
-								continue;
-							}
-							added++;
-							inv = 0;
-							switch( normDir.dir) {
-								case 3: case 2: case 1: case 7: 
-									inv = 1-inv;
-									break;
-								default:
-									//if( !(normDir.dir & 4) )inv = 1-inv;
-									break;
-							}
-							inv = (n0 = normals[baseOffset+4]).sources[0].invert;
-							const p0 = addPoint( n0 );
-							const p1 = addPoint( normals[baseOffset+0]);
-							const p2 = addPoint( normals[baseOffset+1]);
-							const p3 = addPoint( normals[baseOffset+2]);
-							if( inv ) {
-								_debug_output && console.log( "Fi?" );
-								addFace( p0, p2, p1 );
-								addFace( p0, p3, p2 );
-								addFace( p0, p1, p3 );
-							}else {
-								_debug_output && console.log( "Fn?" );
-								addFace( p0, p1, p2 );
-								addFace( p0, p2, p3 );
-								addFace( p0, p3, p1 );
-							}
-
-						}
-					}
-					else {
-						// all 5 gets - solid quad emit.
-						added++;
-						if(ifDraw(4)  )
-						{
-							const l = normDir.largest;
-							inv = 0;
-							let o;
-							var i1, i2, i3, i4;
-							const p0 = addPoint( n0=normals[baseOffset+4]);
-							const p1 = addPoint( n1=normals[baseOffset+(i1=tetCentroidFacet[odd][inv][normDir.dir][l][0])]);
-							const p2 = addPoint( n2=normals[baseOffset+(i2=tetCentroidFacet[odd][inv][normDir.dir][l][1])]);
-							const p3 = addPoint( n3=normals[baseOffset+(i3=tetCentroidFacet[odd][inv][normDir.dir][l][2])]);
-							const p4 = addPoint( n4=normals[baseOffset+(i4=tetCentroidFacet[odd][inv][normDir.dir][l][3])]);
-
-							// console.log( "This is still soemtimes brokens... TODO FIXME")
-							usedTets[odd][inv][normDir.dir][l] = 1;
-
-							addFace( p0, p1, p2 );
-							addFace( p0, p2, p3 );
-							addFace( p0, p3, p4 );
-							addFace( p0, p4, p1 );
-							_debug_output &&  console.log( "G?", x, y, z, odd, inv, normDir );
-							_debug_output &&  console.log( "  G? p0",  n0.p );
-							_debug_output &&  console.log( "  G? p1",  n1.p );
-							_debug_output &&  console.log( "  G? p2",  n2.p );
-							_debug_output &&  console.log( "  G? p3",  n3.p );
-							_debug_output &&  console.log( "  G? p4",  n4.p );
-
-							if(0 &&  normalVertices){
-
-								normalVertices.push( new THREE.Vector3( n0.p[0],n0.p[1]+0.02,n0.p[2]+0.02 ))
-								normalVertices.push( new THREE.Vector3( n0.p[0]+n0.n[0]*1.3,n0.p[1]+n0.n[1]*1.3,n0.p[2]+n0.n[2]*1.3));
-								normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
-								normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
-
-								normalVertices.push( new THREE.Vector3( n1.p[0],n1.p[1]-0.02,n1.p[2]+0.02 ))
-								normalVertices.push( new THREE.Vector3( n1.p[0]+n1.n[0]*1.2,n1.p[1]+n1.n[1]*1.2,n1.p[2]+n1.n[2]*1.2));
-								normalColors.push( new THREE.Color( 0,1.0,0,1.0 ))
-								normalColors.push( new THREE.Color( 0,1.0,0,1.0 ))
-
-								normalVertices.push( new THREE.Vector3( n2.p[0],n2.p[1]+0.02,n2.p[2]-0.02 ))
-								normalVertices.push( new THREE.Vector3( n2.p[0]+n2.n[0]*1.1,n2.p[1]+n2.n[1]*1.1,n2.p[2]+n2.n[2]*1.1));
-								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
-								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
-
-								normalVertices.push( new THREE.Vector3( n3.p[0],n3.p[1]-0.02,n3.p[2]-0.02 ))
-								normalVertices.push( new THREE.Vector3( n3.p[0]+n3.n[0],n3.p[1]+n3.n[1],n3.p[2]+n3.n[2]));
-								normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
-								normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
-
-								normalVertices.push( new THREE.Vector3( n4.p[0]-0.02,n4.p[1],n4.p[2] ))
-								normalVertices.push( new THREE.Vector3( n4.p[0]+n4.n[0],n4.p[1]+n4.n[1],n4.p[2]+n4.n[2]));
-								normalColors.push( new THREE.Color( 1.0,0,1.0,1.0 ))
-								normalColors.push( new THREE.Color( 1.0,0,1.0,1.0 ))
-
-							}
-
-
-						}
-					}
-
-
-				if(1)
-					if( odd ) {
-						if( (n0 = normals[baseOffset+2]  )) {
-							if(ifDraw(5))
-							if( (n3 = normals[baseOffset+(1*dim0)*tetCount+2])
-							   && (n2 = normals[baseOffset+(1+1*dim0)*tetCount+1] )
-							   && (n1 = normals[baseOffset+( 1 )*tetCount+1]) ) {
-								added++;
-								
-								inv = 0;
-								const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-								const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-								const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-								const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-								//ncross( c, n2.n, n0.n );
-								const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-								if( d > 0 ) {
-									if( normDir.dir & 4 ) inv = 0; else inv = 1;
-									switch( normDir.largest )		{
-										//case 0: case 3: case 4: break; // y > z
-										//case 0: case 4: case 5: break; // y > x
-										case 0: case 1: case 3: {
-											if( ( normDir.largest ===3 )||( normDir.largest ===0 ) ){
-												if( normDir.dir === 0 ) inv = 1-inv;
-												if( normDir.dir === 7 ) inv = 1-inv;
-												//console.log( "EMitting?", normDir, inv );
-											}
-											break; // x > z
-										}
-										default:
-											break;
-									}
-									_debug_output && console.log( "I?" );
-									inv = n1.sources[0].invert;
-									outputFace( inv, n0, n1, n2, n3 );
-								}
-							}
-						
-							// 1=2
-							// 3=4
-							//
-							if(ifDraw(6))
-							if( (n3=normals[baseOffset+0] )
-							   && (n2 = normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 0] )
-							   && (n1 = normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 4] )
-							   && normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 4] 
-							   ) {  // and 3 because is 4
-								added++;
-								inv = 0;
-								//normalVertices.push( new THREE.Vector3( n1.p[0],n1.p[1],n1.p[2] ))
-								//normalVertices.push( new THREE.Vector3( n1.p[0] + n1.n[0]/2,n1.p[1] + n1.n[1]/2,n1.p[2] + n1.n[2]/2 ));
-								//normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-								//normalColors.push( new THREE.Color( 0,0.5,0,255 ))
-	
-								switch( normDir.largest ){
-									case 5: case 3: 
-										if(( normDir.dir == 0 )) inv = 0;
-										if(( normDir.dir & 2 )) inv = 1-inv;
-										break;
-									case 4:
-										if(( normDir.dir === 1 )) inv = 0;
-										//if(( normDir.dir == 0 )) inv = 1-inv;
-										if(( normDir.dir & 2 )) inv = 1-inv;
-										
-										break;
-									default:
-										if(!( normDir.dir & 1 )) inv = 1-inv;
-										break;
-								}
-								_debug_output && console.log( "J?", x, y, z,normDir );
-								
-								inv = n1.sources[0].invert;
-								outputFace( inv, n0, n1, n2, n3 );
-
-							}
-
-							if(ifDraw(7)) // forward in-plane
-							if( (n1 = normals[baseOffset + 0] )
-									&& (n2=normals[baseOffset + (1*dim0)*tetCount + 0])
-									&& (n3=normals[baseOffset + (1*dim0)*tetCount + 2])
-									&& normals[baseOffset + (1*dim0)*tetCount + 4]
-									 ) {
-								// nothing above, must be... this.
-								added++;
-								if( normDir.dir & 1 ) inv = 0; else inv = 1;
-								switch( normDir.largest ){
-									case 0: case 1: case 3:
-										break;
-									default:
-										if( normDir.dir & 1 ){
-											if(( normDir.dir & 4 )) inv = 1-inv;
-										}
-										else
-											if( !(normDir.dir & 4) ) inv = 1-inv;
-										break;
-
-								}
-								_debug_output && console.log( "K?" );
-								inv = n1.sources[0].invert;
-								outputFace( inv, n0, n1, n2, n3 );
-							}
-
-							if(ifDraw(8))
-							if( ( n3 = normals[baseOffset+3] )
-							  && (n1 =normals[baseOffset + ( 1 )*tetCount + 1]  )
-							  && (n2=normals[baseOffset + ( 1 )*tetCount + 0] )
-							  && normals[baseOffset + ( 1 )*tetCount + 4] 
-							) {  // and 3 because is 4
-								added++;
-								inv = 0;
-		
-								if( odd ) {
-									switch( normDir.largest ){
-										case 0: case 3:case 2:
-											if( normDir.dir === 0 ) inv = 1;
-											if( normDir.dir === 1 )  inv = 1;
-											//if( normDir.dir === 2 )  inv = 0;
-											break;
-										case 4:
-											//if( normDir.dir === 2 )  inv = 1;
-											if( normDir.dir === 0 ) inv = 1;
-											break;
-										default:
-											if( normDir.dir & 2 ) {
-												if( normDir.dir & 4 )	inv = 1-inv;
-											}else {
-												if(!( normDir.dir & 4))	inv = 1-inv;
-
-											}
-									
-									}
-								}else {
-									switch( normDir.largest ){
-										case 0: case 3:
-											continue;
-											if( normDir.dir === 0 ) inv = 1;
-											if( normDir.dir === 1 )  inv = 1;
-											//if( normDir.dir === 2 )  inv = 0;
-											break;
-										case 2:
-											if( normDir.dir === 0 ) inv = 0;
-											if( normDir.dir === 1 )  inv = 0; 
-											//if( normDir.dir === 2 )  inv = 0;
-											break;
-										case 4:
-											//if( normDir.dir === 2 )  inv = 1;
-											if( normDir.dir === 0 ) inv = 0;
-											break;
-										default:
-											if( normDir.dir & 2 ) {
-												if( normDir.dir & 4 )	inv = 1-inv;
-											}else {
-												if(!( normDir.dir & 4))	inv = 1-inv;
-
-											}
-									}
-									
-								}
-
-								if( !(y & 1 ) ) inv = 1-inv;
-
-								_debug_output && console.log( "L?",x,y,z, inv, odd, normDir );
-								inv = n1.sources[0].invert;
-								outputFace( inv, n0, n1, n2, n3 );
-							}
-
-							if(ifDraw(9)) // forward vertical
-								if( (n1 = normals[baseOffset + (1*dim0)*tetCount+2] )
-								&& (n2 = normals[baseOffset + (1*dim0+1*dim0*dim1)*tetCount + 3])
-								&& (n3 = normals[baseOffset + (1*dim0*dim1)*tetCount + 3] )) {
-									const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-									const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-	
-									const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-									const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-									//ncross( c, n2.n, n0.n );
-									const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-									//if( c[0]*c[0]+c[1]*c[1]+c[2]*c[2] < 0.5 )
-									//console.log( "D:", d );
-									//if( d > 0 ) 
-									{
-										inv = 0;
-
-										getNormalState( normDir, n0.n );
-				//if( normDir.dir !== 7 )continue;
-
-										switch( normDir.largest ){
-											case 0:case 1: case 3:
-												if( !(normDir.dir & 1) ) inv = 1;
-												break;
-											default:
-												if( (normDir.dir & 4) ) {
-													if(( normDir.dir === 5)) {
-														inv = 0;
-													} else if( ( normDir.dir === 7))
-														inv = 0;
-													else
-														inv = 1;
-												} else if(! ( (normDir.dir != 2) && (normDir.dir != 5) ) ){
-													if( (normDir.dir & 2 ))
-														inv = 1;
-													else 
-														inv = 0;
-												}
-												else if( normDir.dir === 7 ) inv = 1-inv;
-												else if( normDir.dir === 0 ) inv = 1-inv;
-												//console.log( "emit:", normDir, inv, n0.n )
-												break;
-										}
-										_debug_output && console.log( "M?" );
-										inv = n1.sources[0].invert;
-										outputFace( inv, n0, n1, n2, n3 );
-									}
-								}
-
-							if(ifDraw(10)) // forawrd-right plane... 
-							if( ( n1 = normals[baseOffset+ ( 1*dim0*dim1)*tetCount + 4] )
-								&& (n2 = normals[baseOffset+ ( 1 + 1*dim0*dim1)*tetCount + 0] )
-								&& (n3 = normals[baseOffset + ( 1 )*tetCount + 1] )
-								) {
-								const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-								const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-								const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-								const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-								//ncross( c, n2.n, n0.n );
-								const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-								//if( c[0]*c[0]+c[1]*c[1]+c[2]*c[2] < 0.5 )
-								//console.log( "D:", d );
-								
-
-							if( d > 0 ) {
-								// right up...
-									getNormalState( normDir, n1.n );
-									inv = 0;
-									if( (normDir.dir & 2) ) inv = 0; else inv = 1;
-									if ( (normDir.dir === 7 ) && ( normDir.largest === 2 || normDir.largest === 1 ) ) inv = 1;
-									//if ( (normDir.dir === 1 ) && ( normDir.largest === 2 || normDir.largest === 5 ) ) inv = 1;
-									added++;
-									//if( normDir.dir !== 2 ) continue;
-									//if( normDir.largest !== 4 ) continue;
-									//console.log( "Emit:", normDir, inv )
-									inv = n1.sources[0].invert;
-									outputFace( inv, n0, n1, n2, n3 );
-									//_debug_output && 
-									_debug_output && console.log( "N?", normDir );
-								}
-								//else console.log( "Threw out plane" );
-							}
-						}
-						// to the fore
-						// TODO : THIS IS STILL BROKEN...
-
-///----------------------------------------------------------
-//    ODD  ....   (above is even (!odd) )
-///----------------------------------------------------------
-
-					}else {
-						//continue;
-						// all other cases that don't include 4 will be rendered in another cell...
-						// this one can only add new faces here.
-						// to the right
-
-						// directly up.
-	/* TODO - HYPERELIP FAIL */
-						if(ifDraw(11))
-						if( ( n0 = normals[baseOffset+1] )
-							&& ( n1 = normals[baseOffset+2] )
-						   && ( n2 = normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 2]  )
-						   && normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 4] 
-						   && ( n3 = normals[baseOffset + ( 1*dim0*dim1 )*tetCount + 1] )
-						  ) {  // and 3 because is 4
-							added++;
-							inv = 0;
-			//if( normDir.dir & 1 ) inv = 0; else inv = 1;
-							switch( normDir.largest ){
-								//case 1:case 3: case 0:
-								//case 4:case 3: case 0:
-								case 4: case 3: case 5:
-									if(!( normDir.dir & 2) ) inv = 1-inv;
-									break;
-									default:
-										if(!( normDir.dir & 1) ) inv = 1-inv;
-										break;
-							}
-						
-							_debug_output && console.log( "AA?" );
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-
-
-	/* TODO - HYPERELIP FAIL */
-						if(ifDraw(12))
-						if( n0 = normals[baseOffset+3] ) { 
-							// and content[baseOffset+(1*dim0)*tetCount+0]  content[baseOffset+(1*dim0)*tetCount+3] content[baseOffset+(1*dim0)*tetCount+4]
-							//console.log( "Content Here:", odd, inv, content[baseOffset+0], content[baseOffset+1], content[baseOffset+2], content[baseOffset+3],content[baseOffset+4] );
-							// to the right - in-plane
-
-							if(ifDraw(13))
-							if( ( n1 = normals[baseOffset+(1*dim0)*tetCount+1] )
-							   && (n2 = normals[baseOffset+(1+1*dim0)*tetCount+0] )
-							   && (n3 = normals[baseOffset+( 1 )*tetCount+2] ) ) {
-								added++;
-								inv = 0;
-								//console.log( "SOmething:",content[baseOffset+ ( 1*dim0)*tetCount + 0] ,content[baseOffset+ ( 1*dim0*dim1)*tetCount +1] ,content[baseOffset+ ( 1*dim0*dim1)*tetCount + 2] ,content[baseOffset+ ( 1*dim0*dim1)*tetCount + 3] ,content[baseOffset+ ( 1*dim0*dim1)*tetCount + 4]  )
-								if( normDir.dir & 4 ) inv = 1-inv;
-	
-								const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-								const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-								const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-								const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-								const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-								
-								if( d > 0 ) {
-									_debug_output && console.log( "BB?" );
-									inv = n1.sources[0].invert;
-									outputFace( inv, n0, n1, n2, n3 );
-								}
-								//else console.log( "Threw out face");
-							}
-
-
-							if(ifDraw(14))
-							if( (n3=normals[baseOffset+1])
-										&& (n1=normals[baseOffset + ( 1 )*tetCount + 2] )
-										&& normals[baseOffset + ( 1 )*tetCount + 4] 
-										&& (n2=normals[baseOffset + ( 1 )*tetCount + 0] )
-										) {  // and 3 because is 4
-								added++;
-
-								if( normDir.dir & 2 ) inv = 1; else inv = 0;
-								switch(normDir.largest  ){
-									case 0: case 3: case 4: {
-										break;
-									};
-									default:
-										if( (normDir.dir & 2 ) ) {
-											if(!( normDir.dir & 4 )) inv = 1-inv;
-										}
-										else {
-											if(( normDir.dir & 4 )) inv = 1-inv;
-										}
-								}
-								_debug_output && console.log( "CC?" );
-								inv = n1.sources[0].invert;
-								outputFace( inv, n0, n1, n2, n3 );
-							}
-							// to the fore
-						}
-
-							// 
-							// odd 2 - above/forward line across
-							if(1)
-							if( n0 = normals[baseOffset + 2] ) {
-
-								if(ifDraw(15))	
-								if( (n1 = normals[baseOffset + (1*dim0)*tetCount + 0] )
-										&& (n2 =normals[baseOffset + (1*dim0)*tetCount + 1] )
-										&& (n3 =normals[baseOffset + 3] )
-										&& (n4 = normals[baseOffset + (1*dim0)*tetCount + 4] ) // make sure the surface goes here...
-										) {
-
-																					
-										const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-										const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-	
-										const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-										const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-										//ncross( c, n2.n, n0.n );
-										const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-										//if( c[0]*c[0]+c[1]*c[1]+c[2]*c[2] < 0.5 )
-										//console.log( "D:", d );
-										if( d > 0 ) {
-											getNormalState( normDir, n4.n );
-										// nothing above, must be... this.
-										added++;
-										inv = 0;//n4.i;
-											if(1)
-										switch(normDir.dir  ){
-											case 7: case 5:
-												inv = 1-inv;
-												break;;
-											case 3: case 1:
-												if( normDir.largest === 3 || normDir.largest === 1|| normDir.largest === 0 )
-													inv = 1-inv;
-												break;
-											case 2: case 0:
-												//inv = 1-inv;
-												break;
-											case 6: case 4:
-												if( normDir.largest === 2 || normDir.largest === 5 || normDir.largest === 4 ) 
-													inv = 1-inv;
-													break;
-										}
-											
-										_debug_output && console.log( "DD?" );
-										outputFace( inv, n0, n1, n2, n3 );
-										}
-								}
-
-								if(ifDraw(16))
-								if( (n1 = normals[baseOffset+(1*dim0*dim1)*tetCount+2])
-									&& (n2 = normals[baseOffset + (1*dim0+1*dim0*dim1)*tetCount + 0])
-									&& (n3 = normals[baseOffset + (1*dim0)*tetCount + 0])
-									) {
-
-										const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-									const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-									const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-									const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-									//ncross( c, n2.n, n0.n );
-									const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-									//if( c[0]*c[0]+c[1]*c[1]+c[2]*c[2] < 0.5 )
-									//console.log( "D:", d );
-									if( d > 0 ) {
-										getNormalState( normDir, n0.n );
-
-										// nothing above, must be... this.
-										added++;
-										inv  = 0 ;
-										switch( normDir.largest ) {
-											case 1: case 3: case 2:case 0:
-												switch( normDir.dir ) {
-													case 5:// case 6: case 7: case 4: 
-													case 7: case 1: case 3:
-														inv = 1;
-														break;
-													default:
-														break;
-												}
-												break;
-											default:
-												if( normDir.dir === 6 ) { inv = 1;
-													break; 
-												}
-												if( normDir.dir & 1) {
-													inv = 1;
-												}
-												break;
-										}
-										_debug_output && console.log( "EE?" );
-										inv = n1.sources[0].invert;
-										outputFace( inv, n0, n1, n2, n3 );
-									}
-									//else console.log( "Threw out face");
-								}
-							}
-						
-
-						if(ifDraw(17)) // good!
-						// odd, 'up'(y), x, 
-						if( n0 = normals[baseOffset+1] ) {
-							if( (n1 = normals[baseOffset+ ( 1*dim0*dim1)*tetCount + 1] ) 
-								&& (n2 = normals[baseOffset+ ( 1 + 1*dim0*dim1)*tetCount + 0] )
-								&& (n3 = normals[baseOffset + ( 1 )*tetCount + 0])
-								) {
-									const l1 =1/Math.sqrt(  n0.n[0]*n0.n[0] + n0.n[1]*n0.n[1] + n0.n[2]*n0.n[2] ) ;
-									const c = [n0.n[0]*l1,n0.n[1]*l1,n0.n[2]*l1];
-
-									const l2 =1/Math.sqrt( n2.n[0]*n2.n[0]+n2.n[1]*n2.n[1]+n2.n[2]*n2.n[2] ) ;
-									const c2 = [n2.n[0]*l2,n2.n[1]*l2,n2.n[2]*l2];
-									//ncross( c, n2.n, n0.n );
-									const d = c[0]*c2[0]+c[1]*c2[1]+c[2]*c2[2];
-									//if( c[0]*c[0]+c[1]*c[1]+c[2]*c[2] < 0.5 )
-									//console.log( "D:", d );
-									if( d > 0 )
-									{
-										getNormalState( normDir, n0.n );
-										// right up...
-										// make sure this is a complete thing...
-										added++;
-										if( normDir.dir & 2 ) inv = 0; else inv = 1;
-													
-										_debug_output && console.log( "FF?" );
-										outputFace( inv, n0, n1, n2, n3 );
-									}
-									//else console.log( "threw out face?", d);
-							}
-
-							
-						}
-					}
-				} else {
-					let n0,n1,n2,n3;
-					if(1)
-					if( !odd ) 
-					{
-						if(ifDraw(18))
-						// not through the center... 
-						if( (n2 = normals[baseOffset+3] )
-						  && (n1 = normals[baseOffset + (1*dim0)*tetCount + 1] )
-						  && (n0 = normals[baseOffset + (1 + 1*dim0)*tetCount + 0])
-						  //&& (normals[baseOffset + (1 + 1*dim0)*tetCount + 4])
-						  && (n3 = normals[baseOffset + ( 1 )*tetCount + 2] )) {
-							const normDir = { dir:0, largest:0 };
-							getNormalState( normDir, n0.n );
-							let inv = 0;//!(( normDir.dir ^ 0x7 ) & 7);
-
-							switch( normDir.dir ){
-								case 0: case 1: case 2: case 3:
-										inv = 1;
-								break;
-								default:
-									break;;
-							}
-							_debug_output && console.log( "GG?" );
-							inv = n0.sources[0].invert;
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-				//console.log( "status:", x, y, z, baseOffset, n0, n1, n2, n3 );
-						if(ifDraw(19))
-						if( (n0 = normals[baseOffset+3] )
-						  && (n3 = normals[baseOffset + (1*dim0*dim1)*tetCount + 3] )
-						  && (n2 = normals[baseOffset + (1*dim0 + 1*dim0*dim1)*tetCount +1])
-						  && (n1 = normals[baseOffset + (1*dim0 )*tetCount + 1] )) {
-							  // this feels large.
-							const normDir = { dir:0, largest:0 };
-							getNormalState( normDir, n0.n );
-							let inv = 0;//normDir.dir&7;
-
-							switch( normDir.dir ){
-								case 0: case 2: case 4: case 6:
-										inv = 1;
-								break;
-								default:
-									break;;
-							}
-							_debug_output && console.log( "HH?" );
-							inv = n0.sources[0].invert;
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-				//console.log( "status:", x, y, z, baseOffset, n0, n1, n2, n3 );
-						if(ifDraw(20))
-						if( (n0 = normals[baseOffset+3] )
-						  && (n1 = normals[baseOffset + (1*dim0*dim1)*tetCount + 3] )
-						  && (n2 = normals[baseOffset + (1 + 1*dim1*dim0)*tetCount + 2])
-						  ///&& ( normals[baseOffset + (1 + 1*dim1*dim0)*tetCount + 4])
-						  && (n3 = normals[baseOffset + ( 1 )*tetCount + 2])) {
-							  
-							  const normDir = { dir:0, largest:0 };
-							  getNormalState( normDir, n0.n );
-							  let inv = 0;//(normDir.dir&7);
-							  switch( normDir.dir ){
-								case 0: case 1: case 4: case 5:
-										inv = 1;
-								break;
-								default:
-									break;;
-							}
-							_debug_output && console.log( "II?" );
-							inv = n0.sources[0].invert;
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-//				console.log( "status:", x, y, z,baseOffset,  n0, n1, n2, n3 );
-					} else {
-						// THERE ARE 2 inverted triangels in this case.  TODO
-						if(ifDraw(21))
-						if( (n0 = normals[baseOffset+1] )
-						  && (n1 = normals[baseOffset + (1*dim0*dim1)*tetCount + 1] )
-						  && (n2 = normals[baseOffset + (1 + 1*dim0*dim1)*tetCount + 0])
-						  && (n3 = normals[baseOffset + ( 1 )*tetCount + 0])) {
-							  
-							  const normDir = { dir:0, largest:0 };
-							  getNormalState( normDir, n0.n );
-							  let inv = 1;
-							  switch( normDir.dir ){
-								case 0: case 1: case 2: case 3:
-										inv = 0;
-								break;
-								default:
-									break;
-							}
-							_debug_output && console.log( "JJ?" );
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-						// there are two more triangles inverted on this TODO
-						if(ifDraw(22)) // foward dots left
-						if( (n0 = normals[baseOffset+2] )
-						  && (n1 = normals[baseOffset + (1*dim0*dim1)*tetCount + 2] )
-						  && (n2 = normals[baseOffset + (1*dim0*dim1 + 1*dim0)*tetCount + 0])
-						  //&& (normals[baseOffset + (1*dim0*dim1 + 1*dim0)*tetCount + 4])
-						  && (n3 = normals[baseOffset + ( 1*dim0 )*tetCount + 0])) {
-
-							const normDir = { dir:0, largest:0 };
-							  getNormalState( normDir, n0.n );
-							  let inv = 1;//normDir.dir&7;
-							  switch( normDir.dir ){
-								case 0: case 4: case 2: case 6:
-										inv = 0;
-								break;
-								default:
-									break;;
-							}
-							_debug_output && console.log( "KK?" );
-							inv = n0.sources[0].invert;
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-						
-						if(ifDraw(23)) // towards big dits
-						if( (n0 = normals[baseOffset+3] )
-						  && (n1 = normals[baseOffset + (1*dim0)*tetCount + 1] )
-						  && (n2 = normals[baseOffset + (1*dim0 + 1)*tetCount + 0])
-						  //&& (normals[baseOffset + (1*dim0 + 1)*tetCount + 4])
-						  && (n3 = normals[baseOffset + ( 1 )*tetCount + 2])) { // 'lower right' (3)   (odd 1 to even 2 )
-
-							const normDir = { dir:0, largest:0 };
-							  getNormalState( normDir, n0.n );
-							  let inv = 1;//normDir.dir&7;
-							  switch( normDir.dir ){
-								case 0: case 1: case 2: case 3:
-										inv = 0;
-								break;
-								default:
-									break;;
-							}
-							_debug_output && console.log( "LL?" );
-							inv = n0.sources[0].invert;
-							outputFace( inv, n0, n1, n2, n3 );
-						}
-					}
-				}
-				//console.log( "ADDED:", added );
 			}
 		}
 	}
