@@ -782,7 +782,7 @@ function meshCloud(data, dims) {
 								pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
 								//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
 
-								if( 0 && normalVertices){
+								if(  normalVertices){
 									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
 									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
 									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
@@ -839,7 +839,7 @@ function meshCloud(data, dims) {
 								pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
 								pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
 								//console.log( "new point(2):", pointOutputHolder );
-								if( 0 && normalVertices){
+								if(  normalVertices){
 									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
 									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
 									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
@@ -888,7 +888,8 @@ function meshCloud(data, dims) {
 		}
 	}
 
-	
+	const fixNormals = []; // these normals were 0 when added.
+
 	// this computes normals at the points on the tet's face.
 	// the face's point-normal can be determined here...
 	for( var z = 0; z < dim2; z++ ) {
@@ -906,6 +907,7 @@ function meshCloud(data, dims) {
 				if( z >= (dim2-1)) tetSkip |= 4;
 				const dataOffset = x + (y*dim0) + z*dim1*dim0;
 	        	const odd = (( x + y + z ) &1);
+				let tv = null;
 				for( let tet = 0; tet < 5; tet++ ) {
 					if( tetMasks[odd][tet] & tetSkip ) continue;
 
@@ -1015,14 +1017,27 @@ function meshCloud(data, dims) {
 							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
 							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
 							if( AisB || BisC || AisC ) {
-								if(0)
+								//if(0)
 								console.log( "zero size tri-face", x, y, z, odd, tet, tri
 									, useFace, AisB,AisC,BisC 
 									, vA, vB, vC
 									);
-								fnorm[0] = 0.6;
+									if(  normalVertices){
+										if( tet == 2 ) {
+											for( let v of [vB]) {
+												//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
+												normalVertices.push( new THREE.Vector3( v[0],v[1],v[2] ))
+												normalVertices.push( new THREE.Vector3( v[0]+1,v[1]+1,v[2]+1));
+												normalColors.push( new THREE.Color( 1.0,0,1.0,1.0 ))
+												normalColors.push( new THREE.Color( 1.0,0,1.0,1.0 ))
+											}
+										}
+									}
+	
+									edges |= 0x80;
+								fnorm[0] = 0;
 								fnorm[1] = 0; // y is always 0
-								fnorm[2] = -0.6;
+								fnorm[2] = 0;
 							}else {
 								v1 = vA;
 								v2 = vB;
@@ -1071,18 +1086,6 @@ function meshCloud(data, dims) {
 								// convert normal to a rotation of 'up'
 								lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
 
-								if(  normalVertices){
-									if( tet == 2 ) {
-										for( let v of [vB]) {
-											//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-											normalVertices.push( new THREE.Vector3( v[0],v[1],v[2] ))
-											normalVertices.push( new THREE.Vector3( v[0]+fnorm[0],v[1]+fnorm[1],v[2]+fnorm[1]));
-											normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
-											normalColors.push( new THREE.Color( 1.0,0,0,1.0 ))
-										}
-									}
-								}
-
 								
 								fnorm[0] = lnQA.x;
 								fnorm[1] = 0; // y is always 0
@@ -1093,7 +1096,7 @@ function meshCloud(data, dims) {
 							pCenter[1] = (vA[1]+vB[1]+vC[1])/3;
 							pCenter[2] = (vA[2]+vB[2]+vC[2])/3;
 
-							let tv = normals[normOffset+tet];
+							tv = normals[normOffset+tet];
 							if( !tv )  {
 								tv = new TetVertBase( pCenter, fnorm.slice(0,3), invert
 									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], useFace );
@@ -1102,6 +1105,7 @@ function meshCloud(data, dims) {
 								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
 							}
 
+							if(0)
 							if( normalVertices && tv.n[0] > 0.4 ){
 								const n = tv.n;
 								const p = tv.p;
@@ -1110,10 +1114,13 @@ function meshCloud(data, dims) {
 								normalVertices.push( new THREE.Vector3( p[0]+up.x,p[1]+up.y,p[2]+up.z));
 								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
 								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
-								console.log( "adding face:", x,y,z, useFace, tet );
+								//console.log( "adding face:", x,y,z, useFace, tet );
 							}
 				
 							usedTets = true;
+						}
+						if( edges & 0x80 ){
+							fixNormals.push( tv );
 						}
 						bits[dataOffset] |= (1<<tet)| (edges << 8 );
 						//console.log( "updated bits:", x, y, z, odd, useFace, tet, bits[dataOffset].toString(16) );
@@ -1218,7 +1225,7 @@ function meshCloud(data, dims) {
 						lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
 						const an = lnQA.up();
 						faceNormals.push( an );
-						if( p.invert && normalVertices){
+						if(  0 && p.invert && normalVertices){
 							normalVertices.push( new THREE.Vector3( p.p[0],p.p[1],p.p[2]+0.02 ))
 							normalVertices.push( new THREE.Vector3( p.p[0]+an.x*1.3,p.p[1]+an.y*1.3,p.p[2]+an.z*1.3));
 							normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
@@ -1314,12 +1321,19 @@ function meshCloud(data, dims) {
 	function emitHex(offset,p, dir, cIndx) {
 		const n= [0,0,0];//p[0].n.slice(0,3);
 		const pn = p[0].n;					
+		const pt = [0,0,0];
 		for( let p_ of p){
 			moveNear( pn, p_.n );
+			pt[0] += p_.p[0];
+			pt[1] += p_.p[1];
+			pt[2] += p_.p[2];
 			n[0] += p_.n[0];
 			n[1] += p_.n[1];
 			n[2] += p_.n[2];
 		}
+		pt[0] /= 6;
+		pt[1] /= 6;
+		pt[2] /= 6;
 		n[0] /= 6;
 		n[1] /= 6;
 		n[2] /= 6;
@@ -1328,7 +1342,7 @@ function meshCloud(data, dims) {
 		const psh = pointStateHolder[ points[(offset + dataOffset[dir]) *6 + cIndx ] ];
 		if( !psh ) {
 			//console.log( "edge is bad..." );
-			if(  normalVertices){
+			if(  0 && normalVertices){
 				const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 				normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
 				normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
@@ -1337,8 +1351,12 @@ function meshCloud(data, dims) {
 			}
 			return;
 		}
+		pt[0] = (pt[0] * 3 + psh.vertBuffer[0])/4;
+		pt[1] = (pt[1] * 3 + psh.vertBuffer[1])/4;
+		pt[2] = (pt[2] * 3 + psh.vertBuffer[2])/4;
 		const up = lnQA.set( 0, n[0],n[1],n[2]).update().up();
-		const vpc = addPoint( {p:psh.vertBuffer, n:n, id:0} );
+		const vpc = addPoint( {p:0?psh.vertBuffer:pt, n:n, id:0} );
+
 		const vp0 = addPoint( p[0] );
 		const vp1 = addPoint( p[1] );
 		const vp2 = addPoint( p[2] );
@@ -1422,13 +1440,20 @@ function meshCloud(data, dims) {
 
 		const n= [0,0,0];//p[0].n.slice(0,3);
 		const pnsrc = p[0].n;					
+		const pt = [0,0,0];
 		for( let pn = 0; pn < 4; pn++){
 			const p_ = p[pn];
 			moveNear( pnsrc, p_.n );
+			pt[0] += p_.p[0];
+			pt[1] += p_.p[1];
+			pt[2] += p_.p[2];
 			n[0] += p_.n[0];
 			n[1] += p_.n[1];
 			n[2] += p_.n[2];
 		}
+		pt[0] /= 4;
+		pt[1] /= 4;
+		pt[2] /= 4;
 		n[0] /= 4;
 		n[1] /= 4;
 		n[2] /= 4;
@@ -1438,7 +1463,7 @@ function meshCloud(data, dims) {
 
 		if( !psh ) {
 			//console.log( "edge is bad..." );
-			if(  normalVertices){
+			if( 0 &&  normalVertices){
 				const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 				normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
 				normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
@@ -1447,15 +1472,18 @@ function meshCloud(data, dims) {
 			}
 			return;
 		}
-		if(  normalVertices){
+		if( 0 && normalVertices){
 			const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 			normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
 			normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
 			normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
 			normalColors.push( new THREE.Color( 1.0,0.0, 0,1.0 ))
 		}
+		pt[0] = (pt[0] * 2 + psh.vertBuffer[0])/3;
+		pt[1] = (pt[1] * 2 + psh.vertBuffer[1])/3;
+		pt[2] = (pt[2] * 2 + psh.vertBuffer[2])/3;
 	
-		const vpc = addPoint( {p:psh.vertBuffer, n:n, id:0} );
+		const vpc = addPoint( {p:0?psh.vertBuffer:pt, n:n, id:0} );
 		const vp0 = addPoint( p[0] );
 		const vp1 = addPoint( p[1] );
 		const vp2 = addPoint( p[2] );
@@ -1465,7 +1493,7 @@ function meshCloud(data, dims) {
 		if( psh && psh.invert  ) {
 			//console.log( "sq face 1", dir, edge, faces.length)
 			//return;
-			if(0) {
+			if(1) {
 			addFace( vpc, vp1, vp0 );
 			addFace( vpc, vp2, vp1 );
 			addFace( vpc, vp3, vp2 );
@@ -1482,7 +1510,7 @@ function meshCloud(data, dims) {
 		}else {
 			//console.log( "sq face 2", dir,edge, faces.length)
 			//return;
-			if(0) {
+			if(1) {
 			addFace( vpc, vp0, vp1 );
 			addFace( vpc, vp1, vp2 );
 			addFace( vpc, vp2, vp3 );
