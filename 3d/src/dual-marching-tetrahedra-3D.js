@@ -98,7 +98,6 @@ const _debug_output = true;
 	var sizes = 0;
 	const pointHolder = [null];
 	const pointStateHolder = [];
-	const pointMergeHolder = [[]];
 	const normalHolder = [[]];
 	const crossHolder = [null];
 	const contentHolder = [null];
@@ -593,21 +592,16 @@ function meshCloud(data) {
 		for( let zz = normalHolder[0].length; zz < sizes; zz++ ) {
 			normalHolder[0].push( null );
 		}
-		for( let zz = pointMergeHolder[0].length; zz < (dim0*dim1*dim2); zz++ ) {
-			pointMergeHolder[0].push( null ); 
-		}
 	}
 	pointStateHolder.length = 0;	
 	// all work space has been allocated by this point.
 	// now, for each layer, compute inside-outside crossings ('cross').. which interestingly relates to 'cross product' but in a 2D way...
 
 	const points  = pointHolder[0];
-	const pointMerge  = pointMergeHolder[0];
 	const normals = normalHolder[0];
 	const crosses = crossHolder[0];
 	const content = contentHolder[0];
 	for( let zero = 0; zero < dim0*dim1*dim2; zero++ ) {
-		pointMerge[zero] = null;
 		// make sure to reset this... 
 		for( let crz = 0; crz < 6; crz++ ) crosses[zero*6+crz] = 0;
 		for( let crz = 0; crz < 5; crz++ )  { content[zero*5+crz] = 0; normals[zero*5+crz] = null; }
@@ -675,16 +669,12 @@ function meshCloud(data) {
 					if( ( d <= 0 && e >0  )|| (d > 0 && e <= 0 ) ){
 						let t;
 						let normal = null;
+						bits[baseOffset] |= 1<<l;
 						//console.log( "x, y is a cross:", x+y*dim0,(x+y*dim0)*6, crosses.length, baseOffset+l, x, y, p0, p1, data0, data1, `d:${d} e:${e}` );
 						if( e <= 0 ) {
 							(t = -e/(d-e));
 // --V-V-V-V-V-V-V-V-- CREATE OUTPUT POINT(VERTEX) HERE --V-V-V-V-V-V-V-V--
 							normal = null;
-							if( t < 0.00001 )  {
-								normal = pointMerge[baseOffset+dataOffset[p1]];
-							} else if( t > 1-0.001 ){
-								normal = pointMerge[baseOffset+dataOffset[p0]];
-							}
 							if( true || !normal ) {
 								pointOutputHolder[0] = cellOrigin[0] + geom[p1][0]+( geom[p0][0]- geom[p1][0])* t;
 								pointOutputHolder[1] = cellOrigin[1] + geom[p1][1]+( geom[p0][1]- geom[p1][1])* t;
@@ -726,24 +716,13 @@ function meshCloud(data) {
 									, t
 								);
 								normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
-								if( t < 0.00001 )  {
-									pointMerge[baseOffset+dataOffset[p1]] = normal;
-								} else if( t > 1-0.00001 ) {
-									pointMerge[baseOffset+dataOffset[p0]] = normal;	
-								}
 							}
 							points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END OUTPUT POINT(VERTEX) HERE --^-^-^-^-^-^--
 						} else {
 							(t = -d/(e-d));
 // --V-V-V-V-V-V-V-V-- OUTPUT POINT 2 HERE --V-V-V-V-V-V-V-V--
-							normal = null;
-							if( t < 0.0001 )  {
-								normal = pointMerge[baseOffset+dataOffset[p0]];
-							} else if( t > 1-0.001 )  {
-								normal = pointMerge[baseOffset+dataOffset[p1]];
-							}
-							if( true ||!normal ) {
+							{
 								pointOutputHolder[0] = cellOrigin[0] + geom[p0][0]+( geom[p1][0]- geom[p0][0])* t;
 								pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
 								pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
@@ -775,10 +754,6 @@ function meshCloud(data) {
 									, t
 								);
 								normal.invert = 1;  // d is < 0 or outside... 
-								if( t < 0.00001 ) 
-									pointMerge[baseOffset+dataOffset[p0]] = normal;
-								else if( t > 1-0.00001 )
-									pointMerge[baseOffset+dataOffset[p1]] = normal;
 							}
 							points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
@@ -798,216 +773,6 @@ function meshCloud(data) {
 	}
 
 	const pendingFixes = [];
-
-	// this computes normals at the points on the tet's face.
-	// the face's point-normal can be determined here...
-	for( var z = 0; z < dim2; z++ ) {
-		// for all boundary crossed points, generate the faces from the intersection points.
-		for( var y = 0; y < dim1; y++ ) {
-			//if( y > 3 ) continue;
-			for( var x = 0; x < dim0; x++ ) {
-				//if( x < 5 || x > 32 ) continue;
-				let tetSkip = 0;
-				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
-				const normOffset = (x + (y*dim0) + z*dim0*dim1)*5; // 1 point-norm per tet
-				if( x >= (dim0-1)) tetSkip |= 1;
-				if( y >= (dim1-1)) tetSkip |= 2;
-				if( z >= (dim2-1)) tetSkip |= 4;
-				const dataOffset = x + (y*dim0) + z*dim1*dim0;
-	        	const odd = (( x + y + z ) &1);
-				let tv = null;
-				for( let tet = 0; tet < 5; tet++ ) {
-					if( tetMasks[odd][tet] & tetSkip ) continue;
-					const edgeChecks = edgeToComp[odd][tet];
-					let invert = 0;
-					let useFace = 0;
-					// this is 'valid combinations' check.
-					if( crosses[ baseOffset+edgeChecks[0] ] ) {
-						//console.log( `Output: odd:${odd} tet:${tet} x:${x} y:${y} a:${JSON.stringify(a)}` );
-						if( crosses[ baseOffset+edgeChecks[1] ] ) {
-							if( crosses[ baseOffset+edgeChecks[2] ] ) {
-								useFace = 1;								
-								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0;
-							} else {
-								if( crosses[ baseOffset+edgeChecks[4] ] && crosses[ baseOffset+edgeChecks[5] ]) {
-									useFace = 2;
-									invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0 ;
-								}
-							}
-						} else {
-							if( crosses[ baseOffset+edgeChecks[2]] && crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
-								useFace = 3;
-								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0  ;
-							}else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[4] ] ) {
-								// source point is 1
-								useFace = 4;
-								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0
-							}
-						}
-					} else {
-						if( crosses[ baseOffset+edgeChecks[1] ] ) {
-							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[3] ] && crosses[ baseOffset+edgeChecks[4] ]) {
-								useFace = 5;
-								invert = ( data[dataOffset+vertToData[odd][tet][1]] < 0 )  ?1:0
-							} else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
-								useFace = 6;
-								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 ) ?1:0
-							}
-						} else {
-							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[4]] && crosses[ baseOffset+edgeChecks[5] ] ) {
-								useFace = 7;
-								invert = ( data[dataOffset+vertToData[odd][tet][2]] >= 0 ) ?1:0
-							}
-						}
-					}
-
-					// compute the point-normal of the face.
-					// the averaging of near normals on the points, which are then
-					// re-averaged to the face normal would
-					// still just be the face normal, with a lot less extra steps.
-					if( useFace-- ) {
-						const fpi = facePointIndexes[odd][tet][invert][useFace];
-						const pCenter = [0,0,0];
-						let edges = 0;
-						let tv = null;
-						//console.log( "adding face:", x,y,z, useFace, tet );
-						for( var tri=0;tri< fpi.length; tri++ ){
-							// these points are just the half points on the geometry.
-							// and what I'm computing is their surface average...
-							const ai = points[baseOffset+fpi[tri][0]];
-							const bi = points[baseOffset+fpi[tri][1]];
-							const ci = points[baseOffset+fpi[tri][2]];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][0];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][1];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][2];
-							if( bi < 0 ){
-								console.log( "How many zeros do we get(b)?", useFace,facePointIndexes, facePointIndexesOriginal[odd][useFace],"xyz:",x,y,z, "ott:",odd,tet,tri, bi, baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
-								continue;
-							}
-							if( ci < 0){
-								console.log( "How many zeros do we get(c)?",useFace, "xyz:", x,y,z,"ott:",odd,tet,tri, ci,baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
-								continue;
-							}
-							// ai, bi, ci are indexes into computed pointcloud layer.
-// --V-V-V-V-V-V-V-V-- GENERATE POINT NORMALS --V-V-V-V-V-V-V-V--
-							//  https://stackoverflow.com/questions/45477806/general-method-for-calculating-smooth-vertex-normals-with-100-smoothness
-							// suggests using the angle as a scalar of the normal.
-							
-							// a - b - c    c->b a->b
-							const vA = pointStateHolder[ai].vertBuffer;
-							const vB = pointStateHolder[bi].vertBuffer;
-							const vC = pointStateHolder[ci].vertBuffer;
-
-							let v1, v2, v3;
-							const AisB =  ( ( vA[0] === vB[0] ) && ( vA[1] === vB[1]  ) && ( vA[2] === vB[2]  ) );
-							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
-							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
-							if( AisB || BisC || AisC ) {
-								edges |= 0x1 << tet;
-								//if(0)
-								console.log( "zero size tri-face", x, y, z, odd, tet, tri
-									, useFace, AisB,AisC,BisC 
-									, vA, vB, vC
-									);
-								switch( tet ) {
-									case 0:
-										
-										break;
-									case 1:
-										break;
-									case 2:
-										break;
-									case 3:
-										break;
-									case 4:
-										console.log( "zero size center normal - so odd?" );
-										break;
-								}
-								fnorm[0] = 0;
-								fnorm[1] = 0; // y is always 0
-								fnorm[2] = 0;
-							}else {
-								v1 = vA;
-								v2 = vB;
-								v3 = vC;
-
-								fnorm[0] = v2[0]-v1[0];fnorm[1] = v2[1]-v1[1];fnorm[2] = v2[2]-v1[2];
-								tmp[0] = v3[0]-v1[0];tmp[1] = v3[1]-v1[1];tmp[2] = v3[2]-v1[2];
-								let a=fnorm[0], b=fnorm[1];
-								fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
-								fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
-								fnorm[2]=a       *tmp[1] - b       *tmp[0];
-								let ds;
-								if( (ds=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.000001 ){
-									//console.log( "Took 1", v1,v2,v3 );
-									fnorm[0] /= Math.sqrt(ds);
-									fnorm[1] /= Math.sqrt(ds);
-									fnorm[2] /= Math.sqrt(ds);
-								}else {
-
-									// b->A  c->A
-									fnorm[0] = vB[0]-vA[0];fnorm[1] = vB[1]-vA[1];fnorm[2] = vB[2]-vA[2];
-									tmp[0] = vC[0]-vA[0];tmp[1] = vC[1]-vA[1];tmp[2] = vC[2]-vA[2];
-									a=fnorm[0], b=fnorm[1];
-									fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
-									fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
-									fnorm[2]=a       *tmp[1] - b       *tmp[0];
-									let ds2;
-									if( (ds2=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.00000001 ){
-										fnorm[0] /= Math.sqrt(ds2);
-										fnorm[1] /= Math.sqrt(ds2);
-										fnorm[2] /= Math.sqrt(ds2);
-									} else {
-										fnorm[0] = vA[0]-vC[0];fnorm[1] = vA[1]-vC[1];fnorm[2] = vA[2]-vC[2];
-										tmp[0] = vB[0]-vC[0];tmp[1] = vB[1]-vC[1];tmp[2] = vB[2]-vC[2];
-										a=fnorm[0], b=fnorm[1];
-										fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
-										fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
-										fnorm[2]=a       *tmp[1] - b       *tmp[0];
-										let ds3;
-										//console.log( "Took 3" );
-										//else 
-										//	console.log( "3Still not happy...", ds, vA, vB, vC );
-									}
-								}
-
-								// convert normal to a rotation of 'up'
-								lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
-
-								
-								fnorm[0] = lnQA.x;
-								fnorm[1] = 0; // y is always 0
-								fnorm[2] = lnQA.z;
-							}
-
-							pCenter[0] = (vA[0]+vB[0]+vC[0])/3;
-							pCenter[1] = (vA[1]+vB[1]+vC[1])/3;
-							pCenter[2] = (vA[2]+vB[2]+vC[2])/3;
-
-							tv = normals[normOffset+tet];
-							if( !tv )  {
-								tv = new TetVertBase( pCenter, fnorm.slice(0,3), invert
-									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], dataOffset, useFace, tet, odd );
-								normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1, psh2,psh3], i:invert};
-								//console.log( "Adding at ", x, y, z, dataOffset, useFace, tet );
-							} else {
-								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
-							}
-						}
-						if( edges  ) {
-							pendingFixes.push( tv );
-						}
-						bits[dataOffset] |= (1<<tet)| (edges << 8 );
-						//console.log( "updated bits:", x, y, z, odd, useFace, tet, bits[dataOffset].toString(16) );
-						//console.log( "Set position:", x, y, z, normOffset, tet, useFace );
-						content[normOffset + tet] = 1;
-// --^-^-^-^-^-^-- END GENERATE NORMALS (if face) --^-^-^-^-^-^--
-					}
-				}
-			}
-		}
-	}
-
 	//console.log( "need to fix a few tets..", pendingFixes );
 	const n = [0,0,0];
 	let tv0 = null;
@@ -1027,7 +792,7 @@ function meshCloud(data) {
 						//tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+4 ];
 					}else console.log( "still not sure what to do here..." );
 				}
-				console.log( 'bit1', bts.toString(16) );
+				//console.log( 'bit1', bts.toString(16) );
 			}else {
 				tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+lookat[1] ];
 				const bts = bits[( pf.offset + dataOffset[lookat[0]] )];
@@ -1038,7 +803,7 @@ function meshCloud(data) {
 						//tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+4 ];
 					}else console.log( "still not sure what to do here...(1)" );
 				}
-				console.log( 'bit1', bts.toString(16) );
+				//console.log( 'bit1', bts.toString(16) );
 			}
 			if( !tv ) {
 				console.log( "offset near this is wrong:", pf.offset, pf.tet, pf.face, lookat );
@@ -1405,7 +1170,7 @@ function meshCloud(data) {
 			}
 			return;
 		}
-		if( 0 && normalVertices){
+		if( normalVertices){
 			const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 			normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
 			normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
@@ -1474,6 +1239,253 @@ function meshCloud(data) {
 		}
 		//console.log( "already visited:", x, y, z );
 	}
+
+
+	function processCube( x, y, z, from, tetPrior ) {
+		const dataOffset = x + (y*dim0) + z*dim1*dim0;
+		// this computes normals at the points on the tet's face.
+		// the face's point-normal can be determined here...
+		if( bits[dataOffset] & (0x1f<<6) ) {
+			// already checked, and has content.
+			return true;
+		}
+		if( visited[dataOffset]) return false;
+
+				//if( x < 5 || x > 32 ) continue;
+				let tetSkip = 0;
+				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
+				const normOffset = (x + (y*dim0) + z*dim0*dim1)*5; // 1 point-norm per tet
+				if( x >= (dim0-1)) tetSkip |= 1;
+				if( y >= (dim1-1)) tetSkip |= 2;
+				if( z >= (dim2-1)) tetSkip |= 4;
+	        	const odd = (( x + y + z ) &1);
+				let tv = null;
+				for( let tet = 0; tet < 5; tet++ ) {
+					if( tetMasks[odd][tet] & tetSkip ) continue;
+					const edgeChecks = edgeToComp[odd][tet];
+					let invert = 0;
+					let useFace = 0;
+					// this is 'valid combinations' check.
+					if( crosses[ baseOffset+edgeChecks[0] ] ) {
+						//console.log( `Output: odd:${odd} tet:${tet} x:${x} y:${y} a:${JSON.stringify(a)}` );
+						if( crosses[ baseOffset+edgeChecks[1] ] ) {
+							if( crosses[ baseOffset+edgeChecks[2] ] ) {
+								useFace = 1;								
+								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0;
+							} else {
+								if( crosses[ baseOffset+edgeChecks[4] ] && crosses[ baseOffset+edgeChecks[5] ]) {
+									useFace = 2;
+									invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0 ;
+								}
+							}
+						} else {
+							if( crosses[ baseOffset+edgeChecks[2]] && crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
+								useFace = 3;
+								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0  ;
+							}else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[4] ] ) {
+								// source point is 1
+								useFace = 4;
+								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0
+							}
+						}
+					} else {
+						if( crosses[ baseOffset+edgeChecks[1] ] ) {
+							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[3] ] && crosses[ baseOffset+edgeChecks[4] ]) {
+								useFace = 5;
+								invert = ( data[dataOffset+vertToData[odd][tet][1]] < 0 )  ?1:0
+							} else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
+								useFace = 6;
+								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 ) ?1:0
+							}
+						} else {
+							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[4]] && crosses[ baseOffset+edgeChecks[5] ] ) {
+								useFace = 7;
+								invert = ( data[dataOffset+vertToData[odd][tet][2]] >= 0 ) ?1:0
+							}
+						}
+					}
+
+					// compute the point-normal of the face.
+					// the averaging of near normals on the points, which are then
+					// re-averaged to the face normal would
+					// still just be the face normal, with a lot less extra steps.
+					if( useFace-- ) {
+						const fpi = facePointIndexes[odd][tet][invert][useFace];
+						const pCenter = [0,0,0];
+						let edges = 0;
+						let fixed = false;
+						//console.log( "adding face:", x,y,z, useFace, tet );
+						for( var tri=0;tri< fpi.length; tri++ ){
+							// these points are just the half points on the geometry.
+							// and what I'm computing is their surface average...
+							const ai = points[baseOffset+fpi[tri][0]];
+							const bi = points[baseOffset+fpi[tri][1]];
+							const ci = points[baseOffset+fpi[tri][2]];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][0];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][1];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][2];
+							if( bi < 0 ){
+								console.log( "How many zeros do we get(b)?", useFace,facePointIndexes, facePointIndexesOriginal[odd][useFace],"xyz:",x,y,z, "ott:",odd,tet,tri, bi, baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
+								continue;
+							}
+							if( ci < 0){
+								console.log( "How many zeros do we get(c)?",useFace, "xyz:", x,y,z,"ott:",odd,tet,tri, ci,baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
+								continue;
+							}
+							// ai, bi, ci are indexes into computed pointcloud layer.
+// --V-V-V-V-V-V-V-V-- GENERATE POINT NORMALS --V-V-V-V-V-V-V-V--
+							//  https://stackoverflow.com/questions/45477806/general-method-for-calculating-smooth-vertex-normals-with-100-smoothness
+							// suggests using the angle as a scalar of the normal.
+							
+							// a - b - c    c->b a->b
+							const vA = pointStateHolder[ai].vertBuffer;
+							const vB = pointStateHolder[bi].vertBuffer;
+							const vC = pointStateHolder[ci].vertBuffer;
+							pCenter[0] = (vA[0]+vB[0]+vC[0])/3;
+							pCenter[1] = (vA[1]+vB[1]+vC[1])/3;
+							pCenter[2] = (vA[2]+vB[2]+vC[2])/3;
+
+
+							let v1, v2, v3;
+							const AisB =  ( ( vA[0] === vB[0] ) && ( vA[1] === vB[1]  ) && ( vA[2] === vB[2]  ) );
+							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
+							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
+							if( AisB || BisC || AisC ) {
+								edges |= 0x1 << tet;
+								if( from >= 0 ) {
+									const nprior = normals[from*5+tetPrior].n;
+									fnorm[0] = nprior[0];
+									fnorm[1] = nprior[1];
+									fnorm[2] = nprior[2];
+								}
+								//if(0)
+								console.log( "zero size tri-face", x, y, z, odd, tet, tri
+									, useFace, AisB,AisC,BisC 
+									, vA, vB, vC
+									);
+								switch( tet ) {
+									case 0:
+										
+										break;
+									case 1:
+										break;
+									case 2:
+										break;
+									case 3:
+										break;
+									case 4:
+										console.log( "zero size center normal - so odd?" );
+										break;
+								}
+								fixed = true;
+								//fnorm[0] = 0;
+								//fnorm[1] = 0; // y is always 0
+								//fnorm[2] = 0;
+							}else {
+								v1 = vA;
+								v2 = vB;
+								v3 = vC;
+								//console.log( "computing normal fnorm..." );
+								fnorm[0] = v2[0]-v1[0];fnorm[1] = v2[1]-v1[1];fnorm[2] = v2[2]-v1[2];
+								tmp[0] = v3[0]-v1[0];tmp[1] = v3[1]-v1[1];tmp[2] = v3[2]-v1[2];
+								let a=fnorm[0], b=fnorm[1];
+								fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
+								fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
+								fnorm[2]=a       *tmp[1] - b       *tmp[0];
+								let ds;
+								if( (ds=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.000001 ){
+									//console.log( "Took 1", v1,v2,v3 );
+									fnorm[0] /= Math.sqrt(ds);
+									fnorm[1] /= Math.sqrt(ds);
+									fnorm[2] /= Math.sqrt(ds);
+								}else {
+
+									// b->A  c->A
+									fnorm[0] = vB[0]-vA[0];fnorm[1] = vB[1]-vA[1];fnorm[2] = vB[2]-vA[2];
+									tmp[0] = vC[0]-vA[0];tmp[1] = vC[1]-vA[1];tmp[2] = vC[2]-vA[2];
+									a=fnorm[0], b=fnorm[1];
+									fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
+									fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
+									fnorm[2]=a       *tmp[1] - b       *tmp[0];
+									let ds2;
+									if( (ds2=fnorm[0]*fnorm[0]+fnorm[1]*fnorm[1]+fnorm[2]*fnorm[2]) > 0.00000001 ){
+										fnorm[0] /= Math.sqrt(ds2);
+										fnorm[1] /= Math.sqrt(ds2);
+										fnorm[2] /= Math.sqrt(ds2);
+									} else {
+										fnorm[0] = vA[0]-vC[0];fnorm[1] = vA[1]-vC[1];fnorm[2] = vA[2]-vC[2];
+										tmp[0] = vB[0]-vC[0];tmp[1] = vB[1]-vC[1];tmp[2] = vB[2]-vC[2];
+										a=fnorm[0], b=fnorm[1];
+										fnorm[0]=fnorm[1]*tmp[2] - fnorm[2]*tmp[1];
+										fnorm[1]=fnorm[2]*tmp[0] - a       *tmp[2];
+										fnorm[2]=a       *tmp[1] - b       *tmp[0];
+										let ds3;
+										//console.log( "Took 3" );
+										//else 
+										//	console.log( "3Still not happy...", ds, vA, vB, vC );
+									}
+								}
+								// convert normal to a rotation of 'up'
+								lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
+
+								if(  normalVertices){
+									//console.log( "Drawing normal normal" );
+									normalVertices.push( new THREE.Vector3( pCenter[0],pCenter[1],pCenter[2]+0.02 ))
+									normalVertices.push( new THREE.Vector3( pCenter[0]+fnorm[0]*0.7,pCenter[1]+fnorm[1]*0.7,pCenter[2]+fnorm[2]*0.7+0.02));
+									normalColors.push( new THREE.Color( 0.8, 0.8, 0, 1.0 ))
+									normalColors.push( new THREE.Color( 0.8, 0.8, 0, 1.0 ))
+									
+										
+								}
+								fnorm[0] = lnQA.x;
+								fnorm[1] = 0; // y is always 0
+								fnorm[2] = lnQA.z;
+
+							}
+
+							tv = normals[normOffset+tet];
+							if( !tv )  {
+								tv = new TetVertBase( pCenter, fnorm.slice(0,3), invert
+									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], dataOffset, useFace, tet, odd );
+								normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1, psh2,psh3], i:invert};
+								//console.log( "Adding at ", x, y, z, dataOffset, useFace, tet );
+							} else {
+								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
+							}
+						}
+						if(1)
+						if(  normalVertices){
+							//console.log( "Drawing normal normal" );
+							const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+							normalVertices.push( new THREE.Vector3( tv.p[0],tv.p[1],tv.p[2]+0.02 ))
+							normalVertices.push( new THREE.Vector3( tv.p[0]+up.x*1.3,tv.p[1]+up.y*1.3,tv.p[2]+up.z*1.3));
+							if( fixed ) {
+							normalColors.push( new THREE.Color( 0, 0.0,1.0,1.0 ))
+							normalColors.push( new THREE.Color( 0,0.0,1.0,1.0 ))
+							}else {
+								normalColors.push( new THREE.Color( 1.0, 0.0,0,1.0 ))
+								normalColors.push( new THREE.Color( 1.0,0.0,0,1.0 ))
+	
+							}
+						}
+		
+						if( edges  ) {
+							pendingFixes.push( tv );
+						}
+						bits[dataOffset] |= (1<<tet)<<6;
+						//console.log( "updated bits:", x, y, z, odd, useFace, tet, bits[dataOffset].toString(16) );
+						//console.log( "Set position:", x, y, z, normOffset, tet, useFace );
+						content[normOffset + tet] = 1;
+// --^-^-^-^-^-^-- END GENERATE NORMALS (if face) --^-^-^-^-^-^--
+					}
+				}
+			if( bits[dataOffset] & (0x1F<<6) ) {
+				return true;
+			}
+			return false;
+	}
+
+
 	function followFace( x, y, z ) {
 		let p0;
 		let p = [null,null,null,null,null,null];
@@ -1482,15 +1494,18 @@ function meshCloud(data) {
 		ffQueue( x, y, z );
 
 		while( (ff_queue.length>0 ) && ( {x,y,z} = ff_queue.shift() )) {
+			
 			added.length = 0;
 			//if( ff_queue.length ) continue;
 			const offset = (x + (y*dim0) + z*dim0*dim1);
 			const baseOffset = offset*5;
 			const odd = (x+y+z)&1;
-			const normDir = { dir:0, largest:0 };
 			//if( candraw )
 			//if( y === 2 ) continue;
 			//console.log( "Drawing cube:", x, y, z, odd, faces.length );
+
+			//if( processCube( x, y, z, offset, -1 ) )
+
 			if( odd === 0 ) {
 				//const ffQueue = ()=>{};
 				if( p[0] = normals[baseOffset+1] ) {
@@ -1499,9 +1514,18 @@ function meshCloud(data) {
 						const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 						normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
 						normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
-						normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
-						normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
+						normalColors.push( new THREE.Color( 0.0, 1.0,1,1.0 ))
+						normalColors.push( new THREE.Color( 0.0, 1.0,1,1.0 ))
 					}
+					const bts = bits[offset+dataOffset[6]];
+					const bts2 = bits[offset+dataOffset[2]];
+					const bts3 = bits[offset+dataOffset[4]];
+					//p[0].face
+					const yzcube = (bts    & (1<<2))?processCube( x, y+1, z+1, offset, 1 ):false;
+					const ycube = ((bts2&(1<<5))|(bts & (1<<2)))?processCube( x, y+1, z , offset, 1):false;
+					const zcube = ((bts3&(1<<4))|(bts & (1<<2)))?processCube( x, y, z+1, offset, 1 ):false;
+					 
+					if( yzcube && ycube && zcube )
 
 					if( (p[1] = normals[baseOffset + tetOffset[4] + 0] )
 						&&(p[2] = normals[baseOffset + tetOffset[6] + 0] )
@@ -1533,6 +1557,7 @@ function meshCloud(data) {
 						}
 					}
 					//if(0)
+					if( zcube )
 					if( ( p[1] = normals[baseOffset + tetOffset[4] + 0] )
 						&&( p[2] = normals[baseOffset + tetOffset[4] + 4] )
 						&&(p[3] = normals[baseOffset + tetOffset[4] + 3] )
@@ -1547,6 +1572,7 @@ function meshCloud(data) {
 					}
 
 					//if(0)
+					if( ycube )
 					if( ( p[5] = normals[baseOffset + tetOffset[2] + 1] )
 						&&( p[4] = normals[baseOffset + tetOffset[2] + 4]) 
 						&&( p[3] = normals[baseOffset + tetOffset[2] + 3] )
@@ -1563,6 +1589,14 @@ function meshCloud(data) {
 
 				if( p[0] = normals[baseOffset+2] ) {
 
+					const bts = bits[offset+dataOffset[5]];
+					const bts2 = bits[offset+dataOffset[1]];
+					const bts3 = bits[offset+dataOffset[4]];
+
+					const xzcube = 	(bts & (1<<0))?processCube( x+1, y, z+1, offset,2 ):false;
+					const xcube = ((bts2&(1<<3))|(bts & ((1<<0))))?processCube( x+1, y, z, offset,2 ):false;
+					const zcube = ((bts3&(1<<5))|(bts & (1<<0)))?processCube( x, y, z+1, offset,2 ):false;
+					if( xcube&&zcube&&xzcube )
 					if( (p[1] = normals[baseOffset + tetOffset[1] + 1]  )
 						&&(p[2] = normals[baseOffset + tetOffset[5] + 0]  )
 						&&(p[3] = normals[baseOffset + tetOffset[4] + 3]  )
@@ -1590,6 +1624,8 @@ function meshCloud(data) {
 								, bits[offset-dataOffset[6]].toString(16)
 										, p[1], p[2], p[3] );
 					}
+
+					if( xcube )
 					if( (p[1] = normals[baseOffset + tetOffset[1] + 1]  )
 						&&(p[2] = normals[baseOffset + tetOffset[1] + 4]  )
 						&&(p[3] = normals[baseOffset + tetOffset[1] + 0]  )
@@ -1607,7 +1643,14 @@ function meshCloud(data) {
 
 				if( p[0] = normals[baseOffset+3] ) {
 
+					const bts = bits[offset+dataOffset[3]];
+					const bts2 = bits[offset+dataOffset[1]];
+					const bts3 = bits[offset+dataOffset[2]];
+					const xycube = (bts &(1<<1))?processCube( x+1, y+1, z, offset,3 ):false;
+					const ycube = ((bts3&(1<<5))|(bts &(1<<1)))?processCube( x, y+1, z, offset,3 ):false;
+					const xcube = ((bts2&(1<<3))|(bts &(1<<1)))?processCube( x+1, y, z, offset,3 ):false;
 
+					if( xcube && ycube && xycube )
 					if( (p[1]= normals[baseOffset + tetOffset[2] + 3])
 						&&(p[3] = normals[baseOffset + tetOffset[1] + 0] )
 						&&(p[2] = normals[baseOffset + tetOffset[3] + 0] )
@@ -1632,9 +1675,23 @@ function meshCloud(data) {
 
 			}else if(1){
 
-				//const ffQueue = ()=>{};
+			//const ffQueue = ()=>{};
 				if( p[0] = normals[baseOffset+0] ) {
 
+					if(  normalVertices){
+						//console.log( "Drawing line:", x, y, z, odd, 4 );
+						const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
+						normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
+						normalVertices.push( new THREE.Vector3( p[0].p[0]+up.x*1.3,p[0].p[1]+up.y*1.3,p[0].p[2]+up.z*1.3));
+						normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
+						normalColors.push( new THREE.Color( 0.0, 1.0,0,1.0 ))
+					}
+	
+					const bts = 0xFFFF | bits[offset+dataOffset[2]];
+
+					const ycube = (bts&(1<<5))?processCube( x, y+1, z, offset,0 ):false;
+					
+					if( ycube )
 
 					if(  (p[5] = normals[baseOffset + tetOffset[2] + 0]  )
 						&&( p[4] = normals[baseOffset + tetOffset[2] + 4]  )
@@ -1657,6 +1714,9 @@ function meshCloud(data) {
 
 
 				if( p[0] = normals[baseOffset+1] ) {
+					const bts = bits[offset+dataOffset[4]];
+					if( (bts&(1<<4)) && processCube( x, y, z+1, offset,1 ) )
+					
 					if( ( p[1] = normals[baseOffset + tetOffset[4] + 0]  )
 						&&( p[2] = normals[baseOffset + tetOffset[4] + 4]  )
 						&&( p[3] = normals[baseOffset + tetOffset[4] + 3]  )
@@ -1673,6 +1733,14 @@ function meshCloud(data) {
 				}
 
 				if( p[0] = normals[baseOffset+2] ) {
+
+					const bts = bits[offset+dataOffset[6]];
+					const bts2 = bits[offset+dataOffset[2]];
+					const bts3 = bits[offset+dataOffset[4]];
+					const yzcube = 	(bts&(1<<2))?processCube( x, y+1, z+1, offset, 2 ):false;
+					const ycube = ((bts2&(1<<5))||(bts&(1<<2)))?processCube( x, y+1, z , offset, 2):false;
+					const zcube = ((bts3&(1<<4))||(bts&(1<<2)))?processCube( x, y, z+1, offset,2 ):false;
+					if( ycube&&zcube&&yzcube )
 					if( ( p[3] = normals[baseOffset + tetOffset[2] + 2] )
 						&&( p[2] = normals[baseOffset + tetOffset[6] + 3]  )
 						&&( p[1] = normals[baseOffset + tetOffset[4] + 3]  )
@@ -1694,6 +1762,12 @@ function meshCloud(data) {
 						}
 					}
 
+					const bts4 = bits[offset+dataOffset[5]];
+					const bts5 = 0xFFFF|bits[offset+dataOffset[1]];
+					const xzcube = ( bts4&(1<<0) ) ?processCube( x+1, y, z+1, offset, 2 ):false;
+					const xcube  = ( bts5&(1<<3) ) ?processCube( x+1, y, z, offset, 2 ):false;
+
+					if( xcube&&xzcube&&zcube )
 					if( ( p[3] = normals[baseOffset + tetOffset[4] + 3]  )
 						&&( p[2] = normals[baseOffset + tetOffset[5] + 0]  )
 						&&( p[1] = normals[baseOffset + tetOffset[1] + 1]  )
@@ -1710,6 +1784,10 @@ function meshCloud(data) {
 						}
 					}
 
+					const bts6 = bits[offset+dataOffset[3]];
+					const xycube = 	(bts6&(1<<1))?processCube( x+1, y+1, z, offset, 2 ):false;
+
+					if( xcube && ycube && xycube )
 					if( ( p[1] = normals[baseOffset + tetOffset[2] + 2]  )
 						&&( p[2] = normals[baseOffset + tetOffset[3] + 1]  )
 						&&( p[3] = normals[baseOffset + tetOffset[1] + 1]  )
@@ -1730,7 +1808,7 @@ function meshCloud(data) {
 						}
 					}
 
-
+					if( xcube )
 					if( ( p[5] = normals[baseOffset + tetOffset[1] + 1]  )
 						&&( p[4] = normals[baseOffset + tetOffset[1] + 4]  )
 						&&( p[3] = normals[baseOffset + tetOffset[1] + 0]  )
@@ -1752,42 +1830,42 @@ function meshCloud(data) {
 			//bits[offset] = 0; // clearing this is the same as marking visited
 			if(1)
 			if( odd === 0 ) {
-				
 				if( normals[baseOffset+0]) {
 					// from even 0
-					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<3)) {
+					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<(6+3))) {
+
 						( ffQueue( x-1, y, z ) );
 					}
-					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<0)) {
+					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<(6+0))) {
 						( ffQueue( x, y-1, z ) );
 					}
-					if( z >0 && bits[offset - dataOffset[4] ] & ( 1<<1) ) {
+					if( z >0 && bits[offset - dataOffset[4] ] & ( 1<<(6+1)) ) {
 						( ffQueue( x, y, z-1 ) );
 					}
 				}
 
 				if( normals[baseOffset+1]) {
 					// from even 1
-					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<2)) {
+					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<(6+2))) {
 						( ffQueue( x-1, y, z ) );
 					}
-					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<1)) {
+					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<(6+1))) {
 						( ffQueue( x, y+1, z ) );
 					}
-					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<1) ) {
+					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<(6+1)) ) {
 						( ffQueue( x, y, z+1 ) );
 					}
 				}
 
 				if( normals[baseOffset+2]) {
 					// from even 2
-					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<1)) {
+					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<(6+1))) {
 						( ffQueue( x+1, y, z ));
 					}
-					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<2)) {
+					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<(6+2))) {
 						( ffQueue( x, y-1, z ));
 					}
-					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<3) ) {
+					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<(6+3)) ) {
 						( ffQueue( x, y, z+1 ));
 					}
 				}
@@ -1795,13 +1873,13 @@ function meshCloud(data) {
 
 				if( normals[baseOffset+3]) {
 					// from even 3
-					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<0)) {
+					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<(6+0))) {
 						( ffQueue( x+1, y, z ));
 					}
-					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<3)) {
+					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<(6+3))) {
 						( ffQueue( x, y+1, z ));
 					}
-					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<2) ) {
+					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<(6+2)) ) {
 						( ffQueue( x, y, z-1 ));
 					}
 				}
@@ -1811,41 +1889,41 @@ function meshCloud(data) {
 			}else {
 				if( normals[baseOffset+0]) {
 					// from odd 0
-					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<3)) {
+					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<(6+3))) {
 						( ffQueue( x-1, y, z ));
 					}
-					if( y < dim1-1 && bits[offset + dataOffset[2] ]  & ( 1<<0)) {
+					if( y < dim1-1 && bits[offset + dataOffset[2] ]  & ( 1<<(6+0))) {
 						( ffQueue( x, y+1, z ));
 					}
-					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<1) ) {
+					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<(6+1)) ) {
 						( ffQueue( x, y, z-1 ));
 					}
 				}
 
 				if( normals[baseOffset+1]) {
 					// from odd 0
-					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<2)) {
+					if( x > 0 && bits[offset - dataOffset[1] ]  & ( 1<<(6+2))) {
 						( ffQueue( x-1, y, z ));
 					}
-					if( y > 0  && bits[offset - dataOffset[2] ]  & ( 1<<1)) {
+					if( y > 0  && bits[offset - dataOffset[2] ]  & ( 1<<(6+1))) {
 						( ffQueue( x, y-1, z ));
 					}
-					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<0) ) {
+					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<(6+0)) ) {
 						( ffQueue( x, y, z+1 ));
 					}
 				}
 
 				if( normals[baseOffset+2]) {
 					// from odd 2
-					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<1)) {
+					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<(6+1))) {
 						//console.log( "This should already have been dispatched?")
 						( ffQueue( x+1, y, z ));
 					}
-					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<2)) {
+					if( y < (dim1-1) && bits[offset + dataOffset[2] ]  & ( 1<<(6+2))) {
 						//console.log( "This should already have been dispatched?")
 						( ffQueue( x, y+1, z ));
 					}
-					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<3) ) {
+					if( z < (dim2-1) && bits[offset + dataOffset[4] ] & ( 1<<(6+3)) ) {
 						//console.log( "This should already have been dispatched?")
 						( ffQueue( x, y, z+1 ));
 					}
@@ -1853,13 +1931,13 @@ function meshCloud(data) {
 
 				if( normals[baseOffset+3]) {
 					// from odd 3
-					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<0)) {
+					if( x < (dim0-1) && bits[offset + dataOffset[1] ]  & ( 1<<(6+0))) {
 						( ffQueue( x+1, y, z ));
 					}
-					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<3)) {
+					if( y > 0 && bits[offset - dataOffset[2] ]  & ( 1<<(6+3))) {
 						( ffQueue( x, y-1, z ));
 					}
-					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<2) ) {
+					if( z > 0 && bits[offset - dataOffset[4] ] & ( 1<<(6+2)) ) {
 						( ffQueue( x, y, z-1 ));
 					}
 				}
@@ -1874,8 +1952,8 @@ function meshCloud(data) {
 		for( let y = 0; y < dim1; y++ ) {
 			for( let x = 0; x < dim0; x++ ) {
 				const offset = (x + (y*dim0) + z*dim0*dim1);
-				if( !bits[offset] || visited[offset] ) {
-					continue
+				if( visited[offset] || !processCube(x,y,z, -1, -1) ) {
+					continue;
 				}
 				//console.log( "Following from", x, y, z );
 				followFace( x, y, z );
