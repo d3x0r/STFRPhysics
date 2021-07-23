@@ -57,7 +57,7 @@ function createTestData() {
 					else n--;
 				}else {
 					volume[n] = f(x,y,z);
-					if( volume[n] === 0 ) volume[n] -= 0.001
+					//if( volume[n] === 0 ) volume[n] -= 0.001
 				}
 			}
 			if( fill )

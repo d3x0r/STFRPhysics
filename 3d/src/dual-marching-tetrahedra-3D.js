@@ -146,7 +146,91 @@ const _debug_output = true;
 		[ [ 0,2,4,1], [6,4,2,7], [5,7,1,4], [3,1,7,2], [1,4,7,2] ],
 		[ [ 2,0,3,6], [4,6,5,0], [7,5,6,3], [1,3,0,5], [0,3,6,5] ],
 	];
-	
+
+	const nearTets = [
+		//even
+		[
+			// tet
+			[ // face
+				[ [-4, 1], [-1, 3], [-2 , 0] ]
+				, [ [-4,1], [-1,3],[-2,0],[0,4] ]
+				, [ [-4,1], [-1,3],[-2,0],[0,4] ]
+				, [ [-4, 1], [-1, 3], [0, 4] ]
+				, [ [-4,1], [-1,3],[-2,0],[0,4] ]
+				,[ [-4, 1], [0, 4], [-2 , 0] ]
+				,[ [0, 4], [-1, 3], [-2 , 0] ]
+			] 
+			,[ // face
+				[ [4, 0], [-1, 2], [2 , 1] ]
+				, [ [4, 0], [-1, 2], [2 , 1],[0,4] ]
+				, [ [4, 0], [-1, 2], [2 , 1],[0,4] ]
+				, [ [4, 0], [-1, 2], [0, 4]] 
+				, [ [4, 0], [-1, 2], [2 , 1],[0,4] ]
+				,[ [4, 0], [0,4], [2 , 1] ]
+				,[ [0, 4], [-1, 2], [2 , 1] ]
+			] 
+			,[ // face
+				[ [4, 3], [1, 1], [-2 , 2] ]
+				, [ [4, 3], [1, 1], [-2 , 2],[0,4] ]
+				, [ [4, 3], [1, 1], [-2 , 2],[0,4] ]
+				, [ [4, 3], [1, 1], [0,4]] 
+				, [ [4, 3], [1, 1], [-2 , 2],[0,4] ]
+				,[ [4, 3], [0,4], [-2 , 2] ]
+				,[ [0, 4], [1, 1], [-2 , 2] ]
+			] 
+			,[ // face
+				[ [-4, 2], [1, 0], [2 , 3] ]
+				, [ [-4, 2], [1, 0], [2 ,3],[0,4] ]
+				, [ [-4, 2], [1, 0], [2 , 3],[0,4] ]
+				, [ [-4, 2], [1, 0], [0,4]] 
+				, [ [-4, 2], [1, 0], [2 , 3],[0,4] ]
+				,[ [-4, 2], [0,4], [2 , 3] ]
+				,[ [0, 4], [1, 0], [2 , 3] ]
+			] 
+		]
+		// odd
+		,[
+			// tet
+			[ // face
+				[ [-4, 1], [-1, 3], [2 , 0] ]
+				, [ [-4,1], [-1,3],[2,0],[0,4] ]
+				, [ [-4,1], [-1,3],[2,0],[0,4] ]
+				, [ [-4, 1], [-1, 3], [0, 4] ]
+				, [ [-4,1], [-1,3],[2,0],[0,4] ]
+				,[ [-4, 1], [0, 4], [2 , 0] ]
+				,[ [0, 4], [-1, 3], [2 , 0] ]
+			] 
+			,[ // face
+				[ [4, 0], [-1, 2], [-2 , 1] ]
+				, [ [4, 0], [-1, 2], [-2 , 1],[0,4] ]
+				, [ [4, 0], [-1, 2], [-2 , 1],[0,4] ]
+				, [ [4, 0], [-1, 2], [0, 4]] 
+				, [ [4, 0], [-1, 2], [-2 , 1],[0,4] ]
+				,[ [4, 0], [0,4], [-2 , 1] ]
+				,[ [0, 4], [-1, 2], [-2 , 1] ]
+			] 
+			,[ // face
+				[ [4, 3], [1, 1], [2 , 2] ]
+				, [ [4, 3], [1, 1], [2 , 2],[0,4] ]
+				, [ [4, 3], [1, 1], [2 , 2],[0,4] ]
+				, [ [4, 3], [1, 1], [0,4]] 
+				, [ [4, 3], [1, 1], [2 , 2],[0,4] ]
+				,[ [4, 3], [0,4], [2 , 2] ]
+				,[ [0, 4], [1, 1], [2 , 2] ]
+			] 
+			,[ // face
+				[ [-4, 2], [1, 0], [-2 , 3] ]
+				, [ [-4, 2], [1, 0], [-2 ,3],[0,4] ]
+				, [ [-4, 2], [1, 0], [-2 , 3],[0,4] ]
+				, [ [-4, 2], [1, 0], [0,4]] 
+				, [ [-4, 2], [1, 0], [-2 , 3],[0,4] ]
+				,[ [-4, 2], [0,4], [-2 , 3] ]
+				,[ [0, 4], [1, 0], [-2 , 3] ]
+			] 
+
+		]
+	]
+
 	// these is the point orders of the tetrahedra. (first triangle in comments at top)
 	// these can be changed to match the original information on the wikipedia marching-tetrahedra page.
 	// the following array is modified so the result is the actual offset in the computed data plane;
@@ -158,37 +242,6 @@ const _debug_output = true;
 			[ [ 0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0] ],
 			[ [ 0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0] ],
 	];
-
-	const tetPointInversions =
-		[
-			[  // the computed halfpoints are inverted from these tet's perspective.
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-			],
-			[
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-				[ 0,0,0  ,0,0,0,0],
-			]
-
-		];
-
-	// tetrahedra edges are in this order.
-	// the point indexes listed here are tetrahedra points.  (point index into vertToDataOrig points to get composite point)
-	const referenceTetEdgePoints = [ [0,1] ,[0,2], [0,3], [1,2], [2,3], [3,1] ];
-	
-	// input is face number (0-3)  output is the triplet of points that define that face.
-	// given to define relations between mating faces of tets.
-	const referenceTetFacePoints = [ [ 0,1,2 ], [0,2,3], [0,3,1], [1,3,2] ];
-
-	// input is face number (0-3) output is the three edges that bound this face.
-	// (unused?  Ordering has no sense... just is what it is? )
-	const referenceTetFaceEdges = [ [0,3,1], [1,2,4], [2,0,5], [3,4,5] ]; 
 
 	const tetCount = 5; // 5 tetrahedrons per cell...
 
@@ -205,7 +258,7 @@ const _debug_output = true;
 
 	// these are used for the non-geometry-helper output
 	const v_cb = new THREE.Vector3();
-	const v_ab = new THREE.Vector3()
+	const v_ab = new THREE.Vector3
 	const v_normTmp = new THREE.Vector3();
 	// used to compute angle between faces, are two direction vectors from a point
 	const v_a1t = new THREE.Vector3();
@@ -226,13 +279,13 @@ const _debug_output = true;
 	// these are edge numbers; a tet has 6 edges.
 	const facePointIndexesOriginal = [
 			[
-				[[0,1,2]],    // vert 0
+				[[0,1,2]],    // vert 0  // no center
 				[[0,1,4],[1,5,4]],
 				[[5,0,3],[2,0,5]],
-				[[4,0,3]],    // vert 1
+				[[4,0,3]],    // vert 1  // filters y
 				[[2,1,4],[4,1,3]],
-				[[1,5,3]],    // vert 2
-				[[2,4,5]]     // vert 3
+				[[1,5,3]],    // vert 2  // filters x
+				[[2,4,5]]     // vert 3  // filters z
 			],
 			// invert
 			[
@@ -245,168 +298,6 @@ const _debug_output = true;
 				[[4,2,5]]     // vert 3
 			],
 	];
-
-	
-   // array of child tetrahedra for collapsing in an octree of DLC cells.
-   // [even/odd parent cell]
-   // all cells collapse with 'even' at 0,0,0  ... 0-1  become another 0.. 2-3 -> 1 ...
-   //   [tetNumberInCell]
-   //      results (right now)   [x,y,z offset (n*2)+   , (exclusion),  tets at offset to include,... (1, 2 or 4 )   ]
-   //   the sum of x+y+z determines whether the tet ID is 'odd' or 'even'.. (x+y+z)&1 === odd.
-   //
-	const childTetList = [ [
-		 [ // 0 - 7 combined
-			  [ 0,0,1,  /* not 3,*/  0,1,2,4  ] /* all tets but 3 - odd */
-						 ,  [ 0,0,0,  0  ]
-						 ,  [ 1,0,1,  0  ]
-						 ,  [ 0,1,1,  0  ]
-		],
-		   
-		[   // 1 - 7 combined
-			  [ 1,0,0, /* not 2, */  0,1,3,4  ] /* all tets but 2 - odd */
-						  , [ 0,0,0,  1  ]
-						  , [ 1,0,1,  1  ]
-						  , [ 0,1,1,  1  ]
-	   ],
-
-	   [ // 2 - 7 combined
-			   [ 0,1,0, /* not 1, */ 0,2,3,4  ] /* all tets but 1 - odd */
-			,[ 0,1,1,  2  ]
-			,[ 1,1,1,  2  ]
-			,[ 0,0,0,  2  ]
-		],
-
-		[ // 3 - 7 combined
-				 [ 1,1,1, /* not 0,*/  1,2,3,4  ] /* all tets but 0 - odd */
-			,[ 0,1,1,  3  ]
-			,[ 1,1,0,  3  ]
-			,[ 0,1,1,  3  ]
-		],
-
-		[   // 4 - 12 combined
-			  [1,0,0,   2 ]
-			  ,[0,0,1,   3 ]
-			  ,[0,1,0,   1 ]
-			  ,[1,1,1,   0 ]
-			,[ 0,0,0,   3, 4  ]
-			,[ 0,1,1,   1, 4  ]
-			,[ 1,0,1,   2, 4  ]
-			,[ 1,1,0,   0, 4  ] 
-		],
-
-		],[
-			[ // 0 - 7 combined
-				[ 0,0,0, /* not 3, */ 0,1,2,4  ] /* all tets but 3 - even */
-							,[ 1,0,0,  0  ]
-							,[ 0,1,0,  0  ]
-							,[ 0,0,1,  0  ]
-			],
-				
-			[   // 1 - 7 combined
-					[ 1,0,1, /* not 2, */ 0,1,3,4  ] /* all tets but 2 - even */
-								,[ 1,0,0,  1  ]
-								,[ 1,1,1,  1  ]
-								,[ 0,0,1,  1  ]
-			],
-
-			[ // 2 - 7 combined
-					[ 0,1,1, /* not 3,*/  0,1,2,4  ] /* all tets but 1 - even */
-				,[ 0,1,0,  2  ]
-				,[ 0,0,1,  2  ]
-				,[ 1,1,1,  2  ]
-			],
-
-			[ // 3 - 7 combined
-						[ 1,1,0,  /* not 0,*/  1,2,3,4  ] /* all tets but 0 - even */
-				,[ 0,1,0,  3  ]
-				,[ 1,0,0,  3  ]
-				,[ 1,1,1,  3  ]
-			],
-
-			[   // 4 - 12 combined
-					[1,0,0,   2,4 ]
-					,[0,0,1,   3,4 ]
-					,[0,1,0,   1,4 ]
-					,[1,1,1,   0,4 ]
-				,[ 0,0,0,   3  ]
-				,[ 0,1,1,   1  ]
-				,[ 1,0,1,   2  ]
-				,[ 1,1,0,   0  ] 
-			],
-		]
-	]
-
-
-const usedTets = [
-	[ // even
-		[ [ 0,0,0,0,0,0]  /* unchecked! */
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		],
-	   [  [ 0,0,0,0,0,0]  /* a few missing checks */
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		, [ 0,0,0,0,0,0]
-		],
-	  ],
-	[ 
-	  [ [ 0,0,0,0,0,0]  /* unchecked! */
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0] 
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  ],
-	 [  [ 0,0,0,0,0,0]  /* a few missing checks */
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  , [ 0,0,0,0,0,0]
-	  ],
-	],
-]
-
-// [odd][invert][dir][longest%3/*min*/]
-const tetCentroidFacet =[  
-			[ // even
-		      [ [ [0,3,2,1],[0,3,2,1],[0,2,3,1],[1,3,0,2],[1,3,0,2/*3,2,0,1*/],[0,2,3,1]]  // 3, 4 set /* unchecked! */
-			  , [ [0,1,2,3],[0,1,2,3],[1,0,2,3],[1,3,0,2],[2,0,3,1/*0,3,1,2*/],[0,2,1,3]]  // 3, 4, 5 set
-			  , [ [0,3,2,1],[1,0,3,2],[3,1,0,2],[0,3,1,2],[0,3,1,2],[1,0,2,3]]
-			  , [ [1,2,3,0],[1,2,3,0],[2,3,1,0],[2,0,3,1],[1,2,0,3],[2,3,1,0]]
-			  , [ [0,3,2,1],[0,3,2,1],[3,2,0,1],[3,0,2,1],[3,0,2,1],[3,2,0,1]]
-			  , [ [2,3,0,1],[2,3,0,1],[3,2,0,1],[3,0,2,1],[3,0,2,1],[3,2,0,1]]
-			  , [ [3,2,1,0],[3,2,1,0],[3,2,0,1],[2,0,3,1],[2,0,3,1],[1,3,2,0]]
-			  , [ [2,3,0,1],[2,3,0,1],[3,2,0,1],[2,0,3,1],[1,2,0,3],[3,2,0,1]]
-			  ],
-			],
-		  [ 
-			[ [ [2,3,0,1],[3,0,1,2],[0,2,3,1],[2,0,3,1],[0,3,1,2],[0,2,3,1]]    // 4 checked /* unchecked! */
-			, [ [0,3,2,1],[0,3,2,1],[0,2,3,1],[2,0,3,1],[0,3,1,2],[1,0,2,3]]   // 3,4 set
-			, [ [3,0,1,2],[3,0,1,2],[0,2,3,1],[1,3,0,2],[0,2,1,3],[1,0,2,3]] 
-			, [ [0,3,2,1],[0,3,2,1],[2,3,1,0],[3,0,2,1],[0,2,1,3],[2,3,1,0]]
-			, [ [2,3,0,1],[2,3,0,1],[3,2,0,1],[2,0,3,1],[2,0,3,1],[0,1,3,2]]
-			, [ [1,0,3,2],[1,0,3,2],[3,2,0,1],[2,0,3,1],[2,0,3,1],[0,1,3,2]]
-			, [ [1,2,3,0],[1,2,3,0],[3,2,0,1],[3,0,2,1],[2,1,3,0],[3,2,0,1]]
-			, [ [1,0,3,2],[1,0,3,2],[3,2,0,1],[1,3,0,2],[0,2,1,3],[2,0,1,3]]
-			],
-		],		  
-	];
-	
-
 
 	// these are bits that are going to 0.
 	const tetMasks = [ [ 0, 2|4, 1|2|4, 1|2, 1|2|4 ], [ 2, 4|1, 1|4|2, 1, 1|2|4 ] ];
@@ -432,16 +323,18 @@ const tetCentroidFacet =[
 	
 
 	class TetVertBase{ 
-		constructor( p, n, invert, p1, p2, p3, face ) {
+		constructor( p, n, invert, p1, p2, p3, offset, face, tet, odd ) {
 			this.invert = invert;
 			this.p = p;
 			this.n = n;
 			this.face = face;
+			this.offset = offset;
+			this.tet = tet;
 			//console.log( "set normal to:", this.n );
 			this. sources=[p1, p2, p3, null]
 			this.elements=[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0]
 			this. eleDels=[ p1.typeDelta, p2.typeDelta,p3.typeDelta,0 ] ;
-
+			this.odd = odd;
 		}
 	
 	
@@ -491,7 +384,6 @@ const tetCentroidFacet =[
 	, faces = opts.faces || []
 	, faceNormals  = []
 	var smoothShade = opts.smoothShade || false;
-	var newData = [];
 	const showGrid = opts.showGrid;
 
 	const dim0 = dims[0];
@@ -526,7 +418,7 @@ const tetCentroidFacet =[
 
 
 	
-	meshCloud( data,dims );
+	meshCloud( data );
 	return null;
 
 function makeList() {
@@ -561,6 +453,36 @@ function makeList() {
 
 }
 
+function makeQueue() {
+	var context_stack = {
+		first : null,
+		last : null,
+		saved : null,
+		length:0,
+		q : 0,
+		push(node,q) {
+			var recover = this.saved;
+			if( recover ) { this.saved = recover.next; recover.node = node; recover.next = null; recover.prior = this.last; }
+			else { recover = { node : node, q:q, next : null, prior : this.last }; }
+			if( !this.last ) this.last = this.first = recover;
+			else {
+				this.last.next = recover;
+				this.last = recover;
+			}
+			this.length++;
+		},
+		shift() {
+			var result = this.first;
+			if( !result ) return null;
+			if( !(this.first = result.next) ) this.last = null;
+			result.next = this.saved; this.saved = result;
+			this.length--;
+			return result.node;
+		},
+	};
+	return context_stack;
+
+}
 
 
 function PointState(v,type1,type2,typeDelta) {
@@ -618,20 +540,10 @@ function cross(o,a,b) {
 
 
 
-function meshCloud(data, dims) {
-
+function meshCloud(data) {
 	// values input to this are in 2 planes for lower and upper values
-
-	//const pointSchedule = makeList();
-
-	// vertex paths 0-1 0-2, 0-3  1-2 2-3 3-1
-	// this is the offset from dataOffset to the related value.
-
-	// index with [odd] [tet_of_cube] [0-5 line index]
-	// result is composite point data offset.
 	
 	for( let a = 0; a < 2; a++ ) for( let b = 0; b < 5; b++ ) for( let c = 0; c < 4; c++ ) vertToData[a][b][c] = dataOffset[vertToDataOrig[a][b][c]];
-
 
 	// this is a computed lookup from facePointIndexes ([invert][output_face_type][0-1 triangle count][0-3 triangle point index]
 	// it is actually edgeToComp[odd][tet][  FPI[invert][face_type][0-1][point indexes] ]
@@ -700,15 +612,12 @@ function meshCloud(data, dims) {
 		for( let crz = 0; crz < 6; crz++ ) crosses[zero*6+crz] = 0;
 		for( let crz = 0; crz < 5; crz++ )  { content[zero*5+crz] = 0; normals[zero*5+crz] = null; }
 	}
+
 	for( var z = 0; z < dim2; z++ ) {
-	
 		let odd = 0;
 		let zOdd = z & 1;
 		cellOrigin[2] = z-dim2/2;
 
-		//if( z < 0 || z > 10 )continue;
-		//if( z < 16 || z > 18 ) continue;
-		
 		// compute one layer (x by y) intersections (cross from inside to outside).
 		// each cell individually has 16 intersections
 		// the first cell needs 9 intersections computed; the subsequent cells providing the computation for the 7 'missing'
@@ -888,7 +797,8 @@ function meshCloud(data, dims) {
 		}
 	}
 
-	
+	const pendingFixes = [];
+
 	// this computes normals at the points on the tet's face.
 	// the face's point-normal can be determined here...
 	for( var z = 0; z < dim2; z++ ) {
@@ -897,7 +807,6 @@ function meshCloud(data, dims) {
 			//if( y > 3 ) continue;
 			for( var x = 0; x < dim0; x++ ) {
 				//if( x < 5 || x > 32 ) continue;
-				let usedTets = false;
 				let tetSkip = 0;
 				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
 				const normOffset = (x + (y*dim0) + z*dim0*dim1)*5; // 1 point-norm per tet
@@ -908,65 +817,45 @@ function meshCloud(data, dims) {
 	        	const odd = (( x + y + z ) &1);
 				for( let tet = 0; tet < 5; tet++ ) {
 					if( tetMasks[odd][tet] & tetSkip ) continue;
-
+					const edgeChecks = edgeToComp[odd][tet];
 					let invert = 0;
 					let useFace = 0;
 					// this is 'valid combinations' check.
-					if( crosses[ baseOffset+edgeToComp[odd][tet][0] ] ) {
+					if( crosses[ baseOffset+edgeChecks[0] ] ) {
 						//console.log( `Output: odd:${odd} tet:${tet} x:${x} y:${y} a:${JSON.stringify(a)}` );
-						if( crosses[ baseOffset+edgeToComp[odd][tet][1] ] ) {
-							if( crosses[ baseOffset+edgeToComp[odd][tet][2] ] ) {
-								// lower left tet. // source point is 0
+						if( crosses[ baseOffset+edgeChecks[1] ] ) {
+							if( crosses[ baseOffset+edgeChecks[2] ] ) {
 								useFace = 1;								
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0;
-								if( tetPointInversions[odd][tet][0] )
-									invert = 1-invert;
 							} else {
-								if( crosses[ baseOffset+edgeToComp[odd][tet][4] ] && crosses[ baseOffset+edgeToComp[odd][tet][5] ]) {
-									// source point is 2? 1?   (0?3?)
+								if( crosses[ baseOffset+edgeChecks[4] ] && crosses[ baseOffset+edgeChecks[5] ]) {
 									useFace = 2;
 									invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0 ;
-									if( tetPointInversions[odd][tet][1] )
-										invert = 1-invert;
 								}
 							}
 						} else {
-							if( crosses[ baseOffset+edgeToComp[odd][tet][2]] && crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
-								// source point is ? 1? 3?   (0? 2?)
+							if( crosses[ baseOffset+edgeChecks[2]] && crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
 								useFace = 3;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0  ;
-								if( tetPointInversions[odd][tet][2] )
-									invert = 1-invert;
-							}else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][4] ] ) {
+							}else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[4] ] ) {
 								// source point is 1
 								useFace = 4;
 								invert = ( data[dataOffset+vertToData[odd][tet][0]] >= 0 )?1:0
-								if( tetPointInversions[odd][tet][3] )
-									invert = 1-invert;
 							}
 						}
 					} else {
-						if( crosses[ baseOffset+edgeToComp[odd][tet][1] ] ) {
-							if( crosses[ baseOffset+edgeToComp[odd][tet][2] ] && crosses[ baseOffset+edgeToComp[odd][tet][3] ] && crosses[ baseOffset+edgeToComp[odd][tet][4] ]) {
-								// 0?1?   2?3?
+						if( crosses[ baseOffset+edgeChecks[1] ] ) {
+							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[3] ] && crosses[ baseOffset+edgeChecks[4] ]) {
 								useFace = 5;
 								invert = ( data[dataOffset+vertToData[odd][tet][1]] < 0 )  ?1:0
-								if( tetPointInversions[odd][tet][4] )
-									invert = 1-invert;
-							} else if( crosses[ baseOffset+edgeToComp[odd][tet][3]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
-								// source point is 2
+							} else if( crosses[ baseOffset+edgeChecks[3]] && crosses[ baseOffset+edgeChecks[5] ] ) {
 								useFace = 6;
 								invert = ( data[dataOffset+vertToData[odd][tet][1]] >= 0 ) ?1:0
-								if( tetPointInversions[odd][tet][5] )
-									invert = 1-invert;
 							}
 						} else {
-							if( crosses[ baseOffset+edgeToComp[odd][tet][2] ] && crosses[ baseOffset+edgeToComp[odd][tet][4]] && crosses[ baseOffset+edgeToComp[odd][tet][5] ] ) {
-								// source point is 3
+							if( crosses[ baseOffset+edgeChecks[2] ] && crosses[ baseOffset+edgeChecks[4]] && crosses[ baseOffset+edgeChecks[5] ] ) {
 								useFace = 7;
 								invert = ( data[dataOffset+vertToData[odd][tet][2]] >= 0 ) ?1:0
-								if( tetPointInversions[odd][tet][6] )
-									invert = 1-invert;
 							}
 						}
 					}
@@ -979,6 +868,7 @@ function meshCloud(data, dims) {
 						const fpi = facePointIndexes[odd][tet][invert][useFace];
 						const pCenter = [0,0,0];
 						let edges = 0;
+						let tv = null;
 						//console.log( "adding face:", x,y,z, useFace, tet );
 						for( var tri=0;tri< fpi.length; tri++ ){
 							// these points are just the half points on the geometry.
@@ -986,9 +876,9 @@ function meshCloud(data, dims) {
 							const ai = points[baseOffset+fpi[tri][0]];
 							const bi = points[baseOffset+fpi[tri][1]];
 							const ci = points[baseOffset+fpi[tri][2]];
-							edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][0];
-							edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][1];
-							edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][2];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][0];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][1];
+							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][2];
 							if( bi < 0 ){
 								console.log( "How many zeros do we get(b)?", useFace,facePointIndexes, facePointIndexesOriginal[odd][useFace],"xyz:",x,y,z, "ott:",odd,tet,tri, bi, baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
 								continue;
@@ -999,7 +889,6 @@ function meshCloud(data, dims) {
 							}
 							// ai, bi, ci are indexes into computed pointcloud layer.
 // --V-V-V-V-V-V-V-V-- GENERATE POINT NORMALS --V-V-V-V-V-V-V-V--
-
 							//  https://stackoverflow.com/questions/45477806/general-method-for-calculating-smooth-vertex-normals-with-100-smoothness
 							// suggests using the angle as a scalar of the normal.
 							
@@ -1008,21 +897,34 @@ function meshCloud(data, dims) {
 							const vB = pointStateHolder[bi].vertBuffer;
 							const vC = pointStateHolder[ci].vertBuffer;
 
-							
-
 							let v1, v2, v3;
 							const AisB =  ( ( vA[0] === vB[0] ) && ( vA[1] === vB[1]  ) && ( vA[2] === vB[2]  ) );
 							const AisC =  ( ( vA[0] === vC[0] ) && ( vA[1] === vC[1]  ) && ( vA[2] === vC[2]  ) );
 							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
 							if( AisB || BisC || AisC ) {
-								if(0)
+								edges |= 0x1 << tet;
+								//if(0)
 								console.log( "zero size tri-face", x, y, z, odd, tet, tri
 									, useFace, AisB,AisC,BisC 
 									, vA, vB, vC
 									);
-								fnorm[0] = 0.6;
+								switch( tet ) {
+									case 0:
+										
+										break;
+									case 1:
+										break;
+									case 2:
+										break;
+									case 3:
+										break;
+									case 4:
+										console.log( "zero size center normal - so odd?" );
+										break;
+								}
+								fnorm[0] = 0;
 								fnorm[1] = 0; // y is always 0
-								fnorm[2] = -0.6;
+								fnorm[2] = 0;
 							}else {
 								v1 = vA;
 								v2 = vB;
@@ -1093,27 +995,18 @@ function meshCloud(data, dims) {
 							pCenter[1] = (vA[1]+vB[1]+vC[1])/3;
 							pCenter[2] = (vA[2]+vB[2]+vC[2])/3;
 
-							let tv = normals[normOffset+tet];
+							tv = normals[normOffset+tet];
 							if( !tv )  {
 								tv = new TetVertBase( pCenter, fnorm.slice(0,3), invert
-									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], useFace );
+									, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci], dataOffset, useFace, tet, odd );
 								normals[normOffset+tet] = tv;//{id:0,p:p,n:n,sources:[psh1, psh2,psh3], i:invert};
+								//console.log( "Adding at ", x, y, z, dataOffset, useFace, tet );
 							} else {
 								tv.update( pCenter, fnorm, pointStateHolder[ai], pointStateHolder[bi], pointStateHolder[ci] )
 							}
-
-							if( normalVertices && tv.n[0] > 0.4 ){
-								const n = tv.n;
-								const p = tv.p;
-								const up = lnQA.set( 0, n[0], n[1], n[2] ).update().up();
-								normalVertices.push( new THREE.Vector3( p[0]+0.01,p[1]+0.01,p[2]+0.01 ))
-								normalVertices.push( new THREE.Vector3( p[0]+up.x,p[1]+up.y,p[2]+up.z));
-								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
-								normalColors.push( new THREE.Color( 1.0,1.0,0,1.0 ))
-								console.log( "adding face:", x,y,z, useFace, tet );
-							}
-				
-							usedTets = true;
+						}
+						if( edges  ) {
+							pendingFixes.push( tv );
 						}
 						bits[dataOffset] |= (1<<tet)| (edges << 8 );
 						//console.log( "updated bits:", x, y, z, odd, useFace, tet, bits[dataOffset].toString(16) );
@@ -1124,6 +1017,52 @@ function meshCloud(data, dims) {
 				}
 			}
 		}
+	}
+
+	//console.log( "need to fix a few tets..", pendingFixes );
+	const n = [0,0,0];
+	let tv0 = null;
+	for( let pf of pendingFixes ) {
+		const useNear = nearTets[pf.odd][pf.tet][pf.face];
+		n[0] = n[1]= n[2] = 0;
+		let i = 0;
+		tv0 = null;
+		for( ; i < useNear.length; i++ ) {
+			const lookat = useNear[i];
+			let tv;
+			if( lookat[0] < 0 ) {
+				tv = normals[ ( pf.offset - dataOffset[-lookat[0]] )*5 +lookat[1]];
+				const bts = bits[( pf.offset - dataOffset[-lookat[0]] )];
+				console.log( 'bit1', bts.toString(16) );
+			}else {
+				tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+lookat[1] ];
+				const bts = bits[( pf.offset + dataOffset[lookat[0]] )];
+				console.log( 'bit1', bts.toString(16) );
+			}
+			if( !tv ) {
+				console.log( "offset near this is wrong:", pf.offset, pf.tet, pf.face, lookat );
+				break;
+			}
+			if( !tv0 ) tv0 = tv;
+			else moveNear( tv0.n, tv.n );
+			if( normalVertices ) {
+				const up = lnQA.set( 0, tv.n[0], tv.n[1], tv.n[2] ).update().up();
+				const v = tv.p;
+				normalVertices.push( new THREE.Vector3( v[0] + 0.01*i,v[1]+ 0.01*i,v[2]+ 0.01*i ))
+				normalVertices.push( new THREE.Vector3( v[0]+up.x,v[1]+up.y,v[2]+up.z));
+				normalColors.push( new THREE.Color( 1.0,1,0,1.0 ))
+				normalColors.push( new THREE.Color( 1.0,1,0,1.0 ))
+			
+			}
+
+			n[0] += tv.n[0];
+			n[1] += tv.n[1];
+			n[2] += tv.n[2];
+		}
+		pf.n[0] = n[0] / i;
+		pf.n[1] = n[1] / i;
+		pf.n[2] = n[2] / i;
+		
 	}
 
 	// so at this point I've computed all the cross points
@@ -1499,7 +1438,7 @@ function meshCloud(data, dims) {
 		}
 }
 
-	const ff_queue = [];
+	const ff_queue = makeQueue();
 	function ffQueue(x,y,z) {
 		const offset = (x + (y*dim0) + z*dim0*dim1);
 		if( x < 0 || y < 0 || z < 0 || x >= dim0 || y >= dim1 || z >= dim2 ) return;
