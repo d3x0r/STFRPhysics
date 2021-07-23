@@ -383,7 +383,7 @@ const _debug_output = true;
 	, normalColors = opts.normalColors || null
 	, faces = opts.faces || []
 	, faceNormals  = []
-	var smoothShade = opts.smoothShade || false;
+	const smoothShade = opts.smoothShade || false;
 	const showGrid = opts.showGrid;
 
 	const dim0 = dims[0];
@@ -1022,10 +1022,22 @@ function meshCloud(data) {
 			if( lookat[0] < 0 ) {
 				tv = normals[ ( pf.offset - dataOffset[-lookat[0]] )*5 +lookat[1]];
 				const bts = bits[( pf.offset - dataOffset[-lookat[0]] )];
+				if( bts & ( 1 << (8+lookat[1]))){
+					if( bts & 0x10 ) {
+						//tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+4 ];
+					}else console.log( "still not sure what to do here..." );
+				}
 				console.log( 'bit1', bts.toString(16) );
 			}else {
 				tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+lookat[1] ];
 				const bts = bits[( pf.offset + dataOffset[lookat[0]] )];
+				if( bts & ( 1 << (8+lookat[1]))){
+					console.log( "the tet to use is also bad");
+					if( bts & 0x10 ) {
+						console.log( "but it has a center..." );
+						//tv = normals[ ( pf.offset + dataOffset[lookat[0]] )*5+4 ];
+					}else console.log( "still not sure what to do here...(1)" );
+				}
 				console.log( 'bit1', bts.toString(16) );
 			}
 			if( !tv ) {
@@ -1074,25 +1086,25 @@ function meshCloud(data) {
 				}
 			}else {
 				if( opts.geometryHelper )
-					{
-						const tmp1 = [bi_.p[0]-ai_.p[0], bi_.p[1]-ai_.p[1], bi_.p[2]-ai_.p[2]];
-						const tmp2 = [ci_.p[0]-ai_.p[0], ci_.p[1]-ai_.p[1], ci_.p[2]-ai_.p[2]];
-						n = cross( [0,0,0], tmp1, tmp2);
-						const s = -1/Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
-						n[0] *= s;
-						n[1] *= s;
-						n[2] *= s;
-						//n = new THREE.Vector3(n[0],n[1],n[2]);
-					}else {
-						const tmp1 = [vertices[bi].x-vertices[ai].x, vertices[bi].y-vertices[ai].y, vertices[bi].z-vertices[ai].z];
-						const tmp2 = [vertices[ci].x-vertices[ai].x, vertices[ci].y-vertices[ai].y, vertices[ci].z-vertices[ai].z];
-						n = cross( [0,0,0], tmp1, tmp2);
-						const s = -1/Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
-						n[0] *= s;
-						n[1] *= s;
-						n[2] *= s;
-						n = new THREE.Vector3(n[0],n[1],n[2]);
-					}
+				{
+					const tmp1 = [bi_.p[0]-ai_.p[0], bi_.p[1]-ai_.p[1], bi_.p[2]-ai_.p[2]];
+					const tmp2 = [ci_.p[0]-ai_.p[0], ci_.p[1]-ai_.p[1], ci_.p[2]-ai_.p[2]];
+					n = cross( [0,0,0], tmp1, tmp2);
+					const s = -1/Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+					n[0] *= s;
+					n[1] *= s;
+					n[2] *= s;
+					//n = new THREE.Vector3(n[0],n[1],n[2]);
+				}else {
+					const tmp1 = [vertices[bi].x-vertices[ai].x, vertices[bi].y-vertices[ai].y, vertices[bi].z-vertices[ai].z];
+					const tmp2 = [vertices[ci].x-vertices[ai].x, vertices[ci].y-vertices[ai].y, vertices[ci].z-vertices[ai].z];
+					n = cross( [0,0,0], tmp1, tmp2);
+					const s = -1/Math.sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
+					n[0] *= s;
+					n[1] *= s;
+					n[2] *= s;
+					n = new THREE.Vector3(n[0],n[1],n[2]);
+				}
 			}
 		}
 		else if( !opts.geometryHelper ){
@@ -1415,12 +1427,12 @@ function meshCloud(data) {
 			//console.log( "sq face 1", dir, edge, faces.length)
 			//return;
 			if(1) {
-			addFace( vpc, vp1, vp0 );
-			addFace( vpc, vp2, vp1 );
-			addFace( vpc, vp3, vp2 );
-			addFace( vpc, vp0, vp3 );
+				addFace( vpc, vp1, vp0 );
+				addFace( vpc, vp2, vp1 );
+				addFace( vpc, vp3, vp2 );
+				addFace( vpc, vp0, vp3 );
 			}
-			if( fold >= 0 ) {
+			else if( fold >= 0 ) {
 				addFace( vp3, vp1, vp0 );
 				addFace( vp3, vp2, vp1 );
 			}else {
@@ -1432,12 +1444,12 @@ function meshCloud(data) {
 			//console.log( "sq face 2", dir,edge, faces.length)
 			//return;
 			if(1) {
-			addFace( vpc, vp0, vp1 );
-			addFace( vpc, vp1, vp2 );
-			addFace( vpc, vp2, vp3 );
-			addFace( vpc, vp3, vp0 );
-			}
-			if( fold >= 0 ) {
+				addFace( vpc, vp0, vp1 );
+				addFace( vpc, vp1, vp2 );
+				addFace( vpc, vp2, vp3 );
+				addFace( vpc, vp3, vp0 );
+			} 
+			else if( fold >= 0 ) {
 				addFace( vp3, vp0, vp1 );
 				addFace( vp3, vp1, vp2 );
 			}else {
@@ -1859,18 +1871,13 @@ function meshCloud(data) {
 	}
 
 	for( let z = 0; z < dim2; z++ ) {
-		//if(!( z > (dim2-4) )) continue;
-		//if( z < 9 || z > 18 ) continue;
-		// for all bounday crossed points, generate the faces from the intersection points.
 		for( let y = 0; y < dim1; y++ ) {
-			//if( y > 3 ) continue;
 			for( let x = 0; x < dim0; x++ ) {
-				//if( x < 4 || x > 11 ) continue;
 				const offset = (x + (y*dim0) + z*dim0*dim1);
 				if( !bits[offset] || visited[offset] ) {
 					continue
 				}
-				console.log( "Follwoing from", x, y, z );
+				//console.log( "Following from", x, y, z );
 				followFace( x, y, z );
 			}
 		}
