@@ -346,9 +346,9 @@ const drawCubes = true;
 			moveNear( this.n, fnorm );		
 			//console.log( "fnorm became:", fnorm);
 			
-			this.n[0] = (this.n[0] + fnorm[0])/2;
-			this.n[1] = (this.n[1] + fnorm[1])/2;
-			this.n[2] = (this.n[2] + fnorm[2])/2;
+//			this.n[0] = (this.n[0] + fnorm[0])/2;
+			//this.n[1] = (this.n[1] + fnorm[1])/2;
+			//this.n[2] = (this.n[2] + fnorm[2])/2;
 	
 			if( p1 !== this.sources[0] && p1 !== this.sources[1] && p1 !== this.sources[2]  ){
 				this.sources[3] = p1;
@@ -613,7 +613,7 @@ function meshCloud(data) {
 		let zOdd = z & 1;
 		cellOrigin[2] = z-dim2/2;
 
-		if( z < 3 || z > 6) continue;
+		//if( z < 3 || z > 6) continue;
 		// compute one layer (x by y) intersections (cross from inside to outside).
 		// each cell individually has 16 intersections
 		// the first cell needs 9 intersections computed; the subsequent cells providing the computation for the 7 'missing'
@@ -621,13 +621,13 @@ function meshCloud(data) {
 		// 
 		for( var y = 0; y < dim1-1; y++ ) {
 		//if( y < 4 || y > 16 ) continue;
-			if( y > 4 ) continue;
+		//	if( y > 4 ) continue;
 			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 			//	if( x < 7 || x > 10 ) continue;
 		//		if( x < 10 || x > 20 ) continue;
 				odd = (( x + y ) &1) ^ zOdd;
-				if( x > 4  ) continue;
+		//		if( x > 4  ) continue;
 		//		if( x < 12 || x > 15 ) continue;
 				cellOrigin[0] = x-dim0/2;
 	
@@ -638,6 +638,38 @@ function meshCloud(data) {
 				visited[baseOffset] = 0;
 				//console.log( "Set bits to 0", baseOffset)
 				let bits_ = 0;
+
+				if( drawCubes && normalVertices){
+					//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
+					//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+											, cellOrigin[1] + geom[0][1]
+											,cellOrigin[2] + geom[0][2] ));
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[1][0]
+						, cellOrigin[1] + geom[1][1]
+						,cellOrigin[2] + geom[1][2]));
+
+
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+						, cellOrigin[1] + geom[0][1]
+						,cellOrigin[2] + geom[0][2] ));
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[2][0]
+						, cellOrigin[1] + geom[2][1]
+						,cellOrigin[2] + geom[2][2]));
+						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+							, cellOrigin[1] + geom[0][1]
+							,cellOrigin[2] + geom[0][2] ));
+					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[4][0]
+					, cellOrigin[1] + geom[4][1]
+					,cellOrigin[2] + geom[4][2]));
+
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+				}
 
 				for( let l = 0; l < 6; l++ ) {
 					const p0 = lineArray[l][0];
@@ -671,54 +703,52 @@ function meshCloud(data) {
 					if( ( d <= 0 && e >0  )|| (d > 0 && e <= 0 ) ){
 						let t;
 						let normal = null;
-						bits[baseOffset] |= 1<<l;
+						bits_ |= 1<<l;
 						//console.log( "x, y is a cross:", x+y*dim0,(x+y*dim0)*6, crosses.length, baseOffset+l, x, y, p0, p1, data0, data1, `d:${d} e:${e}` );
 						if( e <= 0 ) {
 							(t = -e/(d-e));
 // --V-V-V-V-V-V-V-V-- CREATE OUTPUT POINT(VERTEX) HERE --V-V-V-V-V-V-V-V--
-							normal = null;
-							if( true || !normal ) {
-								pointOutputHolder[0] = cellOrigin[0] + geom[p1][0]+( geom[p0][0]- geom[p1][0])* t;
-								pointOutputHolder[1] = cellOrigin[1] + geom[p1][1]+( geom[p0][1]- geom[p1][1])* t;
-								pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
-								//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
+							pointOutputHolder[0] = cellOrigin[0] + geom[p1][0]+( geom[p0][0]- geom[p1][0])* t;
+							pointOutputHolder[1] = cellOrigin[1] + geom[p1][1]+( geom[p0][1]- geom[p1][1])* t;
+							pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
+							//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
 
-								if( drawCubes && normalVertices){
-									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
-															, cellOrigin[1] + geom[p1][1]
-															,cellOrigin[2] + geom[p1][2] ));
-									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
-										, cellOrigin[1] + geom[p0][1]
-										,cellOrigin[2] + geom[p0][2]));
-									switch( l ) {
-											case 0:
-												normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
-												normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
-											break;
-											case 1: 
-												normalColors.push( new THREE.Color( 0,0.5,0.5 ));
-												normalColors.push( new THREE.Color( 0,0.5,0.5 ));
-											break;
-									case 2: 
-										normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
-										normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
-									break;
-									case 3: case 4: case 5: 
-										normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
-										normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
-									break;
-										}
-								}
-	
-								normal = PointState( pointOutputHolder
-									, elements.data[data0]
-									, elements.data[data1]
-									, t
-								);
-								normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
+							if( drawCubes && normalVertices){
+								//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
+								//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+								normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
+														, cellOrigin[1] + geom[p1][1]
+														,cellOrigin[2] + geom[p1][2] ));
+								normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
+									, cellOrigin[1] + geom[p0][1]
+									,cellOrigin[2] + geom[p0][2]));
+								switch( l ) {
+										case 0:
+											normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
+											normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
+										break;
+										case 1: 
+											normalColors.push( new THREE.Color( 0,0.5,0.5 ));
+											normalColors.push( new THREE.Color( 0,0.5,0.5 ));
+										break;
+								case 2: 
+									normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
+									normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
+								break;
+								case 3: case 4: case 5: 
+									normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
+									normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
+								break;
+									}
 							}
+
+							normal = PointState( pointOutputHolder
+								, elements.data[data0]
+								, elements.data[data1]
+								, t
+							);
+							normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
+						
 							points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END OUTPUT POINT(VERTEX) HERE --^-^-^-^-^-^--
 						} else {
@@ -740,12 +770,12 @@ function meshCloud(data) {
 										,cellOrigin[2] + geom[p0][2]));
 										switch( l ) {
 											case 0:case 1:case 2:
-												normalColors.push( new THREE.Color( 0,1.0,0,0.5 ))
-												normalColors.push( new THREE.Color( 0,1.0,0,0.5 ))
+												normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
+												normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
 												break;
 												case 3:case 4:case 5:
-													normalColors.push( new THREE.Color( 0,1.0,0,0.5 ))
-													normalColors.push( new THREE.Color( 0,1.0,0,0.5 ))
+													normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
+													normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
 																	break;
 										}
 								}
@@ -760,7 +790,6 @@ function meshCloud(data) {
 							points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
 						}
-						bits_++;
 						crosses[baseHere+l] = 1;
 						//console.log( "set position crosses:", x, y, z, baseHere,l, `d:${d} e:${e}`  );
 					}
@@ -770,6 +799,7 @@ function meshCloud(data) {
 						crosses[baseHere+l] = 0;
 					}
 				}
+				bits[baseOffset] = bits_;
 			}
 		}
 	}
@@ -960,7 +990,7 @@ function meshCloud(data) {
 
 
 	function emitHex(offset,p, dir, cIndx) {
-		return;
+	
 		const n= [0,0,0];//p[0].n.slice(0,3);
 		const pn = p[0].n;					
 		const pt = [0,0,0];
@@ -1090,6 +1120,15 @@ function meshCloud(data) {
 		const n= [0,0,0];//p[0].n.slice(0,3);
 		const pnsrc = p[0].n;					
 		const pt = [0,0,0];
+		if( edge ===2 )
+		if(  normalVertices){
+			const up = lnQA.set( 0, pnsrc[0],pnsrc[1],pnsrc[2]).update().up();
+			normalVertices.push( new THREE.Vector3( p[0].p[0]-0.02,p[0].p[1]-0.02,p[0].p[2]+0.02 ))
+			normalVertices.push( new THREE.Vector3( p[0].p[0]-0.02+up.x*1.3,p[0].p[1]-0.02+up.y*1.3,p[0].p[2]+up.z*1.3));
+				normalColors.push( new THREE.Color( 1.0,1.0, 1,1.0 ))
+				normalColors.push( new THREE.Color( 1.0,1.0, 1,1.0 ))
+		}
+
 		for( let pn = 0; pn < 4; pn++){
 			const p_ = p[pn];
 			moveNear( pnsrc, p_.n );
@@ -1100,31 +1139,6 @@ function meshCloud(data) {
 			n[1] += p_.n[1];
 			n[2] += p_.n[2];
 
-			if( edge ===2 )
-			if(  normalVertices){
-				const up = lnQA.set( 0, p_.n[0],p_.n[1],p_.n[2]).update().up();
-				normalVertices.push( new THREE.Vector3( p_.p[0],p_.p[1],p_.p[2]+0.02 ))
-				normalVertices.push( new THREE.Vector3( p_.p[0]+up.x*1.3,p_.p[1]+up.y*1.3,p_.p[2]+up.z*1.3));
-				switch( pn ) {
-				case 0:
-					normalColors.push( new THREE.Color( 0,1.0, 1,1.0 ))
-					normalColors.push( new THREE.Color( 0,1.0, 1,1.0 ))
-					break;
-				case 1:
-					normalColors.push( new THREE.Color( 0,1.0, 0,1.0 ))
-					normalColors.push( new THREE.Color( 0,1.0, 0,1.0 ))
-					break;
-				case 2:
-					normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
-					normalColors.push( new THREE.Color( 0,0,1.0,1.0 ))
-					break;
-				case 3:
-					normalColors.push( new THREE.Color( 1.0,1.0, 0,1.0 ))
-					normalColors.push( new THREE.Color( 1.0,1.0, 0,1.0 ))
-					break;
-						}
-			}
-
 		}
 		pt[0] /= 4;
 		pt[1] /= 4;
@@ -1133,11 +1147,10 @@ function meshCloud(data) {
 		n[1] /= 4;
 		n[2] /= 4;
 		const up = lnQA.set( 0, n[0],n[1],n[2]).update().up();
-		console.log( "xxxx:", dir, edge );
 		const psh = pointStateHolder[ points[(offset + dataOffset[dir]) *6 + edge ] ];
 
 		if( !psh ) {
-			//console.log( "edge is bad..." );
+			console.log( "edge is bad..." );
 			if( 0 &&  normalVertices){
 				const up = lnQA.set( 0, p[0].n[0],p[0].n[1],p[0].n[2]).update().up();
 				normalVertices.push( new THREE.Vector3( p[0].p[0],p[0].p[1],p[0].p[2]+0.02 ))
@@ -1301,9 +1314,6 @@ function meshCloud(data) {
 							const ai = points[baseOffset+fpi[tri][0]];
 							const bi = points[baseOffset+fpi[tri][1]];
 							const ci = points[baseOffset+fpi[tri][2]];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][0];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][1];
-							//edges |= 1<< facePointIndexesOriginal[invert][useFace][tri][2];
 							if( bi < 0 ){
 								console.log( "How many zeros do we get(b)?", useFace,facePointIndexes, facePointIndexesOriginal[odd][useFace],"xyz:",x,y,z, "ott:",odd,tet,tri, bi, baseOffset, baseOffset+fpi[tri][0], baseOffset+fpi[tri][1], baseOffset+fpi[tri][2], );
 								continue;
@@ -1404,7 +1414,8 @@ function meshCloud(data) {
 								// convert normal to a rotation of 'up'
 								lnQA.set( { x:fnorm[0], y:fnorm[1], z:fnorm[2] }, false ).update();
 
-								if(  0 && normalVertices){
+								if( (x === 3) && (y === 2) && (z === 4) )
+								if(  normalVertices){
 									//console.log( "Drawing normal normal" );
 									normalVertices.push( new THREE.Vector3( pCenter[0],pCenter[1],pCenter[2]+0.02 ))
 									normalVertices.push( new THREE.Vector3( pCenter[0]+fnorm[0]*0.7,pCenter[1]+fnorm[1]*0.7,pCenter[2]+fnorm[2]*0.7+0.02));
@@ -1416,7 +1427,6 @@ function meshCloud(data) {
 								fnorm[0] = lnQA.x;
 								fnorm[1] = 0; // y is always 0
 								fnorm[2] = lnQA.z;
-
 							}
 
 							tv = normals[normOffset+tet];
@@ -1430,21 +1440,6 @@ function meshCloud(data) {
 							}
 						}
 						didTet.push( tv );
-						if( fixed && y < 3)
-						if(  normalVertices){
-							//console.log( "Drawing normal normal" );
-							const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-							normalVertices.push( new THREE.Vector3( tv.p[0],tv.p[1],tv.p[2]+0.02 ))
-							normalVertices.push( new THREE.Vector3( tv.p[0]+up.x*(!fixed?0.4:1.3),tv.p[1]+up.y*(!fixed?0.4:1.3),tv.p[2]+up.z*(!fixed?0.4:1.3)));
-							if( !fixed ) {
-								normalColors.push( new THREE.Color( 1.0,0.8,0,1.0 ))
-								normalColors.push( new THREE.Color( 1.0,0.8,0,1.0 ))
-							}else {
-								normalColors.push( new THREE.Color( 0, 0.8,1.0,1.0 ))
-								normalColors.push( new THREE.Color( 0,0.8,1.0,1.0 ))
-	
-							}
-						}
 		
 						bits[dataOffset] |= (1<<tet)<<6;
 						//console.log( "updated bits:", x, y, z, odd, useFace, tet, bits[dataOffset].toString(16) );
@@ -1579,7 +1574,6 @@ function meshCloud(data) {
 					}else {
 						//console.log( "Crosses data", crosses[offset*6+] = 1;
 						//)
-						if(0)
 						console.log( "Missing some faces for this quad"
 								,bits[offset].toString(16)
 								, bits[offset+dataOffset[1]].toString(16)
@@ -1699,7 +1693,6 @@ function meshCloud(data) {
 				}
 
 				if( p[0] = normals[baseOffset+2] ) {
-
 					const bts = bits[offset+dataOffset[6]];
 					const bts2 = bits[offset+dataOffset[2]];
 					const bts3 = bits[offset+dataOffset[4]];

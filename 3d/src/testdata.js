@@ -77,6 +77,15 @@ function createTestData() {
 	}
 
 	
+	result['Sphere'] = makeVolume(
+		[[-1.0, 1.0, 0.25],
+		 [-1.0, 1.0, 0.25],
+		 [-1.0, 1.0, 0.25]],
+		function(x,y,z) {
+			return x*x + y*y + z*z - 1.0;
+		}
+	);
+	
 	result['Pyramid'] = makeVolume(
 		[[-1, 1, 0.125],
 		 [-1, 1, 0.125],
@@ -110,15 +119,6 @@ function createTestData() {
 		 [-Math.PI*2, Math.PI*2, Math.PI/8]],
 		function(x,y,z) {
 			return Math.sin(x) + Math.sin(y) + Math.sin(z);
-		}
-	);
-	
-	result['Sphere'] = makeVolume(
-		[[-1.0, 1.0, 0.25],
-		 [-1.0, 1.0, 0.25],
-		 [-1.0, 1.0, 0.25]],
-		function(x,y,z) {
-			return x*x + y*y + z*z - 1.0;
 		}
 	);
 

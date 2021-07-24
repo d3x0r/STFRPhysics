@@ -22,7 +22,7 @@
 	<script src="./src/marchingtetrahedra2.js"></script>
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
-	<script type="module" src="./src/dual-marching-tetrahedra-3D.js"></script>
+	<script type="module" src="./src/dual-marching-tetrahedra-3D2.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
 	<script src="./src/perlinnoise.js"></script>
@@ -485,13 +485,13 @@
 
 			// here you add your objects
 			// - you will most likely replace this part by your own
-			var light	= new THREE.AmbientLight( 0.7 * 0xffffff );
+			var light	= new THREE.AmbientLight( 0.3 * 0xffffff );
 			scene.add( light );
 			var light	= new THREE.PointLight( 0.8 * 0xffffff );
 			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
 			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
 			light.position.multiplyScalar(20);
-			scene.add( light );
+			camera.add( light );
 
 			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
 			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
@@ -499,7 +499,7 @@
 			light2.position.z = -light2.position.z;
 			light2.position.y = -light2.position.y;
 			light2.position.x = -light2.position.x;
-			scene.add( light2 );
+			camera.add( light2 );
 
 
 	if(0){
