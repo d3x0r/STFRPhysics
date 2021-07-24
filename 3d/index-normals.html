@@ -22,6 +22,7 @@
 	<script src="./src/marchingtetrahedra2.js"></script>
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
+	<script type="module" src="./src/dual-marching-tetrahedra-3D.js"></script>
 	<script type="module" src="./src/dual-marching-tetrahedra-3D2.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
@@ -76,8 +77,9 @@
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Dual Marching Tetrahedra (DCL-volume)' : window.DualMarchingTetrahedra3
-		  , 'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
+		    'Dual Marching Tetrahedra' : window.DualMarchingTetrahedra3
+		  , 'Dual Marching Tetrahedra (alt smooth)' : window.DualMarchingTetrahedra3a
+		  ,'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
 		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
 		 // , 'Marching Cubes': MarchingCubes
@@ -104,7 +106,7 @@
 			 var geometryHelper ;
 			 	  //Create surface mesh
 			if( document.getElementById( "showGrid").checked) {
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
+				if( mesher === meshers['Dual Marching Tetrahedra'] ){
 					geometryHelper = THREE.DualGridGeometryBuffer();
 					geometry = geometryHelper.geometry;
 
@@ -342,7 +344,7 @@
 		else {
 			if( document.getElementById("showGrid").checked )
 			{
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
+				if(  mesher === meshers['Dual Marching Tetrahedra (alt smooth)'] || mesher === meshers['Dual Marching Tetrahedra'] ){
 					material	= THREE.DualGridGeometryMaterial();
 					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
 					material.uniforms.elementMap3.value = fieldElements.texture.texture;
@@ -428,7 +430,8 @@
 					context : undefined,
 				});
 			}
-		    meshers['Dual Marching Tetrahedra (DCL-volume)'] = window.DualMarchingTetrahedra3;
+		    meshers['Dual Marching Tetrahedra'] = window.DualMarchingTetrahedra3;
+		    meshers['Dual Marching Tetrahedra (alt smooth)'] = window.DualMarchingTetrahedra3a;
 
 			canvas.addEventListener( "mousemove", (evt)=>{
 				if( material.uniforms && material.uniforms.cursorRayNormal ) {

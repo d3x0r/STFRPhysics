@@ -89,7 +89,7 @@ this is the vertex references on the right, and which 'vert N' applies.
 
 import {lnQuat} from "./lnQuatSq.js"
 lnQuat.setVectorType( THREE.Vector3 )
-var DualMarchingTetrahedra3 = window.DualMarchingTetrahedra3 = (function() {
+var DualMarchingTetrahedra3 = window.DualMarchingTetrahedra3a = (function() {
 const debug_ = false;
 const _debug_output = true;
 const drawCubes = true;
