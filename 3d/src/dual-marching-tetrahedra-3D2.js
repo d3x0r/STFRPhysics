@@ -91,8 +91,8 @@ import {lnQuat} from "./lnQuatSq.js"
 lnQuat.setVectorType( THREE.Vector3 )
 var DualMarchingTetrahedra3 = window.DualMarchingTetrahedra3a = (function() {
 const debug_ = false;
-const _debug_output = true;
-const drawCubes = true;
+const drawCubes = false;
+const drawCubesIntersects = false;
 	// static working buffers
 	let ofsA = 0.0;
 
@@ -415,11 +415,46 @@ const drawCubes = true;
 		 ]
 		];
 
+	const edgeGeometryIndex = [
+		[    
+			 [ 0,   0, 0, 0,  0,   5  ] // lower left forward even
+		   , [ 4,   2, 6, 0,  4,   5  ]
+		   , [ 5,   1, 4, 1,  4,   5  ]
+		   , [ 1,   3, 2, 1,  0,   5  ]
+		   , [ 0,   1, 0, 4,  0,   5  ]
+		]
+
+		,[
+			 [  0, 2, 2, 0, 0, 2 ]
+			,[  4, 4, 0, 4, 0, 0 ]
+			,[  5, 6, 3, 4, 1, 2 ]
+			,[  1, 0, 1, 0, 1, 0 ]
+		 	,[  0, 0, 0, 2, 1, 4 ] // center.
+		 ]
+		];
+
+	const tetEdgeOffsets = [ [
+			 [            0  ,               0 ,              0  ,             0  ,              0 ,               0  ] // lower left forward even
+		   , [ dataOffset[4] ,   dataOffset[2] ,   dataOffset[6] ,              0 ,  dataOffset[4] ,   dataOffset[2]  ]
+		   , [ dataOffset[5] ,   dataOffset[1] ,   dataOffset[4] ,  dataOffset[1] ,  dataOffset[4] ,               0  ]
+		   , [ dataOffset[1] ,   dataOffset[3] ,   dataOffset[2] ,  dataOffset[1] ,              0 ,   dataOffset[2]  ]
+		   , [            0  ,   dataOffset[1] ,              0  ,  dataOffset[4] ,  dataOffset[0] ,   dataOffset[2]  ]
+		]
+
+		,[
+			 [               0 , dataOffset[2] ,  dataOffset[2],            0 ,             0 ,  dataOffset[2] ]
+			,[   dataOffset[4] , dataOffset[4] ,             0 , dataOffset[4],             0 ,              0 ]
+			,[   dataOffset[5] , dataOffset[6] ,  dataOffset[3], dataOffset[4], dataOffset[1] ,  dataOffset[2] ]
+			,[   dataOffset[1] ,             0 ,  dataOffset[1],            0 , dataOffset[1] ,              0 ]
+		 	,[               0 ,             0 ,  dataOffset[0], dataOffset[2], dataOffset[1] ,  dataOffset[4] ] // center.
+		 ]
+		];
+
 
 
 	
-	meshCloud( data );
-	return null;
+	return meshCloud( data );
+	//return null;
 
 function makeList() {
 		var context_stack = {
@@ -542,7 +577,7 @@ function cross(o,a,b) {
 
 function meshCloud(data) {
 	// values input to this are in 2 planes for lower and upper values
-	
+	const meshing = Date.now();	
 	for( let a = 0; a < 2; a++ ) for( let b = 0; b < 5; b++ ) for( let c = 0; c < 4; c++ ) vertToData[a][b][c] = dataOffset[vertToDataOrig[a][b][c]];
 
 	// this is a computed lookup from facePointIndexes ([invert][output_face_type][0-1 triangle count][0-3 triangle point index]
@@ -603,11 +638,12 @@ function meshCloud(data) {
 	const crosses = crossHolder[0];
 	const content = contentHolder[0];
 	for( let zero = 0; zero < dim0*dim1*dim2; zero++ ) {
+		bits[zero] = 0;
 		// make sure to reset this... 
 		for( let crz = 0; crz < 6; crz++ ) crosses[zero*6+crz] = 0;
 		for( let crz = 0; crz < 5; crz++ )  { content[zero*5+crz] = 0; normals[zero*5+crz] = null; }
 	}
-
+	if(0)
 	for( var z = 0; z < dim2; z++ ) {
 		let odd = 0;
 		let zOdd = z & 1;
@@ -625,184 +661,164 @@ function meshCloud(data) {
 			cellOrigin[1] = y-dim1/2;
 			for( var x = 0; x < dim0-1; x++ ) {
 			//	if( x < 7 || x > 10 ) continue;
-		//		if( x < 10 || x > 20 ) continue;
-				odd = (( x + y ) &1) ^ zOdd;
-		//		if( x > 4  ) continue;
-		//		if( x < 12 || x > 15 ) continue;
-				cellOrigin[0] = x-dim0/2;
-	
-				const baseHere = (x+0 + y*dim0 + z*(dim0*dim1))*6;
-				const baseOffset = x+0 + y*dim0 + z * dim0*dim1;
-				const lineArray = linesMin[odd];
-				bits[baseOffset] = 0;
-				visited[baseOffset] = 0;
-				//console.log( "Set bits to 0", baseOffset)
-				let bits_ = 0;
-
-				if( drawCubes && normalVertices){
-					//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-					//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-											, cellOrigin[1] + geom[0][1]
-											,cellOrigin[2] + geom[0][2] ));
-					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[1][0]
-						, cellOrigin[1] + geom[1][1]
-						,cellOrigin[2] + geom[1][2]));
-
-
-					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-						, cellOrigin[1] + geom[0][1]
-						,cellOrigin[2] + geom[0][2] ));
-					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[2][0]
-						, cellOrigin[1] + geom[2][1]
-						,cellOrigin[2] + geom[2][2]));
-						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-							, cellOrigin[1] + geom[0][1]
-							,cellOrigin[2] + geom[0][2] ));
-					normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[4][0]
-					, cellOrigin[1] + geom[4][1]
-					,cellOrigin[2] + geom[4][2]));
-
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-						normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-				}
-
-				for( let l = 0; l < 6; l++ ) {
-					const p0 = lineArray[l][0];
-					const p1 = lineArray[l][1];
-	
-					if( (x == (dim0-1)) &&( (p0 & 1) || (p1 &1) )) {
-						// this is an overflow, need to push fake data....
-						points[baseHere+l] = -1;
-						crosses[baseHere+l] = 0;
-						continue;
-					}
-					if( (y == (dim1-1)) &&( (p0 & 2) || (p1 &2) )) {
-						// this is an overflow, need to push fake data....
-						points[baseHere+l] = -1;
-						crosses[baseHere+l] = 0;
-						continue;
-					}
-					if( (z == (dim2-1)) &&( (p0 & 4) || (p1 & 4) )) {
-						// this is an overflow, need to push fake data....
-						points[baseHere+l] = -1;
-						crosses[baseHere+l] = 0;
-						continue;
-					}
-
-					const data0=baseOffset+dataOffset[p0];
-					const data1=baseOffset+dataOffset[p1];
-	
-					const d=-data[data0]; const e=-data[data1];
-
-					// test if there is a gap in the surface between these two points, then we need to add 2 faces.
-					if( ( d <= 0 && e >0  )|| (d > 0 && e <= 0 ) ){
-						let t;
-						let normal = null;
-						bits_ |= 1<<l;
-						//console.log( "x, y is a cross:", x+y*dim0,(x+y*dim0)*6, crosses.length, baseOffset+l, x, y, p0, p1, data0, data1, `d:${d} e:${e}` );
-						if( e <= 0 ) {
-							(t = -e/(d-e));
-// --V-V-V-V-V-V-V-V-- CREATE OUTPUT POINT(VERTEX) HERE --V-V-V-V-V-V-V-V--
-							pointOutputHolder[0] = cellOrigin[0] + geom[p1][0]+( geom[p0][0]- geom[p1][0])* t;
-							pointOutputHolder[1] = cellOrigin[1] + geom[p1][1]+( geom[p0][1]- geom[p1][1])* t;
-							pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
-							//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
-
-							if( drawCubes && normalVertices){
-								//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-								//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-								normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
-														, cellOrigin[1] + geom[p1][1]
-														,cellOrigin[2] + geom[p1][2] ));
-								normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
-									, cellOrigin[1] + geom[p0][1]
-									,cellOrigin[2] + geom[p0][2]));
-								switch( l ) {
-										case 0:
-											normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
-											normalColors.push( new THREE.Color( 0.5,0,0.0,0.5 ));
-										break;
-										case 1: 
-											normalColors.push( new THREE.Color( 0,0.5,0.5 ));
-											normalColors.push( new THREE.Color( 0,0.5,0.5 ));
-										break;
-								case 2: 
-									normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
-									normalColors.push( new THREE.Color( 0,0,0.5,0.5 ));
-								break;
-								case 3: case 4: case 5: 
-									normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
-									normalColors.push( new THREE.Color( 0,0.3,0.3,0.5 ));
-								break;
-									}
-							}
-
-							normal = PointState( pointOutputHolder
-								, elements.data[data0]
-								, elements.data[data1]
-								, t
-							);
-							normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
-						
-							points[baseHere+l] = normal.id;
-// --^-^-^-^-^-^-- END OUTPUT POINT(VERTEX) HERE --^-^-^-^-^-^--
-						} else {
-							(t = -d/(e-d));
-// --V-V-V-V-V-V-V-V-- OUTPUT POINT 2 HERE --V-V-V-V-V-V-V-V--
-							{
-								pointOutputHolder[0] = cellOrigin[0] + geom[p0][0]+( geom[p1][0]- geom[p0][0])* t;
-								pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
-								pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
-								//console.log( "new point(2):", pointOutputHolder );
-								if( drawCubes && normalVertices){
-									//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-									//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
-															, cellOrigin[1] + geom[p1][1]
-															,cellOrigin[2] + geom[p1][2] ));
-									normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
-										, cellOrigin[1] + geom[p0][1]
-										,cellOrigin[2] + geom[p0][2]));
-										switch( l ) {
-											case 0:case 1:case 2:
-												normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
-												normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
-												break;
-												case 3:case 4:case 5:
-													normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
-													normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
-																	break;
-										}
-								}
-	
-								normal = PointState( pointOutputHolder
-									, elements.data[data0]
-									, elements.data[data1]
-									, t
-								);
-								normal.invert = 1;  // d is < 0 or outside... 
-							}
-							points[baseHere+l] = normal.id;
-// --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
-						}
-						crosses[baseHere+l] = 1;
-						//console.log( "set position crosses:", x, y, z, baseHere,l, `d:${d} e:${e}`  );
-					}
-					else {
-						//console.log( "x,y does not cross", x, y, z, baseHere, l, `d:${d} e:${e}` ); 
-						points[baseHere+l] = -baseHere-l;
-						crosses[baseHere+l] = 0;
-					}
-				}
-				bits[baseOffset] = bits_;
 			}
 		}
 	}
+
+function computeEdges( x, y, z ) {
+	//		if( x < 10 || x > 20 ) continue;
+	let odd = 0;
+	let zOdd = z & 1;
+	cellOrigin[2] = z-dim2/2;
+	cellOrigin[1] = y-dim1/2;
+	odd = (( x + y ) &1) ^ zOdd;
+//		if( x > 4  ) continue;
+//		if( x < 12 || x > 15 ) continue;
+	cellOrigin[0] = x-dim0/2;
+
+	const baseHere = (x+0 + y*dim0 + z*(dim0*dim1))*6;
+	const baseOffset = x+0 + y*dim0 + z * dim0*dim1;
+	const lineArray = linesMin[odd];
+	bits[baseOffset] = 0;
+	visited[baseOffset] = 0;
+	//console.log( "Set bits to 0", baseOffset)
+	let bits_ = 0;
+
+	if( drawCubes && normalVertices){
+		//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
+		//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+								, cellOrigin[1] + geom[0][1]
+								,cellOrigin[2] + geom[0][2] ));
+		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[1][0]
+			, cellOrigin[1] + geom[1][1]
+			,cellOrigin[2] + geom[1][2]));
+
+
+		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+			, cellOrigin[1] + geom[0][1]
+			,cellOrigin[2] + geom[0][2] ));
+		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[2][0]
+			, cellOrigin[1] + geom[2][1]
+			,cellOrigin[2] + geom[2][2]));
+			normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
+				, cellOrigin[1] + geom[0][1]
+				,cellOrigin[2] + geom[0][2] ));
+		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[4][0]
+		, cellOrigin[1] + geom[4][1]
+		,cellOrigin[2] + geom[4][2]));
+
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
+	}
+
+	for( let l = 0; l < 6; l++ ) {
+		const p0 = lineArray[l][0];
+		const p1 = lineArray[l][1];
+
+		if( (x == (dim0-1)) &&( (p0 & 1) || (p1 &1) )) {
+			// this is an overflow, need to push fake data....
+			points[baseHere+l] = -1;
+			crosses[baseHere+l] = 0;
+			continue;
+		}
+		if( (y == (dim1-1)) &&( (p0 & 2) || (p1 &2) )) {
+			// this is an overflow, need to push fake data....
+			points[baseHere+l] = -1;
+			crosses[baseHere+l] = 0;
+			continue;
+		}
+		if( (z == (dim2-1)) &&( (p0 & 4) || (p1 & 4) )) {
+			// this is an overflow, need to push fake data....
+			points[baseHere+l] = -1;
+			crosses[baseHere+l] = 0;
+			continue;
+		}
+
+		const data0=baseOffset+dataOffset[p0];
+		const data1=baseOffset+dataOffset[p1];
+
+		const d=-data[data0]; const e=-data[data1];
+
+		// test if there is a gap in the surface between these two points, then we need to add 2 faces.
+		if( ( d <= 0 && e >0  )|| (d > 0 && e <= 0 ) ){
+			let t;
+			let normal = null;
+			bits_ |= 1<<l;
+			//console.log( "x, y is a cross:", x+y*dim0,(x+y*dim0)*6, crosses.length, baseOffset+l, x, y, p0, p1, data0, data1, `d:${d} e:${e}` );
+			if( e <= 0 ) {
+				(t = -e/(d-e));
+// --V-V-V-V-V-V-V-V-- CREATE OUTPUT POINT(VERTEX) HERE --V-V-V-V-V-V-V-V--
+				pointOutputHolder[0] = cellOrigin[0] + geom[p1][0]+( geom[p0][0]- geom[p1][0])* t;
+				pointOutputHolder[1] = cellOrigin[1] + geom[p1][1]+( geom[p0][1]- geom[p1][1])* t;
+				pointOutputHolder[2] = cellOrigin[2] + geom[p1][2]+( geom[p0][2]- geom[p1][2])* t;
+				//console.log( "new point(1):", pointOutputHolder, t, data[data0], data[data1], data0, data1 );
+
+				normal = PointState( pointOutputHolder
+					, elements.data[data0]
+					, elements.data[data1]
+					, t
+				);
+				normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
+			
+				points[baseHere+l] = normal.id;
+// --^-^-^-^-^-^-- END OUTPUT POINT(VERTEX) HERE --^-^-^-^-^-^--
+			} else {
+				(t = -d/(e-d));
+// --V-V-V-V-V-V-V-V-- OUTPUT POINT 2 HERE --V-V-V-V-V-V-V-V--
+				{
+					pointOutputHolder[0] = cellOrigin[0] + geom[p0][0]+( geom[p1][0]- geom[p0][0])* t;
+					pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
+					pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
+					//console.log( "new point(2):", pointOutputHolder );
+					if( drawCubes && normalVertices){
+						//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
+						//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
+						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
+												, cellOrigin[1] + geom[p1][1]
+												,cellOrigin[2] + geom[p1][2] ));
+						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
+							, cellOrigin[1] + geom[p0][1]
+							,cellOrigin[2] + geom[p0][2]));
+							switch( l ) {
+								case 0:case 1:case 2:
+									normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
+									normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
+									break;
+									case 3:case 4:case 5:
+										normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
+										normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
+														break;
+							}
+					}
+
+					normal = PointState( pointOutputHolder
+						, elements.data[data0]
+						, elements.data[data1]
+						, t
+					);
+					normal.invert = 1;  // d is < 0 or outside... 
+				}
+				points[baseHere+l] = normal.id;
+// --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
+			}
+			crosses[baseHere+l] = 1;
+			//console.log( "set position crosses:", x, y, z, baseHere,l, `d:${d} e:${e}`  );
+		}
+		else {
+			//console.log( "x,y does not cross", x, y, z, baseHere, l, `d:${d} e:${e}` ); 
+			points[baseHere+l] = -baseHere-l;
+			crosses[baseHere+l] = 0;
+		}
+	}
+	
+	if( !bits_ ) bits_ = 0b1000_0000_0000_0000;
+	return (bits[baseOffset] = bits_)&0xFF;
+}
 
 	// so at this point I've computed all the cross points
 	// all the normals
@@ -896,12 +912,12 @@ function meshCloud(data) {
 						lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
 						const an = lnQA.up();
 						faceNormals.push( an );
-						if(  0 && p.invert && normalVertices){
-							normalVertices.push( new THREE.Vector3( p.p[0],p.p[1],p.p[2]+0.02 ))
-							normalVertices.push( new THREE.Vector3( p.p[0]+an.x*1.3,p.p[1]+an.y*1.3,p.p[2]+an.z*1.3));
-							normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
-							normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
-						}
+					}
+					if(  normalVertices){
+						normalVertices.push( new THREE.Vector3( p.p[0],p.p[1],p.p[2]+0.02 ))
+						normalVertices.push( new THREE.Vector3( p.p[0]+an.x*1.3,p.p[1]+an.y*1.3,p.p[2]+an.z*1.3));
+						normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
+						normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
 					}
 				}
 				return p;//p.id - 1;
@@ -1051,7 +1067,7 @@ function meshCloud(data) {
 				addFace( vpc, vp1, vp0 );
 				addFace( vpc, vp2, vp1 );
 			}else {
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp1, vp0 );
 				addFace( vpc, vp2, vp1 );
 
@@ -1062,7 +1078,7 @@ function meshCloud(data) {
 				addFace( vpc, vp3, vp2 );
 				addFace( vpc, vp4, vp3 );
 			}else{
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp3, vp2 );
 				addFace( vpc, vp4, vp3 );
 
@@ -1073,7 +1089,7 @@ function meshCloud(data) {
 				addFace( vpc, vp5, vp4 );
 				addFace( vpc, vp0, vp5 );
 			}else {
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp5, vp4 );
 				addFace( vpc, vp0, vp5 );
 			}
@@ -1084,7 +1100,7 @@ function meshCloud(data) {
 				addFace( vpc, vp0, vp1 );
 				addFace( vpc, vp1, vp2 );
 				}else {
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp0, vp1 );
 				addFace( vpc, vp1, vp2 );
 	
@@ -1095,7 +1111,7 @@ function meshCloud(data) {
 				addFace( vpc, vp2, vp3 );
 				addFace( vpc, vp3, vp4 );
 			}else{
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp2, vp3 );
 				addFace( vpc, vp3, vp4 );
 	
@@ -1106,7 +1122,7 @@ function meshCloud(data) {
 				addFace( vpc, vp4, vp5 );
 				addFace( vpc, vp5, vp0 );
 			}else {
-				console.log( "This is a pinch fix?");
+				//console.log( "This is a pinch fix?");
 				addFace( vpc, vp4, vp5 );
 				addFace( vpc, vp5, vp0 );
 			}
@@ -1244,6 +1260,10 @@ function meshCloud(data) {
 		}
 		if( visited[dataOffset]) return false;
 
+		if( !bits[dataOffset] ) {
+			if( !computeEdges( x, y, z ) ) ;//return;
+		}
+
 				//if( x < 5 || x > 32 ) continue;
 				let tetSkip = 0;
 				const baseOffset = (x + (y*dim0) + z*dim0*dim1)*6;
@@ -1259,6 +1279,12 @@ function meshCloud(data) {
 					let invert = 0;
 					let useFace = 0;
 					// this is 'valid combinations' check.
+					for( let n = 0; n < 5; n++ ) {
+						if( !bits[dataOffset+tetEdgeOffsets[odd][tet][n]]  ) {
+							const offset = geom[ edgeGeometryIndex[odd][tet][n] ];
+							computeEdges( x + offset[0], y+offset[1], z+offset[2] );
+						}
+					}
 					if( crosses[ baseOffset+edgeChecks[0] ] ) {
 						//console.log( `Output: odd:${odd} tet:${tet} x:${x} y:${y} a:${JSON.stringify(a)}` );
 						if( crosses[ baseOffset+edgeChecks[1] ] ) {
@@ -1454,16 +1480,27 @@ function meshCloud(data) {
 			return false;
 	}
 
-
+	let cycles = 0;
+	let startAt = Date.now();
 	function followFace( x, y, z ) {
 		let p0;
 		let p = [null,null,null,null,null,null];
 		let added = [];
+		let tick = 0;
 		//if( x < 10 ) candraw = false;
-		ffQueue( x, y, z );
-
-		while( (ff_queue.length>0 ) && ( {x,y,z} = ff_queue.shift() )) {
-			
+		if( ff_queue.length === 0 ) 
+			return false;
+		while( (ff_queue.length>0 ) ) {
+			if( tick++ > 250 ) {
+				const now = Date.now();
+				if( ( now-startAt ) > 10 )  {
+					//console.log( "Breaking with queue:", ff_queue.length )
+					break;
+				}
+				tick= 0;
+				cycles++;
+			}
+			({x,y,z} = ff_queue.shift());
 			added.length = 0;
 			//if( ff_queue.length ) continue;
 			const offset = (x + (y*dim0) + z*dim0*dim1);
@@ -1905,24 +1942,42 @@ function meshCloud(data) {
 				// there anyway so it would be dispatched.
 			}
 		}
+		return true;
 	}
-
-	for( let z = 0; z < dim2; z++ ) {
-		for( let y = 0; y < dim1; y++ ) {
-			for( let x = 0; x < dim0; x++ ) {
-				const offset = (x + (y*dim0) + z*dim0*dim1);
-				if( visited[offset] || !processCube(x,y,z, -1, -1) ) {
-					continue;
+	z = 0;
+	y = 0;
+	x = 0;
+	function followNewFace() {
+		startAt = Date.now();
+		if( ff_queue.length ) followFace();
+		if( ff_queue.length ) return true;
+		for( ; z < dim2; z++ ) {
+			for( ; y < dim1; y++ ) {
+				for( ; x < dim0; x++ ) {
+					const offset = (x + (y*dim0) + z*dim0*dim1);
+					if( visited[offset] || !processCube(x,y,z, -1, -1) ) {
+						continue;
+					}
+					//console.log( "Following from", x, y, z );
+					ffQueue( x, y, z );
+					followFace(  );
+					// can find another new face to follow?
+					if( ff_queue.length )
+						break;
 				}
-				//console.log( "Following from", x, y, z );
-				followFace( x, y, z );
+				if( x < dim0 ) break;
+				x = 0;
 			}
+			if( y < dim1 ) break;
+			y = 0;
 		}
+		if( z < dim2 ) return true;
+		return false;
 	}
 
+	followNewFace();
 
-
-
+	//console.log( "Took:", Date.now() - meshing, cycles );
 	// update geometry (could wait for index.html to do this?
 	if( showGrid )
 		opts.geometryHelper.markDirty();
@@ -1937,6 +1992,11 @@ function meshCloud(data) {
 		if( a < b ) return a; return b;
 	}
 	//return vertices;
+
+	return ()=>{
+		return followNewFace();
+	}
+
 }
 
 }

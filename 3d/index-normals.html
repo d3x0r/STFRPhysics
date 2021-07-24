@@ -92,6 +92,7 @@
 
 		function updateMesh() {
 
+			updateMeshFunction = false;
 		  scene.remove( surfacemesh );
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
@@ -200,6 +201,9 @@
 		  showGrid : document.getElementById( "showGrid").checked,
 		  geometryHelper : geometryHelper,
 		} );
+
+		updateMeshFunction = ("function" === typeof result) && result ;
+		if( updateMeshFunction ) result = null;
 	  var end = (new Date()).getTime();
 
 	  //Update statistics
@@ -405,6 +409,8 @@
 			}
 		}
 	
+		var updateMeshFunction;
+
 		window.doInit = ()=>{
 		if( !init() )	animate();
 		}
@@ -647,9 +653,19 @@
 			return false;
 		}
 
+
 		// animation loop
 		function animate() {
+			if( updateMeshFunction ) {
+				if( !updateMeshFunction() )
+					updateMeshFunction = false;
+				geometry.verticesNeedUpdate = true;
+			  	geometry.elementsNeedUpdate = true;
+			  	geometry.normalsNeedUpdate = true;
+			  document.getElementById("vertcount").value = geometry.vertices.length;
+				document.getElementById("facecount").value = geometry.faces.length;
 
+			}
 			// loop on request animation loop
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
