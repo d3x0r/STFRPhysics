@@ -447,6 +447,19 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							if( twistDelta ) {
 								yaw( this, twistDelta /*+ angle*/ );
 							}
+						} else {
+							this.nx = 0;
+							this.ny = 1;
+							this.nz = 0;
+						
+							this.x = 0;
+							this.y = 0;
+							this.z = 0;
+						
+							// the remining of this is update()
+							this.θ = 0;
+							this.dirty = false;
+
 						}
 					}
 					return this;
