@@ -657,12 +657,16 @@
 		// animation loop
 		function animate() {
 			if( updateMeshFunction ) {
-				if( !updateMeshFunction() )
+				if( !updateMeshFunction() ){
 					updateMeshFunction = false;
+					geometry.verticesNeedUpdate = true;
+				  	geometry.elementsNeedUpdate = true;
+				  	geometry.normalsNeedUpdate = true;
+				}
 				// geometry updates can take a while...
-				geometry.verticesNeedUpdate = true;
-			  	geometry.elementsNeedUpdate = true;
-			  	geometry.normalsNeedUpdate = true;
+		//		geometry.verticesNeedUpdate = true;
+		//	  	geometry.elementsNeedUpdate = true;
+		//	  	geometry.normalsNeedUpdate = true;
 			    document.getElementById("vertcount").value = geometry.vertices.length;
 				document.getElementById("facecount").value = geometry.faces.length;
 
