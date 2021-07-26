@@ -449,7 +449,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							}
 						} else {
 							this.nx = 0;
-							this.ny = 1;
+							this.ny = theta.y > 0?1:-1;
 							this.nz = 0;
 						
 							this.x = 0;

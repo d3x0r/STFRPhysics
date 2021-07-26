@@ -299,6 +299,25 @@ const drawCubesIntersects = false;
 			],
 	];
 
+	const edgeGeometryIndex = [
+		[    
+			 [ 0,   0, 0, 0,  0,   5  ] // lower left forward even
+		   , [ 4,   2, 6, 0,  4,   5  ]
+		   , [ 5,   1, 4, 1,  4,   5  ]
+		   , [ 1,   3, 2, 1,  0,   5  ]
+		   , [ 0,   1, 0, 4,  0,   5  ]
+		]
+
+		,[
+			 [  0, 2, 2, 0, 0, 2 ]
+			,[  4, 4, 0, 4, 0, 0 ]
+			,[  5, 6, 3, 4, 1, 2 ]
+			,[  1, 0, 1, 0, 1, 0 ]
+		 	,[  0, 0, 0, 2, 1, 4 ] // center.
+		]
+	];
+
+
 	// these are bits that are going to 0.
 	const tetMasks = [ [ 0, 2|4, 1|2|4, 1|2, 1|2|4 ], [ 2, 4|1, 1|4|2, 1, 1|2|4 ] ];
 
@@ -327,6 +346,7 @@ const drawCubesIntersects = false;
 			this.invert = invert;
 			this.p = p;
 			this.n = n;
+			this.nError = false;
 			this.face = face;
 			this.offset = offset;
 			this.tet = tet;
@@ -335,6 +355,9 @@ const drawCubesIntersects = false;
 			this.elements=[p1.type1,p1.type2,p2.type1,p2.type2,p3.type1,p3.type2,0,0]
 			this. eleDels=[ p1.typeDelta, p2.typeDelta,p3.typeDelta,0 ] ;
 			this.odd = odd;
+			p1.normalSources.push( this );
+			p2.normalSources.push( this );
+			p3.normalSources.push( this );
 		}
 	
 	
@@ -355,18 +378,21 @@ const drawCubesIntersects = false;
 				this.elements[6] = p1.type1;
 				this.elements[7] = p1.type2;
 				this.eleDels[3] = p1.typeDelta;
+				p1.normalSources.push( this );
 			}
 			else if( p2 !== this.sources[0] && p2 !== this.sources[1] && p2 !== this.sources[2]  ){
 				this.sources[3] = p2;
 				this.elements[6] = p2.type1;
 				this.elements[7] = p2.type2;
 				this.eleDels[3] = p2.typeDelta;
+				p2.normalSources.push( this );
 			}
 			else if( p3 !== this.sources[0] && p3 !== this.sources[1] && p3 !== this.sources[2]  ) {
 				this.sources[3] = p3;
 				this.elements[6] = p3.type1;
 				this.elements[7] = p3.type2;
 				this.eleDels[3] = p3.typeDelta;
+				p3.normalSources.push( this );
 			}
 		}
 	}
@@ -415,23 +441,6 @@ const drawCubesIntersects = false;
 		 ]
 		];
 
-	const edgeGeometryIndex = [
-		[    
-			 [ 0,   0, 0, 0,  0,   5  ] // lower left forward even
-		   , [ 4,   2, 6, 0,  4,   5  ]
-		   , [ 5,   1, 4, 1,  4,   5  ]
-		   , [ 1,   3, 2, 1,  0,   5  ]
-		   , [ 0,   1, 0, 4,  0,   5  ]
-		]
-
-		,[
-			 [  0, 2, 2, 0, 0, 2 ]
-			,[  4, 4, 0, 4, 0, 0 ]
-			,[  5, 6, 3, 4, 1, 2 ]
-			,[  1, 0, 1, 0, 1, 0 ]
-		 	,[  0, 0, 0, 2, 1, 4 ] // center.
-		 ]
-		];
 
 	const tetEdgeOffsets = [ [
 			 [            0  ,               0 ,              0  ,             0  ,              0 ,               0  ] // lower left forward even
@@ -440,7 +449,6 @@ const drawCubesIntersects = false;
 		   , [ dataOffset[1] ,   dataOffset[3] ,   dataOffset[2] ,  dataOffset[1] ,              0 ,   dataOffset[2]  ]
 		   , [            0  ,   dataOffset[1] ,              0  ,  dataOffset[4] ,  dataOffset[0] ,   dataOffset[2]  ]
 		]
-
 		,[
 			 [               0 , dataOffset[2] ,  dataOffset[2],            0 ,             0 ,  dataOffset[2] ]
 			,[   dataOffset[4] , dataOffset[4] ,             0 , dataOffset[4],             0 ,              0 ]
@@ -684,38 +692,6 @@ function computeEdges( x, y, z ) {
 	//console.log( "Set bits to 0", baseOffset)
 	let bits_ = 0;
 
-	if( drawCubes && normalVertices){
-		//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-		//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-								, cellOrigin[1] + geom[0][1]
-								,cellOrigin[2] + geom[0][2] ));
-		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[1][0]
-			, cellOrigin[1] + geom[1][1]
-			,cellOrigin[2] + geom[1][2]));
-
-
-		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-			, cellOrigin[1] + geom[0][1]
-			,cellOrigin[2] + geom[0][2] ));
-		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[2][0]
-			, cellOrigin[1] + geom[2][1]
-			,cellOrigin[2] + geom[2][2]));
-			normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[0][0]
-				, cellOrigin[1] + geom[0][1]
-				,cellOrigin[2] + geom[0][2] ));
-		normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[4][0]
-		, cellOrigin[1] + geom[4][1]
-		,cellOrigin[2] + geom[4][2]));
-
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-			normalColors.push( new THREE.Color( 1.00,1.0,1.0,0.5 ))
-	}
-
 	for( let l = 0; l < 6; l++ ) {
 		const p0 = lineArray[l][0];
 		const p1 = lineArray[l][1];
@@ -763,6 +739,7 @@ function computeEdges( x, y, z ) {
 					, elements.data[data1]
 					, t
 				);
+				//; eventually this needs its normal also... and there's a normalBuffer in it.
 				normal.invert = 0; // d is > 0 and e < 0 which puts e outside and d inside
 			
 				points[baseHere+l] = normal.id;
@@ -775,26 +752,6 @@ function computeEdges( x, y, z ) {
 					pointOutputHolder[1] = cellOrigin[1] + geom[p0][1]+( geom[p1][1]- geom[p0][1])* t;
 					pointOutputHolder[2] = cellOrigin[2] + geom[p0][2]+( geom[p1][2]- geom[p0][2])* t;
 					//console.log( "new point(2):", pointOutputHolder );
-					if( drawCubes && normalVertices){
-						//console.log( "Drawing line:", x, y, z, odd, tet, invert, useFace );
-						//const up = lnQA.set( 0, tv.n[0],tv.n[1],tv.n[2]).update().up();
-						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p1][0]
-												, cellOrigin[1] + geom[p1][1]
-												,cellOrigin[2] + geom[p1][2] ));
-						normalVertices.push( new THREE.Vector3( cellOrigin[0] + geom[p0][0]
-							, cellOrigin[1] + geom[p0][1]
-							,cellOrigin[2] + geom[p0][2]));
-							switch( l ) {
-								case 0:case 1:case 2:
-									normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
-									normalColors.push( new THREE.Color( 0,0.5,0,0.5 ))
-									break;
-									case 3:case 4:case 5:
-										normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
-										normalColors.push( new THREE.Color( 0,0.5,0.5,0.5 ))
-														break;
-							}
-					}
 
 					normal = PointState( pointOutputHolder
 						, elements.data[data0]
@@ -803,6 +760,7 @@ function computeEdges( x, y, z ) {
 					);
 					normal.invert = 1;  // d is < 0 or outside... 
 				}
+				//; eventually this needs its normal also... and there's a normalBuffer in it.
 				points[baseHere+l] = normal.id;
 // --^-^-^-^-^-^-- END  OUTPUT POINT 2 HERE --^-^-^-^-^-^--
 			}
@@ -816,7 +774,9 @@ function computeEdges( x, y, z ) {
 		}
 	}
 	
+	// if nothing, mark as an 'error' so later if(!bits[]) won't call this function
 	if( !bits_ ) bits_ = 0b1000_0000_0000_0000;
+	// if checking the return value it only wants to know if any; not if error.
 	return (bits[baseOffset] = bits_)&0xFF;
 }
 
@@ -914,6 +874,8 @@ function computeEdges( x, y, z ) {
 						faceNormals.push( an );
 					}
 					if(  normalVertices){
+						lnQA.set( 0, p.n[0], p.n[1], p.n[2] ).update();
+						const an = lnQA.up();
 						normalVertices.push( new THREE.Vector3( p.p[0],p.p[1],p.p[2]+0.02 ))
 						normalVertices.push( new THREE.Vector3( p.p[0]+an.x*1.3,p.p[1]+an.y*1.3,p.p[2]+an.z*1.3));
 						normalColors.push( new THREE.Color( 0,0.7, 0.7,1.0 ))
@@ -1354,6 +1316,9 @@ function computeEdges( x, y, z ) {
 							// suggests using the angle as a scalar of the normal.
 							
 							// a - b - c    c->b a->b
+							const pA = pointStateHolder[ai];
+							const pB = pointStateHolder[bi];
+							const pC = pointStateHolder[ci];
 							const vA = pointStateHolder[ai].vertBuffer;
 							const vB = pointStateHolder[bi].vertBuffer;
 							const vC = pointStateHolder[ci].vertBuffer;
@@ -1368,6 +1333,35 @@ function computeEdges( x, y, z ) {
 							const BisC =  ( ( vB[0] === vC[0] ) && ( vB[1] === vC[1]  ) && ( vB[2] === vC[2]  ) );
 							if( AisB || BisC || AisC ) {
 								edges |= 0x1 << tet;
+
+								const getNorm = [];
+								pA.normalSources.forEach( source=>{
+									getNorm.push(source);
+								});
+								pB.normalSources.forEach( source=>{
+									if( !getNorm.find(n=>n===source))
+										 getNorm.push(source);
+								});
+								pC.normalSources.forEach( source=>{
+									if( !getNorm.find(n=>n===source))
+										getNorm.push(source);
+								});
+								if( getNorm.length> 0 ) {
+									//console.log( "Have some already near candidates to build a normal from?", getNorm );
+									const n = [0,0,0];
+									const start = getNorm[0].n;
+									getNorm.forEach( tet=>{
+										moveNear( start, tet.n);
+										n[0] += tet.n[0];
+										n[1] += tet.n[1];
+										n[2] += tet.n[2];
+									})
+									fnorm[0] = n[0]/ getNorm.length;
+									fnorm[1] = n[1]/ getNorm.length;
+									fnorm[2] = n[2]/ getNorm.length;
+								}
+								else {
+									console.log( "have to do something...")	;
 								if( from >= 0 ) {
 									const tetFrom = didTet[0] || normals[from*5+tetPrior];
 									const nprior = tetFrom.n;
@@ -1381,9 +1375,10 @@ function computeEdges( x, y, z ) {
 										normalVertices.push( new THREE.Vector3( tetFrom.p[0],tetFrom.p[1],tetFrom.p[2]));
 										normalColors.push( new THREE.Color( 1.0,0.0,0,1.0 ))
 										normalColors.push( new THREE.Color( 1.0,1.0,1.0,1.0 ))
-									}
-			
+									}			
 								}
+							}
+
 								if(0)
 								console.log( "zero size tri-face", x, y, z, odd, tet, tri
 									, useFace, AisB,AisC,BisC 
@@ -1538,6 +1533,7 @@ function computeEdges( x, y, z ) {
 						&&(p[3] = normals[baseOffset + tetOffset[2] + 1] )
 						){
 
+						//fixNormals
 						let drawOk = true;
 						{
 							const fc = p[0].face;
