@@ -30,7 +30,7 @@ Controls for the freepsace demo :
 
 
 
-[Demo](d3x0r.github.io/STFRPhysics/freeSpaceTest)
+[Demo](https://d3x0r.github.io/STFRPhysics/freeSpaceTest)
 
 Many camera systems in games have a fixed yaw/pitch for a standard fixed camera.
 
