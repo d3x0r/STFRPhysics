@@ -22,6 +22,7 @@
 	<script src="./src/marchingtetrahedra2.js"></script>
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
+	<script type="module" src="./src/dual-marching-tetrahedra-3D.js"></script>
 	<script type="module" src="./src/dual-marching-tetrahedra-3D2.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
@@ -76,8 +77,9 @@
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
-		    'Dual Marching Tetrahedra (DCL-volume)' : window.DualMarchingTetrahedra3
-		  , 'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
+		  'Dual Marching Tetrahedra (alt smooth)' : window.DualMarchingTetrahedra3a
+		  , 'Dual Marching Tetrahedra' : window.DualMarchingTetrahedra3
+		  ,'Marching Tetraheda 4 (DCL-volume)' : MarchingTetrahedra4
 		  , 'Marching Tetraheda 3 (DCL-plane)' : MarchingTetrahedra3
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
 		 // , 'Marching Cubes': MarchingCubes
@@ -90,6 +92,7 @@
 
 		function updateMesh() {
 
+			updateMeshFunction = false;
 		  scene.remove( surfacemesh );
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
@@ -104,7 +107,7 @@
 			 var geometryHelper ;
 			 	  //Create surface mesh
 			if( document.getElementById( "showGrid").checked) {
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
+				if( mesher === meshers['Dual Marching Tetrahedra'] ){
 					geometryHelper = THREE.DualGridGeometryBuffer();
 					geometry = geometryHelper.geometry;
 
@@ -198,6 +201,9 @@
 		  showGrid : document.getElementById( "showGrid").checked,
 		  geometryHelper : geometryHelper,
 		} );
+
+		updateMeshFunction = ("function" === typeof result) && result ;
+		if( updateMeshFunction ) result = null;
 	  var end = (new Date()).getTime();
 
 	  //Update statistics
@@ -342,7 +348,7 @@
 		else {
 			if( document.getElementById("showGrid").checked )
 			{
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
+				if(  mesher === meshers['Dual Marching Tetrahedra (alt smooth)'] || mesher === meshers['Dual Marching Tetrahedra'] ){
 					material	= THREE.DualGridGeometryMaterial();
 					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
 					material.uniforms.elementMap3.value = fieldElements.texture.texture;
@@ -403,6 +409,8 @@
 			}
 		}
 	
+		var updateMeshFunction;
+
 		window.doInit = ()=>{
 		if( !init() )	animate();
 		}
@@ -428,7 +436,8 @@
 					context : undefined,
 				});
 			}
-		    meshers['Dual Marching Tetrahedra (DCL-volume)'] = window.DualMarchingTetrahedra3;
+		    meshers['Dual Marching Tetrahedra'] = window.DualMarchingTetrahedra3;
+		    meshers['Dual Marching Tetrahedra (alt smooth)'] = window.DualMarchingTetrahedra3a;
 
 			canvas.addEventListener( "mousemove", (evt)=>{
 				if( material.uniforms && material.uniforms.cursorRayNormal ) {
@@ -644,9 +653,24 @@
 			return false;
 		}
 
+
 		// animation loop
 		function animate() {
+			if( updateMeshFunction ) {
+				if( !updateMeshFunction() ){
+					updateMeshFunction = false;
+					geometry.verticesNeedUpdate = true;
+				  	geometry.elementsNeedUpdate = true;
+				  	geometry.normalsNeedUpdate = true;
+				}
+				// geometry updates can take a while...
+		//		geometry.verticesNeedUpdate = true;
+		//	  	geometry.elementsNeedUpdate = true;
+		//	  	geometry.normalsNeedUpdate = true;
+			    document.getElementById("vertcount").value = geometry.vertices.length;
+				document.getElementById("facecount").value = geometry.faces.length;
 
+			}
 			// loop on request animation loop
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
