@@ -180,9 +180,12 @@ function lockChangeAlert() {
       document.mozPointerLockElement === renderer.domElement) {
 		//canvas.rotateStart.set( event.clientX, event.clientY );
     //console.log('The pointer lock status is now locked');
+		mode = 1;
+				
 	controls.userRotate = true;
     //document.addEventListener("mousemove", updatePosition, false);
   } else {
+		mode = 0;
     //console.log('The pointer lock status is now unlocked');
     //document.removeEventListener("mousemove", updatePosition, false);
   }
@@ -197,13 +200,14 @@ function handleKeyEvents( event, isDown ) {
 			return;
 			break;
 		case keys.TAB:
+			event.preventDefault();
 			if( isDown )   {
-				mode = 1-mode;
+				//mode = 1-mode;
 				switch(mode ) {
-				case 0:
+				case 1: // is locked, want unlock
 					document.exitPointerLock();
 					break;
-				case 1:
+				case 0: // is unlocked, want lock.
 					if( renderer.domElement ) {
 						renderer.domElement.requestPointerLock(); 
 					}

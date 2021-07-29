@@ -64,13 +64,14 @@ export function NaturalCamera( object, domElement ) {
 	    //scope.object.matrixNeedsUpdate = true;
 		if( !scope.userRotate ) return;
 		touchUpdate();
+
 		const rt = scope.motion.orientation.right();
 		if( phiDelta || thetaDelta || rt.y ){
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
 
 			// always face 'up'
-			scope.motion.rotation.z = -Math.asin(rt.y)/tick;
+			scope.motion.rotation.z = -Math.asin(rt.y)/tick; // normalize rotation to full rotation for this tick.
 
 			scope.motion.rotation.dirty = true;
 			//scope.motion.rotation.yaw(  );
@@ -85,7 +86,7 @@ export function NaturalCamera( object, domElement ) {
 	
 
 	function onMouseDown( event ) {
-	         console.log( "down" );
+	         //console.log( "down" );
 		if ( scope.enabled === false ) return;
 		if( !scope.userRotate ) return;
 
@@ -105,8 +106,8 @@ export function NaturalCamera( object, domElement ) {
 	//if( event.movementX
 		scope.rotateDelta.set( event.movementX, event.movementY );
 
-        scope.rotateDelta.x = 32 * (scope.rotateDelta.x / window.innerWidth)
-        scope.rotateDelta.y = 32 * (scope.rotateDelta.y / window.innerHeight)
+	        scope.rotateDelta.x = 25 * (scope.rotateDelta.x / window.innerWidth)
+        	scope.rotateDelta.y = 25 * (scope.rotateDelta.y / window.innerHeight)
 
 		thetaDelta -= ( 2 * Math.PI * scope.rotateDelta.x  );
 		phiDelta += ( 2 * Math.PI * scope.rotateDelta.y );
