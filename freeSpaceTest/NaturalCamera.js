@@ -26,11 +26,11 @@ export function NaturalCamera( object, domElement ) {
 	const scope = this;
 	
 	// 2d scaled screen point - prior position
-	const rotateStart = new THREE.Vector2();
+	this.rotateStart = new THREE.Vector2();
 	// 2d scaled screen point - current
-	const rotateEnd = new THREE.Vector2();
+	this.rotateEnd = new THREE.Vector2();
 	// temp for rotation difference of start and end
-	const rotateDelta = new THREE.Vector2();
+	this.rotateDelta = new THREE.Vector2();
 
 	let phiDelta = 0;
 	let thetaDelta = 0;
@@ -85,34 +85,31 @@ export function NaturalCamera( object, domElement ) {
 	
 
 	function onMouseDown( event ) {
+	         console.log( "down" );
 		if ( scope.enabled === false ) return;
 		if( !scope.userRotate ) return;
 
 		event.preventDefault();
 
-		rotateStart.set( event.clientX, event.clientY );
+		//scope.rotateStart.set( event.clientX, event.clientY );
 
-		document.addEventListener( 'mousemove', onMouseMove, false );
-		document.addEventListener( 'mouseup', onMouseUp, false );
 
 	}
 
 	function onMouseMove( event ) {
-
 		if ( scope.enabled === false ) return;
 
 		event.preventDefault();
 
-    	rotateEnd.set( event.clientX, event.clientY );
-		rotateDelta.subVectors( rotateEnd, rotateStart );
 
-        rotateDelta.x = 32 * (rotateDelta.x / window.innerWidth)
-        rotateDelta.y = 32 * (rotateDelta.y / window.innerHeight)
+	//if( event.movementX
+		scope.rotateDelta.set( event.movementX, event.movementY );
 
-		scope.rotateLeft( 2 * Math.PI * rotateDelta.x  );
-		scope.rotateUp( 2 * Math.PI * rotateDelta.y );
+        scope.rotateDelta.x = 32 * (scope.rotateDelta.x / window.innerWidth)
+        scope.rotateDelta.y = 32 * (scope.rotateDelta.y / window.innerHeight)
 
-		rotateStart.copy( rotateEnd );
+		thetaDelta -= ( 2 * Math.PI * scope.rotateDelta.x  );
+		phiDelta += ( 2 * Math.PI * scope.rotateDelta.y );
 
 	}
 
@@ -121,23 +118,12 @@ export function NaturalCamera( object, domElement ) {
 		if ( scope.enabled === false ) return;
 		if ( scope.userRotate === false ) return;
 
-		document.removeEventListener( 'mousemove', onMouseMove, false );
-		document.removeEventListener( 'mouseup', onMouseUp, false );
-
 
 	}
 
 	function onMouseWheel( event ) {
 
 		if ( scope.enabled === false ) return;
-		/*
-		var delta = 0;
-		if ( event.wheelDelta ) { // WebKit / Opera / Explorer 9
-			delta = event.wheelDelta;
-		} else if ( event.detail ) { // Firefox
-			delta = - event.detail;
-		}
-		*/
 	}
 
 	var keyEvent = null;
@@ -227,19 +213,19 @@ function touchUpdate() {
     var t = touches[0];
     if( t.new )
     {
-      rotateStart.set( t.x, t.y );
+      scope.rotateStart.set( t.x, t.y );
       t.new = false;
     }
     else {
-            rotateEnd.set( t.x, t.y );
-      		rotateDelta.subVectors( rotateEnd, rotateStart );
+            scope.rotateEnd.set( t.x, t.y );
+      		scope.rotateDelta.subVectors( scope.rotateEnd, scope.rotateStart );
 
-            rotateDelta.x = -2 * (rotateDelta.x / window.innerWidth)
-            rotateDelta.y = - 2 * (rotateDelta.y / window.innerHeight)
+            scope.rotateDelta.x = -2 * (scope.rotateDelta.x / window.innerWidth)
+            scope.rotateDelta.y = - 2 * (scope.rotateDelta.y / window.innerHeight)
       		scope.rotateLeft( Math.PI/2 * rotateDelta.x   );
       		scope.rotateUp( Math.PI/2 * rotateDelta.y );
             //console.log( rotateDelta )
-      		rotateStart.copy( rotateEnd );
+      		scope.rotateStart.copy( scope.rotateEnd );
     }
   }
 }
@@ -291,6 +277,9 @@ function onTouchEnd( e ) {
 		keyEvent = cb;
     	scope.domElement.addEventListener( 'contextmenu', ignore, false );
     	scope.domElement.addEventListener( 'mousedown', onMouseDown, false );
+		scope.domElement.addEventListener( 'mousemove', onMouseMove, false );
+		scope.domElement.addEventListener( 'mouseup', onMouseUp, false );
+
     	scope.domElement.addEventListener( 'mousewheel', onMouseWheel, false );
       	scope.domElement.addEventListener( 'touchstart', onTouchStart, false );
       	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
