@@ -37,6 +37,7 @@ var controls;
 	var scene2;
 	var scene3;
 	var camera, renderer;
+	let mode = 0;
 	var light;
 	var geometry, material, mesh = [];
 	var frame_target = [];
@@ -153,6 +154,7 @@ function setControls2() {
 
 	const keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40
         , A:65, S:83, D:68, W:87, SPACE:32, C:67 
+, TAB: 9
 , NUM0: 45
 , NUM1: 35
 , NUM2: 40
@@ -173,12 +175,45 @@ const Accel1 = 2*Math.PI / 24;
 const linAccel1 = 10;
 let controlForm = null;
 
+function lockChangeAlert() {
+  if (document.pointerLockElement === renderer.domElement ||
+      document.mozPointerLockElement === renderer.domElement) {
+		//canvas.rotateStart.set( event.clientX, event.clientY );
+    //console.log('The pointer lock status is now locked');
+		mode = 1;
+				
+	controls.userRotate = true;
+    //document.addEventListener("mousemove", updatePosition, false);
+  } else {
+		mode = 0;
+    //console.log('The pointer lock status is now unlocked');
+    //document.removeEventListener("mousemove", updatePosition, false);
+  }
+}
+document.addEventListener('pointerlockchange', lockChangeAlert, false)
+
 function handleKeyEvents( event, isDown ) {
 
 	switch ( event.keyCode ) {
 		default:
 			console.log( "key:", event.keyCode );
 			return;
+			break;
+		case keys.TAB:
+			event.preventDefault();
+			if( isDown )   {
+				//mode = 1-mode;
+				switch(mode ) {
+				case 1: // is locked, want unlock
+					document.exitPointerLock();
+					break;
+				case 0: // is unlocked, want lock.
+					if( renderer.domElement ) {
+						renderer.domElement.requestPointerLock(); 
+					}
+					break;
+				}
+			}
 			break;
 		case keys.TILDE:
 			controls.userRotate = !controls.userRotate;

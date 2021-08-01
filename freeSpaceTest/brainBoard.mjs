@@ -13,7 +13,7 @@ export class ControlForm extends Popup {
 	rotationRate = 0;
 
 	applyAccel = false;
-	objectCount = 2;
+	objectCount = 50;
 	constructor( parent, opts ) {
 		super( "Controls", parent );
 		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
