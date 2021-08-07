@@ -36,10 +36,20 @@
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
 
-		 - Show Full: <input type="radio" name="show" id="showFull" checked><br>
-		 - Show Top Half: <input type="radio" name="show" id="showTop" ><br>
-		 - Show Bottom Half: <input type="radio" name="show" id="showBot" >
+		<ul>
+		 <li> Show Full: <input type="radio" name="show" id="showFull" checked> (show full rotation cycle)<br>
+		 <li> Show Bottom Half: <input type="radio" name="show" id="showTop" > (show top half of the cycle)<br>
+		 <li> Show Top Half: <input type="radio" name="show" id="showBot" > (show bottom half of the cycle)<br>
+		 <li> Cycles: <input type="text"  id="showCycles" value=1 > - do several passes to sum to a total  <br>
+		 <li> Inner Speed: <input type="text"  id="showSpeed" value=2> - rotation rate of inner arm<br>
 
+	<li> red : force required to change the mass...
+      <li> blue : velocity vector at the loction
+      <li> green : position vector of mass
+      <li> dark : start of rotation
+      <li> brighter colors :end of rotation.
+      <li> white : sum of all red vectors within range (total acceleration).
+        </ul>
 		<p style="display:none" >Input Data:<select id="datasource"></select>
 		</p>
 		<p style="display:none" >Algorithm: <select style="display:none" id="mesher"></select></p>
@@ -347,7 +357,7 @@
 			scene.add( light2 );
 */
 	
-			["showFull","showBot","showTop"].forEach( (c)=>document.getElementById( c ).onchange = updateMesh );
+			["showFull","showBot","showTop","showCycles", "showSpeed"].forEach( (c)=>document.getElementById( c ).onchange = updateMesh );
 
 			//Initialize dom elements
 			//testdata = window.createTestData(0);

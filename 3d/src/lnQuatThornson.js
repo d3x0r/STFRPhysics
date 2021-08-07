@@ -9,6 +9,8 @@ let drawNormalBall = false;
 	const showFull = document.getElementById( "showFull" );
 	const showTop = document.getElementById( "showTop" );
 	const showBot = document.getElementById( "showBot" );
+	const showCycles = document.getElementById( "showCycles" );
+	const showSpeed = document.getElementById( "showSpeed" );
 
 
 function DrawQuatNormals(normalVertices,normalColors) {
@@ -28,9 +30,13 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	let prior_del = {x:0.006, y:0, z:0.012 };
 	const sum = {x:0, y:0, z:0 };
 
+	const cycles = Number(showCycles.value);
+	const speed = Number(showSpeed.value);
+
 	const from = show_full?0:show_top?-Math.PI/2:(Math.PI/2);
 	const to = show_full?Math.PI*2:show_top?Math.PI/2:(3*Math.PI/2);
 let skipped = false;
+	for( let c = 0; c < cycles; c++ ) {
 //        for( let t = -Math.PI/2; t < 2*Math.PI/4; t += 2*Math.PI/1024 ) {
         for( let t = from; t < to; t += 2*Math.PI/1024 ) {
 //        for( let t = 0; t < 2*Math.PI; t += 2*Math.PI/1024 ) {
@@ -41,7 +47,7 @@ let skipped = false;
 
 
                 //lnQ.freeSpin( -t*2, v );
-                lnQ.freeSpin( t*2, v );
+                lnQ.freeSpin( t*speed, v );
                 
 			//const new_v = lnQ.up();
 			const basis = lnQ.getBasis( );
@@ -92,9 +98,9 @@ skipped = true;}else
 				}
 	
 	}
-
+	}
                 	normalVertices.push( new THREE.Vector3( 0                      , 0                     , 0.2 ))
-			normalVertices.push( new THREE.Vector3(  sum.x/1024*del_normal_del, 0+sum.y/1024*del_normal_del,  0.2+sum.z/1024*del_normal_del ))
+			normalVertices.push( new THREE.Vector3(  -sum.x/1024*del_normal_del, -sum.y/1024*del_normal_del,  0.2-sum.z/1024*del_normal_del ))
 			normalColors.push( new THREE.Color( 1,1,1,1 ))
 			normalColors.push( new THREE.Color( 1,1,1,1 ))
 console.log( "Total:", sum.x, sum.y, sum.z );
