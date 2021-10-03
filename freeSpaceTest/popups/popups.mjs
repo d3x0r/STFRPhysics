@@ -889,19 +889,19 @@ function makeTextField( form, input, value, text, money, percent ){
 	//textDefault.
         function setValue() {
 	if( money ) {
-		inputControl.value = utils.to$(input[value]);
+		inputControl.textContent = utils.to$(input[value]);
 		inputControl.addEventListener( "change", (e)=>{
 			var val = utils.toD(inputControl.value);
 			input[value] = inputControl.value = utils.to$(val);
 		})
 	} else if( percent ) {
-		inputControl.value = utils.toP(input[value]);
+		inputControl.textContent = utils.toP(input[value]);
 		inputControl.addEventListener( "change", (e)=>{
 			var val = utils.fromP(inputControl.value);
 			input[value] = inputControl.value = utils.toP(val);
 		})
 	}else {
-		inputControl.value = input[value];
+		inputControl.textContent = input[value];
 		inputControl.addEventListener( "input", (e)=>{
 			var val = inputControl.value;
                         input[value] = val;
@@ -918,19 +918,15 @@ function makeTextField( form, input, value, text, money, percent ){
 	return {
             	addEventListener(a,b) { return inputControl.addEventListener(a,b) },
 		get value () {
-			if( money )
-				return utils.toD(inputControl.value);
-			if( percent ) 
-				return utils.fromP(inputControl.value);
-			return inputControl.value;
+			return input[value];
 		},
 		set value (val) {
 			if( money )
-				inputControl.value = utils.to$(val);
+				inputControl.textContent = utils.to$(val);
 			else if( percent )
-				inputControl.value = utils.toP(val);
+				inputControl.textContent = utils.toP(val);
 			else
-				inputControl.value = val;			
+				inputControl.textContent = val;			
 		},
                 reset(){
                     input[value] = initialValue;

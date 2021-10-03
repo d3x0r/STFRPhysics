@@ -1377,6 +1377,63 @@ lnQuat.prototype.yaw2 = function( th ) {
 }
 
 
+//-------------------------------------------------------------------------------
+// these work for the typical 'locked' camera that natural camera uses
+//-------------------------------------------------------------------------------
+// These functions assume that roll is near 0.
+
+
+lnQuat.prototype.getRoll = function() {	
+	// just go ahead and get the basis!
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+	const cn = c*q.nx;
+
+	return Math.asin( s*q.nz  + cn*q.ny );
+}
+
+lnQuat.prototype.getYaw = function() {	
+	// just go ahead and get the basis!
+	const q = this;
+	if( q.dirty ) q.update();
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+
+	const c = 1- c1;
+	const cn = c*q.nx;
+
+	const rx = c1      + cn*q.nx;
+	const principal = Math.asin( -s*q.ny  + (1- c1)*q.nx*q.nz);
+	if( principal < 0 ) {
+		if( rx > 0 ) 
+			return -Math.PI-principal;//-Math.PI/4;
+		else
+			return principal;
+	} else {
+		if( rx > 0 ) 
+			return Math.PI-principal;//Math.PI-principal;//-Math.PI/4;
+		else
+			return principal;
+	}                           	
+}
+
+
+lnQuat.prototype.getPitch = function() {	
+	const q = this;
+	if( q.dirty ) q.update();
+	// input angle...
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	return Math.asin( -s*q.nx + (1-c1)*q.nz*q.ny );
+}
+
+//-------------------------------------------------------------------------------
+
+
 lnQuat.prototype.right = function() {	
 	// just go ahead and get the basis!
 	const q = this;

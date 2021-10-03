@@ -345,6 +345,7 @@ function init() {
         
 	const form = new BrainForm( controlContainer  );
 	controlForm = new ControlForm( controlContainer, {
+		controls:controls,
 		reInit() {
 			addDipoles()
 		}
@@ -394,6 +395,8 @@ function init() {
 		//controlOrbit.enable();
 
 		controls = controlNatural;
+		controlForm.controls = controls;
+		controlForm.mover = myMover;
 
 
 
@@ -587,10 +590,12 @@ function addModelToScene2(object) {
 	}
 
 	scene.add(myMover = x = object);
+
 	myMotion =  new Motion(x);
 	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
         myMotion.orientation.set( 0, 0, -Math.PI, 0 );
 	const body = new SmartBody( x, myMotion );
+		controlForm.mover = myMotion;
 	movers2.push(body);
 	x.matrixAutoUpdate = true;
 	// attach the camera to one smart object.
@@ -624,6 +629,7 @@ function render() {
 var sumDel =0;
 function animate() {
 	var delta = clock.getDelta();
+
 	
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //		console.log( "MyMotion (before)", JSON.stringify(myMotion, null, '\t') );
@@ -771,6 +777,7 @@ function animate() {
 		sumDel += delta;
 
 	controls.update(delta);
+	controlForm.update( delta );
 
 	render();
 

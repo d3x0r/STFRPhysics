@@ -7,6 +7,7 @@ import {Brain} from "./automaton/brain/brain.mjs"
 import {Neuron} from "./automaton/brain/neuron.mjs"
 import {Synapse} from "./automaton/brain/synapse.mjs"
 
+const forms = [];
 
 export class ControlForm extends Popup {
 	
@@ -14,18 +15,72 @@ export class ControlForm extends Popup {
 
 	applyAccel = false;
 	objectCount = 50;
+	yaw = 0;
+	pitch = 0;
+	roll = "0z";
+	#controls = null;
+	#mover = null;	
+
 	constructor( parent, opts ) {
 		super( "Controls", parent );
+		this.#controls = opts.controls;
 		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
 		popups.makeCheckbox( this, this, "applyAccel", "Apply Accel" );
+		this.yawControl = popups.makeTextField( this, this, "yaw", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.pitchControl = popups.makeTextField( this, this, "pitch", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.rollControl = popups.makeTextField( this, this, "roll", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
+
+		this.yawControlM = popups.makeTextField( this, this, "yawm", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.pitchControlM = popups.makeTextField( this, this, "pitchm", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.rollControlM = popups.makeTextField( this, this, "rollm", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
 		const input = popups.makeTextInput( this, this, "objectCount", "Object Count" );
 		popups.makeButton( this, "Re-init", ()=>{
 			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
+		forms.push( this );
 	}
 	
+	set controls( val ) {
+		this.#controls = val;
+	}
+	set mover( val ) {
+		this.#mover= val;
+	}
+	update(delta) {
+		if( this.#controls ) {
+		const o = this.#controls.motion.orientation;
+		this.roll = o.getRoll()*180/Math.PI;
+		this.pitch = o.getPitch()*180/Math.PI;
+		this.yaw = (o.getYaw()*180/Math.PI);
 
+		this.roll = this.roll - this.roll%0.01;
+		this.yaw = this.yaw - this.yaw%0.01;
+		this.pitch = this.pitch - this.pitch%0.01;
+
+		this.rollControl.value = this.roll ;
+		this.pitchControl.value = this.pitch;
+		this.yawControl.value = this.yaw;
+
+		}else {
+		}
+		if( this.#mover ) {
+		const o = this.#mover.orientation;
+		this.rollm = o.getRoll()*180/Math.PI;
+		this.pitchm = o.getPitch()*180/Math.PI;
+		this.yawm = (o.getYaw()*180/Math.PI);
+
+		this.rollm = this.rollm - this.rollm%0.01;
+		this.yawm = this.yawm - this.yawm%0.01;
+		this.pitchm = this.pitchm - this.pitchm%0.01;
+
+		this.rollControlM.value = this.rollm ;
+		this.pitchControlM.value = this.pitchm;
+		this.yawControlM.value = this.yawm;
+
+		}else {
+		}
+	}
 }
 
 export class BrainForm extends Popup {
@@ -41,6 +96,7 @@ export class BrainForm extends Popup {
 
 		const This = this;
 		function brainTick() {
+			for( let form of forms ) form.update();
 			This.brain.step();
 			setTimeout( brainTick, 1 );
 		}

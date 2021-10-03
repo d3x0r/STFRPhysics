@@ -65,13 +65,13 @@ export function NaturalCamera( object, domElement ) {
 		if( !scope.userRotate ) return;
 		touchUpdate();
 
-		const rt = scope.motion.orientation.right();
-		if( phiDelta || thetaDelta || rt.y ){
+		const roll = scope.motion.orientation.getRoll();
+		if( phiDelta || thetaDelta || roll ){
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
 
 			// always face 'up'
-			scope.motion.rotation.z = -Math.asin(rt.y)/tick; // normalize rotation to full rotation for this tick.
+			scope.motion.rotation.z = -roll/tick; // normalize rotation to full rotation for this tick.
 
 			scope.motion.rotation.dirty = true;
 			//scope.motion.rotation.yaw(  );
