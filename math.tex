@@ -1,22 +1,13 @@
 http://mathb.in/45267
 http://mathb.in/64405 (adds alternative rodrigues)
-
-
+http://mathb.in/64565 (Add get roll/pitch/yaw)
+http://mathb.in/64566 (Remove 1-norm notations)
 ---
 Notation:
  
  - a vector : $[a,b,c,...]$
- - 1-norm of a vector: $ ||[x,y,z]||_1 = \sqrt[1] {|x^1|+|y^1|+|z^1|} $ or $ |x|+|y|+|z| $ 
-     - or for : $ [v_1,v_2,v_3,..] $, the 1-norm is: $ \sum_{i=1}^n |v_i|  $
- - 2-norm of a vector: $ ||[x,y,z]|| = \sqrt { x^2+y^2+z^2 } $
+ - unit normal of a vector: $ ||[x,y,z]|| = \sqrt { x^2+y^2+z^2 } $
    - or for: $ [v_1,v_2,v_3,..] $, the 2-norm is: $ \sqrt { \sum_{i=1}^n v_i^2 } $
-
----
-## AAA to Human Readable AAA
-
-Given $A$ as angle-angle-angle vector $[{X},{Y} ,{Z}] $ 
-
-Human Readable: $ \frac { A ||A|| } {||A||_1} $
 
 ---
 ## AAA to axis-angle
@@ -32,6 +23,10 @@ given axis-angle:
 $ A_a =[ {x},{y},{z},{{\theta}}]  $, $A_r=[x,y,z]$, and $A_\theta = \theta$.
 
 Angle angle angle: $   \frac  {{A_\theta}A_r} {||A_r||} $
+
+or assuming that the axis is already a unit vector
+
+Angle angle angle: $   {{A_\theta}A_r}$
 
 ---
 
@@ -189,5 +184,46 @@ xz(1-\cos \theta) - y\sin \theta    &  x\sin \theta + yz(1-\cos \theta)  & \cos 
 \end{bmatrix} $
 
 
+---
 
+These assume that $(0,1,0)$ is 'up' and $(1,0,0)$ is right and $(0,0,1)$ is forward.
+Inputs are $(q_x,q_y,q_z)$ which determine the unit normal rotation axis, and $q_{\theta}$ which is the angle around said axis.
+
+## Get Roll
+
+from AAA, calculating the 'right' of the matrix, and using the Y coordinate of the right access gives the local roll.
+
+effective range from -180 to 180
+
+
+${roll} = \arcsin ({ \sin q_{\theta} \cdot q_z  + (1- c1) \cdot q_x \cdot q_y } )$
+
+
+## Get Yaw
+
+From AAA, use, the 'right' frame, and using the Z and X values to calculate the yaw.  This is assuming that
+the frame generally is oriented such that roll is near zero.
+
+$ s = \sin q_θ$
+
+$ c_1 = \cos q_θ$
+
+$ r_x = \cos q_θ      + (1- \cos q_θ) \cdot q_x \cdot q_x $
+
+$ {principal} = \arcsin( -s \cdot q_y  + (1- c_1)\cdot q_x \cdot q_z)$
+
+    if( r_x < 0 ) return principal;
+    if( principal < 0 ) {
+        result= -π-principal
+    } else {
+        result= π-principal
+    }                           	
+	
+
+
+## Get Pitch
+
+Calculating the Y of the forward vector yields the pitch; effective range from -90 to 90
+
+$ {pitch} = \arcsin ( \sin  q_θ \cdot q_x + (\cos q_θ-1) \cdot q_z \cdot q_y ) $
 
