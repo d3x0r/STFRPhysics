@@ -1407,18 +1407,15 @@ lnQuat.prototype.getYaw = function() {
 	const cn = c*q.nx;
 
 	const rx = c1      + cn*q.nx;
-	const principal = Math.asin( -s*q.ny  + (1- c1)*q.nx*q.nz);
+	const principal = -Math.asin( -s*q.ny  + (1- c1)*q.nx*q.nz);
+	if( rx < 0 ) return principal;
+	let result;
 	if( principal < 0 ) {
-		if( rx > 0 ) 
-			return -Math.PI-principal;//-Math.PI/4;
-		else
-			return principal;
+		result= -Math.PI-principal;//-Math.PI/4;
 	} else {
-		if( rx > 0 ) 
-			return Math.PI-principal;//Math.PI-principal;//-Math.PI/4;
-		else
-			return principal;
+		result= Math.PI-principal;//Math.PI-principal;//-Math.PI/4;
 	}                           	
+	return result;
 }
 
 
@@ -1428,7 +1425,7 @@ lnQuat.prototype.getPitch = function() {
 	// input angle...
 	const s = Math.sin( q.θ ); // double angle sin
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
-	return Math.asin( -s*q.nx + (1-c1)*q.nz*q.ny );
+	return Math.asin( s*q.nx + (c1-1)*q.nz*q.ny );
 }
 
 //-------------------------------------------------------------------------------
