@@ -1,4 +1,7 @@
 http://mathb.in/45267
+http://mathb.in/64405 (adds alternative rodrigues)
+
+
 ---
 Notation:
  
@@ -128,9 +131,33 @@ Rotation angle: $\cos \frac{\gamma}{2} = \cos \alpha   \cos \beta  + \sin \alpha
 get the result angle: $ \gamma = 2 \cos^{-1}( \cos \frac {\gamma}{2} )$
 
 
-Compute axis : $C$ = $  \sin \beta  \cos \alpha  (A_x)  + \sin \alpha  \cos \beta (B_x) + \sin \alpha \sin \beta  ( A_x ⨯ B_x ) $
+Compute axis : $C$ = $  \sin \beta  \cos \alpha  (A_x)  + \sin \alpha  \cos \beta (B_x) + \sin \alpha \sin \beta  ( A_x ? B_x ) $
 
 result : $\frac {\gamma C} {||C||}$
+
+## Rodrigues Alternative 
+
+$th$ = angle to rotate around axis
+
+$a = [ax,ay,az]$ - axis to rotate around
+
+$q_{\theta}$ - rotation around axis to rotate
+
+$ q = [qx,qy,qz]$ - axis to rotate
+
+${ang} = 2 \cdot \arccos  ( \frac { ({{qx} \cdot {ax}+{qy}\cdot{ay}+{qz}\cdot{az})}\cdot({\cos {\frac {{th} + {q_\theta}} 2}}-{\cos {\frac {{th} - {q_\theta}} 2}}) + ( {\cos {\frac {{th} - {q_\theta}} 2}} + {\cos {\frac {{th} + {q_\theta}} 2}} ) } 2   )$
+
+${s_1} = {\sin {\frac {{th} - {q\theta}} 2}} + {\sin {\frac {{th} + {q\theta}} 2}} $
+
+${s_2} = {\sin {\frac {{th} + {q\theta}} 2}} - {\sin {\frac {{th} - {q\theta}} 2}} $
+
+${c_1} = {\cos {\frac {{th} - {q\theta}} 2}} - {\cos {\frac {{th} + {q\theta}} 2}} $
+
+${axisTemp} = {[{a}] \times [{q}]}\cdot {c_1} + {a}\cdot{s_1} + {q}\cdot{s_2} $
+
+${axis} = \frac {axisTemp} { ||{axisTemp}|| } $
+
+Rodrigues Original Axis calc : $\frac {axisTemp} {2 \cdot \sin  \frac {ang} 2 } $
 
 
 
