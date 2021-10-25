@@ -183,7 +183,7 @@ function drawDigitalTimeArm(curSliders, slerp) {
 			{
 				normalVertices.push( new THREE.Vector3( (n?A__ts[n-1].x:0)*spaceScale   ,( n?A__ts[n-1].y:0)*spaceScale      , (n?A__ts[n-1].z:0)*spaceScale  ))
 				normalVertices.push( new THREE.Vector3( (A__ts[n].x)*spaceScale   ,( A__ts[n].y)*spaceScale      , (A__ts[n].z)*spaceScale  ))
-				pushN(n, zz/3+0.4);
+				pushN(n, 0.7);
 			}
 		}
 	}	
@@ -1458,7 +1458,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			lnQ.update();
 	        
 			const len = lnQ.θ;
-			const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
+			const nL = ( Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z) );
 			const nR = lnQ.θ;
 			if( axis ) {
 				document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
@@ -1467,16 +1467,13 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			}else {
 				// normalize the output angle... 
 				if( degrees ) {
-					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.x*180/Math.PI).toFixed(4) + "°";
-					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.y*180/Math.PI).toFixed(4) + "°";
-					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4) +"°<br>"+ (nR/nL*lnQ.z*180/Math.PI).toFixed(4) + "°";
+					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x*180/Math.PI).toFixed(4) +"°";
+					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y*180/Math.PI).toFixed(4) +"°";
+					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z*180/Math.PI).toFixed(4) +"°";
 				}else{
-					//document.getElementById( "lnQXval"+n).textContent = (nR/nL*lnQ.x/Math.PI).toFixed(4) + "π";
-					//document.getElementById( "lnQYval"+n).textContent = (nR/nL*lnQ.y/Math.PI).toFixed(4) + "π";
-					//document.getElementById( "lnQZval"+n).textContent = (nR/nL*lnQ.z/Math.PI).toFixed(4) + "π";
-					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.x/Math.PI).toFixed(4) + "π";
-					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.y/Math.PI).toFixed(4) + "π"
-					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z/Math.PI).toFixed(4) + "π" +"<br>"+ (nR/nL*lnQ.z/Math.PI).toFixed(4) + "π"
+					document.getElementById( "lnQXval"+n).innerHTML = (lnQ.x/Math.PI).toFixed(4) + "π" ;
+					document.getElementById( "lnQYval"+n).innerHTML = (lnQ.y/Math.PI).toFixed(4) + "π" ;
+					document.getElementById( "lnQZval"+n).innerHTML = (lnQ.z/Math.PI).toFixed(4) + "π" ;
 				}
 			}               
 			const xyr = lnQ.θ;

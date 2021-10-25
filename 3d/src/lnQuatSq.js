@@ -241,6 +241,15 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					const z = Math.cos(lng);
 					this.θ = (latmul*lat+spin);
 					this.x = (this.nx =x) * (this.θ); this.y = (this.ny =0); this.z = (this.nz =z) * (this.θ);
+
+
+					this.x = (Math.sin(lng)) * (lat) - (Math.sin(lng0)) * (lat0); 
+					this.y = (this.ny =0); 
+					this.z = (Math.sin(lng)) * (lat) - (Math.sin(lng0)) * (lat0);
+
+					angle = sqrt( x*x + z*z ) 
+
+
 					this.dirty = false;
 					if(d) // D is a boolean to further align the tangents.
 					{
