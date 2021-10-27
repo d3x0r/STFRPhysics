@@ -461,7 +461,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 
 export function updateShapes( shapes ) {
 	const atTick = Date.now();
-	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount;
+	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount * turnCount / 10;
 
 	const lATC = Math.sqrt(A*A+T*T+C*C);
 	const steps = stepCount;
