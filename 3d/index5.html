@@ -42,7 +42,7 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >  - Show Spin Chance: <input type="checkbox" id="showSpinChance" > - Show Spin Up: <input type="checkbox" id="showSpinUp" checked >
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" checked >  - Show Spin Chance: <input type="checkbox" id="showSpinChance" checked > - Show Spin Up: <input type="checkbox" id="showSpinUp" checked >
 			<br>
 		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" >
 		 - Show Trajectories: <input type="checkbox" id="showTrajectories">
@@ -287,6 +287,7 @@
 			light2.position.x = -light2.position.x;
 			scene.add( light2 );
 
+if(0)
 		makeShapes();
 		function makeShapes() {
 			for( var i = 0; i < 2; i++ ) {

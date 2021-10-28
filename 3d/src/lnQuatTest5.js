@@ -12,6 +12,7 @@ let showSpinChance = false;
 let showSpinUp = false;
 let drawNormalBall = false;
 let twistCount = 1;
+let limitCone = false;
 let normalVertices = null;
 let normalColors = null;
 let showOnNormalBall = false;
@@ -71,6 +72,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		prior = null;
 
 	 const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
+if(0)
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
 		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
@@ -148,38 +150,72 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				//if( l > minr ) continue;
 				const lnQ = new lnQuat( 0, cx+x, cy+y, cz+z );
 				const basis = lnQ.getBasis( );
+	                        let ox_,oy_,oz_;
+	                        let ox_2,oy_2,oz_2;
 	                        let ox,oy,oz;
+                			ox = lnQ.x;
+                			oy = lnQ.y;
+	                		oz = lnQ.z;
+
+						ox_ = Math.PI*2*(Math.sin( (1+lnQ.nx)*Math.PI/4 ) *Math.sin( (1+lnQ.nx)*Math.PI/4 ) - 0.0);
+						oy_ = Math.PI*2*(Math.sin( (1+lnQ.ny)*Math.PI/4 ) *Math.sin( (1+lnQ.ny)*Math.PI/4 ) - 0.0);
+						oz_ = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
+if( limitCone ) {
+//if( ox_ > 0.95*Math.PI*2 ) continue
+//if( oy_ > 0.95*Math.PI*2 ) continue
+if( oz_ > 0.95*Math.PI*2 ) continue
+//if( ox_ < 0.05*Math.PI*2 ) continue
+//if( oy_ < 0.05*Math.PI*2 ) continue
+if( oz_ < 0.05*Math.PI*2 ) continue
+}
                                 if( showSpinChance ) {
-                                if( showSpinUp ) {
-				 ox = Math.PI*2*Math.sin( (1+lnQ.nx)*Math.PI/4 ) *Math.sin( (1+lnQ.nx)*Math.PI/4 );
-				oy = Math.PI*2*Math.sin( (1+lnQ.ny)*Math.PI/4 ) *Math.sin( (1+lnQ.ny)*Math.PI/4 );
-				oz = Math.PI*2*Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 );
-                                } else {
+	                                if( showSpinUp ) {
+					// 1/sqrt(3),1/sqrt(3),1/sqrt(3) 
+						//0.57735026918962576450914878050196
+						// 1.238846746625 (1.577*pi/4)
+						// 0.945408798178208552786628648355
+						// 0.89379779567276467139841057011364% up
+						ox_ = Math.PI*2*(Math.sin( (1+lnQ.nx)*Math.PI/4 ) *Math.sin( (1+lnQ.nx)*Math.PI/4 ) - 0.0);
+						oy_ = Math.PI*2*(Math.sin( (1+lnQ.ny)*Math.PI/4 ) *Math.sin( (1+lnQ.ny)*Math.PI/4 ) - 0.0);
+						oz_ = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
+                                	} else {
 
-			       	 ox = Math.PI*2*Math.sin( (1-lnQ.nx)*Math.PI/4 ) *Math.sin( (1-lnQ.nx)*Math.PI/4 );
-					oy = Math.PI*2*Math.sin( (1-lnQ.ny)*Math.PI/4 ) *Math.sin( (1-lnQ.ny)*Math.PI/4 );
-					oz = Math.PI*2*Math.sin( (1-lnQ.nz)*Math.PI/4 ) *Math.sin( (1-lnQ.nz)*Math.PI/4 );
-                                }
-	        } else {
-                		ox = lnQ.x;
-                		oy = lnQ.y;
-                		oz = lnQ.z;
-                }
+						ox_ = Math.PI*2*Math.sin( (1-lnQ.nx)*Math.PI/4 ) *Math.sin( (1-lnQ.nx)*Math.PI/4 );
+						oy_ = Math.PI*2*Math.sin( (1-lnQ.ny)*Math.PI/4 ) *Math.sin( (1-lnQ.ny)*Math.PI/4 );
+						oz_ = Math.PI*2*Math.sin( (1-lnQ.nz)*Math.PI/4 ) *Math.sin( (1-lnQ.nz)*Math.PI/4 );
+	                                }
+			        }
+			        else
+				{
+                			ox_ = ox;
+                			oy_ = oy;
+                			oz_ = oz;
+        		        }
 
+	if(0){
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + 2*lnQ.nx*normal_del/normLen  ,oy*spaceScale + 2*lnQ.ny*normal_del /normLen , oz*spaceScale + 2*lnQ.nz*normal_del/normLen ))
-		
-				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.right.x*normal_del/normLen  ,oy*spaceScale + basis.right.y*normal_del /normLen , oz*spaceScale + basis.right.z*normal_del/normLen ))
-				                                                                                                                                
-				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.up.x*normal_del/normLen     ,oy*spaceScale + basis.up.y*normal_del/normLen     , oz*spaceScale + basis.up.z*normal_del/normLen ))
-				                                                                                                                                
-				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox*spaceScale + basis.forward.x*normal_del/normLen,oy*spaceScale + basis.forward.y*normal_del/normLen, oz*spaceScale + basis.forward.z*normal_del/normLen ))
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale  ,oy_*spaceScale , oz_*spaceScale ))
+
+				normalColors.push( new THREE.Color( 1,1,1,0.5 ))
+				normalColors.push( new THREE.Color( 1,1,1,0.5 ))
+	}
+
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale + 2*lnQ.nx*normal_del/normLen       ,oy_*spaceScale + 2*lnQ.ny*normal_del /normLen      , oz_*spaceScale + 2*lnQ.nz*normal_del/normLen ))
+				                                                                                                                                                    
+		                                                                                                                                                                    
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale + basis.right.x*normal_del/normLen  ,oy_*spaceScale + basis.right.y*normal_del /normLen , oz_*spaceScale + basis.right.z*normal_del/normLen ))
+				                                                                                                                                                    
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale + basis.up.x*normal_del/normLen     ,oy_*spaceScale + basis.up.y*normal_del/normLen     , oz_*spaceScale + basis.up.z*normal_del/normLen ))
+				                                                                                                                                                    
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
+				normalVertices.push( new THREE.Vector3( ox_*spaceScale + basis.forward.x*normal_del/normLen,oy_*spaceScale + basis.forward.y*normal_del/normLen, oz_*spaceScale + basis.forward.z*normal_del/normLen ))
 	        
-				normalColors.push( new THREE.Color( 1,1,0,255 ))
-				normalColors.push( new THREE.Color( 1,1,0,255 ))
+
+				normalColors.push( new THREE.Color( 1*oz_/(Math.PI*2),1*oz_/(Math.PI*2),0,255 ))
+				normalColors.push( new THREE.Color( 1*oz_/(Math.PI*2),1*oz_/(Math.PI*2),0,255 ))
 				normalColors.push( new THREE.Color( 1,0,0,255 ))
 				normalColors.push( new THREE.Color( 1,0,0,255 ))
 				normalColors.push( new THREE.Color( 0,1,0,255 ))
@@ -463,7 +499,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	if( check )
 		normalizeNormalTangent = check.checked; // global variable from lnQuat.js
 
-        DrawQuatNormals(normalVertices,normalColors);
+        //DrawQuatNormals(normalVertices,normalColors);
 
 	const xAxis = {x:1,y:0,z:0};
 	const yAxis = {x:0,y:1,z:0};
@@ -481,6 +517,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 
 
 export function updateShapes( shapes ) {
+return;
 	const atTick = Date.now();
 	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount *turnCount/10;
 
