@@ -676,14 +676,20 @@ function drawSquare( n, q, qPrior ) {
 			let p2_ = {x:onef4,y:-onef4,z:0 } 
 			let p3_ = {x:-onef4,y:onef4,z:0 } 
 			let p4_ = {x:-onef4,y:-onef4,z:0 }
+			const step = new lnQuat();
 			for( let i = 0; i < _20; i++ )
 			{
-				const step = qPrior.add2( q, i*timeScale/_20 );
+				step.x = qPrior.x * (_20-i)/_20 + next.x *( i)/_20;
+				step.y = qPrior.y * (_20-i)/_20 + next.y *( i)/_20;
+				step.z = qPrior.z * (_20-i)/_20 + next.z *( i)/_20;
+				step.dirty = true;
+				step.update();
+				//const step = qPrior.add2( qo, i*timeScale/_20 );
 		
-				const p1 = step.apply( p1_, timeScale/_20 );
-				const p2 = step.apply( p2_, timeScale/_20 );
-				const p3 = step.apply( p3_, timeScale/_20 );
-				const p4 = step.apply( p4_, timeScale/_20 );
+				const p1 = step.apply( p1_, 1 );
+				const p2 = step.apply( p2_, 1);
+				const p3 = step.apply( p3_, 1);
+				const p4 = step.apply( p4_, 1 );
 			
 				normalVertices.push( new THREE.Vector3( p1.x*spaceScale   ,p1.y*spaceScale  , p1.z*spaceScale ))
 				normalVertices.push( new THREE.Vector3( p2.x*spaceScale   ,p2.y*spaceScale  , p2.z*spaceScale  ))
@@ -705,7 +711,7 @@ function drawSquare( n, q, qPrior ) {
 
 
 	}
-
+if(0)
 	if( drawRotIter || drawMechanicalRot ) 
 	{
 		const p1 = ( next.applyDel({x:onef1 ,y :onef1,z:0 }, timeScale));
