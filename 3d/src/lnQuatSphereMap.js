@@ -166,7 +166,7 @@ function makeQuat(p,y,r) {
 			const ax = o.nx
 			const ay = o.ny
 			const az = o.nz
-			const oct = 0;//Math.floor( o.θ / (Math.PI*2) ); 
+			const oct = 0;//currentOctave || Math.floor( o.θ / (Math.PI*4) ); 
 			const th = o.θ % (Math.PI*2);
 
 			{ // finish rodrigues
@@ -178,7 +178,7 @@ function makeQuat(p,y,r) {
 				const cxpy = Math.cos(xpy);
 				const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 			
-				let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*4 + oct*Math.PI*2);
+				let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*2 + oct*Math.PI*4);
 				// only good for rotations between 0 and pi.
 			
 				if( ang && ang != Math.PI*2 ) {
@@ -196,7 +196,7 @@ function makeQuat(p,y,r) {
 
 					const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 					
-					q.θ  = ang + currentOctave * 4*Math.PI;;
+					q.θ  = ang;// + currentOctave * Math.PI;;
 					q.nx = Cx*Clx;
 					q.ny = Cy*Clx;
 					q.nz = Cz*Clx;
@@ -443,7 +443,7 @@ function makeQuat(p,y,r) {
 	
 
 
-					lnQ.θ +=  currentOctave * 4*Math.PI;
+					//lnQ.θ +=  currentOctave * 4*Math.PI;
 					lnQ.x = lnQ.nx * lnQ.θ;
 					lnQ.y = lnQ.ny * lnQ.θ;
 					lnQ.z = lnQ.nz * lnQ.θ;

@@ -1086,7 +1086,7 @@ function slerp2( q, p, t, target, external ) {
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
 function finishRodrigues( q, oct, ax, ay, az, th ) {
-	oct = oct || 0;
+	oct = oct || Math.floor(q.θ/(Math.PI*2));
 	// A dot B   = cos( angle A->B )
 	// cos( C/2 ) 
 	//  cos(angle between the two rotation axii)
@@ -1119,7 +1119,7 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
 	// octive should have some sort of computation that gets there...
 	// would have to be a small change
-	let ang = acos( cosCo2 )*2 + oct * (Math.PI*4);
+	let ang = acos( cosCo2 )*2 + oct * (Math.PI*2);
 
 	if( ang ) {
 		const sxmy = Math.sin(xmy);
