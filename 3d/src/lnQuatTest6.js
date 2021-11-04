@@ -34,6 +34,42 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const o = [0,0,0];//6/spaceScale,+6/spaceScale,+6/spaceScale];
 	let prior = null;
 
+	{
+		//function GeneratePoints(n) 
+		if(1)
+		{
+	let goldenRatio = 1 + Math.sqrt(5) / 4
+	let angleIncrement = Math.PI * 2 * goldenRatio
+	let multiplier = 1
+const n = 18;
+let px,py,pz;
+	for( let i = 0; i < n; i++ ) {
+		let distance = i / n
+		let incline = Math.acos(1 - 2 * distance)
+		let azimuth = angleIncrement * i
+
+		let x = Math.sin(incline) * Math.cos(azimuth) * multiplier
+		let y = Math.sin(incline) * Math.sin(azimuth) * multiplier
+		let z = Math.cos(incline) * multiplier
+		normalVertices.push( new THREE.Vector3( 0*spaceScale   ,0*spaceScale  , 0*spaceScale ))
+		normalVertices.push( new THREE.Vector3( (x)*spaceScale   ,(y)*spaceScale  , (z)*spaceScale  ))
+
+		//normalVertices.push( new THREE.Vector3( x*spaceScale   ,y*spaceScale  , z*spaceScale ))
+		//normalVertices.push( new THREE.Vector3( px*spaceScale   ,py*spaceScale  , pz*spaceScale  ))
+		px=x;py=y;pz=z;
+
+		normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+		normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+		//normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+		//normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
+	
+		
+	//	self:PlotPoints(x, y, z)
+	}
+	}
+	}
+
+
 	
 	if( showTrajectories ) {
 		priorPosx.x = 0;
@@ -141,17 +177,17 @@ if(0)
 
 	function drawDots() {
 
-	const steps = stepCount/100;
+	const steps = stepCount/10;
 		const normLen = 2;
 	const lATC = Math.sqrt(A*A+T*T+C*C);
-	const subSteps = turnCount;//Math.sqrt(steps);
+	const subSteps = turnCount/4;//Math.sqrt(steps);
 	const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
 		const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 		const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
                 const Aax = {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA};
                 const Bax = {x:xRot/lB, y:yRot/lB, z:zRot/lB };
 
-		for( let atTick = 0; atTick < 0.5; atTick += 1/(turnCount*steps) ) {
+		for( let atTick = 0; atTick < 2; atTick += 1/(subSteps*steps) ) {
 
 
 //	const atTick = Date.now();
@@ -167,7 +203,7 @@ if(0)
 		
 		const lnQ = new lnQuat( lnQ0 )
                     	.freeSpin( fibre, Aax )
-                        .freeSpin( t, Bbx );
+                        .freeSpin( t, Bax );
 
 
 				const basis = lnQ.getBasis( );
@@ -585,7 +621,7 @@ export function updateShapes( shapes ) {
 
 	const lATC = Math.sqrt(A*A+T*T+C*C);
 	const steps = stepCount;
-	const subSteps = turnCount;//Math.sqrt(steps);
+	const subSteps = turnCount/4;//Math.sqrt(steps);
 	
 	const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
 	
