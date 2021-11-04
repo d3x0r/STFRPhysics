@@ -38,6 +38,7 @@ export class ControlForm extends Popup {
 			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
+		this.move( 0,300);
 		forms.push( this );
 	}
 	
@@ -54,6 +55,7 @@ export class ControlForm extends Popup {
 		this.pitch = o.getPitch()*180/Math.PI;
 		this.yaw = (o.getYaw()*180/Math.PI);
 
+
 		this.roll = this.roll - this.roll%0.01;
 		this.yaw = this.yaw - this.yaw%0.01;
 		this.pitch = this.pitch - this.pitch%0.01;
@@ -64,11 +66,16 @@ export class ControlForm extends Popup {
 
 		}else {
 		}
-		if( this.#mover ) {
-		const o = this.#mover.orientation;
-		this.rollm = o.getRoll()*180/Math.PI;
-		this.pitchm = o.getPitch()*180/Math.PI;
-		this.yawm = (o.getYaw()*180/Math.PI);
+		if( this.#controls) {
+//		const o = this.#mover.orientation;
+		const o = this.#controls.motion.orientation;
+		//this.rollm = o.getRoll()*180/Math.PI;
+		//this.pitchm = o.getPitch()*180/Math.PI;
+		//this.yawm = (o.getYaw()*180/Math.PI);
+
+		this.rollm = o.z*180/Math.PI;
+		this.pitchm = o.x*180/Math.PI;
+		this.yawm = (o.y*180/Math.PI);
 
 		this.rollm = this.rollm - this.rollm%0.01;
 		this.yawm = this.yawm - this.yawm%0.01;
@@ -91,7 +98,6 @@ export class BrainForm extends Popup {
 		super( "Brain 1", parent );
 		
 		this.hide();
-		
 		const brainBoard = this.board = new BrainBoard( this.brain, this.divContent );
 
 		const This = this;
