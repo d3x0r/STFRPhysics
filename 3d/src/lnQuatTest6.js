@@ -141,27 +141,33 @@ if(0)
 
 	function drawDots() {
 
+	const steps = stepCount/100;
 		const normLen = 2;
-		for( let atTick = 0; atTick < 1.0; atTick += 1/(turnCount*5000) ) {
-//	const atTick = Date.now();
-	const nTotal = ( atTick) * stepCount *turnCount;
-
 	const lATC = Math.sqrt(A*A+T*T+C*C);
-	const steps = stepCount;
 	const subSteps = turnCount;//Math.sqrt(steps);
 	const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
-	
-        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*4) %(1/subSteps));
-		const t = (Math.PI*4)* subSteps*(fiberPart);// - (Math.PI*2);
-		
-
 		const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 		const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
+                const Aax = {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA};
+                const Bax = {x:xRot/lB, y:yRot/lB, z:zRot/lB };
+
+		for( let atTick = 0; atTick < 0.5; atTick += 1/(turnCount*steps) ) {
+
+
+//	const atTick = Date.now();
+//	const nTotal = ( atTick) * stepCount *turnCount;
+
+	
+        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
+//		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
+		const fibre = atTick * ( 4*Math.PI ) -Math.PI/2;
+
+	        const fiberPart =((fibre)/(Math.PI*4) %(1/subSteps));
+		const t = (Math.PI*4)* subSteps*(fiberPart);// - (Math.PI*2);
+		
 		const lnQ = new lnQuat( lnQ0 )
-                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
+                    	.freeSpin( fibre, Aax )
+                        .freeSpin( t, Bbx );
 
 
 				const basis = lnQ.getBasis( );
