@@ -122,6 +122,7 @@ export class Motion {
 
 
 	affect( motion, inverse, delta ) {
+		if( !motion ) {console.trace( "Maybe pass a motion to affect?" ) }
 		const tmp1 = new lnQuat();
 		const tmp2 = new lnQuat();
 
