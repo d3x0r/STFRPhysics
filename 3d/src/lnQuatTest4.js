@@ -23,7 +23,7 @@ let stepx = {x:0.02, y:0, z:0 };
 let stepy = {x:0, y:0.02, z:0 };
 let stepz = {x:0, y:0, z:0.02 };
 let stepxyz = {x:0.02, y:0.02, z:0.02 };
-
+let internalSpin = false;
 const spaceScale = 5;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
@@ -76,7 +76,10 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
 
-		const lnQ = new lnQuat( lnQ0 )
+		const lnQ = internalSpin?new lnQuat( lnQ0 )
+                    	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
+                        .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } )
+			:new lnQuat( lnQ0 )
                     	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
                         .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
 
@@ -461,7 +464,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 
 export function updateShapes( shapes ) {
 	const atTick = Date.now();
-	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount * turnCount / 5 /* this 5 and turn count must relate*/;
+	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount * turnCount  /* this 5 and turn count must relate*/;
 
 	const lATC = Math.sqrt(A*A+T*T+C*C);
 	const steps = stepCount;
@@ -477,9 +480,13 @@ export function updateShapes( shapes ) {
 
 		const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 		const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
-		const lnQ = new lnQuat( lnQ0 )
+		const lnQ = internalSpin?new lnQuat( lnQ0 )
+                    	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
+                        .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } )
+			:new lnQuat( lnQ0 )
                     	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
                         .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
+
 
 	lnQ.exp( shapes[0].quaternion );
 	lnQ.exp( shapes[1].quaternion );
