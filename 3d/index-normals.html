@@ -23,7 +23,7 @@
 	<script src="./src/marchingtetrahedra3.js"></script>
 	<script src="./src/marchingtetrahedra4.js"></script>
 	<script type="module" src="./src/dual-marching-tetrahedra-3D.js"></script>
-	<script type="module" src="./src/dual-marching-tetrahedra-3D2.js"></script>
+	<script type="module" src="./src/dual-marching-tetrahedra-3D3.js"></script>
 	<script src="./src/surfacenets.js"></script>
 
 	<script src="./src/perlinnoise.js"></script>
@@ -657,12 +657,21 @@
 		// animation loop
 		function animate() {
 			if( updateMeshFunction ) {
-				if( !updateMeshFunction() ){
-					updateMeshFunction = false;
+				if( !updateMeshFunction() )
+				{
+					updateMeshFunction = null;
+				}
+					//console.log( "Refresh geometry" );
 					geometry.verticesNeedUpdate = true;
 				  	geometry.elementsNeedUpdate = true;
 				  	geometry.normalsNeedUpdate = true;
-				}
+
+			if( geometryNormals ) {
+				geometryNormals.verticesNeedUpdate = true;
+				geometryNormals.normalsNeedUpdate = true;
+				geometryNormals.elementsNeedUpdate = true;
+				//geometryNormals.setDrawRange( 0, geometryNormals.vertices.length/2 );
+			}
 				// geometry updates can take a while...
 		//		geometry.verticesNeedUpdate = true;
 		//	  	geometry.elementsNeedUpdate = true;
