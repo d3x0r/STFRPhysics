@@ -438,9 +438,9 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	//drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	//drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
 	const spots = 3;
-const A = Math.floor((curSliders.lnQX - 500)/100)*4;
-const B = Math.floor((curSliders.lnQY - 500)/100)*4;
-const C = Math.floor((curSliders.lnQZ - 500)/100)*4;
+const A = curSliders.lnQX/2*4;
+const B = curSliders.lnQY/2*4;
+const C = curSliders.lnQZ/2*4;
 
 
 	if(drawNormalBall/*draw normal ball with twist*/)
