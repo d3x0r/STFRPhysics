@@ -67,14 +67,24 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 
-		<p>X:<input type="range" id="lnQX" min=1  max=8  value=1> Y:<input type="range" id="lnQY" min=1  max=8 value=1> 
-		Z:<input type="range" id="lnQZ" min=1  max=8 value=1>
+		
+		<p>
+		4 emitters: <input type="checkbox" id="4Emitters" >
+		A:<input type="range" id="lnQX" min=1  max=8  value=3>
+		X:<SPAN id="lnQXval">-0-</SPAN> 
+		B:<input type="range" id="lnQY" min=1  max=8 value=3> 
+		Y:<SPAN id="lnQYval">-0-</SPAN> 
+		C:<input type="range" id="lnQZ" min=1  max=8 value=3>
+		Z:<SPAN id="lnQZval">-0-</SPAN> 
+		D:<input type="range" id="lnQT" min=-30  max=30 value=3>
+		T:<SPAN id="lnQTval">1.0</SPAN>  
+		Octive:<SPAN id="lnQAval">1.0</SPAN></p>
+		
 <div style="visibility:hidden">
- T:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
+	
 		Octive:<input type="range" id="lnQA" min="3"  max="100" value="40"></p>
 		<p>turns:<input type="range" id="turnCounter" min="1"  max="128" value="12"> steps:<input type="range" id="stepCounter" min="1"  max="100" value="10">
 		</p>
-		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 
 		<!-- p>Q2X:<SPAN id="lnQ2Xval">-0-</SPAN> Q2Y:<SPAN id="lnQ2Yval">-0-</SPAN> Q2Z:<SPAN id="lnQ2Zval">-0-</SPAN> </p -->
 
@@ -418,6 +428,9 @@ for (let i = 0; i < 3; i++) {
 			is = document.getElementById( "lnQA" );
 			is.oninput = updateMesh;
 
+
+			is = document.getElementById( "4Emitters" );
+			is.oninput = updateMesh;
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQY" );
