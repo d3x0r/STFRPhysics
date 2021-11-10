@@ -70,14 +70,20 @@
 		
 		<p>
 		4 emitters: <input type="checkbox" id="4Emitters" >
-		A:<input type="range" id="lnQX" min=1  max=8  value=3>
-		X:<SPAN id="lnQXval">-0-</SPAN> 
-		B:<input type="range" id="lnQY" min=1  max=8 value=3> 
-		Y:<SPAN id="lnQYval">-0-</SPAN> 
-		C:<input type="range" id="lnQZ" min=1  max=8 value=3>
-		Z:<SPAN id="lnQZval">-0-</SPAN> 
-		D:<input type="range" id="lnQT" min=-30  max=30 value=3>
-		T:<SPAN id="lnQTval">1.0</SPAN>  
+		5 emitters: <input type="checkbox" id="5Emitters" >
+		6 emitters: <input type="checkbox" id="6Emitters" >
+		A:<input type="range" id="lnQX" min=1  max=28  value=1>
+		<SPAN id="lnQXval">-0-</SPAN> 
+		B:<input type="range" id="lnQY" min=1  max=28 value=1> 
+		<SPAN id="lnQYval">-0-</SPAN> 
+		C:<input type="range" id="lnQZ" min=1  max=28 value=1>
+		<SPAN id="lnQZval">-0-</SPAN> 
+		D:<input type="range" id="lnQT" min=1  max=28 value=1>
+		<SPAN id="lnQTval">1.0</SPAN>  
+		E:<input type="range" id="lnQE" min=1  max=28 value=1>
+		<SPAN id="lnQEval">1.0</SPAN>  
+		F:<input type="range" id="lnQF" min=1  max=28 value=1>
+		<SPAN id="lnQFval">1.0</SPAN>  
 		Octive:<SPAN id="lnQAval">1.0</SPAN></p>
 		
 <div style="visibility:hidden">
@@ -431,11 +437,19 @@ for (let i = 0; i < 3; i++) {
 
 			is = document.getElementById( "4Emitters" );
 			is.oninput = updateMesh;
+			is = document.getElementById( "5Emitters" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "6Emitters" );
+			is.oninput = updateMesh;
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQY" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQZ" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "lnQE" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "lnQF" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;

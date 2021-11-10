@@ -1,6 +1,6 @@
 import {lnQuat} from "./lnQuatSq.js" 
 
-let A,B,C,D,E,T;  // slider values
+let A,B,C,D,E,F,G,T;  // slider values
 let twistDelta = 0;
 let normalizeNormalTangent = false;
 let xRot, yRot, zRot;
@@ -18,6 +18,8 @@ let normalColors = null;
 let showOnNormalBall = false;
 let showTrajectories = false;
 let fourEmitters = false;
+let fiveEmitters = true;
+let sixEmitters = false;
 let priorPosx = {x:0,y:0,z:0};
 let priorPosy = {x:0,y:0,z:0};
 let priorPosz = {x:0,y:0,z:0};
@@ -440,7 +442,11 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	//drawN( new lnQuat( {x:0,y:1,z:0 } ), {x:0,y:1,z:0} );
 	//drawN( new lnQuat( {x:0,y:-1,z:0 } ), {x:0,y:-1,z:0} );
 	const vecs = [ {x:0,y:1,z:0},null,null,null ];
+	const vecs5 = [ {x:0,y:1,z:0},null,null,null,null,null ];
+	const vecs6 = [ {x:0,y:1,z:0},null,null,null,null,null ];
 	const lnQv = new lnQuat( 0, deg2rad( 109.4712203 ), 0, 0 );
+	const lnQv5 = new lnQuat( 0, deg2rad( 60 ), 0, 0 );
+	const lnQv6 = new lnQuat( 0, deg2rad( 60 ), 0, 0 );
 	vecs[1] = lnQv.applyDel( vecs[0], 1 );
 	lnQv.x = 0;
 	lnQv.y = deg2rad( 120 );
@@ -448,9 +454,28 @@ function DrawQuatNormals(normalVertices,normalColors) {
 	vecs[2] = lnQv.applyDel( vecs[1], 1 );
 	vecs[3] = lnQv.applyDel( vecs[2], 1 );
 
+	vecs5[1] = lnQv5.applyDel( vecs5[0], 1 );
+	lnQv5.x = 0;
+	lnQv5.y = deg2rad( 90 );
+	lnQv5.dirty = true;
+	vecs5[2] = lnQv5.applyDel( vecs5[1], 1 );
+	vecs5[3] = lnQv5.applyDel( vecs5[2], 1 );
+	vecs5[4] = lnQv5.applyDel( vecs5[3], 1 );
+
+	vecs6[1] = lnQv6.applyDel( vecs6[0], 1 );
+	lnQv6.x = 0;
+	lnQv6.y = deg2rad( 72 );
+	lnQv6.dirty = true;
+	vecs6[2] = lnQv6.applyDel( vecs6[1], 1 );
+	vecs6[3] = lnQv6.applyDel( vecs6[2], 1 );
+	vecs6[4] = lnQv6.applyDel( vecs6[3], 1 );
+	vecs6[5] = lnQv6.applyDel( vecs6[4], 1 );
+
+
 	//const l1 = Math.sqrt( (vecs[1].x-vecs[0].x)*(vecs[1].x-vecs[0].x)+(vecs[1].y-vecs[0].y)*(vecs[1].y-vecs[0].y)+(vecs[1].z-vecs[0].z)*(vecs[1].z-vecs[0].z));
 	//const l2 = Math.sqrt( (vecs[2].x-vecs[1].x)*(vecs[2].x-vecs[1].x)+(vecs[2].y-vecs[1].y)*(vecs[2].y-vecs[1].y)+(vecs[2].z-vecs[1].z)*(vecs[2].z-vecs[1].z));
 	//console.log( "DIFF:", l2-l1 );
+	if( fourEmitters )
 	{
 		restart = false;
 		const new_v = {x:0,y:0,z:0};
@@ -459,18 +484,47 @@ function DrawQuatNormals(normalVertices,normalColors) {
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + vecs[v].x*50  ,new_v.y*spaceScale + vecs[v].y*50  ,new_v.z*spaceScale + vecs[v].z*50 ))
 
-			normalColors.push( new THREE.Color( 1,0,0 ))
-			normalColors.push( new THREE.Color( 1,0,0 ))
+			normalColors.push( new THREE.Color( 1,1,0 ))
+			normalColors.push( new THREE.Color( 1,1,0 ))
+		}
+	}
+
+	if( fiveEmitters )
+	{
+		restart = false;
+		const new_v = {x:0,y:0,z:0};
+		
+		for( let v = 0; v < 5; v++ ) {
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale - vecs5[v].x*50             ,new_v.y*spaceScale   - vecs5[v].y*50        , new_v.z*spaceScale - vecs5[v].z*50 ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + vecs5[v].x*50  ,new_v.y*spaceScale + vecs5[v].y*50  ,new_v.z*spaceScale + vecs5[v].z*50 ))
+
+			normalColors.push( new THREE.Color( 1,0,1 ))
+			normalColors.push( new THREE.Color( 1,0,1 ))
+		}
+	}
+
+	if( sixEmitters )
+	{
+		restart = false;
+		const new_v = {x:0,y:0,z:0};
+		
+		for( let v = 0; v < 6; v++ ) {
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale - vecs6[v].x*50             ,new_v.y*spaceScale   - vecs6[v].y*50        , new_v.z*spaceScale - vecs6[v].z*50 ))
+			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + vecs6[v].x*50  ,new_v.y*spaceScale + vecs6[v].y*50  ,new_v.z*spaceScale + vecs6[v].z*50 ))
+
+			normalColors.push( new THREE.Color( 1,0,1 ))
+			normalColors.push( new THREE.Color( 1,0,1 ))
 		}
 	}
 
 	//console.log( "things:", vecs );
 	const spots = 3;
-const A = curSliders.lnQX/2*4;
-const B = curSliders.lnQY/2*4;
-const C = curSliders.lnQZ/2*4;
-const D = curSliders.lnQT/2*4;
-
+const A = curSliders.lnQX/3*4;
+const B = curSliders.lnQY/3*4;
+const C = curSliders.lnQZ/3*4;
+const D = curSliders.lnQT/3*4;
+E = E /3 * 4;
+F = F /3 * 4;
 
 	if(drawNormalBall/*draw normal ball with twist*/)
 		for( let h = 1*-1; h <= 1; h+= 1/spots * 0.05 ) {
@@ -523,7 +577,39 @@ const D = curSliders.lnQT/2*4;
 
 			let height;
 
-			if(fourEmitters) {
+			if(sixEmitters) {
+				height = 6;
+
+				for( let v = 0; v < 6; v++ ) {
+					const dot = vecs6[v].x * new_v.x + vecs6[v].y * new_v.y + vecs6[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					height += Math.cos( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								) );
+				}			
+			}
+			else if(fiveEmitters) {
+				height = 6;
+
+				for( let v = 0; v < 5; v++ ) {
+					const dot = vecs5[v].x * new_v.x + vecs5[v].y * new_v.y + vecs5[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					height += Math.cos( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								) );
+				}			
+			}
+			else if(fourEmitters) {
 				height = 4;
 
 				for( let v = 0; v < 4; v++ ) {
@@ -619,9 +705,13 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	showTrajectories = document.getElementById( "showTrajectories" )?.checked;
 			let lnQX = document.getElementById( "lnQX" ).value;
 		fourEmitters = document.getElementById( "4Emitters" )?.checked;
+		fiveEmitters = document.getElementById( "5Emitters" )?.checked;
+		sixEmitters = document.getElementById( "6Emitters" )?.checked;
 			let lnQY = document.getElementById( "lnQY" ).value;
 			let lnQZ = document.getElementById( "lnQZ" ).value;
 			let lnQT = document.getElementById( "lnQT" ).value;
+			let lnQE = document.getElementById( "lnQE" ).value;
+			let lnQF = document.getElementById( "lnQF" ).value;
 			let lnQA = document.getElementById( "lnQA" ).value;
 
 	curSliders.lnQX = lnQX;
@@ -635,13 +725,14 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 
 			//let lnQ = new lnQuat(  { a:(lnQT/100+1)*(lnQX/10-5)/20 , b:(lnQT/100+1)*(B=(lnQY/10-5)/20) , c: (lnQT/100+1)*(C=(lnQZ/10-5)/20)  } );
 			T = lnQT;
-			E=lnQA/100;
+			E=lnQE;
 			let lnQ = new lnQuat(  { a:(A=lnQX) , b:(B=lnQY) , c:(C=lnQZ)  } );
 	A = A ;
 	B = B ;
 	C = C ;
 	T = T;
-	E = E * 30;
+	E = Number(lnQE);
+	F = Number(lnQF);
 	D = Number(T) ;
 	twistDelta = A;
 
@@ -690,6 +781,8 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	document.getElementById( "lnQXval").textContent = A;
 	document.getElementById( "lnQYval").textContent = B;
 	document.getElementById( "lnQZval").textContent = C;
+	document.getElementById( "lnQEval").textContent = E;
+	document.getElementById( "lnQFval").textContent = F;
 	document.getElementById( "lnQTval").textContent = T;
 	document.getElementById( "lnQAval").textContent = ((E/3)|0)-4;
 
