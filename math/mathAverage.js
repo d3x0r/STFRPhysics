@@ -109,7 +109,7 @@ function drawsomething() {
 	
 
 	const data = [0,3,0,0,0,3,0,0,0,0,3];
-	const data2 = [0,3,3.5,2.5,3,2.5,3.5,0,0,3];
+	const data2 = [0,2.9,2.5,2.2,3.2,2.5,3.5,0,0,3];
 
 	const scalar = (values.A+5)*30 +1;
 	y = 0;
@@ -119,14 +119,25 @@ function drawsomething() {
 		plot( x, y, pens[0] );
 	}
 
+	for( x = minScale; x < maxScale; x+= step(1000) ) {
+		y = data[Math.floor(x)+5];
+
+		plot( x, y, pens[6] );
+	}
+
 	y = 0;
 	for( x = minScale; x < maxScale; x+= step(1000) ) {
 		y = (y*(scalar-1)+data2[Math.floor(x)+5])/scalar;
 
-		plot( x, y, pens[0] );
+		plot( x, y, pens[1] );
 	}
 
 
+	for( x = minScale; x < maxScale; x+= step(1000) ) {
+		y = data2[Math.floor(x)+5];
+
+		plot( x, y, pens[7] );
+	}
 
 	ctx.putImageData(_output, 0,0);
 
