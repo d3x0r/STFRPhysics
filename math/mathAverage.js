@@ -110,6 +110,11 @@ function drawsomething() {
 
 	const data = [0,3,0,0,0,3,0,0,0,0,3];
 	const data2 = [0,2.9,2.5,2.2,3.2,2.5,3.5,0,0,3];
+	const data3 = [];
+
+	for( x = minScale; x < maxScale; x+= step(1000) ) {
+		data3.push( data2[(Math.floor(x)+5)]-1+ 2*Math.random() );
+	}
 
 	const scalar = (values.A+5)*30 +1;
 	y = 0;
@@ -138,6 +143,21 @@ function drawsomething() {
 
 		plot( x, y, pens[7] );
 	}
+
+	y = 0;
+	for( x = minScale; x < maxScale; x+= step(1000) ) {
+		y = (y*(scalar-1)+data3[Math.floor((x-minScale)*1000/(maxScale-minScale))])/scalar;
+
+		plot( x, y, pens[2] );
+	}
+
+
+	for( x = minScale; x < maxScale; x+= step(1000) ) {
+		y = data3[Math.floor((x-minScale)*1000/(maxScale-minScale))];
+
+		plot( x, y, pens[8] );
+	}
+
 
 	ctx.putImageData(_output, 0,0);
 
