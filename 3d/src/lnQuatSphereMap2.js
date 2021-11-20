@@ -961,11 +961,8 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 
 {	
-	const k = -curSliders.lnQZ[0]*4;
+	const k = curSliders.lnQZ[0]*4;
 	const t = curSliders.lnQY[0]*4;	
-	const r0x = Math.cos(t);
-	const r0z = Math.sin(t);
-
 	const lnQ0_ = new lnQuat();
 
 	lnQ0.x = 0;
@@ -1093,6 +1090,36 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 
 }
+
+{
+	{
+		const k = -curSliders.lnQZ[0]*4;
+		const v = {x:0,y:29,z:0};
+		lnQ0.set( 0,0,0,0).update();
+		
+		//lnQ0.yaw( curSliders.lnQY[n]*4 );
+
+	        lnQ2.x = k*Math.sin( curSliders.lnQZ[0] * 4 )/100;
+		lnQ2.y = k*Math.cos( curSliders.lnQZ[0] * 4 )/100;
+		lnQ2.z = 0;
+		//lnQuat.apply( lnQ0.θ, lnQ0, lnQ2, 1, lnQ2 );
+		lnQ2.dirty = true;
+		lnQ2.update();	
+		
+	        for( let l = 0; l < 100; l++ ) {
+			lnQ0.freeSpin( lnQ2.θ, lnQ2 );
+			//lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
+			const vt = lnQ0.applyDel( v, 1 );
+			doDrawBasis( lnQ0, vt, 1, 1 );
+			//doDrawBasis( lnQ0, lnQ0, 0, 1 );
+			//doDrawBasis( lnQ0_, vt, 0, 1 );
+			//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
+		}
+		
+
+	}
+}
+
 
         document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]/Math.PI).toFixed(4) + "π";
         document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]/Math.PI).toFixed(4) + "π";
