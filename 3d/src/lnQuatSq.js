@@ -1020,8 +1020,8 @@ lnQuat.apply = function( angle, axis, v, del, target ) {
 
 		const vx = v.x , vy = v.y , vz = v.z;
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		target.set(
-			  vx*c + s*(qy * vz - qz * vy) + qx * dot
+		target.set( 0
+			, vx*c + s*(qy * vz - qz * vy) + qx * dot
 			, vy*c + s*(qz * vx - qx * vz) + qy * dot
 			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
 		return target;
