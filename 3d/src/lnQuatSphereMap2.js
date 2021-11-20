@@ -893,9 +893,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			if( n === 1 ) {
 			        totalNormal = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			}
-			curSliders.lnQX[n-1] = (lnQX / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-			curSliders.lnQY[n-1] = (lnQY / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
-			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1);// * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 
 			let lnQ;
 	if( !lnQ5 )
@@ -934,25 +934,10 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		else
 	             lnQ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5][n-1];
 			lnQ.update();
-	        
-			const len = lnQ.θ;
-			if( axis ) {
-				document.getElementById( "lnQXval"+n).textContent = (lnQ.nx).toFixed(4);
-				document.getElementById( "lnQYval"+n).textContent = (lnQ.ny).toFixed(4);
-				document.getElementById( "lnQZval"+n).textContent = (lnQ.nz).toFixed(4);
-			}else {
-				// normalize the output angle... 
-				const nL = Math.abs(lnQ.x)+Math.abs(lnQ.y)+Math.abs(lnQ.z);
-				if( degrees ) {
-					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ*180/Math.PI).toFixed(4);
-					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ*180/Math.PI).toFixed(4);
-					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ*180/Math.PI).toFixed(4);
-				}else{
-					document.getElementById( "lnQXval"+n).textContent = (lnQ.x/nL*lnQ.θ).toFixed(4);
-					document.getElementById( "lnQYval"+n).textContent = (lnQ.y/nL*lnQ.θ).toFixed(4);
-					document.getElementById( "lnQZval"+n).textContent = (lnQ.z/nL*lnQ.θ).toFixed(4);
-				}
-			}               
+
+				document.getElementById( "lnQXval"+n).textContent = ( curSliders.lnQZ[0]*curSliders.lnQX[n-1]/Math.PI).toFixed(4) + "π";
+				document.getElementById( "lnQYval"+n).textContent = ( 4*curSliders.lnQY[n-1]/Math.PI).toFixed(4) + "π";
+				document.getElementById( "lnQZval"+n).textContent = ( curSliders.lnQZ[n-1]/Math.PI).toFixed(4) + "π";
 
 
 	            const xyr = lnQ.θ;
@@ -969,18 +954,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			}
 	        
 	        
-			if( degrees ) {
-				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] *180/Math.PI).toFixed(4);
-				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] *180/Math.PI).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len*180/Math.PI).toFixed(4);
-			} else {
-				document.getElementById( "xRot"+n).textContent = (curSliders.lnQX[n-1] ).toFixed(4);
-				document.getElementById( "yRot"+n).textContent = (curSliders.lnQY[n-1] ).toFixed(4);
-				document.getElementById( "lnQAngle"+n).textContent = (len).toFixed(4);
-			}
-			if( degrees ) {
-			} else {
-			}
 			//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 			
 	        
@@ -1012,13 +985,13 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 		doDrawBasis( lnQ1,lnQ1, 0, 1 );
 	
-	const v = {x:0,y:20,z:0};
+	const v = {x:0,y:30,z:0};
 	for( let l = 0; l < 100; l++ ) {
 
 		lnQ0.spin( lnQ1.θ, lnQ1 );
 		lnQ0_.spin( lnQ1.θ, lnQ1 );
 		const vt = lnQ0.applyDel( v, 1 );
-		doDrawBasis( lnQ0, vt, 1, 1 );
+		//doDrawBasis( lnQ0, vt, 1, 1 );
 		//doDrawBasis( lnQ0, lnQ0, 0, 1 );
 		doDrawBasis( lnQ0_, vt, 0, 1 );
 		//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
@@ -1048,7 +1021,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		lnQ0.freeSpin( lnQ2.θ, lnQ2 );
 		lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
 		const vt = lnQ0.applyDel( v, 1 );
-		doDrawBasis( lnQ0, vt, 1, 1 );
+		//doDrawBasis( lnQ0, vt, 1, 1 );
 		//doDrawBasis( lnQ0, lnQ0, 0, 1 );
 		doDrawBasis( lnQ0_, vt, 0, 1 );
 		//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
@@ -1070,7 +1043,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		lnQ0.freeSpin( lnQ2.θ, lnQ2 );
 		lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
 		const vt = lnQ0.applyDel( v, 1 );
-		doDrawBasis( lnQ0, vt, 1, 1 );
+		//doDrawBasis( lnQ0, vt, 1, 1 );
 		//doDrawBasis( lnQ0, lnQ0, 0, 1 );
 		doDrawBasis( lnQ0_, vt, 0, 1 );
 		//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
@@ -1091,7 +1064,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		lnQ0.freeSpin( lnQ2.θ, lnQ2 );
 		lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
 		const vt = lnQ0.applyDel( v, 1 );
-		doDrawBasis( lnQ0, vt, 1, 1 );
+		//doDrawBasis( lnQ0, vt, 1, 1 );
 		//doDrawBasis( lnQ0, lnQ0, 0, 1 );
 		doDrawBasis( lnQ0_, vt, 0, 1 );
 		//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
@@ -1112,7 +1085,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		lnQ0.freeSpin( lnQ2.θ, lnQ2 );
 		lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
 		const vt = lnQ0.applyDel( v, 1 );
-		doDrawBasis( lnQ0, vt, 1, 1 );
+		//doDrawBasis( lnQ0, vt, 1, 1 );
 		//doDrawBasis( lnQ0, lnQ0, 0, 1 );
 		doDrawBasis( lnQ0_, vt, 0, 1 );
 		//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );

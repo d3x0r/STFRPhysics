@@ -1009,7 +1009,7 @@ lnQuat.apply = function( angle, axis, v, del, target ) {
 	//this.update();
 	// 3+2 +sqrt+exp+sin
 	if( !(angle*del) ) {
-		target.set( v.x, v.y, v.z );
+		target.set( 0, v.x, v.y, v.z );
 		return target; // 1.0
 	} else  {
 		const len = Math.sqrt( axis.x * axis.x + axis.y * axis.y + axis.z * axis.z );
