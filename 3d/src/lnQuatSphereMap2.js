@@ -1092,30 +1092,38 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 }
 
 {
+	const k = curSliders.lnQZ[0]*4;
+	const t = curSliders.lnQY[0]*4;	
+	const lnQ0_ = new lnQuat();
+	const v = {x:0,y:29,z:0};
 	{
-		const k = -curSliders.lnQZ[0]*4;
-		const v = {x:0,y:29,z:0};
+		const l5 = curSliders.lnQZ[4]*8;
 		lnQ0.set( 0,0,0,0).update();
 		
-		//lnQ0.yaw( curSliders.lnQY[n]*4 );
+		
+		for( let seg =0; seg < 100; seg++ ) {
 
-	        lnQ2.x = k*Math.sin( curSliders.lnQZ[0] * 4 )/100;
-		lnQ2.y = k*Math.cos( curSliders.lnQZ[0] * 4 )/100;
-		lnQ2.z = 0;
-		//lnQuat.apply( lnQ0.θ, lnQ0, lnQ2, 1, lnQ2 );
-		lnQ2.dirty = true;
-		lnQ2.update();	
-		
-	        for( let l = 0; l < 100; l++ ) {
-			lnQ0.freeSpin( lnQ2.θ, lnQ2 );
-			//lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
-			const vt = lnQ0.applyDel( v, 1 );
-			doDrawBasis( lnQ0, vt, 1, 1 );
-			//doDrawBasis( lnQ0, lnQ0, 0, 1 );
-			//doDrawBasis( lnQ0_, vt, 0, 1 );
-			//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
+			lnQ0.yaw( (2*Math.PI-k*2)/100 );
+
+			lnQ2.x = (Math.PI*2)*k /100  ;
+			lnQ2.y = 0;
+			lnQ2.z = 0;
+			lnQuat.apply( lnQ0.θ, lnQ0, lnQ2, 1, lnQ2 );
+			lnQ2.dirty = true;
+			lnQ2.update();	
+
+		        for( let l = 0; l < 1; l++ ) {
+
+				lnQ0.freeSpin( lnQ2.θ, lnQ2 );
+				lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
+				//lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
+				const vt = lnQ0.applyDel( v, 1 );  // the up works fine too - dn't ned 0 for this.
+				//doDrawBasis( lnQ0, vt, 1, 1 );
+				//doDrawBasis( lnQ0, lnQ0, 0, 1 );
+				doDrawBasis( lnQ0_, vt, 0, 1 );
+				//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
+			}
 		}
-		
 
 	}
 }
