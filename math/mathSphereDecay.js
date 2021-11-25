@@ -1,3 +1,6 @@
+// https://www.geogebra.org/3d/qxejdpty
+//https://www.geogebra.org/3d/sadtqz3x
+
 
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
@@ -135,7 +138,7 @@ function drawsomething() {
 	}
 
 	for( let r = -8.99; r < 8; r+=0.5 ) {
-		for( let t=-8.99; t < 8; t+= 5/1000 ) {
+		for( let t=-18.99; t < 18; t+= 5/1000 ) {
 			const Ax = A_0(t,t,r,values.B,values.A );
 			const Ay = A_0(r,t,r,values.B,values.A );
 			plot(Ax,Ay,pens[1] );
