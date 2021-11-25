@@ -134,9 +134,8 @@ function drawsomething() {
 		}
 	}
 
-
-	for( let r = -4.99; r < 5; r+=0.5 ) {
-		for( let t=-4.99; t < 5; t+= 5/1000 ) {
+	for( let r = -8.99; r < 8; r+=0.5 ) {
+		for( let t=-8.99; t < 8; t+= 5/1000 ) {
 			const Ax = A_0(t,t,r,values.B,values.A );
 			const Ay = A_0(r,t,r,values.B,values.A );
 			plot(Ax,Ay,pens[1] );
@@ -149,18 +148,18 @@ function drawsomething() {
 
 			if(1)
 			{
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(r,t,r,values.B,values.A )-r;
-					const Ay = A_0(t,t,r,values.B,values.A )-t;
-					plot(Ax,Ay,pens[4] );
-				}
 
 // this is change in virtual Y by time... 
 				{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
 					const Ax = A_0(t,t,r,values.B,values.A )-t;
 					const Ay = A_0(r,t,r,values.B,values.A )-r;
+					plot(Ax,Ay,pens[4] );
+				}
+				{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+					const Ax = A_0(r,t,r,values.B,values.A )-r;
+					const Ay = A_0(t,t,r,values.B,values.A )-t;
 					plot(Ax,Ay,pens[5] );
 				}
 
