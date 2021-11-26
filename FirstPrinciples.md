@@ -93,18 +93,18 @@ Classically, wavelength(m) * frequency(1/s) = C;  this is extended with turns to
 The energy of a wave is a direct relationship of its frequency; `E = hF`; where `h` is Plank's Constant that directly scaled turns per second.
 
 Using this, and replacing into the 'Mass–energy relation' `e=m*c^2` 
-represented by  `t/s = g * t-t-m-m/s-s`, and reordering the terms `g-m/s = 1/t*1/m`  
-Or momentum equals one over turns times one over meters.  
+represented by  `t/s = g * t-t-m-m/s-s`, and reordering the terms `g-m/s = 1/t*1/m` 
+Or momentum equals one over turns times one over meters. 
 ~~The smaller the radius that the turns happen in, the greater the mass.~~(this requires additional investigation, specific directions might infer different properties?)
-Alternatively this can be factored like `g = s/m-m-t` which is `g-m/s = 1/c 1/m`.  
-The smaller the radius, the greater the turns can be because there's less `m-t/s`.  
+Alternatively this can be factored like `g = s/m-m-t` which is `g-m/s = 1/c 1/m`. 
+The smaller the radius, the greater the turns can be because there's less `m-t/s`. 
 (Maybe instead 1/c = g-m/s * m?)
 
 ### Maybe instead?
 
 Revisiting the above, the principle dimensional units are time(s), distance(m), and turns(t); the units of mass(g) can be expressed entirely in terms of time, distance and turns.
 
-Time and distance are non-independant values, where you have motion, coordinates of distance are related to time (m/s).  Similary time and turns have a relationship thats a measure of angular velocity (t/s).  
+Time and distance are non-independant values, where you have motion, coordinates of distance are related to time (m/s).  Similary time and turns have a relationship thats a measure of angular velocity (t/s). 
 
 (?Relationship) of distance and turn  are (multiplied?) to find an angular distance or arc-length per time traveled.
 
@@ -198,4 +198,54 @@ does the target have linear velocity?  gold leaf experiments have motion with st
 
 
 with nearly insignificant electric charge... 
+
+## To Be moved up.
+
+General relativity(special relativity) curvature is accomplished.
+
+So - linear paths around any pure gravitational source will not interact with the source except on direct incident.
+
+If the wave length of the light is longer than the incidental area it may still interface but is still a low chance, with a high chance to be out of phase also.
+
+Photons travel on geodesics, within a space that is displaced by space itself collapsing into itself.?
+
+This is like quantum locking in magnetism.
+
+The idea is that as space falls within the exclusion, that torque is imparted, which prevents more of that space from falling into it in that direction, by displacing the space linearly.
+
+This can be seen that the space is rarified; certainly the amount of surface that is around 0, when stretched to +1 has can only be so thick... 
+
+If the thickness of that is less than a wavelength it will not be seen by a wavelength.
+
+The space that is most likely to fall in next is on the rotation axis, which will move the axis in a random direction; which forces a displacement now perpendicular to that, allowing another 90 degree area of space to potentially fall in...
+though at any particular point a point of space might fall in, changing the direction of the spin, and allowing certain uncertainty in the spin direction (unless conditioned by other means).
+
+at any time there's a -1 space and +pi rotation and -1 rotation +1 space  (the rotation has to give space back to space?  the rotation can emit the space as a photon?  Peizo electric?)
+
+In the case of striking peize electric with mechanical (linear impact) this forces space into the exclusion in a particular polarized direction, causing a net spin in a certain direction
+
+light cones are always divergent from an emitter.  The wavelength of light is tangential to the frequency.  If the frequency is coming at you in time, then the wave is across your view; this impliex that 
+it has at least to differene X-> values... that has a unique position. 
+    When the photon is emitted it's at a certain frequency that the current spacial configuration of the emitter is(a), and is seen as red shifted.
+
+(a) that iron experiment at harvard... at the top, the space that contains the iron is in a less dense space, with the detector at the bottom  is in more dense space, the wavelength is compressed and blue shifted with the spatial gradient.
+If the emitter is in the more dense space, then as the photon moves away from that source, it expands to the less dense space where the emitter is and has a longer wavelength, and is apparently red shifted.
+
+(Most)Any source of photons we see is massive, and has a certain gradient of space in which its particles are in to emit said frequency.  anywhere outside of that, and those points that are furthest from it will have a divergent angle of that source gradient of X)
+
+Back to a ideal massive source - is in visible.
+If the mass existed within the excluded space, photons would pass around it and never actually hit it.
+
+
+Very distant very massive objects may appear invisible if there is enough behind them to occlude it.
+
+2) at some absolute distance L (in light-meters) the divergence from the source will be equivalent to flat space (in addition to other curvatures the light passes through? regardless of)
+
+Or - the universe is generally expanding, and space in generally is getting rarified allowing for a red shift everywhere around us, which most recent time being the least gravitational dense. (this is still a theoretical consideration)
+
+- state? - Space that is displaced does not displace the position of other displacements.
+  
+
+
+
 
