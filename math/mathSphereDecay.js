@@ -157,19 +157,54 @@ function drawsomething() {
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
 					const Ax = A_0(t,t,r,values.B,values.A )-t;
 					const Ay = A_0(r,t,r,values.B,values.A )-r;
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
 					plot(Ax,Ay,pens[4] );
+					//plot(Bx,By,pens[7] );
 				}
 				{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
 					const Ax = A_0(r,t,r,values.B,values.A )-r;
 					const Ay = A_0(t,t,r,values.B,values.A )-t;
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
 					plot(Ax,Ay,pens[5] );
+					//plot(Bx,By,pens[8] );
 				}
 
 			}
-
 		}
 	}
+	if(0)
+	for( let r = -799; r < 800; r+=50 ) {
+		for( let t=-1899; t < 1800; t+= 500/1000 ) {
+			if(1)
+			{
+
+// this is change in virtual Y by time... 
+				{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+					const Ax = A_0(t,t,r,values.B,values.A )-t;
+					const Ay = A_0(r,t,r,values.B,values.A )-r;
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
+					plot(Ax*20,Ay*20,pens[4] );
+					//plot(Bx,By,pens[7] );
+				}
+				{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+					const Ax = A_0(r,t,r,values.B,values.A )-r;
+					const Ay = A_0(t,t,r,values.B,values.A )-t;
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
+					plot(Ax*20,Ay*20,pens[5] );
+					//plot(Bx,By,pens[8] );
+				}
+
+			}
+		}
+	}
+
 
 	for( let r = -1.99; r < 2; r+=0.5 ) {
 		for( let t=-4.99; t < 5; t+= 5/1000 ) {
