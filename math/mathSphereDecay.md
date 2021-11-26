@@ -53,8 +53,9 @@ We start with a circle of radius 0.
 
 
 
+##
 
-
+![Exammple Screenshot](ExtendedGraph.png)
 
 
 
