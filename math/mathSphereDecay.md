@@ -50,8 +50,28 @@ Minkowski space and most systems only consider conservation of energy (barly) in
 
 We start with a circle of radius 0.
 
+The hyperbolic curve minus X is the path around the displacement.
 
+`Q_0` This is length in light-space.
 
+`Q_1` is the inverse translation from 'real' to (x/y/z) in light space.
+
+`dQ_0` is the first derivitive of Q_0.  This curve isn't shown... they are lines that bow outward/form a circle around the origin.
+
+`A_0` This converts any arbitrary value from flat space to light space
+
+The code later uses A_0(x, (x,y,z,Q) -> (x,y,z) ) - x  which removes the sloped part of hte hyparbolic, which is the deviation from a straight line (or a light-like path).
+
+``` js
+const _2to1 = (x,y)=> Math.sqrt(x*x+y*y);
+const _3to1 = (x,y,z)=> Math.sqrt(x*x+y*y+z*z);
+const _4to1 = (x,y,z,w)=> Math.sqrt(x*x+y*y+z*z+w*w);
+
+const Q_0 = _4to1;  // length in displaced space
+const Q_i = (x,y,z,Q) => Math.sqrt( x*x+y*y+z*z-Q*Q );  // from converted to real (unsquash)
+const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash)
+const A_0 = (l,x,y,z,Q) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,Q)
+```
 
 ##
 
