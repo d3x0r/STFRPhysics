@@ -128,7 +128,7 @@ function drawsomething() {
 
 
 	                   
-	for( let r = 0; r < 8; r+=0.5 ) {
+	for( let r = 0.01; r < 8; r+=0.5 ) {
 		const Gr = A_0(r,r,0,values.B,values.A );
 		for( let t=0; t < Math.PI*2; t+= Math.PI*2/((r+1+values.A)*500) ) {
 			const x = Gr*Math.cos(t);
