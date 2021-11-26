@@ -24,6 +24,8 @@ When `Offset X` is ____ then `Offset Y`
  - less than - ( the space geodesics are closed, and fill follow space like paths )
  - greater than or equal to - almost no apparent curvature is overserved, but you do start to see the spinning core; this is a close graph of geodeics.
 
+![Exammple Screenshot](MaxDialation.png)
+
 ![Exammple Screenshot](GravityCurves.png)
 
 
