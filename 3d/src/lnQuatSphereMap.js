@@ -22,6 +22,7 @@ let twistCount = 2;
 let weylGroup = false;
 let showScaledPoints = false; // show X/Y/Z Scaled to SO3 Axis/||Axis||_2 * Angle
 let showCoords = false;
+let showNormalProjection = true;
 let bisectAnalog = false;
 let trisectAnalog = false;
 let timeScale = 1.5;
@@ -223,6 +224,7 @@ function makeQuat(p,y,r) {
 	const tmpPoint = { x:0, y:0, z:0 };
 	function drawGrid(normalVertices,normalColors, curSliders) {
 		const merge = document.getElementById( "additiveMerge" )?.checked;
+		showNormalProjection = document.getElementById( "showNormalProjection")?.checked;
 		 _1norm = document.getElementById( "oneNormal" )?.checked;
 		 inv_1norm = document.getElementById( "invOneNormal" )?.checked;
 		 mapPolar = document.getElementById( "mapPolar" )?.checked;
@@ -350,7 +352,7 @@ function makeQuat(p,y,r) {
 				//lnQ.x = -lnQ.x;				
 				//lnQ.y = -lnQ.y;				
 				//lnQ.z = -lnQ.z;				
-
+				if( showNormalProjection ) {
 				const basis = lnQ.update().getBasis();
 				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
@@ -408,6 +410,10 @@ function makeQuat(p,y,r) {
 				}else {
 					p2.push( {x:basis2.up.x,y:basis2.up.y,z:basis2.up.z} )
 				}
+				}else
+							doDrawBasis( lnQ, lnQ, 0.25, 1, null, 1, g2, t2 );
+
+
 			}
 		}
 
@@ -449,6 +455,7 @@ function makeQuat(p,y,r) {
 					lnQ.z = lnQ.nz * lnQ.θ;
 
 					//lnQ.add( offset, 1 )
+				if( showNormalProjection ) {
 					
 					const basis = lnQ.update().getBasis();
 					tmpPoint.x = basis.up.x * spaceScale*1.43 ;
@@ -488,6 +495,8 @@ function makeQuat(p,y,r) {
 					}else {
 						p2.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 					}
+					}else 					doDrawBasis( lnQ, doDrawBasis, 0.25, 1, null, 1, gamma, r);
+
 				}
 			}
 		}
