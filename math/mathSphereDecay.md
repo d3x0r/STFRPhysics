@@ -6,23 +6,29 @@ This ends up considering that gravity is a increasing gradient towards the sourc
 
 ## Demo
 
-[Playground](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature based on displacements.  The `Offset X` slider controls the inner displacment of 0.  The point that used to be at 0 is no longer at 0, but is instead
+[Playground](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature based on displacements.  The `Displacment A` slider controls the inner displacment of 0.  The point that used to be at 0 is no longer at 0, but is instead
 shoved away from the 0 by some amount.  Straight lines are proportionally scaled such that there position relative to the 0 is still the same.... as the radius increases, the surface area of the spheres increase more than the radius, 
 which allows a larger radius to contain any inner radius plus some amount of its original amount, which results in a net decay of displacement over distance from the source. 
 
 The graph shows the (red) circular displacement, where 0,1,2,3,4,... units are displaced from their original position.  The innermost circle is 0, and there is no space within the 0; this is entirely where curvature and rotations. 
 
-Then X lines are in green, and Y lines are drawn in the intial position with no displacement curvature; then as `Offset X` is increased, the lines around 0 deviate.  The lines crossing near 0 are not At 0, so they will bend around; 
+Then X lines are in green, and Y lines are drawn in the intial position with no displacement curvature; then as `Displacment A` is increased, the lines around 0 deviate.  The lines crossing near 0 are not At 0, so they will bend around; 
 This would be a good place to put a Schrodinger operator, where the path to the left or right is uncertain, and either is viable; (usually these result as a collision, imparting a linear momentum).
 
 The inner lines (< 0 in the circles) are the difference each point is displaced from it's origin; it's the delta of the x/y lines... green and blue match respecitvely (the green is the (x,y,z) change in the Y=n geodesic lines.  blue is the (x,y,z) change in the X=n geodesic lines).
 
-The `Offset Y` is actually a 'Z' if X and Y are the gridlines, so it's a distance away from the center; it was meant more as abias on the Y direction that moving up, there's less and less displacment (scanning the graph from left to right 
+The `Offset Z` is offset of the Z position being viewed, if X and Y are the gridlines; it's a distance away from the center; it was meant more as a bias on the Y direction that moving up, there's less and less displacment (scanning the graph from left to right 
 the green lines up 'up' less and less the further away they are, this offset controls how far every point is away from the origin.
 
-When `Offset X` is ____ then `Offset Y`
+When `Displacment A` is ____ then `Offset Z`
  - less than - ( the space geodesics are closed, and fill follow space like paths )
  - greater than or equal to - almost no apparent curvature is overserved, but you do start to see the spinning core; this is a close graph of geodeics.
+
+`Displacment B` dialates the inner infinity and inserts another graph.  This is the derivitive of the curve actually.
+
+Displacment A and Displacement B I think are spaces that rotate between themselves, representing an electro static and electromagnetic field.
+
+(Perhaps there's a Displacment C for Strong force?  I suspect Weak Force will fall out as time-base probability of change.)
 
 ![Exammple Screenshot](MaxDialation.png)
 

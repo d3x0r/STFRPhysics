@@ -29,6 +29,10 @@ const myForm = {
 	sliderB : document.getElementById( "B" ),
 	sliderC : document.getElementById( "C" ),
 	sliderD : document.getElementById( "D" ),
+	sliderAmax : document.getElementById( "Amax" ),
+	sliderBmax : document.getElementById( "Bmax" ),
+	sliderCmax : document.getElementById( "Cmax" ),
+	sliderDmax : document.getElementById( "Dmax" ),
 	sliderValA : document.getElementById( "Aval" ),
 	sliderValB : document.getElementById( "Bval" ),
 	sliderValC : document.getElementById( "Cval" ),
@@ -37,18 +41,21 @@ const myForm = {
 
 // area of a triangle
 
-const values = {A:0.0,B:0.0,C:0.0,D:0.0};
+const values = {A:0.0,Amax:0,B:0.0,C:0.0,D:0.0};
 
 myForm.sliderA.oninput = myForm.sliderValA.oninput = readValues;
+myForm.sliderAmax.oninput = readValues;
 myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
 myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
 myForm.sliderD.oninput = myForm.sliderValD.oninput = readValues;
 
 myForm.sliderA.value = 0;
+myForm.sliderAmax.value = 0;
 myForm.sliderB.value = 0;
 
 function readValues()  {
 	values.A = (Number(myForm.sliderA.value)/20.0);
+	values.Amax = (Number(myForm.sliderAmax.value)/20.0);
 	values.B = (Number(myForm.sliderB.value)/20.0);
 	values.B *= 1.5;
 	values.C = (Number(myForm.sliderC.value)/10.0)-5;
@@ -74,11 +81,51 @@ const trunc = (x,y)=>x-mod(x,y);
 const _2to1 = (x,y)=> Math.sqrt(x*x+y*y);
 const _3to1 = (x,y,z)=> Math.sqrt(x*x+y*y+z*z);
 const _4to1 = (x,y,z,w)=> Math.sqrt(x*x+y*y+z*z+w*w);
+const _5to1 = (x,y,z,w,q)=> Math.sqrt(x*x+y*y+z*z+w*w+q*q);
 
 const Q_0 = _4to1;  // from real to converted (squash)
 const Q_i = (x,y,z,Q) => Math.sqrt( x*x+y*y+z*z-Q*Q );  // from converted to real (unsquash)
 const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash)
 const A_0 = (l,x,y,z,Q) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,Q)
+
+
+const M_0 = _5to1;
+const M_00 = M_0;
+const M_ii = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z-w*w-q*q );  // from converted to real (unsquash)
+const M_0i = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z+w*w-q*q );  // from converted to real (unsquash)
+const M_i0 = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z-w*w+q*q );  // from converted to real (unsquash)
+
+const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
+const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
+
+// sequential space would enumerate in a sort of alternating sign, alternating reiprocal
+// spaces infinity to 0 - 0 to infinity - infinity to 0 - ...
+
+// the net spatial displacement is the net charge, plus net motion
+
+// outer surface goes from an infinity to 0; a signed motion within that space is relative to that space
+//   sign alone does not go through the 0.... going from -e to +e does not notice any sort of 'space' of the zero space.
+
+// This can simplify some models... a gravitational body whose center is within the virtual space of the other does not further get accelerated by the other.
+//   This spacial shift translation from 0 to N around a thing gives things volumes that cannot interact.
+
+// this means especially for the next space, the surface is an infinity that converges to 0 in the center. 
+// 
+
+
+// the composite of near fields... each individual dialation doesn't affect any other dialation; these points remain constant in space.
+// (unless the underlayig space also warps ?  Another internal dialation also doesn't affect other points in flat space.
+
+// light is in light-space, and conforms to that space.
+// there's obviously an underlaying flatter space that light's space is displaced from.
+// this displacement is proportional to the gravity field felt.
+
+// if the underlaying spin in great enough, then the thing may be invisible, but still have a force.  (darkish matter... dense enough to displace any light wave around it without interacting
+
+// the inner
+
+
+
 
 function drawsomething() {
 	let x, y, z, w, X, Y, Z, W;
@@ -129,7 +176,7 @@ function drawsomething() {
 
 	                   
 	for( let r = 0.01; r < 8; r+=0.5 ) {
-		const Gr = A_0(r,r,0,values.B,values.A );
+		const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
 		for( let t=0; t < Math.PI*2; t+= Math.PI*2/((r+1+values.A)*500) ) {
 			const x = Gr*Math.cos(t);
 			const y = Gr*Math.sin(t);
@@ -139,14 +186,14 @@ function drawsomething() {
 
 	for( let r = -8.99; r < 8; r+=0.5 ) {
 		for( let t=-18.99; t < 18; t+= 5/1000 ) {
-			const Ax = A_0(t,t,r,values.B,values.A );
-			const Ay = A_0(r,t,r,values.B,values.A );
-			plot(Ax,Ay,pens[1] );
+				const Ax = B_0(t,t,r,values.B,values.A, values.Amax );
+				const Ay = B_0(r,t,r,values.B,values.A, values.Amax );
+				plot(Ax,Ay,pens[1] );
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			const Ax = A_0(r,t,r,values.B,values.A );
-			const Ay = A_0(t,t,r,values.B,values.A );
-			plot(Ax,Ay,pens[2] );
+				const Ax = B_0(r,t,r,values.B,values.A, values.Amax );
+				const Ay = B_0(t,t,r,values.B,values.A, values.Amax );
+				plot(Ax,Ay,pens[2] );
 			}
 
 			if(1)
@@ -155,80 +202,107 @@ function drawsomething() {
 // this is change in virtual Y by time... 
 				{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(t,t,r,values.B,values.A )-t;
-					const Ay = A_0(r,t,r,values.B,values.A )-r;
+					const Ax = A_0(t,t,r,values.B,values.A, values.Amax )-t;
+					const Ay = A_0(r,t,r,values.B,values.A, values.Amax )-r;
+					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
+					const By = A_0(Ay,Ax,Ay,0, values.Amax );
 					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
 					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Ax,Ay,pens[4] );
+					plot(Bx,By,pens[4] );
 					//plot(Bx,By,pens[7] );
 				}
 				{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(r,t,r,values.B,values.A )-r;
-					const Ay = A_0(t,t,r,values.B,values.A )-t;
+					const Ax = A_0(r,t,r,values.B,values.A, values.Amax )-r;
+					const Ay = A_0(t,t,r,values.B,values.A, values.Amax )-t;
+					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
+					const By = A_0(Ay,Ax,Ay,0, values.Amax );
 					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
 					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Ax,Ay,pens[5] );
+					plot(Bx,By,pens[5] );
 					//plot(Bx,By,pens[8] );
 				}
 
 			}
-		}
-	}
-	if(0)
-	for( let r = -799; r < 800; r+=50 ) {
-		for( let t=-1899; t < 1800; t+= 500/1000 ) {
-			if(1)
-			{
-
-// this is change in virtual Y by time... 
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(t,t,r,values.B,values.A )-t;
-					const Ay = A_0(r,t,r,values.B,values.A )-r;
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Ax*20,Ay*20,pens[4] );
-					//plot(Bx,By,pens[7] );
-				}
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(r,t,r,values.B,values.A )-r;
-					const Ay = A_0(t,t,r,values.B,values.A )-t;
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Ax*20,Ay*20,pens[5] );
-					//plot(Bx,By,pens[8] );
-				}
-
-			}
-		}
-	}
-
-
-	for( let r = -1.99; r < 2; r+=0.5 ) {
-		for( let t=-4.99; t < 5; t+= 5/1000 ) {
-		     if(0)
+if(1) {
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.A );
-			const Ay = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.A );
-			plot(t,Ay,pens[3] );
-			plot(t,Ax,pens[4] );
+			//const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
+			//const Ay = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
+			const Ax = dQ_0(r,t,r,_2to1(values.B,values.A),values.Amax )*values.Amax;
+			const Ay = dQ_0(t,t,r,_2to1(values.B,values.A),values.Amax )*values.Amax;
+			//plot(t,Ay,pens[3] );
+			//plot(t,Ax,pens[4] );
 			plot(Ax,Ay,pens[5] );
 			}
+			{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+			const Ax = dQ_0(t,t,r,values.B,values.Amax )*values.Amax;
+			const Ay = dQ_0(r,t,r,values.B,values.Amax )*values.Amax;
+			//plot(t,Ay,pens[3] );
+			//plot(t,Ax,pens[4] );
+			plot(Ax,Ay,pens[4] );
+			}
+}
+		}
+
+	}
+	if(1)
+	for( let r = -799; r < 800; r+=100 ) {
+		for( let t=-1899; t < 1800; t+= 1000/1000 ) {
+			if(1)
+			{
+
+// this is change in virtual Y by time... 
+				{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+					const Ax = A_0(t,t,r,values.B,values.A )-t;
+					const Ay = A_0(r,t,r,values.B,values.A )-r;
+					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
+					const By = A_0(Ay,Ax,Ay,0, values.Amax );
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
+					plot(Bx,By,pens[4] );
+					//plot(Bx,By,pens[7] );
+				}
+				{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+					const Ax = A_0(r,t,r,values.B,values.A )-r;
+					const Ay = A_0(t,t,r,values.B,values.A )-t;
+					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
+					const By = A_0(Ay,Ax,Ay,0, values.Amax );
+					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
+					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
+					plot(Bx,By,pens[5] );
+					//plot(Bx,By,pens[8] );
+				}
+
+			}
+
 if(0)
+{
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			const Ax = dQ_0(t,t,r,values.B,values.A );
-			const Ay = dQ_0(r,t,r,values.B,values.A );
-			plot(t,Ay,pens[3] );
-			plot(t,Ax,pens[4] );
+			//const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
+			//const Ay = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
+			const Ax = dQ_0(r,t,r,_2to1(values.B,values.A),values.Amax );
+			const Ay = dQ_0(t,t,r,_2to1(values.B,values.A),values.Amax );
+			//plot(t,Ay,pens[3] );
+			//plot(t,Ax,pens[4] );
 			plot(Ax,Ay,pens[5] );
 			}
-
+			{
+// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
+			const Ax = dQ_0(t,t,r,values.B,values.Amax );
+			const Ay = dQ_0(r,t,r,values.B,values.Amax );
+			//plot(t,Ay,pens[3] );
+			//plot(t,Ax,pens[4] );
+			plot(Ax,Ay,pens[4] );
+			}
+}
 		}
 	}
+
 
 	
 
