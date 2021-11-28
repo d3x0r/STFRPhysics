@@ -314,7 +314,7 @@ function drawsomething() {
 
 	const s={x:values.A,y:0,z:0};
 	const q={x:values.Amax,y:0,z:0};
-	const p0={x:0,y:0,z:values.B};
+	const p0={x:0,y:0,z:0};
 	                   
 	const  p= {x:0, y:0,z:values.B }
 
@@ -350,7 +350,7 @@ if(0)
 			{
 				const P = {x:0,y:0,z:0};
 				for( let o of wells ) {
-					const p_ = L_sq(p, values.B, o, s, q );
+					const p_ = L_sq(p, 0, o, s, q );
 					P.x += p_.x - p.x;
 					P.y += p_.y - p.y;
 					P.z += p_.z - p.z;
