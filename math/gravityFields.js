@@ -62,6 +62,7 @@ myForm.sliderB.value = 0;
 
 function readValues()  {
 	values.A = (Number(myForm.sliderA.value)/20.0);
+	values.A *= 5;
 	values.Amax = (Number(myForm.sliderAmax.value)/20.0);
 	values.B = (Number(myForm.sliderB.value)/20.0);
 	values.B *= 5;
@@ -268,8 +269,8 @@ function L_d_iron_zofs( x, zofs, p, s, q ) {
 function drawsomething() {
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
-	const minScale = -5;
-	const maxScale = 5;
+	const minScale = -50;
+	const maxScale = 50;
 
 	const delStep = (min,max,x)=>( (max-min)/x );
 	const step = (x)=>( (maxScale-minScale)/x );
@@ -298,8 +299,8 @@ function drawsomething() {
 
 
 	function plot( x_, y_, c ) {
-		if( x_ < -5 || y_ < -5 ) return
-		if( x_ > 5 || y_ > 5 ) return
+		if( x_ < minScale || y_ < minScale ) return
+		if( x_ > maxScale || y_ > maxScale ) return
 		const x = unit(x_);
 		const y = unit(-y_);
 		output[((x+y*squareSize)<<2)+0] = c[0];
@@ -339,8 +340,8 @@ if(0)
 //	p.z = ;
 //	p0.z = 0;
 
-	for( let r = -8.99; r < 8; r+=0.125 ) {
-		for( let t=-18.99; t < 18; t+= 5/1000 ) {
+	for( let r = -58.99; r < 58; r+=1 ) {
+		for( let t=-68.99; t < 68; t+= 25/1000 ) {
 		 	p.x = t;
 			p.y = r;
 			//p.z = 0;
