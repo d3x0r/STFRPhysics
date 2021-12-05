@@ -107,6 +107,13 @@ const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
 // this normalizes a value from ( ( x/y/z -> x/y/z/w ) -> x/y/z/q )
 const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
 
+const B_i = (l,x,y,z,w,q) => {
+	const ofs = _3to1(x,y,z)-(w+q);
+	
+	return ;
+	A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
+}
+
 // sequential space would enumerate in a sort of alternating sign, alternating reiprocal
 // spaces infinity to 0 - 0 to infinity - infinity to 0 - ...
 
@@ -348,10 +355,35 @@ if(0)
 				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
 			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
 			if( Math.sqrt(mx*mx+my*my)< (1) ) break;
-			plot(Ax,Ay, pens[0] );
+			plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
 		}
 	}
-
+	 //if(0)
+	{
+	const slopex = mouseX/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
+	const slopey = mouseY/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
+	for( let t = 0; t < 2; t+= 2/1000 ) {
+		
+		{
+			{
+			const mx = mouseX +slopey*0.1 + slopex * (t-1);
+			const my = mouseY -slopex*0.1 + slopey * (t-1);
+				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
+				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+			plot(Ax,Ay, pens[2] );
+			}
+			{
+			const mx = mouseX -slopey*0.1 + slopex * (t-1);
+			const my = mouseY +slopex*0.1 + slopey * (t-1);
+				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
+				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+			plot(Ax,Ay, pens[2] );
+			}
+		}
+	}
+	}
 	ctx.putImageData(_output, 0,0);
 
 }
