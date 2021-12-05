@@ -1,6 +1,10 @@
 // https://www.geogebra.org/3d/qxejdpty
 //https://www.geogebra.org/3d/sadtqz3x
 
+// d/dx (log(x)) = 1/x
+//  which then d/dx(1/x) = -1/x^2  which is sort of the answer I was expecting... 
+// 
+
 
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
@@ -9,12 +13,193 @@ const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
 const BASE_COLOR_BLUE = [0,0,255,255];
+const BASE_COLOR_YELLOW = [255,255,0,255];
 const BASE_COLOR_GREEN = [0,255,0,255];
 
-const wells = [ {x:2.5,y:2.5,z:0}
-              , {x:2.5,y:-2.5,z:0}
-              , {x:-2.5,y:2.5,z:0}
-              , {x:-2.5,y:-2.5,z:0} ];
+const wells = [ {x:12.5,y:12.5,z:0}
+              , {x:12.5,y:-12.5,z:0}
+              , {x:-12.5,y:12.5,z:0} 
+              , {x:-12.5,y:-12.5,z:0} ];
+
+const localDel = 0.1;
+const local = [ {x:1,y:1,z:1} 
+	      , {x:-1,y:1,z:1} 
+	      , {x:1,y:-1,z:1} 
+	      , {x:-1,y:-1,z:1} 
+	      , {x:1,y:1,z:-1} 
+	      , {x:-1,y:1,z:-1} 
+	      , {x:1,y:-1,z:-1} 
+	      , {x:-1,y:-1,z:-1}  
+		];
+
+
+function measureArcBox( p, s, q ) {
+	// each well applies a effective curvature tensor.
+	// this has two components - the amount the that radius is compressed
+	//  and the amount that the arc is expanded.
+	//   0->s+q
+	// 1-> 
+	// 1/1 = infinity form s+q
+	// radius/theta = 1 (?)
+	// theta of 0 is 180
+	// theta of 1 is only 
+
+	// this is like log(r) space... remember log-quaternion.
+
+	// R is 0 = (s+r)
+	//      1 = x/x.len * sqrt(11+(s))
+	//      2 = x/x.len * sqrt(22+(s))
+	//	
+
+
+	//    xx/lenlen * (1+s)
+	//    xx  (1+s)/lenlen = x'x'
+	//     
+
+
+	//  === Stress of Arc ===
+	// - stretch of the outer edge is
+	//        (sqrt(x^(2)+S S)-x)*2 π
+	//     (sqrt(xx+ss)-x)*2pi
+	//
+	//  the change in the curvature  	
+	//     x/sqrt(xx+SS) -1
+	//   
+	//  for any S above, the change of the curvature is the same.
+	//   get get a proper change in gradient the height of the gradient needs to be applied to the change.
+	//   SS*(x/sqrt(xx+SS) -1)  (*2pi?)
+
+
+	//  === Stress of radius ===
+	//      sqrt(xx+SS)-x
+	// this itself is just the displacement of the space
+	//    the change in the displacment is 
+	//     x/sqrt(xx+SS) -1
+	//   the density thereforeis
+	//   S * (x/sqrt(xx+SS) - 1)
+	
+	const rl = _3to1(p);
+	const S = _2to1(_3to1(s.x,s.y,s.z),_3to1(q.x,q.y,q.z) )/( sqrt(rl*rl+S*S) - 1);
+	
+	// this gives the relative density changes 
+	return S;
+	
+}
+
+function measureArcs( p, s, q ) {
+	const t = {x:0,y:0,z:0};
+	const P = {x:0,y:0,z:0};
+	const D = {x:1,y:1,z:1};
+
+	const xy = { a:1, b:1 };
+	const xz = { a:1, b:1 };
+	const yz = { a:1, b:1 };
+
+	// forward = forward dot forward
+	//		right dot forward
+	//		forward dot right
+	//		right dot right
+	//
+		
+
+	// for each well, 
+	const dens = [];
+	let first = true;
+	const localDels = local.map( (del,idx)=>{
+		P.x = p.x + del.x*localDel;
+		P.y = p.y + del.y*localDel;
+		P.z = p.z + del.z*localDel;
+		for( let o of wells ) {
+			// for each displament point, get the spacial density for this well.
+			t.x = P.x - o.x;
+			t.y = P.y - o.y;
+			t.z = P.z - o.z;
+			const S = measureArc( t, s, q );
+			// this is the arc, in the direction of
+			if( first ) {
+				// in the direction of x/y/z is S.  that means some transform of 
+				const forward = { x:t.x, y:t.y, z:t.z }
+
+			
+				//plane normal UV				
+			
+				dens.push( { x:1, y:1, z:1 } );
+			}else dens[idx] *= S;
+
+		first = false;	
+		}
+	})
+
+	const localDels2 = localDels.map( (del,idx)=>{
+		D.x *= del.x * dens[idx];
+		D.y *= del.y * dens[idx];
+		D.z *= del.z * dens[idx];
+	})
+
+	//console.log( "This density is then... the sum of the deltas from the central delta" );
+	return t;
+
+}
+
+
+// this returns the net change of all 8 corners around a point.
+// it's the general motion of space, and gives the uphill gradient
+function measureBox( p, s, q ) {
+	const t = {x:0,y:0,z:0};
+	const P = {x:0,y:0,z:0};
+	const D = {x:0,y:0,z:0};
+
+
+		t.x = p.x;
+		t.y = p.y;
+		t.z = p.z;
+
+		for( let o of wells ) {
+			//plot( o.x,o.y,pens[0]);
+			if( p === o ) continue;
+
+			const p_ = L_sq(p, 0, o, s, q );
+			const a = p_.x - t.x;
+			const b = p_.y - t.y;
+			const c = p_.z - t.z;
+			D.x += a;
+			D.y += b;
+			D.z += c;
+		}
+		// D is the net delta of the origin
+
+	const localDels = local.map( (del)=>{
+		t.x = p.x + del.x*localDel;
+		t.y = p.y + del.y*localDel;
+		t.z = p.z + del.z*localDel;
+
+		for( let o of wells ) {
+			//plot( o.x,o.y,pens[0]);
+			//if( p === o ) continue;
+			const p_ = L_sq(t, 0, o, s, q );
+			const a = p_.x - t.x;
+			const b = p_.y - t.y;
+			const c = p_.z - t.z;
+			P.x += a;
+			P.y += b;
+			P.z += c;
+		}
+		return {x:P.x-D.x,y:P.y-D.y,z:P.z-D.z};
+	} );
+	t.x = 0;
+	t.y = 0;
+	t.z = 0;
+	localDels.map( (m)=>{
+		t.x += m.x;
+		t.y += m.y;
+		t.z += m.z;
+	} );
+	t.x /= 8;
+	t.y /= 8;
+	t.z /= 8;
+	//console.log( "This density is then... the sum of the deltas from the central delta" );
+	return t;
+}
 
 const spin_0 = {x:0,y:0,z:0};
 const spin_1 = {x:0,y:0,z:0};
@@ -100,20 +285,9 @@ const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash
 const A_0 = (l,x,y,z,w) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,w)
 
 
-// this adds a Q component to a preivously only x/y/z/Q comonent
-const M_0 = _5to1;
-const M_00 = M_0;
-const M_ii = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z-w*w-q*q );  // from converted to real (unsquash)
-const M_0i = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z+w*w-q*q );  // from converted to real (unsquash)
-const M_i0 = (x,y,z,w,q) => Math.sqrt( x*x+y*y+z*z-w*w+q*q );  // from converted to real (unsquash)
-
-const dM_0 = (l,x,y,z,w,q) => (q)*(l/_4to1(x,y,z,w));  // from converted to real (unsquash)
 
 
-const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
 
-// this normalizes a value from ( ( x/y/z -> x/y/z/w ) -> x/y/z/q )
-const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
 
 const _zero = {x:0,y:0,z:0};
 
@@ -121,7 +295,7 @@ const L_r = {x:0,y:0,z:0};
 // scale point x relative to (p)osition with (s)pin vector
 function L_0( x, p, s ) {
 	const rp = {x:x.x-p.x,y:x.y-p.y,z:x.z-p.z}; // this is effective real space position.
-	const rl = _3to1( s.x, s.y, s.z );
+	const rl = _4to1( s.x, s.y, s.z, 1 );
 	//const rs = {x:s.x-s0.x,y:s.y-s0.y,z:s.z-s0.z}; // this is effective real space position.
 
 	const q0 = Q_0( s.x, s.y, s.z, _3to1( s.x, s.y, s.z ) );
@@ -144,7 +318,7 @@ function L_0( x, p, s ) {
 function L_sq( x, zofs, p, s, q ) {
 	
 	const rp = {x:x.x-p.x,y:x.y-p.y,z:x.z-p.z-zofs}; // this is effective real space position.
-	const rl = _3to1( rp.x, rp.y, rp.z );
+	const rl = _4to1( rp.x, rp.y, rp.z, 0 );
 	const sl = _3to1( s.x, s.y, s.z );
 	const ql = _3to1( q.x, q.y, q.z );
 	const tl = Math.sqrt(sl*sl+ql*ql);
@@ -200,9 +374,9 @@ function L_1( r, zdel, q ) {
 }
 
 // spacially scales the extents used.
+// d/dx(log(x)) = 1/x
 function L_d( x, zofs, p, s, q ) {
 	//if( !zofs ) return L_sq( x,zofs,p,s,q );
-	//const dM_0 = (l,x,y,z,w,q) => (q)*(l/_4to1(x,y,z,w));  // from converted to real (unsquash)
 	const rx = {x:x.x-p.x,y:x.y-p.y,z:x.z-p.z-zofs}; // this is effective real space position.
 	const rl_ = _3to1( rx.x, rx.y, rx.z );  // add 1 to be able to scale within q.
 	const rl = zofs<rl_?_2to1( rl_, (rl_-zofs)/rl_ ):_2to1(rl_,0);  // add 1 to be able to scale within q.
@@ -219,7 +393,6 @@ function L_d( x, zofs, p, s, q ) {
 
 function L_d_iron_zofs( x, zofs, p, s, q ) {
 	//if( !zofs ) return L_sq( x,zofs,p,s,q );
-	//const dM_0 = (l,x,y,z,w,q) => (q)*(l/_4to1(x,y,z,w));  // from converted to real (unsquash)
 	const rp = {x:x.x-p.x,y:x.y-p.y,z:x.z-p.z-zofs}; // this is effective real space position.
 	const sl = _4to1( s.x, s.y, s.z, zofs );
 	const rl = _4to1( rp.x, rp.y, rp.z, 0 );
@@ -263,15 +436,30 @@ function L_d_iron_zofs( x, zofs, p, s, q ) {
 // the inner expressions end up visible on the outside...
 // the layers aren't quite nesting like one would like.
 
+let mouseX=0, mouseY=0;
+
+canvas.addEventListener( "mousemove", (e)=>{
+	const rect = canvas.getBoundingClientRect();
+	const w = rect.right-rect.left;//window.innerWidth;
+	const h = rect.bottom-rect.top;//window.innerHeight;
+	const x = (((e.clientX-rect.left)-(w/2.0))/w) * 100;
+	const y = -(((e.clientY-rect.top)-(h/2.0))/h) * 100;
+	mouseX = x;
+	mouseY = y;
+	drawsomething();
+} );
 
 
 
 function drawsomething() {
+
+
 	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
-	const minScale = -50;
-	const maxScale = 50;
-
+	const minScale = -80;
+	const maxScale = 80;
+	//const minScale = -50;
+	//const maxScale = 50;
 	const delStep = (min,max,x)=>( (max-min)/x );
 	const step = (x)=>( (maxScale-minScale)/x );
 	const unit = (x)=>Math.floor( squareSize/2 + (x * squareSize/(maxScale-minScale) ) );
@@ -282,6 +470,22 @@ function drawsomething() {
 	ctx.clearRect(0,0,squareSize,squareSize );
 	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
 	var output = _output.data;
+function updateWells() {
+	const s={x:values.A,y:0,z:0};
+	const q={x:values.Amax,y:0,z:0};
+	let first = true;			
+	for( let o of wells ) {
+		if( first ) { first = false; continue; }
+		const a = measureBox( o, s, q );
+		line( o.x, o.y, o.x+a.x, o.y+a.y, BASE_COLOR_BLUE );
+		//const al = _3to1(a.x,a.y,a.z);
+		o.x += a.x/50;
+		o.y += a.y/50;
+//		o.z += -a.z/50;
+	}
+
+}
+                        //updateWells();
 
 	const pens = [ ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 0,9)
 			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 0,9) 
@@ -308,6 +512,93 @@ function drawsomething() {
 		output[((x+y*squareSize)<<2)+2] = c[2];
 		output[((x+y*squareSize)<<2)+3] = c[3];
 	}
+
+	function line( x1, y1, x2, y2, c ) {
+		const realX1 = unit(x1);
+		const realY1 = unit(-y1);
+		const realX2 = unit(x2);
+		const realY2 = unit(-y2);
+		const realLen = Math.sqrt( (realX2-realX1)*(realX2-realX1)  + (realY2-realY1)*(realY2-realY1) );
+		x1 *= realLen;
+		y1 *= realLen;
+		x2 *= realLen;
+		y2 *= realLen;
+		// scale coordinates to a unit-pixel size...
+
+		var err, delx, dely, len, inc;
+		//if( !pImage || !pImage->image ) return;
+		delx = x2 - x1;
+		if( delx < 0 )
+			delx = -delx;
+        
+		dely = y2 - y1;
+		if( dely < 0 )
+			dely = -dely;
+        
+		if( dely > delx ) // length for y is more than length for x
+		{
+			len = dely;
+			if( y1 > y2 )
+			{
+				var tmp = x1;
+				x1 = x2;
+				x2 = tmp;
+				y1 = y2; // x1 is start...
+			}
+			if( x2 > x1 )
+				inc = 1;
+			else
+				inc = -1;
+        
+			err = -(dely / 2);
+			while( len >= 0 )
+			{
+				plot( x1/realLen, y1/realLen, c );
+				y1++;
+				err += delx;
+				while( err >= 0 )
+				{
+					err -= dely;
+					x1 += inc;
+				}
+				len--;
+			}
+		}
+		else
+		{
+			if( !delx ) // 0 length line
+				return;
+			len = delx;
+			if( x1 > x2 )
+			{
+				var tmp = y1;
+				y1 = y2;
+				y2 = tmp;
+				x1 = x2; // x1 is start...
+			}
+			if( y2 > y1 )
+				inc = 1;
+			else
+				inc = -1;
+        
+			err = -(delx / 2);
+			while( len >= 0 )
+			{
+				plot(  x1/realLen, y1/realLen, c );
+				x1++;
+				err += dely;
+				while( err >= 0 )
+				{
+					err -= delx;
+					y1 += inc;
+				}
+				len--;
+			}
+		}
+        
+	}
+	
+
 		
 //	const thisDel = (n,m)=>n*n*n-(n-m)*(n-m)*(n-m);
 	const thisDel = (n,y)=>n*n*n-(n-step(1000))*(n-step(1000))*(n-step(1000))+y*y*y;
@@ -321,7 +612,6 @@ function drawsomething() {
 if(0)
 	for( let r = 0.01; r < 8; r+=0.5 ) {
 		// circles have no elongation to have to scale,it only needs the radius scaled.
-		//const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
 		p.x = r;
 		const r1 = L_sq(p, values.B, p0, s, q );
 		const Gr = _3to1(r1.x,r1.y,r1.z );
@@ -339,9 +629,61 @@ if(0)
 
 //	p.z = ;
 //	p0.z = 0;
+	const rows = [];
+		if(0)
+		{
+			
+				const P = {x:0,y:0,z:0};
+				const M = {x:0,y:0,z:0};
+				const N = {x:0,y:0,z:0};
 
+			
+				for( let o of wells ) {
+
+					M.x = o.x+0.1;
+					M.y = o.y+0.1;
+					M.z = o.z+0.1;
+
+					plot( o.x,o.y,pens[0]);
+					line( p.y,p.x,P.y,P.x, pens[1] )
+				
+
+					const p_ = L_sq(p, 0, o, s, q );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
+				}
+		}
+if(1)
+	for( let r = minScale; r < maxScale; r += step(20) ) {
+		for( let t = minScale; t < maxScale; t += step(20) ) {
+			p.x = r; p.y = t; p.z = 0;
+			const a = measureBox( p, s, q );
+			const al = _3to1(a.x,a.y,a.z);
+			line( p.x, p.y, p.x+a.x/15,p.y+a.y/15,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_RED, al, 100 ) )
+			if( al > 10 ) {
+				plot( p.x, p.y, ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_YELLOW, al, 100 ) )
+			}else{
+				plot( p.x, p.y, ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_RED, al, 10 ) )
+			}
+		}
+	}
+
+			for( let o of wells ) {
+				plot( o.x,o.y,pens[0]);
+			}
+
+if(1)
 	for( let r = -58.99; r < 58; r+=1 ) {
-		for( let t=-68.99; t < 68; t+= 25/1000 ) {
+		const row = [];
+	//	rows.push(row );
+		for( let t=-68.99; t < 68; t+= step(1000) ) {
 		 	p.x = t;
 			p.y = r;
 			//p.z = 0;
@@ -349,19 +691,69 @@ if(0)
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
+				const M = {x:0,y:0,z:0};
+				const N = {x:0,y:0,z:0};
 				for( let o of wells ) {
 					const p_ = L_sq(p, 0, o, s, q );
-					P.x += p_.x - p.x;
-					P.y += p_.y - p.y;
-					P.z += p_.z - p.z;
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
 				}
+				const dl = _2to1( P.x, P.y );
+				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
+//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
 				P.x += p.x;
 				P.y += p.y;
+				//line( p.x,p.y,P.x,P.y, pens[0] )
+				//line( p.y,p.x,P.y,P.x, pens[1] )
+				//row.push( P );
 				plot(P.x,P.y,pens[1] );
-				plot(P.y,P.x,pens[2] );
+				
+				
 				//plot(p_.x,p_.y,pens[1] );
 				//plot(p_.y,p_.x,pens[2] );
 			}
+		 	p.x = r;
+			p.y = t;
+			if(1)
+			{
+				const P = {x:0,y:0,z:0};
+				const M = {x:0,y:0,z:0};
+				const N = {x:0,y:0,z:0};
+				for( let o of wells ) {
+					const p_ = L_sq(p, 0, o, s, q );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
+				}
+				const dl = _2to1( P.x, P.y );
+				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
+//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
+				P.x += p.x;
+				P.y += p.y;
+				//line( p.x,p.y,P.x,P.y, pens[0] )
+				//line( p.y,p.x,P.y,P.x, pens[1] )
+				//row.push( P );
+			//	plot(P.x,P.y,pens[1] );
+				plot(P.x,P.y,pens[2] );
+				
+				
+				//plot(p_.x,p_.y,pens[1] );
+				//plot(p_.y,p_.x,pens[2] );
+			}
+
 		if(0)
 			{
 
@@ -392,60 +784,83 @@ if(0)
 		}
 
 	}
-	if(0)
-	for( let r = -799; r < 800; r+=100 ) {
-		for( let t=-1899; t < 1800; t+= 1000/1000 ) {
+
+
+
+
+	for( let t = 0; t < 360; t+= 10 ) {
+		let slopex = Math.cos( t/180*Math.PI );
+		let slopey = Math.sin( t/180*Math.PI );
+		for( let t=0; t < 50; t+= 50/1000 ) {
+
+			const mx = mouseX + slopey*Math.cos(2*t) + slopex * t;
+			const my = mouseY - slopex*Math.cos(2*t) + slopey * t;
+
+		 	p.x = mx;
+			p.y = my;
+			//p.z = 0;
+			// these two draw the X/Y grid lines.
 			if(1)
 			{
-
-// this is change in virtual Y by time... 
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(t,t,r,values.B,values.A )-t;
-					const Ay = A_0(r,t,r,values.B,values.A )-r;
-					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
-					const By = A_0(Ay,Ax,Ay,0, values.Amax );
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Bx,By,pens[4] );
-					//plot(Bx,By,pens[7] );
+				const P = {x:0,y:0,z:0};
+				const M = {x:0,y:0,z:0};
+				const N = {x:0,y:0,z:0};
+				for( let o of wells ) {
+					const p_ = L_sq(p, 0, o, s, q );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
 				}
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(r,t,r,values.B,values.A )-r;
-					const Ay = A_0(t,t,r,values.B,values.A )-t;
-					const Bx = A_0(Ax,Ax,Ay,0, values.Amax );
-					const By = A_0(Ay,Ax,Ay,0, values.Amax );
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Bx,By,pens[5] );
-					//plot(Bx,By,pens[8] );
-				}
+				const dl = _2to1( P.x, P.y );
+				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
+//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
+				P.x += p.x;
+				P.y += p.y;
+				//line( p.x,p.y,P.x,P.y, pens[0] )
+				//line( p.y,p.x,P.y,P.x, pens[1] )
+				//row.push( P );
+				plot(P.x,P.y,pens[0] );
+				
 
+				//const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
+			//	const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+			//if( Math.sqrt(mx*mx+my*my)< (1) ) break;
+			//plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
 			}
-
-if(0)
-{
-			{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			//const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
-			//const Ay = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
-			const Ax = dQ_0(r,t,r,_2to1(values.B,values.A),values.Amax );
-			const Ay = dQ_0(t,t,r,_2to1(values.B,values.A),values.Amax );
-			//plot(t,Ay,pens[3] );
-			//plot(t,Ax,pens[4] );
-			plot(Ax,Ay,pens[5] );
-			}
-			{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			const Ax = dQ_0(t,t,r,values.B,values.Amax );
-			const Ay = dQ_0(r,t,r,values.B,values.Amax );
-			//plot(t,Ay,pens[3] );
-			//plot(t,Ax,pens[4] );
-			plot(Ax,Ay,pens[4] );
-			}
-}
 		}
+	}
+	 if(0)
+	{
+	const slopex = mouseX/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
+	const slopey = mouseY/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
+	for( let t = 0; t < 2; t+= 2/1000 ) {
+		
+		{
+			{
+			const mx = mouseX +slopey*0.1 + slopex * (t-1);
+			const my = mouseY -slopex*0.1 + slopey * (t-1);
+				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
+				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+			plot(Ax,Ay, pens[2] );
+			}
+			{
+			const mx = mouseX -slopey*0.1 + slopex * (t-1);
+			const my = mouseY +slopex*0.1 + slopey * (t-1);
+				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
+				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+			plot(Ax,Ay, pens[2] );
+			}
+		}
+	}
 	}
 
 
