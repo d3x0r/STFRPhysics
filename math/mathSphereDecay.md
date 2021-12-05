@@ -88,6 +88,19 @@ const A_0 = (l,x,y,z,Q) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,Q)
 
 
 
+# Slopes and gradients
+
+the displacement isn't enough to worry about, the different in displacements is what IS important
+
+depending on the direction it was a radial offset (only it's a sum of different radial inputs )
+
+// 1/x = d log(x)  
+// 1+1/x  
+// x / (itself plus inner size sum)
+// 
+// there's a curl in the flat surface with just 4 emitters.
+// if there's boundary conditions to prevent this, I expect it wouldn't be such an issue.
+
 
 
 ## Working notes
