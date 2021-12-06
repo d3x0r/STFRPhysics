@@ -754,7 +754,7 @@ if(1)
 				//plot(p_.y,p_.x,pens[2] );
 			}
 
-		if(0)
+			if(0) // second layer graph
 			{
 
 // this is change in virtual Y by time... 
@@ -774,7 +774,7 @@ if(1)
 				}
 			}
 
-if(0)
+			if(0)  // inner graph
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
 				const p_ = L_d( p, values.B, p0, s, q );
@@ -788,9 +788,13 @@ if(0)
 
 
 
+	const _p = {x:0, y:0 };
+	let _l = 0;
+	let first = true;
 	for( let t = 0; t < 360; t+= 10 ) {
 		let slopex = Math.cos( t/180*Math.PI );
 		let slopey = Math.sin( t/180*Math.PI );
+		let red_blue = 0.5;
 		for( let t=0; t < 50; t+= 50/1000 ) {
 
 			const mx = mouseX + slopey*Math.cos(2*t) + slopex * t;
@@ -818,21 +822,59 @@ if(0)
 					P.z += c;
 				}
 				const dl = _2to1( P.x, P.y );
-				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
 				P.x += p.x;
 				P.y += p.y;
-				//line( p.x,p.y,P.x,P.y, pens[0] )
-				//line( p.y,p.x,P.y,P.x, pens[1] )
-				//row.push( P );
-				plot(P.x,P.y,pens[0] );
+				if( red_blue < 0.5 ) {
+					plot(P.x,P.y,ColorAverage( BASE_COLOR_RED, BASE_COLOR_GREEN, red_blue, 0.5 ) );	
+				} else {
+					plot(P.x,P.y,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLUE, red_blue-0.5, 0.5 ) );	
+				}
+			}
+
+
+		 	p.x = mouseX + slopex * t;
+			p.y = mouseY + slopey * t;
+
+			// these two draw the X/Y grid lines.
+			if(1)
+			{
+				const P = {x:0,y:0,z:0};
+				const M = {x:0,y:0,z:0};
+				const N = {x:0,y:0,z:0};
+				for( let o of wells ) {
+					const p_ = L_sq(p, 0, o, s, q );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
+				}
+				const dl = _2to1( P.x, P.y );
+				if( first ){
+					first = false;
+					_l = dl;
+					_p.x = P.x;
+					_p.y = P.y;
+				} else {
+					if( _l < dl ) {
+						red_blue = (( red_blue * 499 ) + 1)/500;
+					} else {
+						red_blue = (( red_blue * 499 ) + 0)/500;
+					}
+				}
+				P.x += p.x;
+				P.y += p.y;
+				if( red_blue < 0.5 ) {
+					plot(P.x,P.y,ColorAverage( BASE_COLOR_RED, BASE_COLOR_GREEN, red_blue, 0.5 ) );	
+				} else {
+					plot(P.x,P.y,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLUE, red_blue-0.5, 0.5 ) );	
+				}
 				
 
-				//const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-			//	const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
-			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-			//if( Math.sqrt(mx*mx+my*my)< (1) ) break;
-			//plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
 			}
 		}
 	}
