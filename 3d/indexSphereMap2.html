@@ -61,6 +61,9 @@
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls" >
+
+	  <div class="hideCOntrols" style="display:none">
+		
 		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
 		<p style="display:none">Input Data:</p>
 		<p style="display:none"><select id="datasource"></select></p>
@@ -86,7 +89,7 @@
 		<p style="display:none">Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" value="checked"></p>
 	
 
-		<p id ="advancedControls"  >
+		<p id ="advancedControls" >
 		 <span style="visibility:visible">- Show Basis Map: <input type="checkbox" id="showCoordinateGrid" value="checked"></span>
 		 - Show Inverse Basis Map: <input type="checkbox" id="showInvCoordinateGrid" value="checked">
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
@@ -159,6 +162,7 @@
 			 - YPR<input type="radio" name="drawMode" id="mountYPR" >
 			 - YRP<input type="radio" name="drawMode" id="mountYRP" >
 			 - free<input type="radio" name="drawMode" id="mountNone" >
+</div>
 		<table id="sliders">
 			<!--col><col><col><col>
 			<col style="width:0">
@@ -182,7 +186,7 @@
 		</td><td> X
 		</td><td> Y
 		</td><td> Z
-		</td><td class="header"> Angle
+		</td><td class="header" > Angle
 		</td><td class="header"> Step Scalar
 		</td><td class="header"> (Use)
 		</td><td class="header"> Mech. XRot
