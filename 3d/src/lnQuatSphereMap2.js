@@ -63,11 +63,11 @@ let shownL = true;  //  p / nL
 let shownR = true;  // p.n(xyz)  p / nR
 const lnQ0 = new lnQuat();
 
-let lnQ1;
-let lnQ2;
-let lnQ3;
-let lnQ4;
-let lnQ5;
+let lnQ1 = new lnQuat();
+let lnQ2 = new lnQuat();
+let lnQ3 = new lnQuat();
+let lnQ4 = new lnQuat();
+let lnQ5 = new lnQuat();
 
 const lnQ_current = [];
 let lnQ1_current;
@@ -842,6 +842,28 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
         	: document.getElementById( "mountRYP")?.checked?0
                 : 6
                 ;
+
+
+			normalVertices.push( new THREE.Vector3( 0			       ,0			       , 0			       ))
+			normalVertices.push( new THREE.Vector3( 40  ,0, 0 ) );
+																				       
+			normalVertices.push( new THREE.Vector3( 0			       ,0			       , 0			       ))
+			normalVertices.push( new THREE.Vector3( 0, 40,  0 ) );
+																				       
+			normalVertices.push( new THREE.Vector3( 0			       ,0			       , 0			       ))
+			normalVertices.push( new THREE.Vector3( 0, 0, 40 ) );
+		   
+			{
+				//const s = t / (Math.PI*4);
+				const s = 1.0;
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 1.0*s,0,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,1.0*s,0,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
+			}
+
         
 	drawRawRotIter = document.getElementById( "drawRawRotIter")?.checked;
 	drawRotIter = document.getElementById( "drawRotIter")?.checked;
@@ -896,63 +918,30 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			curSliders.lnQX[n-1] = (lnQX / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			curSliders.lnQY[n-1] = (lnQY / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
 			curSliders.lnQZ[n-1] = (lnQZ / 500 - 1) * Math.PI * (scalar?6:1)*(scalar2?0.25:1);
+			
 
-			let lnQ;
-	if( !lnQ5 )
 		       	switch(n) {
 			case 1:
-				if( rawAngles )
-					lnQ = lnQ1 = mkQuat( 0, curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] ).update();
-				else
-					lnQ = lnQ1 = makeQuat( curSliders.lnQX[0], curSliders.lnQY[0], curSliders.lnQZ[0] );
+				curSliders.lnQZ[n-1] = curSliders.lnQZ[n-1] * 4;
 				break;
 			case 2:
-				if( rawAngles )
-					lnQ = lnQ2 = mkQuat( 0, curSliders.lnQX[1], curSliders.lnQY[1], curSliders.lnQZ[1] ).update();
-				else
-					lnQ = lnQ2 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 				break;
 			case 3:
-				if( rawAngles )
-					lnQ = lnQ3 = mkQuat( 0, curSliders.lnQX[2], curSliders.lnQY[2], curSliders.lnQZ[2] ).update();
-				else
-					lnQ = lnQ3 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 				break;
 			case 4:
-				if( rawAngles )
-					lnQ = lnQ4 = mkQuat( 0, curSliders.lnQX[3], curSliders.lnQY[3], curSliders.lnQZ[3] ).update();
-				else
-					lnQ = lnQ4 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
 				break;
 			case 5:
-				if( rawAngles )
-					lnQ = lnQ5 = mkQuat( 0, curSliders.lnQX[4], curSliders.lnQY[4], curSliders.lnQZ[4] ).update();
-				else
-					lnQ = lnQ5 = makeQuat( curSliders.lnQX[n-1], curSliders.lnQY[n-1], curSliders.lnQZ[n-1] );
+				curSliders.lnQZ[n-1] = curSliders.lnQZ[n-1] * 36;
 				break;
 			}
-		else
-	             lnQ = [lnQ1,lnQ2,lnQ3,lnQ4,lnQ5][n-1];
-			lnQ.update();
+		
 
-				document.getElementById( "lnQXval"+n).textContent = ( curSliders.lnQZ[0]*curSliders.lnQX[n-1]/Math.PI).toFixed(4) + "π";
+
+				document.getElementById( "lnQXval"+n).textContent = ( curSliders.lnQX[0]*4/Math.PI).toFixed(4) + "π";
 				document.getElementById( "lnQYval"+n).textContent = ( 4*curSliders.lnQY[n-1]/Math.PI).toFixed(4) + "π";
 				document.getElementById( "lnQZval"+n).textContent = ( curSliders.lnQZ[n-1]/Math.PI).toFixed(4) + "π";
 
 
-	            const xyr = lnQ.θ;
-			const xyl = lnQ.θ;
-			const showInterpolant = document.getElementById( "drawInterp"+n)
-			if( showInterpolant )  
-				drawRotationInterpolant[n-1] = showInterpolant.value;
-			const useStep = document.getElementById( "useStep"+n)
-			if( stepScalar[n-1] = useStep.checked ) {
-				document.getElementById( "stepScalar"+n).textContent = (xyl/xyr).toFixed(4);
-			} else {
-				document.getElementById( "stepScalar"+n).textContent = 1;
-				
-			}
-	        
 	        
 			//document.getElementById( "lnQYEulerval"+n).textContent = (qlen*180/Math.PI).toFixed(4);
 			
@@ -1092,18 +1081,21 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 }
 
 {
-	const k = curSliders.lnQZ[0]*4;
+	const k = curSliders.lnQZ[0]*4; // value displayed is *4
 	const t = curSliders.lnQY[0]*4;	
 	const lnQ0_ = new lnQuat();
 	const v = {x:0,y:29,z:0};
 	{
-		const l5 = curSliders.lnQZ[4]*8;
+		const l5 = curSliders.lnQZ[4];
 		lnQ0.set( 0,0,0,0).update();
 		
 		
 		for( let seg =0; seg < 100; seg++ ) {
 
-			lnQ0.yaw( (2*Math.PI-k*2)/100 );
+			//lnQ0.yaw( Math.PI*(1+Math.cos(k))/100 );
+			lnQ0.yaw( l5/100 );
+			//console.log( "lnQ0:", lnQ0.x, lnQ0.y, lnQ0.z );
+			doDrawBasis( lnQ0, lnQ0, 0, 1 );
 
 			lnQ2.x = (Math.PI*2)*k /100  ;
 			lnQ2.y = 0;
@@ -1123,6 +1115,23 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 				doDrawBasis( lnQ0_, vt, 0, 1 );
 				//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
 			}
+
+			lnQ2.x *= 100;
+			lnQ2.y *= 100;
+			lnQ2.z *= 100;
+			doDrawBasis( lnQ2, lnQ2, 0, 1 );
+
+	// so building from the other side; 
+	// curvature = 1, angle = 0 = 0
+	// curvature = 0, angle = any = 0
+
+	// angle = 0.02pi (2pi/100) pi/2 offset   but at curvature=1, is also nearly back to the start.
+	//    0.4pi  pi offset  0.8734 curvature closes the loop.
+        //0.6pi  = 3pi/2 offset   
+	// 0.8pi = 2pi offset  and curvature 0 closes the loop.
+        //     curvature 0.8671 ->  3/pi/2 offset
+	//      curvature of 1.75 -> pi offset
+	//	curvature of 3.14 -> almost back to pi/2 offset (after 3 loops of the curve)
 		}
 
 	}
@@ -1131,7 +1140,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
         document.getElementById( "lnQXval1").textContent = ( curSliders.lnQX[0]/Math.PI).toFixed(4) + "π";
         document.getElementById( "lnQYval1").textContent = ( curSliders.lnQY[0]/Math.PI).toFixed(4) + "π";
-        document.getElementById( "lnQZval1").textContent = ( curSliders.lnQZ[0]/Math.PI).toFixed(4) + "π";
+        document.getElementById( "lnQZval1").textContent = ( curSliders.lnQZ[0]*4).toFixed(4) ;
 
 		timeScale = 3*(Number(document.getElementById( "timeScalar" )?.value ) / 450 -1);
 		document.getElementById( "timeScalarValue" ).textContent = timeScale.toFixed(4);
