@@ -142,13 +142,14 @@ if(0)
 		minr = minr*minr;
 		const r = range*range;
 		const normLen = 0.15*(steps/range);
+		const lnQ = new lnQuat(  );
 		for( let x = -range; x <= range;  x += (2*range)/steps ) {
 			for( let y = -range; y <= range;  y += (2*range)/steps ) {
 				for( let z = -range; z <= range; z += (2*range)/steps ) {
 				const l = x*x+y*y+z*z;
 				if( l > r ) continue;
 				//if( l > minr ) continue;
-				const lnQ = new lnQuat( 0, cx+x, cy+y, cz+z );
+				lnQ.set( 0, cx+x, cy+y, cz+z );
 				const basis = lnQ.getBasis( );
 	                        let ox_,oy_,oz_;
 	                        let ox_2,oy_2,oz_2;
@@ -157,9 +158,17 @@ if(0)
                 			oy = lnQ.y;
 	                		oz = lnQ.z;
 
-						ox_ = Math.PI*2*(Math.sin( (1+lnQ.nx)*Math.PI/4 ) *Math.sin( (1+lnQ.nx)*Math.PI/4 ) - 0.0);
-						oy_ = Math.PI*2*(Math.sin( (1+lnQ.ny)*Math.PI/4 ) *Math.sin( (1+lnQ.ny)*Math.PI/4 ) - 0.0);
-						oz_ = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
+//sin(2th)=sin(th)sin(th)
+
+	// these are angle off-of axis
+	// while x,y,z are around axis
+						//ox = Math.asin( lnQ.nx ) * lnQ.θ;
+						//oy = Math.asin( lnQ.ny ) * lnQ.θ;
+						//oz = Math.asin( lnQ.nz ) * lnQ.θ;
+
+						//ox_ = Math.PI*2*(Math.sin( (1+lnQ.nx)*Math.PI/4 ) *Math.sin( (1+lnQ.nx)*Math.PI/4 ) - 0.0);
+						//oy_ = Math.PI*2*(Math.sin( (1+lnQ.ny)*Math.PI/4 ) *Math.sin( (1+lnQ.ny)*Math.PI/4 ) - 0.0);
+						//oz_ = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
 if( limitCone ) {
 //if( ox_ > 0.95*Math.PI*2 ) continue
 //if( oy_ > 0.95*Math.PI*2 ) continue
@@ -192,6 +201,7 @@ if( oz_ < 0.05*Math.PI*2 ) continue
                 			oz_ = oz;
         		        }
 
+					const	spinUp = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
 	if(0){
 				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
 				normalVertices.push( new THREE.Vector3( ox_*spaceScale  ,oy_*spaceScale , oz_*spaceScale ))
@@ -214,8 +224,8 @@ if( oz_ < 0.05*Math.PI*2 ) continue
 				normalVertices.push( new THREE.Vector3( ox_*spaceScale + basis.forward.x*normal_del/normLen,oy_*spaceScale + basis.forward.y*normal_del/normLen, oz_*spaceScale + basis.forward.z*normal_del/normLen ))
 	        
 
-				normalColors.push( new THREE.Color( 1*oz_/(Math.PI*2),1*oz_/(Math.PI*2),0,255 ))
-				normalColors.push( new THREE.Color( 1*oz_/(Math.PI*2),1*oz_/(Math.PI*2),0,255 ))
+				normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
+				normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
 				normalColors.push( new THREE.Color( 1,0,0,255 ))
 				normalColors.push( new THREE.Color( 1,0,0,255 ))
 				normalColors.push( new THREE.Color( 0,1,0,255 ))
