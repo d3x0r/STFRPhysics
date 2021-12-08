@@ -437,7 +437,7 @@ function makeQuat(p,y,r) {
 				// Math.PI +/-0.1 - sliders
 				//  - this i sthe same orientation all the way around, it's the inner pi+x and pi-x geodesics - that go around 0.
 				//
-				for( let gamma = -Math.abs(curSliders.lnQX[0])-0.1 -curSliders.lnQY[0]; gamma <= Math.abs(curSliders.lnQX[0])+0.1 -curSliders.lnQY[0]; gamma += Math.PI/20, gamline++ ){
+				for( let gamma = -Math.abs(curSliders.lnQX[0])-0.1 +curSliders.lnQY[0]; gamma <= Math.abs(curSliders.lnQX[0])+0.1 +curSliders.lnQY[0]; gamma += Math.PI/20, gamline++ ){
 					let g2 = gamma;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 					let t2 = r;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 
@@ -489,15 +489,27 @@ function makeQuat(p,y,r) {
 						const Cx = Math.cos(lng)         * Math.cos(r/2);
 						const Cy = Math.sin(lng)         * Math.cos(r/2);
 						const Cz = Math.cos(lng + gamma) * Math.sin(r/2);
-					        
+
+if(0) {
+						let ang = Math.asin( Math.sin(gamma)*Math.sin(r/2) )*2 + Math.PI;
+
+						const Cx = Math.cos(r/2);
+						const Cy = 0;
+						const Cz = Math.cos(gamma) * Math.sin(r/2);
+}					        
+
 						//const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
 						const Clx = 1/Math.sin(ang/2);
 					             // (sin(γ) cos(r/2) cos^(-1)(-sin(r/2) sin(α + γ)))/sqrt(1 - sin^2(r/2) sin^2(α + γ))
 
 						lnQ.θ = ang;
-						lnQ.nx=Cx*Clx;
-						lnQ.ny=Cy*Clx;
+						lnQ.nx=Cx*Clx ;
+						const y_ = lnQ.ny=Cy*Clx *Math.sin(twistDelta);
 						lnQ.nz=Cz*Clx;
+
+						lnQ.ny=y_     *Math.cos(twistDelta) + lnQ.nz * Math.sin(twistDelta);
+						lnQ.nz=lnQ.nz *Math.cos(twistDelta) + y_ * Math.sin(twistDelta);
+
                                                 useForward = true;
 					}
 
