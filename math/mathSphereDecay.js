@@ -10,7 +10,7 @@ const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
 const BASE_COLOR_BLUE = [0,0,255,255];
 const BASE_COLOR_GREEN = [0,255,0,255];
-
+let invertCurvature =false;
 
 function ColorAverage( a, b, i,m) {
 
@@ -37,13 +37,13 @@ const myForm = {
 	sliderValB : document.getElementById( "Bval" ),
 	sliderValC : document.getElementById( "Cval" ),
 	sliderValD : document.getElementById( "Dval" ),
+	invertCurvature : document.getElementById( "invertCurvature" )
 }
 
 // area of a triangle
 
 const values = {A:0.0,Amax:0,B:0.0,C:0.0,D:0.0};
-
-myForm.sliderA.oninput = myForm.sliderValA.oninput = readValues;
+myForm.invertCurvature.oninput =  myForm.sliderA.oninput = myForm.sliderValA.oninput = readValues;
 myForm.sliderAmax.oninput = readValues;
 myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
 myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
@@ -84,8 +84,8 @@ const _4to1 = (x,y,z,w)=> Math.sqrt(x*x+y*y+z*z+w*w);
 const _5to1 = (x,y,z,w,q)=> Math.sqrt(x*x+y*y+z*z+w*w+q*q);
 
 // this adds a W component to a previously only x/y/z component scaled.
-const Q_0 = (x,y,z,w) => Math.sqrt(x*x+y*y+z*z+w*w);  // from real to converted (squash)
-const Q_i = (x,y,z,Q) => Math.sqrt( x*x+y*y+z*z-Q*Q );  // from converted to real (unsquash)
+const Q_0 = (x,y,z,w) => Math.sqrt(x*x+y*y+z*z+((invertCurvature?-1:1)* w*w));  // from real to converted (squash)
+const Q_i = (x,y,z,Q) => Math.sqrt( x*x+y*y+z*z+((invertCurvature?1:-1)*Q*Q) );  // from converted to real (unsquash)
 const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash)
 
 // this normalizes a value from x/y/z -> x/y/z/w
@@ -201,7 +201,7 @@ function drawsomething() {
 //	const thisDel = (n,m)=>n*n*n-(n-m)*(n-m)*(n-m);
 	const thisDel = (n,y)=>n*n*n-(n-step(1000))*(n-step(1000))*(n-step(1000))+y*y*y;
 
-
+	invertCurvature	= document.getElementById( "invertCurvature")?.checked;
 	                   
 	for( let r = 0.01; r < 8; r+=0.5 ) {
 		// circles have no elongation to have to scale,it only needs the radius scaled.
