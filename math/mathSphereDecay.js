@@ -213,7 +213,20 @@ function drawsomething() {
 
 	//field is 2xg or 2g or g^2 for 2m?
 
-	
+	for( let r = -Math.PI*2; r <= Math.PI*2; r+=Math.PI/500 ) {
+		for( let t=0; t <= Math.PI; t+= Math.PI/12 ) {
+			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
+			const Clx = ang/Math.sin(ang/2);
+
+			const Cx = Math.cos(r/2);
+			const Cz = Math.cos(t) * Math.sin(r/2);
+			
+			const px = (values.A+values.Amax)/(2*Math.PI)*Cx*Clx;
+			const py = (values.A+values.Amax)/(2*Math.PI)*Cz*Clx;
+			plot( py, px,pens[2] );
+			plot( px, py,pens[1] );
+		}
+	}
 
 	for( let r = -8.99; r < 8; r+=0.5 ) {
 		for( let t=-18.99; t < 18; t+= 5/1000 ) {
@@ -231,7 +244,7 @@ function drawsomething() {
 				plot(Ax,Ay,pens[2] );
 			}
 
-			if(1)
+			if(0)
 			{
 
 // this is change in virtual Y by time... 
@@ -261,7 +274,7 @@ function drawsomething() {
 				}
 
 			}
-if(1) {
+if(0) {
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
 			//const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
