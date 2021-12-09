@@ -90,6 +90,7 @@ const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash
 
 // this normalizes a value from x/y/z -> x/y/z/w
 const A_0 = (l,x,y,z,w) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,w)
+const A_i = (l,x,y,z,w) => l/Math.sqrt(x*x+y*y+z*z) * Q_i(x,y,z,w)
 
 
 // this adds a Q component to a preivously only x/y/z/Q comonent
@@ -105,14 +106,9 @@ const dM_0 = (l,x,y,z,w,q) => (q)*(l/_4to1(x,y,z,w));  // from converted to real
 const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
 
 // this normalizes a value from ( ( x/y/z -> x/y/z/w ) -> x/y/z/q )
-const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
+const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_00( x,y,z,w,q );
 
-const B_i = (l,x,y,z,w,q) => {
-	const ofs = _3to1(x,y,z)-(w+q);
-	
-	return ;
-	A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_0( x,y,z,w,q );
-}
+const B_i = (l,x,y,z,w,q) => A_i(l,x,y,z,w)/_4to1(x,y,z,w) * (invertCurvature?M_00( x,y,z,w,q ):M_ii( x,y,z,w,q ));
 
 // sequential space would enumerate in a sort of alternating sign, alternating reiprocal
 // spaces infinity to 0 - 0 to infinity - infinity to 0 - ...
@@ -362,25 +358,44 @@ if(0)
 	{
 	const slopex = mouseX/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
 	const slopey = mouseY/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
+	const _mouseX = B_0(mouseX, mouseX,mouseY,values.B,values.A, values.Amax );
+	const _mouseY = B_0(mouseY, mouseX,mouseY,values.B,values.A, values.Amax );
 	for( let t = 0; t < 2; t+= 2/1000 ) {
 		
 		{
 			{
-			const mx = mouseX +slopey*0.1 + slopex * (t-1);
-			const my = mouseY -slopex*0.1 + slopey * (t-1);
-				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
-			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-			plot(Ax,Ay, pens[2] );
+			const dx = slopey*0.1 + slopex * (t-1);
+			const dy = -slopex*0.1 + slopey * (t-1);
+				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
+				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
+				{
+					//const Ax = B_i(mx,mx,my,values.B,values.A, values.Amax );
+					//const Ay = B_i(my,mx,my,values.B,values.A, values.Amax );
+					const Ax = mx;// / _4to1(mx,my,values.B,values.A) * B_i(mx,mx,my,values.B,values.A, values.Amax );
+					const Ay = my;//B_i(my,mx,my,values.B,values.A, values.Amax );
+					//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+					plot(Ax,Ay, pens[2] );
+				}
 			}
 			{
-			const mx = mouseX -slopey*0.1 + slopex * (t-1);
-			const my = mouseY +slopex*0.1 + slopey * (t-1);
-				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
-			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-			plot(Ax,Ay, pens[2] );
-			}
+			const dx = -slopey*0.1 + slopex * (t-1);
+			const dy = +slopex*0.1 + slopey * (t-1);
+				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
+				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
+
+					const Ax = mx;// / _4to1(mx,my,values.B,values.A) * B_i(mx,mx,my,values.B,values.A, values.Amax );
+					const Ay = my;//B_i(my,mx,my,values.B,values.A, values.Amax );
+				plot(Ax,Ay, pens[2] );
+
+/*				const mx = mouseX -slopey*0.1 + slopex * (t-1);
+				const my = mouseY +slopex*0.1 + slopey * (t-1);
+				{
+				const Ax = B_i(mx,mx,my,values.B,values.A, values.Amax );
+				const Ay = B_i(my,mx,my,values.B,values.A, values.Amax );
+				//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
+				plot(Ax,Ay, pens[2] );
+				}
+*/			}
 		}
 	}
 	}
