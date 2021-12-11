@@ -212,7 +212,9 @@ function drawsomething() {
 	}
 
 	//field is 2xg or 2g or g^2 for 2m?
-
+	const scalar = (values.A+values.Amax);
+	const zscalar =(values.B+scalar)?  scalar*scalar /Q_0(0,0,values.B,scalar):0;
+	if( !invertCurvature)
 	for( let r = -Math.PI*2; r <= Math.PI*2; r+=Math.PI/500 ) {
 		for( let t=0; t <= Math.PI; t+= Math.PI/12 ) {
 			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
@@ -221,8 +223,8 @@ function drawsomething() {
 			const Cx = Math.cos(r/2);
 			const Cz = Math.cos(t) * Math.sin(r/2);
 			
-			const px = (values.A+values.Amax)/(2*Math.PI)*Cx*Clx;
-			const py = (values.A+values.Amax)/(2*Math.PI)*Cz*Clx;
+			const px = zscalar/(2*Math.PI)*Cx*Clx;
+			const py = zscalar/(2*Math.PI)*Cz*Clx;
 			plot( py, px,pens[2] );
 			plot( px, py,pens[1] );
 		}
