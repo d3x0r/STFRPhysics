@@ -1,4 +1,4 @@
-.controls { pointer-events: none; }
+.xcontrols { pointer-events: none; }
 input {pointer-events:all}
 button {pointer-events:all}
 select {pointer-events:all}
@@ -42,6 +42,7 @@ body {
 	top		: 10px;
 	left		: 10px;
 	padding		: 5px;
+        z-index:20;
 }
 
 .right {

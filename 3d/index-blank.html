@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Isosurface Texture Toolbox</title>
+		
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+
+		<script src="./src/three.js/three.min.js"></script>
+		<script src="./src/Detector.js"></script>
+		<script src="./src/Stats.js"></script>
+
+		<script src="./src/THREEx.screenshot.js"></script>
+		<script src="./src/THREEx.FullScreen.js"></script>
+		<script src="./src/THREEx.WindowResize.js"></script>
+		<script src="./src/threex.dragpancontrols.js"></script>
+
+
+		<link href="./src/main.css" rel="stylesheet">
+	</head>
+<body>
+	<!-- three.js container -->
+       	<div id="container"></div>
+	<!-- info on screen display -->
+	<div id="info">
+		<div class="top">
+			Isosurface Texture Tester
+		</div>
+		<div class="bottom" id="inlineDoc">
+			- <i><a href="https://www.github.com/d3x0r/STFRPhysics">https://www.github.com/d3x0r/STFRPhysics</a></i>
+			- <i>p</i> for screenshot
+		- <i>f</i> for fullscreen</div>
+	  <div class="controls">
+	  </div>
+	</div>
+
+	<script type="module">
+        	import {initUI, updateGeometry} from "./src/blankTest.js"
+		//import {Popups} from "@d3x0r/popups"
+		var stats, scene, renderer, composer;
+		let camera, cameraControls;
+		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
+		var meshers = {
+		};
+		var testdata = {};
+		var testelements = {};
+		var material	= null;
+
+  			geometry	= new THREE.Geometry();
+                        
+ 		function updateMesh() {
+
+		  scene.remove( wiremesh );
+		  scene.remove( lineSegments );
+
+
+       		  geometry	= new THREE.Geometry();
+		  geometry.vertices.length = 0;
+		  geometry.faces.length = 0;
+
+		  
+		  geometryNormals	= new THREE.Geometry();
+		  geometryNormals.vertices.length = 0;
+		  geometryNormals.faces.length = 0;
+		  geometryNormals.colors.length = 0;
+		  
+
+		  var start = (new Date()).getTime();
+
+
+		  updateGometry(geometryNormals && geometryNormals.vertices,geometryNormals && geometryNormals.colors);
+
+
+
+		  geometry.computeBoundingBox();
+		  geometry.computeBoundingSphere();
+          
+		if( document.getElementById( "showNormal" ).checked && !document.getElementById("showGrid").checked ) {
+			material	= new THREE.MeshNormalMaterial();
+			surfacemesh	= new THREE.Mesh( geometry, material );
+			surfacemesh.doubleSided = true;
+		}
+		else {
+				material	= new THREE.MeshPhongMaterial({
+					color:0x700070
+				});
+				surfacemesh	= new THREE.Mesh( geometry, material );
+				surfacemesh.doubleSided = true;
+		}
+		var wirematerial = new THREE.MeshBasicMaterial({
+				color : 0xffffff
+			  , wireframe : true
+			});
+		wiremesh = new THREE.Mesh(geometry, wirematerial);
+		wiremesh.doubleSided = true;
+
+		if( geometryNormals ) {
+			var linematerial = new THREE.LineBasicMaterial({
+				color : 0xffffff
+			  , vertexColors: THREE.VertexColors
+			});
+			lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
+			scene.add( lineSegments );
+		}
+
+		scene.add( surfacemesh );
+		scene.add( wiremesh );
+
+		}
+	
+		// init the scene
+		function init(){
+			initUI();
+			var canvas = document.createElement( 'canvas' );
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			var context = canvas.getContext( 'webgl', { alpha: false, antialias: true } );
+			if( Detector.webgl ){
+				renderer = new THREE.WebGLRenderer({
+					canvas: canvas, context: context,
+					antialias		: true,	// to get smoother output
+					preserveDrawingBuffer	: true	// to allow screenshot
+				});
+				//console.log( "YES?", renderer );
+				renderer.setClearColor( 0xBBBBBB, 1 );
+			}else{
+			  renderer = new THREE.WebGLRenderer({
+					canvas: canvas, context: context,
+					canvas : undefined,
+					context : undefined,
+				});
+			}
+
+			canvas.addEventListener( "mousemove", (evt)=>{
+				if( material && material.uniforms && material.uniforms.cursorRayNormal ) {
+					var pRect = canvas.getBoundingClientRect();
+					var x = evt.clientX - pRect.left;
+					var y = evt.clientY - pRect.top;
+					var x = ( (evt.x - pRect.left) / pRect.width ) * 2.0 - 1.0;
+					var y = ( (evt.y - pRect.top) / pRect.height ) * 2.0 - 1.0;
+					x = -x;
+					y = y;
+					var v = new THREE.Vector3( 0, 0, -1 );
+					v.unproject( camera );
+
+					var rc = new THREE.Raycaster();
+					rc.setFromCamera( new THREE.Vector2( x, y ), camera );
+
+
+					if(material) material.uniforms.cursorRayNormal.value.set( -x, -y, (pRect.width/2350)*camera.aspect )  ;
+
+        			}
+			} );
+
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.getElementById('container').appendChild(canvas);
+
+			// add Stats.js - https://github.com/mrdoob/stats.js
+			stats = new Stats();
+			stats.domElement.style.position	= 'absolute';
+			stats.domElement.style.bottom	= '0px';
+			document.body.appendChild( stats.domElement );
+
+			// create a scene
+			scene = new THREE.Scene();
+
+			// put a camera in the scene
+			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			camera.position.set(0, 0, 80);
+			scene.add(camera);
+
+			// create a camera contol
+			cameraControls	= new THREE.TrackballControls( camera, document.getElementById('container') )
+
+			// transparently support window resize
+			THREEx.WindowResize.bind(renderer, camera);
+			// allow 'p' to make screenshot
+			THREEx.Screenshot.bindKey(renderer);
+			// allow 'f' to go fullscreen where this feature is supported
+			if( THREEx.FullScreen.available() ){
+				THREEx.FullScreen.bindKey();
+				document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
+			}
+
+			// here you add your objects
+			// - you will most likely replace this part by your own
+			var light	= new THREE.AmbientLight( 0.7 * 0xffffff );
+			scene.add( light );
+			var light	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light.position.multiplyScalar(20);
+			scene.add( light );
+
+			var light2	= new THREE.PointLight( 0.8 * 0xffffff );
+			//light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			light2.position.copy( light.position );
+			light2.position.z = -light2.position.z;
+			light2.position.y = -light2.position.y;
+			light2.position.x = -light2.position.x;
+			scene.add( light2 );
+
+
+
+			//Initialize dom elements
+
+			//Update mesh
+			updateMesh();
+
+			return false;
+		}
+
+		// animation loop
+		function animate() {
+
+			// loop on request animation loop
+			// - it has to be at the begining of the function
+			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+
+			// update stats
+			stats.update();
+		}
+
+		// render the scene
+		function render() {
+			// update camera controls
+			cameraControls.update();
+			if( material && material.uniforms && material.uniforms.cursorIconUp ) {
+        	  			material.uniforms.cursorIconUp.value.copy( camera.up ); // this should update to the camera up 
+          				material.uniforms.cursorRayOrigin.value.copy( camera.position ); // this should update to the camera up 
+		}
+
+
+			// actually render the scene
+		renderer.render( scene, camera );
+	}
+	</script>
+
+</body></html>
