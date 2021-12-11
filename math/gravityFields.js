@@ -16,10 +16,10 @@ const BASE_COLOR_BLUE = [0,0,255,255];
 const BASE_COLOR_YELLOW = [255,255,0,255];
 const BASE_COLOR_GREEN = [0,255,0,255];
 
-const wells = [ {x:12.5,y:12.5,z:0}
-              , {x:12.5,y:-12.5,z:0}
-              , {x:-12.5,y:12.5,z:0} 
-              , {x:-12.5,y:-12.5,z:0} ];
+const wells = [ {x:5,y:5,z:0}
+              , {x:5,y:-5,z:0}
+              , {x:-5,y:5,z:0} 
+              , {x:-5,y:-5,z:0} ];
 
 const localDel = 0.1;
 const local = [ {x:1,y:1,z:1} 
