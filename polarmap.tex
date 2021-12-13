@@ -1,0 +1,35 @@
+http://mathb.in/68309
+
+- $t$ is the angle around the sphere (longitude); range is $0$ to $2\pi$ 
+- $r$ is the latitude 2pi is the same pole, but different representation; range is $0$ to $4\pi$ ($-2\pi$ to $2\pi$)
+- When theta is 0 ($t=\frac \pi 2$ and $r=\pi$), so at the south pole, at 90 degrees to the right, then the $\cos t$ and $\cos \frac r 2 $ are also 0, and the result is the identity rotation (0,0,0).  Most other points that are at a southern pole are separated by their longitude angle.  
+- the poles where $r=0$, $r=2\pi$ are at $(+\pi,0)$ and $(-\pi,0)$  respectively.  A small angle of $r$ moves away from the pole fairly quickly; but while at these poles, it's impossible to determine the $t$.
+- n is a combined scalar; $\frac 1 {\sin \frac \theta 2} $ normalizes the vector x and y; $\theta$ is then applied as a scalar on the unit length.
+- $xx+yy=\theta\theta$
+
+$ (r,t) => (x,y) $
+
+$\theta = \sin^{-1}( \sin(t)*\sin \frac r 2 )*2 + \pi$
+
+$n = \frac \theta { \sin \frac \theta 2 }$ 
+
+$ x = n \cos \frac r 2 $
+
+$ y = n \cos(t)   \sin {\frac r 2}$
+			
+---
+
+- reverse function... 
+
+$ (x,y)=> (r,t)$
+
+$ \theta = \sqrt xx+yy $
+
+$ r = 2 \cos^{-1} {\frac {x \sin \frac \theta 2  } \theta  }$
+
+$ t = \cos ^{-1} {\frac { y \sin {\frac \theta 2} } {\theta \sin {\frac r 2 } } }$
+
+
+---
+a+bi + cj+dk
+
