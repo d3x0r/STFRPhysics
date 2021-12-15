@@ -460,7 +460,7 @@ function makeQuat(p,y,r) {
 						// summarized here...
 				                //  http://mathb.in/68133
 						//fixed graph for sideways stuff... didn't work. (dipole +/- pi centering)
-						const lng = curSliders.lnQY[0];// + ( gamma - Math.PI/2);
+						const lng = curSliders.lnQY[0]-twistDelta;// + ( gamma - Math.PI/2);
 						// input lng, gamma, r; r is the distance from one pole side to the other polar side.
 						// this requires r from 0 4pi to get back to the start.
 						//   R 0 = (0,-1,0) ('proper' north pole?), to pi/2 = equator, to pi = south pole, to 3pi/2=equator 
@@ -504,11 +504,11 @@ if(0) {
 
 						lnQ.θ = ang;
 						lnQ.nx=Cx*Clx ;
-						const y_ = lnQ.ny=Cy*Clx *Math.sin(twistDelta);
+						const y_ = lnQ.ny=Cy*Clx;// *Math.sin(twistDelta);
 						lnQ.nz=Cz*Clx;
 
-						lnQ.ny=y_     *Math.cos(twistDelta) + lnQ.nz * Math.sin(twistDelta);
-						lnQ.nz=lnQ.nz *Math.cos(twistDelta) + y_ * Math.sin(twistDelta);
+						//lnQ.ny=y_     *Math.cos(twistDelta) + lnQ.nz * Math.sin(twistDelta);
+						//lnQ.nz=lnQ.nz *Math.cos(twistDelta) + y_ * Math.sin(twistDelta);
 
                                                 useForward = true;
 					}
