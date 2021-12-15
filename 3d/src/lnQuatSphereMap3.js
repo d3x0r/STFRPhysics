@@ -484,11 +484,11 @@ function makeQuat(p,y,r) {
 							//(arccos( -sin(gamma+alpha)*sin(r/2) )*2)
 						// this makes gamma increment stay in the same forward direction through the R step. basd on the angle of gamma
 						// and then lng is an offset of the position, and a twist.
-						let ang = Math.acos( -Math.sin(gamma+lng)*Math.sin(r/2) )*2 ;
+						let ang = Math.acos( -Math.sin(gamma+lng-twistDelta)*Math.sin(r/2) )*2 ;
 
-						const Cx = Math.cos(lng)         * Math.cos(r/2);
-						const Cy = Math.sin(lng)         * Math.cos(r/2);
-						const Cz = Math.cos(lng + gamma) * Math.sin(r/2);
+						const Cx = Math.cos(lng+twistDelta)         * Math.cos(r/2);
+						const Cy = Math.sin(lng+twistDelta)         * Math.cos(r/2);
+						const Cz = Math.cos(lng + gamma-twistDelta) * Math.sin(r/2);
 
 if(0) {
 						let ang = Math.asin( Math.sin(gamma)*Math.sin(r/2) )*2 + Math.PI;
@@ -520,7 +520,7 @@ if(0) {
 
 				
 					lnQ.dirty = false;
-					if( twistDelta ) lnQ.roll( twistDelta );
+					//if( twistDelta ) lnQ.roll( twistDelta );
 					//lnQ.add( offset, 1 )
 				
 				if( showNormalProjection ) {
