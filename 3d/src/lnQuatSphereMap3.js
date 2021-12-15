@@ -484,13 +484,23 @@ function makeQuat(p,y,r) {
 							//(arccos( -sin(gamma+alpha)*sin(r/2) )*2)
 						// this makes gamma increment stay in the same forward direction through the R step. basd on the angle of gamma
 						// and then lng is an offset of the position, and a twist.
+//				twistDelta = -lng;
+				// long change up location, but does not turn the frame.
+				//
+						let ang = Math.acos( -Math.sin(gamma+2*lng-twistDelta)*Math.sin(r/2) )*2 ;
+						const Cx = Math.cos( +twistDelta)         * Math.cos(r/2);
+						const Cy = Math.sin( +twistDelta)         * Math.cos(r/2);
+						const Cz = Math.cos(2*lng + gamma-twistDelta) * Math.sin(r/2);
+if(0) {
+		// allows prograssive rotation of the frame and up
 						let ang = Math.acos( -Math.sin(gamma+lng-twistDelta)*Math.sin(r/2) )*2 ;
-
-						const Cx = Math.cos(lng+twistDelta)         * Math.cos(r/2);
-						const Cy = Math.sin(lng+twistDelta)         * Math.cos(r/2);
+						const Cx = Math.cos(lng +twistDelta)         * Math.cos(r/2);
+						const Cy = Math.sin(lng +twistDelta)         * Math.cos(r/2);
 						const Cz = Math.cos(lng + gamma-twistDelta) * Math.sin(r/2);
+}
 
 if(0) {
+		// simple case no rotation of normal... 
 						let ang = Math.asin( Math.sin(gamma)*Math.sin(r/2) )*2 + Math.PI;
 
 						const Cx = Math.cos(r/2);
