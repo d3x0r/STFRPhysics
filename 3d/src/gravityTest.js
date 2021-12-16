@@ -1,7 +1,7 @@
 
 
 
-import {popups,Popup} from "../../node_modules/@d3x0r/popups/popups.mjs"
+import {popups,Popup} from "../../node_modules/d3x0r/popups/popups.mjs"
 
 
 let zDepth= 0;
