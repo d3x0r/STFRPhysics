@@ -379,8 +379,8 @@ if(0)
 		
 		{
 			{
-			const dx = slopey*0.1 + slopex * (t-1);
-			const dy = -slopex*0.1 + slopey * (t-1);
+			const dx = -slopey*0.1 + slopex * (t-1);
+			const dy = slopex*0.1 + slopey * (t-1);
 				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				{
@@ -393,8 +393,8 @@ if(0)
 				}
 			}
 			{
-			const dx = -slopey*0.1 + slopex * (t-1);
-			const dy = +slopex*0.1 + slopey * (t-1);
+			const dx = slopey*0.1 + slopex * (t-1);
+			const dy = -slopex*0.1 + slopey * (t-1);
 				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
 
