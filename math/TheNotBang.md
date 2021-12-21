@@ -2,6 +2,29 @@
 
 # 
 
+When I first did the mathSphereDecay plot, and realized that the curvature is a positive pressure in space, this lead me to consider the dark energy aspect of modern science; and that this displacment of space pushes stuff away from each other.
+When I started to dig into that as a method of implementing gravity force, everything move away from each other instead of towards each other, and I had anti-gravity; so the space displacement itself does not affect the thing
+displacing it.  This is proven in the null experiment of Michelson-Morley.  Mass is not affected by the curvature of space; that is the cause of the mass is not subject to the curvature; the bobbers in the water don't feel the water(?).
+
+https://en.wikipedia.org/wiki/Pound%E2%80%93Rebka_experiment shows red shift without doppler cause; the top of the building is not moving away from or towards the ground in any way; the gradient of gravity itself shifts the frequency.
+
+The frequency component of light is generally along it's travel velocity, and is the wavelength forward/backward; while there is also an amplitude tangentially, which is also related to the wavelength.  If light emitted at some frequency goes
+from a gravitational gradient further away, the linear component in the direction of gravity is less compressed further away, so approaching the gravitational source, the frequency compresses, and becomes blue shifted; Conversely, travelling
+away from a gravitational source the gradient of space is less compressed and the signal appears red shifted.  This is only one aspect of the shift though, also the frequency generator deeper in the gravity well is running slower, what it emits
+as a frequency is slightly lower when received by a clock further out in the gradient, and again, emitted from outside, the clock is slightly faster than the low clocks, so the top to bottom is blue shifted from a time delay.
+
+Now, also, the tangential component of light will spread with distance in a gravitational source.  The light would have to be described by a line and a cylinder around it, and any line on the cylinder will diverge tangentially from 
+the center when leaving a gravitational source, which causes a red shift; any gravitational displacments of space that happen tangnetial to the light will not have any effect on making the light converge or diverge more; except in the region 
+that is closest, if a probe was in that spot, it might see a blue shifted signal when between two other massive objects.  But, then as I was following along in the Einstein Field Equations, which are built from the results of various other
+math, the Ricci tensor and scalar are just describing the transformation of space, and time really isn't even a factor.
+
+So... there wasn't a big bang?  Nothing's moving away from each other?  The Hubble Constant is just the general mass of objects - and how much space is displaced by graviational sources?  The graviational sources do not push each other away
+by displacing the space (they're generally attracted to each other) which does push more space to the outside of themselves.  The least dense space is near a massive object (and technically IN the massive object, since that's where the negative curvature actually happens; 
+I mean if there's a positive side to the curve, there must be a negative; and as demonstrated in images below, the negative curvature is NOT on the outside).
+
+
+## I don't know...
+
 As far as I can tell, the Big Bang Theory isn't so much of a theory as a creation myth.
 
 A lot of science is being based on assigning some meaning of this big bang that has led to a lot of misconceptions...
