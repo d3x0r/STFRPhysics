@@ -206,7 +206,7 @@ function updateGeometry( normalVertices,normalColors) {
 	const q = {x:0,y:0,z:0};
 	const p = {x:0,y:0,z:zDepth } ;
 
-	for( let zDepth = -20; zDepth < 20; zDepth+=incr *10 ) 
+	for( let zDepth = -0.2; zDepth < 0.2; zDepth+=incr *0.1 ) 
 	{
 		p.z = zDepth + values.sliderA/100;
 	for( let r = -20; r < 20; r+=incr ) {
