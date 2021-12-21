@@ -24,6 +24,7 @@ let stepy = {x:0, y:0.02, z:0 };
 let stepz = {x:0, y:0, z:0.02 };
 let stepxyz = {x:0.02, y:0.02, z:0.02 };
 let internalSpin = false;
+let useQuaternion = false;
 const spaceScale = 5;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
@@ -69,12 +70,41 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		prior = null;
 
 	 const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
+
+	var dq = new THREE.Quaternion( Math.sin( T/2 ) * A/lATC,  Math.sin( T/2 ) * B/lATC, Math.sin( T/2 ) * C/lATC, Math.cos( T/2 ) );
+	const lnQq = new lnQuat();
+	const axis1 = {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA};
+	const axis2 = {x:xRot/lB, y:yRot/lB, z:zRot/lB };
+
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
 		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
+        	const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
 		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
+		if(useQuaternion)
+		{	
+			let q1 = new THREE.Quaternion( Math.sin(fibre/2)* AxRot/lA,Math.sin(fibre/2)*AyRot/lA,Math.sin(fibre/2)*AzRot/lA,  Math.cos(fibre/2));
+			//q1.setFromAxisAngle ( axis1, fibre );
+			let q2 = new THREE.Quaternion( Math.sin(t/2)* xRot/lB,Math.sin(t/2)*yRot/lB,Math.sin(t/2)*zRot/lB,  Math.cos(t/2));
+			//q2.setFromAxisAngle ( axis2, t );
+			let q3 = dq.clone();
+			q3.multiply( q1 )
+			q3.multiply( q2 )
+			const len = Math.sqrt( q3.x*q3.x+ q3.y*q3.y+q3.z*q3.z+q3.w*q3.w );
+			//console.log( "resulting quat:", len );
+			const a = Math.acos( q3.w/len ) * 2;
+			const s = Math.sin( a/2 )*len;
+			lnQq.nx = q3.x / s;
+			lnQq.ny = q3.y / s;
+			lnQq.nz = q3.z / s;
+			lnQq.θ = a;
+			lnQq.x = a * lnQq.nx;
+			lnQq.y = a * lnQq.ny;
+			lnQq.z = a * lnQq.nz;
+                        lnQq.dirty = false;
+			doDrawBasis( lnQq, fibre, true );
+		}
 
 		const lnQ = internalSpin?new lnQuat( lnQ0 )
                     	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
@@ -119,7 +149,7 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
 			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
 		}
-
+		if(!useQuaternion)
 		if(showOnNormalBall) 		
 			drawN( lnQ );
 		else
@@ -385,6 +415,8 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	E = E * 30;
 	D = T ;
 	twistDelta = A;
+
+	useQuaternion = document.getElementById( "useQuaternion" )?.checked;
 
 	let tmp;
 	tmp = document.getElementById( "xRot" ).value;

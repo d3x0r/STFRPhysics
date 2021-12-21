@@ -42,7 +42,7 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >
 			<br>
 		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" >
 		 - Show Trajectories: <input type="checkbox" id="showTrajectories">
@@ -471,6 +471,8 @@ for (let i = 0; i < 3; i++) {
 			is = document.getElementById( "sharpenTransition" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showCoordinateGrid" );
+			is.onchange = updateMesh;
+			is = document.getElementById( "useQuaternion" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showOnNormalBall" );
 			is.onchange = updateMesh;
