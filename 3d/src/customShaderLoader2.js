@@ -40,7 +40,8 @@ TextureDone( ()=>{
 		}else 
 			common.stack.add( image );
 	}
-	window.doInit();
+	if( window.doInit )
+		window.doInit();
 })
 
 import {createTestData} from "./testdata.js"
