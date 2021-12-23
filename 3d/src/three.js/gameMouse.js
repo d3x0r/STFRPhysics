@@ -12,7 +12,7 @@ casting.geometry.dynamic = true;
 casting.mesh = new THREE.LineSegments( casting.geometry, casting.material );
  casting.mesh.frustumCulled = false;
  var vertices = new Float32Array( 500 * 3 ); // 3 vertices per point
-casting.geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) )
+casting.geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) )
 
 casting.addRef = function updateCastMesh( currentRef) {
   {

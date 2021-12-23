@@ -202,16 +202,16 @@ function L_d_iron_zofs( x, zofs, p, s, q ) {
 function updateGeometry( normalVertices,normalColors) {
         const spaceScale = 3.0;     
 	const incr = 0.25;
-	const s = {x:6.0,y:0,z:0};
+	const s = {x:values.sliderB,y:0,z:0};
 	const q = {x:0,y:0,z:0};
 	const p = {x:0,y:0,z:zDepth } ;
 
 	for( let zDepth = -0.2; zDepth < 0.2; zDepth+=incr *0.1 ) 
 	{
-		p.z = zDepth + values.sliderA/100;
-	for( let r = -20; r < 20; r+=incr ) {
+		p.z = zDepth + values.sliderA;
+	for( let r = -20/4; r < 20/4; r+=incr ) {
 		
-		for( let c = -20; c < 20; c+=incr ) {
+		for( let c = -20/4; c < 20/4; c+=incr ) {
 
 			// -----------------------------------------------------------------
 			const P = {x:0,y:0,z:0};
@@ -321,7 +321,10 @@ function updateGeometry( normalVertices,normalColors) {
 function initUI( updateMesh ) {
 	const controls = document.getElementById( "controls" );
         console.log( "controls",controls );
-	const slider = popups.makeSlider( controls, values, "sliderA", "zLevel" );
+	const slider = popups.makeSlider( controls, values, "sliderA", "zLevel", (x)=>x*6/1000 );
+	slider.on( "change", (slider)=>updateMesh() );
+	const slider2 = popups.makeSlider( controls, values, "sliderB", "Displacment", (x)=>x*6/1000 );
+	slider2.on( "change", (slider)=>updateMesh() );
 	popups.makeButton( controls, "Update", updateMesh );
 }
 

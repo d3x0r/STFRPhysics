@@ -107,11 +107,11 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		}
 
 		const lnQ = internalSpin?new lnQuat( lnQ0 )
-                    	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                        .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } )
+                    	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
+                        .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
 			:new lnQuat( lnQ0 )
-                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
+                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
+                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E );
 
 
 		if( showTrajectories ) {
@@ -464,7 +464,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	document.getElementById( "lnQYval").textContent = B;
 	document.getElementById( "lnQZval").textContent = C;
 	document.getElementById( "lnQTval").textContent = T;
-	document.getElementById( "lnQAval").textContent = ((E/3)|0)-4;
+	document.getElementById( "lnQAval").textContent = E= ((E/3)|0)-4;
 
 	tmp = document.getElementById( "turnCounter" );
 	turnCount = tmp.value;
