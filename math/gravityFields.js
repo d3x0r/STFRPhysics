@@ -607,7 +607,7 @@ function updateWells() {
 	const q={x:values.Amax,y:0,z:0};
 	const p0={x:0,y:0,z:0};
 	                   
-	const  p= {x:0, y:0,z:values.B }
+	const  p= {x:mouseX, y:mouseY,z:values.B }
 
 if(0)
 	for( let r = 0.01; r < 8; r+=0.5 ) {
@@ -684,8 +684,8 @@ if(1)
 		const row = [];
 	//	rows.push(row );
 		for( let t=-68.99; t < 68; t+= step(1000) ) {
-		 	p.x = t;
-			p.y = r;
+		 	p.x = t + mouseX;
+			p.y = r + mouseY;
 			//p.z = 0;
 			// these two draw the X/Y grid lines.
 			if(1)
@@ -719,8 +719,8 @@ if(1)
 				//plot(p_.x,p_.y,pens[1] );
 				//plot(p_.y,p_.x,pens[2] );
 			}
-		 	p.x = r;
-			p.y = t;
+		 	p.x = r + mouseX;
+			p.y = t + mouseY;
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};

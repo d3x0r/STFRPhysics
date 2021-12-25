@@ -22,7 +22,7 @@ const wells = [/* {x:5,y:5,z:0,g:1.0}
               , {x:-5,y:-5,z:0,g:1.0} */ ];
 
 for( let w = 0; w < 100; w++ ) {
-	wells.push( {x:(Math.random()-0.5)* 50,y:(Math.random()-0.5)* 50,z:0,g:Math.random()/3+0.5} );
+	wells.push( {x:(Math.random()-0.5)* 200/2,y:(Math.random()-0.5)* 200/2,z:(Math.random()-0.5)* 0,g:Math.random()/3+0.5} );
 }
 
 const localDel = 0.1;
@@ -645,8 +645,8 @@ if(1)
 	//	rows.push(row );
 		first = true;
 		for( let t=-68.99; t < 68; t+= step(1000) ) {
-		 	p.x = t;
-			p.y = r;
+		 	p.x = t + mouseX;
+			p.y = r + mouseY;
 			const len =  _3to1( p.x, p.y, p.z );
 			//p.z = 0;
 			// these two draw the X/Y grid lines.
@@ -689,8 +689,8 @@ if(1)
 			p0.z = P.z;
 
 			}
-		 	p.x = r;
-			p.y = t;
+		 	p.x = r + mouseX;
+			p.y = t + mouseY;
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
