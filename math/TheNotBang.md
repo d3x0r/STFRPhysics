@@ -1,4 +1,37 @@
 
+# Working Theory
+
+There is a flat space, which can be used as a basis to show positive curvature.  There is another space, where photons are allowed to go.  The second space can be mapped on the first space, but have additional displacments
+from positive curvature generators that move where light can go.  This is an ideal graph, and it should be noted that the physics of real life includes additional interactions that will often prevent following ideal geodesics; except
+in the extreme case that black holes represent.
+
+![External Image?](https://i.ibb.co/HT2BV4H/image.png)
+
+Light emitted at a particular point is subject to being emitted at the frequency within that space.  That is, if the emitter is deeper in gravity, the emitter occupies a certain physical space that is in flat space; while the photon space
+is has a non-rectangular mapping, the curvature in that space is wider and shorter than an emitter further away from a gravitational source;  between that, and the reduced speed that clocks run, the frequency emitted is red shifted already,
+and when received by a higher speed clock, in a less dense space that is narrower and taller than the emitter measures red shift.
+
+Conversely, emitted from a narrow, tall space, with a fast clock, with the same physical dimensions emits a blue shifted signal, which a slower clock, and wider, shorter space will see as blue shifted (compressed in space, across a shorter 
+counted time).
+
+In the above image, consider the spatial displacemnets (white circles) as the effective gravity of galaxies, and from the center a photon is emitted, which does not interact with anything, but follows its own geodesics.
+The average displacment of space increases as a emitted photon passes past galaxies from the center (relative to 0 in flat space), is greater and greater 
+
+(Only a certain portion of flat to curved space can really be considered... the further away from some relative origin or some relative point, the greater the effective displacement. This additional shove on the curvature of the space
+may seem cumulative and resembele dark energy; but the displacement does not shove other displacments (rather they are actually attracted to each other because of the gradient of spaces).  It's more that from a relative perspective of 
+emission, vs the displaced space that matters; the spatial displacment measured in the opposite direction will also be a net positive dispalcment from its relative flat space coordinates.)
+
+One might call light photons corpuscular; running in little tubes that generally get stretched more and more; end up covering more effective flat space than they should, thereby making them red shifted.
+
+If a path of light takes less time to cross a space, it is blue shifted; such as on the right side slightly below center, the photon is travelling between two gravitational gradients that cause it to blue shift while between them, 
+but the net effect will be to red shift it once it passes those.
+
+It's effectively the sum of the masses that are in a sphere behind a photon that controls how much the space is displaced.... and the further the photon goes, the more mass is behind it, effecitvely generating a constant progressive gradient.
+
+
+
+
+
 
 # 
 
