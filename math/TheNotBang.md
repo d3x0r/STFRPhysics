@@ -5,7 +5,7 @@ There is a flat space, which can be used as a basis to show positive curvature. 
 from positive curvature generators that move where light can go.  This is an ideal graph, and it should be noted that the physics of real life includes additional interactions that will often prevent following ideal geodesics; except
 in the extreme case that black holes represent.
 
-![External Image?](https://i.ibb.co/HT2BV4H/image.png)
+![External Image?](DistributedDisplacments.png)
 
 Light emitted at a particular point is subject to being emitted at the frequency within that space.  That is, if the emitter is deeper in gravity, the emitter occupies a certain physical space that is in flat space; while the photon space
 is has a non-rectangular mapping, the curvature in that space is wider and shorter than an emitter further away from a gravitational source;  between that, and the reduced speed that clocks run, the frequency emitted is red shifted already,
