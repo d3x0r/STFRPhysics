@@ -40,7 +40,13 @@ the space light travels through.
 The bottom row in the above picture, starting from top left and going across, then to the second row; shows if light were emitted somewhere on the left side, and travelled further and further, the total displacment of the space (the right
 green edge) is progressively longer and longer; which makes for a constant displacement of space that lengthens the wavelength of the photon as it goes on.
 
+There is an issue, however; doing the calculation as the total sum of all the points, the effecitve displacment of the space offsets the space from the actual displacment source; but, 
+1) it's possible that the space is NOT stretched (but then Eddington's experiment fails); 2) space itself would have automatically already 'flowed' (for lack of a better word) around the point appropriately to just be displaced... so I have
+to run some sort of relation over the graph ; though maybe more advanced math that considers all the peer displacments with the self displacment would work; sorting the points almost works to either draw the closest first (which still gets displaced by the later points),
+or drawing the closest last (which shoves all the outer ones away from their sources)... maybe it's the average of both sorts?  (I could really wish I had any other brain to bounce this off of)
 
+The last image in the sequence above is each point with a very small radius of displacment that shows where the actual locations are, since their net effect is small enough to not displace others very far; compared to the broadend and 
+heightened displacments in the other images.
 
 
 # Background
