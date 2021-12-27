@@ -31,9 +31,7 @@ It's effectively the sum of the masses that are in a sphere behind a photon that
 
 
 
-
-
-# 
+# Background
 
 When I first did the mathSphereDecay plot, and realized that the curvature is a positive pressure in space, this lead me to consider the dark energy aspect of modern science; and that this displacment of space pushes stuff away from each other.
 When I started to dig into that as a method of implementing gravity force, everything move away from each other instead of towards each other, and I had anti-gravity; so the space displacement itself does not affect the thing
@@ -56,7 +54,7 @@ by displacing the space (they're generally attracted to each other) which does p
 I mean if there's a positive side to the curve, there must be a negative; and as demonstrated in images below, the negative curvature is NOT on the outside).
 
 
-## I don't know...
+### I don't know...
 
 As far as I can tell, the Big Bang Theory isn't so much of a theory as a creation myth.
 
