@@ -35,7 +35,7 @@ The increased density is the average of all the galaxies within a expanding sphe
 and it already had low effect when the photon was emitted, so would have even less effect now; It's probably more like the sphere between where is currently is, and where it was emitted from that has an effective additional displacment on 
 the space light travels through.
 
-#[progressiveDIsplacments.png](progressiveDIsplacments.png)
+![progressiveDIsplacments.png](progressiveDIsplacments.png)
 
 The bottom row in the above picture, starting from top left and going across, then to the second row; shows if light were emitted somewhere on the left side, and travelled further and further, the total displacment of the space (the right
 green edge) is progressively longer and longer; which makes for a constant displacement of space that lengthens the wavelength of the photon as it goes on.
