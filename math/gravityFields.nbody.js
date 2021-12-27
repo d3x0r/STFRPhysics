@@ -9,6 +9,12 @@
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
+// this controls the grid resolution - -80 to 80 is what shows on the display.
+const squareSize = 1024;
+const minScale = -80;
+const maxScale = 80;
+
+
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
@@ -21,9 +27,17 @@ const wells = [/* {x:5,y:5,z:0,g:1.0}
               , {x:-5,y:5,z:0,g:1.0} 
               , {x:-5,y:-5,z:0,g:1.0} */ ];
 
+if(0)
 for( let w = 0; w < 100; w++ ) {
 	wells.push( {x:(Math.random()-0.5)* 200/2,y:(Math.random()-0.5)* 200/2,z:(Math.random()-0.5)* 0,g:Math.random()/3+0.5} );
 }
+
+
+for( let w = 0; w < 14; w++ ) {
+	for( let t = 0; t <= w; t++ )
+		wells.push( {x:(20-w)*10-100,y:(t-15)*10+50,z:0,g:1 } );
+}
+
 
 const localDel = 0.1;
 const local = [ {x:1,y:1,z:1} 
@@ -35,6 +49,49 @@ const local = [ {x:1,y:1,z:1}
 	      , {x:1,y:-1,z:-1} 
 	      , {x:-1,y:-1,z:-1}  
 		];
+
+const gradients = [];
+
+if(0)
+for( let x = minScale; x <= maxScale; x++ ) {
+        const X = x - minScale;
+	const col = [];
+	gradients.push(col);
+	for( let y = minScale; y <= maxScale; y++ ) {
+		const Y = y-minScale;
+		
+
+		const p = {x:x,y:y,z:0};
+		const p_ = {x:x,y:y,z:0};
+		let p__;
+		const s = {x:1,y:0,z:0};
+		const P = {x:0,y:0,z:0};
+		
+		const row = [];
+		const rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-x,w.y-y,w.z), x:w.x-mouseX,y:w.y-mouseY,z:w.z, g:w.g}) ).sort( (a,b)=>b.l-a.l );
+		
+		for( let well of rel_wells ) {
+			s.x =  well.g;
+			{
+				 p__ = L_sq(p_, 0, well.w, s, q );
+				const a = p__.x - p_.x;
+				const b = p__.y - p_.y;
+				const c = p__.z - p_.z;
+				p_.x = p__.x;
+				p_.y = p__.y;
+				p_.z = p__.z;
+				//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+				//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+				//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+				P.x += a;
+				P.y += b;
+				P.z += c;
+			}
+		}
+		col.push( P );
+	}
+
+}
 
 
 function measureArcBox( p, s, q ) {
@@ -459,9 +516,6 @@ function drawsomething() {
 
 
 	let x, y, z, w, X, Y, Z, W;
-	const squareSize = 1024;
-	const minScale = -80;
-	const maxScale = 80;
 	//const minScale = -50;
 	//const maxScale = 50;
 	const delStep = (min,max,x)=>( (max-min)/x );
@@ -615,7 +669,7 @@ function updateWells() {
 	const  p= {x:0, y:0,z:values.B }
 
 	//field is 2xg or 2g or g^2 for 2m?
-
+//	const rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-mouseX,w.y-mouseY,w.z), x:w.x-mouseX,y:w.y-mouseY,z:w.z, g:w.g}) ).sort( (a,b)=>a.l-b.l );
 //	p.z = ;
 //	p0.z = 0;
 	const rows = [];
@@ -634,9 +688,6 @@ if(1)
 		}
 	}
 
-			for( let o of wells ) {
-				plot( o.x,o.y,pens[0]);
-			}
 
 	let first = true;
 if(1)
@@ -644,28 +695,39 @@ if(1)
 		const row = [];
 	//	rows.push(row );
 		first = true;
-		for( let t=-68.99; t < 68; t+= step(1000) ) {
-		 	p.x = t + mouseX;
-			p.y = r + mouseY;
-			const len =  _3to1( p.x, p.y, p.z );
+		for( let t=-68.99; t < 68; t+= step(300) ) {
+		 	p.x = t - mouseX;
+			p.y = r - mouseY;
+			//const len =  _3to1( p.x, p.y, p.z );
 			//p.z = 0;
+		let rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z) }) ).sort( (a,b)=>b.l-a.l );
+
 			// these two draw the X/Y grid lines.
+				let p_ = Object.assign({},p);
+				let p__ = p;
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
-				for( let o of wells ) {
+				for( let o_ of rel_wells ) {
+					const o = o_.w;
+					//if( o.l > 40 ) continue;
 					s.x = values.A * o.g;
+					M.x = o.x;
+					M.y = o.y ;
 					//if( _3to1( o.x, o.y, o.z ) < len ) 
 					{
-					const p_ = L_sq(p, 0, o, s, q );
-					const a = p_.x - p.x;
-					const b = p_.y - p.y;
-					const c = p_.z - p.z;
-					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					 p__ = L_sq(p_, 0, o, s, q );
+					const a = p__.x - p_.x;
+					const b = p__.y - p_.y;
+					const c = p__.z - p_.z;
+					p_.x = p__.x;
+					p_.y = p__.y;
+					p_.z = p__.z;
+					//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
 					P.x += a;
 					P.y += b;
 					P.z += c;
@@ -674,47 +736,57 @@ if(1)
 				const dl = _2to1( P.x, P.y );
 				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
 //				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-				P.x += p.x;
-				P.y += p.y;
+				P.x += t;
+				P.y += r;
 				//line( p.x,p.y,P.x,P.y, pens[0] )
 				//line( p.y,p.x,P.y,P.x, pens[1] )
 				//row.push( P );
 
-			if( first ) 
-				plot(P.x,P.y,pens[1] );
-			else
-				line( P.x,P.y,p0.x, p0.y, pens[1] );
-			p0.x = P.x;
-			p0.y = P.y;
-			p0.z = P.z;
+				if( first ) 
+					plot(P.x,P.y,pens[1] );
+				else
+					line( P.x,P.y,p0.x, p0.y, pens[1] );
+				p0.x = P.x;
+				p0.y = P.y;
+				p0.z = P.z;
 
 			}
-		 	p.x = r + mouseX;
-			p.y = t + mouseY;
+		 	p_.x = p.x = r - mouseX;
+			p_.y = p.y = t - mouseY;
+		 rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z)}) ).sort( (a,b)=>b.l-a.l );
+				
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
-				for( let o of wells ) {
+				for( let o_ of rel_wells ) {
+					const o = o_.w;
 					s.x = values.A * o.g;
-					const p_ = L_sq(p, 0, o, s, q );
-					const a = p_.x - p.x;
-					const b = p_.y - p.y;
-					const c = p_.z - p.z;
-					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					M.x = o.x - 50;
+					M.y = o.y;
+					{
+					 p__ = L_sq(p_, 0, o, s, q );
+					const a = p__.x - p_.x;
+					const b = p__.y - p_.y;
+					const c = p__.z - p_.z;
+					p_.x = p__.x;
+					p_.y = p__.y;
+					p_.z = p__.z;
+					//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
 					P.x += a;
 					P.y += b;
 					P.z += c;
+					}
 				}
 
 				const dl = _2to1( P.x, P.y );
 				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
 //				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-				P.x += p.x;
-				P.y += p.y;
+				P.x += r;
+				P.y += t;
 			if( first ) 
 				plot(P.x,P.y,pens[2] );
 			else
@@ -729,12 +801,19 @@ if(1)
 	}
 
 //	ctx.putImageData(_output, 0,0);
+			for( let o of wells ) {
+				plot( o.x -0 + mouseX,o.y + mouseY,pens[0]);
+				plot( o.x -0.1 + mouseX,o.y + mouseY,pens[0]);
+				plot( o.x -0 + mouseX,o.y+0.1 + mouseY,pens[0]);
+				plot( o.x -0.1 + mouseX,o.y+0.1 + mouseY,pens[0]);
+			}
 
 
 	let start = Date.now();
 	const _p = {x:0, y:0 };
 	let _l = 0;
 	first = true;
+if(0)
 	for( let t = 0; t < 360; t+= 10 ) {
 		let slopex = Math.cos( t/180*Math.PI );
 		let slopey = Math.sin( t/180*Math.PI );
