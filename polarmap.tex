@@ -1,7 +1,15 @@
 http://mathb.in/68309
+http://mathb.in/68362
+
+https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap3.html
+(Hidden link above)
+
+
+
 
 - $t$ is the angle around the sphere (longitude); range is $0$ to $2\pi$ 
 - $r$ is the latitude 2pi is the same pole, but different representation; range is $0$ to $4\pi$ ($-2\pi$ to $2\pi$)
+- $\delta r$ follows a geodesic that forward parallel transpoarts the tangent plane; (does not change the orientation of the tangent plane moving around this path.
 - When theta is 0 ($t=\frac \pi 2$ and $r=\pi$), so at the south pole, at 90 degrees to the right, then the $\cos t$ and $\cos \frac r 2 $ are also 0, and the result is the identity rotation (0,0,0).  Most other points that are at a southern pole are separated by their longitude angle.  
 - the poles where $r=0$, $r=2\pi$ are at $(+\pi,0)$ and $(-\pi,0)$  respectively.  A small angle of $r$ moves away from the pole fairly quickly; but while at these poles, it's impossible to determine the $t$.
 - n is a combined scalar; $\frac 1 {\sin \frac \theta 2} $ normalizes the vector x and y; $\theta$ is then applied as a scalar on the unit length.
@@ -29,7 +37,45 @@ $ r = 2 \cos^{-1} {\frac {x \sin \frac \theta 2  } \theta  }$
 
 $ t = \cos ^{-1} {\frac { y \sin {\frac \theta 2} } {\theta \sin {\frac r 2 } } }$
 
+---
+## 3D transformation
+
+- $r$ is still the distance from pole to pole
+- $t$ is still the angle around the pole.
+- $s$ is an offset to the base and angle around the pole.
+- the value ( $t$-$s$ ) might often be used to maintain the same up orientation and just apply a turn to the tangent plant at the same point.
+- $s$ from 0 to pi rotates the angle by 360 degrees, so the resulting twist is the same orientation; but at the opposite same-pole.
+
+$ (r,t,s) => (x,y,z) $
+
+$\theta = \sin^{-1}( \sin(s+t)*\sin \frac r 2 )*2 + \pi$
+
+$n = \frac \theta { \sin \frac \theta 2 }$ 
+
+$ x = n \cos s \cos \frac r 2 $
+
+$ y = n \cos(s+t)   \sin {\frac r 2}$
+
+$ z = n \sin s \cos \frac r 2 $
 
 ---
-a+bi + cj+dk
 
+## 4D rotation(?)
+
+- Rotate the up, but don't twist the base frame.... which yields frame torsion.
+- as pole configurations go...
+- `twistDelta` turns the frame that gets forward parallel transported along R at some `lng`.   following along a constant lng does not rotate the tangent plane relative to the movement.
+
+- gamma // used as angle around the pole delta
+
+- lng  // used as bias angle from (0+gamma) angle
+
+- twistDelta // rotates the tangent plane
+
+- r   // distance from one pole to another - follows a geodesic that forward parallel transpoarts the tangent plane.
+
+
+						let ang = Math.acos( -Math.sin(gamma+2*lng-twistDelta)*Math.sin(r/2) )*2 ;
+						const Cx = Math.cos( +twistDelta)         * Math.cos(r/2);
+						const Cy = Math.sin( +twistDelta)         * Math.cos(r/2);
+						const Cz = Math.cos(2*lng + gamma-twistDelta) * Math.sin(r/2);
