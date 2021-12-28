@@ -22,7 +22,8 @@ import {DualGeometryMaterial} from "./dual.geometrymaterial.texture.js"
 
 const common = {
 	stack : null,
-	cursorIcon : null
+	cursorIcon : null,
+	inited : false,
 }
 
 TextureDone( ()=>{
@@ -40,6 +41,7 @@ TextureDone( ()=>{
 		}else 
 			common.stack.add( image );
 	}
+	common.inited = true;
 	if( window.doInit )
 		window.doInit();
 })
