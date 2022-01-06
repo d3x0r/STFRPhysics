@@ -469,6 +469,7 @@ function DrawQuatNormals(normalVertices,normalColors) {
 
 }
 
+export {DrawQuatPaths};
 window.DrawQuatPaths = DrawQuatPaths;
 function DrawQuatPaths(normalVertices,normalColors) {
         let curSliders = {

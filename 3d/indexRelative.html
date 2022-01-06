@@ -4,11 +4,11 @@
 		
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-
-		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
+
+		<!--script type="module" src="./src/customShaderLoader2.js"></script>
 		<script type="module" src="./src/lnQuatSq.js"></script>
-		<script type="module" src="./src/lnQuatTestRelative.js"></script>
+		<script type="module" src="./src/lnQuatTestRelative.js"></script-->
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
 		<script src="./src/Stats.js"></script>
@@ -101,10 +101,13 @@
 	  </div>
 	</div>
 
-	<script >
+	<script type="module">
+		import {common} from "./src/customShaderLoader2.js"
+		import {DrawQuatPaths} from "./src/lnQuatTestRelative.js"
 
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
+		let cameraControls;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
 		var meshers = {
 		//  , 'Marching Tetraheda 2 (DCL-cell)' : MarchingTetrahedra2
@@ -163,7 +166,7 @@
 			
 			var start = (new Date()).getTime();
 	if( geometryNormals  ) 
-		window.DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
+		DrawQuatPaths(geometryNormals.vertices,geometryNormals.colors);
 
 
 	  var opts = {
@@ -213,6 +216,7 @@
 		window.doInit = ()=>{
 		if( !init() )	animate();
 		}
+		if( common.inited ) window.doInit();
 		// init the scene
 		function init(){
 

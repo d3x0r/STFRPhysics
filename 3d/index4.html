@@ -89,6 +89,7 @@
 
 	<script type="module">
 
+		import {common} from "./src/customShaderLoader2.js"
 		import {DrawQuatPaths, updateShapes} from "./src/lnQuatTest4.js"
 		var presetFields = [	"lnQX", "lnQY", "lnQZ", "lnQT", "xRot", "yRot", "zRot" ];
 		var presets = [	[500, 750, 500, 700, 900, 500, 500 ]	
@@ -193,6 +194,7 @@
 		window.doInit = ()=>{
 		if( !init() )	animate();
 		}
+		if( common.inited ) window.doInit();
 		// init the scene
 		function init(){
 
