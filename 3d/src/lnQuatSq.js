@@ -1206,7 +1206,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( this, oct-4, ax, ay, az, th );
+	return finishRodrigues( this, oct||0, ax, ay, az, th );
 }
 
 lnQuat.prototype.freeSpin = function(th,axis,oct){
