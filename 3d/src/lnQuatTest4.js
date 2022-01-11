@@ -25,6 +25,7 @@ let stepz = {x:0, y:0, z:0.02 };
 let stepxyz = {x:0.02, y:0.02, z:0.02 };
 let internalSpin = true;
 let useQuaternion = false;
+let useStepFunction = false;
 const spaceScale = 5;
 
 function QuatPathing2(q, v, c,normalVertices,normalColors) {
@@ -76,6 +77,9 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const axis1 = {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA};
 	const axis2 = {x:xRot/lB, y:yRot/lB, z:zRot/lB };
 
+	const fiberStep = ( 4*Math.PI ) / ( steps );
+	const fiberPartStep = ((fiberStep + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
+	let lnQ_=new lnQuat().set( lnQ0);
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
 		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
@@ -115,13 +119,24 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
                         .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E );
 */
 
-		const lnQ = internalSpin?new lnQuat( lnQ0 )
+
+		const lnQ  =
+		( !useStepFunction ) ?
+			(internalSpin?new lnQuat( lnQ0 )
                     	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
                         .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
 			:new lnQuat( lnQ0 )
                     	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
-                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E );
-
+                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
+                        )
+		       :( internalSpin?lnQ_
+                    	.spin( fiberStep, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
+                        .spin( fiberPartStep, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
+			:lnQ_
+                    	.freeSpin( fiberStep, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
+                        .freeSpin( fiberPartStep, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
+			);
+		lnQ_ = lnQ;
 		if( showTrajectories ) {
 			const newDelx = lnQ.apply( stepx );
 			const newDely = lnQ.apply( stepy );
@@ -425,6 +440,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	twistDelta = A;
 
 	useQuaternion = document.getElementById( "useQuaternion" )?.checked;
+	useStepFunction = document.getElementById( "useStepFunction" )?.checked;
 	internalSpin = document.getElementById( "useInternal" )?.checked;
 
 	let tmp;
@@ -496,16 +512,20 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	const cz = new THREE.Color( 0,192,192,255 );
 	QuatPathing2( lnQ, yAxis, cy,normalVertices,normalColors );
 
-	
+
+	const lABC = Math.sqrt(A*A+B*B+C*C);
+	const lnQ0 = new lnQuat(  0, T*A/lABC, T*B/lABC, T*C/lABC ).update();
+	lnQ_ = new lnQuat().set( lnQ0 );
 	//QuatPathing( lnQ, xAxis, cx,normalVertices,normalColors );
 	//QuatPathing( lnQ, yAxis, cy,normalVertices,normalColors );
 	//QuatPathing( lnQ, zAxis, cz,normalVertices,normalColors );
 }
 
+let lnQ_;
 
-export function updateShapes( shapes ) {
+export function updateShapes( shapes,camera ) {
 	const atTick = Date.now();
-	const nTotal = ( ( (atTick )/(turnCount*5000) ) %1) * stepCount * turnCount  /* this 5 and turn count must relate*/;
+	const nTotal = ( ( (atTick )/(turnCount*useStepFunction?5000:25000) ) %1) * stepCount * turnCount  /* this 5 and turn count must relate*/;
 
 	const lABC = Math.sqrt(A*A+B*B+C*C);
 	const steps = stepCount;
@@ -521,6 +541,8 @@ export function updateShapes( shapes ) {
 	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
 
+	const fiberStep = ( 4*Math.PI ) / ( steps );
+	const fiberPartStep = ((fiberStep + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
 
 	if(useQuaternion)
 	{	
@@ -556,15 +578,25 @@ export function updateShapes( shapes ) {
 			const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 			const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
 
-			const lnQ = internalSpin?new lnQuat( lnQ0 )
+			const lnQ =  (!useStepFunction)?(
+				internalSpin?new lnQuat( lnQ0 )
                             	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
                                 .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E )
 				:new lnQuat( lnQ0 )
                             	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
-                                .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E );
+                                .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E ) )
+			:(internalSpin?lnQ_
+                            	.spin( fiberStep, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
+                                .spin( fiberPartStep, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E )
+				:lnQ_
+                            	.freeSpin( fiberStep, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
+                                .freeSpin( fiberPartStep, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E )
+			  )
+			;
                 
                 
 		lnQ.exp( shapes[0].quaternion );
+		lnQ.exp( camera.quaternion );
 		lnQ.exp( shapes[1].quaternion );
 		shapes[1].position.set( lnQ.x*spaceScale, lnQ.y*spaceScale, lnQ.z*spaceScale );
 	}

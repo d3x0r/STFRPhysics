@@ -42,7 +42,10 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >  - use Internal Rotation: <input type="checkbox" id="useInternal" checked >
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >  
+			- use Internal Rotation: <input type="checkbox" id="useInternal" unchecked >
+			- use Step Function: <input type="checkbox" id="useStepFunction" unchecked >
+			
 			<br>
 		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" >
 		 - Show Trajectories: <input type="checkbox" id="showTrajectories">
@@ -478,6 +481,8 @@ for (let i = 0; i < 3; i++) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "useInternal" );
 			is.onchange = updateMesh;
+			is = document.getElementById( "useStepFunction" );
+			is.onchange = updateMesh;
 			is = document.getElementById( "showOnNormalBall" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "showTrajectories" );
@@ -520,7 +525,7 @@ for (let i = 0; i < 3; i++) {
 			// - it has to be at the begining of the function
 			// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 			requestAnimationFrame( animate );
-			updateShapes( shapes );
+			updateShapes( shapes,camera );
 			// do the render
 			render();
 
