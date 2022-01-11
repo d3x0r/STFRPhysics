@@ -514,12 +514,12 @@ export function updateShapes( shapes ) {
 	const lnQ0 = new lnQuat(  0, T*A/lABC, T*B/lABC, T*C/lABC ).update();
 	
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
+	const fibre = nTotal * ( 4*Math.PI ) / ( steps );
         const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
-		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
+	const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
 		
-			const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
-			const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
+	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
+	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
 
 
 	if(useQuaternion)
@@ -555,12 +555,13 @@ export function updateShapes( shapes ) {
 	}else{
 			const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 			const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
+
 			const lnQ = internalSpin?new lnQuat( lnQ0 )
-                            	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                                .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } )
+                            	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
+                                .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E )
 				:new lnQuat( lnQ0 )
-                            	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                                .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
+                            	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA},E )
+                                .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB },E );
                 
                 
 		lnQ.exp( shapes[0].quaternion );
