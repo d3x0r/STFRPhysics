@@ -85,6 +85,7 @@ function lnQuat( theta, d, a, b, e ){
 }
 
 lnQuat.SLERP = false;
+lnQuat.invertCrossProduct = false;
 lnQuat.sinNormal = false;
 
 lnQuat.setTwistDelta = function(t) {
@@ -1133,9 +1134,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
 		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
-		const crsX = -(ay*q.nz-az*q.ny);
-		const crsY = -(az*q.nx-ax*q.nz);
-		const crsZ = -(ax*q.ny-ay*q.nx);
+		const crsX = (lnQuat.invertCrossProduct?-1:1)*(ay*q.nz-az*q.ny);
+		const crsY = (lnQuat.invertCrossProduct?-1:1)*(az*q.nx-ax*q.nz);
+		const crsZ = (lnQuat.invertCrossProduct?-1:1)*(ax*q.ny-ay*q.nx);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );

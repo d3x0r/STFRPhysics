@@ -1626,6 +1626,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		}
 	        
 
+		if( document.getElementById( "invertCrossProduct" )?.checked ) {
+			lnQuat.invertCrossProduct = true;
+		}else 			
+			lnQuat.invertCrossProduct = false;
+
+
 
 		if( document.getElementById( "useSLERP" )?.checked ) {
 			lnQuat.SLERP = true;

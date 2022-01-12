@@ -61,7 +61,7 @@
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls">
-		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" ><br>
+		   Show Advanced: <input type="checkbox" id="showAdvanced" >Show Arms: <input type="checkbox" id="showArm" >  Invert CrossProduct(QuatAlign): <input type="checkbox" id="invertCrossProduct" unchecked ><br>
 		<p style="display:none">Input Data:</p>
 		<p style="display:none"><select id="datasource"></select></p>
 		<p style="display:none">Algorithm:</p>
@@ -709,19 +709,12 @@ function blurSlider( slider ) {
 
 			}
 
-			is = document.getElementById( "timeScalar" );
-			is.oninput = updateMesh;
-			is = document.getElementById( "twistDelta" );
-			is.oninput = updateMesh;
+		const controls = ["timeScalar","twistDelta","invertCrossProduct",];
+		controls.map( c=>{const is=document.getElementById( c ); if(is) is.oninput=updateMesh;} );
+
 			//is.value = 500;
 			//is.range = 1000;
 
-			is = document.getElementById( "showArm");
-			if( is ) is.onchange=()=>{
-				let is = document.getElementById( "drawRawRotIter" );
-				is = document.getElementById( "drawRawRot" ).checked = true;
-				updateMesh();
-			}
 			is = document.getElementById( "add2Norm" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "useSLERP" );
@@ -797,6 +790,13 @@ function blurSlider( slider ) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "fineRange" );
 			is.onchange = updateMesh;
+
+			is = document.getElementById( "showArm");
+			if( is ) is.onchange=()=>{
+				let is = document.getElementById( "drawRawRotIter" );
+				is = document.getElementById( "drawRawRot" ).checked = true;
+				updateMesh();
+			}
 
 			const is5 = document.getElementById( "fixAxleRotation" );
 			is5.onchange = ()=>{
