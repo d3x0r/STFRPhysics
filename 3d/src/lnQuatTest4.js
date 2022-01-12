@@ -93,8 +93,8 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			let q2 = new THREE.Quaternion( Math.sin(t/2)* xRot/lB,Math.sin(t/2)*yRot/lB,Math.sin(t/2)*zRot/lB,  Math.cos(t/2));
 			//q2.setFromAxisAngle ( axis2, t );
 			let q3 = dq.clone();
-			q3.multiply( q1 )
-			q3.multiply( q2 )
+			q3.multiply( internalSpin? q1.conjugate():q1 )
+			q3.multiply( internalSpin? q2.conjugate():q2 )
 			const len = Math.sqrt( q3.x*q3.x+ q3.y*q3.y+q3.z*q3.z+q3.w*q3.w );
 //if( Math.abs(len-1) > 0.1 ) console.log( "Result:", len, nTotal, q3 );
 			//console.log( "resulting quat:", len );

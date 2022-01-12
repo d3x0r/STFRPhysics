@@ -903,9 +903,9 @@ lnQuat.prototype.apply = function( v ) {
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
-			  vx*c + s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
+			  vx*c + (internalSpin?-1:1)*s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + (internalSpin?-1:1)*s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + (internalSpin?-1:1)*s*(qx * vy - qy * vx) + qz * dot );
 	} 
 }
 
