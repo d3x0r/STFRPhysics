@@ -42,9 +42,12 @@
 		 - Show Grid: <input type="checkbox" id="showGrid" checked>
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
-		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >  
+		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >  <br>
 			- use Internal Rotation: <input type="checkbox" id="useInternal" unchecked >
 			- use Step Function: <input type="checkbox" id="useStepFunction" unchecked >
+			
+			<br>
+			- Invert Cross Product(Q Compat): <input type="checkbox" id="invertCrossProduct" unchecked >
 			
 			<br>
 		 - Show on Normal Ball: <input type="checkbox" id="showOnNormalBall" >
@@ -412,6 +415,11 @@ for (let i = 0; i < 3; i++) {
 			is = document.getElementById("showNormals");
 			is.onchange = updateMesh;
 			is.checked  = true;
+
+
+
+			is = document.getElementById( "invertCrossProduct" );
+			is.oninput = updateMesh;
 
 			is = document.getElementById( "SinNormalizeRRF" );
 			is.oninput = updateMesh;

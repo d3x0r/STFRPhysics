@@ -443,6 +443,11 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	useStepFunction = document.getElementById( "useStepFunction" )?.checked;
 	internalSpin = document.getElementById( "useInternal" )?.checked;
 
+	if( document.getElementById( "invertCrossProduct" )?.checked ) {
+		lnQuat.invertCrossProduct = true;
+	}else 			
+		lnQuat.invertCrossProduct = false;
+
 	let tmp;
 	tmp = document.getElementById( "xRot" ).value;
 	curSliders.xRot = tmp;	
