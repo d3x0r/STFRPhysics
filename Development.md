@@ -114,5 +114,7 @@ to rotate, is using that in an external sense to rotate the frame.
 
 
 
+# Help Wanted
 
-# ...
+At this point I'd like to see quaternions work... but I don't know the proper expression for `r*(q*r^-1)`  sort of thing... and if that IS it, 
+then there's my complaint with quaternions; because that curve should also be the intrinsic curve, and be nice stright lines in the rotation vector space.
