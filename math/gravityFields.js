@@ -606,8 +606,22 @@ function updateWells() {
 	const s={x:values.A,y:0,z:0};
 	const q={x:values.Amax,y:0,z:0};
 	const p0={x:0,y:0,z:0};
+	const p0_={x:0,y:0,z:0}; // used to cache the previous point for a line.
 	                   
 	const  p= {x:mouseX, y:mouseY,z:values.B }
+
+	if(0) // project single axis rotated 45 degrees...
+	for( let r = minScale;r<maxScale;r+=step(100) ){
+		const newX = r/Math.sqrt(r*r)*Math.sqrt(r*r+s.x*s.x);
+		const r_ = Math.sqrt(newX*newX + r*r );
+		const tan_ = newX/r;
+		const ang = Math.atan( tan_ ) - Math.PI/4;
+		
+		plot( (r<0?-1:1)*r_ * Math.cos( ang ), (r<0?-1:1)*r_ * Math.sin(ang), pens[0] );
+		line( p0.x,p0.y,(r<0?-1:1)*r_ * Math.cos( ang ), (r<0?-1:1)*r_ * Math.sin(ang), pens[0] );
+		p0.x = (r<0?-1:1)*r_ * Math.cos( ang );
+		p0.y = (r<0?-1:1)*r_ * Math.sin(ang);
+	}
 
 if(0)
 	for( let r = 0.01; r < 8; r+=0.5 ) {
@@ -678,81 +692,97 @@ if(1)
 			for( let o of wells ) {
 				plot( o.x,o.y,pens[0]);
 			}
+	 let first = true;
 
 if(1)
 	for( let r = -58.99; r < 58; r+=1 ) {
 		const row = [];
 	//	rows.push(row );
+		first = true;
 		for( let t=-68.99; t < 68; t+= step(1000) ) {
-		 	p.x = t + mouseX;
-			p.y = r + mouseY;
+		 	p.x = t;
+			p.y = r;
 			//p.z = 0;
 			// these two draw the X/Y grid lines.
+			let rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z) }) ).sort( (a,b)=>b.l-a.l );
+			let p_ = Object.assign({},p);
+			let p__ = p;
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
-				for( let o of wells ) {
-					const p_ = L_sq(p, 0, o, s, q );
-					const a = p_.x - p.x;
-					const b = p_.y - p.y;
-					const c = p_.z - p.z;
-					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
-					P.x += a;
-					P.y += b;
-					P.z += c;
+				for( let o_ of rel_wells ) {
+					const o = o_.w;
+					{
+						 p__ = L_sq(p_, 0, o, s, q );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+
+						P.x += a;
+						P.y += b;
+						P.z += c;
+					}
 				}
 				const dl = _2to1( P.x, P.y );
-				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-				P.x += p.x;
-				P.y += p.y;
-				//line( p.x,p.y,P.x,P.y, pens[0] )
-				//line( p.y,p.x,P.y,P.x, pens[1] )
-				//row.push( P );
+
+				P.x += t;
+				P.y += r;
+
 				plot(P.x,P.y,pens[1] );
-				
-				
-				//plot(p_.x,p_.y,pens[1] );
-				//plot(p_.y,p_.x,pens[2] );
+				if( first ) 
+					plot(P.x,P.y,pens[1] );
+				else
+					line( P.x,P.y,p0.x, p0.y, pens[1] );
+				p0.x = P.x;
+				p0.y = P.y;
+				p0.z = P.z;
+
 			}
-		 	p.x = r + mouseX;
-			p.y = t + mouseY;
+		 	p_.x = p.x = r ;
+			p_.y = p.y = t ;
+			rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z) }) ).sort( (a,b)=>b.l-a.l );
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
-				for( let o of wells ) {
-					const p_ = L_sq(p, 0, o, s, q );
-					const a = p_.x - p.x;
-					const b = p_.y - p.y;
-					const c = p_.z - p.z;
-					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
-					P.x += a;
-					P.y += b;
-					P.z += c;
+				for( let o_ of rel_wells ) {
+					const o = o_.w;
+					{
+						 p__ = L_sq(p_, 0, o, s, q );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+
+						P.x += a;
+						P.y += b;
+						P.z += c;
+					}
 				}
 				const dl = _2to1( P.x, P.y );
-				//plot( p.x, p.y, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-//				plot( p.y, p.x, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, dl, 1 ) )
-				P.x += p.x;
-				P.y += p.y;
-				//line( p.x,p.y,P.x,P.y, pens[0] )
-				//line( p.y,p.x,P.y,P.x, pens[1] )
-				//row.push( P );
-			//	plot(P.x,P.y,pens[1] );
+
+				P.x += r;
+				P.y += t;
+
 				plot(P.x,P.y,pens[2] );
-				
-				
-				//plot(p_.x,p_.y,pens[1] );
-				//plot(p_.y,p_.x,pens[2] );
+				if( first ) 
+					plot(P.x,P.y,pens[2] );
+				else
+					line( P.x,P.y,p0_.x, p0_.y, pens[2] );
+			        
+				p0_.x = P.x;
+				p0_.y = P.y;
+				p0_.z = P.z;
 			}
+			first  =false;
 
 			if(0) // second layer graph
 			{
@@ -790,7 +820,7 @@ if(1)
 
 	const _p = {x:0, y:0 };
 	let _l = 0;
-	let first = true;
+	first = true;
 	for( let t = 0; t < 360; t+= 10 ) {
 		let slopex = Math.cos( t/180*Math.PI );
 		let slopey = Math.sin( t/180*Math.PI );

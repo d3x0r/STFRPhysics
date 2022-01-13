@@ -700,11 +700,11 @@ if(1)
 			p.y = r - mouseY;
 			//const len =  _3to1( p.x, p.y, p.z );
 			//p.z = 0;
-		let rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z) }) ).sort( (a,b)=>b.l-a.l );
+			let rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z) }) ).sort( (a,b)=>b.l-a.l );
 
 			// these two draw the X/Y grid lines.
-				let p_ = Object.assign({},p);
-				let p__ = p;
+			let p_ = Object.assign({},p);
+			let p__ = p;
 			if(1)
 			{
 				const P = {x:0,y:0,z:0};
@@ -714,23 +714,21 @@ if(1)
 					const o = o_.w;
 					//if( o.l > 40 ) continue;
 					s.x = values.A * o.g;
-					M.x = o.x;
-					M.y = o.y ;
 					//if( _3to1( o.x, o.y, o.z ) < len ) 
 					{
-					 p__ = L_sq(p_, 0, o, s, q );
-					const a = p__.x - p_.x;
-					const b = p__.y - p_.y;
-					const c = p__.z - p_.z;
-					p_.x = p__.x;
-					p_.y = p__.y;
-					p_.z = p__.z;
-					//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
-					P.x += a;
-					P.y += b;
-					P.z += c;
+						 p__ = L_sq(p_, 0, o, s, q );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+						//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+						//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+						//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+						P.x += a;
+						P.y += b;
+						P.z += c;
 					}
 				}
 				const dl = _2to1( P.x, P.y );
@@ -753,7 +751,7 @@ if(1)
 			}
 		 	p_.x = p.x = r - mouseX;
 			p_.y = p.y = t - mouseY;
-		 rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z)}) ).sort( (a,b)=>b.l-a.l );
+		 	rel_wells = wells.map( (w)=>({w:w, l:_3to1(w.x-p.x,w.y-p.y,w.z)}) ).sort( (a,b)=>b.l-a.l );
 				
 			if(1)
 			{
@@ -763,22 +761,20 @@ if(1)
 				for( let o_ of rel_wells ) {
 					const o = o_.w;
 					s.x = values.A * o.g;
-					M.x = o.x - 50;
-					M.y = o.y;
 					{
-					 p__ = L_sq(p_, 0, o, s, q );
-					const a = p__.x - p_.x;
-					const b = p__.y - p_.y;
-					const c = p__.z - p_.z;
-					p_.x = p__.x;
-					p_.y = p__.y;
-					p_.z = p__.z;
-					//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
-					P.x += a;
-					P.y += b;
-					P.z += c;
+						 p__ = L_sq(p_, 0, o, s, q );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+						//if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+						//if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+						//if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+						P.x += a;
+						P.y += b;
+						P.z += c;
 					}
 				}
 
