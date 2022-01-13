@@ -1192,8 +1192,8 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	// make sure it's normalized
 
 	//-------- apply rotation to the axle... (put axle in this basis)
-	const nst = Math.sin(this.θ/2); // normal * sin_theta
-	const qw = Math.cos(this.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
+	const nst = Math.sin((lnQuat.invertCrossProduct?-1:1)*this.θ/2); // normal * sin_theta
+	const qw = Math.cos((lnQuat.invertCrossProduct?-1:1)*this.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 	
 	const qx = this.nx*nst;
 	const qy = this.ny*nst;
