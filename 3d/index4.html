@@ -43,7 +43,7 @@
 		 - Sharpen Transition: <input type="checkbox" id="sharpenTransition" >
 		<p>
 		 - Show Basis Map: <input type="checkbox" id="showCoordinateGrid" >   - use Quaternions: <input type="checkbox" id="useQuaternion" unchecked >  <br>
-			- use Internal Rotation: <input type="checkbox" id="useInternal" unchecked >
+			- use External Rotation: <input type="checkbox" id="useExternal" unchecked >
 			- use Step Function: <input type="checkbox" id="useStepFunction" unchecked >
 			
 			<br>
@@ -487,7 +487,7 @@ for (let i = 0; i < 3; i++) {
 			is.onchange = updateMesh;
 			is = document.getElementById( "useQuaternion" );
 			is.onchange = updateMesh;
-			is = document.getElementById( "useInternal" );
+			is = document.getElementById( "useExternal" );
 			is.onchange = updateMesh;
 			is = document.getElementById( "useStepFunction" );
 			is.onchange = updateMesh;

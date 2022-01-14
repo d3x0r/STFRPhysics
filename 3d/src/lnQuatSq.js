@@ -903,9 +903,9 @@ lnQuat.prototype.apply = function( v ) {
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
-			  vx*c + (internalSpin?-1:1)*s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + (internalSpin?-1:1)*s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + (internalSpin?-1:1)*s*(qx * vy - qy * vx) + qz * dot );
+			  vx*c + (lnQuat.invertCrossProduct?-1:1)*s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + (lnQuat.invertCrossProduct?-1:1)*s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + (lnQuat.invertCrossProduct?-1:1)*s*(qx * vy - qy * vx) + qz * dot );
 	} 
 }
 
@@ -1086,7 +1086,7 @@ function slerp2( q, p, t, target, external ) {
 
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
-function finishRodrigues( q, oct, ax, ay, az, th ) {
+function finishRodrigues( q, oct, ax, ay, az, th, extrinsic ) {
 	oct = oct || Math.floor(q.θ/(Math.PI*2));
 	// A dot B   = cos( angle A->B )
 	// cos( C/2 ) 
@@ -1134,9 +1134,9 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
 		// the following expression is /2 (has to be normalized anyway keep 1 bit)
 		// and is not normalized with sin of angle/2.
-		const crsX = (lnQuat.invertCrossProduct?-1:1)*(ay*q.nz-az*q.ny);
-		const crsY = (lnQuat.invertCrossProduct?-1:1)*(az*q.nx-ax*q.nz);
-		const crsZ = (lnQuat.invertCrossProduct?-1:1)*(ax*q.ny-ay*q.nx);
+		const crsX = (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(ay*q.nz-az*q.ny);
+		const crsY = (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(az*q.nx-ax*q.nz);
+		const crsZ = (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(ax*q.ny-ay*q.nx);
 		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
@@ -1181,9 +1181,24 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 
 lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
+
+
 	if( "undefined" === typeof oct ) oct = 4;
 	if( this.dirty ) this.update();
 
+	const ax_ = axis.x;
+	const ay_ = axis.y;
+	const az_ = axis.z;
+	// make sure it's normalized
+	const aLen = Math.sqrt(ax_*ax_ + ay_*ay_ + az_*az_);
+	if( aLen ) {
+		const ax = ax_/aLen;
+		const ay = ay_/aLen;
+		const az = az_/aLen;
+
+		return finishRodrigues( this, oct||0, ax, ay, az, th, true );
+	}
+	return this;    {
 	// ax, ay, az could be given; these are computed as the source quaternion normal
 	const aLen = Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z);
 	const ax_ = axis.x/aLen;
@@ -1207,7 +1222,8 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( this, oct||0, ax, ay, az, th );
+	return finishRodrigues( this, oct||0, ax, ay, az, th, true );
+}
 }
 
 lnQuat.prototype.freeSpin = function(th,axis,oct){
