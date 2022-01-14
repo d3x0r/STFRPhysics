@@ -1386,6 +1386,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	drawWorldAxles = document.getElementById( "drawWorldAxles" )?.checked;
 	showSliderCurves = document.getElementById( "showSliderCurves" )?.checked;
 
+		if( document.getElementById( "invertCrossProduct" )?.checked ) {
+			lnQuat.invertCrossProduct = true;
+		}else 			
+			lnQuat.invertCrossProduct = false;
+
+
 	let rotateXArm = document.getElementById( "drawArmFromX" )?.checked;
 	let rotateYArm = document.getElementById( "drawArmFromY" )?.checked;
 	let rotateZArm = document.getElementById( "drawArmFromZ" )?.checked;
@@ -1625,12 +1631,6 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			showLineSeg[4] = check.checked;
 		}
 	        
-
-		if( document.getElementById( "invertCrossProduct" )?.checked ) {
-			lnQuat.invertCrossProduct = true;
-		}else 			
-			lnQuat.invertCrossProduct = false;
-
 
 
 		if( document.getElementById( "useSLERP" )?.checked ) {
