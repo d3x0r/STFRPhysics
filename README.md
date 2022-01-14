@@ -1,44 +1,39 @@
-﻿# Space-Time Field Reactor Physics
+# Space-Time Field Reactor Physics
 
 ## Fast Faraday Force Flux Field Reactor (FFFFFR?)
 
 Mostly this project is just about exploring the rotation space of log-quaternions.
 
-## Preface
+## Introduction
 
-This is a study of rotation vectors... rotation vectors add similar to the terms here... https://en.wikipedia.org/wiki/Lie_product_formula that each 
-is applied in parallel steps until the end.
+I have this stubborn idea that rotations should be intrinsic instead of extrinsic; my rotation matrices
+implemented a long while ago, worked very well, but were all rotations around internal axes.  I carried
+that forward, and after a lot of trial and error, found the Rodrigues Rotation Formula for Composite Rotations
+on the wikipedia page for quaternions used for rotations; this formula could be used to just rotate axis and angle,
+and I was able to implement that function to exactly match the intrinsic rotations generated with matrices.
 
+Continuing further, found that rotations are additive in this mode (at least for calculating net accelerations); 
+And found very easy generation of supposedly complex Hopf Fibration curves, but moreso, applied the rotations to 
+a 5 segment robot arm (something that  with a angle of less than 90 degrees could net in a rotation greater than 180
+degrees overall; to test and push the range and extent of these rotation vectors.
 
+Recently I was compelled to implement the same rotations using Quaternions; It was nearly the same, except, there
+is this cross-product term in the Rodrigues Rotation Formula that when inverted matches quaternions; but caused all of
+the demos based on intrinsic rotations to fail; and the rotations all appeared as extrinsic.  In the Hopf Fibration 
+demo https://d3x0r.github.io/STFRPhysics/3d/index4.html, I had a animated cube that showed the evolution of the rotation, 
+and instead of rotating relative to its own axes, it was rotating relative to global axes, and showed a completely different
+rotation behavior.
 
-### Old Preface
+This last discovery gives me a single flag to rotate by an extrinsic or intrinsic rotation using the same rotation vector;
+The alternative is to rotate the direction of the vector relative to the frame and then apply it to get the other mode; with
+quaternions this would be q^-1 ** r ** q which removes the rotation from r, and then builds the result applying q back to the whole frame.
+In rotation vectors `lnQuat.applyDel( direction, -1 )` this is the inverse/conjugate which scaled the angle by -1, to rotate the direction, 
+and then use this resulting axis and the original angle to rotate around.
 
-There exists a coordinate space of rotations that's not self covering.
-
-The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
-of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a Cartesian or linear space around 1 or more axles;
-where additional axles composite into a single composite axle, around which all linear space is translated.  The coordinates of a curvature are
-in terms of `dθ/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
-Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
-as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
-all points in the frame to this new frame.
-
-The rotation space is linear, and can be compared relatively(which is to say to take the difference of the rotations).
-While the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
-when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
-that line to get there; even in space, gravity applies a curvature to your inertia).
-When a rotation is rotated, the operation is the [cross product](whitepaper.md#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: 
-`lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)`. The math performed is not the same, and the cross product of 
-log quaternions retains the correct relative angles within the rotation space; including potential orbital jumps.
-
-In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
-represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
-the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
-vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
-the [total angular warp](whitepaper.md#regarding-specific-representation) of coodinate space.
-
-Coordinates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
-from the origin is the same rotation axle, with a different angular speed.
+[Development](Development.md): I threw together this document when I became confronted with how-to for quaternion matched rotations;
+It explores internal vs external (or intrinsic vs extrinsic) rotations.  It might be un-obvious that there is a difference, after all
+a rotation axis that rotates a frame is still the same location; and becomes even more opaque that a simple cross product term is
+the whole of the difference.
 
 
 ## Other Documents
@@ -275,3 +270,44 @@ rotation space will be applied as if the rotation was applied to the Z axis, the
 Rotation around the X axis rotates the frame such that a change in the Y will now be aligned with the Z axis, which is also heading in the same direction as the previous addition.
 
 This is a way to combine angular velocities and get a net axis/angle of rotation.  This is not the same a rotation applied to a rotation.
+
+
+
+
+
+## Old Preface
+
+This is a study of rotation vectors... rotation vectors add similar to the terms here... https://en.wikipedia.org/wiki/Lie_product_formula that each 
+is applied in parallel steps until the end.
+
+
+
+### Old Old Preface
+
+There exists a coordinate space of rotations that's not self covering.
+
+The coordinate space of rotations, hence called 'rotation space' or 'rotation map', is a continuous, infinite space consisiting
+of N perpendicular axles which together apply curvature to a space.  Curvature is a translation of a Cartesian or linear space around 1 or more axles;
+where additional axles composite into a single composite axle, around which all linear space is translated.  The coordinates of a curvature are
+in terms of `dθ/dT`, similar to velocity expressed in (X,Y,Z) linear coordinates with units of `dPosition/dT`.
+Velocity sums to a position, angular velocity sums to an angular position.  Curvature at time 0 is the same
+as a curvature of 0 at any other time `T`; which is the basis frame representing the new (X/Y/Z) vectors used to scale 
+all points in the frame to this new frame.
+
+The rotation space is linear, and can be compared relatively(which is to say to take the difference of the rotations).
+While the differential rotation is knowable, and defines a specific axis/angle itself, the required path to take to move your rotation point,
+when properly constrained to rotation composition, is a different matter (much like in life, just because you can compute a line from here to there, doesn't mean you can use
+that line to get there; even in space, gravity applies a curvature to your inertia).
+When a rotation is rotated, the operation is the [cross product](whitepaper.md#lna-x-lnb---the-cross-product-of-natural-log-vector-complex-numbers) of two log quaternions: 
+`lnQ1 x lnQ2` and not addition; compared to `exp(lnQ1) x exp(lnQ2)`. The math performed is not the same, and the cross product of 
+log quaternions retains the correct relative angles within the rotation space; including potential orbital jumps.
+
+In every 3D physics and game engine, objects have 6 dimensions, 3 which represent it's velocity and 3 that
+represent it's angular velocity.   The normal vector representing velocity is the direction of motion, while
+the normal of the vector representing angular velocity is the axis of rotation.  The length of the velocity
+vector represents the speed of an object, similarly the sum of the angles of the angular velocity represents 
+the [total angular warp](whitepaper.md#regarding-specific-representation) of coodinate space.
+
+Coordinates within the rotation space have a sort of concentric spherical shell nature to them, any line radially
+from the origin is the same rotation axle, with a different angular speed.
+
