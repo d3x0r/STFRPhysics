@@ -351,7 +351,15 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							const ay = (cny*this.ny) + c1;
 							const az = (cny*this.nz) + s*this.nx;
 							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-							return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta );
+							if( lnQuat.invertCrossProduct ) {
+								// apply inverse transform is another option to reverse the cross product...
+								const localAx = this.applyDel( {x:ax,y:ay,z:az}, -1 );
+								return finishRodrigues( this, 0, localAx.x, localAx.y, localAx.z, spin+twistDelta );
+							} else {
+								// without the If above, this also works....
+								/// this has to be an intrinsic rotation, if it is default extrinsic, Apply extrinsic to reverse back to intrinsic
+								return finishRodrigues( this, 0, ax, ay, az, spin+twistDelta, lnQuat.invertCrossProduct );
+							}	
 						}else {
 							//if(this.θ < 0 )
 								this.θ = lat;
@@ -411,40 +419,6 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							this.x = this.nx*cosTheta;
 							this.z = this.nz*cosTheta;
 							
-
-							if(setNormal) {
-								//const fN = 1/Math.sqrt( tz*tz+tx*tx );
-					        
-								const txn = -this.nz;
-								const tzn = this.nx;
-					        
-								const s = Math.sin( cosTheta ); // double angle substituted
-								const c = 1- Math.cos( cosTheta ); // double angle substituted
-					        
-								// determinant coordinates
-								const angle = acos( ( ty + 1 ) * ( 1 - txn ) / 2 - 1 );
-					        
-								// compute the axis
-								const yz = s * this.nx;
-								const xz = ( 2 - c * (this.nx*this.nx + this.nz*this.nz)) * tzn;
-								const xy = s * this.nx * tzn  
-								         + s * this.nz * (1-txn);
-					        
-								const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
-								this.nx = yz *tmp;
-								this.ny = xz *tmp;
-								this.nz = xy *tmp;
-					        
-								const lNorm = angle;
-								this.x = this.nx * lNorm;
-								this.y = this.ny * lNorm;
-								this.z = this.nz * lNorm;
-					        
-								// the remining of this is update()
-								this.θ = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z);
-								this.dirty = false;
-							}
-					        
 							if( twistDelta ) {
 								yaw( this, twistDelta /*+ angle*/ );
 							}
@@ -903,9 +877,9 @@ lnQuat.prototype.apply = function( v ) {
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
 		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
 		return new vectorType(
-			  vx*c + (lnQuat.invertCrossProduct?-1:1)*s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + (lnQuat.invertCrossProduct?-1:1)*s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + (lnQuat.invertCrossProduct?-1:1)*s*(qx * vy - qy * vx) + qz * dot );
+			  vx*c + s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
 	} 
 }
 
@@ -1285,7 +1259,7 @@ function roll( q, th ) {
 
 function yaw( q, th ) {
 	// input angle...
-	const s = Math.sin( q.θ ); // double angle sin
+	const s = Math.sin(  q.θ ); // double angle sin
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	const c = 1- c1;
 
@@ -1293,8 +1267,10 @@ function yaw( q, th ) {
 	const ax = ( cny*q.nx ) - s*q.nz;
 	const ay = ( cny*q.ny ) + c1;
 	const az = ( cny*q.nz ) + s*q.nx;
+	
+
 	//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-	return finishRodrigues( q, 0, ax, ay, az, th );
+	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.inverseCrossProduct );
 }
 
 lnQuat.prototype.up = function() {	
