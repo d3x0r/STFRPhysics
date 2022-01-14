@@ -398,6 +398,10 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	normalVertices = normalVertices_
 	normalColors = normalColors_;
 
+	if( document.getElementById( "invertCrossProduct" )?.checked ) {
+		lnQuat.invertCrossProduct = true;
+	}else 			
+		lnQuat.invertCrossProduct = false;
 	showOnNormalBall = document.getElementById( "showOnNormalBall" )?.checked;
 	showTrajectories = document.getElementById( "showTrajectories" )?.checked;
         let curSliders = {
@@ -433,10 +437,6 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	useStepFunction = document.getElementById( "useStepFunction" )?.checked;
 	externalSpin = document.getElementById( "useExternal" )?.checked;
 
-	if( document.getElementById( "invertCrossProduct" )?.checked ) {
-		lnQuat.invertCrossProduct = true;
-	}else 			
-		lnQuat.invertCrossProduct = false;
 
 	let tmp;
 	tmp = document.getElementById( "xRot" ).value;
