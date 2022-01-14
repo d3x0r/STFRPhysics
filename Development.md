@@ -118,3 +118,6 @@ to rotate, is using that in an external sense to rotate the frame.
 
 At this point I'd like to see quaternions work... but I don't know the proper expression for `r*(q*r^-1)`  sort of thing... and if that IS it, 
 then there's my complaint with quaternions; because that curve should also be the intrinsic curve, and be nice stright lines in the rotation vector space.
+
+So it seems I have to decompose the quaternion; well, since it gets re-scaled, I just have to rotate the I,J,K components by one vector before the other (ug how to multiply quaternions and vectors?  Wolfram returns a Quaternion object).
+
