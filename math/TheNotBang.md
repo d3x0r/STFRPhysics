@@ -5,6 +5,8 @@ There is a flat space, which can be used as a basis to show positive curvature. 
 from positive curvature generators that move where light can go.  This is an ideal graph, and it should be noted that the physics of real life includes additional interactions that will often prevent following ideal geodesics; except
 in the extreme case that black holes represent.
 
+See also: (mathSphereDecay.md)[mathSphereDecay.md]
+
 ![External Image?](DistributedDisplacments.png)
 
 Light emitted at a particular point is subject to being emitted at the frequency within that space.  That is, if the emitter is deeper in gravity, the emitter occupies a certain physical space that is in flat space; while the photon space
@@ -51,7 +53,7 @@ heightened displacments in the other images.
 
 # Background
 
-When I first did the mathSphereDecay plot, and realized that the curvature is a positive pressure in space, this lead me to consider the dark energy aspect of modern science; and that this displacment of space pushes stuff away from each other.
+When I first did the [mathSphereDecay](mathSphereDecay.md) plot, and realized that the curvature is a positive pressure in space, this lead me to consider the dark energy aspect of modern science; and that this displacment of space pushes stuff away from each other.
 When I started to dig into that as a method of implementing gravity force, everything move away from each other instead of towards each other, and I had anti-gravity; so the space displacement itself does not affect the thing
 displacing it.  This is proven in the null experiment of Michelson-Morley.  Mass is not affected by the curvature of space; that is the cause of the mass is not subject to the curvature; the bobbers in the water don't feel the water(?).
 
