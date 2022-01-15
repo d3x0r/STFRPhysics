@@ -88,7 +88,7 @@ Rotation of space would look more like a twist, which we don't see.
 
 Gravitational Lensing isn't convex lense lensing; it's gravitational lensing.
 
-![Gravity Lense](GravityLens1.png)
+![Gravity Lense](GravityLense1.png)
 
 Light follow straight lines; from a far enough away source the light rays are nearly all parallel... but really they come from a point source, and have a small angle/spread to them...
 
