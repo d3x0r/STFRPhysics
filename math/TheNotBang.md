@@ -5,7 +5,7 @@ There is a flat space, which can be used as a basis to show positive curvature. 
 from positive curvature generators that move where light can go.  This is an ideal graph, and it should be noted that the physics of real life includes additional interactions that will often prevent following ideal geodesics; except
 in the extreme case that black holes represent.
 
-See also: (mathSphereDecay.md)[mathSphereDecay.md]
+See also: [mathSphereDecay.md](mathSphereDecay.md)
 
 ![External Image?](DistributedDisplacments.png)
 
