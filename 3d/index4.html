@@ -166,33 +166,33 @@
 			let n = 0;
 			var newData = [];
 		
-	  var opts;
-	  var result = opts = {
-                  elements : null,
-		  minimize : null,
-		  maximize : null,
-		  inflation : 0,
-		  vertices : null,
-		  faces : null,
-		  normalVertices : geometryNormals && geometryNormals.vertices,
-		  normalColors : geometryNormals && geometryNormals.colors,
-		  smoothShade : document.getElementById( "smoothShade" ).checked,
-		  showGrid : document.getElementById( "showGrid").checked,
-		  geometryHelper : geometryHelper,
-		};
-	  var end = (new Date()).getTime();
+			  var opts;
+			  var result = opts = {
+                                  elements : null,
+				  minimize : null,
+				  maximize : null,
+				  inflation : 0,
+				  vertices : null,
+				  faces : null,
+				  normalVertices : geometryNormals && geometryNormals.vertices,
+				  normalColors : geometryNormals && geometryNormals.colors,
+				  smoothShade : document.getElementById( "smoothShade" ).checked,
+				  showGrid : document.getElementById( "showGrid").checked,
+				  geometryHelper : geometryHelper,
+				};
+			var end = (new Date()).getTime();
 
-	  //Update statistics
-	  document.getElementById("meshtime").value = (end - start) / 1000.0;
-
-		if( geometryNormals ) {
-			var linematerial = new THREE.LineBasicMaterial({
-				color : 0xffffff
-			  , vertexColors: THREE.VertexColors
-			});
-			lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
-			scene.add( lineSegments );
-		}
+			//Update statistics
+	 		document.getElementById("meshtime").value = (end - start) / 1000.0;
+	         
+			if( geometryNormals ) {
+				var linematerial = new THREE.LineBasicMaterial({
+					color : 0xffffff
+				  , vertexColors: THREE.VertexColors
+				});
+				lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
+				scene.add( lineSegments );
+			}
 
 
 		}
@@ -419,7 +419,7 @@ for (let i = 0; i < 3; i++) {
 
 
 			is = document.getElementById( "invertCrossProduct" );
-			is.oninput = updateMesh;
+			is.onchange = updateMesh;
 
 			is = document.getElementById( "SinNormalizeRRF" );
 			is.oninput = updateMesh;
