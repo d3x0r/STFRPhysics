@@ -307,19 +307,17 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 									const ss2 = sxpy - sxmy
 									const cc1 = cxmy - cxpy
 
-									const crsX = (ay*q.nz-az*q.ny);
+									const crsX = (lnQuat.invertCrossProduct?-1:1)*(ay*q.nz-az*q.ny);
 									const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
 
-									const crsY = (az*q.nx-ax*q.nz);
+									const crsY = (lnQuat.invertCrossProduct?-1:1)*(az*q.nx-ax*q.nz);
 									const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 
-									const crsZ = (ax*q.ny-ay*q.nx);
+									const crsZ = (lnQuat.invertCrossProduct?-1:1)*(ax*q.ny-ay*q.nx);
 									const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
 									const Clx = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-									if( spin ) {
 
-									}
 									q.θ  = ang;
 									q.nx = Cx*Clx;
 									q.ny = Cy*Clx;
@@ -351,7 +349,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							const ay = (cny*this.ny) + c1;
 							const az = (cny*this.nz) + s*this.nx;
 							//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-							if( lnQuat.invertCrossProduct ) {
+							if( false && lnQuat.invertCrossProduct ) { /*generally we don't want the first option, it's an additional object, and can just toggle the cross product */
 								// apply inverse transform is another option to reverse the cross product...
 								const localAx = this.applyDel( {x:ax,y:ay,z:az}, -1 );
 								return finishRodrigues( this, 0, localAx.x, localAx.y, localAx.z, spin+twistDelta );
@@ -1240,7 +1238,11 @@ function pitch( q, th ) {
 	const ay = ( cnx*q.ny + s*q.nz );
 	const az = ( cnx*q.nz - s*q.ny );
 
-	return finishRodrigues( q, 0, ax, ay, az, th );
+	if( lnQuat.invertCrossProduct && false ) {
+		const localAx = q.applyDel( {x:ax,y:ay,z:az}, -1 );
+		return finishRodrigues( q, 0, localAx.x, localAx.y, localAx.z, th );
+	}
+	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.invertCrossProduct );
 }
 
 function roll( q, th ) {
@@ -1254,7 +1256,11 @@ function roll( q, th ) {
 	const ay = ( cnz*q.ny ) - s*q.nx;
 	const az = ( cnz*q.nz ) + c1;
 
-	return finishRodrigues( q, 0, ax, ay, az, th );
+	if( lnQuat.invertCrossProduct && false ) {
+		const localAx = q.applyDel( {x:ax,y:ay,z:az}, -1 );
+		return finishRodrigues( q, 0, localAx.x, localAx.y, localAx.z, th );
+	}
+	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.invertCrossProduct );
 }
 
 function yaw( q, th ) {
@@ -1268,9 +1274,12 @@ function yaw( q, th ) {
 	const ay = ( cny*q.ny ) + c1;
 	const az = ( cny*q.nz ) + s*q.nx;
 	
-
+	if( lnQuat.invertCrossProduct && false ) {
+		const localAx = q.applyDel( {x:ax,y:ay,z:az}, -1 );
+		return finishRodrigues( q, 0, localAx.x, localAx.y, localAx.z, th );
+	}
 	//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
-	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.inverseCrossProduct );
+	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.invertCrossProduct );
 }
 
 lnQuat.prototype.up = function() {	
