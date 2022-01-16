@@ -169,6 +169,7 @@ function makeQuat(p,y,r) {
 			const az = o.nz
 			const oct = 0;//currentOctave || Math.floor( o.θ / (Math.PI*4) ); 
 			const th = o.θ % (Math.PI*2);
+			
 
 			{ // finish rodrigues
 				const AdotB = (qnx*ax + /*q.ny*ay +*/ qnz*az);
@@ -857,6 +858,11 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
                 : 6
                 ;
         
+		if( document.getElementById( "invertCrossProduct" )?.checked ) {
+			lnQuat.invertCrossProduct = true;
+		}else 			
+			lnQuat.invertCrossProduct = false;
+
 	drawRawRotIter = document.getElementById( "drawRawRotIter")?.checked;
 	drawRotIter = document.getElementById( "drawRotIter")?.checked;
 	drawMechanicalRot = document.getElementById( "drawMechanicalRot")?.checked;

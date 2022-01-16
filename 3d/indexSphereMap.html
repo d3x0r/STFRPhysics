@@ -88,7 +88,10 @@
 
 		<p id ="advancedControls"  >
 		 <span style="visibility:visible">- Show Basis Map: <input type="checkbox" id="showCoordinateGrid" unchecked></span>
-		 <span style="visibility:visible">- Show Normal Projection: <input type="checkbox" id="showNormalProjection" checked></span>
+		 <span style="visibility:visible">- Show Normal Projection: <input type="checkbox" id="showNormalProjection" checked>
+			Invert CrossProduct(QuatAlign): <input type="checkbox" id="invertCrossProduct" unchecked >
+			<br>
+</span>
 		 - Show Unscaled Basis Map: <input type="checkbox" id="showRawCoordinateGrid" value="checked">
 			<br>
 		 <span style="visibility:visible">- Show Grid Lines: <input type="checkbox" id="showGrid" checked></span>
@@ -743,10 +746,11 @@
 			is = document.getElementById( "useSLERPBasis" );
 			is.oninput = updateMesh;
 
-			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid", 
-			 "polarAligned", "stereoProject",
-				"weylGroup","mapPolar", "useIterations", "subIterations",
-				"oneNormal", "invOneNormal", "showNormalProjection"
+			["showNormal", "showSliderCurves","smoothShade" ,"weylCurvature", "showGrid"
+			 ,"polarAligned", "stereoProject"
+				,"weylGroup","mapPolar", "useIterations", "subIterations"
+				,"oneNormal", "invOneNormal", "showNormalProjection"
+				,"invertCrossProduct"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
 				if( is )
