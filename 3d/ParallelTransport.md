@@ -3,7 +3,7 @@
 
 [Demo](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap2.html)
 
-[!Screenshot](CurvatureScreenshot.png)
+![Screenshot](CurvatureScreenshot.png)
 
 This is an experiment with parallel transporting a frame for some wandering functions.  There are 5 Line segments which
 turn by some amount and then each take 100 steps of some arc-length, The frame that they are in is parallel transported, and the
