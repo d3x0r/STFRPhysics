@@ -54,10 +54,10 @@
 	<!-- info on screen display -->
 	<div id="info" >
 		<div class="top">
-			Covering Map Explorer
+			Curvature Toy
 		</div>
 		<div class="bottom" id="inlineDoc">
-			- <i><a href="https://github.com/d3x0r/STFRPhysics/blob/master/3d/indexSphereMap.md">More Info and Source</a></i>
+			- <i><a href="https://github.com/d3x0r/STFRPhysics/blob/master/3d/ParallelTransport.md">More Info and Source</a></i>
 			- <i>p</i> for screenshot
 		- <i>f</i> for fullscreen</div>
 	  <div class="controls" >
@@ -171,27 +171,15 @@
 			<col style="width:0">
 			<col style="width:0"-->
 		<tr id="time"><td colspan=5>
-		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
+		
 		</td></tr>
 
-		<tr id="twist" style="visibility:visible"><td colspan=5>
-		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
-		</td>
-		<td>
-			Octave:<input type="range" id="octave" min="0"  max="10" value="0">
-		</td>
-		</tr>
+		
 		<tr><td> 
 		</td><td> 
-		</td><td> X
-		</td><td> Y
-		</td><td> Z
-		</td><td class="header" > Angle
-		</td><td class="header"> Step Scalar
-		</td><td class="header"> (Use)
-		</td><td class="header"> Mech. XRot
-		</td><td class="header"> Mech. YRot
-		</td><td class="header"> Iterations
+		</td><td> Step
+		</td><td> Turn Angle
+		</td><td> 
 		</td></tr>
 
 		<tr style="visibility:visible"><td style="color:red">1</td><td>
@@ -200,7 +188,7 @@
 		<input type="range" id="lnQX1" min="0"  max="1000"  value=750> 
 		</td><td>Long:
 		<input type="range" id="lnQY1" min="0"  max="1000" value=500> 
-		</td><td> Size:
+		</td><td> Curvature:
 		<input type="range" id="lnQZ1" min="0"  max="1000" value=501> 
 		</td></tr>
 
@@ -226,13 +214,7 @@
 			<SPAN id="lnQZval1quat">-0-</SPAN> <br>
 			-
 		</td>
-		<td style="visibility:hidden"><SPAN id="lnQAngle1">-0-</SPAN> 
-		</td><td  style="visibility:hidden" class="right"><SPAN id="stepScalar1">-0-</SPAN> 
-		</td><td  style="visibility:hidden"><INPUT type="checkbox" id="useStep1" >
-		</td><td  style="visibility:hidden" class="right"><SPAN id="xRot1">-0-</SPAN> 
-		</td><td  style="visibility:hidden" class="right"><SPAN id="yRot1">-0-</SPAN> 
-		</td><td  style="visibility:hidden" class="right"><input type="range" id="drawInterp1" min=0 max=250 value=25 >
-		</td></tr>
+		</tr>
 		
 		<tr id="arm2" style="color:green"><td>2</td><td>
 			<input type="checkbox" id="showX2" checked>
@@ -240,18 +222,12 @@
 		<input type="range" id="lnQX2" min="0"  max="1000"  value=750> 
 		</td><td>
 		<input type="range" id="lnQY2" min="0"  max="1000" value=750> 
-		</td><td>
+		</td><td style="display:none" >
 		<input type="range" id="lnQZ2" min="0"  max="1000" value="500"> 
 		</td></tr>
 		<tr id="arm2val"><td> </td><td>
 		</td><td>
-		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td><SPAN id="lnQZval2">-0-</SPAN> 
-		</td><td><SPAN id="lnQAngle2">-0-</SPAN> 
-		</td><td class="right"><SPAN id="stepScalar2">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep2" >
-		</td><td class="right"><SPAN id="xRot2">-0-</SPAN> 
-		</td><td class="right"><SPAN id="yRot2">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp2" min=0 max=250 value=25>
+		<SPAN id="lnQXval2">-0-</SPAN></td><td><SPAN id="lnQYval2">-0-</SPAN></td><td style="display:none" ><SPAN id="lnQZval2">-0-</SPAN> 
 		</td></tr>
 
 		<tr id="arm3" style="color:blue"><td>3</td><td>
@@ -260,18 +236,12 @@
 		<input type="range" id="lnQX3" min="0"  max="1000"  value=750> 
 		</td><td>
 		<input type="range" id="lnQY3" min="0"  max="1000" value=750> 
-		</td><td>
+		</td><td style="display:none" >
 		<input type="range" id="lnQZ3" min="0"  max="1000" value="500"> 
 		</td></tr>
 		<tr id="arm3val"><td> </td><td>
 		</td><td>
-		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td><SPAN id="lnQZval3">-0-</SPAN> 
-		</td><td><SPAN id="lnQAngle3">-0-</SPAN> 
-		</td><td class="right"><SPAN id="stepScalar3">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep3" >
-		</td><td class="right"><SPAN id="xRot3">-0-</SPAN> 
-		</td><td class="right"><SPAN id="yRot3">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp3" min=0 max=250 value=25>
+		<SPAN id="lnQXval3">-0-</SPAN></td><td><SPAN id="lnQYval3">-0-</SPAN></td><td style="display:none" ><SPAN id="lnQZval3">-0-</SPAN> 
 		</td></tr>
 
 		<tr id="arm4" style="color:cyan"><td>4</td><td>
@@ -280,39 +250,27 @@
 		<input type="range" id="lnQX4" min="0"  max="1000"  value=750> 
 		</td><td>
 		<input type="range" id="lnQY4" min="0"  max="1000" value=750> 
-		</td><td>
+		</td><td style="display:none" >
 		<input type="range" id="lnQZ4" min="0"  max="1000" value="500"> 
 		</td></tr>
 		<tr id="arm4val"><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval4">-0-</SPAN></td><td><SPAN id="lnQYval4">-0-</SPAN>
-		</td><td><SPAN id="lnQZval4">-0-</SPAN> 
-		</td><td><SPAN id="lnQAngle4">-0-</SPAN> 
-		</td><td class="right"><SPAN id="stepScalar4">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep4" >
-		</td><td class="right"><SPAN id="xRot4">-0-</SPAN> 
-		</td><td class="right"><SPAN id="yRot4">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp4" min=0 max=250 value=25>
+		</td><td style="display:none" ><SPAN id="lnQZval4">-0-</SPAN> 
 		</td></tr>
 
-		<tr id="arm5" style="color:yellow"><td>5</td><td>
+		<tr id="arm5" ><td style="color:yellow">5</td><td>
 			<input type="checkbox" id="showX5" checked>
 		</td><td> 
 		<input type="range" id="lnQX5" min="0"  max="1000"  value=750> 
 		</td><td>
 		<input type="range" id="lnQY5" min="0"  max="1000" value=750> 
-		</td><td>
+		</td><td><span>Single Step Turn</span><br>
 		<input type="range" id="lnQZ5" min="0"  max="1000" value="500"> 
 		</td></tr>
 		<tr id="arm5val"><td> </td><td>
 		</td><td>
 		<SPAN id="lnQXval5">-0-</SPAN></td><td><SPAN id="lnQYval5">-0-</SPAN></td><td><SPAN id="lnQZval5">-0-</SPAN> 
-		</td><td><SPAN id="lnQAngle5">-0-</SPAN> 
-		</td><td class="right"><SPAN id="stepScalar5">-0-</SPAN> 
-		</td><td ><INPUT type="checkbox" id="useStep5" >
-		</td><td class="right"><SPAN id="xRot5">-0-</SPAN> 
-		</td><td class="right"><SPAN id="yRot5">-0-</SPAN> 
-		</td><td class="right"><input type="range" id="drawInterp5" min=0 max=250 value=25>
 		</td></tr>
 		</table>
 
@@ -565,7 +523,7 @@
 
 			// put a camera in the scene
 			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
-			camera.position.set(0, 0, 80);
+			camera.position.set(0, 80, 1);
 			scene.add(camera);
 
 			// create a camera contol
@@ -719,20 +677,10 @@
 
 				is = document.getElementById( "showX"+n);
 				is.oninput = updateMesh;
-				is = document.getElementById( "useStep"+n);
-				is.oninput = updateMesh;
 
-				is = document.getElementById( "drawInterp"+n);
-				is.oninput = updateMesh;
 
 			}
 
-			is = document.getElementById( "timeScalar" );
-			is.oninput = updateMesh;
-			is = document.getElementById( "twistDelta" );
-			is.oninput = updateMesh;
-			is = document.getElementById( "octave" );
-			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;
 
@@ -753,6 +701,7 @@
 				"oneNormal", "invOneNormal"
 			].forEach( (control)=>{
 				const is = document.getElementById( control );
+				if( is ) 
 				is.onchange = updateMesh;
 
 			})
