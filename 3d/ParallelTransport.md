@@ -47,7 +47,13 @@ Another spatial displacement - showing 3d geodesic planes.
 
 - https://d3x0r.github.io/STFRPhysics/3d/index-gravity-field.html
 
+### A note on Sphere Decay demo
 
+This has a graph in the center void (otherwise it would just be white, and uninteresting) the graph that is there are curves that are parallel frame transports from -2pi to 2pi; the rotation span is 4pi across the void.
+
+The middle started as just showing the amount the line is displaced linearly, and I realized that curve was actually the tangent of the rotation curves, and required an addition dialation.
+
+The first space under '0' is 'i', but then there's apparently a 'i2' that's the second half of i. 
 
 
 ## Hyperbole about perspective
