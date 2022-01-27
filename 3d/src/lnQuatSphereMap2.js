@@ -560,14 +560,14 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 		lnQ0.set( 0,0,0,0).update();
 		
 		
-		for( let seg =0; seg < 100; seg++ ) {
+		for( let seg =0; seg < 400; seg++ ) {
 
 			//lnQ0.yaw( Math.PI*(1+Math.cos(k))/100 );
 			lnQ0.yaw( l5/100 );
 			//console.log( "lnQ0:", lnQ0.x, lnQ0.y, lnQ0.z );
 			doDrawBasis( lnQ0, lnQ0, 0, 1 );
 
-			lnQ2.x = (Math.PI*2)*k /100  ;
+			lnQ2.x = k /100  ;
 			lnQ2.y = 0;
 			lnQ2.z = 0;
 			lnQuat.apply( lnQ0.θ, lnQ0, lnQ2, 1, lnQ2 );
@@ -589,7 +589,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 			lnQ2.x *= 100;
 			lnQ2.y *= 100;
 			lnQ2.z *= 100;
-			doDrawBasis( lnQ2, lnQ2, 0, 1 );
+			//doDrawBasis( lnQ2, lnQ2, 0, 1 );
 
 	// so building from the other side; 
 	// curvature = 1, angle = 0 = 0
