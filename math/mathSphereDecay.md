@@ -43,7 +43,10 @@ Displacment A and Displacement B I think are spaces that rotate between themselv
 - [First Principles](/FirstPrinciples.md)
 - [Sphere map](/3d/indexSphereMap.md)
 - [Parallel transport using rotations over curvatures](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap2.html)
-
+- https://www.youtube.com/watch?v=qBJCCe81OCg
+- https://www.youtube.com/watch?v=km7WTO_6K5s
+- https://www.youtube.com/watch?v=3LBitCErlBE
+- https://youtu.be/Ggtpb0_gXPE?t=1926
 
 ### A thing that's spinning continue's to spin....
 
@@ -82,10 +85,12 @@ const dQ_0 = (l,x,y,z,Q) => l/_4to1(x,y,z,Q);  // from real to converted (squash
 const A_0 = (l,x,y,z,Q) => l/Math.sqrt(x*x+y*y+z*z) * Q_0(x,y,z,Q)
 ```
 
-##
 
 ![Exammple Screenshot](ExtendedGraph.png)
 
+##  Parallel Transport rotations
+
+This resulted in a quation that's a plane in 3d rotation space...
 
 
 # Slopes and gradients
@@ -254,203 +259,10 @@ depending on the direction it was a radial offset (only it's a sum of different 
 		
 		
 		
-		class BiLnQuat() {
-			
-			lnQ0 = new lnQuat();
-			lnQ1 = new lnQuat();
-			
-			lnQX = new lnQuat();
-			
-			AdotB = 0;
-			xmy = 0;
-			xpy = 0;
-			cxmy = 0;
-			cxpy = 0;
-			sxmy = 0;
-			sxpy = 0;
-			
-			constructor() {
-			}
-			
-			set( q1, q2 ) {
-				const lnQ0 = this.lnQ0;
-				const lnQ1 = this.lnQ1;
-				lnQ0.set(q1).update();
-				lnQ1.set(q2).update();
-				
-				this.AdotB = lnQ0.nx*lnQ1.nx + lnQ0.ny*lnQ1.ny +lnQ0.nz*lnQ1.nz;
-				this.xmy = (lnQ1.? - lnQ0.? )/2;
-				this.xpy = (lnQ1.? + lnQ0.? )/2;
-			
-				this.cxmy = Math.cos(this.xmy);
-				this.cxpy = Math.cos(this.xpy);
-				this.sxmy = Math.sin(this.xmy);
-				this.sxpy = Math.sin(this.xpy);
-			
-				lnQx.? = Math.acos( ( ( this.AdotB )*(this.cxpy - this.cxmy) + this.cxmy + this.cxpy )/2 )*2;
-
-				const ss1 = this.sxmy + this.sxpy  // 2 cos(y) sin(x)
-				const ss2 = this.sxpy - this.sxmy  // 2 cos(x) sin(y)
-				const cc1 = this.cxmy - this.cxpy  // 2 sin(x) sin(y)
-        
-				//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
-				// the following expression is /2 (has to be normalized anyway keep 1 bit)
-				// and is not normalized with sin of angle/2.
-				const crsX = (lnQ1.ny*lnQ0.nz-lnQ1.nz*lnQ0.ny);
-				const crsY = (lnQ1.nz*lnQ0.nx-lnQ1.nx*lnQ0.nz);
-				const crsZ = (lnQ1.nx*lnQ0.ny-lnQ1.ny*lnQ0.nx);
-				const Cx = ( crsX * cc1 +  lnQ1.nx * ss1 + lnQ0.nx * ss2 );
-				const Cy = ( crsY * cc1 +  lnQ1.ny * ss1 + lnQ0.ny * ss2 );
-				const Cz = ( crsZ * cc1 +  lnQ1.nz * ss1 + lnQ0.nz * ss2 );
-        
-				// this is NOT /sin(theta);  it is, but only in some ranges...
-				const Clx = (lnQuat.sinNormal)
-				          ?(1/(2*Math.sin( ang/2 )))
-				          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-
-				lnQX.nx = Cx*Clx;
-				lnQX.ny = Cy*Clx;
-				lnQX.nz = Cz*Clx;
-        
-				lnQX.x  = lnQX.nx*lnQx.?;
-				lnQX.y  = lnQX.ny*lnQx.?;
-				lnQX.z  = lnQX.nz*lnQx.?;
-        
-				lnQX.dirty = false;
-			}
-		
-			applyDel( q, dt ) {
-			
-				const xmy = (lnQ1.?*dt - lnQ0.?*dt )/2;
-				const xpy = (lnQ1.?*dt + lnQ0.?*dt )/2;
-			
-				const cxmy = Math.cos(this.xmy);
-				const cxpy = Math.cos(this.xpy);
-				const sxmy = Math.sin(this.xmy);
-				const sxpy = Math.sin(this.xpy);
-			
-				lnQx.? = Math.acos( ( ( this.AdotB )*(cxpy - cxmy) + cxmy + cxpy )/2 )*2;
-
-				const ss1 = sxmy + sxpy  // 2 cos(y) sin(x)
-				const ss2 = sxpy - sxmy  // 2 cos(x) sin(y)
-				const cc1 = cxmy - cxpy  // 2 sin(x) sin(y)
-        
-				//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
-				// the following expression is /2 (has to be normalized anyway keep 1 bit)
-				// and is not normalized with sin of angle/2.
-				const crsX = (lnQ1.ny*lnQ0.nz-lnQ1.nz*lnQ0.ny);
-				const crsY = (lnQ1.nz*lnQ0.nx-lnQ1.nx*lnQ0.nz);
-				const crsZ = (lnQ1.nx*lnQ0.ny-lnQ1.ny*lnQ0.nx);
-				const Cx = ( crsX * cc1 +  lnQ1.nx * ss1 + lnQ0.nx * ss2 );
-				const Cy = ( crsY * cc1 +  lnQ1.ny * ss1 + lnQ0.ny * ss2 );
-				const Cz = ( crsZ * cc1 +  lnQ1.nz * ss1 + lnQ0.nz * ss2 );
-				// if theta is very small, the above direction vector will also be near 0
-				if( lnQX.? > 1e-13) {
-					// this is NOT /sin(theta);  it is, but only in some ranges...
-					const Clx = (1/(2*Math.sin( lnQX.?/2 )))
-                
-					lnQX.nx = Cx*Clx;
-					lnQX.ny = Cy*Clx;
-					lnQX.nz = Cz*Clx;
-                
-					lnQX.x  = lnQX.nx*lnQx.?;
-					lnQX.y  = lnQX.ny*lnQx.?;
-					lnQX.z  = lnQX.nz*lnQx.?;
-                
-					lnQX.dirty = false;
-				}
-				
-				q.freeSpin( lnQX.?*dt, lnQX );
-			}
-		
-		}
-	
-function finishRodrigues( q, oct, ax, ay, az, th ) {
-	oct = oct || 0;
-	const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
-	
-	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
-	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
-	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
-	const xmy = (th - q.?)/2; // X - Y  ('x' 'm'inus 'y')
-	const xpy = (th + q.?)/2  // X + Y  ('x' 'p'lus 'y' )
-	const cxmy = Math.cos(xmy);
-	const cxpy = Math.cos(xpy);
-
-	// cos(angle result)
-	//const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
-	// ( 2 cos(x) cos(y) - 2 A sin(x) sin(y) ) / 2
-	
-	const cosCo2 = ( ( this.AdotB )*(this.cxpy - this.cxmy) + this.cxmy + this.cxpy )/2;
-	//   (1-cos(A))cos(x-y)+(1+cos(A))cos(x+y)
-	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
-	// octive should have some sort of computation that gets there...
-	// would have to be a small change
-	ang = Math.acos( ( ( this.AdotB )*(this.cxpy - this.cxmy) + this.cxmy + this.cxpy )/2 )*2 + oct * (Math.PI*4);
-
-	if( ang ) {
-		const sxmy = Math.sin(xmy);
-		const sxpy = Math.sin(xpy);
-		// vector rotation is just...
-		// when both are large, cross product is dominant (pi/2)
-		const ss1 = sxmy + sxpy  // 2 cos(y) sin(x)
-		const ss2 = sxpy - sxmy  // 2 cos(x) sin(y)
-		const cc1 = cxmy - cxpy  // 2 sin(x) sin(y)
-
-		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
-		// the following expression is /2 (has to be normalized anyway keep 1 bit)
-		// and is not normalized with sin of angle/2.
-		const crsX = (ay*q.nz-az*q.ny);
-		const crsY = (az*q.nx-ax*q.nz);
-		const crsZ = (ax*q.ny-ay*q.nx);
-		const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-
-		// this is NOT /sin(theta);  it is, but only in some ranges...
-		const Clx = (lnQuat.sinNormal)
-		          ?(1/(2*Math.sin( ang/2 )))
-		          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-		if(0) {
-			// this normalizes the rotation so there's no overflows.
-			const other = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-			if( Math.abs( other - Clx ) > 0.001 ) {
-				console.log( "Compare A and B:", Clx, other, th, q.? );
-			}
-		}
-		q.rn = Clx; // I'd like to save this to see what the normal actually was
-		q.?  = ang;
-		q.nx = Cx*Clx;
-		q.ny = Cy*Clx;
-		q.nz = Cz*Clx;
-
-		q.x  = q.nx*ang;
-		q.y  = q.ny*ang;
-		q.z  = q.nz*ang;
-
-		q.dirty = false;
-	} else {
-		// result angle is 0
-		if( AdotB > 0 ) {
-			q.?  = q.?+th;
-		}else {
-			q.?  = q.?+th;
-		}
-		q.x = (q.nx) * q.?;
-		q.y = (q.ny) * q.?;
-		q.z = (q.nz) * q.?;
-		q.dirty = false;
-	}
-	return q;
-}
-
-}
 
 
 -------------------------------------------------
 
-
-	  
 	  ------------------
 	  so... to show geodesics...
 	  motion on a sphere is 2?1?d, 1 forward 1 angle.
@@ -532,123 +344,6 @@ function finishRodrigues( q, oct, ax, ay, az, th ) {
 	
 	
 	-------
-	
-	http://mathb.in/67745  
-	http://mathb.in/67746 This is the algorithm recaptured in math... 
-	http://mathb.in/67747
-	
-	1) yaw(dt)
-	
-		// compute 'up' from 'q'
-		const ax = ( 1 - Math.cos( q.? ) * q.ny*q.nx ) - Math.sin( q.? )*q.nz;
-		const ay = ( 1 - Math.cos( q.? ) * q.ny*q.ny ) + Math.cos( q.? );
-		const az = ( 1 - Math.cos( q.? ) * q.ny*q.nz ) + Math.sin( q.? )*q.nx;
-
-			// rotate 'q' around 'up' by 'X'
-			const th = X; // amount of yaw per step... (360/steps - 2*k (NO))
-			const AdotB = (q.nx*ax + q.ny*ay + q.nz*az);
-			const xmy = (th - q.?)/2; 
-			const xpy = (th + q.?)/2;
-			const cxmy = Math.cos(xmy);
-			const cxpy = Math.cos(xpy);
-
-			const cosCo2 = ( ( AdotB )*(cxpy - cxmy) + cxmy + cxpy )/2;
-			let ang = acos( cosCo2 )*2;
-
-			const sxmy = Math.sin(xmy);
-			const sxpy = Math.sin(xpy);
-	
-			const ss1 = sxmy + sxpy
-			const ss2 = sxpy - sxmy
-			const cc1 = cxmy - cxpy
-    
-			const crsX = (ay*q.nz-az*q.ny);
-			const crsY = (az*q.nx-ax*q.nz);
-			const crsZ = (ax*q.ny-ay*q.nx);
-			const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-			const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-			const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-    
-			// this is NOT /sin(theta);  it is, but only in some ranges...
-			const Clx = (1/(2*Math.sin( ang/2 )));
-			
-			q.rn = Clx; // I'd like to save this to see what the normal actually was
-			q.?  = ang;
-			q.nx = Cx*Clx;
-			q.ny = Cy*Clx;
-			q.nz = Cz*Clx;
-    
-			q.x  = q.nx*ang;
-			q.y  = q.ny*ang;
-			q.z  = q.nz*ang;
-
-
-			// the above q is what's used for this.
-			// rotate (k,0,0) by the new frame to get the axis relative to that frame
-			const vx = (Math.PI*2)*k /100;
-			const c = Math.cos(acos( cosCo2 )*2);
-			const s = Math.sin(acos( cosCo2 )*2);
-    
-			const Vector = new vectorType(
-				  vx*c        + q.nx * (1-c)*((q.nx * vx ) )
-				, + s*(q.nz)  + q.ny * (1-c)*((q.nx * vx ) )
-				, + s*(-q.ny) + q.nz * (1-c)*((q.nx * vx ) ) );
-
-
-			// This is repeated twice, once on the current q1
-			// another time on the t(n) as q.
-			const th = length(Vector); // amount of yaw per step... (360/steps - 2*k (NO))
-			const ax = Vector.x/th;
-			const ay = Vector.y/th;
-			const az = Vector.z/th;
-			
-			// this q is still the above q... 
-			const AdotB2 = (q.nx*ax + q.ny*ay + q.nz*az);
-			const xmy = (th - acos( cosCo2 )*2 )/2; 
-			const xpy = (th + acos( cosCo2 )*2 )/2;
-			const cxmy = Math.cos(xmy);
-			const cxpy = Math.cos(xpy);
-
-			const cosCo2 = ( ( AdotB2 )*(cxpy - cxmy) + cxmy + cxpy )/2;
-			let ang = acos( cosCo2 )*2;
-
-			const sxmy = Math.sin(xmy);
-			const sxpy = Math.sin(xpy);
-	
-			const ss1 = sxmy + sxpy
-			const ss2 = sxpy - sxmy
-			const cc1 = cxmy - cxpy
-    
-			const crsX = (ay*q.nz-az*q.ny);
-			const crsY = (az*q.nx-ax*q.nz);
-			const crsZ = (ax*q.ny-ay*q.nx);
-			const Cx = ( crsX * cc1 +  ax * ss1 + q.nx * ss2 );
-			const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
-			const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
-    
-			const Clx = (1/(2*Math.sin( ang/2 )));
-			
-			q.?  = ang;
-			q.nx = Cx*Clx;
-			q.ny = Cy*Clx;
-			q.nz = Cz*Clx;
-    
-			q.x  = q.nx*ang;
-			q.y  = q.ny*ang;
-			q.z  = q.nz*ang;
-
-		
----	
-
-	m[0] = {0,0,0}
-	m'(n) = m(n-1) x Yaw(X)
-	
-	s(n) = {k,0,0} x m'(n)
-
-	m(n) = m'(n) x s(n)
-	t(n) = t(n-1) x s(n)
-	
-	
 	
 	
 	
