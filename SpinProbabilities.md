@@ -30,6 +30,12 @@ what the probability of that is there.
 The unit-vector normalization of (x,y,z) with (xx+yy+zz)=1 ends up applying the correct changes to the other axises such that
 (1,0,0) is 100% in one direction, but only 50-50 in the other direction.  
 
+Taking the normalized (unit vector) direction, each component results in a spin-up probability of:
+
+```
+f(x) = sin( (1+x) * PI/4 )^2
+```
+
 At 0 angle along an axis, there's a 50-50 chance of being detected as 'up'.
 
 ![Dirac1](spinUpProbabilityCurve.png)
