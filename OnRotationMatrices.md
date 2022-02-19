@@ -118,9 +118,17 @@ and then we add another axis to the hypercube, and have 4 corners that have 4 or
 
 add another and have a cube of hypercubes, then in 3 variation spaces, you have 8 different 3 space orientations that you're scaling between.
 
-##
+## Oh Linear Algebra 
 
 
+https://github.com/d3x0r/SACK/blob/master/src/imglib/assembly_reference/lineasm.asm
 
+https://github.com/d3x0r/SACK/blob/master/src/imglib/line.c#L44
+
+Linear scalars, which can be applied in multiple directions and dimensions for linear tranformations...
+
+Since the matrix is really just a multi-linear scalar is the relationship, that really the transform from A to B of the 3x3 matrix within the 4x4 is like a y=mx+b but more like y = ax-bx+c.
+
+Which makes it very [Lagrangian](https://en.wikipedia.org/wiki/Lagrangian_mechanics) actually  where you have a something added and somthing taken away to equal 0 instead of a 0.
 
 
