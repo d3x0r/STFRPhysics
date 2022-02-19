@@ -28,17 +28,17 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 
    But the matrix direction is bidirectional, taken on both sides...
      that is there's an apply that translates x-> x1 x2 and y to y1 y2   as in
-     
-        |  |  |
-        |----|---|
-        | x1 | y2 |
-        | y1 | y3 |
-        
-     but the inverse is also available as x from x1,y1  and y from x2,y2 
-     ( So one way is translate from local to global the other way is global to local )
-     
-     So then x2 scales x1 in the inerse direction (X2 f_inv(x)) and y1 scales x1 in the forward direction (X1 f(x)).
-     
+
+   |  |  |
+   |----|---|
+   | x1 | y2 |
+   | y1 | y3 |
+   
+but the inverse is also available as x from x1,y1  and y from x2,y2 
+( So one way is translate from local to global the other way is global to local )
+
+So then x2 scales x1 in the inerse direction (X2 f_inv(x)) and y1 scales x1 in the forward direction (X1 f(x)).
+
     
      (z?) = g(x,y) = y1*f_inv(x) + y2*f(x) + y3 * y
      
@@ -47,11 +47,12 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 ## 3x3 
 
   So now when the additional two rows get added (bottom and right)
-        |  |  |  |
-        |---|----|---|
-        | x1 | y1 |z3 |
-        | x2 | y2 |z4 |
-        | z1 | z2 |z5 |
+  
+|  |  |  |
+|---|----|---|
+| x1 | y1 |z3 |
+| x2 | y2 |z4 |
+| z1 | z2 |z5 |
 
   then the value pair in (z3,z4) applys as a scalar to the original core's 'apply' direction
   then the pair (z1,z2) applys to the core the inverse application part
@@ -69,12 +70,13 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 ## 4x4  
   
   So now when the additional two rows get added (bottom and right)
-        |  |  |  |  |
-        |---|----|---|---|
-        | x1 | y1 |z3 | t4 |
-        | x2 | y2 |z4 | t5 |
-        | z1 | z2 |z5 | t6 |
-        | t1 | t2 | t3 | t7 |
+  
+  |  |  |  |  |
+  |---|----|---|---|
+  | x1 | y1 |z3 | t4 |
+  | x2 | y2 |z4 | t5 |
+  | z1 | z2 |z5 | t6 |
+  | t1 | t2 | t3 | t7 |
   
   similarly now we have a 3d rotation coordinate kernel, which is scaled with the verse and inverse component of the 't' vector, 
   
