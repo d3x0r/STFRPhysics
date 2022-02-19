@@ -43,7 +43,34 @@ So then x2 scales x1 in the inerse direction (X2 f_inv(x)) and y1 scales x1 in t
      (z?) = g(x,y) = y1*f_inv(x) + y2*f(x) + y3 * y
 
      (z?) = g_inv(x,y) = -( y2*f_inv(x) + y1*f(x)  + y3*y )
+
+
+### 2x2 evolution from 1x1 (0 rotation) 
+
+This has to add 1 angle, it's around a axis that doesn't exist in this space... but it's a propery perpendicular to the x-y plane.
+
+It adds some of scaled X and inverse scaled X.
+
+     a  vA
+     iA b
      
+     the 'y3' part ends up being what ever is leftover from the other, so we can maintain the proper proportions.
+
+    An angle like 1/2  is     a cos(T)  - b *  sin(T), a sin(T) + b * cos(T)
+                             ( x1 y1 - y2 y3, x1 y2 + y1 y3 )
+ 
+	g(x,y) = x cos(T)  - y *  sin(T), x sin(T) + y * cos(T);
+
+
+    f_inv(x with a) * y1 + f( x with a ) * y2 ) + y3 * x
+
+     x1y2 - x1y1 
+
+so `x1` is `R` in a complex number idea... 
+
+?y3 is then what the Y coordinate input is really... and should be a 1 also? a and b don't have to have a relationship at this point.
+
+
 ## 3x3 
 
   So now when the additional two rows get added (bottom and right)
@@ -68,6 +95,25 @@ So then x2 scales x1 in the inerse direction (X2 f_inv(x)) and y1 scales x1 in t
   
   
    in the 3d case, the opposing z1,z3, z2,z4 are the direction vector in the xy plane, and are then a circle around to the z axis.
+
+
+
+### 3x3 evolution from 2x2 (1 rotation) 
+
+So this is reasonable to pretend that we don't have a 3rd real dimension, and assume it's just a 'thing'; can show slices of planes or something; but.
+
+This adds a ratio of 2 coodinates which rotate the `x` and `y` axis toward the 'z' (new) axis.  There's a circular sort of 
+limit between these two values as if they were within a `x+yi` complex number that is constrained to be a unit vector. 
+
+Maybe it's just abstractly `sqrt(xdel + ydel + z5 z5) = 1`  (which is what the third row in a rotation matrix would be...) but then (wx_del,wy_del,wz_del) added in 4x4 rotation plus ww_del = 1.
+
+
+The z1,z2 values and z3,z4 values have to come from somewhere, and or have some related meaning to them... 
+
+In the matrix representation, what the final rotation can be for the resulting rotation using x-y is limited to scaling/rotating the x-y rotation in the first place.  It's that rotation
+forward and inverse versions scaled by the other factors... (by the z1,z2,z3,z4) and z5's modification of any new Z value.
+
+... ( to be expanded)
   
 ## 4x4  
   
