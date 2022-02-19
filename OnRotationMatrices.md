@@ -14,11 +14,11 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 
 ## 1x1?
 
-        |  |
-        |----|
-        | x1  |
-
-        
+  |  |
+  |----|
+  | x1  |
+  
+  
       y =  f(x)     = X1 x 
       
         f_inv(x) = -X1 x 
@@ -26,7 +26,7 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 
 ## 2x2
 
-  - But the matrix direction is bidirectional, taken on both sides...
+   But the matrix direction is bidirectional, taken on both sides...
      that is there's an apply that translates x-> x1 x2 and y to y1 y2   as in
      
         |  |  |
