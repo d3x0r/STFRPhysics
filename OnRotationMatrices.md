@@ -114,6 +114,21 @@ In the matrix representation, what the final rotation can be for the resulting r
 forward and inverse versions scaled by the other factors... (by the z1,z2,z3,z4) and z5's modification of any new Z value.
 
 ... ( to be expanded)
+
+A and B and C  which is (B-A)dz ; A is the start, B is the target, C is a delta over Z that A-B is changed.
+
+so with A and (B-A)/dz can scale as in y = mx+b   y = (b-a/dx) x + A
+
+but then I get delta-Xz(which looks like it's around the Y axis) and delta-Yz(which looks like it's along the X axis) 
+
+and now Z is an axis we can see/use the original delta-Xy still exists.
+
+the total delta-(Yz,Xz,Xy); is 1(2pi) max and are all identity to start.... or rather iterating from 0 to this 1 gives all of the stages along that... 
+
+
+
+
+
   
 ## 4x4  
   
@@ -177,4 +192,76 @@ Since the matrix is really just a multi-linear scalar is the relationship, that 
 
 Which makes it very [Lagrangian](https://en.wikipedia.org/wiki/Lagrangian_mechanics) actually  where you have a something added and somthing taken away to equal 0 instead of a 0.
 
+
+---
+
+## More Work
+
+It's sort of self-modifing;... so then
+
+a cross product of axb
+
+is 
+
+```
+(ab sin theta)
+(x,y) x (a,b) = (axby-bxay)
+
+(if a&b are unit, just sin(theta) )
+```
+
+
+| | |
+|---|----|
+| 0            |-(axby-bxay)/2  |
+| (axby-bxay)/2|            0   |
+
+| | |
+|---|----|
+| 0            |-sin(theta)/2  |
+| (sin theta)/2|            0  |
+
+
+
+xy
+yz
+xz
+
+| | | |
+|---|----|---|
+| 0             | -(axby-bxay)/2  |   -(axbz-bxaz)/2  |
+| (axby-byax)/2 |    0            |   -(aybz-byaz)/2  |
+| (axbz-bxaz)/2 | (aybz-byaz)/2   | 0                 |
+
+
+| | | | |                  
+|---|----|---|---|
+| 0             | -(axby-bxay)/2 |    -(axbz-bxaz)/2 | -(axbw-bxaw)/2      |
+| (axby-byax)/2 |    0           |    -(aybz-byaz)/2 | -(aybw-byaw)/2      |
+| (axbz-bxaz)/2 | (aybz-byaz)/2  |    0              |    -(azbw-bzaw)/2   |
+| (axbw-bxaw)/2 |  (aybw-byaw)/2 |   (azbw-bzaw)/2   |        0            |
+
+
+
+``` js
+	/*
+	https://stackoverflow.com/a/12472591/4619267
+	x = (R21 - R12)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+	y = (R02 - R20)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+	z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
+	*/	
+        // this is the direction normal... the axis of rotation
+	const yz = basis.up     .z - basis.forward.y;
+	const xz = basis.forward.x - basis.right  .z;
+	const xy = basis.right  .y - basis.up     .x;
+	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+
+// and it would seem to follow....
+
+	const wx = basis.in   .x - basis.right.w;
+	const wy = basis.in   .y - basis.up     .w;
+	const wz = basis.in   .z - basis.forward.w;
+	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+
+```
 
