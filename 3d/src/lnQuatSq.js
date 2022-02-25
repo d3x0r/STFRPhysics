@@ -996,7 +996,16 @@ lnQuat.apply = function( angle, axis, v, del, target ) {
 		target.set( 0
 			, vx*c + s*(qy * vz - qz * vy) + qx * dot
 			, vy*c + s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
+			, vz*c + s*(qx * vy - qy * vx) + qz * dot 
+///			, vw*c + s*(qx * vy - qy * vx) + qw * dot 
+			);
+/*
+      c     s*qz   s*qy   s* wx qwqx         qx
+v*   -s*qz  c      s*qx   s* wy qwqy      +  qy  *dot*(1-c)
+     s*qy   s*qx      c   s* wz qwqz         qz
+     s*qwqx s*qwqy s*qwqx     c              qw
+*/
+
 		return target;
 	}
 }
@@ -1113,6 +1122,11 @@ function finishRodrigues( q, oct, ax, ay, az, th, extrinsic ) {
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
+		         /*
+		        ax qx  -crsz   crsy
+			crsz   ay qy  -crsx
+			-crsy  crsy   az qz
+			  */
 		// this is NOT /sin(theta);  it is, but only in some ranges...
 		const Clx = (lnQuat.sinNormal)
 		          ?(1/(2*Math.sin( ang/2 )))
@@ -1155,7 +1169,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	// input angle...
 
 
-	if( "undefined" === typeof oct ) oct = 4;
+	if( "undefined" === typeof oct ) oct = 0;
 	if( this.dirty ) this.update();
 
 	const ax_ = axis.x;
