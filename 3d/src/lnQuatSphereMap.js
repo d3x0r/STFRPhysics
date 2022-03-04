@@ -53,6 +53,7 @@ let totalNormal = 0;
 let drawWorldAxles = false;
 let mountOrder = 0;
 let currentOctave = 0;
+let stereoProject = false;
 
 let lnQx = new lnQuat();
 let lnQx2 = new lnQuat();
@@ -118,7 +119,7 @@ function makeQuat(p,y,r) {
 	const zAxis = {x:0, y:0, z:1};
 	let useSub = false;
 	let subIterations = 10;
-	function pMake(q, x, y, o ){
+	function pMake(q, x, y, o, gamma, r ){
 		
 		if( weylGroup ) {
 			q.x = x;
@@ -218,6 +219,19 @@ function makeQuat(p,y,r) {
 				}
 			}
 		}
+
+		if( mapPolar ) {
+					if( weylCurvature )
+						q.yaw( gamma );
+					else if( polarAligned && !stereoProject )
+						q.yaw( -gamma);
+					else if( stereoProject && !polarAligned )
+						q.yaw( -r );
+					else if( stereoProject && polarAligned )
+						q.yaw( r );
+
+		}
+
 		return q;
 	}
 
@@ -232,7 +246,7 @@ function makeQuat(p,y,r) {
 		 weylCurvature = document.getElementById( "weylCurvature" )?.checked;
 		 weylGroup = document.getElementById( "weylGroup" )?.checked;
 		 polarAligned= document.getElementById( "polarAligned" )?.checked;
-		 const stereoProject = document.getElementById( "stereoProject" )?.checked;
+		 stereoProject = document.getElementById( "stereoProject" )?.checked;
 		 const showGrid = document.getElementById( "showGrid").checked;
 		const lnQ = new lnQuat();
 		const spaceScale = 18;
@@ -294,7 +308,7 @@ function makeQuat(p,y,r) {
 
 		const step = range/32;
 
-		if( !mapPolar ) 
+		if( !mapPolar )  {
 		
 		for( let theta = -(range); theta <= (range); theta += (step) ){
 	
@@ -417,6 +431,7 @@ function makeQuat(p,y,r) {
 
 			}
 		}
+		}  // end if(!mapPolar );
 
 		let rline = 0;
 		if( mapPolar ) {
@@ -435,20 +450,7 @@ function makeQuat(p,y,r) {
 					g2 = (r)*Math.sin(gamma);
 					t2 = (r)*Math.cos(gamma);
 					
-					pMake( lnQ, t2, g2, lnQx);
-
-					let spinDiff = 0;
-					if( weylCurvature )
-						lnQ.yaw( gamma );
-					else if( polarAligned && !stereoProject )
-						lnQ.yaw( -gamma);
-					else if( stereoProject && !polarAligned )
-						lnQ.yaw( -r );
-					else if( stereoProject && polarAligned )
-						lnQ.yaw( r );
-
-	
-
+					pMake( lnQ, t2, g2, lnQx, gamma, r);
 
 					//lnQ.θ +=  currentOctave * 4*Math.PI;
 					lnQ.x = lnQ.nx * lnQ.θ;
@@ -458,11 +460,11 @@ function makeQuat(p,y,r) {
 					//lnQ.add( offset, 1 )
 				if( showNormalProjection ) {
 					
-					const basis = lnQ.update().getBasis();
+					const basis = lnQ.getBasis();
 					tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 					tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 					tmpPoint.z = basis.up.z * spaceScale*1.43 ;
-					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, gamma, r);
+					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, g2, t2, gamma, r );
 					const wraps = Math.floor( range / Math.PI ) * Math.PI;
 					if( showGrid && draw ) {
 						const oldp = p[gamline];
@@ -496,7 +498,8 @@ function makeQuat(p,y,r) {
 					}else {
 						p2.push( {x:basis.up.x,y:basis.up.y,z:basis.up.z} )
 					}
-					}else 					doDrawBasis( lnQ, doDrawBasis, 0.25, 1, null, 1, gamma, r);
+					}else 					
+						doDrawBasis( lnQ, lnQ, 0.25, 1, null, 1, g2, t2, gamma, r);
 
 				}
 			}
@@ -563,7 +566,7 @@ function makeQuat(p,y,r) {
 
 	// graph of location to rotation... 
 
-	function doDrawBasis(lnQ2,t,s,Del,from,colorS, gamma, theta	 ) {
+	function doDrawBasis(lnQ2,t,s,Del,from,colorS, gamma, theta, g2In, r	 ) {
 
 		const basis = lnQ2.update().getBasisT( Del,from );
 		const normal_del = 3;
@@ -590,6 +593,7 @@ function makeQuat(p,y,r) {
 				normalColors.push( new THREE.Color( 0,0,1.0*colorS,255 ))
 			}
 		}
+
 		if( showRotationCurves )
 		{
 			let x_ = 0;
@@ -603,17 +607,20 @@ function makeQuat(p,y,r) {
 			let minofs, maxofs;
 
 			if( showRotationCurve === "X") {
-				minofs = -(maxofs = Math.PI*2);
+				minofs = -(maxofs = Math.PI/2);
 				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
 			} else {
-				minofs = -(maxofs = Math.PI/2);
+				minofs = -(maxofs = Math.PI/100);
 				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
 			}
 			first = true;
 
+				//lnQuat.setTwistDelta( twistDelta );
+
 			if( 1 || showRotationCurve === "X" )
-			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
-				lnQx2.set( {lat:curSliders.lnQX[0] + latPlus,lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
+
+				lnQx2.set( {lat:curSliders.lnQX[0] + latPlus,lng:curSliders.lnQY[0]}, false ).yaw(twistDelta);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
@@ -622,7 +629,7 @@ function makeQuat(p,y,r) {
 					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				}
 				//if( merge ) {
-					pMake( lnQ, t2, g2, lnQx2);
+					pMake( lnQ, t2, g2, lnQx2, g2In, r);
 
 					let x = lnQ.x;
 					let y = lnQ.y;
@@ -649,16 +656,17 @@ function makeQuat(p,y,r) {
 			}
 
 			if( showRotationCurve === "Y") {
-				minofs = -(maxofs = Math.PI*2);
+				minofs = -(maxofs = Math.PI/2);
 				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
 			} else {
-				minofs = -(maxofs = Math.PI/2);
+				minofs = -(maxofs = Math.PI/10);
 				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
 			}
+if(1) {
 			first = true;
 			if( 1 || showRotationCurve === "Y" )
-			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
-				lnQx2.set( {lat:curSliders.lnQX[0] ,lng:curSliders.lnQY[0]+ latPlus}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
+				lnQx2.set( {lat:curSliders.lnQX[0] ,lng:curSliders.lnQY[0]+ latPlus}, false ).yaw(twistDelta);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
@@ -667,7 +675,7 @@ function makeQuat(p,y,r) {
 					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				}
 				//if( merge ) {
-					pMake( lnQ, t2, g2, lnQx2);
+					pMake( lnQ, t2, g2, lnQx2, g2In, r);
 
 					let x = lnQ.x;
 					let y = lnQ.y;
@@ -694,18 +702,18 @@ function makeQuat(p,y,r) {
 			}
 
 			if( showRotationCurve === "Z") {
-				minofs = -(maxofs = Math.PI*2);
+				minofs = -(maxofs = Math.PI/2);
 				color = new THREE.Color( 1.0 * (theta+range)/range * 0.5,1.0 * (gamma+range)/range * 0.5,0,255 );
 			} else {
-				minofs = -(maxofs = Math.PI/2);
+				minofs = -(maxofs = Math.PI/10);
 				color = new THREE.Color( 0.2 * (theta+range)/range * 0.5,0.2 * (gamma+range)/range * 0.5,0,255 );
 				
 			}
 			first = true;
 			if( 1 || showRotationCurve === "Z" )
-			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (Math.PI*4)/20 ){
-				lnQuat.setTwistDelta( twistDelta + latPlus );
-				lnQx2.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, normalizeTangents );//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
+			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
+				//lnQuat.setTwistDelta( twistDelta + latPlus );
+				lnQx2.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, false ).yaw(twistDelta+latPlus);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
 				let g2 = gamma ;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				let t2 = theta;// / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
@@ -714,7 +722,7 @@ function makeQuat(p,y,r) {
 					t2 = 1.414*theta / (Math.abs(gamma)+Math.abs(theta)) * Math.sqrt( gamma*gamma+theta*theta);
 				}
 				//if( merge ) {
-					pMake( lnQ, t2, g2, lnQx2);
+					pMake( lnQ, t2, g2, lnQx2, g2In, r);
 
 					let x = lnQ.x;
 					let y = lnQ.y;
@@ -745,7 +753,7 @@ function makeQuat(p,y,r) {
 
 
 		}
-
+}
 		let x = lnQ2.x,y =lnQ2.y,z= lnQ2.z;
 			if( from ) {
 

@@ -321,9 +321,11 @@ function updateGeometry( normalVertices,normalColors) {
 function initUI( updateMesh ) {
 	const controls = document.getElementById( "controls" );
         console.log( "controls",controls );
-	const slider = popups.makeSlider( controls, values, "sliderA", "zLevel", (x)=>x*6/1000 );
+	values.sliderA = 0.594;
+	const slider = popups.makeSlider( controls, values, "sliderA", "zLevel", (x)=>x*6/1000, (x)=>x*1000/6 );
 	slider.on( "change", (slider)=>updateMesh() );
-	const slider2 = popups.makeSlider( controls, values, "sliderB", "Displacment", (x)=>x*6/1000 );
+	values.sliderB = 1.512;
+	const slider2 = popups.makeSlider( controls, values, "sliderB", "Displacment", (x)=>x*6/1000, (x)=>x*1000/6 );
 	slider2.on( "change", (slider)=>updateMesh() );
 	popups.makeButton( controls, "Update", updateMesh );
 }
