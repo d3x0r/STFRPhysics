@@ -85,6 +85,7 @@ const tmpQ = new lnQuat();
 export class Motion {
 	body  = null;
 	// body.position is position
+	position = new THREE.Vector3();
 	speed = new directedDistance();
 
 	tmp_acceleration = new THREE.Vector3();
@@ -118,6 +119,7 @@ export class Motion {
 
 	constructor( body ) {
 		this.body = body;
+		if( body ) this.position = this.body.position;
 	}
 
 
@@ -129,9 +131,9 @@ export class Motion {
 		this.orientation.update();
 		// compute a direction vector between this motion and motion target
 		const tmpDir = this.tmpDir;
-		tmpDir.x = motion.body.position.x - this.body.position.x;
-		tmpDir.y = motion.body.position.y - this.body.position.y;
-		tmpDir.z = motion.body.position.z - this.body.position.z;
+		tmpDir.x = motion.position.x - this.position.x;
+		tmpDir.y = motion.position.y - this.position.y;
+		tmpDir.z = motion.position.z - this.position.z;
 		tmpDir.dirty = true;
 		tmpDir.update();
 
@@ -268,9 +270,9 @@ export class Motion {
 			        this.speed.y -= this.speed.y * speedNormal;
 			        this.speed.z -= this.speed.z * speedNormal;
 
-                                this.body.position.x = motion.body.position.x - tmpDir.x * (1+perInner);
-                                this.body.position.y = motion.body.position.y - tmpDir.y * (1+perInner);
-                                this.body.position.z = motion.body.position.z - tmpDir.z * (1+perInner);
+                                this.position.x = motion.position.x - tmpDir.x * (1+perInner);
+                                this.position.y = motion.position.y - tmpDir.y * (1+perInner);
+                                this.position.z = motion.position.z - tmpDir.z * (1+perInner);
 			       // this.acceleration.addScaledVector( tmpDir, -1*speedNormal );
                         }
                      //else
@@ -303,7 +305,7 @@ export class Motion {
 		//motion.dipole.update();
 		const torque = new lnQuat();// 0, tmp2.x-tmp1.x,tmp2.y-tmp1.y,tmp2.z-tmp1.z);
 		tmp1.cross( tmp2, torque );
-		const bodyDel = Vector3Pool.new().subVectors(  this.body.position, motion.body.position );
+		const bodyDel = Vector3Pool.new().subVectors(  this.position, motion.position );
 		const rSq = bodyDel.lengthSq();
 		bodyDel.delete();
 		this.eTorque.add( torque, 100/rSq );
@@ -342,15 +344,17 @@ export class Motion {
 					this.rotation.update();
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
-							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
+							, z:this.rotation.nz } );
+					if( this.body )
+						this.orientation.exp( this.body.quaternion, 1 );
 
 					
 					this.speed.addScaledVector( this.tmp_acceleration, delta );
 					var del = this.speed.clone().multiplyScalar( delta );
 					const basis = this.orientation.getBasis();
-					this.body.position.addScaledVector( basis.forward, del.z );
-					this.body.position.addScaledVector( basis.up, del.y );
-					this.body.position.addScaledVector( basis.right, -del.x );
+					this.position.addScaledVector( basis.forward, del.z );
+					this.position.addScaledVector( basis.up, del.y );
+					this.position.addScaledVector( basis.right, -del.x );
 					//del.delete();
 					
 						/*
@@ -370,6 +374,7 @@ export class Motion {
 					//m.rotateRelative( this_move.x, this_move.y, this_move.z );
 					//this_move.delete();
 				}
+
                 inertialmove ( m, delta ) {
 					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
 					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
@@ -392,7 +397,9 @@ export class Motion {
 					this.rotation.update();
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
-							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
+							, z:this.rotation.nz } )
+					if( this.body )
+						this.orientation.exp( this.body.quaternion, 1 );
 
 					/*
 					this.speed.addScaledVector( this.acceleration, delta );
@@ -413,13 +420,14 @@ export class Motion {
 
 					del.delete();
 
-					this.body.position.addScaledVector( this.speed, delta );
+					this.position.addScaledVector( this.speed, delta );
 
 					// this is applying internal torque.
 
 					//m.rotateRelative( this_move.x, this_move.y, this_move.z );
 					//this_move.delete();
 				}
+
                 freemove( m, delta ) {
 					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
 					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
@@ -441,7 +449,7 @@ export class Motion {
 					
 					del.delete();
 
-					this.body.position.addScaledVector( this.speed, delta );
+					this.position.addScaledVector( this.speed, delta );
 
 					//const tq = {x:this.torque.x, y:this.torque.y, z:this.torque.z}
 					//const gtorque = tq;//this.orientation.applyDel( tq );
@@ -473,15 +481,17 @@ export class Motion {
 					if(0)
 					this.orientation.spin( this.rotation.θ * delta, {x:this.rotation.nx
 							, y:this.rotation.ny
-							, z:this.rotation.nz } ).exp( this.body.quaternion, 1 );
+							, z:this.rotation.nz } );
 					if(0)
 					this.orientation.freeSpin( this.eTorque.θ * delta, {x:this.eTorque.nx
 							, y:this.eTorque.ny
-							, z:this.eTorque.nz } ).exp( this.body.quaternion, 1 );
+							, z:this.eTorque.nz } );
 					if(1)
 					this.orientation.freeSpin( tmpQ.θ * delta, {x:tmpQ.nx
 						, y:tmpQ.ny
-						, z:tmpQ.nz } ).exp( this.body.quaternion, 1 );
+						, z:tmpQ.nz } )
+					if( this.body )
+						this.orientation.exp( this.body.quaternion, 1 );
 	
 					if( isNaN( this.orientation.θ ) ) {
 						console.log( "overflow orientation:", this.orientation, this.rotation, this.eTorque );
