@@ -31,8 +31,8 @@ which rotates around Z, and moves points from (x,y) to (x,y,z).
 
    |  |  |
    |----|---|
-   | x1 | y2 |
-   | y1 | y3 |
+   | y3 | y2 |
+   | y1 | x1 |
    
 but the inverse is also available as x from x1,y1  and y from x2,y2 
 ( So one way is translate from local to global the other way is global to local )
@@ -80,6 +80,14 @@ so `x1` is `R` in a complex number idea...
 | x1 | y2 |z3 |
 | y1 | y3 |z4 |
 | z1 | z2 |z5 |
+
+|  |  |  |
+|---|----|---|
+| z5 | z3 |z4 |
+| z2 | y3 |y2 |
+| z1 | y1 |x1 |
+
+
 
   then the value pair in (z3,z4) applys as a scalar to the original core's 'apply' direction
   then the pair (z1,z2) applys to the core the inverse application part
@@ -140,6 +148,15 @@ the total delta-(Yz,Xz,Xy); is 1(2pi) max and are all identity to start.... or r
   | y1 | y3 |z4 | t5 |
   | z1 | z2 |z5 | t6 |
   | t1 | t2 | t3 | t7 |
+
+  
+  |  |  |  |  |
+  |---|----|---|---|
+ |T7 | T1 | T2 | T3 |
+ |t6 | x1 | y2 |z3 | 
+ |t5 | y1 | y3 |z4 | 
+ |t4 | z1 | z2 |z5 | 
+
   
   similarly now we have a 3d rotation coordinate kernel, which is scaled with the verse and inverse component of the 't' vector, 
   
@@ -203,9 +220,14 @@ a cross product of axb
 
 is 
 
+well I was along the right train of thought... https://en.wikipedia.org/wiki/Cross_product#Conversion_to_matrix_multiplication
+
+
+
+
 ```
 (ab sin theta)
-(x,y) x (a,b) = (axby-bxay)
+(x,y) x (a,b) = (bx-ay)
 
 (if a&b are unit, just sin(theta) )
 ```
@@ -213,8 +235,8 @@ is
 
 | | |
 |---|----|
-| 0            |-(axby-bxay)/2  |
-| (axby-bxay)/2|            0   |
+| 0            |-(bx-ya)/2  |
+| (bx-ya)/2|            0   |
 
 | | |
 |---|----|
@@ -222,24 +244,35 @@ is
 | (sin theta)/2|            0  |
 
 
+(x,y,z) x (a,b,c)  xy, yz, xz
 
-xy
-yz
-xz
+cy-bz  az-cx  ay-bx
+
 
 | | | |
 |---|----|---|
-| 0             | -(axby-bxay)/2  |   -(axbz-bxaz)/2  |
-| (axby-byax)/2 |    0            |   -(aybz-byaz)/2  |
-| (axbz-bxaz)/2 | (aybz-byaz)/2   | 0                 |
+| 0             | -(ay-bx)/2  |  (-) -(az-cx)/2  |
+| (ay-bx)/2 |    0            |      -(bz-cy)/2  |
+| (-)(az-cx)/2 | (bz-cy)/2   | 0                 |
 
+const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
+
+angle = acos(t);
+
+const t = ( ( basis.right.x + basis.up.y + basis.forward.z + basis.forward.w ) - 1 )/2;
+
+angle = acos(t);
+
+### 6 product to matrix
+
+cross product to 4x4 matrix : to apply to a point...
 
 | | | | |                  
 |---|----|---|---|
-| 0             | -(axby-bxay)/2 |    -(axbz-bxaz)/2 | -(axbw-bxaw)/2      |
-| (axby-byax)/2 |    0           |    -(aybz-byaz)/2 | -(aybw-byaw)/2      |
-| (axbz-bxaz)/2 | (aybz-byaz)/2  |    0              |    -(azbw-bzaw)/2   |
-| (axbw-bxaw)/2 |  (aybw-byaw)/2 |   (azbw-bzaw)/2   |        0            |
+| 0             | -(ay-bx)/2 |    -(az-cx)/2 | -(aw-dx)/2      |
+| (ay-bx)/2 |    0           |    -(bz-cy)/2 | -(bw-dy)/2      |
+| (az-cx)/2 | (bz-cy)/2  |    0              |    -(cw-dz)/2   |
+| (aw-dx)/2 | (bw-dy)/2 |   (cw-dz)/2   |        0            |
 
 
 
@@ -255,6 +288,7 @@ xz
 	const xz = basis.forward.x - basis.right  .z;
 	const xy = basis.right  .y - basis.up     .x;
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
+	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
 
 // and it would seem to follow....
 
@@ -264,4 +298,46 @@ xz
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
 
 ```
+
+// so, does applying this to a vector just work out to be the coss product times a vector?
+//  not really?  Unless all of those values are the inverse...
+
+
+```
+| | | |
+|---|----|---|
+| 0             | -(ay-bx)/2  |  (-) -(az-cx)/2  |  X
+| (ay-bx)/2 |    0            |      -(bz-cy)/2  |  Y
+| (-)(az-cx)/2 | (bz-cy)/2   | 0                 |  Z
+
+x * (ay-bx+az-cx)
+     (y+z)*a - (b+c)x
+    
+    
+    (bz-cy)
+    
+y * (-(ay-bx)+bz-cy)    
+     (z+x)*b - (a+c)*y 
+    
+    (az-cx)
+    
+z * -(az-cx+bz-cy)
+     (x+y)c - (a+b)z
+    
+     (ay-bx)
+   
+```
+
+But, this matrix has been a 0 angle rotation around the axis.. to match the angle... and I don't *need* the /2; most normalize the axis with a sqrt rather than knowing it's the sin of the angle. (well then I have to scale
+the trace by 2  subtract from 2?)
+
+| | | |
+|---|----|---|
+| sqrt(2-(m01 m01 + m02 m02 ))  | -()                      |   -()                  |  x
+| ()                 |    sqrt(2-(m10 m10 + m12 m12 ))     |   -()                  |  y
+| ()                 | ()                       |  sqrt(2-(m20 m20 + m21 m21 ))     |  z
+
+
+
+
 
