@@ -1,6 +1,50 @@
 
 <html>
-<head><title>Spacial Compression Geodesics</title></head>
+<head>
+<style>
+body {
+	overflow	: hidden;
+	padding		: 0;
+	margin		: 0;
+
+	color		: #000;
+	-webkit-text-stroke : 2px #ffffff40;
+	text-shadow: white 0px 0px 10px;
+	background-color: #EEE;
+	font-family	: arial;
+	font-weight : 800;
+	font-size	: 100%;
+}
+#info .top {
+	position	: absolute;
+	top		: 0px;
+	width		: 100%;
+	padding		: 5px;
+	text-align	: center;
+}
+#info a {
+	color		: #66F;
+	text-decoration	: none;
+}
+#info a:hover {
+	text-decoration	: underline;
+}
+#info .bottom {
+	position	: absolute;
+	bottom		: 0px;
+	right		: 5px;
+	padding		: 5px;
+}
+
+#info .controls {
+	position	: absolute;
+	top		: 10px;
+	left		: 10px;
+	padding		: 5px;
+}
+
+</style>
+<title>Spacial Compression Geodesics</title></head>
 <body>
    <p>
 	<div style="position:relative">
@@ -8,7 +52,7 @@
 	<div style="position:absolute;top:0">
 	<a href="https://github.com/d3x0r/STFRPhysics/blob/master/math/mathSphereDecay.md">More Information</a>
 	<p>Inverse Cuvature <input id="invertCurvature" type="checkbox" unchecked> </p>
-	<p>Displacement A<input type="range" id="A" value="50"> <span id="Aval"></span>Displacement B<input type="range" id="Amax" value="50"></p>
+	<p>Displacement A<input type="range" id="A" value="50"> <span id="Aval"></span>  <!--Displacement B<input type="range" id="Amax" value="50"> -->  </p>
 	<p>Offset Z<input type="range" id="B" value="50"> <span id="Bval"><div style="visibility:hidden"></span> Offset nY<input type="range" id="Dmax" value="50"> </div></p>
 <div style="visibility:hidden">
 	<p>Offset Z<input type="range" id="C" value="50"> <span id="Cval"></span> Offset nZ<input type="range" id="Cmax" value="50"> </p>

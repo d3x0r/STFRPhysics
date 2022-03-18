@@ -44,18 +44,18 @@ const myForm = {
 
 const values = {A:0.0,Amax:0,B:0.0,C:0.0,D:0.0};
 myForm.invertCurvature.oninput =  myForm.sliderA.oninput = myForm.sliderValA.oninput = readValues;
-myForm.sliderAmax.oninput = readValues;
+if(myForm.sliderAmax) myForm.sliderAmax.oninput = readValues;
 myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
 myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
 myForm.sliderD.oninput = myForm.sliderValD.oninput = readValues;
 
 myForm.sliderA.value = 0;
-myForm.sliderAmax.value = 0;
+if(myForm.sliderAmax) myForm.sliderAmax.value = 0;
 myForm.sliderB.value = 0;
 
 function readValues()  {
 	values.A = (Number(myForm.sliderA.value)/20.0);
-	values.Amax = (Number(myForm.sliderAmax.value)/20.0);
+	values.Amax = (myForm.sliderAmax)? (Number(myForm.sliderAmax.value)/20.0):0;
 	values.B = (Number(myForm.sliderB.value)/20.0);
 	values.B *= 5;
 	values.C = (Number(myForm.sliderC.value)/10.0)-5;
@@ -182,8 +182,7 @@ function drawsomething() {
 		];
 
 
-
-	function plot( x_, y_, c ) {
+	function plotPut( x_, y_, c ) {
 		if( x_ < -5 || y_ < -5 ) return
 		if( x_ > 5 || y_ > 5 ) return
 		const x = unit(x_);
@@ -193,30 +192,58 @@ function drawsomething() {
 		output[((x+y*squareSize)<<2)+2] = c[2];
 		output[((x+y*squareSize)<<2)+3] = c[3];
 	}
+
+	function plot( x_, y_, c ) {
+		if( x_ < -5 || y_ < -5 ) return
+		if( x_ > 5 || y_ > 5 ) return
+		const x = unit(x_);
+		const y = unit(-y_);
+		output[((x+y*squareSize)<<2)+0] |= c[0];
+		output[((x+y*squareSize)<<2)+1] |= c[1];
+		output[((x+y*squareSize)<<2)+2] |= c[2];
+		output[((x+y*squareSize)<<2)+3] |= c[3];
+	}
 		
 //	const thisDel = (n,m)=>n*n*n-(n-m)*(n-m)*(n-m);
 	const thisDel = (n,y)=>n*n*n-(n-step(1000))*(n-step(1000))*(n-step(1000))+y*y*y;
 
 	invertCurvature	= document.getElementById( "invertCurvature")?.checked;
 	                   
-	for( let r = 0.01; r < 8; r+=0.5 ) {
-		// circles have no elongation to have to scale,it only needs the radius scaled.
-		const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
-		// draw a circle with an aprox number of dots... could be smarter (or draw segments)
-		// the density could shade the pen also.
-		for( let t=0; t < Math.PI*2; t+= Math.PI*2/((r+1+values.A)*500) ) {
-			const x = Gr*Math.cos(t);
-			const y = Gr*Math.sin(t);
-			plot(x,y,pens[0] );
-		}
-	}
-
 	//field is 2xg or 2g or g^2 for 2m?
 	const scalar = (values.A+values.Amax);
 	const zscalar =(values.B+scalar)?  scalar*scalar /Q_0(0,0,values.B,scalar):0;
 	if( !invertCurvature)
 	for( let r = -Math.PI*2; r <= Math.PI*2; r+=Math.PI/500 ) {
-		for( let t=0; t <= Math.PI; t+= Math.PI/12 ) {
+		for( let t=0; t <= Math.PI; t+= Math.PI/24 ) {
+			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
+			const Clx = ang/Math.sin(ang/2);
+
+			const Cx = Math.cos(r/2);
+			const Cz = Math.cos(t) * Math.sin(r/2);
+			
+			const px = zscalar/(2*Math.PI)*Cx*Clx;
+			const py = zscalar/(2*Math.PI)*Cz*Clx;
+			plot( py, px,pens[2] );
+			plot( px, py,pens[1] );
+		}
+
+	}
+	for( let r = 0; r <= Math.PI*4; r+=(r>Math.PI*2)?Math.PI/200:Math.PI/1500 ) {
+
+		for( let t=Math.PI*31/64; t <= Math.PI/2+Math.PI*1/64; t+= Math.PI/640 ) {
+			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
+			const Clx = ang/Math.sin(ang/2);
+
+			const Cx = Math.cos(r/2);
+			const Cz = Math.cos(t) * Math.sin(r/2);
+			
+			const px = zscalar/(2*Math.PI)*Cx*Clx;
+			const py = zscalar/(2*Math.PI)*Cz*Clx;
+			plot( py, px,pens[2] );
+			plot( px, py,pens[1] );
+		}
+	if(0)
+		for( let t=-Math.PI/2; t <= -Math.PI*3/8; t+= Math.PI/32 ) {
 			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
 			const Clx = ang/Math.sin(ang/2);
 
@@ -230,7 +257,8 @@ function drawsomething() {
 		}
 	}
 
-	for( let r = -8.99; r < 8; r+=0.5 ) {
+
+	for( let r = -8.99; r < 8; r+=0.08 ) {
 		for( let t=-18.99; t < 18; t+= 5/1000 ) {
 
 			// these two draw the X/Y grid lines.
@@ -354,6 +382,19 @@ if(0)
 }
 		}
 	}
+
+	for( let r = 0.01; r < 8; r+=0.5 ) {
+		// circles have no elongation to have to scale,it only needs the radius scaled.
+		const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
+		// draw a circle with an aprox number of dots... could be smarter (or draw segments)
+		// the density could shade the pen also.
+		for( let t=0; t < Math.PI*2; t+= Math.PI*2/((r+1+values.A)*500) ) {
+			const x = Gr*Math.cos(t);
+			const y = Gr*Math.sin(t);
+			plotPut(x,y,pens[0] );
+		}
+	}
+
 
 
 	for( let t = 0; t < 360; t+= 10 ) {
