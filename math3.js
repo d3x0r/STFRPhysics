@@ -104,9 +104,9 @@ sin(2x) = 2 sin(x) cos(x)
 
 cos(2x) = cos2(x) – sin2(x) = 1 – 2 sin2(x) = 2 cos2(x) – 1	
 
-	const nx = q.x * nR;  //  x / sqrt(xx+yy+zz)
-	const ny = q.y * nR;  //  y / sqrt(xx+yy+zz)
-	const nx = q.z * nR;  //  z / sqrt(xx+yy+zz)
+	const qx = q.x * nR;  //  x / sqrt(xx+yy+zz)
+	const qy = q.y * nR;  //  y / sqrt(xx+yy+zz)
+	const qx = q.z * nR;  //  z / sqrt(xx+yy+zz)
 
 	const xy = 2*qx*qy;  // sin(t)*sin(t) * x * y 
 	const yz = 2*qy*qz;  // sin(t)*sin(t) * y * z 
@@ -127,6 +127,11 @@ cos(2x) = cos2(x) – sin2(x) = 1 – 2 sin2(x) = 2 cos2(x) – 1
 	const yz = qy*qz;  // ( 1 - cos(2t) ) * y * z 
 	const xz = qx*qz;  // ( 1 - cos(2t) ) * z * x
 
+	const xw = qx*qw;  // ( 1 - cos(2t) ) * x * y 
+	const yw = qy*qw;  // ( 1 - cos(2t) ) * y * z 
+	const zw = qx*qw;  // ( 1 - cos(2t) ) * z * x
+
+	no
 	const wx = qw*qx;  // sin(2t) * x 
 	const wy = qw*qy;  // sin(2t) * y 
 	const wz = qw*qz;  // sin(2t) * z 
@@ -134,10 +139,12 @@ cos(2x) = cos2(x) – sin2(x) = 1 – 2 sin2(x) = 2 cos2(x) – 1
 	const xx = qx*qx;  // ( 1 - cos(2t) ) * x * x 
 	const yy = qy*qy;  // ( 1 - cos(2t) ) * y * y
 	const zz = qz*qz;  // ( 1 - cos(2t) ) * z * z 
+	const ww = qw*qw;  // ( 1 - cos(2t) ) * z * z 
 
-	const basis = { right  :{ x : 1 - ( yy + zz ),  y :     ( wz + xy ), z :     ( xz - wy ) }
-	              , up     :{ x :     ( xy - wz ),  y : 1 - ( zz + xx ), z :     ( wx + yz ) }
-	              , forward:{ x :     ( wy + xz ),  y :     ( yz - wx ), z : 1 - ( xx + yy ) }
+	const basis = { right  :{ x : 1 - ( yy + zz +ww ),  y :     ( wz + xy ), z :     ( xz - wy ), w :  }
+	              , up     :{ x :     ( xy - wz )     ,  y : 1 - ( zz + xx +ww ), z :     ( wx + yz ), w :  }
+	              , forward:{ x :     ( wy + xz )     ,  y :     ( yz - wx ), z : 1 - ( xx + yy +ww ), w :  }
+	              , out    :{ x :     ( ww + xw )     ,  y :     ( yz - wx ), z : 1 - ( xx + yy ), w : 1 - ( xx+yy+zz ) }
 	              , origin: { x:0, y:0, z:0 } };
 
 
@@ -585,6 +592,12 @@ z = (R10 - R01)/sqrt((R21 - R12)^2+(R02 - R20)^2+(R10 - R01)^2);
 		const tx = 2 * (qy * v.z - qz * v.y);
 		const ty = 2 * (qz * v.x - qx * v.z);
 		const tz = 2 * (qx * v.y - qy * v.x);
+
+		const tx = 2 * (qwy * v.w - qwz * v.w);
+		const ty = 2 * (qwz * v.W - qwx * v.w);
+		const tz = 2 * (qwx * v.w - qwy * v.w);
+		
+
 
 		return { x : v.x + qw * tx + ( qy * tz - ty * qz )
 			, y : v.y + qw * ty + ( qz * tx - tz * qx )
