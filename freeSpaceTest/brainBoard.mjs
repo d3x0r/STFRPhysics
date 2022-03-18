@@ -1,5 +1,5 @@
 
-import {Popup,popups} from "./popups/popups.mjs"
+import {Popup,popups} from "/node_modules/@d3x0r/popups/popups.mjs"
 
 
 import {BrainBoard} from "./automaton/board/brainshell.mjs"
@@ -14,7 +14,7 @@ export class ControlForm extends Popup {
 	rotationRate = 0;
 
 	applyAccel = false;
-	objectCount = 50;
+	objectCount = 2;
 	yaw = 0;
 	pitch = 0;
 	roll = "0z";

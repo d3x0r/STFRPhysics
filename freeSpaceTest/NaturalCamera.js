@@ -35,7 +35,7 @@ export function NaturalCamera( object, domElement ) {
 	let phiDelta = 0;
 	let thetaDelta = 0;
 
-	this.userRotate = true;
+	this.userRotate = false;
 
 	this.rotateLeft = function ( angle ) {
 		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();

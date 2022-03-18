@@ -13,13 +13,15 @@ import {NaturalCamera} from "./NaturalCamera.js"
 import {SaltyRNG} from "./salty_random_generator.js";
 import * as THREE from "../3d/src/three.js/three.module.js"
 import {Motion} from "../3d/src/three.js/personalFill.mjs"
-import {popups} from "./popups/popups.mjs"
-
+import {popups} from "/node_modules/@d3x0r/popups/popups.mjs"
+import * as CANNON from '/node_modules/cannon-es/dist/cannon-es.js'
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 import {BrainForm} from "./brainBoard.mjs"
 import {ControlForm} from "./brainBoard.mjs"
 import {BrainStem,ref} from "./automaton/brain/brain.mjs"
+
+
 //var glow = require( './glow.renderer.js' );
 
 var l = 0;
@@ -29,6 +31,16 @@ var l = 0;
 var RNG = SaltyRNG( (salt)=>{salt.push( Date.now() ) } );
 
 //var words1 = voxelUniverse.createTextCluster( "Hello World" );
+let world = null;
+var myMover = null;
+var myBrainBoard = null;
+var myMotion = null;
+var movers2 = [];
+var movers = [];
+var dirs = [];
+var camMat = null;
+var status_line;
+
 
 var controlNatural;
 var controlOrbit;
@@ -182,7 +194,7 @@ function lockChangeAlert() {
     //console.log('The pointer lock status is now locked');
 		mode = 1;
 				
-	controls.userRotate = true;
+	//controls.userRotate = true;
     //document.addEventListener("mousemove", updatePosition, false);
   } else {
 		mode = 0;
@@ -206,11 +218,13 @@ function handleKeyEvents( event, isDown ) {
 				switch(mode ) {
 				case 1: // is locked, want unlock
 					document.exitPointerLock();
+					controls.userRotate = false;
 					break;
 				case 0: // is unlocked, want lock.
 					if( renderer.domElement ) {
 						renderer.domElement.requestPointerLock(); 
 					}
+					controls.userRotate = true;
 					break;
 				}
 			}
@@ -305,6 +319,7 @@ function handleKeyEvents( event, isDown ) {
 				myMotion.acceleration.y = 0;
 			break;
 
+/*
             case keys.SPACE:
             case keys.E:
                 myMotion.speed.y = moveSpeed;
@@ -313,6 +328,7 @@ function handleKeyEvents( event, isDown ) {
             case keys.Q:
                 myMotion.speed.y = -moveSpeed;
 				break;
+
 			case keys.A:
 				myMotion.speed.x = -moveSpeed;
 				break;
@@ -325,21 +341,13 @@ function handleKeyEvents( event, isDown ) {
 			case keys.D:
 				myMotion.speed.x = moveSpeed;
 				break;
+*/
 		}
 	event.preventDefault();
 		//console.log( "myMotion:", myMotion.torque )
 		//console.log( "myMotion:", myMotion.rotation )
 }
 
-
-var myMover = null;
-var myBrainBoard = null;
-var myMotion = null;
-var movers2 = [];
-var movers = [];
-var dirs = [];
-var camMat = null;
-var status_line;
 
 function init() {
         
@@ -361,6 +369,25 @@ function init() {
                 } );
         	
 	}
+
+	{
+
+		// Init cannon.js
+		world = new CANNON.World();
+		world.gravity.set(0, 0, 0 );
+
+	/*	
+        // Floor
+        const floorShape = new CANNON.Plane()
+        const floorBody = new CANNON.Body({ mass: 0 })
+        floorBody.addShape(floorShape)
+        floorBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0)
+        world.addBody(floorBody)
+	*/	
+
+	}
+	
+
 		scene = new THREE.Scene();
 		scene2 = new THREE.Scene();
 		scene3 = new THREE.Scene();
@@ -423,6 +450,7 @@ objectLoader.load("models/rock1.json", model=>{
 } );
 
 
+
 function addDipoles() {
 	for( let body of movers ) {
 		scene.remove( body.x );
@@ -441,23 +469,52 @@ function addDipoles() {
 	for( var n = 0; n < controlForm.objectCount; n++ ) {
 		var x;
 		scene.add( x = protoRock.clone() );
+		
 		x.matrixAutoUpdate = true;
 		x.position.x = size * ( RNG.getBits( 11, true ) / 1024 );
 		x.position.y = size * ( RNG.getBits( 11, true ) / 1024 );
 		x.position.z = -10 + size * ( RNG.getBits( 11, true ) / 1024 );
-		var m = new Motion( x );
+		var m = new Motion( );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.z = 2*Math.PI * RNG.getBits( 8, true ) /128;
-		m.dipole.x = m.rotation.x;
-		m.dipole.y = m.rotation.y;
-		m.dipole.z = m.rotation.z;
+		m.dipole.x = 0;//m.rotation.x;
+		m.dipole.y = 0;//m.rotation.y;
+		m.dipole.z = 0;//m.rotation.z;
 		m.rotation.dirty = true;
 		m.dipole.dirty = true;
 		m.dipole.update();
 		//m.speed.y = 1;
-		movers.push({x:x,m:m});
 
+		//const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
+		const dipoleShape = new CANNON.Sphere(1.8);
+		const dipoleBody = new CANNON.Body({ mass: 1 })
+          	dipoleBody.addShape(dipoleShape)
+		dipoleBody.position.copy(x.position);
+
+		world.addBody(dipoleBody);
+
+
+         
+		dipoleBody.position.copy( x.position );
+		dipoleBody.quaternion.set( m.rotation.x,m.rotation.y,m.rotation.z );
+		const mover = {x:x, m:m, body:dipoleBody 
+/*
+				, attractor:{ o:jointOffset, c:jointConstraint,
+
+			      move(position) {
+				// move the attractor...
+			        mover.attractor.jointOffset.copy(position);
+			        mover.attractor.jointConstraint.update();
+			      } 
+
+					}
+*/
+		};
+
+		movers.push( mover );
+
+		// ----- Some debug line geometries BGR associated with world(not body relative?)
 
 		var material = new THREE.LineBasicMaterial({
 			color: 0x0000ff
@@ -627,6 +684,192 @@ function render() {
 }
 
 var sumDel =0;
+
+
+	const     crossDipole = new lnQuat();
+const imp = new CANNON.Vec3( 0,0,0 ),zero = new CANNON.Vec3( 0,0,0 );
+const torq = new CANNON.Vec3( 0,0,0 );
+
+function	affect( ent, ent2, inverse, delta ) {
+		const motion = ent2.m;
+		const body2 = ent2.body;
+		const body = ent.body;
+		const this_ = ent.m;
+		const tmp1 = new lnQuat();
+		const tmp2 = new lnQuat();
+		if( !motion ) {console.trace( "Maybe pass a motion to affect?" ) }
+
+		this_.orientation.update();
+		// compute a direction vector between this motion and motion target
+		const tmpDir = this_.tmpDir;
+		tmpDir.x = body2.position.x - body.position.x;
+		tmpDir.y = body2.position.y - body.position.y;
+		tmpDir.z = body2.position.z - body.position.z;
+		tmpDir.dirty = true;
+		tmpDir.update();
+
+		const l1 = tmpDir.θ;
+		// compute my dispole in global coordinates (dipole is directly tied to orientation)
+		this_.dipoleVec.x = this_.dipole.nx;
+		this_.dipoleVec.y = this_.dipole.ny;
+		this_.dipoleVec.z = this_.dipole.nz;
+		body.quaternion.vmult( this_.dipoleVec, this_.dipoleVec, 1 );  
+		const relPole = this_.tmpDipole = this_.dipoleVec;
+		this_.dipoleVec.dirty = true; this_.dipoleVec.update();
+
+		// compute target dipole global coordinates (dipole is directly tied to orientation)
+		motion.dipoleVec.x = motion.dipole.nx;
+		motion.dipoleVec.y = motion.dipole.ny;
+		motion.dipoleVec.z = motion.dipole.nz;
+		body2.quaternion.vmult( motion.dipoleVec, motion.dipoleVec, 1 );
+		const otherPole = this_.tmpOtherDipole = motion.dipoleVec;
+		motion.dipoleVec.dirty = true; motion.dipoleVec.update();
+
+		if( l1 < 50 ) {
+		this_.affectors++;
+		const l2 = motion.dipoleVec.θ;//length();
+
+		// compute angle of my position vs target dipole direction
+		const dot = ( tmpDir.nx*otherPole.nx + tmpDir.ny*otherPole.ny + tmpDir.nz*otherPole.nz );
+
+		// if dot is near 1 or -1, the cross doesn't really matter... 
+
+		/// dot == 1 : 0 degrees, up to dot = -1 at pi (180 degrees) and then it's times 2  
+		// at 90 degrees a dipole is facing 180 degrees opposing, 
+		// at 180 degrees it's 360 degrees and up again.
+		const ofsAngle = Math.acos(dot)*2;
+
+		// use lnQUat for directed distance, normal, length
+
+		tmp1.x = tmpDir.nx;
+		tmp1.y = tmpDir.ny;
+		tmp1.z = tmpDir.nz;
+		tmp1.dirty = true;
+
+		// use lnQuat for dipole axis and angle (strength of pole?)
+		tmp2.x = otherPole.nx;
+		tmp2.y = otherPole.ny;
+		tmp2.z = otherPole.nz;
+		tmp2.dirty = true;
+		tmp1.update();
+		tmp2.update();
+
+		// cross product is a direction vector perpendicular to the direction and other pole
+		const torque = this_.lastCross;
+		// this is the axis to rotate target dipole 
+		// effective orientation perpendicular to my direction and target dipole
+		// this IS unstable near identity....
+		tmp1.cross( tmp2, torque );
+		
+		/*
+		torque.θ = ofsAngle ;
+		torque.x = torque.nx * torque.θ;
+		torque.y = torque.ny * torque.θ;
+		torque.z = torque.nz * torque.θ;
+		*/
+
+		// use static method to use torque axisd
+		// and ofs angle to compute relative dipole (store in targetVec)
+		lnQuat.apply( -ofsAngle, torque, otherPole, 1, this_.targetVec);
+
+		// use temp to compute the cross of my pole and the expected target pole
+		tmp1.x = relPole.x
+		tmp1.y = relPole.y
+		tmp1.z = relPole.z
+
+		// this is what the desired dipole should look like
+		tmp2.x = this_.targetVec.x
+		tmp2.y = this_.targetVec.y
+		tmp2.z = this_.targetVec.z
+
+		tmp1.dirty = true;
+		tmp2.dirty = true;
+		tmp1.update();
+		tmp2.update();
+
+		// cross is a rotation that moves the axis of our dipole toward target dipole
+		tmp1.cross( tmp2, this_.lastCross2 );
+		const accScalar = Math.cos( this_.lastCross2.θ );
+
+		// scale by N/r^2 for distance falloff
+		if( Math.abs(l1 )>1e-9)
+		this_.eTorque.add( this_.lastCross2,10/(l1*l1*movers.length) );
+					if( isNaN( this_.eTorque.x ) ) {
+						debugger; console.log( "overflow orientation:", this_.orientation, this_.rotation, this_.eTorque );
+						//this_.orientation.θ = 0;
+					}
+
+		//body.angularVelocity.x = 0;
+		//body.angularVelocity.y = 0;
+		//body.angularVelocity.z = 0;
+		body.applyTorque( this_.eTorque.update() );
+
+		if( true ) {
+
+			// for some distance R
+                    	//   if( l1 < R )
+                    	//      perOne = (R-l1)/l1  // fraction of l1 that is past R
+                    	//
+			const diff = 3;
+				// if length is less than sum of radii
+				// 
+			//if( l1 < 3 ) 
+			{
+
+				const perOuter = (3 - l1)/l1;
+				const perInner = (3 - l1)/3;
+				tmp2.x = otherPole.x;
+				tmp2.y = otherPole.y;
+				tmp2.z = otherPole.z;
+				tmp2.dirty = true;
+				tmp1.cross( tmp2.update(), crossDipole );
+
+				//const realDot = otherPole.nx*relPole.nx + otherPole.ny*relPole.ny + otherPole.nz*relPole.nz;
+				let realDot = this_.targetVec.x*relPole.nx + this_.targetVec.y*relPole.ny + this_.targetVec.z*relPole.nz;
+				const ofsAngle2 = Math.acos(realDot)*2;
+
+				crossDipole.θ = ofsAngle2;
+				crossDipole.x = crossDipole.nx * crossDipole.θ;
+				crossDipole.y = crossDipole.ny * crossDipole.θ;
+				crossDipole.z = crossDipole.nz * crossDipole.θ;
+                               //if(0)
+/*
+				if( dot < 0 ) {
+					this_.eTorque.add( this_.crossDipole, 1 );
+				}else {
+					this_.eTorque.add( this_.crossDipole, -1 );
+		 		}
+
+*/			
+			if( realDot < 0 )	
+				realDot=-realDot* realDot;
+			else
+				realDot=realDot* realDot;
+				imp.x = 0.02*realDot*tmpDir.x/(l1*l1);
+				imp.y = 0.02*realDot*tmpDir.y/(l1*l1);
+				imp.z = 0.02*realDot*tmpDir.z/(l1*l1);
+				//zero.x = tmpDir.x;
+				//zero.y = tmpDir.y;
+				//zero.z = tmpDir.z;
+				body.applyImpulse( 10,imp,zero );
+                                //this_.position.x = motion.position.x - tmpDir.x * (1+perInner);
+                                //this_.position.y = motion.position.y - tmpDir.y * (1+perInner);
+                                //this_.position.z = motion.position.z - tmpDir.z * (1+perInner);
+			       // this_.acceleration.addScaledVector( tmpDir, -1*speedNormal );
+                        }
+		}
+                     //else
+				//this_.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
+        }
+				const l =body.position.length(); 
+				imp.x = -body.position.x/(l*10000);
+				imp.y = -body.position.y/(l*10000);
+				imp.z = -body.position.z/(l*10000);
+				body.applyImpulse( 10,imp,zero );
+}
+	
+
+
 function animate() {
 	var delta = clock.getDelta();
 
@@ -644,21 +887,20 @@ function animate() {
 		//}
 		motion.inertialmove(m.matrix,delta) 
 		
-		var mot = motion;
-		var x1= m.position.x ; 
-		var y= m.position.y ; 
-		var z= m.position.z ; 
+		const x1= m.position.x ; 
+		const y= m.position.y ; 
+		const z= m.position.z ; 
 		if( ( x1 < -100 || x1 > 100 ) 
 		  ||( y < -100 || y > 100 ) 
 		  ||( z < -100 || z > 100 ) ) {
-			m.position.x = 100 * ( RNG.getBits( 11, true ) / 1024 );
-			m.position.y = 100 * ( RNG.getBits( 11, true ) / 1024 );
-			m.position.z = 100 * ( RNG.getBits( 11, true ) / 1024 );
+			m.position.x = 10 * ( RNG.getBits( 11, true ) / 1024 );
+			m.position.y = 10 * ( RNG.getBits( 11, true ) / 1024 );
+			m.position.z = 10 * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.x = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-
 		}
+
 		/*
 		if( m !== myMover )
 			if( sumDel > 1 ) {
@@ -671,6 +913,8 @@ function animate() {
 
 
 	});
+
+
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
 //	console.log( "MyMotion (after)", JSON.stringify(myMotion, null, '\t') );
@@ -709,15 +953,22 @@ function animate() {
 	movers.forEach( (ent,idx)=>{
 		for( let idx2= 0; idx2 < (movers.length); idx2++ ){
 			if( idx === idx2 ) continue;
-			ent.m.affect( movers[idx2].m, idx2 < idx, delta );
+			affect( ent, movers[idx2], idx2 < idx, delta );
+			//ent.m.affect( movers[idx2].m, idx2 < idx, delta );
 		}
-		ent.m.affect( myMotion, false, delta );
+		//affect( ent, 
+		//ent.m.affect( myMotion, false, delta );
+
 		const m = ent.x;
 		const motion = ent.m;
 		
-		motion.freemove(m.matrix,delta) 
-		motion.orientation.update(); 
+		//motion.freemove(m.matrix,delta)  // what's freemove vs ?
+		
+		motion.orientation.update(); // these are lnQuats?
 		motion.dipole.update();
+
+		///ent.attractor.move( m.position, motion.orientation );
+		//motion.dipoleBody.
 
 		
 		var dirLines = dirs[idx];
@@ -727,6 +978,7 @@ function animate() {
 		var pt = {x:motion.eTorque.x*15, y:motion.eTorque.y*15, z:motion.eTorque.z*15 };
 		//if( idx == 1 )
 		//pt = motion.dipoleVec;
+
 		if( !motion.tmpDipole ) {
 			motion.dipoleVec.x = motion.dipole.x;
 			motion.dipoleVec.y = motion.dipole.y;
@@ -737,30 +989,38 @@ function animate() {
 
 		//const newDir = motion.tmpDir;//pt;// idx==0?pt:motion.orientation.apply( pt );
 		const newDir = motion.targetVec;//pt;// idx==0?pt:motion.orientation.apply( pt );
+		//const newDir = motion.tmpOtherDipole;//pt;// idx==0?pt:motion.orientation.apply( pt );
+		//const newDir = motion.lastCross;//pt;// idx==0?pt:motion.orientation.apply( pt );
+                                
 		//const newDir2 = motion.tmpOtherDipole;//motion.orientation.apply( motion.dipoleVec );
 		const newDir2 = motion.lastCross2;//motion.orientation.apply( motion.dipoleVec );
+                //const newDir2 = motion.tmpDir;//motion.orientation.apply( motion.dipoleVec );
+
+
+		//const newDir2 = motion.lastCross2;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
 		//const newDir3 = motion.targetVec;
 		const newDir3 = motion.tmpDipole;
+		//const newDir3 = motion.tmpDir;
 		if( newDir ) {
 
-		dirLine.geometry.vertices[1].x = newDir.x*1;
-		dirLine.geometry.vertices[1].y = newDir.y*1;
-		dirLine.geometry.vertices[1].z = newDir.z*1;
-		dirLine.position.copy( m.position );
+			dirLine.geometry.vertices[1].x = newDir.x*5;
+			dirLine.geometry.vertices[1].y = newDir.y*5;
+			dirLine.geometry.vertices[1].z = newDir.z*5;
+			dirLine.position.copy( m.position );
 		}
 		if( newDir2 ) {
-		dirLine2.geometry.vertices[1].x = newDir2.x*5;
-		dirLine2.geometry.vertices[1].y = newDir2.y*5;
-		dirLine2.geometry.vertices[1].z = newDir2.z*5;
-		dirLine2.position.copy( m.position );
+			dirLine2.geometry.vertices[1].x = newDir2.nx*5;
+			dirLine2.geometry.vertices[1].y = newDir2.ny*5;
+			dirLine2.geometry.vertices[1].z = newDir2.nz*5;
+			dirLine2.position.copy( m.position );
 		}
 		if( newDir3 ) {
-		dirLine3.geometry.vertices[1].x = newDir3.x*2;
-		dirLine3.geometry.vertices[1].y = newDir3.y*2;
-		dirLine3.geometry.vertices[1].z = newDir3.z*2;
-		dirLine3.position.copy( m.position );
-			}
+			dirLine3.geometry.vertices[1].x = newDir3.nx*5;
+			dirLine3.geometry.vertices[1].y = newDir3.ny*5;
+			dirLine3.geometry.vertices[1].z = newDir3.nz*5;
+			dirLine3.position.copy( m.position );
+		}
 
 
 		//dirLine.geometry.vertices[1].x = motion.torque.x*5;
@@ -769,10 +1029,26 @@ function animate() {
 		dirLine.geometry.verticesNeedUpdate = true;
 		dirLine2.geometry.verticesNeedUpdate = true;
 		dirLine3.geometry.verticesNeedUpdate = true;
-		//dirLine.matrix.compose( o, q, s );
-		
-
+		//dirLine.matrix.compose( o, q, s );		
 	});
+
+        // Step the physics world
+        //world.fixedStep();
+    	world.step(1/60, delta, 1);
+	movers.forEach( (ent,idx)=>{
+		const b  =ent.body;
+		const m = ent.x;
+		//m.matrix                   
+
+		m.position.copy( b.position );
+		b.quaternion.setQuat( m.quaternion );
+		//b.quaternion.exp( m.quaternion );
+		
+	} );
+        // Render three.js
+
+
+
 	if( sumDel > 1 ) sumDel = 0;
 		sumDel += delta;
 
