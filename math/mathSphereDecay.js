@@ -228,7 +228,7 @@ function drawsomething() {
 		}
 
 	}
-	for( let r = 0; r <= Math.PI*4; r+=(r>Math.PI*2)?Math.PI/200:Math.PI/1500 ) {
+	for( let r = 0; r <= Math.PI*4; r+=(r < Math.PI*3/4 || ((r> Math.PI*5/4 && r < 8*Math.PI/2 ) )?Math.PI/50:Math.PI/25000) ) {
 
 		for( let t=Math.PI*31/64; t <= Math.PI/2+Math.PI*1/64; t+= Math.PI/640 ) {
 			let ang = Math.asin( Math.sin(t)*Math.sin(r/2) )*2 + Math.PI;
