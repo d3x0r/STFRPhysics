@@ -106,7 +106,9 @@ const dM_0 = (l,x,y,z,w,q) => (q)*(l/_4to1(x,y,z,w));  // from converted to real
 const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
 
 // this normalizes a value from ( ( x/y/z -> x/y/z/w ) -> x/y/z/q )
-const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_00( x,y,z,w,q );
+//const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_00( x,y,z,w,q );
+// single expression version.
+const B_0 = (l,x,y,z,w,q) =>{ const xx=x*x; const yy=y*y; const zz=z*z; return (l/Math.sqrt(xx+yy+zz) * Math.sqrt(xx+yy+zz+((invertCurvature?-1:1)* w*w)))/Math.sqrt(xx+yy+zz+w*w) * Math.sqrt(xx+yy+zz+w*w+q*q) };
 
 const B_i = (l,x,y,z,w,q) => A_i(l,x,y,z,w)/_4to1(x,y,z,w) * (invertCurvature?M_00( x,y,z,w,q ):M_ii( x,y,z,w,q ));
 
@@ -139,20 +141,6 @@ const B_i = (l,x,y,z,w,q) => A_i(l,x,y,z,w)/_4to1(x,y,z,w) * (invertCurvature?M_
 
 let mouseX=0, mouseY=0;
 
-canvas.addEventListener( "mousemove", (e)=>{
-	const rect = canvas.getBoundingClientRect();
-	const w = rect.right-rect.left;//window.innerWidth;
-	const h = rect.bottom-rect.top;//window.innerHeight;
-	const x = (((e.clientX-rect.left)-(w/2.0))/w) * 10;
-	const y = -(((e.clientY-rect.top)-(h/2.0))/h) * 10;
-	mouseX = x;
-	mouseY = y;
-	drawsomething();
-} );
-
-
-function drawsomething() {
-	let x, y, z, w, X, Y, Z, W;
 	const squareSize = 1024;
 	const minScale = -5;
 	const maxScale = 5;
@@ -163,11 +151,6 @@ function drawsomething() {
 	const unit2 = (x)=>x;
 	const range = maxScale-minScale;
 	const zero = -minScale;
-
-	ctx.clearRect(0,0,squareSize,squareSize );
-	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
-	var output = _output.data;
-
 	const pens = [ ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 0,9)
 			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 0,9) 
 			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 0,9) 
@@ -180,6 +163,27 @@ function drawsomething() {
 			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 6,9) 
 			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 6,9) 
 		];
+
+
+canvas.addEventListener( "mousemove", (e)=>{
+	const rect = canvas.getBoundingClientRect();
+	const w = rect.right-rect.left;//window.innerWidth;
+	const h = rect.bottom-rect.top;//window.innerHeight;
+	const x = (((e.clientX-rect.left)-(w/2.0))/w) * 10;
+	const y = -(((e.clientY-rect.top)-(h/2.0))/h) * 10;
+	mouseX = x;
+	mouseY = y;
+	drawsomething();
+} );
+
+
+
+function drawsomething() {
+	let x, y, z, w, X, Y, Z, W;
+
+	ctx.clearRect(0,0,squareSize,squareSize );
+	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
+	var output = _output.data;
 
 
 	function plotPut( x_, y_, c ) {
