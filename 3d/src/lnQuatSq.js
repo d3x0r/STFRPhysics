@@ -461,9 +461,9 @@ lnQuat.prototype.cross = function( other, target ){
 
 	const norm = Math.sin( angle );
 	
-	const crsX = (this.ny*other.nz-this.nz*other.ny);
-	const crsY = (this.nz*other.nx-this.nx*other.nz);
-	const crsZ = (this.nx*other.ny-this.ny*other.nx);
+	const crsX = -(this.ny*other.nz-this.nz*other.ny);
+	const crsY = -(this.nz*other.nx-this.nx*other.nz);
+	const crsZ = -(this.nx*other.ny-this.ny*other.nx);
 	if( norm ) {
 		target.θ = angle;
 		target.nx = crsX/norm;
@@ -993,8 +993,7 @@ lnQuat.apply = function( angle, axis, v, del, target ) {
 
 		const vx = v.x , vy = v.y , vz = v.z;
 		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		target.set( 0
-			, vx*c + s*(qy * vz - qz * vy) + qx * dot
+		target.set(  vx*c + s*(qy * vz - qz * vy) + qx * dot
 			, vy*c + s*(qz * vx - qx * vz) + qy * dot
 			, vz*c + s*(qx * vy - qy * vx) + qz * dot 
 ///			, vw*c + s*(qx * vy - qy * vx) + qw * dot 
