@@ -1,2 +1,2 @@
 theme: jekyll-theme-minimal
-include: ["node_modules"]
+xinclude: ["node_modules"]
