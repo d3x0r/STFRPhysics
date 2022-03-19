@@ -13,8 +13,8 @@ import {NaturalCamera} from "./NaturalCamera.js"
 import {SaltyRNG} from "./salty_random_generator.js";
 import * as THREE from "../3d/src/three.js/three.module.js"
 import {Motion} from "../3d/src/three.js/personalFill.mjs"
-import {popups} from "/node_modules/@d3x0r/popups/popups.mjs"
-import * as CANNON from '/node_modules/cannon-es/dist/cannon-es.js'
+import {popups} from "/nm/@d3x0r/popups/popups.mjs"
+import * as CANNON from '/nm/cannon-es/dist/cannon-es.js'
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 import {BrainForm} from "./brainBoard.mjs"

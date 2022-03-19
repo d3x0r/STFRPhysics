@@ -1,5 +1,5 @@
 
-import {Popup,popups} from "/node_modules/@d3x0r/popups/popups.mjs"
+import {Popup,popups} from "/nm/@d3x0r/popups/popups.mjs"
 
 
 import {BrainBoard} from "./automaton/board/brainshell.mjs"

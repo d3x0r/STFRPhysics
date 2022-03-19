@@ -12,7 +12,7 @@ import {DirDeltaMap,DefaultMethods,DefaultViaMethods}  from "./peice.mjs";
 import { Board } from "./board.mjs";
 import * as shapes from "./shapes.mjs";
 
-import {popups} from "/node_modules/@d3x0r/popups/popups.mjs"
+import {popups} from "/nm/@d3x0r/popups/popups.mjs"
 
 //typedef class local_tag BRAINBOARD;
 
