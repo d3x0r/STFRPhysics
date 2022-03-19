@@ -21,7 +21,7 @@ import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 import {BrainForm} from "./brainBoard.mjs"
-import {ControlForm} from "./brainBoard.mjs"
+import {ControlForm} from "./controlForm.mjs"
 import {BrainStem,ref} from "./automaton/brain/brain.mjs"
 
 
@@ -676,7 +676,7 @@ function addModelToScene2(object) {
 	myMotion =  new Motion(x);
 	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
         myMotion.orientation.set( 0, 0, -Math.PI, 0 );
-	myMotion.position.set( 0, 0, 25 );
+	myMotion.position.set( 0, 0, 100 );
 	const body = new SmartBody( x, myMotion );
 	controlForm.mover = myMotion;
 	movers2.push(body);
@@ -717,6 +717,7 @@ const imp = new CANNON.Vec3( 0,0,0 ),zero = new CANNON.Vec3( 0,0,0 );
 const torq = new CANNON.Vec3( 0,0,0 );
 
 function	affect( ent, ent2, inverse, delta ) {
+
 		const motion = ent2.m;
 		const body2 = ent2.body;
 		const body = ent.body;
@@ -819,7 +820,7 @@ function	affect( ent, ent2, inverse, delta ) {
 
 		// scale by N/r^2 for distance falloff
 		if( Math.abs(l1 )>1e-9)
-		this_.eTorque.add( this_.lastCross2,100/(l1*l1) );
+		this_.eTorque.add( this_.lastCross2,controlForm.rotScalar*50/(l1*l1) );
 					if( isNaN( this_.eTorque.x ) ) {
 						debugger; console.log( "overflow orientation:", this_.orientation, this_.rotation, this_.eTorque );
 						//this_.orientation.θ = 0;
@@ -861,9 +862,9 @@ function	affect( ent, ent2, inverse, delta ) {
 			realDot=-realDot* realDot;
 		else
 			realDot=realDot* realDot;
-			imp.x = 30.0*0.02*realDot*tmpDir.x/(l1*l1);
-			imp.y = 30.0*0.02*realDot*tmpDir.y/(l1*l1);
-			imp.z = 30.0*0.02*realDot*tmpDir.z/(l1*l1);
+			imp.x = controlForm.linScalar*1.0*0.02*realDot*tmpDir.x/(l1*l1);
+			imp.y = controlForm.linScalar*1.0*0.02*realDot*tmpDir.y/(l1*l1);
+			imp.z = controlForm.linScalar*1.0*0.02*realDot*tmpDir.z/(l1*l1);
 			//zero.x = tmpDir.x;
 			//zero.y = tmpDir.y;
 			//zero.z = tmpDir.z;
@@ -878,9 +879,9 @@ function	affect( ent, ent2, inverse, delta ) {
 				//this_.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
         }
 	const l =body.position.length(); 
-	imp.x = -body.position.x/(1000);
-	imp.y = -body.position.y/(1000);
-	imp.z = -body.position.z/(1000);
+	imp.x = -body.position.x/(50000);
+	imp.y = -body.position.y/(50000);
+	imp.z = -body.position.z/(50000);
 	body.applyImpulse( 10,imp,zero );
 }
 	
