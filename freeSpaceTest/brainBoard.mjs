@@ -14,7 +14,7 @@ export class ControlForm extends Popup {
 	rotationRate = 0;
 
 	applyAccel = false;
-	objectCount = 2;
+	objectCount = 20;
 	yaw = 0;
 	pitch = 0;
 	roll = "0z";

@@ -474,13 +474,35 @@ function addDipoles() {
 		scene.add( x = protoRock.clone() );
 		
 		x.matrixAutoUpdate = true;
+
+		var m = new Motion( );
+	switch( n ) {
+	case 0:
+		x.position.x = 0;
+		x.position.y = 10;
+		x.position.z = -20;
+		m.rotation.x = 0;
+		m.rotation.y = 0;
+		m.rotation.z = 0;
+		break;
+	case 11:
+		x.position.x = 10;
+		x.position.y = 10;
+		x.position.z = -20;
+		m.rotation.x = 0;
+		m.rotation.y = 0/5;
+		m.rotation.z = 0/3;
+		break;
+	default:
 		x.position.x = size * ( RNG.getBits( 11, true ) / 1024 );
 		x.position.y = size * ( RNG.getBits( 11, true ) / 1024 );
 		x.position.z = -10 + size * ( RNG.getBits( 11, true ) / 1024 );
-		var m = new Motion( );
 		m.rotation.x = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.y = 2*Math.PI * RNG.getBits( 8, true ) /128;
 		m.rotation.z = 2*Math.PI * RNG.getBits( 8, true ) /128;
+		break;
+	}
+
 		m.dipole.x = 0;//m.rotation.x;
 		m.dipole.y = 0;//m.rotation.y;
 		m.dipole.z = 0;//m.rotation.z;
@@ -702,7 +724,7 @@ function	affect( ent, ent2, inverse, delta ) {
 		const tmp2 = new lnQuat();
 		if( !motion ) {console.trace( "Maybe pass a motion to affect?" ) }
 
-		this_.orientation.update();
+		//this_.orientation.update();
 		// compute a direction vector between this motion and motion target
 		const tmpDir = this_.tmpDir;
 		tmpDir.x = body2.position.x - body.position.x;
@@ -773,17 +795,17 @@ function	affect( ent, ent2, inverse, delta ) {
 
 		// use static method to use torque axisd
 		// and ofs angle to compute relative dipole (store in targetVec)
-		lnQuat.apply( -ofsAngle, torque, otherPole, 1, this_.targetVec);
+		lnQuat.apply( ofsAngle, torque, otherPole, 1, this_.targetVec);
 
 		// use temp to compute the cross of my pole and the expected target pole
-		tmp1.x = relPole.x
-		tmp1.y = relPole.y
-		tmp1.z = relPole.z
+		tmp2.x = relPole.x
+		tmp2.y = relPole.y
+		tmp2.z = relPole.z
 
 		// this is what the desired dipole should look like
-		tmp2.x = this_.targetVec.x
-		tmp2.y = this_.targetVec.y
-		tmp2.z = this_.targetVec.z
+		tmp1.x = this_.targetVec.x
+		tmp1.y = this_.targetVec.y
+		tmp1.z = this_.targetVec.z
 
 		tmp1.dirty = true;
 		tmp2.dirty = true;
@@ -796,79 +818,69 @@ function	affect( ent, ent2, inverse, delta ) {
 
 		// scale by N/r^2 for distance falloff
 		if( Math.abs(l1 )>1e-9)
-		this_.eTorque.add( this_.lastCross2,10/(l1*l1*movers.length) );
+		this_.eTorque.add( this_.lastCross2,100/(l1*l1) );
 					if( isNaN( this_.eTorque.x ) ) {
 						debugger; console.log( "overflow orientation:", this_.orientation, this_.rotation, this_.eTorque );
 						//this_.orientation.θ = 0;
 					}
 
-		//body.angularVelocity.x = 0;
-		//body.angularVelocity.y = 0;
-		//body.angularVelocity.z = 0;
-		body.applyTorque( this_.eTorque.update() );
+		// for some distance R
+                //   if( l1 < R )
+                //      perOne = (R-l1)/l1  // fraction of l1 that is past R
+                //
+		// if length is less than sum of radii
+		// 
+		//if( l1 < 3 ) 
+		{
 
-		if( true ) {
+			tmp2.x = otherPole.x;
+			tmp2.y = otherPole.y;
+			tmp2.z = otherPole.z;
+			tmp2.dirty = true;
+			tmp1.cross( tmp2.update(), crossDipole );
 
-			// for some distance R
-                    	//   if( l1 < R )
-                    	//      perOne = (R-l1)/l1  // fraction of l1 that is past R
-                    	//
-			const diff = 3;
-				// if length is less than sum of radii
-				// 
-			//if( l1 < 3 ) 
-			{
+			//const realDot = otherPole.nx*relPole.nx + otherPole.ny*relPole.ny + otherPole.nz*relPole.nz;
+			let realDot = this_.targetVec.x*relPole.nx + this_.targetVec.y*relPole.ny + this_.targetVec.z*relPole.nz;
+			const ofsAngle2 = Math.acos(realDot)*2;
 
-				const perOuter = (3 - l1)/l1;
-				const perInner = (3 - l1)/3;
-				tmp2.x = otherPole.x;
-				tmp2.y = otherPole.y;
-				tmp2.z = otherPole.z;
-				tmp2.dirty = true;
-				tmp1.cross( tmp2.update(), crossDipole );
-
-				//const realDot = otherPole.nx*relPole.nx + otherPole.ny*relPole.ny + otherPole.nz*relPole.nz;
-				let realDot = this_.targetVec.x*relPole.nx + this_.targetVec.y*relPole.ny + this_.targetVec.z*relPole.nz;
-				const ofsAngle2 = Math.acos(realDot)*2;
-
-				crossDipole.θ = ofsAngle2;
-				crossDipole.x = crossDipole.nx * crossDipole.θ;
-				crossDipole.y = crossDipole.ny * crossDipole.θ;
-				crossDipole.z = crossDipole.nz * crossDipole.θ;
-                               //if(0)
+			crossDipole.θ = ofsAngle2;
+			crossDipole.x = crossDipole.nx * crossDipole.θ;
+			crossDipole.y = crossDipole.ny * crossDipole.θ;
+			crossDipole.z = crossDipole.nz * crossDipole.θ;
+                       //if(0)
 /*
-				if( dot < 0 ) {
-					this_.eTorque.add( this_.crossDipole, 1 );
-				}else {
-					this_.eTorque.add( this_.crossDipole, -1 );
-		 		}
+			if( dot < 0 ) {
+				this_.eTorque.add( this_.crossDipole, 1 );
+			}else {
+				this_.eTorque.add( this_.crossDipole, -1 );
+			}
 
-*/			
-			if( realDot < 0 )	
-				realDot=-realDot* realDot;
-			else
-				realDot=realDot* realDot;
-				imp.x = 0.02*realDot*tmpDir.x/(l1*l1);
-				imp.y = 0.02*realDot*tmpDir.y/(l1*l1);
-				imp.z = 0.02*realDot*tmpDir.z/(l1*l1);
-				//zero.x = tmpDir.x;
-				//zero.y = tmpDir.y;
-				//zero.z = tmpDir.z;
-				body.applyImpulse( 10,imp,zero );
-                                //this_.position.x = motion.position.x - tmpDir.x * (1+perInner);
-                                //this_.position.y = motion.position.y - tmpDir.y * (1+perInner);
-                                //this_.position.z = motion.position.z - tmpDir.z * (1+perInner);
-			       // this_.acceleration.addScaledVector( tmpDir, -1*speedNormal );
-                        }
-		}
+*/		
+		if( realDot < 0 )	
+			realDot=-realDot* realDot;
+		else
+			realDot=realDot* realDot;
+			imp.x = 30.0*0.02*realDot*tmpDir.x/(l1*l1);
+			imp.y = 30.0*0.02*realDot*tmpDir.y/(l1*l1);
+			imp.z = 30.0*0.02*realDot*tmpDir.z/(l1*l1);
+			//zero.x = tmpDir.x;
+			//zero.y = tmpDir.y;
+			//zero.z = tmpDir.z;
+			body.applyImpulse( 10,imp,zero );
+                        //this_.position.x = motion.position.x - tmpDir.x * (1+perInner);
+                        //this_.position.y = motion.position.y - tmpDir.y * (1+perInner);
+                        //this_.position.z = motion.position.z - tmpDir.z * (1+perInner);
+		       // this_.acceleration.addScaledVector( tmpDir, -1*speedNormal );
+                }
+		
                      //else
 				//this_.acceleration.addScaledVector( tmpDir, 15*accScalar/(l1*l1) );
         }
-				const l =body.position.length(); 
-				imp.x = -body.position.x/(l*10000);
-				imp.y = -body.position.y/(l*10000);
-				imp.z = -body.position.z/(l*10000);
-				body.applyImpulse( 10,imp,zero );
+	const l =body.position.length(); 
+	imp.x = -body.position.x/(1000);
+	imp.y = -body.position.y/(1000);
+	imp.z = -body.position.z/(1000);
+	body.applyImpulse( 10,imp,zero );
 }
 	
 
@@ -927,30 +939,6 @@ function animate() {
 	movers.forEach( (ent,idx)=>{
 		ent.m.start();
 
-		
-		if(0) {
-			ent.m.rotation.θ = rotation;// + Math.PI/2;//Math.PI/32;
-			ent.m.rotation.x = (ent.m.rotation.nx = ent.m.dipole.nx) * ent.m.rotation.θ;
-			ent.m.rotation.y = (ent.m.rotation.ny = ent.m.dipole.ny) * ent.m.rotation.θ;
-			ent.m.rotation.z = (ent.m.rotation.nz = ent.m.dipole.nz) * ent.m.rotation.θ;	
-		}
-		if(0)
-		switch( idx ) {
-			case 0:
-				ent.x.position.x = 0;
-				ent.x.position.y = 0;
-				ent.x.position.z = 5;
-				ent.m.orientation.x = 0;
-				ent.m.orientation.y = 0;
-				ent.m.orientation.z = 0;
-				ent.m.orientation.dirty = true;
-				break;
-			case 1:
-				ent.x.position.x = 5*Math.sin(now*Math.PI*2);
-				ent.x.position.y = 5*Math.cos(now*Math.PI*2);
-				ent.x.position.z = 5;
-				break;
-		}
 		//ent.m.rotation.update();
 	});
 	movers.forEach( (ent,idx)=>{
@@ -967,7 +955,7 @@ function animate() {
 		
 		//motion.freemove(m.matrix,delta)  // what's freemove vs ?
 		
-		motion.orientation.update(); // these are lnQuats?
+		//motion.orientation.update(); // these are lnQuats?
 		motion.dipole.update();
 
 		///ent.attractor.move( m.position, motion.orientation );
@@ -1003,7 +991,9 @@ function animate() {
 		//const newDir2 = motion.lastCross2;//motion.orientation.apply( motion.dipoleVec );
 		//const newDir3 = motion.lastCross;
 		//const newDir3 = motion.targetVec;
+		//const newDir3 = motion.tmpDipole;
 		const newDir3 = motion.tmpDipole;
+
 		//const newDir3 = motion.tmpDir;
 		if( newDir ) {
 
@@ -1034,6 +1024,15 @@ function animate() {
 		dirLine3.geometry.verticesNeedUpdate = true;
 		//dirLine.matrix.compose( o, q, s );		
 	});
+
+	movers.forEach( (ent,idx)=>{
+		//m.matrix                   
+		const body = ent.body;
+		body.applyTorque( ent.m.eTorque.update() );
+
+		
+	} );
+        // Render three.js
 
         // Step the physics world
         //world.fixedStep();
