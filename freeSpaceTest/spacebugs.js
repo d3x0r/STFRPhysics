@@ -676,8 +676,9 @@ function addModelToScene2(object) {
 	myMotion =  new Motion(x);
 	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
         myMotion.orientation.set( 0, 0, -Math.PI, 0 );
+	myMotion.position.set( 0, 0, 25 );
 	const body = new SmartBody( x, myMotion );
-		controlForm.mover = myMotion;
+	controlForm.mover = myMotion;
 	movers2.push(body);
 	x.matrixAutoUpdate = true;
 	// attach the camera to one smart object.
