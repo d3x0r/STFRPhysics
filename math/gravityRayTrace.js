@@ -10,10 +10,10 @@ const ctx2 = canvas2.getContext( '2d' );
 
 let canvas3 = null;
 
-var grd2 = ctx.createLinearGradient(0, 0, 4096, 0);
-grd2.addColorStop(0, "#990");
-grd2.addColorStop(0.5, "#ff0");
-grd2.addColorStop(1, "#990");
+var grd2 = "#ff0";//ctx.createLinearGradient(0, 0, 4096, 0);
+//grd2.addColorStop(0, "#990");
+//grd2.addColorStop(0.5, "#ffd");
+//grd2.addColorStop(1, "#990");
 
 
 function tmp() {
@@ -116,7 +116,7 @@ ctx.fillStyle = grd;
 ctx.fillStyle = "white";
 			ctx.fillText( "E", 0, 128 );
 			ctx.fillText( "E", 4095, 128 );
-	document.body.appendChild( canvas );	
+//	document.body.appendChild( canvas );	
 }
 
 const BASE_COLOR_WHITE = [255,255,255,255];
@@ -542,7 +542,7 @@ if(1)
 		if( t2 < 10 ) {
 			ctx.fillStyle = grd2;
 
-			ctx.fillRect( Math.floor(((t+45)/90)*1024),  512, 1, 256 );
+			ctx.fillRect( Math.floor(((t+45)/90)*1024),  256, 1, 256 );
 			continue;
 		}
 		{
@@ -594,6 +594,7 @@ if(1)
 
 try {
 	drawsomething();
+	drawRayTrace();
 }catch(err) {
 	alert( "GotError:"+err );
 }
