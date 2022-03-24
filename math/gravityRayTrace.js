@@ -150,6 +150,7 @@ const myForm = {
 	sliderCmax : document.getElementById( "Cmax" ),
 	sliderDmax : document.getElementById( "Dmax" ),
 	sliderValA : document.getElementById( "Aval" ),
+	sliderValAmax : document.getElementById( "Amaxval" ),
 	sliderValB : document.getElementById( "Bval" ),
 	sliderValC : document.getElementById( "Cval" ),
 	sliderValD : document.getElementById( "Dval" ),
@@ -171,12 +172,13 @@ myForm.sliderB.value = 0;
 
 function readValues()  {
 	values.A = (Number(myForm.sliderA.value)/20.0);
-	values.Amax = (myForm.sliderAmax)? (Number(myForm.sliderAmax.value)/20.0):0;
+	values.Amax = (myForm.sliderAmax.value)/30.0;
 	values.B = (Number(myForm.sliderB.value)/20.0);
 	values.B *= 5;
 	values.C = (Number(myForm.sliderC.value)/10.0)-5;
 	values.D = (Number(myForm.sliderD.value)/10.0)-5;
 	myForm.sliderValA.textContent = values.A;
+	myForm.sliderValAmax.textContent = values.Amax;
 	myForm.sliderValB.textContent = values.B;
 	myForm.sliderValC.textContent = values.C;
 	myForm.sliderValD.textContent = values.D;
@@ -377,10 +379,10 @@ function drawsomething() {
 		for( let t=0; t < 10; t+= 10/1000 ) {
 			const mx = mouseX + slopex * t;
 			const my = mouseY + slopey * t;
-				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+				const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
+				const Ay = B_0(my,mx,my,values.B,values.A, 0 );
 			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-			if( Math.sqrt(mx*mx+my*my)< (1) ) break;
+			if( Math.sqrt(mx*mx+my*my)< (values.Amax) ) break;
 			plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
 		}
 	}
@@ -388,16 +390,16 @@ function drawsomething() {
 	{
 	const slopex = mouseX/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
 	const slopey = mouseY/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
-	const _mouseX = B_0(mouseX, mouseX,mouseY,values.B,values.A, values.Amax );
-	const _mouseY = B_0(mouseY, mouseX,mouseY,values.B,values.A, values.Amax );
+	const _mouseX = B_0(mouseX, mouseX,mouseY,values.B,values.A, 0 );
+	const _mouseY = B_0(mouseY, mouseX,mouseY,values.B,values.A, 0 );
 	for( let t = 0; t < 2; t+= 2/100 ) {
 		
 		{
 			{
 			const dx = -slopey*0.1 + slopex * (t-1);
 			const dy = slopex*0.1 + slopey * (t-1);
-				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
-				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
+				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, 0 );
+				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, 0 );
 				{
 					//const Ax = B_i(mx,mx,my,values.B,values.A, values.Amax );
 					//const Ay = B_i(my,mx,my,values.B,values.A, values.Amax );
@@ -410,8 +412,8 @@ function drawsomething() {
 			{
 			const dx = slopey*0.1 + slopex * (t-1);
 			const dy = -slopex*0.1 + slopey * (t-1);
-				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
-				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
+				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, 0 );
+				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, 0 );
 
 					const Ax = mx;// / _4to1(mx,my,values.B,values.A) * B_i(mx,mx,my,values.B,values.A, values.Amax );
 					const Ay = my;//B_i(my,mx,my,values.B,values.A, values.Amax );
@@ -470,23 +472,23 @@ function drawRayTrace() {
 	invertCurvature	= document.getElementById( "invertCurvature")?.checked;
 	                   
 	//field is 2xg or 2g or g^2 for 2m?
-	const scalar = (values.A+values.Amax);
-	const zscalar =(values.B+scalar)?  scalar*scalar /Q_0(0,0,values.B,scalar):0;
+	const scalar = (values.A);
+	const zscalar = values.Amax;
 	                 if(0)
 	for( let r = -8.99*100; r < 8*100; r+=0.08*100 ) {
 		for( let t=-18.99*100; t < 18*100; t+= 5*100/1000 ) {
 
 			// these two draw the X/Y grid lines.
 			{
-				const Ax = B_0(t,t,r,values.B*100,values.A*100, values.Amax );
-				const Ay = B_0(r,t,r,values.B*100,values.A*100, values.Amax );
+				const Ax = B_0(t,t,r,values.B*100,values.A*100, 0 );
+				const Ay = B_0(r,t,r,values.B*100,values.A*100, 0 );
 				plot(t/100,r/100,pens[4] );
 				plot(Ax/100,Ay/100,pens[1] );
 			}
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-				const Ax = B_0(r,t,r,values.B,values.A*100, values.Amax );
-				const Ay = B_0(t,t,r,values.B,values.A*100, values.Amax );
+				const Ax = B_0(r,t,r,values.B,values.A*100, 0 );
+				const Ay = B_0(t,t,r,values.B,values.A*100, 0 );
 				plot(r/100,t/100,pens[5] );
 				plot(Ax/100,Ay/100,pens[2] );
 			}
@@ -494,10 +496,10 @@ function drawRayTrace() {
 		}
 
 	}
-	                               if(0)
+	        //                       if(0)
 	for( let r = 0.01; r < 8; r+=0.5 ) {
 		// circles have no elongation to have to scale,it only needs the radius scaled.
-		const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
+		const Gr = B_0(r,r,0,values.B,values.A, 0 );
 		// draw a circle with an aprox number of dots... could be smarter (or draw segments)
 		// the density could shade the pen also.
 		for( let t=0; t < Math.PI*2; t+= Math.PI*2/((r+1+values.A)*500) ) {
@@ -516,10 +518,10 @@ if(1)
 		for( let t2=0; t2 < 10; t2+= 10/400 ) {
 			const mx = mouseX + slopex * t2;
 			const my = mouseY + slopey * t2;
-				const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-				const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
+				const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
+				const Ay = B_0(my,mx,my,values.B,values.A, 0 );
 			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-			if( Math.sqrt(mx*mx+my*my)< (1) ) break;
+			if( Math.sqrt(mx*mx+my*my)< (values.Amax) ) break;
 			plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t2/10, 1 ));
 		}
 
@@ -534,7 +536,7 @@ if(1)
 		for( t2=0; t2 < 10; t2+= 10/400 ) {
 			const mx = mouseX + slopex * t2;
 			const my = mouseY + slopey * t2;
-			if( Math.abs( mx*mx+my*my ) < 1 ) break;
+			if( Math.abs( mx*mx+my*my ) < zscalar ) break;
 				//const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
 				//const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
 			//}
@@ -549,10 +551,10 @@ if(1)
 			let t2=10
 			const mx = mouseX + slopex * t2;
 			const my = mouseY + slopey * t2;
-			const Ax = B_0(mx,mx,my,values.B,values.A, values.Amax );
-			const Ay = B_0(my,mx,my,values.B,values.A, values.Amax );
-			const Ax2 = B_0(mx-slopex*0.1,mx-slopex*0.1,my-slopey*0.1,values.B,values.A, values.Amax );
-			const Ay2 = B_0(my-slopey*0.1,mx-slopex*0.1,my-slopey*0.1,values.B,values.A, values.Amax );
+			const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
+			const Ay = B_0(my,mx,my,values.B,values.A, 0 );
+			const Ax2 = B_0(mx-slopex*0.1,mx-slopex*0.1,my-slopey*0.1,values.B,values.A, 0 );
+			const Ay2 = B_0(my-slopey*0.1,mx-slopex*0.1,my-slopey*0.1,values.B,values.A, 0 );
 			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
 			if( Math.sqrt(mx*mx+my*my)< (1) ) break;
 			let curangle = Math.atan2( (Ay-Ay2), (Ax-Ax2) );
