@@ -190,24 +190,12 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 		if( "undefined" !== typeof a ) {
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
-			if( theta ) {
-				//throw new Error( "CHECK INITIALIZER" );
-       				this.x = theta;
-				this.y = d;
-				this.z = a;
-				this.dirty = true;
-                                return this;
-			}else {
-				this.x = d;
-				this.y = a;
-				this.z = b;
-				this.dirty = true;
-				if( e ) {
-					this.update();
-					alignZero(this);
-				}
-                                return this;
-			}
+			//throw new Error( "CHECK INITIALIZER" );
+       			this.x = theta;
+			this.y = d;
+			this.z = a;
+			this.dirty = true;
+                        return this;
 
 		}else {
 			if( "object" === typeof theta ) {
