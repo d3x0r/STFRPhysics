@@ -192,16 +192,11 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			// create with 4 raw coordinates
 			if( theta ) {
 				//throw new Error( "CHECK INITIALIZER" );
-				//const spin = (abs(d)+abs(a)+abs(b));
-				if( spin ) {
-					this.x = theta;
-					this.y = d;
-					this.z = a;
-				} else {
-					this.x = 0;
-					this.y = 0;
-					this.z = 0;
-				}
+       				this.x = theta;
+				this.y = d;
+				this.z = a;
+				this.dirty = true;
+                                return this;
 			}else {
 				this.x = d;
 				this.y = a;
