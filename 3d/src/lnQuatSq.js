@@ -191,13 +191,12 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
 			if( theta ) {
-				throw new Error( "CHECK INITIALIZER" );
-				const spin = (abs(d)+abs(a)+abs(b));
+				//throw new Error( "CHECK INITIALIZER" );
+				//const spin = (abs(d)+abs(a)+abs(b));
 				if( spin ) {
-					const nSpin = (theta)/spin;
-					this.x = d*nSpin;
-					this.y = a*nSpin;
-					this.z = b*nSpin;
+					this.x = theta;
+					this.y = d;
+					this.z = a;
 				} else {
 					this.x = 0;
 					this.y = 0;
