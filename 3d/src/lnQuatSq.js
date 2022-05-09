@@ -191,11 +191,28 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
 			//throw new Error( "CHECK INITIALIZER" );
+                        if( "number" === typeof b ){
+                        if( theta !== 0 ) console.log( "set is setting a non-zero lnquat" )
+       			this.x = d;
+			this.y = a;
+			this.z = b;
+				if( e ) {
+					this.update();
+					alignZero(this);
+				}
+			this.dirty = true;
+                        return this;
+                        }else {
        			this.x = theta;
 			this.y = d;
 			this.z = a;
 			this.dirty = true;
+				if( e ) {
+					this.update();
+					alignZero(this);
+				}
                         return this;
+                        }
 
 		}else {
 			if( "object" === typeof theta ) {
@@ -964,7 +981,7 @@ lnQuat.apply = function( angle, axis, v, del, target ) {
 	//this.update();
 	// 3+2 +sqrt+exp+sin
 	if( !(angle*del) ) {
-		target.set( 0, v.x, v.y, v.z );
+		target.set( v.x, v.y, v.z );
 		return target; // 1.0
 	} else  {
 		const len = Math.sqrt( axis.x * axis.x + axis.y * axis.y + axis.z * axis.z );
@@ -1152,7 +1169,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 
 	if( "undefined" === typeof oct ) oct = 0;
 	if( this.dirty ) this.update();
-
+/*
 	const ax_ = axis.x;
 	const ay_ = axis.y;
 	const az_ = axis.z;
@@ -1165,7 +1182,9 @@ lnQuat.prototype.spin = function(th,axis,oct){
 
 		return finishRodrigues( this, oct||0, ax, ay, az, th, true );
 	}
-	return this;    {
+	return this;    
+*/
+	{
 	// ax, ay, az could be given; these are computed as the source quaternion normal
 	const aLen = Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z);
 	const ax_ = axis.x/aLen;
@@ -1189,7 +1208,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
 
-	return finishRodrigues( this, oct||0, ax, ay, az, th, true );
+	return finishRodrigues( this, oct||0, ax, ay, az, th, false );
 }
 }
 
@@ -1269,10 +1288,6 @@ function yaw( q, th ) {
 	const ay = ( cny*q.ny ) + c1;
 	const az = ( cny*q.nz ) + s*q.nx;
 	
-	if( lnQuat.invertCrossProduct && false ) {
-		const localAx = q.applyDel( {x:ax,y:ay,z:az}, -1 );
-		return finishRodrigues( q, 0, localAx.x, localAx.y, localAx.z, th );
-	}
 	//console.log( "Rotate ", q.nx, q.ny, q.nz, ax, ay, az, th );
 	return finishRodrigues( q, 0, ax, ay, az, th, lnQuat.invertCrossProduct );
 }
