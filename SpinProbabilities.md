@@ -73,7 +73,7 @@ On this second graph `pi/8 = 0.8943`;
 
 `1/2 + 1/(2*sqrt(2)) = 0.85355339059327376220042218105242`  
 
-## ...
+## Detector Graphs
 
 This is all a bit like saying 'the sky is blue, because the sky is blue'.... QM is already using a super position of spin axis, without calling it that.
 
