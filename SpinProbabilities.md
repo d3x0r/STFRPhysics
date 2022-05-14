@@ -87,6 +87,9 @@ At `pi/8` it's near the 89% chance... which is https://en.wikipedia.org/wiki/Bel
 
 https://en.wikipedia.org/wiki/Aspect%27s_experiment This gives 'A maximal violation of Bell's inequalities is predicted for |α−β| = 22.5°'
 
+https://en.wikipedia.org/wiki/Quantum_entanglement#History 'He also showed that the correlation varied only upon (as cosine square of) the angle between the polarizer settings[11] and decreased exponentially with time lag between emitted photons.'  (but that means that it evolves over time, and without detection at a similar time the alignments of the results diminishes...)
+
+![Cos Detectors](cos-detectors.png)
 
 
 ![combining the products](sin_squared_detectors.png)
