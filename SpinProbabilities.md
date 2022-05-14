@@ -38,11 +38,57 @@ f(x) = sin( (1+x) * PI/4 )^2
 
 At 0 angle along an axis, there's a 50-50 chance of being detected as 'up'.
 
-![Dirac1](spinUpProbabilityCurve.png)
+The position along each axis from 0 to 1 is the chance a detection along that axis results in 'up' detected... for example: along the X axis a axis that goes directly negative has a 0 percent chance of being 'up', but 
+any other axis up to the ones halfway, which are perpendicular to the detector have a 50-50 chance of being detected as up or down.  This is partially due that in that area, the other spin axii are not specifically accounted for, but are 
+lumped to a sum probability; and the `sin(position on sphere) * sin(position on sphere)` covers the volume of probabilities around that point. (probably need to expand on this later... it's accounting for a 3rd dimension that's equivalent to one
+of the existing dimensions, while working on a 2D projection of the system...  )
 
+![Dirac1](spinUpProbabilityCurve.png)
 
 
 Screenshot from the Demo above... marked with some points of interest of least and most probabilities...
 
 ![dirac2](ExampleSpinExpectationGraph.png)
+
+
+
+## 2 Detector Probability of Correlation
+
+The graph of the above function, for a single axis projection, looks like this.
+
+Where -1 to 1 along the X is the maximum coordinate along an axis.  This value is usually a non-linear value, such as a coordinate of a unit direction vector, or the dot or cross product of unit vectors.
+
+![graph of f(x) above](sin_squared_f.png)
+
+
+`g(x)= f( sin(x*pi/2) )` this replaces X from -1 to 1 linear with X -1 to 1 as a dot product, which is the sin of the angle between two unit direction vectors. `(sin(-pi/2 to pi/2))` scales the from `(-1,-1 to 1,1)`; but changes the slope.
+
+In this case, the dot product of the spin detectors is `1` when aligned, and `0` when not aligned.  This is a factor that results in the similarity of the measurements.
+
+![graph of non linear g(x)](sin_squared_dot_product.png)
+
+However, the coordinates of a direction vector are already similar to sin/cos limited functions, `xx+yy+zz=1`; which are spherical/circular in nature.
+
+On this second graph `pi/8 = 0.8943`; 
+
+`1/2 + 1/(2*sqrt(2)) = 0.85355339059327376220042218105242`  
+
+## ...
+
+This is all a bit like saying 'the sky is blue, because the sky is blue'.... QM is already using a super position of spin axis, without calling it that.
+
+
+
+The purple line on the following graph represents the correlation chance for detectors.  At +/-1 the detectors are 90 degrees separated, and the correlation is 0%.
+At 1-1/3 ( or 90+30 degrees) the chance is 50% correlation, and equates to Bell's Theorum for QM. The graph is `1-sin( pi/2(1+sin(pi/2(1+x))))^2`; which is the non linear graph above, simplified into a single expression.  `1-sin^2` is the same as `cos^2` and I'm not sure about the centering...
+are detectors which are aligned more likely to correlate, or are detectors that are 90 degrees opposed supposed to not-correlate more?  There is a flat peak to the graph that can be moved with the inner `(1+x)` term.
+
+At `pi/8` it's near the 89% chance... which is https://en.wikipedia.org/wiki/Bell_test#A_typical_CHSH_(two-channel)_experiment 'The settings a, a′, b and b′ are generally in practice chosen to be 0, 45°, 22.5° and 67.5° respectively — the "Bell test angles"...'.  This is 45 degrees and 1/2 of 45 degrees offset.
+
+https://en.wikipedia.org/wiki/Aspect%27s_experiment This gives 'A maximal violation of Bell's inequalities is predicted for |α−β| = 22.5°'
+
+
+
+![combining the products](sin_squared_detectors.png)
+
 
