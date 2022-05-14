@@ -89,8 +89,15 @@ https://en.wikipedia.org/wiki/Aspect%27s_experiment This gives 'A maximal violat
 
 https://en.wikipedia.org/wiki/Quantum_entanglement#History 'He also showed that the correlation varied only upon (as cosine square of) the angle between the polarizer settings[11] and decreased exponentially with time lag between emitted photons.'  (but that means that it evolves over time, and without detection at a similar time the alignments of the results diminishes...)
 
+
+this is `cos( pi/2 * x ) ^2`.  The lines at 0.25 are 25 degrees, and 90 degrees is +/-1.  0 is 0 degrees of separation for the detectors; 1 is 90 degrees of separation, with 0% chance of correlation....
+
+This doesn't show a 50% chance of correlation though...
+
 ![Cos Detectors](cos-detectors.png)
 
+
+(this squares the square again... such that in this curve, 60 degrees is 50% correlation, but then the 22.5 degree parts fail...
 
 ![combining the products](sin_squared_detectors.png)
 
