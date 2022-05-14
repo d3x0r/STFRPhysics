@@ -71,9 +71,8 @@ In this case, the dot product of the spin detectors is `1` when aligned, and `0`
 
 However, the coordinates of a direction vector are already similar to sin/cos limited functions, `xx+yy+zz=1`; which are spherical/circular in nature.
 
-On this second graph `pi/8 = 0.8943`; 
+~~On this second graph `pi/8 = 0.8943`;~~ 
 
-`1/2 + 1/(2*sqrt(2)) = 0.85355339059327376220042218105242`  
 
 ## Detector Graphs
 
@@ -86,6 +85,8 @@ At 1-1/3 ( or 90+30 degrees) the chance is 50% correlation, and equates to Bell'
 are detectors which are aligned more likely to correlate, or are detectors that are 90 degrees opposed supposed to not-correlate more?  There is a flat peak to the graph that can be moved with the inner `(1+x)` term.
 
 At `pi/8` it's near the 89% chance... which is https://en.wikipedia.org/wiki/Bell_test#A_typical_CHSH_(two-channel)_experiment 'The settings a, a′, b and b′ are generally in practice chosen to be 0, 45°, 22.5° and 67.5° respectively — the "Bell test angles"...'.  This is 45 degrees and 1/2 of 45 degrees offset.
+
+It seems to be near value... `1/2 + 1/(2*sqrt(2)) = 0.85355339059327376220042218105242` .
 
 https://en.wikipedia.org/wiki/Aspect%27s_experiment This gives 'A maximal violation of Bell's inequalities is predicted for |α−β| = 22.5°'
 
