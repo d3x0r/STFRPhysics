@@ -96,6 +96,9 @@ This doesn't show a 50% chance of correlation though...
 
 ![Cos Detectors](cos-detectors.png)
 
+So the above doesn't hit the 50% chance, so if we delinearize the X with `(sin(x * pi/2))` then the 50% chance hits the mark at 60/120 degrees, but then the correlation at 22.5 degrees should be higher than `0.854`....
+
+![cos detectors with additional curve](cos-detectors-alt.png)
 
 (this squares the square again... such that in this curve, 60 degrees is 50% correlation, but then the 22.5 degree parts fail...
 
