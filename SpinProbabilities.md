@@ -52,14 +52,16 @@ Screenshot from the Demo above... marked with some points of interest of least a
 
 
 
-## 2 Detector Probability of Correlation
+## Single Detector Graphs
 
-The graph of the above function, for a single axis projection, looks like this.
+This graph of the above function, for a single axis projection, looks like this.
 
-Where -1 to 1 along the X is the maximum coordinate along an axis.  This value is usually a non-linear value, such as a coordinate of a unit direction vector, or the dot or cross product of unit vectors.
+Where -1 to 1 along the X is the unit spin axis projected on the X axis.  This value (x) to the function is usually a non-linear value, such as a coordinate of a unit direction vector projected on another direction vector, 
+or the dot or cross product of unit vectors.
 
 ![graph of f(x) above](sin_squared_f.png)
 
+Delinearizing X with sin`sin(x*pi/2)` lets the 2d graph more flat, so the X coordinate then is just an angle, or really portion of a quarter turn.
 
 `g(x)= f( sin(x*pi/2) )` this replaces X from -1 to 1 linear with X -1 to 1 as a dot product, which is the sin of the angle between two unit direction vectors. `(sin(-pi/2 to pi/2))` scales the from `(-1,-1 to 1,1)`; but changes the slope.
 
