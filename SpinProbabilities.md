@@ -54,7 +54,7 @@ Screenshot from the Demo above... marked with some points of interest of least a
 
 ## Single Detector Graphs
 
-This graph of the above function, for a single axis projection, looks like this.
+This graph of the above function `f(x) = sin( (1+x) * PI/4 )^2`, for a single axis projection, looks like this.
 
 Where -1 to 1 along the X is the unit spin axis projected on the X axis.  This value (x) to the function is usually a non-linear value, such as a coordinate of a unit direction vector projected on another direction vector, 
 or the dot or cross product of unit vectors.
