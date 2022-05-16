@@ -141,10 +141,12 @@ const maxScale = 1024;
 		const x = unit(x_);
 		const y = unit(y_);
 //console.log( "Draw:", x, y );
+	if(c[0] )
 		output[((x+y*squareSize)<<2)+0] = c[0];
+if( c[1])
 		output[((x+y*squareSize)<<2)+1] = c[1];
-		output[((x+y*squareSize)<<2)+2] = c[2];
-		output[((x+y*squareSize)<<2)+3] = c[3];
+		if(c[2])output[((x+y*squareSize)<<2)+2] = c[2];
+		if(c[3])output[((x+y*squareSize)<<2)+3] = c[3];
 	}
 
 	function line( x1, y1, x2, y2, c ) {
@@ -243,6 +245,11 @@ const maxScale = 1024;
 
         let prior_x_d = -1;
         let prior_y_d = -1;
+        let prior_x_e = -1;
+        let prior_y_e = -1;
+
+        let prior_x_ed = -1;
+        let prior_y_ed = -1;
 
 	for( let per = 0; per <= 10; per++ ) {
 			line( 0, 1024-per*10.24, 1024, 1024-per*10.24, [0,0,0,255] );
@@ -261,19 +268,31 @@ const maxScale = 1024;
 		const ypos_b = 1024-(val2 * 1024);
 
 		const ypos_d = (1024 + (val?(1024 * (1-(val2/val))):1024));
+		
+		const x = (ang / 90);
+		const ax = x>1?2-x:x<-1?2+x:x;
+			
+		const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
+		const ypos_e =1024- (1024 * val3 );
+
+		const ypos_ed =(1024 + (val3?(1024 * (1-(val2/val3))):1024));
+
 	//console.log( "Vals:", ang, val, val2, (val?(1024 * (1-(val2/val))):1024), ypos_d );
 //console.log( "line:", valArr, val, ypos, ypos_b );
                 
 		if( (ang %30) === 0 ) {
 			line( xpos, 0, xpos, 1024, [0,0,0,255] );
 		}
-
+		
                 if( prior_x > 0 ) {
-                	line( prior_x, prior_y, xpos, ypos, pens[0] );
+                	line( prior_x, prior_y, xpos, ypos, pens[2] );
 
                 	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
 
                 	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
+
+                	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
+                	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
 
 		//	ctx.putImageData(_output, 0,0);
 
@@ -287,7 +306,11 @@ const maxScale = 1024;
                 prior_x_d = xpos;
                 prior_y_d = ypos_d;
 		
+                prior_x_e = xpos;
+                prior_y_e = ypos_e;
 
+                prior_x_ed = xpos;
+                prior_y_ed = ypos_ed;
         }
 
 	
