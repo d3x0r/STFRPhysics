@@ -137,3 +137,11 @@ If 90 degrees is setup for A1 and B1, then there is never a correlation between 
 and B0 with A1 is the same angle, as is B1 with A0, so they are all 3 equally valid.
 
 ![a few angles setup in 35 degrees...](CHSH-InequalitySetup.png)
+
+### Relating Monte Carlo simulation with predicted QM
+
+
+The green line is the predicted QM chance based on cos(angle) between detectors.  Red line is the Simulation value.  The blue line is the percent difference (100% at the top of the image; which makes this approx 10% error).
+Angle divisions are shown every 30 degrees.
+
+![Comparison graph](bell-comparison.png)
