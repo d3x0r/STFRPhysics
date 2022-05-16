@@ -131,9 +131,9 @@ CHSH probability is S>2 = win; S < 2 is random coin.   S=4 is win 100% compatibi
 https://qubit.guide/9.3-chsh-inequality.html  (+9.4)
 
 
-Given this, then this setup models the supposed information.   At a 30 degree offset, QM predicts 86% correlation, while I only measure 83%, it's sufficient to be > 3 CHSH.
+Given this, then this setup models the supposed information.   At a 30 degree offset, QM predicts 86% correlation, while I only measure 83%, it's sufficient to get S > 2.74(ish) vs QM 2.828   CHSH.
 
-If 90 degrees is setup for A1 and B1, then there is never a correlation between the two, and slicing the interior arc into 1/3 gives a seprateion of A0 and B0 of 30 degrees which again is a 83-86% correlation, 
+If 90 degrees is setup for A1 and B1, then there is never a correlation between the two, and slicing the interior arc into 1/3 gives a separation of A0 and B0 of 30 degrees which again is a 83-86% correlation, 
 and B0 with A1 is the same angle, as is B1 with A0, so they are all 3 equally valid.
 
 ![a few angles setup in 35 degrees...](CHSH-InequalitySetup.png)
