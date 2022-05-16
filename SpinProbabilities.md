@@ -108,3 +108,32 @@ So the above doesn't hit the 50% chance, so if we delinearize the X with `(sin(x
 ![combining the products](sin_squared_detectors.png)
 
 
+
+## Contention with Bells Math
+
+https://youtu.be/uef_qN7VFuY?t=1394  "sigma(V,A)" is not a probablistic quantity, it is itself +/- 1/2. 
+
+Using the 'hidden variable' `V dot A * 1/2`  is not that V is 1/2 or -1/2, but a range of values. (or cos of the angle between the hidden variable and the detector alignment)
+
+then the integral `( d^n V  P(V)  * simga_e(v,a) sigma_p(v, b ) )`
+    (sum all componnents, probability density, and the functions of that variable)
+
+`sig_e(a)sig_p(b)-sig_e(a)sig_p(c)`
+
+sig^2(v,b)= 0.25
+
+(29:25).. and then inserting a 1.
+
+### CHSH Inequality
+
+CHSH probability is S>2 = win; S < 2 is random coin.   S=4 is win 100% compatibility with truth   (A0 ~ B0)  (A0 ~ B0) (A1 ~ B0) (A1 !~ B1)
+
+https://qubit.guide/9.3-chsh-inequality.html  (+9.4)
+
+
+Given this, then this setup models the supposed information.   At a 30 degree offset, QM predicts 86% correlation, while I only measure 83%, it's sufficient to be > 3 CHSH.
+
+If 90 degrees is setup for A1 and B1, then there is never a correlation between the two, and slicing the interior arc into 1/3 gives a seprateion of A0 and B0 of 30 degrees which again is a 83-86% correlation, 
+and B0 with A1 is the same angle, as is B1 with A0, so they are all 3 equally valid.
+
+![a few angles setup in 35 degrees...](CHSH InequalitySetup.png)

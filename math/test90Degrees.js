@@ -120,6 +120,7 @@ const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];  // 90 degrees sep
 let axis2 = axis2_45;
 
 const tmp = [0,0,0];
+const tmp2 = [0,0,0];
 
 function pick(){
 	let t = ( tmp[0] = Math.random()*2-1 ) * tmp[0];
@@ -137,15 +138,15 @@ function getStateByChance( axis ) {
 	let s = 0;
 
 	let dot= axis[0]*axis1[0] ;
-	let chance = Math.sin( Math.PI/4 * (1+dot) );
-	chance = chance*chance;
+	let chance = dot;// Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
 	
 	if( Math.random() < chance ) 
 		s += 1;
 
 	dot= axis[0]*axis2[0] + axis[1]*axis2[1]
-	chance = Math.sin( Math.PI/4 * (1+dot) );
-	chance = chance*chance;
+	chance = dot;//Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
 	if( Math.random() < chance ) 
 		s += 2;
 	return s;
@@ -177,7 +178,10 @@ function test1() {
         	const s = getState( pick() );
                 choices[s]++;
         }
-        console.log( "choices:", choices, choices.map( c=>c/i), (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
+
+	
+
+        console.log( "choices:", choices, choices.map( c=>(c/i)*Math.log2(c/i) ).reduce( ((acc,val)=>acc+=val),0 )+2, (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
 }
 
 function test2() {
@@ -196,6 +200,7 @@ function test2() {
 	}
 }
 
+axis2 = tmp2;
 test2();
 [axis2_0, axis2_22, axis2_30, axis2_45,axis2_60,axis2_90].forEach( ax=>{ axis2 = ax; test1() } );
 //test1();
