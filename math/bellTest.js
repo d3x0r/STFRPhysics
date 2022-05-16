@@ -244,6 +244,11 @@ const maxScale = 1024;
         let prior_x_d = -1;
         let prior_y_d = -1;
 
+	for( let per = 0; per <= 10; per++ ) {
+			line( 0, 1024-per*10.24, 1024, 1024-per*10.24, [0,0,0,255] );
+
+	}
+
 	for( let ang = -180; ang <= 180; ang++ ) {
         	const xpos = (ang + 180)/360 * 1020 + 2;
                 axis2[0] = Math.cos( ang/180*Math.PI );
@@ -252,9 +257,12 @@ const maxScale = 1024;
                 const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
                 const ypos = 1024-(val * 1024);
 
-		const ypos_b = 1024-Math.abs(Math.cos( ang/180*Math.PI )) * 1024;
+		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
+		const ypos_b = 1024-(val2 * 1024);
 
-		const ypos_d = 1024 - (ypos?(124 * (ypos_b/ypos)):1);
+		const ypos_d = (1024 + (val?(1024 * (1-(val2/val))):1024));
+	//console.log( "Vals:", ang, val, val2, (val?(1024 * (1-(val2/val))):1024), ypos_d );
+//console.log( "line:", valArr, val, ypos, ypos_b );
                 
 		if( (ang %30) === 0 ) {
 			line( xpos, 0, xpos, 1024, [0,0,0,255] );
