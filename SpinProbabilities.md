@@ -136,4 +136,4 @@ Given this, then this setup models the supposed information.   At a 30 degree of
 If 90 degrees is setup for A1 and B1, then there is never a correlation between the two, and slicing the interior arc into 1/3 gives a seprateion of A0 and B0 of 30 degrees which again is a 83-86% correlation, 
 and B0 with A1 is the same angle, as is B1 with A0, so they are all 3 equally valid.
 
-![a few angles setup in 35 degrees...](CHSH InequalitySetup.png)
+![a few angles setup in 35 degrees...](CHSH-InequalitySetup.png)
