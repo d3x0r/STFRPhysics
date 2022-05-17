@@ -99,8 +99,13 @@ function pick4(){
         return tmp;
 }
 
-const pick = pick4;
+// Pick1 picks more diagonals, unfairly, and is between LHV and QM
+// pick2 is fair vector choice; and matches LHV computed; but only picks a direction in a plane.
+// pick3 is another fair version, but 3d.
+// pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
+const pick = pick2;  
 
+                                                 
 
 function getStateByChance( axis ) {    
 	let s = 0;
