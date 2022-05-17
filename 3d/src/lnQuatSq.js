@@ -338,7 +338,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							return this;
 						}
 					}else {
-						if( 1 || twistDelta ) {
+						if( twistDelta ) {
 							// input angle...
 							const s = Math.sin( this.θ ); // double angle sin
 							const c1 = Math.cos( this.θ ); // sin/cos are the function of exp()
