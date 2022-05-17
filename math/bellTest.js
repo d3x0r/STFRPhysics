@@ -317,7 +317,7 @@ if( c[1])
 		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
 		const ypos_b = 1024-(val2 * 1024);
 
-		const ypos_d = (1024 + (val?(1024 * (1-(val2/val))):1024));
+		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
 		const ax = x>1?2-x:x<-1?2+x:x;
@@ -325,7 +325,7 @@ if( c[1])
 		const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
 		const ypos_e =1024- (1024 * val3 );
 
-		const ypos_ed =(1024 + (val3?(1024 * (1-(val2/val3))):1024));
+		const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));
 
 	//console.log( "Vals:", ang, val, val2, (val?(1024 * (1-(val2/val))):1024), ypos_d );
 //console.log( "line:", valArr, val, ypos, ypos_b );
