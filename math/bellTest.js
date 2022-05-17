@@ -1,4 +1,5 @@
 
+import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 
 const canvas = document.getElementById( "testSurface" );
@@ -23,6 +24,7 @@ function ColorAverage( a, b, i,m) {
 }
 
 
+const lnQ= new lnQuat();
 
 const choices = [0,0,0,0];
 const choices_d = [0,0,0,0];
@@ -44,7 +46,7 @@ let axis2 = axis2_45;
 const tmp = [0,0,0];
 const tmp2 = [0,0,0];
 
-function pick(){
+function pick1(){
 	let t = ( tmp[0] = Math.random()*2-1 ) * tmp[0];
         t += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
         t += ( tmp[2] = Math.random()*2-1 ) * tmp[2];
@@ -54,6 +56,43 @@ function pick(){
         tmp[2] *= t;
         return tmp;
 }
+function pick2(){
+	let t = Math.random();
+	let l = 0;
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	l += ( tmp[0] = Math.cos( t * 2*Math.PI )) *tmp[0];
+	l += ( tmp[1] = Math.sin( t * 2*Math.PI )) *tmp[1];
+	l += ( tmp[2] = 0 ) *tmp[2];
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
+	t = 1/Math.sqrt(l);
+        tmp[0] *= t;
+        tmp[1] *= t;
+        tmp[2] *= t;
+        return tmp;
+}
+function pick3(){
+	let t = Math.random()*Math.PI*2;
+	let u = Math.random()*2*Math.PI;
+	let l = 0;
+	lnQ.x=lnQ.y=lnQ.z=lnQ.nz=lnQ.nx=lnQ.θ=0; lnQ.ny= 1; lnQ.dirty = false;
+	const up = lnQ.pitch( u ).roll( t ).up();
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	l += ( tmp[0] = up.x ) *tmp[0];
+	l += ( tmp[1] = up.y ) *tmp[1];
+	l += ( tmp[2] = up.z ) *tmp[2];
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
+	t = 1/Math.sqrt(l);
+        tmp[0] *= t;
+        tmp[1] *= t;
+        tmp[2] *= t;
+        return tmp;
+}
+
+const pick = pick2;
 
 
 function getStateByChance( axis ) {    
@@ -108,12 +147,30 @@ function test1() {
 }
 
 
+let drawing = false;
+let ang = -180;
+        let prior_x = -1;
+        let prior_y = -1;
+
+        let prior_x_b = -1;
+        let prior_y_b = -1;
+
+        let prior_x_d = -1;
+        let prior_y_d = -1;
+        let prior_x_e = -1;
+        let prior_y_e = -1;
+
+        let prior_x_ed = -1;
+        let prior_y_ed = -1;
+
 function drawsomething() {
 
 
 	const squareSize = 1024;
 
-	ctx.clearRect(0,0,squareSize,squareSize );
+	if( !drawing ) {
+		ctx.clearRect(0,0,squareSize,squareSize );
+	}
 	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
 	var output = _output.data;
 
@@ -134,6 +191,7 @@ function drawsomething() {
 
 
 	const minScale = 0;
+
 const maxScale = 1024;
 	function plot( x_, y_, c ) {
 		if( x_ < minScale || y_ < minScale ) return
@@ -237,26 +295,18 @@ if( c[1])
 	}
 	
 	axis2 = tmp2;
-        let prior_x = -1;
-        let prior_y = -1;
 
-        let prior_x_b = -1;
-        let prior_y_b = -1;
-
-        let prior_x_d = -1;
-        let prior_y_d = -1;
-        let prior_x_e = -1;
-        let prior_y_e = -1;
-
-        let prior_x_ed = -1;
-        let prior_y_ed = -1;
-
-	for( let per = 0; per <= 10; per++ ) {
+	if( !drawing ) {
+		for( let per = 0; per <= 10; per++ ) {
 			line( 0, 1024-per*10.24, 1024, 1024-per*10.24, [0,0,0,255] );
-
+	
+		}
+		drawing = true;
+		ang = -180;
 	}
-
-	for( let ang = -180; ang <= 180; ang++ ) {
+	const now = Date.now();
+	for( ; ang <= 180; ang++ ) {
+		if( (Date.now() -now) > 100 ) break;
         	const xpos = (ang + 180)/360 * 1020 + 2;
                 axis2[0] = Math.cos( ang/180*Math.PI );
                 axis2[1] = Math.sin( ang/180*Math.PI );
@@ -312,15 +362,15 @@ if( c[1])
                 prior_x_ed = xpos;
                 prior_y_ed = ypos_ed;
         }
-
+	if( ang > 180 ) drawing = false;
 	
 
 	ctx.putImageData(_output, 0,0);
-
+	if( drawing ) requestAnimationFrame( drawsomething);
 }
 
 try {
-	drawsomething();
+		drawsomething();
 }catch(err) {
 	alert( "GotError:"+err );
 }
