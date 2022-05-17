@@ -58,37 +58,24 @@ function pick1(){
 }
 function pick2(){
 	let t = Math.random();
-	let l = 0;
         //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
         //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
-	l += ( tmp[0] = Math.cos( t * 2*Math.PI )) *tmp[0];
-	l += ( tmp[1] = Math.sin( t * 2*Math.PI )) *tmp[1];
-	l += ( tmp[2] = 0 ) *tmp[2];
+	tmp[0] = Math.cos( t * 2*Math.PI );
+	tmp[1] = Math.sin( t * 2*Math.PI );
+	tmp[2] = 0;
 	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
 
-	t = 1/Math.sqrt(l);
-        tmp[0] *= t;
-        tmp[1] *= t;
-        tmp[2] *= t;
         return tmp;
 }
 function pick3(){
+	/* https://mathworld.wolfram.com/SpherePointPicking.html */
 	let t = Math.random()*Math.PI*2;
-	let u = Math.random()*2*Math.PI;
-	let l = 0;
-	lnQ.x=lnQ.y=lnQ.z=lnQ.nz=lnQ.nx=lnQ.θ=0; lnQ.ny= 1; lnQ.dirty = false;
-	const up = lnQ.pitch( u ).roll( t ).up();
-        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
-        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
-	l += ( tmp[0] = up.x ) *tmp[0];
-	l += ( tmp[1] = up.y ) *tmp[1];
-	l += ( tmp[2] = up.z ) *tmp[2];
-	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+	let u = Math.acos( Math.random()*2-1 );
 
-	t = 1/Math.sqrt(l);
-        tmp[0] *= t;
-        tmp[1] *= t;
-        tmp[2] *= t;
+	tmp[0] = Math.cos(t)*Math.sin(u);
+	tmp[1] = Math.sin(t)*Math.sin(u);
+	tmp[2] = Math.cos(u);
+
         return tmp;
 }
 
@@ -306,7 +293,7 @@ if( c[1])
 	}
 	const now = Date.now();
 	for( ; ang <= 180; ang++ ) {
-		if( (Date.now() -now) > 100 ) break;
+		if( (Date.now() -now) > 30 ) break;
         	const xpos = (ang + 180)/360 * 1020 + 2;
                 axis2[0] = Math.cos( ang/180*Math.PI );
                 axis2[1] = Math.sin( ang/180*Math.PI );
