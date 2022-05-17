@@ -79,7 +79,27 @@ function pick3(){
         return tmp;
 }
 
-const pick = pick2;
+function pick4(){
+	let t = Math.random()*Math.PI*2;
+	let u = Math.random()*2*Math.PI;
+	let l = 0;
+	lnQ.x=lnQ.y=lnQ.z=lnQ.nz=lnQ.nx=lnQ.θ=0; lnQ.ny= 1; lnQ.dirty = false;
+	const up = lnQ.pitch( u ).roll( t ).up();
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	l += ( tmp[0] = up.x ) *tmp[0];
+	l += ( tmp[1] = up.y ) *tmp[1];
+	l += ( tmp[2] = up.z ) *tmp[2];
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
+	t = 1/Math.sqrt(l);
+        tmp[0] *= t;
+        tmp[1] *= t;
+        tmp[2] *= t;
+        return tmp;
+}
+
+const pick = pick4;
 
 
 function getStateByChance( axis ) {    

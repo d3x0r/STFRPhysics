@@ -154,3 +154,12 @@ The ratio of the arcs that overlap and don't overlap is really the same as the s
 Scaling 1 as '1/4 of a turn' or `*pi/2` equivalent for sin/cos functions, then the ratio of ( ( the union of arc A and B minus the angle ) over just the amount that overlaps; which ends up `(2-x - x)/(2-x)` or `1-(2x/(2-2x))`.
 
 ![some working sketches of the above](bell-expectation.png)
+
+### CHSH Gamed
+
+Local Hidden Variable (LHV).
+
+In this graph, correlation of the chosen vectors vs the standard `V.A*V.B` chances has a greater than QM predicted chance of correlation; while still providing 0 correlation at 90 degrees.  60 degrees is like 30% greater than 50% chance (Bells Experimental Values) or like 65% correlation.
+THe specific detector angles don't really matter, but greater than 30 degrees for chosing detector settings is a win... and at 30 degrees LHV with gamed vector set is the same chance as QM .  and only a little over 2% under correlated below 30 degrees.
+
+![CHSH graph shown](CHSH-InequalityGamed1.png)
