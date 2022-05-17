@@ -145,3 +145,12 @@ The green line is the predicted QM chance based on cos(angle) between detectors.
 Angle divisions are shown every 30 degrees.
 
 ![Comparison graph](bell-comparison.png)
+
+
+### Probability Calculation
+
+The ratio of the arcs that overlap and don't overlap is really the same as the samples that will pass/fail.
+
+Scaling 1 as '1/4 of a turn' or `*pi/2` equivalent for sin/cos functions, then the ratio of ( ( the union of arc A and B minus the angle ) over just the amount that overlaps; which ends up `(2-x - x)/(2-x)` or `1-(2x/(2-2x))`.
+
+![some working sketches of the above](bell-expectation.png)
