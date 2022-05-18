@@ -201,13 +201,14 @@ if( oz_ < 0.05*Math.PI*2 ) continue
                 			oz_ = oz;
         		        }
 
+//if(0) {
 					//const	spinUp = Math.PI*2*(Math.sin( (1+lnQ.nz)*Math.PI/4 ) *Math.sin( (1+lnQ.nz)*Math.PI/4 ) - 0.0);
 					const	spinUp = lnQ.nz;
 
 
 
-					normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
-					normalVertices.push( new THREE.Vector3( ox_*spaceScale + 2*lnQ.nx*normal_del/normLen       ,oy_*spaceScale + 2*lnQ.ny*normal_del /normLen      , oz_*spaceScale + 2*lnQ.nz*normal_del/normLen ))
+					//normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
+					//normalVertices.push( new THREE.Vector3( ox_*spaceScale + 2*lnQ.nx*normal_del/normLen       ,oy_*spaceScale + 2*lnQ.ny*normal_del /normLen      , oz_*spaceScale + 2*lnQ.nz*normal_del/normLen ))
 					                                                                                                                                                    
 		                                                                                                                                                                            
 					normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
@@ -220,15 +221,15 @@ if( oz_ < 0.05*Math.PI*2 ) continue
 					normalVertices.push( new THREE.Vector3( ox_*spaceScale + basis.forward.x*normal_del/normLen,oy_*spaceScale + basis.forward.y*normal_del/normLen, oz_*spaceScale + basis.forward.z*normal_del/normLen ))
 	                                
 	                                
-					normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
-					normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
+					//normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
+					//normalColors.push( new THREE.Color( 1*spinUp/(Math.PI*2),1*spinUp/(Math.PI*2),0,255 ))
 					normalColors.push( new THREE.Color( 1,0,0,255 ))
 					normalColors.push( new THREE.Color( 1,0,0,255 ))
 					normalColors.push( new THREE.Color( 0,1,0,255 ))
 					normalColors.push( new THREE.Color( 0,1,0,255 ))
 					normalColors.push( new THREE.Color( 0,0,1,255))
 					normalColors.push( new THREE.Color( 0,0,1,255 ))
-				
+//}				
 					
 				}
 				
