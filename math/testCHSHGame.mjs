@@ -24,7 +24,8 @@ const axis2_60 = [Math.cos(Math.PI/3),Math.sin(Math.PI/3),0];
 const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];
 
 // optimal? rough guess...
-// 2.4 should be optimal for this hidden variable.
+// 3.4 (0.80 + (1-0) ) should be optimal for this hidden variable.
+// that is 80% right for A,B,C and 100% not right for D.
 
 const a0 = axis2_60;
 const a1 = axis2_0;
@@ -35,8 +36,9 @@ const b1 = axis2_90;
 const axis2_22_5 = [Math.cos(Math.PI*22.5/180),Math.sin(Math.PI*22.5/180),0];
 const axis2_45   = [Math.cos(Math.PI*45/180),Math.sin(Math.PI*45/180),0];
 const axis2_62_5 = [Math.cos(Math.PI*67.5/180),Math.sin(Math.PI*67.5/180),0];
+
+// CHSH angles only get 3.16 win z
 /*
-// CHSH angles only get 2.17 win
 const a0 = axis2_45;
 const a1 = axis2_0;
 const b0 = axis2_22_5;
