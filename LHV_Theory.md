@@ -33,7 +33,7 @@ where both detections will be aligned vs detections that were expected aligned a
 
 ## Bell's Experiment
 
-There's so many https://www.youtube.com/watch?v=UZiwtfrisTQ There was a very recent done; lots can explain this idea.
+There's so many [The Sience Asylum, Bell Theory](https://www.youtube.com/watch?v=hiyKxhETXd8) There was a very recent done; lots can explain this idea.
 
 QM prediction `cos(60 degrees)` = 50% chance or 0.5.  Or that at 60 degrees there's a 50% correlation, and 60 degrees is Bells Test Setting.
 

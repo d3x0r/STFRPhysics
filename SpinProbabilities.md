@@ -163,3 +163,25 @@ In this graph, correlation of the chosen vectors vs the standard `V.A*V.B` chanc
 THe specific detector angles don't really matter, but greater than 30 degrees for chosing detector settings is a win... and at 30 degrees LHV with gamed vector set is the same chance as QM .  and only a little over 2% under correlated below 30 degrees.
 
 ![CHSH graph shown](CHSH-InequalityGamed1.png)
+
+
+I added a test in math/testCHSHGame
+
+```
+Array is : {A0, B0} got  [up-up,up-down,down-down,down-up], where up-up and down-down is expected to correlate
+then {A1, B0}, {A0,B1}, {A1,B1}; where A1 and B1 are expected to not correlate, and penalize points.
+choices: [
+  [ 82760, 16467, 83915, 16858 ],
+  [ 83026, 16753, 83629, 16592 ],
+  [ 82708, 16519, 84071, 16702 ],
+  [ 49649, 50130, 50460, 49761 ]
+] [ 0.331465, 0.331365, 0.330945, -0.002405 ] [
+  0.8010270662155631,
+  0.79821983475056,
+  0.8002732504715384,
+  0.009595052862557352
+] 2.389925098575104
+Ideal CHSH S for LHV : 2.40
+```
+
+so to disprove this hidden variable QM has to be > 2.4 (which is in theory possible)
