@@ -28,7 +28,7 @@ LHV Simulation is simply comparing if the dot product of vectors is greater than
 The probability for a single detector and single particle is a sphere centered on the origin from -1 to 1, where < 0 indicates inversed result will be received; that is if expecting a up, should expect a down.
 
 The probability of 2 detectors and the same local variable is the ratio of overlaped arcs where the dot product is > 0 for two circles; this ends up being just the ratio of the arcs covered by the angles.  `1-x/(2-x)` is the ratio of correlation; 
-where both detections will be aligned vs detections that were expected aligned and were inverted.  The inverse of this is `1-1-x/(2-x)` or `x/(2-x)`. (Live Demo)[https://d3x0r.github.io/STFRPhysics/math/indexBellInquality.html]
+where both detections will be aligned vs detections that were expected aligned and were inverted.  The inverse of this is `1-1-x/(2-x)` or `x/(2-x)`. [Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality.html)
 
 
 ## Bell's Experiment
@@ -45,7 +45,7 @@ https://qubit.guide/9.3-chsh-inequality.html
 
 QM Max correlation `2*sqrt(2)` = 2.828.
 
-LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: (inset link to game)) implement a game that two people isolated by distance with an entangled RNG can get 80% correlation on 3 of the 4 choices, and 0% correlation on the last, which is a full point for S: (4/5)+(4/5)+(4/5)+(1-0).
+LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](d3x0r.github.io/STFRPhysics/math/CHSH_Game.html)) implement a game that two people isolated by distance with an entangled RNG can get 80% correlation on 3 of the 4 choices, and 0% correlation on the last, which is a full point for S: (4/5)+(4/5)+(4/5)+(1-0).
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
@@ -59,7 +59,7 @@ LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 
 ## GHZ Experiment
 
 This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the reults for the other
-detectors. This does not happen with 100% chance but  (However, we experimentally observed such terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic)[https://web.physics.ucsb.edu/~quopt/ghz.pdf].
+detectors. This does not happen with 100% chance but  [However, we experimentally observed such terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic](https://web.physics.ucsb.edu/~quopt/ghz.pdf).
 
 GHZ QM predcition - 100% (?) 
 
