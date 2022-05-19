@@ -45,7 +45,7 @@ https://qubit.guide/9.3-chsh-inequality.html
 
 QM Max correlation `2*sqrt(2)` = 2.828.
 
-LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](d3x0r.github.io/STFRPhysics/math/CHSH_Game.html)) implement a game that two people isolated by distance with an entangled RNG can get 80% correlation on 3 of the 4 choices, and 0% correlation on the last, which is a full point for S: (4/5)+(4/5)+(4/5)+(1-0).
+LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](https://d3x0r.github.io/STFRPhysics/math/CHSH_Game.html)) implement a game that two people isolated by distance with an entangled RNG can get 80% correlation on 3 of the 4 choices, and 0% correlation on the last, which is a full point for S: (4/5)+(4/5)+(4/5)+(1-0).
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
