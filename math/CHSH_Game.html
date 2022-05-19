@@ -1,0 +1,267 @@
+
+<html>
+
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+   <p>
+
+	<div class="setup">
+	<select ID="ruleset">
+		<option ID="CHSH">Use CHSH Test Angles (22,45,67)</option>
+		<option ID="IDEAL">Use Ideal Test Angles (30,60,90)</option>
+	</select>
+	<select ID="RNG">
+		<option ID="RNG1">SFC32</option>
+		<option ID="RNG2">MUL32</option>
+		<option ID="RNG3">XOR32</option>
+		<option ID="RNG4">JSF32</option>
+	</select>
+	<input ID="seed" size=25>Seed</input>
+	<p><button ID="start">Begin with new seed</button>
+	<p>Step: <span ID="step">-0-</span>
+
+
+	</div>
+
+	<div>
+
+	<div style="display:inline-block;border-radius:10px;border:2px solid black;" class="PlayerA">
+		Player A can select 0 or 1...
+	<p><input type="radio" ID="a0" name="Aselector" checked>0 CHoice</input>
+	<input type="radio" ID="a1" name="Aselector">1 CHoice</input>
+	<p>Output is:<span ID="AValue">--</span>
+	</DIV>
+
+	<div style="display:inline-block;border-radius:10px;border:2px solid black;" class="PlayerB">
+		Player B can select 0 or 1...
+	<p><input type="radio" ID="b0" name="Bselector" checked>0 CHoice</input>
+	<input type="radio" ID="b1" name="Bselector">1 CHoice</input>
+	<p>Output is:<span ID="BValue">--</span>
+	</DIV>
+
+	<p>Is Correlated:<span ID="CValue">--</span>
+		
+
+	<p><button ID="play">Get Results</button>
+
+	<p><table ID="stats"><tr><th>A (a0b0)</th><th>B (a1b0)</th><th>C (a0b1)</th><th>D (a1b1)</th><th>S (A+B+C-D)</th></tr>
+		</table>
+
+	</div>
+
+
+</body>
+<script type="module"> 
+
+// seeded random number generators; all return a number from 0 to 1.0
+// seed is a string.
+import {SFC32,MUL32,XOR32,JSF32} from "./prng_short.mjs"
+
+
+const choices = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+
+const axis1 = [1,0,0];
+
+const axis2_0 = [Math.cos(0),Math.sin(0),0];
+const axis2_30 = [Math.cos(Math.PI/6),Math.sin(Math.PI/6),0];
+//const axis2_30 = [Math.cos(Math.PI*40/180),Math.sin(Math.PI*40/180),0];
+const axis2_60 = [Math.cos(Math.PI/3),Math.sin(Math.PI/3),0];
+const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];
+
+// optimal? rough guess...
+// 3.4 (0.80 + (1-0) ) should be optimal for this hidden variable.
+// that is 80% right for A,B,C and 100% not right for D.
+
+let a0 = axis2_60;
+let a1 = axis2_0;
+let b0 = axis2_30;
+let b1 = axis2_90;
+
+
+const axis2_22_5 = [Math.cos(Math.PI*22.5/180),Math.sin(Math.PI*22.5/180),0];
+const axis2_45   = [Math.cos(Math.PI*45/180),Math.sin(Math.PI*45/180),0];
+const axis2_67_5 = [Math.cos(Math.PI*67.5/180),Math.sin(Math.PI*67.5/180),0];
+
+// CHSH angles only get 3.16 win z
+/*
+const a0 = axis2_45;
+const a1 = axis2_0;
+const b0 = axis2_22_5;
+const b1 = axis2_62_5;
+*/
+
+
+//let axis2 = axis2_45;
+
+const tmp = [0,0,0];
+const tmp2 = [0,0,0];
+
+// fills 'tmp' global.
+function pick(){
+	let t = RNG();
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	tmp[0] = Math.cos( t * 2*Math.PI );
+	tmp[1] = Math.sin( t * 2*Math.PI );
+	tmp[2] = 0;
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
+        return tmp;
+}
+
+// Pick1 picks more diagonals, unfairly, and is between LHV and QM
+// pick2 is fair vector choice; and matches LHV computed; but only picks a direction in a plane.
+// pick3 is another fair version, but 3d.
+// pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
+
+
+let step = 0;
+let ruleSelect = document.getElementById( "ruleset" );
+let RNGSelect = document.getElementById( "RNG" );
+let seedText = document.getElementById( "seed" );
+let stepText = document.getElementById( "step" );
+let startBtn = document.getElementById( "start" );
+let aText = document.getElementById( "AValue" );
+let bText = document.getElementById( "BValue" );
+let cText = document.getElementById( "CValue" );
+let statsTable = document.getElementById( "stats" );
+let statsRow = statsTable.insertRow();
+let statsRow2 = statsTable.insertRow();
+let picks = [statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell()];
+let stats = [statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell()];
+
+let selectors = [ [document.getElementById( "a0" ),document.getElementById( "a1" )],[document.getElementById( "b0" ),document.getElementById( "b1" )]];
+
+
+let playBtn = document.getElementById( "play" );
+
+let RNG = null;
+
+startBtn.addEventListener( "click", begin );
+playBtn.addEventListener( "click", play );
+
+seedText.value = "Seed Value";
+	
+begin(); // do a onetime setup.
+
+function begin() {
+	choices.forEach( c=>c.forEach((v,i)=>c[i]=0));
+
+	const seed = seedText.value;
+	//console.log( "Setup RNG:", seed );
+	const sel = RNGSelect.selectedOptions[0].id;
+	switch( sel ) {
+	case "RNG1": RNG=SFC32( seed ); break;
+	case "RNG2": RNG=MUL32( seed ); break;
+	case "RNG3": RNG=XOR32( seed ); break;
+	case "RNG4": RNG=JSF32( seed ); break;
+	default: console.log( "Selection out of bounds." ); break;
+	}
+	const rulesel = ruleSelect.selectedOptions[0].id;
+	switch( rulesel ) {
+	case "CHSH": a0=axis2_22_5; a1=axis2_67_5; b0=axis2_45; b1=axis2_0; break;
+	case "IDEAL": a0=axis2_30; a1=axis2_90; b0=axis2_60; b1=axis2_0; break;
+	default: console.log( "Selection out of bounds." ); break;
+	}
+	step = 0;
+	aText.textContent = '';
+	bText.textContent = '';
+	cText.textContent = '';
+	picks.forEach( pick=>pick.textContent='' );
+	stats.forEach( pick=>pick.textContent='' );
+	stepText.textContent = "- 0 -";
+
+}
+                                                 
+function play() {
+	const Aselector = selectors[0][0].checked?1:0;
+	const Bselector = selectors[1][0].checked?1:0;
+	step++;
+	stepText.textContent = step;
+
+	pick();
+	let a,b;
+	let c = 0;
+	let S = 0;
+	[a0,a1].forEach( a=>{
+		[b0,b1].forEach( b=>{
+			let s = '';
+			const as = getState(a); 
+			const bs = getState(b);
+			if( as&bs || (!as && !bs) ) { 
+				choices[c][0]++;
+					s += '⚪';}
+				 else {
+				choices[c][1]++;
+				s += '⚫';
+			}
+			
+			picks[c].textContent = s;
+			const thisVal = (1-choices[c][1]/choices[c][0]);
+			if( c == 3 ) S += 1-thisVal;
+			else S += thisVal;
+			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio diff/same";
+			c++;
+		} )
+
+	} )
+
+	stats[4].textContent = S.toFixed(3);
+
+	console.log( "Aselector:", Aselector, Bselector );		
+
+	if( Aselector )
+		a= getState( a0 );
+	else a= getState( a1 );
+
+	if( a ) 
+		aText.textContent = "⚪";
+	else
+		aText.textContent = "⚫";
+
+	if( Bselector )
+		b= getState( b0 );
+	else b= getState( b1 );
+	if( b ) 
+		bText.textContent = "⚪";
+	else
+		bText.textContent = "⚫";
+
+	if( a ^ b )
+		cText.textContent = "⚫";
+	else
+		cText.textContent = "⚪";
+
+
+}
+
+function getStateByChance( axis ) {    
+	let s = 0;
+
+	let dot= axis[0]*axis1[0] ;
+	let chance = dot;// Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
+	
+	if( Math.random() < chance ) 
+		s += 1;
+
+	dot= axis[0]*axis2[0] + axis[1]*axis2[1]
+	chance = dot;//Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
+	if( Math.random() < chance ) 
+		s += 2;
+	return s;
+}
+
+const  getState = ( axis )=>( (axis[0]*tmp[0] + axis[1]*tmp[1]) >= 0 );
+
+
+
+
+</script>
+</html>
+
+
+
