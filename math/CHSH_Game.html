@@ -8,17 +8,17 @@
    <p>
 
 	<div class="setup">
-	<select ID="ruleset">
+	Ruleset:<select ID="ruleset">
 		<option ID="CHSH">Use CHSH Test Angles (22,45,67)</option>
 		<option ID="IDEAL">Use Ideal Test Angles (30,60,90)</option>
 	</select>
-	<select ID="RNG">
+	 RNG:<select ID="RNG">
 		<option ID="RNG1">SFC32</option>
 		<option ID="RNG2">MUL32</option>
 		<option ID="RNG3">XOR32</option>
 		<option ID="RNG4">JSF32</option>
 	</select>
-	<input ID="seed" size=25>Seed</input>
+	 Seed:<input ID="seed" size=25></input>
 	<p><button ID="start">Begin with new seed</button>
 	<p>Step: <span ID="step">-0-</span>
 
@@ -51,6 +51,35 @@
 
 	</div>
 
+
+	<div> 
+	<H1>How to Play</H1>
+	<p>While it is possible to play solo, you and a distant friend can decide on a ruleset, a RNG, and a seed and then decide who will be A and who will be B.
+	Each player can record their selections and the outcome of their own selection.  After making a selection, or to begin with a new set of selections, click the "Begin with new seed" button; this will clear
+        all information in all counters and start a new random number generator at step 1.  If the step count between the two players is off, the correlations are not true, so the step number should also be noted when
+	testing with a friend.
+
+	<p>After both players have made their selections, they can click the 'Get Results' button to proceed to the next result step.
+
+	<p>Rulesets may be:
+		<UL>
+			<LI>CHSH Test angles - these use the experimental test angles of 0, 22.5, 45 and 67.5 degrees.  This is not the ideal score; because it loses points in the 4th part for excessive correlations.
+			<LI>Ideal Test Angles - uses 0, 30, 60, 90 degrees for the angles; this provides 100% non-correlation on the 4th setting, except by random chance; the other 3 values are only 80% correlated though.
+		</UL>
+
+	<p>RNG Choices: (<a href="https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript">implemented from</a>)
+		<UL>
+			<LI>SFC32 - Simple Fast Counter
+			<LI>MUL32 - Mulberry
+			<LI>XOR32 - xoshiro 128
+			<LI>JSF32 - Jenkins Small Fast
+		</UL>
+
+	<p>Seed: May be any string the two agree on; the string content is bit shuffled to generate a random start point in the random number generator.
+
+	<H2>Other Information</H2>
+	This isn't much of a game itelf, so this keeps the running statistics for every set of choices both players might make, and reports on the number of correlated and non-correlated results for each of those settings.
+	
 
 </body>
 <script type="module"> 
