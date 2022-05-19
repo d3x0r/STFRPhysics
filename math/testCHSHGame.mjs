@@ -25,6 +25,7 @@ const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];
 
 // optimal? rough guess...
 // 2.4 should be optimal for this hidden variable.
+
 const a0 = axis2_60;
 const a1 = axis2_0;
 const b0 = axis2_30;
@@ -135,8 +136,8 @@ function test1() {
 	console.log( "Array is : {A0, B0} got  [up-up,up-down,down-down,down-up], where up-up and down-down is expected to correlate" );
 	console.log( "then {A1, B0}, {A0,B1}, {A1,B1}; where A1 and B1 are expected to not correlate, and penalize points." );
 
-        console.log( "choices:", CHSH_wins, CHSH_wins.map( choices=> (choices[0]-choices[1])/i ), totalWin,  totalWin.reduce( ((acc,val,i)=>acc+(i==3?-1:1)*val),0 ));
-	console.log( "Ideal CHSH S for LHV : 2.40" );
+        console.log( "choices:", CHSH_wins, totalWin,  totalWin.reduce( ((acc,val,i)=>acc+(i==3?1-val:val)),0 ));
+	console.log( "Ideal CHSH S for LHV : 3.40 which is > 2*sqrt(2) 2.82" );
 }
 
 

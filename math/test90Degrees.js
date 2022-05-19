@@ -123,13 +123,14 @@ const tmp = [0,0,0];
 const tmp2 = [0,0,0];
 
 function pick(){
-	let t = ( tmp[0] = Math.random()*2-1 ) * tmp[0];
-        t += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
-        t += ( tmp[2] = Math.random()*2-1 ) * tmp[2];
-        t = 1/Math.sqrt( t );
-        tmp[0] *= t;
-        tmp[1] *= t;
-        tmp[2] *= t;
+	let t = Math.random();
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	tmp[0] = Math.cos( t * 2*Math.PI );
+	tmp[1] = Math.sin( t * 2*Math.PI );
+	tmp[2] = 0;
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
         return tmp;
 }
 
@@ -196,7 +197,7 @@ function test2() {
         		const s = getState( pick() );
 	                choices[s]++;
         	}
-	        console.log( th,"choices:", 1-(choices[1])/(choices[0]), Math.cos( angle ), (1-(choices[1])/(choices[0]))/ Math.cos( angle ) );
+	        console.log( th,"choices:", 1-(choices[1])/(choices[0]), Math.cos( angle ), (1-(choices[1])/(choices[0])) );
 	}
 }
 
