@@ -197,7 +197,9 @@ function test2() {
         		const s = getState( pick() );
 	                choices[s]++;
         	}
-	        console.log( th,"choices:", 1-(choices[1])/(choices[0]), Math.cos( angle ), (1-(choices[1])/(choices[0])) );
+		const ev = Math.abs(angle/Math.PI*2);
+
+	        console.log( th,"choices:", 1-(choices[1])/(choices[0]), 1-ev/(2-ev), Math.cos( angle ), (1-(choices[1])/(choices[0])) );
 	}
 }
 
