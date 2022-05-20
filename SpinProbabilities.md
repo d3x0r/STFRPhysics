@@ -1,5 +1,21 @@
 
-# Pauli Matrices, spin calculations
+
+# Spin Detection and Spin Probabilities
+
+QM has math, that predicts a degree of correlation at a detector vs another detector.  The first section runs through some introductory matrerial that regard quantum mechanical calculations.
+The second section is a refomulation based on a non-digital hidden variable, that has its own predictions.
+
+The QM Math section and the LHV section are not equivalent; and really calculating with Spin Axis will back-propagate through the math a little.
+
+Mostly this just deals with the so-called entanglement of particles; and that they somehow communicate instantaneously at distant locations.  The simple geometric solution of using their spin axis with a dot product of the detectors
+results with a ratio `1-(x/(2-x))` which is the amount of correlation for a degree of sepration of two detectors.   If the detectors are polarized filters, then the 1/2 overlap is 2 quaters seprated by 180 degrees; if they are Stern Gerlach,
+then the degree is the degree of the detector, and 1/2 up and 1/2 down still works.  If they are positron electron pairs, I can further state that they have the same spin axis, but opposite spin signs/ directions; the 'spin down' detected in that state
+does not reflect the axis direction inversion, merely the rotation direction around that axis.
+
+
+# Section 1 - QM Math
+
+## Pauli Matrices, spin calculations
 
 Really I blame this guy for all the understanding I've gained...
 
@@ -11,14 +27,13 @@ https://www.youtube.com/channel/UCZSC7wgBq3RSLKoJDfGL0Rg/videos User: NoahExplai
 - (probably 1 also...)
 
 
-
-## The demo
+### The demo
 
 None of the sliders and options really apply to this; it's just a copy from other demos; and is left a little ugly.
 
 [Cuboid...](https://d3x0r.github.io/STFRPhysics/3d/index5.html)
 
-## The breakdown...
+### The breakdown...
 
 The spin probabilities are computes as two orthagonal axii that are related through a proportionality.
 
@@ -52,7 +67,7 @@ Screenshot from the Demo above... marked with some points of interest of least a
 
 
 
-## Single Detector Graphs
+### Single Detector Graphs
 
 This graph of the above function `f(x) = sin( (1+x) * PI/4 )^2`, for a single axis projection, looks like this.
 
@@ -74,64 +89,39 @@ However, the coordinates of a direction vector are already similar to sin/cos li
 ~~On this second graph `pi/8 = 0.8943`;~~ 
 
 
-## Detector Graphs
+---
 
-This is all a bit like saying 'the sky is blue, because the sky is blue'.... QM is already using a super position of spin axis, without calling it that.
-
-
-
-The purple line on the following graph represents the correlation chance for detectors.  At +/-1 the detectors are 90 degrees separated, and the correlation is 0%.
-At 1-1/3 ( or 90+30 degrees) the chance is 50% correlation, and equates to Bell's Theorum for QM. The graph is `1-sin( pi/2(1+sin(pi/2(1+x))))^2`; which is the non linear graph above, simplified into a single expression.  `1-sin^2` is the same as `cos^2` and I'm not sure about the centering...
-are detectors which are aligned more likely to correlate, or are detectors that are 90 degrees opposed supposed to not-correlate more?  There is a flat peak to the graph that can be moved with the inner `(1+x)` term.
-
-At `pi/8` it's near the 89% chance... which is https://en.wikipedia.org/wiki/Bell_test#A_typical_CHSH_(two-channel)_experiment 'The settings a, a′, b and b′ are generally in practice chosen to be 0, 45°, 22.5° and 67.5° respectively — the "Bell test angles"...'.  This is 45 degrees and 1/2 of 45 degrees offset.
-
-It seems to be near value... `1/2 + 1/(2*sqrt(2)) = 0.85355339059327376220042218105242` .
-
-https://en.wikipedia.org/wiki/Aspect%27s_experiment This gives 'A maximal violation of Bell's inequalities is predicted for |α−β| = 22.5°'
-
-https://en.wikipedia.org/wiki/Quantum_entanglement#History 'He also showed that the correlation varied only upon (as cosine square of) the angle between the polarizer settings[11] and decreased exponentially with time lag between emitted photons.'  (but that means that it evolves over time, and without detection at a similar time the alignments of the results diminishes...)
-
-
-this is `cos( pi/2 * x ) ^2`.  The lines at 0.25 are 25 degrees, and 90 degrees is +/-1.  0 is 0 degrees of separation for the detectors; 1 is 90 degrees of separation, with 0% chance of correlation....
-
-This doesn't show a 50% chance of correlation though...
-
-![Cos Detectors](cos-detectors.png)
-
-So the above doesn't hit the 50% chance, so if we delinearize the X with `(sin(x * pi/2))` then the 50% chance hits the mark at 60/120 degrees, but then the correlation at 22.5 degrees should be higher than `0.854`....
-
-![cos detectors with additional curve](cos-detectors-alt.png)
-
-(this squares the square again... such that in this curve, 60 degrees is 50% correlation, but then the 22.5 degree parts fail...
-
-![combining the products](sin_squared_detectors.png)
-
-
+# Section 2
 
 ## Contention with Bells Math
 
-https://youtu.be/uef_qN7VFuY?t=1394  "sigma(V,A)" is not a probablistic quantity, it is itself +/- 1/2. 
-
+This is one of many sources that explain Bells Inequality, and the calculation, and terms that go into it:
+[23:16 / 51:29 017 Einstein-Podolski-Rosen Experiment and Bell's Inequality](https://youtu.be/uef_qN7VFuY?t=1394) "sigma(V,A)" as used in this video is NOT a probablistic quantity, it is itself +/- 1/2; 
+this makes it a digital variable which before detection can only have 1 of 2 values.   The hidden varaible is a analog value from -1 to 1 though, which means this inequality doesn't have to apply to this hidden variable. 
 Using the 'hidden variable' `V dot A * 1/2`  is not that V is 1/2 or -1/2, but a range of values. (or cos of the angle between the hidden variable and the detector alignment)
 
-then the integral `( d^n V  P(V)  * simga_e(v,a) sigma_p(v, b ) )`
-    (sum all componnents, probability density, and the functions of that variable)
+then the integral `( d^n V  P(V)  * simga_e(v,a) sigma_p(v, b ) )`  (sum all componnents, probability density, and the functions of that variable)
 
-`sig_e(a)sig_p(b)-sig_e(a)sig_p(c)`
+~~`sig_e(a)sig_p(b)-sig_e(a)sig_p(c)`~~
 
-sig^2(v,b)= 0.25
+~~sig^2(v,b)= 0.25~~
 
-(29:25).. and then inserting a 1.
+~~(29:25).. and then inserting a 1.~~
+
+
 
 ### CHSH Inequality
 
+CHSH is another way to defined Bells inequality that is more robust, and covers more choices; requires different angles than Bells Test does.
+
 CHSH probability is S>2 = win; S < 2 is random coin.   S=4 is win 100% compatibility with truth   (A0 ~ B0)  (A0 ~ B0) (A1 ~ B0) (A1 !~ B1)
 
-https://qubit.guide/9.3-chsh-inequality.html  (+9.4)
+This is a nice short presentation of this idea: https://qubit.guide/9.3-chsh-inequality.html  (+9.4)
 
+There are also many sources to get more information about this game...
 
-Given this, then this setup models the supposed information.   At a 30 degree offset, QM predicts 86% correlation, while I only measure 83%, it's sufficient to get S > 2.74(ish) vs QM 2.828   CHSH.
+Given this, then this setup models the supposed information.   At a 30 degree offset, QM predicts 86% correlation, while I only measure 80%, it's sufficient to get S > 2.74 or 2.4(ish) vs QM 2.828   CHSH.  The anti-correlation point
+however, is free; because detectors at 90 degrees never correlate, and that's like a free point just for playing giving LHV 3.40 idealy, and 3.19 using CHSH test angles. (There is no perfect 4 point game).
 
 If 90 degrees is setup for A1 and B1, then there is never a correlation between the two, and slicing the interior arc into 1/3 gives a separation of A0 and B0 of 30 degrees which again is a 83-86% correlation, 
 and B0 with A1 is the same angle, as is B1 with A0, so they are all 3 equally valid.
@@ -176,12 +166,14 @@ choices: [
   [ 82708, 16519, 84071, 16702 ],
   [ 49649, 50130, 50460, 49761 ]
 ] [ 0.331465, 0.331365, 0.330945, -0.002405 ] [
-  0.8010270662155631,
-  0.79821983475056,
-  0.8002732504715384,
-  0.009595052862557352
+  0.8010270662155631,   // ( 80% correlation)
+  0.79821983475056,     // ( 80% correlation)
+  0.8002732504715384,   // ( 80% correlation)
+  0.009595052862557352  // ( 0% correlation = 100% non correlation = 1 point (almost, there is always slighly more ++ and -- at some point))
 ] 2.389925098575104
-Ideal CHSH S for LHV : 2.40
+
+Ideal CHSH S for LHV : 3.40
 ```
 
-so to disprove this hidden variable QM has to be > 2.4 (which is in theory possible)
+so to disprove this hidden variable QM has to be > 3.4 (which is in theory possible)
+
