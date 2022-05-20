@@ -31,7 +31,6 @@ https://www.youtube.com/channel/UCZSC7wgBq3RSLKoJDfGL0Rg/videos User: NoahExplai
 
 None of the sliders and options really apply to this; it's just a copy from other demos; and is left a little ugly.
 
-[Cuboid...](https://d3x0r.github.io/STFRPhysics/3d/index5.html)
 
 ### The breakdown...
 
@@ -57,6 +56,8 @@ The position along each axis from 0 to 1 is the chance a detection along that ax
 any other axis up to the ones halfway, which are perpendicular to the detector have a 50-50 chance of being detected as up or down.  This is partially due that in that area, the other spin axii are not specifically accounted for, but are 
 lumped to a sum probability; and the `sin(position on sphere) * sin(position on sphere)` covers the volume of probabilities around that point. (probably need to expand on this later... it's accounting for a 3rd dimension that's equivalent to one
 of the existing dimensions, while working on a 2D projection of the system...  )
+
+[Demo](https://d3x0r.github.io/STFRPhysics/3d/index5.html)
 
 ![Dirac1](spinUpProbabilityCurve.png)
 
@@ -92,6 +93,16 @@ However, the coordinates of a direction vector are already similar to sin/cos li
 ---
 
 # Section 2
+
+
+## Single Detector Graph
+
+Spin probabiities for LHV are just the spin axis dotted on the detector vector.  If the vector si down, then it is negative or inversed-relation probability.
+
+[Demo](https://d3x0r.github.io/STFRPhysics/3d/index5-spin)
+
+![Pretty Ball with sorted up right forward rotations](LHV-single-detector.png)
+
 
 ## Contention with Bells Math
 
