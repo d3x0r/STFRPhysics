@@ -114,10 +114,10 @@ to rotate, is using that in an external sense to rotate the frame.
 
 
 
-# Help Wanted
+# Compatibility with Quaternions
 
-At this point I'd like to see quaternions work... but I don't know the proper expression for `r*(q*r^-1)`  sort of thing... and if that IS it, 
-then there's my complaint with quaternions; because that curve should also be the intrinsic curve, and be nice stright lines in the rotation vector space.
+Quaternion `QxP` is an extrinsic rotation of Q around P, or an intrinsic rotation of P around Q. In the intrinsic case, the axis 'Q' is within the frame of 'P', and moves as P moves. In the extrinsic case, 'P' is external
+to the frame of Q and rotates Q.
 
-So it seems I have to decompose the quaternion; well, since it gets re-scaled, I just have to rotate the I,J,K components by one vector before the other (ug how to multiply quaternions and vectors?  Wolfram returns a Quaternion object).
-
+Inverting the cross product in the Rodrigues rotation formula makes this work the same; [The Demo](https://d3x0r.github.io/STFRPhysics/3d/index4.html) ~~has some inversed options still~~, but at least can demonstrate the same configurations;
+and the rotating cube indicating the rotation combination over time shows the difference between intrinsic and extrinsic rotations.
