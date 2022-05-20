@@ -92,12 +92,16 @@ However, the coordinates of a direction vector are already similar to sin/cos li
 
 ---
 
-# Section 2
+# Section 2 - Local Variable Spin Axis
 
+
+So this is using spin axis projected on detectors. For a vector (x,y,z) projected on (1,0,0) (if the detector is along the X axis) then from (-1) to (1) is negative to positive probability of being detected in that direction.  (not to metion 
+it just IS already in that direction; but it will end up sorting into that particular group).
 
 ## Single Detector Graph
 
-Spin probabiities for LHV are just the spin axis dotted on the detector vector.  If the vector si down, then it is negative or inversed-relation probability.
+Spin probabiities for LHV are just the spin axis dotted on the detector vector.  If the vector sis down, then it is negative or inversed-relation probability.
+This sorts aligned frames into aligned left/right (red), up/down (green) and also forward/backward (blue).
 
 [Demo](https://d3x0r.github.io/STFRPhysics/3d/index5-spin)
 
