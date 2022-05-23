@@ -107,6 +107,10 @@ This sorts aligned frames into aligned left/right (red), up/down (green) and als
 
 ![Pretty Ball with sorted up right forward rotations](LHV-single-detector.png)
 
+This graph compares `cos(pi/2 * x)` and `(1-(x/(2-x))`; and shows error percentage.   At very low correlation the error is high that this has a better chance to detect same states than QM predicts.
+
+![Local Variable vs QM error factor](LHV-QM-error.png)
+
 
 ## Contention with Bells Math
 
