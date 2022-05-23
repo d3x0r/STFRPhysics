@@ -125,8 +125,55 @@ particles are spin 1/2 though, and it can be said that they are always +1/2 or -
 The coordinates for points in space, this gives every point in space its own spin.  The behavior of the spins on each axis may be applied
 to some fixed points (1,0,0),(0,1,0) and (0,0,1) to give a new orientation for general frame of a body of connected spans of spaces.
 
+## 4D
+
+4 axises are not required for most of this; at least not that are also bound to linear space the same way; additional axises are orthangonal not perpenedicular to the first 3 spatial dimensions.
+
+Continuing on, we get a more complex situation.  The coordinates would look like `((x,y,z,w),(X,Y,Z,W))`.  By definition a rotation around x, will affect all axis's perpendicular to it,
+which means `y` and `z` components have to interact also with `w` for a rotations around a single axis.
+
+The matrix (linear algebra) approach defines perpendiculars to planes; so there are planes `xy`,`xz`,and `yz` in 3 dimsions.  The next coordinate adds
+`wx`, `wy`, `wz` planes each with their own perpendicular axises, and none of the perpendiculars to these planes are the W axis. 
+In the 3D cases, the perpendicular to `xy` is `z` or overlaps the `z` at least; similarly `xz` is `y` and `yz` is overlaps `x`.
+
+A rotation around `W` would rotate `x->y->z->x` and not modify `w` components at all.
+
+( cross product of (ax,ay,az,aw) and (bx,by,bz,bw) is a 6 dimensional thing, with 6 spin axises modeled.  This provides a reference relation between two spatial points; this
+relation can be represented with scaling a point by dividing by one scalar and multiplying by another to result in a smooth linear transform; and the relatoinship of all linear points
+remains the same. )
+
+## Working with...
 
 
+3 dimensions of space are pretty easy to comprehend (assuming a lot here).
 
+At every point in space, there is also a spin associated with that point.
+
+Since the rotation rate has a maximum before wrapping back to itself, this can be modeled in a finite sphere.  The grid of points that are in space, can each be dialated slightly and fit a graph inside.
+
+There are also characteristics of lines from the linear space into the nothing within the space that make them both separate and able to be traversed.  A Spin coodinate that is purely around a single axis moves
+along a single axis, and can become a pure linear emission called a photon.  This photon will eventually interact with another thing, and it's spin will enter the spin coordinate space constructely or destructively; though 
+if they interfere, the chance of joining with the spin is lower than being deflected by the spin;  (a difference between transmission and refraction and at a point diffraction. )
+
+![Image of the above text](math/GeodesicsAround.png)
+
+This graph is just the amount each point in space was displaced by the displacement. So as this goes to infinity, the changes go to zero, but are never quite zero.
+Can apply arctan to this, to get an angle, and then dialate the inner graph again, and complete the intersection with the nodes with straight lines across a circle.
+
+The arctangent is only good for 1/2 of the curve up to 0, and another half at -0 to -90 degrees.
+
+![Image of the above text](math/ExtendedGraph.png)
+
+This is the same changes, but dialated with another 0, but an unknown graph, so I could see what those curves approaching zero actually looked like.
+
+![Image of the above text](math/MaxDialation.png)
+
+And then this, zooming in on the near 0 points on the curves with better resolution, is the angular calculation filling in 0-90 (or -90).
+
+![Final calculation](spatialDisplacement.png)
+
+
+These curves are also parallel-transport curves; or more speciically they are the rotation axises and amounts to parallel transport a frame around a sphere depending on what it's base orientation is, this plane is tilted, but looks the same.
+Spin 1/2 is a cirlcle that is pi that is a ring equal distance from both the origin and space.
 
 
