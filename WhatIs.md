@@ -155,8 +155,6 @@ There are also characteristics of lines from the linear space into the nothing w
 along a single axis, and can become a pure linear emission called a photon.  This photon will eventually interact with another thing, and it's spin will enter the spin coordinate space constructely or destructively; though 
 if they interfere, the chance of joining with the spin is lower than being deflected by the spin;  (a difference between transmission and refraction and at a point diffraction. )
 
-![Image of the above text](math/GeodesicsAround.png)
-
 This graph is just the amount each point in space was displaced by the displacement. So as this goes to infinity, the changes go to zero, but are never quite zero.
 Can apply arctan to this, to get an angle, and then dialate the inner graph again, and complete the intersection with the nodes with straight lines across a circle.
 
@@ -164,11 +162,8 @@ The arctangent is only good for 1/2 of the curve up to 0, and another half at -0
 
 ![Image of the above text](math/ExtendedGraph.png)
 
-This is the same changes, but dialated with another 0, but an unknown graph, so I could see what those curves approaching zero actually looked like.
 
-![Image of the above text](math/MaxDialation.png)
-
-And then this, zooming in on the near 0 points on the curves with better resolution, is the angular calculation filling in 0-90 (or -90).
+So this is the extended graph with arctan of the difference of spatial displacement.  (I wonder if the 4 unit works for this).  
 
 ![Final calculation](spatialDisplacement.png)
 
