@@ -1,70 +1,4 @@
-arc length
 
-at something
-
-is no
-
-0 to 90 degrees overlap.
-
-+ 90 degrees overlap.
-
-
-2*(0-90) degrees overlap outside. + (90 + 0-90 degrees) 
-
-sum is   3n + 90
-overlap 2n is not inside
-    90 + n is inside 
-	
-	
-	90/2n
-	
-	90/90+n
-	
-	
-120 	1/3  2/3  1/3  
-	
-	
-90	   1/2  1/2  1/2     33%   1/2 / 3/2
-	
-	
-	
-225   1/4  3/4  1/4   3:5/4   3/4  / 5/4   3/5
-	
-	   1 - 1/4  
-	   
-	1/100    99/100  1/100  
-	
-	  
-	  ( axbx+ayby+azbz ) ( axcx+aycy +azcz )
-	  axbx axcx + axbx aycy + axbx azcz
-	  + ayby axcx + ayby aycy + ayby azcz
-	  + azbz axcx + azbz aycy + azbz azcz
-	  
-	  a* a *b*c +  
-	         + axbx aycy + axbx azcz
-	  + ayby axcx + ayby azcz
-	  + azbz axcx + azbz aycy + 
-	  
-	  cos( pi/2 a )*cos(pi/2 c-a)*cos(pi/2 c)
-	  
-	  
-	  ideal CHSH ?  A0=B0 A1=B0 B1=A0 A1!+B1
-	  
-	  https://qubit.guide/9.3-chsh-inequality.html  (+9.4)
-	  
-			offset A0 -22.5 B0 +22.5   A1 +45 B1 -45
-	  
-			and then use photons chosen from 
-			   +60   A0 is up   ==  B0 is up
-			                   
-                     A1 is down ~~ B1 is down
-          			   +135 
-			   -45  -135
-			   
-			   A1 can only know to B0's result
-			   B1 can only know A0's result
-			   
-			   A0 knows B0 and B1 results
 			   
 			   
 			   1) dimensions, coordinates
@@ -83,7 +17,7 @@ overlap 2n is not inside
 			   7) axis-detector
 
 
-Requirements: Complex numbers, Algebra, Geometry
+Requirements: Algebra, Geometry, Complex numbers (basic knowledge of)
 
 Proposition - forget a heap of what you know; take this for what it is, and don't try to make it what you have.
 I've had what you have, and how you see and understand it; it has taken a while of tinkering to break that model,
