@@ -113,67 +113,6 @@ let px,py,pz;
 
 
 	 const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
-if(0)
-	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
-        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-		const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
-		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
-		
-
-		const lnQ = new lnQuat( lnQ0 )
-                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
-
-
-		if( showTrajectories ) {
-			const newDelx = lnQ.apply( stepx );
-			const newDely = lnQ.apply( stepy );
-			const newDelz = lnQ.apply( stepz );
-			const newDelxyz = lnQ.apply( stepxyz );
-		
-			normalVertices.push( new THREE.Vector3( (priorPosx.x)*spaceScale             ,(priorPosx.y)*spaceScale                , (priorPosx.z)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (priorPosx.x+newDelx.x)*spaceScale   ,(priorPosx.y+newDelx.y)*spaceScale      , (priorPosx.z+newDelx.z)*spaceScale  ))
-			normalVertices.push( new THREE.Vector3( (priorPosy.x)*spaceScale             ,(priorPosy.y)*spaceScale                , (priorPosy.z)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (priorPosy.x+newDely.x)*spaceScale   ,(priorPosy.y+newDely.y)*spaceScale      , (priorPosy.z+newDely.z)*spaceScale  ))
-			normalVertices.push( new THREE.Vector3( (priorPosz.x)*spaceScale             ,(priorPosz.y)*spaceScale                , (priorPosz.z)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (priorPosz.x+newDelz.x)*spaceScale   ,(priorPosz.y+newDelz.y)*spaceScale      , (priorPosz.z+newDelz.z)*spaceScale  ))
-			normalVertices.push( new THREE.Vector3( (priorPosxyz.x)*spaceScale             ,(priorPosxyz.y)*spaceScale                , (priorPosxyz.z)*spaceScale ))
-			normalVertices.push( new THREE.Vector3( (priorPosxyz.x+newDelxyz.x)*spaceScale   ,(priorPosxyz.y+newDelxyz.y)*spaceScale      , (priorPosxyz.z+newDelxyz.z)*spaceScale  ))
-			priorPosx.x += newDelx.x;
-			priorPosx.y += newDelx.y;
-			priorPosx.z += newDelx.z;
-			priorPosy.x += newDely.x;
-			priorPosy.y += newDely.y;
-			priorPosy.z += newDely.z;
-			priorPosz.x += newDelz.x;
-			priorPosz.y += newDelz.y;
-			priorPosz.z += newDelz.z;
-			priorPosxyz.x += newDelxyz.x;
-			priorPosxyz.y += newDelxyz.y;
-			priorPosxyz.z += newDelxyz.z;
-			normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
-			normalColors.push( new THREE.Color( 0.6,0.6,0,255 ))
-			normalColors.push( new THREE.Color( 0.6,0,0.6,255 ))
-			normalColors.push( new THREE.Color( 0.6,0,0.6,255 ))
-			normalColors.push( new THREE.Color( 0,0.6,0.6,255 ))
-			normalColors.push( new THREE.Color( 0,0.6,0.6,255 ))
-			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
-			normalColors.push( new THREE.Color( 0.6,0.6,0.6,255 ))
-		}
-
-		if(showOnNormalBall) 		
-			drawN( lnQ );
-		else
-			doDrawBasis( lnQ, fibre, true );
-		
-	}
-
-	if(0&& showCoordinateGrid  ) {
-		const range = (  2 ) * Math.PI;
-		const minRange = (0 ) * Math.PI;
-		drawRange( 0,0,0, range, 12*Math.PI, Math.PI*2 );
-	}
 
 	drawDots();
 
@@ -295,13 +234,6 @@ if( oz_ < 0.05*Math.PI*2 ) continue
                 			oz_ = oz;
         		        }
 
-	if(0){
-				normalVertices.push( new THREE.Vector3( ox*spaceScale                             ,oy*spaceScale                             , oz*spaceScale ))
-				normalVertices.push( new THREE.Vector3( ox_*spaceScale  ,oy_*spaceScale , oz_*spaceScale ))
-
-				normalColors.push( new THREE.Color( 1,1,1,0.5 ))
-				normalColors.push( new THREE.Color( 1,1,1,0.5 ))
-	}
 
 				normalVertices.push( new THREE.Vector3( ox_*spaceScale                                     ,oy_*spaceScale                                     , oz_*spaceScale ))
 				normalVertices.push( new THREE.Vector3( ox_*spaceScale + 2*lnQ.nx*normal_del/normLen       ,oy_*spaceScale + 2*lnQ.ny*normal_del /normLen      , oz_*spaceScale + 2*lnQ.nz*normal_del/normLen ))
@@ -538,32 +470,9 @@ F = F /3 * 4;
 				drawN( lnQ );
 			}
 		}
-	if(0)
-		for( x = -Math.PI*4;x < Math.PI*4; x+= 0.5 )
-		for( y = -Math.PI*4;y < Math.PI*4; y+= 0.5 )
-		for( z = -Math.PI*4;z < Math.PI*4; z+= 0.5 )
-		 {
-			{
-				const lnQ = new lnQuat( 0,x,y,z );
-				drawN( lnQ );
-			}
-		}
-
-
-	if(0)
-		for( let h = -1; h <= 1; h+= 0.25 ) {
-			if( h < 0.6 ) continue;
-		for( let t = Math.PI; t < Math.PI*3/2; t+= 0.25 ){
-				let x = Math.sin(t );
-				const z = Math.cos(t);
-				const lnQ = new lnQuat( {x:x*(1-Math.abs(h)), y:h, z:z*(1-Math.abs(h)) } );
-			drawN( lnQ );
-		}
-	}
-
 	
 
-	function drawN( lnQ )
+	function drawN_cos( lnQ )
 	{
 			const new_v = lnQ.apply( v );
 			const basis = lnQ.getBasis( );
@@ -658,16 +567,118 @@ F = F /3 * 4;
 			
 	
 	}
+			
+		function cos2(x){
+			// l is mod(x,y) that works.  x%y failed.
+			const l = (x,y)=>(x/y-Math.floor(x/y))*y;
+			// k is the basic function
+			const k = (x)=>           Math.abs( l( x+  Math.PI/2,  Math.PI)-Math.PI/2);
+			// m is the minus sign... otherwise it only oscillates on the top half.
+			const m = (x)=>Math.sign( Math.abs( l( x+3*Math.PI/2,2*Math.PI)          )-Math.PI );
 
+			return m(x)*(1-(k(x)/(Math.PI-k(x))));
+		}
 
-}
-
+/*
+	for( let x = -Math.PI*12; x < Math.PI*2; x += Math.PI/32 ) {
+	        	const zz = cos2(x);
+			normalVertices.push( new THREE.Vector3( x*spaceScale                             ,cos2(x)*spaceScale                             , 0*spaceScale ))
+			normalVertices.push( new THREE.Vector3( x*spaceScale + 1*normal_del  ,cos2(x)*spaceScale + 1*normal_del  ,0*spaceScale + 0*normal_del ))
+		                           if( zz > 0 ){
+			normalColors.push( new THREE.Color( 1,1,1 ))
+			normalColors.push( new THREE.Color( 1,1,1 ))
+			}else {
+			normalColors.push( new THREE.Color( 1,0,1 ))
+			normalColors.push( new THREE.Color( 1,0,1 ))
+			}
+	}
+*/
 	function drawN( lnQ )
 	{
 			const new_v = lnQ.apply( v );
 			const basis = lnQ.getBasis( );
 
+		const ax =  Math.asin(new_v.x);
+		const ay =  Math.asin(new_v.y);
+		const az =  Math.asin(new_v.z);
+
+			//const height = 5 + (Math.cos( ax*4 )) + Math.cos( ay*4 ) + Math.cos( az*4 );
+
+			let height=0;
+
+			if(sixEmitters) {
+				height = 6;
+
+				for( let v = 0; v < 6; v++ ) {
+					const dot = vecs6[v].x * new_v.x + vecs6[v].y * new_v.y + vecs6[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					const freq = ( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								));
+					height += 1-(freq/(Math.PI-freq));
+				}			
+			}
+			else if(fiveEmitters) {
+				height = 6;
+
+				for( let v = 0; v < 5; v++ ) {
+					const dot = vecs5[v].x * new_v.x + vecs5[v].y * new_v.y + vecs5[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					height += cos2( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								) );
+					//height += 1-(freq/(Math.PI-freq));
+				}			
+			}
+			else if(fourEmitters) {
+				height = 4;
+
+				for( let v = 0; v < 4; v++ ) {
+					const dot = vecs[v].x * new_v.x + vecs[v].y * new_v.y + vecs[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					const freq= Math.cos( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : D ) );
+					height += cos2(freq);
+				}			
+			}
+			else {
+				height = 3;
+				{
+					const freq = ax*A;
+					height += cos2(freq);
+				}
+				{
+					const freq = ay*B;
+					height += cos2(freq);
+				}
+				{
+					const freq = az*C;
+					height += cos2(freq);
+				}
+
+				//height = 3 + (Math.cos( ax*A )) + Math.cos( ay*B ) + Math.cos( az*C );
+			}
+
+			
+
+			//const height = 10 + (Math.cos( Math.atan2(lnQ.nz,lnQ.nx)*A )) + Math.cos( ax*B ) + Math.cos( az*C );
+
 	                // in a radius from the height...
+			new_v.x *= height/4;	
+			new_v.y *= height/4;	
+			new_v.z *= height/4;	
 
 			// the original normal direction; projected offset of sphere (linear scaled)
 			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
@@ -684,15 +695,18 @@ F = F /3 * 4;
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale                             ,new_v.y*spaceScale                             , new_v.z*spaceScale ))
 			normalVertices.push( new THREE.Vector3( new_v.x*spaceScale + basis.forward.x*normal_del,new_v.y*spaceScale + basis.forward.y*normal_del,new_v.z*spaceScale + basis.forward.z*normal_del ))
 
-			normalColors.push( new THREE.Color( 255,0,0,255 ))
-			normalColors.push( new THREE.Color( 255,0,0,255 ))
-			normalColors.push( new THREE.Color( 0,255,0,255 ))
-			normalColors.push( new THREE.Color( 0,255,0,255 ))
-			normalColors.push( new THREE.Color( 0,0,255,255))
-			normalColors.push( new THREE.Color( 0,0,255,255 ))
+			normalColors.push( new THREE.Color( 1,0,0 ))
+			normalColors.push( new THREE.Color( 1,0,0 ))
+			normalColors.push( new THREE.Color( 0,1,0 ))
+			normalColors.push( new THREE.Color( 0,1,0 ))
+			normalColors.push( new THREE.Color( 0,0,1 ))
+			normalColors.push( new THREE.Color( 0,0,1 ))
 			
 	
 	}
+
+
+}
 
 window.DrawQuatPaths = DrawQuatPaths;
 export function DrawQuatPaths(normalVertices_,normalColors_) {
@@ -816,28 +830,4 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 
 export function updateShapes( shapes ) {
 //return;
-	const atTick = Date.now();
-	const nTotal = ( ( (atTick )/(turnCount*15000) ) %1) * stepCount *turnCount;
-
-	const lATC = Math.sqrt(A*A+T*T+C*C);
-	const steps = stepCount;
-	const subSteps = turnCount/4;//Math.sqrt(steps);
-	
-	const lnQ0 = new lnQuat(  0, T*A/lATC, T*B/lATC, T*C/lATC ).update();
-	
-        //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*4) %(1/subSteps));
-		const t = (Math.PI*4)* subSteps*(fiberPart);// - (Math.PI*2);
-		
-
-		const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
-		const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
-		const lnQ = new lnQuat( lnQ0 )
-                    	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA} )
-                        .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB } );
-
-	lnQ.exp( shapes[0].quaternion );
-	lnQ.exp( shapes[1].quaternion );
-	shapes[1].position.set( lnQ.x*spaceScale, lnQ.y*spaceScale, lnQ.z*spaceScale );
 }
