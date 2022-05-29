@@ -259,7 +259,7 @@ function play() {
 			// so I was misinformed on my initial introduction to the game.
 			//const thisVal = (choices[c][0]-choices[c][1])/(choices[c][1]+choices[c][0]);
 
-			if( c == 3 ) S += -thisVal;
+			if( c == 3 ) S += 1-thisVal;
 			else S += thisVal;
 			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>(same-diff)/tot";
 			c++;
