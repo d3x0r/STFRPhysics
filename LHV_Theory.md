@@ -39,6 +39,7 @@ QM prediction `cos(60 degrees)` = 50% chance or 0.5.  Or that at 60 degrees ther
 
 LHV prediction `x = 60 *pi/180 * 2/pi  120/180 = 2/3; p=1-(x/(2-x))` = 50% or 0.5.     `1-(2/3/(2-2/3))` = `1-(2/3/(4/3))` = `1-(2/3*(3/4))` = `1-(2/4)` =  0.5.
 
+
 ## CHSH Experiment
 
 https://qubit.guide/9.3-chsh-inequality.html
@@ -48,6 +49,36 @@ QM Max correlation `2*sqrt(2)` = 2.828.
 LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](https://d3x0r.github.io/STFRPhysics/math/CHSH_Game.html)) implement a game that two people isolated by distance with an entangled RNG can get 80% correlation on 3 of the 4 choices, and 0% correlation on the last, which is a full point for S: (4/5)+(4/5)+(4/5)+(1-0).
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
+
+
+### CHSH Real Life Comparisons
+
+I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
+
+With a stack of polarizers, the only events that count are those that correlate (make it through both), 
+vs the total amount that would normally be received in the same amount of time.   If the photon passes the 
+first polarizer, and since there is only a second polarizer, then it doesn't matter if the first polarizer 
+modifies the result, it would still be in the same arc as the original input.  This makes the probability of 
+making it through both polarizers (pi/2 - x ) / pi  for x in radians.  (90-x)/180 for x in degrees...
+
+Below is the experimental results from the link above, and new LHV predictions to relate... is far off?
+
+```    	                                                    
+    experimental   angle              QM pred.  QM/Exp      LHV pred.    LHV/QM    LHV/
+    result	                                                                       Exp. Res.
+    0.457 ± 0.009 0.00                0.464     1.015       0.5          1.07      1.015
+    0.451 ± 0.013 11.25  (0.438)      0.448     0.993       0.4375       0.97      0.97
+    0.400 ± 0.007 22.5                0.401     1.003       0.375        0.935     0.935
+    0.340 ± 0.010 33.75               0.333     0.979       0.313        0.939     0.92
+    0.249 ± 0.007 45                  0.251     1.008       0.250        0.996     1.004
+    0.164 ± 0.007 56.25               0.170     1.03        0.1875       1.10      1.14
+    0.100 ± 0.003 67.5                0.100     1.0         0.125        1.25      1.25
+    0.052 ± 0.004 78.75               0.055     1.058       0.0625       1.13      1.20
+    0.041 ± 0.003 90                  0.039     0.951       0.000        100       100
+```
+
+
+
 
 #### working notes of above
 
