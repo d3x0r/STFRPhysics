@@ -9,11 +9,12 @@
 
 	<div class="setup">
 	Ruleset:<select ID="ruleset">
-		<option ID="CHSH">Use CHSH Test Angles (22,45,67)</option>
+		<option ID="CHSH" checked>Use CHSH Test Angles (22,45,67)</option>
 		<option ID="IDEAL">Use Ideal Test Angles (30,60,90)</option>
+		<option ID="IDEAL2">Use Ideal Test Angles (-45,0,+45)</option>
 	</select>
 	 RNG:<select ID="RNG">
-		<option ID="RNG1">SFC32</option>
+		<option ID="RNG1" checked>SFC32</option>
 		<option ID="RNG2">MUL32</option>
 		<option ID="RNG3">XOR32</option>
 		<option ID="RNG4">JSF32</option>
@@ -77,6 +78,15 @@
 
 	<p>Seed: May be any string the two agree on; the string content is bit shuffled to generate a random start point in the random number generator.
 
+	<H2>Result Table meanings</H2>
+	The result table is somewhat abbreviated to fit in a smaller space.
+	 <UL>
+		<LI>same - when the two detectors are selected, the results were correlated.
+		<LI>diff - when the two detectors are selected, the results were different.
+		<li>ratio - calculation of abs(same-diff)/(same+diff); where same+diff is the total results.
+	</UL>
+	The proposed Bell samples then would have to be 3:1 <code>3-1/(3+1) = 2/4 = 50% </code>.  
+
 	<H2>Other Information</H2>
 	This isn't much of a game itelf, so this keeps the running statistics for every set of choices both players might make, and reports on the number of correlated and non-correlated results for each of those settings.
 	
@@ -114,6 +124,7 @@ let b1 = axis2_90;
 
 const axis2_22_5 = [Math.cos(Math.PI*22.5/180),Math.sin(Math.PI*22.5/180),0];
 const axis2_45   = [Math.cos(Math.PI*45/180),Math.sin(Math.PI*45/180),0];
+const axis2_m45  = [Math.cos(-Math.PI*45/180),Math.sin(-Math.PI*45/180),0];
 const axis2_67_5 = [Math.cos(Math.PI*67.5/180),Math.sin(Math.PI*67.5/180),0];
 
 // CHSH angles only get 3.16 win z
@@ -195,6 +206,7 @@ function begin() {
 	switch( rulesel ) {
 	case "CHSH": a0=axis2_22_5; a1=axis2_67_5; b0=axis2_45; b1=axis2_0; break;
 	case "IDEAL": a0=axis2_30; a1=axis2_90; b0=axis2_60; b1=axis2_0; break;
+	case "IDEAL2": a0=axis2_0; a1=axis2_45; b0=axis2_0; b1=axis2_m45; break;
 	default: console.log( "Selection out of bounds." ); break;
 	}
 	step = 0;
@@ -231,10 +243,25 @@ function play() {
 			}
 			
 			picks[c].textContent = s;
+			// (a-b)/a = 3.40(ideal), 3.30(ideal2), 3.19(CHSH)
+			// ratio of excessive correlations with total possible correlations; 
+			// assuming every non-correlation has to be countered by a correlation
+			//   99 samples, 66 correlate, 33 non-correlate = 0.5 score. 50%
+			//  100 samples, 25 correlate, 75 non-correlate = -0.66 (well in this case, non-correlations, or negatives, 
+			//       are actually correlations, I can be assured that every up is a down.)
+			//  100 samples, 50 correlate, 50 non-correlate = 0% correlation
+			//  100 samples, 75 correlate, 25 non-correlate = 66% correlation
+			//  100 samples, 100 correlate, 0 non-correlate = 100% correlation
+			//  100 samples, 0 correlate, 100 non-correlate = (-)100% correlation
 			const thisVal = (1-choices[c][1]/choices[c][0]);
-			if( c == 3 ) S += 1-thisVal;
+
+			// (a-b)/(a+b) = 2.0 (without bonus point either... point 3 is only a penalty reduces ideal to 3 not 4... 
+			// so I was misinformed on my initial introduction to the game.
+			//const thisVal = (choices[c][0]-choices[c][1])/(choices[c][1]+choices[c][0]);
+
+			if( c == 3 ) S += -thisVal;
 			else S += thisVal;
-			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio diff/same";
+			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>(same-diff)/tot";
 			c++;
 		} )
 
