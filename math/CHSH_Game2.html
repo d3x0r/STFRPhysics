@@ -3,6 +3,7 @@
 
 <head>
 <meta charset="utf-8">
+<title> CHSH Game (total divisor)
 </head>
 <body>
    <p>
@@ -25,12 +26,11 @@
 
 
 	</div>
-	<div>
-	<P><a href="CHSH_Game2.html">Alternate scoring</a>; I think this scoring method is wrong, and is not what QM 
- 	predicts; to get 50% correlation I'd have to match 75 in 100 samples, and the curve between 0% correlation and 50%
-	is crazy steep; conversely with only 25% matches I should be 50% correlated in the other direction.
-	</div>
 
+	<div>
+	<P><a href="CHSH_Game.html">Generaous scoring</a>; This is my generously scoring game, predicting that QM predicts 
+	the same percentages as this; and according to comparisons with other experimental data, does.
+	</div>
 
 	<div>
 
@@ -266,15 +266,15 @@ function play() {
 			//  100 samples, 75 correlate, 25 non-correlate = 66% correlation
 			//  100 samples, 100 correlate, 0 non-correlate = 100% correlation
 			//  100 samples, 0 correlate, 100 non-correlate = (-)100% correlation
-			const thisVal = (1-choices[c][1]/choices[c][0]);
+			//const thisVal = (1-choices[c][1]/choices[c][0]);
 
 			// (a-b)/(a+b) = 2.0 (without bonus point either... point 3 is only a penalty reduces ideal to 3 not 4... 
 			// so I was misinformed on my initial introduction to the game.
-			//const thisVal = (choices[c][0]-choices[c][1])/(choices[c][1]+choices[c][0]);
+			const thisVal = (choices[c][0]-choices[c][1])/(choices[c][1]+choices[c][0]);
 
-			if( c == 3 ) S += 1-thisVal;
+			if( c == 3 ) S -= thisVal;
 			else S += thisVal;
-			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>actual/possible";
+			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>(same-diff)/tot";
 			c++;
 		} )
 

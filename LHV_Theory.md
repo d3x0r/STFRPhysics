@@ -77,6 +77,53 @@ Below is the experimental results from the link above, and new LHV predictions t
     0.041 ± 0.003 90                  0.039     0.951       0.000        100       100
 ```
 
+My prediction does not account for experimental bias of 1 in 35 counts just happen, or a similar percentage of counts lost.
+Non-detection doesn't imply non-correlation, just that something happened that made the possible truth not go through the filter; the polarizers are lossy themselves.
+
+The above comparison shows QM is +/-3% and I'm +25% -8% (the 25% is at low counts, where polarizers are mostly an inverse coorelation).
+
+### CHSH Wikipedia Talk
+
+[Link To Talk](https://en.wikipedia.org/wiki/Talk:CHSH_inequality#CHSH_Game_Implementation_scores_3.40)
+It's been contested that my ratio of ratios is wrong, and not the intended result.  I can apply a scalar and offset and correct.
+
+The reported probability is `1/2 cos^2(x)`; which can either be `1/2 g(x)^2` or `(g(2x)+1)/4` as approximations.  Would have to justify 
+why this multiplication happens; but here's those graphs.
+
+![graph](math/CHSH_wiki_game.png)
+
+```
+
+https://en.wikipedia.org/wiki/CHSH_inequality#Optimal_quantum_strategy
+
+(for 0 to pi/2, ranges > pi/2 are inverse correlations and ranges < 0 are reflections of > 0 )
+
+cos(x) ~= (1-(x/(pi-x))
+
+A better expression of this is
+
+// perform modulous with floor (amazingly most math programs do mod 'wrong').
+mod(x,y)= (x/y-floor(x/y))*y
+
+// this produces the basic saw wave
+
+k(x)=| mod (x+pi/2, pi )- pi/2 |
+
+// this is a sign correction for > pi/2 inverse correlations
+m(x)= sign( | mod( x-pi/2,2pi) | - pi )
+
+g(x)= m(x)(pi-2*k(x))/(pi-k(x));
+
+
+cos(x) ~= g(x)
+
+1/2 cos^2(pi/8)   is like    g(x)^2 / 2 
+      and more like (g(2x)+1)/4 
+
+// WHY?  I do not yet know, it just is.  so then measuring QM predictions should match...
+(optimal quantum strategy wikipedia page above)
+```
+
 
 
 
