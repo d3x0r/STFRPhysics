@@ -1,0 +1,28 @@
+
+<html>
+<head></head>
+<body>
+   <p>
+	<div style="position:relative">
+    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
+	<p>Red is current WIP Expected (2-2x)/(1-x).  Green is cos(theta) or A.B for detectors A and B.  Blue is the simulation results.<br>
+	<p>Blue line on the bottom is the percent difference between simulation and QM Projected (blue over green).
+        <p>Red line on bottom is percent difference between WIP and QM.
+
+	<p>Revised, based on advice from wikipedia talk, which said I was using the wrong divisor.
+	  Matching <a href="https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19"> CHSH Experiment</a> results on pages 83, 84; 
+	 <p>the counts are R_0, which is the counts of all events without a polarizer.  This is 'testSize' set to 200,000 right now.  This experiment
+         then projects the spin axis on the polarizer and only allows 1/2 of the photons to pass through, (|dot| > 0.707), giving 90 degree polarizers 0 chance to 
+        have events pass both. 
+
+	<div style="position:absolute;top:0">
+	</div>
+	</div>
+
+
+</body>
+<script type="module" src="bellTest3_polarizers.js"> </script>
+</html>
+
+
+
