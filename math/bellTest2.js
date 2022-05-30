@@ -5,6 +5,11 @@ const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
+const slider = document.createElement( "input" );
+slider.setAttribute( "type", "range" );
+document.body.appendChild( slider );
+slider.addEventListener( "input", update );
+
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
@@ -199,6 +204,101 @@ let ang = -180;
         let prior_x_ed = -1;
         let prior_y_ed = -1;
 
+
+function update( evt ) {
+	const ang = ((slider.value)/100) *Math.PI/2;
+	console.log( "ang?", ang );
+	firstDraw( ang );
+	
+}
+function firstDraw( ang1 ) {
+	    var centerX = canvas.width / 2;
+    var centerY = canvas.height / 2;
+    var radius = 200;
+               /*
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "#77440020";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+               */
+    ctx.beginPath();
+	
+    ctx.arc(centerX+100, centerY, radius, 0,  2*Math.PI, false);
+
+    ctx.fillStyle = "#FFF";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+
+
+	const arc1 =  [Math.cos(0), Math.sin(0)];
+	const arc2 =  [Math.cos(0), Math.sin(0)];
+	const arc3 =  [Math.cos(0), Math.sin(0)];
+
+	//let ang1 = 20 * Math.PI/180;
+	let ang2 = 20 * Math.PI/180;
+	let ang3 = 20 * Math.PI/180;
+    ctx.beginPath();
+	
+	ctx.moveTo( centerX+100 , centerY );
+	ctx.lineTo( centerX+100 - radius, centerY );
+    ctx.arc(centerX+100, centerY, radius, Math.PI,  2*Math.PI-ang1, false);
+	ctx.lineTo( centerX+100 , centerY );
+//ctx.closePath();
+
+    ctx.fillStyle = "#00770020";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+    ctx.beginPath();
+	
+	ctx.moveTo( centerX+100 , centerY );
+	ctx.lineTo( centerX+100 + radius * Math.cos( 2*Math.PI-ang1), centerY  + radius * Math.sin( 2*Math.PI-ang1));
+    ctx.arc(centerX+100, centerY, radius, 2*Math.PI-ang1,  2*Math.PI, false);
+	ctx.lineTo( centerX+100 , centerY );
+//ctx.closePath();
+
+    ctx.fillStyle = "#77000020";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+
+
+
+
+    ctx.beginPath();
+	ctx.moveTo( centerX+100 , centerY );
+	ctx.lineTo( centerX+100 + radius * Math.cos( 2*Math.PI-ang1), centerY  + radius * Math.sin( 2*Math.PI-ang1));
+    ctx.arc(centerX+100, centerY, radius, Math.PI-ang1,  Math.PI+ang1, false);
+	ctx.lineTo( centerX+100 , centerY );
+    ctx.fillStyle = "#77000020";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+
+    ctx.beginPath();
+	ctx.moveTo( centerX+100 , centerY );
+	ctx.lineTo( centerX+100 + radius * Math.cos( Math.PI+ang1), centerY  + radius * Math.sin( Math.PI+ang1));
+    ctx.arc(centerX+100, centerY, radius, Math.PI+ang1,  2*Math.PI-ang1, false);
+ctx.closePath();
+    ctx.fillStyle = "#00007720";
+    ctx.fill();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+}
+
 function drawsomething() {
 
 
@@ -206,6 +306,8 @@ function drawsomething() {
 
 	if( !drawing ) {
 		ctx.clearRect(0,0,squareSize,squareSize );
+
+		firstDraw( Math.PI/4);
 	}
 	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
 	var output = _output.data;
