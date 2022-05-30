@@ -50,6 +50,37 @@ LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](ht
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
+### Scoring in Game
+
+Scoring is based on a correlator that assumes that more than one type of result is required to actually have a correlation. 
+
+In a sequence of (S)ame and (D)ifferent results, `SDSDSDSD` is 0% correlation.
+A sequence `SDDSDDSDD` has a total D of 6, and a count of correlated D's of 3; which is a -50% correlation (or that the correlation is inverted, and for a '+1' should expect a '-1' and vice versa.
+This can be accounted for numerically, by computing the minimum of D and S, subtracting the smaller from the larger, and dividing by just the larger.
+Subtracting 1 of the results for every smaller result accounts that the first 'D' or 'S' in a sequence doesn't count for the length of correlations.
+
+```
+  (1-choices[c][1]/choices[c][0])
+
+1-a/b = b-a/b  
+
+a is the smaller of the differences or sames, b is the larger.
+
+```
+
+The game actually uses a simplified equation, 
+because the values of sames and differences aren't setup to have inverse correlations, 
+or expecting an inversion in the successful result.
+
+I made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html)  there's a slider toward the bottom to control the angle of overlap.
+The blue wedge compared to the green+blue wedge is what's being measured.
+
+#### working notes of above
+
+22.5 /90 = 0; 0.25; 0.5; 0.75;  `1 - 1/4/(2-1/4)` = `6/7` = 0.85714...
+
+0.75 = `1-3/4/(2-3/4)` = `1-3/5` = 2/5; but as a loss is `1-2/5` = `3/5` = 0.6.  
+
 
 ### CHSH Real Life Comparisons
 
@@ -123,15 +154,6 @@ cos(x) ~= g(x)
 // WHY?  I do not yet know, it just is.  so then measuring QM predictions should match...
 (optimal quantum strategy wikipedia page above)
 ```
-
-
-
-
-#### working notes of above
-
-22.5 /90 = 0; 0.25; 0.5; 0.75;  `1 - 1/4/(2-1/4)` = `6/7` = 0.85714...
-
-0.75 = `1-3/4/(2-3/4)` = `1-3/5` = 2/5; but as a loss is `1-2/5` = `3/5` = 0.6.  
 
 
 ## GHZ Experiment
