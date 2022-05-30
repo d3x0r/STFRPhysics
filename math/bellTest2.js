@@ -207,7 +207,7 @@ let ang = -180;
 
 function update( evt ) {
 	const ang = ((slider.value)/100) *Math.PI/2;
-	console.log( "ang?", ang );
+	//console.log( "ang?", ang );
 	firstDraw( ang );
 	
 }
@@ -298,6 +298,10 @@ ctx.closePath();
     ctx.strokeStyle = "black";
     ctx.stroke();
 }
+
+		ctx.clearRect(0,0,1024,1024 );
+
+		firstDraw( Math.PI/4);
 
 function drawsomething() {
 
@@ -579,7 +583,7 @@ a = 1/(2-cos(x))
 }
 
 try {
-		drawsomething();
+		//drawsomething();
 }catch(err) {
 	alert( "GotError:"+err );
 }
