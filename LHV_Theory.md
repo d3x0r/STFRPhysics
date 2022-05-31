@@ -50,9 +50,18 @@ LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](ht
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
+#### working notes of above
+
+22.5 /90 = 0; 0.25; 0.5; 0.75;  `1 - 1/4/(2-1/4)` = `6/7` = 0.85714...
+
+0.75 = `1-3/4/(2-3/4)` = `1-3/5` = 2/5; but as a loss is `1-2/5` = `3/5` = 0.6.  
+
+
 ### Scoring in Game
 
 Scoring is based on a correlator that assumes that more than one type of result is required to actually have a correlation. 
+
+
 
 In a sequence of (S)ame and (D)ifferent results, for example `SDSDSDSD`. 
 The correlation calculation in most cases expects correlation. For each 'S' +1 is asdded and for each 'D' -1 is added from a counter; this is simply `S-D`.
@@ -63,17 +72,15 @@ Examples
 
 String is assumed to be a repeating segment forever, order does not matter.
 
-|string | score | angle | QM |
-|---|---|---|----|
-| SD | 0 | 90 or -90 | 0  |
-| SSD | 0.5 | +/-60 |  0.5 |
-| SDD  | -0.5 | +/-120 | -0.5 |
-| SSS   | 1 | 0 |  1 |
-| DDD   | -1 | 180 | -1 |
-| SSSD  | 0.66 | +/-45 | 0.707 |
-| SSSSD | 0.75 | +/-36 | 0.809 |
-
-
+|string | score | angle | QM | (S-D)/(S+D) |
+|---|---|---|----|---|
+| SD | 0 | 90 or -90 | 0  | 0 |
+| SSD | 0.5 | +/-60 |  0.5 |  0.33 |
+| SDD  | -0.5 | +/-120 | -0.5 | -0.33 |
+| SSS   | 1 | 0 |  1 | 1 |
+| DDD   | -1 | 180 | -1 | 1 |
+| SSSD  | 0.66 | +/-45 | 0.707 | 0.5 |
+| SSSSD | 0.75 | +/-36 | 0.809 | 0.6 |
 
 
 ```
@@ -90,11 +97,16 @@ I also made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/
 there's a slider toward the bottom to control the angle of overlap.
 The blue wedge compared to the green+blue wedge is what's being measured.
 
-#### working notes of above
+### Sources of Experimental Error
 
-22.5 /90 = 0; 0.25; 0.5; 0.75;  `1 - 1/4/(2-1/4)` = `6/7` = 0.85714...
+Experiments often comment
+ - polarizers are lossy; in the high range, correlations are lost
+ - electrons are hard to get to go where you want them and they often miss entirely
+ - photo detectors get false triggers (low range, is additional counts )
 
-0.75 = `1-3/4/(2-3/4)` = `1-3/5` = 2/5; but as a loss is `1-2/5` = `3/5` = 0.6.  
+Additional noise
+ - at high angles, the low ratio of correlation is also very noisy ( correlations are (S11D4) or something, a artificial error bar should be able to be made. The simulation line shows jitter.
+
 
 
 ### CHSH Real Life Comparisons
