@@ -105,7 +105,7 @@ Experiments often comment
  - photo detectors get false triggers (low range, is additional counts )
 
 Additional noise
- - at high angles, the low ratio of correlation is also very noisy ( correlations are (S11D4) or something, a artificial error bar should be able to be made. The simulation line shows jitter.
+ - at high angles, the low ratio of correlation is also very noisy ( correlations are (S11D7), an artificial error bar should be able to be made. The simulation line shows jitter.
 
 
 
