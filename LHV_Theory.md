@@ -54,25 +54,40 @@ LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 
 
 Scoring is based on a correlator that assumes that more than one type of result is required to actually have a correlation. 
 
-In a sequence of (S)ame and (D)ifferent results, `SDSDSDSD` is 0% correlation.
-A sequence `SDDSDDSDD` has a total D of 6, and a count of correlated D's of 3; which is a -50% correlation (or that the correlation is inverted, and for a '+1' should expect a '-1' and vice versa.
-This can be accounted for numerically, by computing the minimum of D and S, subtracting the smaller from the larger, and dividing by just the larger.
-Subtracting 1 of the results for every smaller result accounts that the first 'D' or 'S' in a sequence doesn't count for the length of correlations.
+In a sequence of (S)ame and (D)ifferent results, for example `SDSDSDSD`. 
+The correlation calculation in most cases expects correlation. For each 'S' +1 is asdded and for each 'D' -1 is added from a counter; this is simply `S-D`.
+Then if the total is > 0, then it is divided against 'S' that it expects correlations to be the same (they were MOSTLY the same); and if the total is < 0
+divide by 'D' in which case it expects inverse correlations. 
+
+Examples
+
+String is assumed to be a repeating segment forever, order does not matter.
+
+|string | score | angle | QM |
+|---|---|---|----|
+| SD | 0 | 90 or -90 | 0  |
+| SSD | 0.5 | +/-60 |  0.5 |
+| SDD  | -0.5 | +/-120 | -0.5 |
+| SSS   | 1 | 0 |  1 |
+| DDD   | -1 | 180 | -1 |
+| SSSD  | 0.66 | +/-45 | 0.707 |
+| SSSSD | 0.75 | +/-36 | 0.809 |
+
+
+
 
 ```
-  (1-choices[c][1]/choices[c][0])
+  (max(a,b)-min(a,b))/max(a,b)  this loses the sign.
 
-1-a/b = b-a/b  
 
-a is the smaller of the differences or sames, b is the larger.
+   (a-b)<0 ? (a-b)/b : (a-b)/a  //this keeps the sign.
+
 
 ```
 
-The game actually uses a simplified equation, 
-because the values of sames and differences aren't setup to have inverse correlations, 
-or expecting an inversion in the successful result.
 
-I made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html)  there's a slider toward the bottom to control the angle of overlap.
+I also made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html) 
+there's a slider toward the bottom to control the angle of overlap.
 The blue wedge compared to the green+blue wedge is what's being measured.
 
 #### working notes of above
@@ -206,3 +221,10 @@ Rotations in 3 dimensions may be added together if they all happen at the same t
 Rotations represent a change in angle over time, so if an object has already elapsed some time, and is at a rotation, applying the next rotation must be an integral including the current rotation which still happens; either the additional
 rotation is from an internal source, in which case the relative direction of that force changes in time with the original rotation, or it is external, which changes which direction the current rotation is relative to that external instead.
 
+
+## More Links
+
+- https://www.academia.edu/55866414/On_Stern_Gerlach_coincidence_measurements_and_their_application_to_Bells_theorem
+- https://inspirehep.net/files/67578c1d19ace842e25198fa5675442e J.S. Bell, 1964.   ; vague on the actual quantum math expectaion which is probably also - expected correlation of a type of result, not of all results.
+- https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19 CHSH Experiment data; Hidden variable needs adjust ment for 1) lossy polarizers that just fail and 2) noisy detector that just goes off.
+- https://www.academia.edu/6157188/Feynmans_Thesis_A_New_Approach_to_Quantum_Theory ; unused, just a bookmark.
