@@ -50,23 +50,31 @@ LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](ht
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
-#### working notes of above
-
-22.5 /90 = 0; 0.25; 0.5; 0.75;  `1 - 1/4/(2-1/4)` = `6/7` = 0.85714...
-
-0.75 = `1-3/4/(2-3/4)` = `1-3/5` = 2/5; but as a loss is `1-2/5` = `3/5` = 0.6.  
-
 
 ### Scoring in Game
 
-Scoring is based on a correlator that assumes that more than one type of result is required to actually have a correlation. 
+The game's input starts with a measured up down on two devices in two different positions. These are ++, +-, -+, and -- result counts.  These are each 
+divided by the sum of the inputs such that they are scaled to 1/4 and add together to equal 1.
 
+The results are then grouped into pairs of either Same (++,--) or Different(-+,+-) results.  The sum of each of these is 1/2, and still the sum of the
+total is 1.  These Same and Different results are evaluated in chains, with an expectation of correlation.  4 independant streams of results are generated
+one for each pair of devices and settings.
 
-
-In a sequence of (S)ame and (D)ifferent results, for example `SDSDSDSD`. 
-The correlation calculation in most cases expects correlation. For each 'S' +1 is asdded and for each 'D' -1 is added from a counter; this is simply `S-D`.
+In a sequence of (S)ame and (D)ifferent results, for example `SDSDSDSD`; for each 'S', +1 is asdded and for each 'D', -1 is 
+added to a counter; this is also simply `S-D`
 Then if the total is > 0, then it is divided against 'S' that it expects correlations to be the same (they were MOSTLY the same); and if the total is < 0
-divide by 'D' in which case it expects inverse correlations. 
+divide by 'D' in which case it expects inverse correlations.   Another way of approaching this is with edge trigger on change that saves the current count
+of correlations, and resets the counter to 0, and begins to accumulate correlations for the new state;  Then only a count of 1 adds any meaningful information
+and `SDSDSD` ends up saving a bunch of 0's. ~~ Penalizing the ratio again for the total count of samples is... (unfair)~~; At the end I end up with a total count
+of each type of chain, which again can be subtracted, or evaluated in order, only this time (doing something like) subtracting the length of the chain from each previous chain, 
+until you end up with a single chain of 'S' or 'D'.  The final length of that chain is compared against the possible expected correlations, rather than against all samples.
+
+
+Evaluating `(S-D)/(S+D)`  for a chain of `SSD` is 1/3; and overall looks like `(1-pi/2 x)`; which is a flat line, and is the proposed sum of probabilities 
+asserted by Bell in 1964.  I somehow expect that the actual numbers from these experiments correlate more like I've describe above.  The expectation
+is that a correlation will occur, the first result should only determine which direction of correlation (same or different), and at 100% correlation
+of Same results there are no differences.  If there start to occur a few differences, then these only penalize the correlations.
+
 
 Examples
 
@@ -117,22 +125,33 @@ With a stack of polarizers, the only events that count are those that correlate 
 vs the total amount that would normally be received in the same amount of time.   If the photon passes the 
 first polarizer, and since there is only a second polarizer, then it doesn't matter if the first polarizer 
 modifies the result, it would still be in the same arc as the original input.  This makes the probability of 
-making it through both polarizers (pi/2 - x ) / pi  for x in radians.  (90-x)/180 for x in degrees...
+making it through both polarizers `((1-2x)/(((1-2x)<0)?x:(1-x)) +1)/2` for x in quarter turns; 
 
 Below is the experimental results from the link above, and new LHV predictions to relate... is far off?
 
+After re-evaluating the math and going ahead with the relations, [THis Demo Graph](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2_polarizers.html), I applied
+the same sort of math to evaluating the results, which meant I had to find the other non-linear curve that matched this percentage.  While I have it above, and it works here
+and even below in the desmos link, this is yet to be decomposed to simpler expressions.
+
+![2 polarizer graph](CHSH_2Polarizer.png)
+
+This used to be different, and has been revised, there's a different prediction for a stack of polarizers.
+
+[Expectations adjusted here](https://www.desmos.com/calculator/lpkgsac90c) The adjusted LHV values account for 0.035 excess counts in the low side, and -0.05 counts
+because of losses on the high end.
+
 ```    	                                                    
-    experimental   angle              QM pred.  QM/Exp      LHV pred.    LHV/QM    LHV/
-    result	                                                                       Exp. Res.
-    0.457 ± 0.009 0.00                0.464     1.015       0.5          1.07      1.015
-    0.451 ± 0.013 11.25  (0.438)      0.448     0.993       0.4375       0.97      0.97
-    0.400 ± 0.007 22.5                0.401     1.003       0.375        0.935     0.935
-    0.340 ± 0.010 33.75               0.333     0.979       0.313        0.939     0.92
-    0.249 ± 0.007 45                  0.251     1.008       0.250        0.996     1.004
-    0.164 ± 0.007 56.25               0.170     1.03        0.1875       1.10      1.14
-    0.100 ± 0.003 67.5                0.100     1.0         0.125        1.25      1.25
-    0.052 ± 0.004 78.75               0.055     1.058       0.0625       1.13      1.20
-    0.041 ± 0.003 90                  0.039     0.951       0.000        100       100
+    experimental   angle              QM pred.  QM/Exp      LHV pred. LHV adj.    LHV/QM     LHV(Adj)/
+    result	                                                                  (exp pred)   Exp. Res.
+    0.457 ± 0.009 0.00                0.464     1.015       0.5       0.486        1.07       1.06
+    0.451 ± 0.013 11.25  (0.438)      0.448     0.993       0.464     0.451        1.03       1.00
+    0.400 ± 0.007 22.5                0.401     1.003       0.4167    0.403       1.04        1.00
+    0.340 ± 0.010 33.75               0.333     0.979       0.350     0.336        1.051      0.97
+    0.249 ± 0.007 45                  0.251     1.008       0.250     0.250        0.996      1.00
+    0.164 ± 0.007 56.25               0.170     1.03        0.150     0.164        0.88       1.00
+    0.100 ± 0.003 67.5                0.100     1.0         0.083     0.095        0.83       0.95
+    0.052 ± 0.004 78.75               0.055     1.058       0.036     0.048        0.65       0.92
+    0.041 ± 0.003 90                  0.039     0.951       0.000     0.035        100        0.85 
 ```
 
 My prediction does not account for experimental bias of 1 in 35 counts just happen, or a similar percentage of counts lost.
