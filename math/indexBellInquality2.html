@@ -8,9 +8,19 @@
 	<p>I found a copy of <a href="https://inspirehep.net/files/67578c1d19ace842e25198fa5675442e">Bell's paper</a>, in which he even makes the case
 	for a spin axis as the hidden variable.  Then he proceeds in (10) to declare the wrong sum.
 
-	The actual sum is 1-(x/(pi-x)).  <a href="https://github.com/d3x0r/STFRPhysics/blob/master/LHV_Theory.md#scoring-in-game">As explained here</a>
+	<p>The actual sum is 1-(x/(pi-x)).  <a href="https://github.com/d3x0r/STFRPhysics/blob/master/LHV_Theory.md#scoring-in-game">As explained here</a>
+	<h2>Individual Correlations(right)</h2>
 
-	<p>The ratio of blue to green is the actual ratio one would expect.
+	<p>The right side graph more represents a Stern-Gerlach device, that detects 50% left or 50% right within an arc.  Then measuring that
+	against another similar arc.  Where the arcs do not overlap at all, there is no chance of correlation, and those values are thrown out.
+	For each value which is then within that arc, they may get transformed by the first filter (the semicircle that does not move), then it can
+	change, and become a vector that is also outside of the correlation range, so another of that same amount is removed.
+
+	
+
+
+	<p>The ratio of blue to green is the actual ratio one would expect; </code>(2-2x)/(2-x)<code>, so the blue circle is <code>2-2x</code> where 2 is 
+	1/2 of the circle, and 4 is the total circle, but +/-1 are equivalent to 90 degrees.  The green arc is then just <code>2-x</code>.
 
 	<p>There are two half circle arcs, one that's fixed, with a line across the bottom, and a 180 degree arc above.  The second rotates towards
         the left, and ends at the blue triangle.  The portion that cannot correlate with filters is removed from both arcs.  Then of those that make 
@@ -21,6 +31,12 @@
 	<p>The left graph is polarizers, the slider rotates through 90 degrees.  The slider to the left is 0 degrees and middle is 45 degrees.
          At 45 degrees, the preferred correlation becomes non-correlation; and the divisor for how much goes through continues to increase.  This is
 	noted with a darker color.	
+
+	<p>For a stack of polarizers, this was harder go graph, and I suspect the fractions that are related/removed can be drawn better.  But in this case
+	the blue arc's function is different for 1/2 of the rotations, that where both polarizers are aligned, until they are 45 degrees, there is an expectation
+	only against the same results; after degrees, the expectation switches, and becomes expectation of failure.  This switch makes the divisor go from 1 to 0.5 at 45 degrees.
+	and then return to 1; in the end, making the shrinking blue arc count for less; but overall, allowing more same-same correlations at very high angles than 
+	Quantum Mechanics predicts.
 
 	<p> 
 <pre><code> 
@@ -34,12 +50,19 @@ else
 	<div id="controls"></div>
 	<div style="position:absolute;top:0">
 	</div>
-    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
+    <CANVAS WIDTH=1024 height=500 ID="testSurface" ></CANVAS>
 	</div>
+
+
+    <h2> See Also</h2>
+	<UL>
+		<LI><a href="https://www.youtube.com/watch?v=oN_fSVhmR6M">https://www.youtube.com/watch?v=oN_fSVhmR6M</a>; video explainer/ talk-through of this program.
+		<LI><a href="https://twitter.com/D3X0R/status/1527528582515265536"><!--'First Fuck You.' -->Claimed first public notice</a>: He said he wanted a super simple expression, that was a Nobel Prize worth idea.
+		<LI><a href="https://github.com/d3x0r/STFRPhysics/blob/master/LHV_Theory.md">LHV Theory</a>; badly named, granted, more wordy explanation of the math and QM experimental comparisons.
+	</UL>
 
 </body>
 <script type="module" src="bellTest2.js"> </script>
 </html>
-
 
 

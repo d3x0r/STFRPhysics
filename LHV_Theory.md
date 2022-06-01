@@ -133,6 +133,9 @@ After re-evaluating the math and going ahead with the relations, [THis Demo Grap
 the same sort of math to evaluating the results, which meant I had to find the other non-linear curve that matched this percentage.  While I have it above, and it works here
 and even below in the desmos link, this is yet to be decomposed to simpler expressions.
 
+[Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html); this demonstration program explores amont of difference (difference of angle) of 
+2 polarizers and one side of a Stern-Gerlach or CHSH Independant Objserver Game.  
+
 ![2 polarizer graph](CHSH_2Polarizer.png)
 
 This used to be different, and has been revised, there's a different prediction for a stack of polarizers.
