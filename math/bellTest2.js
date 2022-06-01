@@ -298,102 +298,45 @@ ctx.closePath();
     ctx.stroke();
 
 	
-        drawHalf( ang1/2,0 );
-        drawHalf( ang1/2,Math.PI );
+        drawHalf( ang1,0 );
+        drawHalf( ang1,2 );
 
-	function drawHalf( ang1, del ) {
+	function wedge( from, to, r, ca, cb ) {
 		const centerX = 150;
-		//const center = 250;
-
 		ctx.beginPath();
 	
 		ctx.moveTo( centerX+100 , centerY );
-		ctx.lineTo( centerX+100 + radius * Math.cos( del+2*Math.PI-ang1), centerY  + radius * Math.sin( del+2*Math.PI-ang1));
-		    ctx.arc(centerX+100, centerY, radius, del+2*Math.PI-ang1,  del+2*Math.PI, false);
+		ctx.lineTo( centerX+100 + r*radius * Math.cos(from*Math.PI/2), centerY  + r*radius * Math.sin( from*Math.PI/2));
+		    ctx.arc(centerX+100, centerY, r*radius, from*Math.PI/2,  to*Math.PI/2, false);
 		ctx.lineTo( centerX+100 , centerY );
 //ctx.closePath();
 
-		    ctx.fillStyle = "#77000020";
+		    ctx.fillStyle = ca;//"#77000020";
 	    ctx.fill();
 	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = "red";
+	    ctx.strokeStyle = cb;//"red";
 	    ctx.stroke();
+	}
+
+	function drawHalf( ang1, del ) {
+		const centerX = 150;
+	const ang = ang1/Math.PI*2;
+		//const center = 250;
+
+		if( ang1 < Math.PI/4 )  {
+			wedge( del - ang*2, del, 1.0, "#77000020", "red" );
+
+			wedge( del+0, del+2-ang*2, 1.05, "#00770020", "green" );
 	
+			wedge( del+0+ang, del+2-ang*2, 1, "#00007720", "blue" );
 
-
-
-		if( ang1 < Math.PI/8 )  {
-            ctx.beginPath();
-	    ctx.moveTo( centerX+100 , centerY );
-	    ctx.lineTo( centerX+100 + radius * Math.cos( del-Math.PI*1/2-ang1), centerY  + radius * Math.sin( del+Math.PI*3/2-ang1));
-            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2-ang1,  del+Math.PI*3/2, false);
-	    ctx.lineTo( centerX+100 , centerY );
-            ctx.fillStyle = "#77000020";
-            ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "red";
-            ctx.stroke();
-
-    ctx.beginPath();
-	
-		ctx.moveTo( centerX+100 , centerY );
-		ctx.lineTo( centerX+100 - 1.05*radius*Math.cos(-Math.PI*1/2), centerY + 1.05*radius*Math.sin(Math.PI*3/2));
-	    ctx.arc(centerX+100, centerY, 1.05*radius, del-Math.PI*1/2,  del+0-ang1, false);
-		ctx.lineTo( centerX+100 , centerY );
-	    //ctx.closePath();
-	
-	    ctx.fillStyle = "#00770020";
-	    ctx.fill();
-	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = "green";
-	    ctx.stroke();
-	
-
-            ctx.beginPath();
-            ctx.moveTo( centerX+100 , centerY );
-            ctx.lineTo( centerX+100 + radius * Math.cos( del+Math.PI*3/2+ang1), centerY  + radius * Math.sin( del+Math.PI*3/2+ang1));
-            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2+ang1, del+ Math.PI*2-ang1, false);
-            ctx.fillStyle = "#00007720";
-            ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "blue";
-            ctx.stroke();
 		}else {
-            ctx.beginPath();
-	    ctx.moveTo( centerX+100 , centerY );
-	    ctx.lineTo( centerX+100 + radius * Math.cos( del-Math.PI*1/2-ang1), centerY  + radius * Math.sin( del+Math.PI*3/2-ang1));
-            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2-ang1,  del+Math.PI*3/2+ang1-Math.PI/8, false);
-	    ctx.lineTo( centerX+100 , centerY );
-            ctx.fillStyle = "#77000020";
-            ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "red";
-            ctx.stroke();
 
-    ctx.beginPath();
+			wedge( del - (2-ang*2), del+0, 1.0, "#77000020", "red" );
+			wedge( del+0, del+ang*2, 1.05, "#00330060", "green" );
 	
-		ctx.moveTo( centerX+100 , centerY );
-		ctx.lineTo( centerX+100 - 1.05*radius*Math.cos(-Math.PI*1/2-(ang1-Math.PI/8)), centerY + 1.05*radius*Math.sin(Math.PI*3/2-(ang1-Math.PI/8)));
-	    ctx.arc(centerX+100, centerY, 1.05*radius, del-Math.PI/2+(ang1-Math.PI/8),  del+0-ang1, false);
-		ctx.lineTo( centerX+100 , centerY );
-	    //ctx.closePath();
-	
-	    ctx.fillStyle = "#00770020";
-	    ctx.fill();
-	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = "green";
-	    ctx.stroke();
-	
+			wedge( del+0.5, del+1.50-ang*1, 1, "#6070E740", "#33f" );
 
-            ctx.beginPath();
-            ctx.moveTo( centerX+100 , centerY );
-            ctx.lineTo( centerX+100 + radius * Math.cos( del+Math.PI*3/2+Math.PI/8), centerY  + radius * Math.sin( del+Math.PI*3/2+Math.PI/8));
-            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2+Math.PI/8, del+ Math.PI*2-ang1, false);
-            ctx.fillStyle = "#00007720";
-            ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "blue";
-            ctx.stroke();
 		}
 
 
