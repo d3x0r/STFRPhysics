@@ -5,11 +5,32 @@ const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
+
 const slider = document.createElement( "input" );
 slider.setAttribute( "type", "range" );
 const controls = document.getElementById( "controls" );
 controls.appendChild( slider );
 slider.addEventListener( "input", update );
+
+slider.setAttribute( "max",1000 );
+slider.value = 500;
+slider.style.width="250px";
+
+const angleLeader = document.createElement( "span" );
+angleLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Angle:";
+controls.appendChild( angleLeader );
+const angleText = document.createElement( "span" );
+angleText.textContent = "50%";
+controls.appendChild( angleText );
+angleText.style.fontSize = "200%";
+
+const polarizerLeader = document.createElement( "span" );
+polarizerLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Polarizer correlation:";
+controls.appendChild( polarizerLeader );
+const polarizerText = document.createElement( "span" );
+polarizerText.textContent = "50%";
+polarizerText.style.fontSize = "200%";
+controls.appendChild( polarizerText );
 
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
@@ -207,7 +228,7 @@ let ang = -180;
 
 
 function update( evt ) {
-	const ang = ((slider.value)/100) *Math.PI/2;
+	const ang = ((slider.value)/1000) *Math.PI/2;
 	//console.log( "ang?", ang );
 	firstDraw( ang );
 	
@@ -217,6 +238,27 @@ function firstDraw( ang1 ) {
     var centerY = canvas.height / 2;
     var radius = 200;
 ctx.clearRect( 0, 0, 1024, 1024);
+
+	const i = ang1/Math.PI*2;
+	angleText.textContent = (90 * (ang1/Math.PI*2)).toFixed(4) +"°";
+	
+	let a = 1-i;
+	let b = i;
+	let r = a-b;
+	if( r > 0 ) {
+		//polarizerText.textContent = (r/a).toFixed(4);		
+		polarizerText.textContent = (1/2 * (1+(1-2*i)/(1-i))).toFixed(4)+"%";
+		polarizerText.style.color = "black";
+		polarizerText.style.background = "white";
+	}       else {
+		polarizerText.textContent = (100/2 * (1-i)/i).toFixed(4) +"%";
+		polarizerText.style.color = "white";
+		polarizerText.style.background = "black";
+
+	}
+
+	
+//	polarizerText.textContent = (;
                /*
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
