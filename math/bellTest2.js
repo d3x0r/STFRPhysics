@@ -213,7 +213,7 @@ function update( evt ) {
 	
 }
 function firstDraw( ang1 ) {
-	    var centerX = canvas.width / 2;
+	    var centerX = 666;
     var centerY = canvas.height / 2;
     var radius = 200;
 ctx.clearRect( 0, 0, 1024, 1024);
@@ -241,13 +241,7 @@ ctx.clearRect( 0, 0, 1024, 1024);
 */
 
 
-	const arc1 =  [Math.cos(0), Math.sin(0)];
-	const arc2 =  [Math.cos(0), Math.sin(0)];
-	const arc3 =  [Math.cos(0), Math.sin(0)];
-
 	//let ang1 = 20 * Math.PI/180;
-	let ang2 = 20 * Math.PI/180;
-	let ang3 = 20 * Math.PI/180;
     ctx.beginPath();
 	
 	ctx.moveTo( centerX+100 , centerY );
@@ -302,293 +296,113 @@ ctx.closePath();
     ctx.lineWidth = 1;
     ctx.strokeStyle = "blue";
     ctx.stroke();
+
+	
+        drawHalf( ang1/2,0 );
+        drawHalf( ang1/2,Math.PI );
+
+	function drawHalf( ang1, del ) {
+		const centerX = 150;
+		//const center = 250;
+
+		ctx.beginPath();
+	
+		ctx.moveTo( centerX+100 , centerY );
+		ctx.lineTo( centerX+100 + radius * Math.cos( del+2*Math.PI-ang1), centerY  + radius * Math.sin( del+2*Math.PI-ang1));
+		    ctx.arc(centerX+100, centerY, radius, del+2*Math.PI-ang1,  del+2*Math.PI, false);
+		ctx.lineTo( centerX+100 , centerY );
+//ctx.closePath();
+
+		    ctx.fillStyle = "#77000020";
+	    ctx.fill();
+	    ctx.lineWidth = 1;
+	    ctx.strokeStyle = "red";
+	    ctx.stroke();
+	
+
+
+
+		if( ang1 < Math.PI/8 )  {
+            ctx.beginPath();
+	    ctx.moveTo( centerX+100 , centerY );
+	    ctx.lineTo( centerX+100 + radius * Math.cos( del-Math.PI*1/2-ang1), centerY  + radius * Math.sin( del+Math.PI*3/2-ang1));
+            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2-ang1,  del+Math.PI*3/2, false);
+	    ctx.lineTo( centerX+100 , centerY );
+            ctx.fillStyle = "#77000020";
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+    ctx.beginPath();
+	
+		ctx.moveTo( centerX+100 , centerY );
+		ctx.lineTo( centerX+100 - 1.05*radius*Math.cos(-Math.PI*1/2), centerY + 1.05*radius*Math.sin(Math.PI*3/2));
+	    ctx.arc(centerX+100, centerY, 1.05*radius, del-Math.PI*1/2,  del+0-ang1, false);
+		ctx.lineTo( centerX+100 , centerY );
+	    //ctx.closePath();
+	
+	    ctx.fillStyle = "#00770020";
+	    ctx.fill();
+	    ctx.lineWidth = 1;
+	    ctx.strokeStyle = "green";
+	    ctx.stroke();
+	
+
+            ctx.beginPath();
+            ctx.moveTo( centerX+100 , centerY );
+            ctx.lineTo( centerX+100 + radius * Math.cos( del+Math.PI*3/2+ang1), centerY  + radius * Math.sin( del+Math.PI*3/2+ang1));
+            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2+ang1, del+ Math.PI*2-ang1, false);
+            ctx.fillStyle = "#00007720";
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+		}else {
+            ctx.beginPath();
+	    ctx.moveTo( centerX+100 , centerY );
+	    ctx.lineTo( centerX+100 + radius * Math.cos( del-Math.PI*1/2-ang1), centerY  + radius * Math.sin( del+Math.PI*3/2-ang1));
+            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2-ang1,  del+Math.PI*3/2+ang1-Math.PI/8, false);
+	    ctx.lineTo( centerX+100 , centerY );
+            ctx.fillStyle = "#77000020";
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "red";
+            ctx.stroke();
+
+    ctx.beginPath();
+	
+		ctx.moveTo( centerX+100 , centerY );
+		ctx.lineTo( centerX+100 - 1.05*radius*Math.cos(-Math.PI*1/2-(ang1-Math.PI/8)), centerY + 1.05*radius*Math.sin(Math.PI*3/2-(ang1-Math.PI/8)));
+	    ctx.arc(centerX+100, centerY, 1.05*radius, del-Math.PI/2+(ang1-Math.PI/8),  del+0-ang1, false);
+		ctx.lineTo( centerX+100 , centerY );
+	    //ctx.closePath();
+	
+	    ctx.fillStyle = "#00770020";
+	    ctx.fill();
+	    ctx.lineWidth = 1;
+	    ctx.strokeStyle = "green";
+	    ctx.stroke();
+	
+
+            ctx.beginPath();
+            ctx.moveTo( centerX+100 , centerY );
+            ctx.lineTo( centerX+100 + radius * Math.cos( del+Math.PI*3/2+Math.PI/8), centerY  + radius * Math.sin( del+Math.PI*3/2+Math.PI/8));
+            ctx.arc(centerX+100, centerY, radius, del+Math.PI*3/2+Math.PI/8, del+ Math.PI*2-ang1, false);
+            ctx.fillStyle = "#00007720";
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "blue";
+            ctx.stroke();
+		}
+
+
+	}
+
+
 }
 
 		ctx.clearRect(0,0,1024,1024 );
 
 		firstDraw( Math.PI/4);
 
-function drawsomething() {
-
-
-	const squareSize = 1024;
-
-	if( !drawing ) {
-		ctx.clearRect(0,0,squareSize,squareSize );
-
-		firstDraw( Math.PI/4);
-	}
-	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
-	var output = _output.data;
-
-	const unit=(x=>(x|0));        
-
-	const pens = [ ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 0,9)
-			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 0,9) 
-			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 0,9) 
-
-	                ,ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 3,9)
-			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 3,9) 
-			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 3,9) 
-
-			, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLACK, 6,9)
-			,ColorAverage( BASE_COLOR_GREEN, BASE_COLOR_BLACK, 6,9) 
-			,ColorAverage( BASE_COLOR_BLUE, BASE_COLOR_BLACK, 6,9) 
-		];
-
-
-	const minScale = 0;
-
-const maxScale = 1024;
-	function plot( x_, y_, c ) {
-		if( x_ < minScale || y_ < minScale ) return
-		if( x_ > maxScale || y_ > maxScale ) return
-		const x = unit(x_);
-		const y = unit(y_);
-//console.log( "Draw:", x, y );
-		const ofs = ((x+y*squareSize)<<2);
-	if(c[0] )
-		output[ofs+0] = c[0];
-if( c[1])
-		output[ofs+1] = c[1];
-		if(c[2])output[ofs+2] = c[2];
-		if(c[3])output[ofs+3] = c[3];
-	}
-
-	function line( x1, y1, x2, y2, c ) {
-/*
-		const realX1 = unit(x1);
-		const realY1 = unit(-y1);
-		const realX2 = unit(x2);
-		const realY2 = unit(-y2);
-		const realLen = Math.sqrt( (realX2-realX1)*(realX2-realX1)  + (realY2-realY1)*(realY2-realY1) );
-		x1 *= realLen;
-		y1 *= realLen;
-		x2 *= realLen;
-		y2 *= realLen;
-*/
-		// scale coordinates to a unit-pixel size...
-
-		var err, delx, dely, len, inc;
-		//if( !pImage || !pImage->image ) return;
-		delx = x2 - x1;
-		if( delx < 0 )
-			delx = -delx;
-        
-		dely = y2 - y1;
-		if( dely < 0 )
-			dely = -dely;
-        
-		if( dely > delx ) // length for y is more than length for x
-		{
-			len = dely;
-			if( y1 > y2 )
-			{
-				var tmp = x1;
-				x1 = x2;
-				x2 = tmp;
-				y1 = y2; // x1 is start...
-			}
-			if( x2 > x1 )
-				inc = 1;
-			else
-				inc = -1;
-        
-			err = -(dely / 2);
-			while( len >= 0 )
-			{
-		if( x1 < 0 || y1 < 0 || x1 > 1024 || y1 > 1024 ) return;
-				plot( x1, y1, c );
-				y1++;
-				err += delx;
-				while( err >= 0 )
-				{
-					err -= dely;
-					x1 += inc;
-				}
-				len--;
-			}
-		}
-		else
-		{
-			if( !delx ) // 0 length line
-				return;
-			len = delx;
-			if( x1 > x2 )
-			{
-				var tmp = y1;
-				y1 = y2;
-				y2 = tmp;
-				x1 = x2; // x1 is start...
-			}
-			if( y2 > y1 )
-				inc = 1;
-			else
-				inc = -1;
-        
-			err = -(delx / 2);
-			while( len >= 0 )
-			{
-		if( x1 < 0 || y1 < 0 || x1 > 1024 || y1 > 1024 ) return;
-				plot(  x1, y1, c );
-				x1++;
-				err += dely;
-				while( err >= 0 )
-				{
-					err -= delx;
-					y1 += inc;
-				}
-				len--;
-			}
-		}
-        
-	}
-	
-	axis2 = tmp2;
-
-	if( !drawing ) {
-		for( let per = 0; per <= 10; per++ ) {
-			line( 0, 1024-per*10.24, 1024, 1024-per*10.24, [0,0,0,255] );
-	
-		}
-		drawing = true;
-		ang = -180;
-	}
-	const now = Date.now();
-	for( ; ang <= 180; ang++ ) {
-		if( (Date.now() -now) > 30 ) break;
-        	const xpos = (ang + 180)/360 * 1020 + 2;
-		axis2_angle = ang/180*Math.PI;
-                axis2[0] = Math.cos( axis2_angle );
-                axis2[1] = Math.sin( axis2_angle );
-                const valArr = test1();//getState( axis2 );
-
-                //const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
-                //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
-                //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
-                //const val = Math.abs(valArr[3])/(testSize);
-// 0 0 = no result no result
-// 1 0 = result no result
-// 0 2 = no result could have resulted
-// 1 2 = resulted with both filters.
-	// according to experimental PDF https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19 pages 83-ish.
-	// total hits over total R_0 hits.  (0 to 0.5)
-		//const val = valArr[3]/(valArr[3]+valArr[0]+valArr[1]+valArr[2]);
-		//const val = valArr[3]/(testSize);
-		//const val = 2*(valArr[7])/(200000);
-
-/*
-a-b   a-b
-a     a+b
-
-0.5 = (a-b)/a  a+b = 1;
-
-cos(x) = 2a-1
-cos(x)-1 
-
-b = 1-a;
-
-0.5 = (2a-1)/a
-
-0.5a = 2a-1
-
-(cos(x)-2)a=-1
-a = 1/(2-cos(x))
-
-
-*/
-
-// 90   1:1   (a-b=0)/(2)
-// 70.5 2:1?  (1/3)
-//      1.5:1 (2/5)
-// 78.463
-//      3/2:1  (1/2) / (5/2)   1/5
-//      1.25:1 
-// 83.62
-//     5/4:1  ( 1/4 ) / ( 9/4 )  1/9
-//      1.125:1 
-// 86.627
-//    9/8:1  (1/8)  / ( 17/8 )   1/17
-
-		valArr[0] += valArr[4];
-		valArr[1] += valArr[5];
-		valArr[2] += valArr[6];
-		valArr[3] += valArr[7];
-
-//		const val = (valArr[3])/(valArr[3]+valArr[1]);
-		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
-
-        	const val = valArr[3] / testSize;
-        	//const val = (((valArr[3]>valArr[1])?((valArr[3]-valArr[1])/(valArr[3]+valArr[1])):(-(valArr[1]-valArr[3])/(valArr[3]+valArr[1])))+1)/2;
-//		const val = (valArr[3]>valArr[1]?( ((valArr[3]-valArr[1])/(valArr[3]))):( ((valArr[1]-valArr[3])/(valArr[1]))));
-                console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
-                //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
-	
-                const ypos = 1024-(val * 1024);
-                    //if( ang === 45 ) debugger;
-		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
-		const ypos_b = 1024-(val2 * 1024);
-
-
-		//const ypos_d = (1024 - (val?(1024 * ((val2<val)?((val2-val)/(val2+val)):((val-val2)/(val2+val)))):1024));
-
-		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
-		
-		const x = (ang / 90);
-		const ax = x>1?2-x:x<-1?2+x:x;
-			
-		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
-		const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
-
-		const ypos_e =1024- (1024 * val3 );
-
-		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));
-		const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
-
-	//console.log( "Vals:", ang, val, val2, (val?(1024 * (1-(val2/val))):1024), ypos_d );
-//console.log( "line:", valArr, val, ypos, ypos_b );
-                
-		if( (ang %30) === 0 ) {
-			line( xpos, 0, xpos, 1024, [0,0,0,255] );
-		}
-		
-                if( prior_x > 0 ) {
-			line( prior_x, prior_y, xpos, ypos, pens[2] );
-		
-                	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
-
-                //	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
-
-                	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
-                //	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
-
-		//	ctx.putImageData(_output, 0,0);
-
-                }
-                prior_x = xpos;
-                prior_y = ypos;
-
-                prior_x_b = xpos;
-                prior_y_b = ypos_b;
-
-                prior_x_d = xpos;
-                prior_y_d = ypos_d;
-		
-                prior_x_e = xpos;
-                prior_y_e = ypos_e;
-
-                prior_x_ed = xpos;
-                prior_y_ed = ypos_ed;
-        }
-	if( ang > 180 ) drawing = false;
-	
-
-	ctx.putImageData(_output, 0,0);
-	if( drawing ) requestAnimationFrame( drawsomething);
-}
-
-try {
-		//drawsomething();
-}catch(err) {
-	alert( "GotError:"+err );
-}
