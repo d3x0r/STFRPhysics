@@ -290,7 +290,7 @@ ctx.clearRect( 0, 0, 1024, 1024);
 
 	}
 
-	corrText.textContent = (100*(q-p)/(q+p)).toFixed(4) +"% "
+	corrText.textContent = (100*(q-p)/(q)).toFixed(4) +"% "
 	
 //	polarizerText.textContent = (;
                /*
