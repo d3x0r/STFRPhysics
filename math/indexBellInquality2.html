@@ -1,20 +1,24 @@
 
 <html>
-<head><title>Actual correlation result</title></head>
+<head><title>Polarizer demonstration</title></head>
 <body>
    <p>
 	<div style="position:relative">
-    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
 	
-	I found a copy of <a href="https://inspirehep.net/files/67578c1d19ace842e25198fa5675442e">Bell's paper</a>, in which he even makes the case
+	<p>I found a copy of <a href="https://inspirehep.net/files/67578c1d19ace842e25198fa5675442e">Bell's paper</a>, in which he even makes the case
 	for a spin axis as the hidden variable.  Then he proceeds in (10) to declare the wrong sum.
 
 	The actual sum is 1-(x/(pi-x)).  <a href="https://github.com/d3x0r/STFRPhysics/blob/master/LHV_Theory.md#scoring-in-game">As explained here</a>
 
-	
+	<p>The ratio of blue to green is the actual ratio one would expect.
 
+	<p>There are two half circle arcs, one that's fixed, with a line across the bottom, and a 180 degree arc above.  The second rotates towards
+        the left, and ends at the blue triangle.  The portion that cannot correlate with filters is removed from both arcs.  Then of those that make 
+	it through the arc, the amount of extended overlap is removed again.  The ratio of actual occurances to possible occurances is `pi-2x / pi-x` or `1-x/(pi-x)`.
+	<div id="controls"></div>
 	<div style="position:absolute;top:0">
 	</div>
+    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
 	</div>
 
 </body>

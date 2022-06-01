@@ -7,7 +7,8 @@ const ctx = canvas.getContext( '2d' );
 
 const slider = document.createElement( "input" );
 slider.setAttribute( "type", "range" );
-document.body.appendChild( slider );
+const controls = document.getElementById( "controls" );
+controls.appendChild( slider );
 slider.addEventListener( "input", update );
 
 const BASE_COLOR_WHITE = [255,255,255,255];
@@ -215,6 +216,7 @@ function firstDraw( ang1 ) {
 	    var centerX = canvas.width / 2;
     var centerY = canvas.height / 2;
     var radius = 200;
+ctx.clearRect( 0, 0, 1024, 1024);
                /*
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -224,6 +226,9 @@ function firstDraw( ang1 ) {
     ctx.strokeStyle = "black";
     ctx.stroke();
                */
+
+/* 
+// clear cirle 
     ctx.beginPath();
 	
     ctx.arc(centerX+100, centerY, radius, 0,  2*Math.PI, false);
@@ -233,7 +238,7 @@ function firstDraw( ang1 ) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
     ctx.stroke();
-
+*/
 
 
 	const arc1 =  [Math.cos(0), Math.sin(0)];
@@ -246,15 +251,15 @@ function firstDraw( ang1 ) {
     ctx.beginPath();
 	
 	ctx.moveTo( centerX+100 , centerY );
-	ctx.lineTo( centerX+100 - radius, centerY );
-    ctx.arc(centerX+100, centerY, radius, Math.PI,  2*Math.PI-ang1, false);
+	ctx.lineTo( centerX+100 - 1.05*radius, centerY );
+    ctx.arc(centerX+100, centerY, 1.05*radius, Math.PI,  2*Math.PI-ang1, false);
 	ctx.lineTo( centerX+100 , centerY );
 //ctx.closePath();
 
     ctx.fillStyle = "#00770020";
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "green";
     ctx.stroke();
 
     ctx.beginPath();
@@ -268,7 +273,7 @@ function firstDraw( ang1 ) {
     ctx.fillStyle = "#77000020";
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "red";
     ctx.stroke();
 
 
@@ -283,7 +288,7 @@ function firstDraw( ang1 ) {
     ctx.fillStyle = "#77000020";
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "red";
     ctx.stroke();
 
 
@@ -295,7 +300,7 @@ ctx.closePath();
     ctx.fillStyle = "#00007720";
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "blue";
     ctx.stroke();
 }
 
