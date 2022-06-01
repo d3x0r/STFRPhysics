@@ -1,7 +1,7 @@
 
 <html>
 <head><title>Polarizer demonstration</title></head>
-<body>
+<body style="font-size:125%">
    <p>
 	<div style="position:relative">
 	
@@ -22,6 +22,15 @@
          At 45 degrees, the preferred correlation becomes non-correlation; and the divisor for how much goes through continues to increase.  This is
 	noted with a darker color.	
 
+	<p> 
+<pre><code> 
+x = degrees/90;
+
+if( 1-2*x > 0 )  // 0 to 45 degrees is > 0  45 to 90 degrees is < 0
+	percent = (100/4 * (1+(1-2*x)/(1-x)))  // divisor slowly decreases to 0.5
+else
+	percent = (100/4 * (1-x)/x)   // divisor slowly increases after 0.5
+</code></pre>
 	<div id="controls"></div>
 	<div style="position:absolute;top:0">
 	</div>

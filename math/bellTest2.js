@@ -24,6 +24,7 @@ angleText.textContent = "50%";
 controls.appendChild( angleText );
 angleText.style.fontSize = "200%";
 
+
 const polarizerLeader = document.createElement( "span" );
 polarizerLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Polarizer correlation:";
 controls.appendChild( polarizerLeader );
@@ -31,6 +32,30 @@ const polarizerText = document.createElement( "span" );
 polarizerText.textContent = "50%";
 polarizerText.style.fontSize = "200%";
 controls.appendChild( polarizerText );
+
+const polarizerTrailer = document.createElement( "span" );
+polarizerTrailer.innerHTML = " (transmission is 50% of that)";
+controls.appendChild( polarizerTrailer );
+
+controls.appendChild( document.createElement( "p")  );
+
+const qmLeader = document.createElement( "span" );
+qmLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QM Prediction:";
+controls.appendChild( qmLeader );
+const qmText = document.createElement( "span" );
+qmText.textContent = "50%";
+controls.appendChild( qmText );
+qmText.style.fontSize = "200%";
+
+
+const corrLeader = document.createElement( "span" );
+corrLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error Percent:";
+controls.appendChild( corrLeader );
+const corrText = document.createElement( "span" );
+corrText.textContent = "50%";
+controls.appendChild( corrText );
+corrText.style.fontSize = "200%";
+
 
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
@@ -241,22 +266,31 @@ ctx.clearRect( 0, 0, 1024, 1024);
 
 	const i = ang1/Math.PI*2;
 	angleText.textContent = (90 * (ang1/Math.PI*2)).toFixed(4) +"°";
+
+	const c = Math.cos( ang1 );
+	const q = (100*(c*c)/2);
+	qmText.textContent = q.toFixed(4);
+
 	
 	let a = 1-i;
 	let b = i;
 	let r = a-b;
+	let p = 0;
 	if( r > 0 ) {
 		//polarizerText.textContent = (r/a).toFixed(4);		
-		polarizerText.textContent = (1/2 * (1+(1-2*i)/(1-i))).toFixed(4)+"%";
+		p = 100/4 * (1+(1-2*i)/(1-i));
+		polarizerText.textContent = (p).toFixed(4)+"% ";
 		polarizerText.style.color = "black";
 		polarizerText.style.background = "white";
 	}       else {
-		polarizerText.textContent = (100/2 * (1-i)/i).toFixed(4) +"%";
+		p = (100/4 * (1-i)/i);
+		polarizerText.textContent = (p).toFixed(4) +"% ";
 		polarizerText.style.color = "white";
 		polarizerText.style.background = "black";
 
 	}
 
+	corrText.textContent = (100*(q-p)/(q+p)).toFixed(4) +"% "
 	
 //	polarizerText.textContent = (;
                /*
