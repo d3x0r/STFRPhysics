@@ -404,11 +404,20 @@ a = 1/(2-cos(x))
 		valArr[2] += valArr[6];
 		valArr[3] += valArr[7];
 
-//		const val = (valArr[3])/(valArr[3]+valArr[1]);
+		let val = (valArr[3]-valArr[1]);
+		if( 1 ) {
+			val /= (valArr[3]+valArr[1]);
+			val = (val+1)/2;
+		}else {
+			if( val < 0 ) val /=(valArr[1]);
+			else  val /=(valArr[3]);
+			val = (val+1)/2;
+		}
 		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
 
 // 3 stackpolarizer result
-        	const val = valArr[7] / testSize;
+//        	const val = valArr[7] / testSize;
+
         	//const val = (((valArr[3]>valArr[1])?((valArr[3]-valArr[1])/(valArr[3]+valArr[1])):(-(valArr[1]-valArr[3])/(valArr[3]+valArr[1])))+1)/2;
 //		const val = (valArr[3]>valArr[1]?( ((valArr[3]-valArr[1])/(valArr[3]))):( ((valArr[1]-valArr[3])/(valArr[1]))));
                 //console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
@@ -416,7 +425,7 @@ a = 1/(2-cos(x))
 	
                 const ypos = 1024-(val * 1024);
                     //if( ang === 45 ) debugger;
-		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
+		const val2 = Math.cos( ang/180*Math.PI )*Math.cos( ang/180*Math.PI );
 		const ypos_b = 1024-(val2 * 1024);
 
 
@@ -428,8 +437,27 @@ a = 1/(2-cos(x))
 		const ax = x>1?2-x:x<-1?2+x:x;
 			
 		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
-		const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+//		const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+                   let val3 = 1;
+		if( 0 ) {
+			val3 = 2-2*ax; /// (2-(Math.abs(ax))));
+			val3 = (val3-ax)/(val3+ax);
+		}else{
+			const a = (ax < 0)? (1-ax>1)?(1+ax):(ax)  :(1-ax>1)?(-ax):(1-ax);
 
+			const b = 1-a;
+	// 2-2ax / 2-3ax
+			 val3 = a-b; /// (2-(Math.abs(ax))));
+
+	//	2-2ax ax
+			const _val3 = val3;
+			//val3 = (val3-ax); 
+			//console.log( "Val:", ang,ax, val3, _val3, valArr[3], valArr[1], "AB:", a, b, "  VA31:",valArr[3]/(valArr[3]+valArr[1]), valArr[1]/(valArr[3]+valArr[1]) );
+
+			if( val3 < 0 ) val3 /= (b); else val3 /= (a);
+			val3 = (val3+1)/2;
+			//val3 = (val3);
+		}
 		const ypos_e =1024- (1024 * val3 );
 
 		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));
