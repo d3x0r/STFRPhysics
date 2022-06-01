@@ -405,10 +405,12 @@ a = 1/(2-cos(x))
 		valArr[3] += valArr[7];
 
 		let val = (valArr[3]-valArr[1]);
-		if( 1 ) {
+		if( 0 ) {
+			// required math to score probabilities
 			val /= (valArr[3]+valArr[1]);
 			val = (val+1)/2;
 		}else {
+			// math that works.
 			if( val < 0 ) val /=(valArr[1]);
 			else  val /=(valArr[3]);
 			val = (val+1)/2;
@@ -434,27 +436,20 @@ a = 1/(2-cos(x))
 		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
-		const ax = x>1?2-x:x<-1?2+x:x;
+		const ax = x>1?2-x:x<-1?-2-x:x;
 			
 		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
 //		const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
                    let val3 = 1;
 		if( 0 ) {
+			// required math to score probabilities
 			val3 = 2-2*ax; /// (2-(Math.abs(ax))));
 			val3 = (val3-ax)/(val3+ax);
 		}else{
-			const a = (ax < 0)? (1-ax>1)?(1+ax):(ax)  :(1-ax>1)?(-ax):(1-ax);
-
-			const b = 1-a;
-	// 2-2ax / 2-3ax
-			 val3 = a-b; /// (2-(Math.abs(ax))));
-
-	//	2-2ax ax
-			const _val3 = val3;
-			//val3 = (val3-ax); 
-			//console.log( "Val:", ang,ax, val3, _val3, valArr[3], valArr[1], "AB:", a, b, "  VA31:",valArr[3]/(valArr[3]+valArr[1]), valArr[1]/(valArr[3]+valArr[1]) );
-
-			if( val3 < 0 ) val3 /= (b); else val3 /= (a);
+			const absx = Math.abs( ax );
+			const del = 1-2*absx;
+			// (1-2x)/(((1-2x)<0)?x:(1-x))
+			if( del < 0 ) val3 = del/absx; else val3 = del/(1-absx);
 			val3 = (val3+1)/2;
 			//val3 = (val3);
 		}
@@ -475,10 +470,10 @@ a = 1/(2-cos(x))
 		
                 	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
 
-                //	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
+                	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
 
                 	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
-                //	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
+                	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
 
 		//	ctx.putImageData(_output, 0,0);
 
