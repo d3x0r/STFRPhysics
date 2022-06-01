@@ -34,7 +34,7 @@ polarizerText.style.fontSize = "200%";
 controls.appendChild( polarizerText );
 
 const polarizerTrailer = document.createElement( "span" );
-polarizerTrailer.innerHTML = " (transmission is 50% of that)";
+polarizerTrailer.innerHTML = "";
 controls.appendChild( polarizerTrailer );
 
 controls.appendChild( document.createElement( "p")  );
