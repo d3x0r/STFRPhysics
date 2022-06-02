@@ -325,26 +325,43 @@ if( c[1])
                 axis2[0] = Math.cos( ang/180*Math.PI );
                 axis2[1] = Math.sin( ang/180*Math.PI );
                 const valArr = test1();//getState( axis2 );
-                const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
+
+		// 1 - va1/va0 = (va0-va1)/va0
+		// 1 - va0/va1 = -(va1-va0)/va1 (this invers the negative probability.
+                const val = ((valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(valArr[0]/valArr[1]-1))+1)/2;
+
                 const ypos = 1024-(val * 1024);
 
-		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
+		const val2 = (Math.cos( ang/180*Math.PI )+1)/2;
 		const ypos_b = 1024-(val2 * 1024);
 
 		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
-		const ax = x>1?2-x:x<-1?2+x:x;
+		const ax = x>1?2-x:x<-1?-2-x:x;
 			
-		const i=(x)=>x;
-		const j=(x)=>(1-x);
-		const k = (x)=>((1+j(x)-i(x))>0?(1+j(x)-i(x))/i(x):(1+j(x)-i(x))/(1+j(x)));
+		const i = (x)=>Math.abs(x)/2;
+		const j = (x)=>(1-Math.abs(x)/2);
+		const k = (x)=>( ((j(x)-i(x))>0)?(j(x)-i(x))/j(x):((j(x)-i(x))/i(x)) );
 
 		
-
+		let val3;
 		//const val3 = k(x);//(2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
+		let ais = 1-Math.abs(ax)/2;
+		let bis = Math.abs(ax)/2;
 
-		const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
+		if( ais - bis < 0 ) {
+			val3 = (ais-bis)/bis;
+		}else
+			val3 = (ais-bis)/ais;
+
+
+		val3 = k(ax);
+		if( Math.abs(x) > 1 ) val3 *= -1;
+
+		val3 = ((val3)+1)/2;
+		
+		
 
 		const ypos_e =1024- (1024 * val3 );
 
@@ -365,7 +382,7 @@ if( c[1])
                 	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
 
                 	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
-                	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
+                	//line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
 
 		//	ctx.putImageData(_output, 0,0);
 
