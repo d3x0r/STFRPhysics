@@ -335,8 +335,13 @@ if( c[1])
 		const val2 = (Math.cos( ang/180*Math.PI )+1)/2;
 		const ypos_b = 1024-(val2 * 1024);
 
-		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
-		
+		let ypos_d =0;
+		if( val2<0.5 ) { 
+			const v2 = 1-val2;
+			const v1 = 1-val;
+			ypos_d = (1024 - (val?(1024 * ((v2<v1)?((1-(v2)/v1)):((1-(v1)/v2)))):1024));
+		} else
+			ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		const x = (ang / 90);
 		const ax = x>1?2-x:x<-1?-2-x:x;
 			
