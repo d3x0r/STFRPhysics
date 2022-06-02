@@ -166,7 +166,7 @@ The above comparison shows QM is +/-3% and I'm +25% -8% (the 25% is at low count
 
 This is a sample (probably large, and I should look into resizing it).
 
-![math/overlap-arcs.png]
+![Example arc graph of 60 degrees and 50% correlation](math/overlap-arcs.png)
 
 Given two SG devices mounted in a fixed location; in the image one is labeled 'A' and outlined in red; the other is labeled 'B' and is outlined in blue.
 
