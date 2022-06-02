@@ -366,38 +366,6 @@ if( c[1])
 		//const val = valArr[3]/(testSize);
 		//const val = 2*(valArr[7])/(200000);
 
-/*
-a-b   a-b
-a     a+b
-
-0.5 = (a-b)/a  a+b = 1;
-
-cos(x) = 2a-1
-cos(x)-1 
-
-b = 1-a;
-
-0.5 = (2a-1)/a
-
-0.5a = 2a-1
-
-(cos(x)-2)a=-1
-a = 1/(2-cos(x))
-
-
-*/
-
-// 90   1:1   (a-b=0)/(2)
-// 70.5 2:1?  (1/3)
-//      1.5:1 (2/5)
-// 78.463
-//      3/2:1  (1/2) / (5/2)   1/5
-//      1.25:1 
-// 83.62
-//     5/4:1  ( 1/4 ) / ( 9/4 )  1/9
-//      1.125:1 
-// 86.627
-//    9/8:1  (1/8)  / ( 17/8 )   1/17
                        	/*
 		valArr[0] += valArr[4];
 		valArr[1] += valArr[5];
@@ -429,13 +397,19 @@ a = 1/(2-cos(x))
 	
                 const ypos = 1024-(val * 1024);
                     //if( ang === 45 ) debugger;
-		const val2 = Math.abs(Math.cos( ang/180*Math.PI ));
+		const val2 = (1/2-Math.abs(Math.cos( 2*ang/180*Math.PI )*Math.cos( 2*ang/180*Math.PI )/2))/2;
 		const ypos_b = 1024-(val2 * 1024);
 
 
 		//const ypos_d = (1024 - (val?(1024 * ((val2<val)?((val2-val)/(val2+val)):((val-val2)/(val2+val)))):1024));
 
-		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
+		let ypos_d ;
+		if( val2<0.5 ) { 
+			const v2 = 1-val2;
+			const v1 = 1-val;
+			ypos_d = (1024 - (val?(1024 * ((v2<v1)?((1-(v2)/v1)):((1-(v1)/v2)))):1024));
+		} else
+			ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
 		const ax = x>1?2-x:x<-1?-2-x:x;
@@ -455,7 +429,15 @@ a = 1/(2-cos(x))
 		const ypos_e =1024- (1024 * val3 );
 
 		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));
-		const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
+		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
+
+		let ypos_ed ;
+		if( 1 || val2<0.5 ) { 
+			const v3 = 1-val;
+			const v2 = 1-val3;
+			ypos_ed = (1024 + (v3?(1024 * ((v2<v3)?(((v2-v3)/(v2+v3))):(((v3-v2)/(v3+v2))))):1024));
+		} else
+			ypos_ed = (1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
 
 	//console.log( "Vals:", ang, val, val2, (val?(1024 * (1-(val2/val))):1024), ypos_d );
 //console.log( "line:", valArr, val, ypos, ypos_b );
@@ -469,10 +451,10 @@ a = 1/(2-cos(x))
 		
                 	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
 
-                //	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
+                	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
 
                 	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
-                //	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
+                	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
 
 		//	ctx.putImageData(_output, 0,0);
 
