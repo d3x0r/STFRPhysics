@@ -220,7 +220,9 @@ if( c[1])
 	}
 
 	function line( x1, y1, x2, y2, c ) {
-/*
+		if( x1 < 0 || x1 > 1024 || x2 < 0 || x2 > 1024 ) return;
+		if( y1 < 0 || y1 > 1024 || y2 < 0 || y2 > 1024 ) return;
+/*              
 		const realX1 = unit(x1);
 		const realY1 = unit(-y1);
 		const realX2 = unit(x2);
@@ -334,7 +336,16 @@ if( c[1])
 		const x = (ang / 90);
 		const ax = x>1?2-x:x<-1?2+x:x;
 			
+		const i=(x)=>x;
+		const j=(x)=>(1-x);
+		const k = (x)=>((1+j(x)-i(x))>0?(1+j(x)-i(x))/i(x):(1+j(x)-i(x))/(1+j(x)));
+
+		
+
+		//const val3 = k(x);//(2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
+
 		const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
+
 		const ypos_e =1024- (1024 * val3 );
 
 		const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));

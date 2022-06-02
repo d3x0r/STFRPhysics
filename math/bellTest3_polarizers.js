@@ -398,20 +398,33 @@ a = 1/(2-cos(x))
 //      1.125:1 
 // 86.627
 //    9/8:1  (1/8)  / ( 17/8 )   1/17
-
+                       	/*
 		valArr[0] += valArr[4];
 		valArr[1] += valArr[5];
 		valArr[2] += valArr[6];
 		valArr[3] += valArr[7];
+		         */
+		//const val = (valArr[7])/(valArr[5]);
 
-//		const val = (valArr[3])/(valArr[3]+valArr[1]);
-		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
 
+//this alone is close...
+//  I wonder what the multiplication does.
+		const val = 1/2 * (valArr[7])/(+valArr[3]+valArr[1]);
+/*
+		let val_a =  (valArr[3]-valArr[1]);  // compare 1v2
+		let val_b =  (valArr[7]-valArr[6]);  // compare 2v3
+		if( val_a < 0 ) val_a /= valArr[1];
+		else val_a /= valArr[3];
+		if( val_b < 0 ) val_b /= valArr[6];
+		else val_b /= valArr[7];
+
+		const val = (1-(val_b*val_a+1)/2)/2;
+*/
 // 3 stackpolarizer result
-        	const val = valArr[7] / testSize;
+//        	const val = valArr[7] / testSize;
         	//const val = (((valArr[3]>valArr[1])?((valArr[3]-valArr[1])/(valArr[3]+valArr[1])):(-(valArr[1]-valArr[3])/(valArr[3]+valArr[1])))+1)/2;
 //		const val = (valArr[3]>valArr[1]?( ((valArr[3]-valArr[1])/(valArr[3]))):( ((valArr[1]-valArr[3])/(valArr[1]))));
-                //console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
+               // console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
                 //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
 	
                 const ypos = 1024-(val * 1024);
@@ -425,10 +438,19 @@ a = 1/(2-cos(x))
 		const ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
-		const ax = x>1?2-x:x<-1?2+x:x;
+		const ax = x>1?2-x:x<-1?-2-x:x;
 			
+		const rx = (ax)=> (1-2*Math.abs(ax));
+		
+		const r = (x) => (( (rx(x)>0?(rx(x)/(1-Math.abs(x))):(rx(x)/(Math.abs(x))))+1)/2) ;
+
+		const ra = r(ax);
+		const rb = r(1-Math.abs(ax));
+		let val3 = ra*rb;// (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+
+
 		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
-		const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+		//const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
 
 		const ypos_e =1024- (1024 * val3 );
 
