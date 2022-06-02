@@ -162,6 +162,53 @@ Non-detection doesn't imply non-correlation, just that something happened that m
 
 The above comparison shows QM is +/-3% and I'm +25% -8% (the 25% is at low counts, where polarizers are mostly an inverse coorelation).
 
+#### Graphic Representation
+
+This is a sample (probably large, and I should look into resizing it).
+
+![math/overlap-arcs.png]
+
+Given two SG devices mounted in a fixed location; in the image one is labeled 'A' and outlined in red; the other is labeled 'B' and is outlined in blue.
+
+I feel like I should quote 'photon'; as I do mean it in more of a point like entity (not a particle per say, since when spins interact, 
+it's like skipping stones on water, and the composite has multiple deflection fronts).  A photon has a spin axis, a position, and a direction;
+while the rate of spin might matter whether it is a short enough wavelength to make it through the polarizers is a different thing; the speed is 
+assumed to be a constant that's the speed of light. It only has a position in the sense that it starts on one side of a polarizer, moves to between both polarizers, and 
+ends after the second polarizer.
+
+Polarizer is another word that should be quoted, this polarizer knows 'up' and 'down', (not 'up or down' but 'not left or right'); and when a photon mentioned
+above passes through it, the photon is allowed to be modified up to +/-90 degrees from the detectors axis.  The detectors axis is a line from the midpoint to 1/2
+of their respective arcs.
+
+This can be then modeled by considering two polarized plates that are overlapped.
+'Correlation' means that a photon will pass through both polarizers and is not stopped along the way, 
+and because they are symmetric order does not matter, the 'A' polarized plate is in front (or the first to be interacted with) for explanation purposes.
+Polarized plates affect photons, and photons passing through them 
+are changed; the limit of this change is within (in this case, +/-90 degrees) of their alignment.
+                                                                                                                                                                               
+The red regions on the right side, and below the middle 'A' are regions where a 'up' event will not pass through both polarizers as the same spin direction.
+In the case of the region on the right side (near the A ), anything in this region is up for A detector and down for B.  In the region on the lower left,
+these are also definitely different results, that B will detect as 'up' and A will detect as 'down'. 
+
+The remaining intersection of A and B (the arc in green) are the potential correlations that there can be; however, when passing through 'A', and having
+a spin axis in that green arc, it can change, and be in the right side red arc; so these are removed from the possible definite correlations. Then 
+(it turns out that) the remaining blue arc, after subtracting non-corellations again (this is the third time it's removed), the ratio of the blue arc
+tot he green arc is the actual amount of correlation.
+
+are the only correlations to account for (assertion, questionable reasoning).
+    The left side has an additional region of red, which overlaps the green, these are correlations which could have been up in cases of both,
+    but may measure down (may be transformed into down- see that's a claim from the polarizer aspect part).  That is the behavior that the simulator
+    exhibits.  The result of throwing random vectors at two different devices correlate as such.
+
+It seems hard to justify why a ratio like the one shown in the image of 1/4 to 2/3 should be representative of the whole range; but it's really not, and
+doesn't have to be.  Consider that at 100%, both are the full range of possibility and 100% of everything goes through both.  At slightly less than 100%,
+then the ratio that makes it through both is less than 100%, and doesn't have to be a ratio of 100% of the possible input samples.  You can disregard the rest,
+because conversely, there's a portion of photons that can make it through A, and be turned into photons that can also pass through B.
+
+There's probably a nice 3D graph of this  https://www.geogebra.org/3d/zbfqqswd  but better... it sort of needs to be polar...
+
+
+
 ### CHSH Wikipedia Talk
 
 [Link To Talk](https://en.wikipedia.org/wiki/Talk:CHSH_inequality#CHSH_Game_Implementation_scores_3.40)
@@ -205,6 +252,8 @@ cos(x) ~= g(x)
 ```
 
 
+
+
 ## GHZ Experiment
 
 This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the reults for the other
@@ -218,7 +267,7 @@ GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minu
 
 
 
-## What are Dimensions?
+## What are Dimensions? (to be moved later, too philosophic)
 
 (sidebar, another view of coordinate systems?)
 
