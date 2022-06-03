@@ -40,6 +40,16 @@ QM prediction `cos(60 degrees)` = 50% chance or 0.5.  Or that at 60 degrees ther
 LHV prediction `x = 60 *pi/180 * 2/pi  120/180 = 2/3; p=1-(x/(2-x))` = 50% or 0.5.     `1-(2/3/(2-2/3))` = `1-(2/3/(4/3))` = `1-(2/3*(3/4))` = `1-(2/4)` =  0.5.
 
 
+## GHZ Experiment
+
+This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the reults for the other
+detectors. This does not happen with 100% chance but  [However, we experimentally observed such terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic](https://web.physics.ucsb.edu/~quopt/ghz.pdf).
+
+GHZ QM predcition - 100% (?) 
+
+GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.4, that's 0.83; and within the error bars).
+
+
 ## CHSH Experiment
 
 https://qubit.guide/9.3-chsh-inequality.html
@@ -253,16 +263,79 @@ cos(x) ~= g(x)
 
 
 
+### Improved Physical Experiment
 
-## GHZ Experiment
+There are catchers that catch balls, and there are splitter blocks, these are red, blue, green and purple. (Green and purple end up equivalent to red and blue
+respetively).
 
-This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the reults for the other
-detectors. This does not happen with 100% chance but  [However, we experimentally observed such terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic](https://web.physics.ucsb.edu/~quopt/ghz.pdf).
+A parallel row of box pairs can be constructed, the first of the pair will always just be red or blue.  The size of this set of boxes is the total sample size.
+Balls are dropped such that they will hit one of these pairs.
 
-GHZ QM predcition - 100% (?) 
+The first box of every set of choices must be equal numbers of blue and red blocks. If a ball hits blue, the ball is marked with 'left' and falls out
+of any other blue box.  If a ball hits a red, the ball is marked with 'right' and falls out of any other red box.
 
-GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.4, that's 0.83; and within the error bars).
+The second box of pair can be any color, following these rules
+ - for every red added to a red, a blue must be added to a blue.
+ - For every blue added to a red, a green is added to a blue.
+ - for every green added to a red, a purple is added to a blue.
+ - for every purple added to a red, a red is added to a blue.
+ - for every red added to a blue, a purple must be added to a red.
+ - For every blue added to a blue, a red is added to a red.
+ - for every green added to a blue, a blue is added to a red.
+ - for every purple added to a blue, a green is added to a red.
 
+| from first layer | second layer |  grouping |
+|----|----|--- |
+| left | red |  (BR) 1 |
+| left | blue |  (BB) 2 |
+| left | green |  (BG) 3; part of 1  |
+| left | purple | (BP) 4; part of 2  |
+| right | red | (RR)5 |
+| right | blue | (RB)6 |
+| right | green | (RG)7; part of 5 |
+| right | purple | (RP)8; part of 6 |
+
+So we can calculate the sum of the above, and compare the ratio of the left side to the right side.
+
+```
+  left|red + left|green + right|green + right|red = 2 - (left|blue+left|purple) - (right|blue+right|purple)
+
+also:
+
+  A = (left|red + left|green) + (right|green + right|red)
+  B = (left|blue + left|purple) + (right|blue+right|purple)
+  A+B=2
+```
+
+![8 slot image](math/8Box-Correlation.png)
+
+#### Considering the above picture, at 1 offset
+
+Of those that went left, the portion becomes blue or purple does not transmit which is 2-1/8; the remaining portion 7/8 do transmit.
+
+Of those that went right, the portion that becomes green or red does transmit, which is +1/8; the remaining porition 7/8 do not transmit.
+
+```
+left = 2
+right = 2
+
+A+B=2
+2-A = B
+B +A -A = B
+
+   B            A            B
+( 2 -(1/8) - +(1/8) ) / (2 - 1/8) = 14/8 / 15/8 =  14/15     (also 1-A/B)
+
+
+```
+
+
+```
+( 1-B/A : A/B-1 ) is 1 to -1 for 100% to inverse-related 100%. 
+
+The larger of A and B are used for the divisor, so the divisor is never 0.
+
+```
 
 ## Correlation Explanation (take 3)
 
@@ -302,150 +375,6 @@ This is a quick table of 12 slot probabilities.
 
 ![10 slot image](math/10Box-Correlation1.png)
 
-### Improved Experiment
-
-Improved experiment - there are catchers that catch balls, and there are splitter blocks, these are red, blue, green and purple.
-
-The first box of every entry in the chain must be equal numbers of blue and red blocks. If a ball hits blue, the ball is marked with 'left' and falls out
-of any other blue box.  If a ball hits a red, the ball is marked with 'right' and falls out of any other red box.
-
-The second box of each entry may be any color, following these rules
- - for every red added to a red, a blue must be added to a blue.
- - For every blue added to a red, a green is added to a blue.
- - for every green added to a red, a purple is added to a blue.
- - for every purple added to a red, a red is added to a blue.
- - for every red added to a blue, a purple must be added to a red.
- - For every blue added to a blue, a red is added to a red.
- - for every green added to a blue, a blue is added to a red.
- - for every purple added to a blue, a green is added to a red.
-
-| from first layer | second layer |  grouping |
-|----|----|--- |
-| left | red |  (BR) 1 |
-| left | blue |  (BB) 2 |
-| left | green |  (BG) 3; part of 1  |
-| left | purple | (BP) 4; part of 2  |
-| right | red | (RR)5 |
-| right | blue | (RB)6 |
-| right | green | (RG)7; part of 5 |
-| right | purple | (RP)8; part of 6 |
-
-In the case of polarizers, inverted results are the same as transmissions, and second layer of green+red and blue+purple are the sums to use.
-
-```
-left|red + left|green + right|green + right|red = 2 - (left|blue+left|purple) - (right|blue+right|purple)
-```
-
-#### Considering the blow picture, at 1 offset
-
-Of those that went left, the portion becomes blue or purple does not transmit which is 2-1/8; the remaining portion 7/8 do transmit.
-
-Of those that went right, the portion that becomes green or red does transmit, which is +1/8; the remaining porition 7/8 do not transmit.
-
-```
-left = 2
-right = 2
-
-A+B=2
-2-A = B
-B +A -A = B
-
-   B            A            B
-( 2 -(1/8) - +(1/8) ) / (2 - 1/8) = 14/8 / 15/8 =  14/15     (also 1-A/B)
-
-
-```
-
-If a left ball hits a red box, it goes into group 1, and is a match
-If a right ball hits a red box, it goes into gropu 2, and is a not match
-if a left ball hits a blue box, ig goes into group 3, and is not amatch
-if a right ball hits a blue box; it goes into gropp 4, and is a match
-
-- A: ball hits blue, goes left, hits blue, goes to catch 1 (same)
-- B: ball hits blue, goes left, hits red, goes to catch 2. (diff)
-- C: ball hits red, goes right, hits blue, goes to catch 3. (diff)
-- D: ball hits red, goes right, hits red, goes to catch 4. (same)
-
-the ratio of 1-((A+D)/(B+C)) = 1-A/B = 1-D/C; A=D, B=C; any scalars for counts applied to the above cancel out in the comparison, 
-but this is the actual ratio of intensity.  Combination of boxes may be built with the following rules, because of symmetry 
-Blue-Blue must have a Red-Red; every Blue-Red must have a Red-Blue. So one might simplify it to `2*same` and `2*diff` or 1/2.
-If the box chain is built with only Blue-Blue and Red-Red sequences, it's 100% correlation.
-If the box chain is built only with Red-Blue and Blue-Red sequences, it is 100% noncorrelated; balls basically come out in a random location, 1:1 probability for any slot.
-
-If a fraction of spots each Blue-Red or Red-Blue combination reduces the possible total correlation, and then of that possible correlation, there's the amount
-that actually correlated, which is indeed also related to the fraction of the total samples that correlated.  As a ball passes a red or blue box, it can come out
-of any of the Red or Blue boxes, whatever the color was when it entered.
-
-Because the first layer performs a transformation on the value passing through it, 
-
-#### Logic table
-
-| Row |box type input| box type output |  result |
-|----|----------|--------|----|
-| A |  red    |  red    | left 1 |
-| B |  red    | blue    | right 1 |
-| C |  blue   | red     | right 2 |
-| D |  blue   | blue    | left  2 |
-
-The ratios overall, when sampled, show A and D are equal, B and C are equal.
-
-
-```
-( 1-B/A : A/B-1 ) is 1 to -1 for 100% to inverse-related 100%. 
-
-The larger of A and B are used for the divisor, so the divisor is never 0.
-
-```
-
-In the case that there is 1 slot offset
- - 1 in 8 might go left on the next layer.
- - 1 in 2 go to the right
-   - 1 in 8 of those go to the left
-   - 7 in 8 go to the right
-
-
-1 in 8 balls that could have been successes is rejected, leaving 7/8 that have a 1/8 chance of being a potential success.
-But then 1/8 chances that would have been a failure is now a 7/8 chance of a success in the next layer too. (8-2)/(8-1).
-
-
-![8 slot image](math/8Box-Correlation.png)
-
-## What are Dimensions? (to be moved later, too philosophic)
-
-(sidebar, another view of coordinate systems?)
-
-In 1 Dimension, the length along a line is a a linear dimension.  It doesn't matter what shape the line is in, but it may be convenient to consider it a straight line for now.
-There has to be some fixed mark on the line from which the distance is measured; many points along the line have relative distances to each other, and any other point is a valid origin for distance.
-There is an amount of twist around the line, without adding another spatial dimension, line-landers will occupy some amount of arc-length or angle, (perhaps called phase?), and relative rotations can 
-be measured against other known orientations.  If there's a well defined 0 for some reason, all angled might be based against that.  If the angle that's occupied does not overlap another line-lander they can pass each other
-on the line, even if their body is also itself a length, with different amounts of angular occupation along the length in different orientations.
-
-A second orthoganal dimension can be added, relating two of the previously mentioned line dimensions, and providing a 2D surface of X/Y relative positions things can interact with, and the additional rotation angle controls a direction normal
-to that surface.  A surface normal is a sort of direction of the surface or orientation; in computer graphics, this is a normal map, which can use two spherical coordinates to represent a direction; which is a combination of the two spins 
-of the X and Y lines.
-
-To track a rotation in that plane, a third axis really has to be considered that is perpendicular to the surface itself, and becomes co-incidental with the Z axis when adding another dimension.
-The rotation factors of the existing 2 dimensions don't really apply to track the rotation of the object on the plane, but the rotation at every point on the plane; and none of the points on the plane can move off of the plane.
-
-Adding a 3rd dimension, now an X,Y and Z axis (which are, again, aribtrary lines, they don't have to be straight, and later will have to not be straight, but at this point, straight lines can be considered).  This forms a cube of related points
-and thre's full freedom to move in any x y or Z diretion, plus at every point in the space there is an orientation to that point, which are the 3 coordinates of rotation associted with each axis.  
-Shapes that occupy 3 linear dimensions, also occupy arc still, and additionally can use the same rotation directions to apply to points in the space around a line.  And all of the points around the line are rotated a certain amount
-in a certain amount of time, which forms a macroscopic rotation.
-
-These various dimensions can be used in various subsets; complex numbers for example use 3rd spin and first and second x/y location.
-
-The change in orientation of the points in a space can be applied to fixed points in that space, and project how they change in time.  If the points (1,0,0), (0,1,0) and (0,0,1) are all individually rotated by a rotation, then the result
-is a new orienation of that frame.  This sort of frame would represent the current X Y and Z axis coordinates, which can be scaled with each new point to find a new location in space.   Matrixes capture this, and represent these three direction
-vectors, which, when applied(multiplied) with a point, results with a point in some direction in space.
-
-
-
-### Moving Angles (rotations)
-
-Rotations in 3 dimensions may be added together if they all happen at the same time; and any basis vectors Xb, Yb, Zb that are perpendicular in that space may be used scaled appropriately by some related X Y and Z scalars, and added together.
-
-Rotations represent a change in angle over time, so if an object has already elapsed some time, and is at a rotation, applying the next rotation must be an integral including the current rotation which still happens; either the additional
-rotation is from an internal source, in which case the relative direction of that force changes in time with the original rotation, or it is external, which changes which direction the current rotation is relative to that external instead.
 
 
 ## More Links
