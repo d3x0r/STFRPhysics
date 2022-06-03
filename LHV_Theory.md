@@ -384,13 +384,23 @@ This is a quick table of 12 slot probabilities.
 ## LHV Graph
 
 
-
  - R(x) = { x>1:A/B,2-B/A }
    - Ratio of Bucket A vs Bucket B
    - A+B=2
    - 1-(A/B)=0
  - P_r(x) = (R(x)-1)/2
    - Convert ratio to probability.
+
+
+```
+A+B=2
+(A=B)*(A=B)=1
+
+(B-A)/B = 1-A/B
+(B-A)/A = B/A-1
+
+
+```
 
 Note: The slope of the change in the ratio of probability for N samples with 1 not correlated, is -0.5.
 QM's prediction of cos(theta) has slope 0, and is near 0 for a long time before it is `-0.5` at `cos(0.5)`.
