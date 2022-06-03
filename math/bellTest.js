@@ -134,6 +134,9 @@ function getState( axis ) {
 	}else{
 		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
 	}
+	// don't have to shuffle, the vector that's input covers the range of inputs, and the inputs
+	// are 1:1 with outputs in the first case.
+
 	if( (axis[0]*axis2[0] + axis[1]*axis2[1]) >= 0 ) {
 		//choices_d[2] += Math.sin( Math.PI/4*(1+(axis[0]*axis2[0]+axis[1]*axis2[1])) );
 		s += 2;
@@ -325,6 +328,9 @@ if( c[1])
                 axis2[0] = Math.cos( ang/180*Math.PI );
                 axis2[1] = Math.sin( ang/180*Math.PI );
                 const valArr = test1();//getState( axis2 );
+
+		valArr[0] = (valArr[0]+valArr[3])/100000;
+		valArr[1] = (valArr[1]+valArr[2])/100000;
 
 		// 1 - va1/va0 = (va0-va1)/va0
 		// 1 - va0/va1 = -(va1-va0)/va1 (this invers the negative probability.

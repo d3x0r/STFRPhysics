@@ -265,48 +265,53 @@ cos(x) ~= g(x)
 
 ### Improved Physical Experiment
 
-There are catchers that catch balls, and there are splitter blocks, these are red, blue, green and purple. (Green and purple end up equivalent to red and blue
-respetively).
+There are catchers that catch balls, and there are splitter blocks, these are red, blue, green and purple.
 
-A parallel row of box pairs can be constructed, the first of the pair will always just be red or blue.  The size of this set of boxes is the total sample size.
-Balls are dropped such that they will hit one of these pairs.
+A parallel row of box pairs can be constructed.  For every red box there is a blue box.  The size of this set of boxes is the total sample size times 2; `2C` where
+C is the number of red or blue boxes.  Balls are dropped such that they will hit one of these pairs.
 
-The first box of every set of choices must be equal numbers of blue and red blocks. If a ball hits blue, the ball is marked with 'left' and falls out
-of any other blue box.  If a ball hits a red, the ball is marked with 'right' and falls out of any other red box.
+ - If a ball hits blue, the ball is marked with 'left' and falls out of any other blue box.
+ - If a ball hits a red, the ball is marked with 'right' and falls out of any other red box.
 
 The second box of pair can be any color, following these rules
  - for every red added to a red, a blue must be added to a blue.
- - For every blue added to a red, a green is added to a blue.
- - for every green added to a red, a purple is added to a blue.
- - for every purple added to a red, a red is added to a blue.
- - for every red added to a blue, a purple must be added to a red.
+ - For every blue added to a red, a red is added to a blue.
+ - for every red added to a blue, a blue must be added to a red.
  - For every blue added to a blue, a red is added to a red.
- - for every green added to a blue, a blue is added to a red.
- - for every purple added to a blue, a green is added to a red.
+
+The total set size must be even, and this can be defined as `2C`. The count of boxes is then `2C = A+B`. `B=A`, `2C=2A` or `2C=2B`.
+
+Then we also have core
+`A-B` is the difference between what was counted for A and B.
+Then applying some algebra: when `B > A` or `A < 1` or `B > 1`, making `B-A=P*2B`, then `(B-A)/B=P*2`, `1-A/B=P*2`;
+ otherwise `A-B=P*2B`, then `(A-B)/B=P*2`, `A/B-1=P*2`.
 
 | from first layer | second layer |  grouping |
 |----|----|--- |
-| left | red |  (BR) 1 |
-| left | blue |  (BB) 2 |
-| left | green |  (BG) 3; part of 1  |
-| left | purple | (BP) 4; part of 2  |
-| right | red | (RR)5 |
-| right | blue | (RB)6 |
-| right | green | (RG)7; part of 5 |
-| right | purple | (RP)8; part of 6 |
+| left | red |  (BR) S - Transmitted |
+| left | blue |  (BB) D - blocked |
+| right | red | (RR) S - Transmitted |
+| right | blue | (RB) D - blocked |
 
-So we can calculate the sum of the above, and compare the ratio of the left side to the right side.
+
+`S` and `D` are normalized such that `S+D=2`; `s+d=x`, `S=2s/x`, `D=2d/x`; Really this doesn't matter, 
+`D` and `S` are divided against each other cancelling any 
+constant scalar like set size.
+If 'transmitted' is the expected relation, then start with '1', and remove the
+ratio that were blocked (`Diff/Same`).  Otherwise if `block` is the expected relation, calculate the ratio that were transmitted, and subtract 1 instead.
+The calculated intensity is then `1-D/S` if `(S-D)>=0`, or `S/D-1` if `(S-D)<=0`. 
 
 ```
-  left|red + left|green + right|green + right|red = 2 - (left|blue+left|purple) - (right|blue+right|purple)
+  left|red + right|red = 2 - ( (left|blue) + (right|blue) )
 
 also:
 
-  A = (left|red + left|green) + (right|green + right|red)
-  B = (left|blue + left|purple) + (right|blue+right|purple)
+  A = (left|red) + (right|red)
+  B = (left|blue) + (right|blue)
   A+B=2
 ```
 
+(image needs to be revered to delete a row(?); polarizers are 1/2 cycle of SG, only mutual transmission is abs(SG) independant observations)
 ![8 slot image](math/8Box-Correlation.png)
 
 #### Considering the above picture, at 1 offset
@@ -375,6 +380,22 @@ This is a quick table of 12 slot probabilities.
 
 ![10 slot image](math/10Box-Correlation1.png)
 
+
+## LHV Graph
+
+
+
+ - R(x) = { x>1:A/B,2-B/A }
+   - Ratio of Bucket A vs Bucket B
+   - A+B=2
+   - 1-(A/B)=0
+ - P_r(x) = (R(x)-1)/2
+   - Convert ratio to probability.
+
+Note: The slope of the change in the ratio of probability for N samples with 1 not correlated, is -0.5.
+QM's prediction of cos(theta) has slope 0, and is near 0 for a long time before it is `-0.5` at `cos(0.5)`.
+
+![curves mentioned above.](math/LHV_slopes.png)
 
 
 ## More Links
