@@ -264,8 +264,151 @@ GHZ QM predcition - 100% (?)
 GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.4, that's 0.83; and within the error bars).
 
 
+## Correlation Explanation (take 3)
+
+Let's suppose we have 10 slots, which have a grated mesh over them.  Then from above, drop marbles.  When the marble goes through the first grate,
+it's bounced such that it could end up coming out over any of it's 10 spots.
+
+In the best case, both meshes are directly over all 10 slots, and dropping a marble there's 100% probability that marbles dropped with end up in some bucket.
+
+In the next case, we move both of the meshes in opposite directions, so they cover only 9 spots. Consider the first mesh, at a quick glance, 
+there's one slot which the marble won't hit the grating at all; the chance of this being a success is 0 in 1 in 10; But there's s slot that 
+isn't over a bucket, which can still drop a marble into a bucket, so there's a 1:10 chance the marble shows up anyway.
+
+That is until the grates are 100% non-overlapped, and then there's no possibility it makes it through both.  At this point, the consideration becomes
+the inverse of the expected correlation of inverse correlation; in this case how much everything falls out.  In the case of a SG detector it becomes 
+the probability that the results are inverted (+1:-1 or -1:+1).  
+
+This is a quick table of 12 slot probabilities.
+
+| shift  |  odds |   correlation |
+|-----|-----|-----|
+| 0   | 12:12 |  + 100%  |
+| 1   | 10:11   | + 90.9% |
+| 2   | 8:10   | + 80% |
+| 3   | 6:9   | + 66% |
+| 4   | 4:8   | + 50% |
+| 5   | 2:7   | + 29% |
+|     |       |  |
+| 6   | 0:6   | +/-0% There is a shift of divisor here |
+|     |       |  |
+| 7   | 2:7   | - 29% |
+| 8   | 4:8   | - 50% |
+| 9   | 6:9   | - 66% |
+| 10  | 8:10   | - 80% |
+| 11  | 10:11  | - 90.9% |
+| 12  | 12:12  | - 100% |
+ 
+
+![10 slot image](math/10Box-Correlation1.png)
+
+### Improved Experiment
+
+Improved experiment - there are catchers that catch balls, and there are splitter blocks, these are red, blue, green and purple.
+
+The first box of every entry in the chain must be equal numbers of blue and red blocks. If a ball hits blue, the ball is marked with 'left' and falls out
+of any other blue box.  If a ball hits a red, the ball is marked with 'right' and falls out of any other red box.
+
+The second box of each entry may be any color, following these rules
+ - for every red added to a red, a blue must be added to a blue.
+ - For every blue added to a red, a green is added to a blue.
+ - for every green added to a red, a purple is added to a blue.
+ - for every purple added to a red, a red is added to a blue.
+ - for every red added to a blue, a purple must be added to a red.
+ - For every blue added to a blue, a red is added to a red.
+ - for every green added to a blue, a blue is added to a red.
+ - for every purple added to a blue, a green is added to a red.
+
+| from first layer | second layer |  grouping |
+|----|----|--- |
+| left | red |  (BR) 1 |
+| left | blue |  (BB) 2 |
+| left | green |  (BG) 3; part of 1  |
+| left | purple | (BP) 4; part of 2  |
+| right | red | (RR)5 |
+| right | blue | (RB)6 |
+| right | green | (RG)7; part of 5 |
+| right | purple | (RP)8; part of 6 |
+
+In the case of polarizers, inverted results are the same as transmissions, and second layer of green+red and blue+purple are the sums to use.
+
+```
+left|red + left|green + right|green + right|red = 2 - (left|blue+left|purple) - (right|blue+right|purple)
+```
+
+#### Considering the blow picture, at 1 offset
+
+Of those that went left, the portion becomes blue or purple does not transmit which is 2-1/8; the remaining portion 7/8 do transmit.
+
+Of those that went right, the portion that becomes green or red does transmit, which is +1/8; the remaining porition 7/8 do not transmit.
+
+```
+left = 2
+right = 2
+
+A+B=2
+2-A = B
+B +A -A = B
+
+   B            A            B
+( 2 -(1/8) - +(1/8) ) / (2 - 1/8) = 14/8 / 15/8 =  14/15     (also 1-A/B)
 
 
+```
+
+If a left ball hits a red box, it goes into group 1, and is a match
+If a right ball hits a red box, it goes into gropu 2, and is a not match
+if a left ball hits a blue box, ig goes into group 3, and is not amatch
+if a right ball hits a blue box; it goes into gropp 4, and is a match
+
+- A: ball hits blue, goes left, hits blue, goes to catch 1 (same)
+- B: ball hits blue, goes left, hits red, goes to catch 2. (diff)
+- C: ball hits red, goes right, hits blue, goes to catch 3. (diff)
+- D: ball hits red, goes right, hits red, goes to catch 4. (same)
+
+the ratio of 1-((A+D)/(B+C)) = 1-A/B = 1-D/C; A=D, B=C; any scalars for counts applied to the above cancel out in the comparison, 
+but this is the actual ratio of intensity.  Combination of boxes may be built with the following rules, because of symmetry 
+Blue-Blue must have a Red-Red; every Blue-Red must have a Red-Blue. So one might simplify it to `2*same` and `2*diff` or 1/2.
+If the box chain is built with only Blue-Blue and Red-Red sequences, it's 100% correlation.
+If the box chain is built only with Red-Blue and Blue-Red sequences, it is 100% noncorrelated; balls basically come out in a random location, 1:1 probability for any slot.
+
+If a fraction of spots each Blue-Red or Red-Blue combination reduces the possible total correlation, and then of that possible correlation, there's the amount
+that actually correlated, which is indeed also related to the fraction of the total samples that correlated.  As a ball passes a red or blue box, it can come out
+of any of the Red or Blue boxes, whatever the color was when it entered.
+
+Because the first layer performs a transformation on the value passing through it, 
+
+#### Logic table
+
+| Row |box type input| box type output |  result |
+|----|----------|--------|----|
+| A |  red    |  red    | left 1 |
+| B |  red    | blue    | right 1 |
+| C |  blue   | red     | right 2 |
+| D |  blue   | blue    | left  2 |
+
+The ratios overall, when sampled, show A and D are equal, B and C are equal.
+
+
+```
+( 1-B/A : A/B-1 ) is 1 to -1 for 100% to inverse-related 100%. 
+
+The larger of A and B are used for the divisor, so the divisor is never 0.
+
+```
+
+In the case that there is 1 slot offset
+ - 1 in 8 might go left on the next layer.
+ - 1 in 2 go to the right
+   - 1 in 8 of those go to the left
+   - 7 in 8 go to the right
+
+
+1 in 8 balls that could have been successes is rejected, leaving 7/8 that have a 1/8 chance of being a potential success.
+But then 1/8 chances that would have been a failure is now a 7/8 chance of a success in the next layer too. (8-2)/(8-1).
+
+
+![8 slot image](math/8Box-Correlation.png)
 
 ## What are Dimensions? (to be moved later, too philosophic)
 
