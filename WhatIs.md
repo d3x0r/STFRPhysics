@@ -172,3 +172,47 @@ These curves are also parallel-transport curves; or more speciically they are th
 Spin 1/2 is a cirlcle that is pi that is a ring equal distance from both the origin and space.
 
 
+
+
+
+---
+
+# Alternative Phrasings(?)
+
+## What are Dimensions? (to be moved later, too philosophic)
+
+(sidebar, another view of coordinate systems?)
+
+In 1 Dimension, the length along a line is a a linear dimension.  It doesn't matter what shape the line is in, but it may be convenient to consider it a straight line for now.
+There has to be some fixed mark on the line from which the distance is measured; many points along the line have relative distances to each other, and any other point is a valid origin for distance.
+There is an amount of twist around the line, without adding another spatial dimension, line-landers will occupy some amount of arc-length or angle, (perhaps called phase?), and relative rotations can 
+be measured against other known orientations.  If there's a well defined 0 for some reason, all angled might be based against that.  If the angle that's occupied does not overlap another line-lander they can pass each other
+on the line, even if their body is also itself a length, with different amounts of angular occupation along the length in different orientations.
+
+A second orthoganal dimension can be added, relating two of the previously mentioned line dimensions, and providing a 2D surface of X/Y relative positions things can interact with, and the additional rotation angle controls a direction normal
+to that surface.  A surface normal is a sort of direction of the surface or orientation; in computer graphics, this is a normal map, which can use two spherical coordinates to represent a direction; which is a combination of the two spins 
+of the X and Y lines.
+
+To track a rotation in that plane, a third axis really has to be considered that is perpendicular to the surface itself, and becomes co-incidental with the Z axis when adding another dimension.
+The rotation factors of the existing 2 dimensions don't really apply to track the rotation of the object on the plane, but the rotation at every point on the plane; and none of the points on the plane can move off of the plane.
+
+Adding a 3rd dimension, now an X,Y and Z axis (which are, again, aribtrary lines, they don't have to be straight, and later will have to not be straight, but at this point, straight lines can be considered).  This forms a cube of related points
+and thre's full freedom to move in any x y or Z diretion, plus at every point in the space there is an orientation to that point, which are the 3 coordinates of rotation associted with each axis.  
+Shapes that occupy 3 linear dimensions, also occupy arc still, and additionally can use the same rotation directions to apply to points in the space around a line.  And all of the points around the line are rotated a certain amount
+in a certain amount of time, which forms a macroscopic rotation.
+
+These various dimensions can be used in various subsets; complex numbers for example use 3rd spin and first and second x/y location.
+
+The change in orientation of the points in a space can be applied to fixed points in that space, and project how they change in time.  If the points (1,0,0), (0,1,0) and (0,0,1) are all individually rotated by a rotation, then the result
+is a new orienation of that frame.  This sort of frame would represent the current X Y and Z axis coordinates, which can be scaled with each new point to find a new location in space.   Matrixes capture this, and represent these three direction
+vectors, which, when applied(multiplied) with a point, results with a point in some direction in space.
+
+
+
+### Moving Angles (rotations)
+
+Rotations in 3 dimensions may be added together if they all happen at the same time; and any basis vectors Xb, Yb, Zb that are perpendicular in that space may be used scaled appropriately by some related X Y and Z scalars, and added together.
+
+Rotations represent a change in angle over time, so if an object has already elapsed some time, and is at a rotation, applying the next rotation must be an integral including the current rotation which still happens; either the additional
+rotation is from an internal source, in which case the relative direction of that force changes in time with the original rotation, or it is external, which changes which direction the current rotation is relative to that external instead.
+
