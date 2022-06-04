@@ -290,7 +290,7 @@ Then applying some algebra: when `B > A` or `A < 1` or `B > 1`, making `B-A=P*2B
 |----|----|---|---|---|
 | left | red |  (BR) S | Transmitted | up up |
 | left | blue |  (BB) D | blocked | up down   |
-| right | red | (RR) S | blocked(polarizers) | down up |
+| right | red | (RR) S | blocked | down up |
 | right | blue | (RB) D | blocked | down down |
 
 
