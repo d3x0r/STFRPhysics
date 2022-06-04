@@ -1,7 +1,7 @@
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
-const testSize= 200000;
+const testSize= 100000;
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
@@ -377,24 +377,24 @@ if( c[1])
 
 //this alone is close...
 //  I wonder what the multiplication does.
-		const val = 1/2 * (valArr[7])/(+valArr[3]+valArr[1]);
-/*
-		let val_a =  (valArr[3]-valArr[1]);  // compare 1v2
-		let val_b =  (valArr[7]-valArr[6]);  // compare 2v3
-		if( val_a < 0 ) val_a /= valArr[1];
-		else val_a /= valArr[3];
-		if( val_b < 0 ) val_b /= valArr[6];
-		else val_b /= valArr[7];
+//    R1  R2  R4 = yes
+//    R1  B   R4 = yes
+//    B   R2  R4 = yes
+//    B   B   R4 = yes
+//    R1  R2  B
+//    R1  B   B
+//    B   R2  B
+//    B   B   B
 
-		const val = (1-(val_b*val_a+1)/2)/2;
-*/
-// 3 stackpolarizer result
-//        	const val = valArr[7] / testSize;
-        	//const val = (((valArr[3]>valArr[1])?((valArr[3]-valArr[1])/(valArr[3]+valArr[1])):(-(valArr[1]-valArr[3])/(valArr[3]+valArr[1])))+1)/2;
-//		const val = (valArr[3]>valArr[1]?( ((valArr[3]-valArr[1])/(valArr[3]))):( ((valArr[1]-valArr[3])/(valArr[1]))));
-               // console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
-                //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
-	
+
+		// 1-Transmitted/Blocked
+		// red,red,red  !red,red,red  !red,!red,red
+		let Trans = valArr[7];//+valArr[6];
+		let Block = valArr[2]+valArr[0]+valArr[3]+valArr[1];
+		Block += +valArr[4]+valArr[6]+valArr[5];
+		let val = (Block>Trans)?( 1+(Trans-Block)/(Block)):((Trans-Block)/Trans);
+		val *= 2;
+		//val = -val;
                 const ypos = 1024-(val * 1024);
                     //if( ang === 45 ) debugger;
 		const val2 = (1/2-Math.abs(Math.cos( 2*ang/180*Math.PI )*Math.cos( 2*ang/180*Math.PI )/2))/2;
@@ -412,30 +412,42 @@ if( c[1])
 			ypos_d = (1024 - (val?(1024 * ((val2<val)?(1-(val2/val)):(1-(val/val2)))):1024));
 		
 		const x = (ang / 90);
-		const ax = x>1?2-x:x<-1?-2-x:x;
+
+		const ax = (x+4)%2;
 			
-		const rx = (ax)=> (1-2*Math.abs(ax));
+/*
+		const rx = (ax)=> (2-2*Math.abs(ax));
+		const r = (x) => (( (rx(x)>0?(rx(x)/(2-Math.abs(x))):(rx(x)/(Math.abs(x)))))) ;
+		const r2 = (x) => ( 2*Math.abs(r(x)-1) );
 		
-		const r = (x) => (( (rx(x)>0?(rx(x)/(1-Math.abs(x))):(rx(x)/(Math.abs(x))))+1)/2) ;
 
 		const ra = r(ax);
-		const rb = r(1-Math.abs(ax));
-		let val3 = ra*rb;// (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+		const rb = 1-r(4-4*ax)/2;
+		let val3 = rb;//0.25+(((rb)))/4;// (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+*/
 
+		const rx = (ax)=> (2-2*Math.abs(ax));
+		const r = (x) => (  rx(x)>0?(rx(x)/(2-Math.abs(x))):(rx(x)/(Math.abs(x))) ) ;
+		
+
+		const ra = r((ax));
+		const rb = r((1-ax));
+		// (2-2*ax)*(2*ax)
+		let val3 = Math.abs(rb*ra);//0.25+(((rb)))/4;// (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
+
+		val3 = val3/2 * 5/4;
 
 		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
 		//const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
 
 		const ypos_e =1024- (1024 * val3 );
 
-		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(1-(val2/val3)):(1-(val3/val2)))):1024));
-		//const ypos_ed =(1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
 
 		let ypos_ed ;
 		if( 1 || val2<0.5 ) { 
-			const v3 = 1-val;
+			const v3 = val;
 			const v2 = 1-val3;
-			ypos_ed = (1024 + (v3?(1024 * ((v2<v3)?(((v2-v3)/(v2+v3))):(((v3-v2)/(v3+v2))))):1024));
+			ypos_ed = 1024*(val+1);//(1024 - (v3?(1024 * ((v2<v3)?(((v3-v2)/(v3))):(((v3-v2)/(v2))))+0.75):1024));
 		} else
 			ypos_ed = (1024 - (val3?(1024 * ((val2<val3)?(((val2-val3)/(val2+val3))):(((val3-val2)/(val3+val2))))):1024));
 
@@ -447,7 +459,7 @@ if( c[1])
 		}
 		
                 if( prior_x > 0 ) {
-			line( prior_x, prior_y, xpos, ypos, pens[2] );
+			line( prior_x, prior_y, xpos, ypos, pens[3] );
 		
                 	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
 
