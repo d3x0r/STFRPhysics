@@ -435,7 +435,7 @@ if( c[1])
 		// (2-2*ax)*(2*ax)
 		let val3 = Math.abs(rb*ra);//0.25+(((rb)))/4;// (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));
 
-		val3 = val3/2 * 5/4;
+		val3 = val3 * 5/8;
 
 		//const val3 = (2-2*(Math.abs(ax)))/(2-(Math.abs(ax)));
 		//const val3 = (1 - ((Math.abs(ax)) ))/2;/// (2-(Math.abs(ax))));

@@ -287,7 +287,7 @@ Then applying some algebra: when `B > A` or `A < 1` or `B > 1`, making `B-A=P*2B
  otherwise `A-B=P*2B`, then `(A-B)/B=P*2`, `A/B-1=P*2`.
 
 | from first layer | second layer |  grouping |  Polarizers | SG  |
-|----|----|--- |---|---|----|
+|----|----|---|---|---|
 | left | red |  (BR) S | Transmitted | up up |
 | left | blue |  (BB) D | blocked | up down   |
 | right | red | (RR) S | blocked(polarizers) | down up |
