@@ -286,12 +286,12 @@ Then we also have core
 Then applying some algebra: when `B > A` or `A < 1` or `B > 1`, making `B-A=P*2B`, then `(B-A)/B=P*2`, `1-A/B=P*2`;
  otherwise `A-B=P*2B`, then `(A-B)/B=P*2`, `A/B-1=P*2`.
 
-| from first layer | second layer |  grouping |
-|----|----|--- |
-| left | red |  (BR) S - Transmitted |
-| left | blue |  (BB) D - blocked |
-| right | red | (RR) S - Transmitted |
-| right | blue | (RB) D - blocked |
+| from first layer | second layer |  grouping |  Polarizers | SG  |
+|----|----|--- |---|---|----|
+| left | red |  (BR) S | Transmitted | up up |
+| left | blue |  (BB) D | blocked | up down   |
+| right | red | (RR) S | blocked(polarizers) | down up |
+| right | blue | (RB) D | blocked | down down |
 
 
 `S` and `D` are normalized such that `S+D=2`; `s+d=x`, `S=2s/x`, `D=2d/x`; Really this doesn't matter, 
