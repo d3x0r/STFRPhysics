@@ -25,12 +25,13 @@
 
 
 	</div>
+	<!--
 	<div>
 	<P><a href="CHSH_Game2.html">Alternate scoring</a>; I think this scoring method is wrong, and is not what QM 
  	predicts; to get 50% correlation I'd have to match 75 in 100 samples, and the curve between 0% correlation and 50%
 	is crazy steep; conversely with only 25% matches I should be 50% correlated in the other direction.
 	</div>
-
+	-->
 
 	<div>
 
@@ -184,8 +185,24 @@ let bText = document.getElementById( "BValue" );
 let cText = document.getElementById( "CValue" );
 let statsTable = document.getElementById( "stats" );
 let statsRow = statsTable.insertRow();
+let barsRow = statsTable.insertRow();
 let statsRow2 = statsTable.insertRow();
 let picks = [statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell()];
+let barCells = [barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell()];
+let same_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "⚪";
+	bar.appendChild( label );
+	const el = document.createElement( "meter" );  bar.appendChild( el ); bar.appendChild( document.createElement("br")); return el } );
+let diff_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "⚫";
+	bar.appendChild( label );
+
+	const el = document.createElement( "meter" );  bar.appendChild( el ); bar.appendChild( document.createElement("br")); return el } );
+let weight_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "Weight";
+	bar.appendChild( label );
+
+	const el = document.createElement( "meter" );  bar.appendChild( el ); return el } );
 let stats = [statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell()];
 
 let selectors = [ [document.getElementById( "a0" ),document.getElementById( "a1" )],[document.getElementById( "b0" ),document.getElementById( "b1" )]];
@@ -227,6 +244,9 @@ function begin() {
 	bText.textContent = '';
 	cText.textContent = '';
 	picks.forEach( pick=>pick.textContent='' );
+	same_bars.forEach( bar=>pick.value = 0 );
+	diff_bars.forEach( bar=>pick.value = 0 );
+	weight_bars.forEach( bar=>pick.value = 0 );
 	stats.forEach( pick=>pick.textContent='' );
 	stepText.textContent = "- 0 -";
 
@@ -274,6 +294,18 @@ function play() {
 
 			if( c == 3 ) S += 1-thisVal;
 			else S += thisVal;
+			same_bars[c].value = choices[c][0] / (choices[c][1]+choices[c][0]);
+			diff_bars[c].value = choices[c][1] / (choices[c][1]+choices[c][0]);
+			if( thisVal  <0 ) {
+				weight_bars[c].style.background="red";
+				if( thisVal < -1 )
+					weight_bars[c].value = 1;
+				else
+				weight_bars[c].value = -thisVal;
+			} else{
+				weight_bars[c].style.background="";
+				weight_bars[c].value = thisVal;
+			}
 			stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>actual/possible";
 			c++;
 		} )
