@@ -3,12 +3,42 @@
 <head><title>Polarizer demonstration</title></head>
 <body style="font-size:125%">
    <p>
-	
+	Sliders control how many things are on each side of the balance.  Each object has a certain mass, with a slider to control that.  The final slider is the mass of the beam itself.
+
+	<p>When the beam of the balance is heavy, especially compared to the ratio of objects, the balance will never get to maximum tilt.
+
+	<p>Some Math: <pre><code>
+   A = object count
+   B = other object count
+   C = (A+B)/2, which is half of total objects.  This provides a reference for where balance or 0 is.
+   a = A/C, ratio of objects on the A side vs the balance of the objects.
+   b = B/C, ratio of objects on the B side vs the balance of the objects.
+
+   a+b=2  or  A/C+B/C=2  represent the total weight to be divided; 
+                         this is more of a given, along the lines of 1(A)+1(B)=2((A+B)/2)
+   			
+
+   The ratio of the weights are; in the below expressions, the C term is mostly meaningless 
+   other than a+b=2 part for the normalized versions, since A/C / B/C = A/B  similarly with the inverse.
+
+   (A-B)/A or (A-B)/B  depending on whether A or B is heavier. 	
+   1-B/A  or A/B-1  are equivalent to the above expressions.
+
+   the result of the above expressions is the fraction of 0 to 90 degrees that is the tilt of the scale.
+
+   --- When also considering the mass of the beam... ---
+
+   M = beam mass
+   m = M/(A+B) which is beam mass per object.
+
+   1-(B+m)/(A+m) and (A+m)/(B+m)-1  are the expressions including beam weight per object.
+   </code></pre>
+
 
 	<div id="controls"></div>
 	<div style="position:absolute;top:0">
 	</div>
-    <CANVAS WIDTH=1024 height=500 ID="testSurface" ></CANVAS>
+    <CANVAS WIDTH=1024 height=800 ID="testSurface" ></CANVAS>
 	</div>
 
 
