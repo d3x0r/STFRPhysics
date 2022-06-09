@@ -196,7 +196,10 @@ function firstDraw( a, b, mass ) {
 	for( let A = 0; A < g-m; A++ ) {
 		const x = A%30;
 		const y = Math.floor(A/30);
-		wedge( 0, Math.PI*2, 8, beamX - 15*20 +x*20, 10 + y*20, "#00770080");
+		if( a < b )
+			wedge( 0, Math.PI*2, 8, beamX - 15*20 +x*20, 10 + y*20, "#77000080");
+		else
+			wedge( 0, Math.PI*2, 8, beamX - 15*20 +x*20, 10 + y*20, "#00770080");
 	}
 	ctx.beginPath( );
 	ctx.lineWidth = 3;
