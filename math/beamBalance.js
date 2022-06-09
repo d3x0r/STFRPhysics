@@ -102,13 +102,25 @@ controls.appendChild( sliderTextMass );
 
 
 span = document.createElement( "span" );
-span.textContent = "Tilt Angle ";
+span.textContent = "Tilt Angle: ";
 controls.appendChild( span );
 
 const tiltText = document.createElement( "span" );
 tiltText.textContent = "0°";
 controls.appendChild( tiltText );
 
+	span = document.createElement( "br" );
+	controls.appendChild( span );
+
+
+span = document.createElement( "span" );
+span.textContent = "Classical Mechanics: ";
+controls.appendChild( span );
+
+
+const cm_tiltText = document.createElement( "span" );
+cm_tiltText.textContent = "0°";
+controls.appendChild( cm_tiltText );
 
 
 function balance(a,b,m) {
@@ -144,21 +156,35 @@ function firstDraw( a, b, mass ) {
 	ctx.clearRect( 0, 0, 1024, 1024);
 
 	const tilt = balance( a, b, mass );
+	const cm_tilt = a==b?0:-Math.cos(Math.PI*a/(a+b));
 	
-	tiltText.textContent = (tilt*90)+"°";
+	tiltText.textContent = (tilt*90).toFixed(3)+"°";
+	cm_tiltText.textContent = (cm_tilt*90).toFixed(3)+"°" + "  (" + ((cm_tilt-tilt)*90).toFixed(3) + "° delta)";
 
 	const bx = Math.cos( Math.PI/2 * tilt );
 	const by = Math.sin( Math.PI/2 * tilt );
+	const cm_bx = Math.cos( Math.PI/2 * cm_tilt );
+	const cm_by = Math.sin( Math.PI/2 * cm_tilt );
+
+	ctx.strokeStyle = "#333";
+	ctx.beginPath();
+	ctx.strokeStyle = "red";
+	ctx.lineWidth = 1;
+	ctx.moveTo( beamX-cm_bx*200, beamY-cm_by*200 );
+	ctx.lineTo( beamX+cm_bx*200, beamY+cm_by*200 );
+	ctx.stroke();
+
 	
 	ctx.strokeStyle = "#333";
-	ctx.font = "24px monospace"
 	ctx.beginPath();
-	ctx.lineWidth = 2;
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = 3;
 	ctx.moveTo( beamX-bx*200, beamY-by*200 );
 	ctx.lineTo( beamX+bx*200, beamY+by*200 );
 	ctx.stroke();
 	//console.log( "ang?", ang );
 	ctx.fillStyle = "#333";
+	ctx.font = "24px monospace"
 	ctx.fillText( "A", beamX-bx*200, beamY-by*200 - 20 );
 	ctx.fillText( "B", beamX+bx*200, beamY+by*200 - 20 );
 
@@ -201,7 +227,16 @@ function firstDraw( a, b, mass ) {
 		else
 			wedge( 0, Math.PI*2, 8, beamX - 15*20 +x*20, 10 + y*20, "#00770080");
 	}
+
 	ctx.beginPath( );
+	ctx.strokeStyle="black";
+	ctx.lineWidth = 3;
+	ctx.moveTo( 250, 80 );
+	ctx.lineTo( 950, 80 );
+	ctx.stroke();
+
+	ctx.beginPath( );
+	ctx.strokeStyle="black";
 	ctx.lineWidth = 3;
 	ctx.moveTo( 250, 80 );
 	ctx.lineTo( 950, 80 );
@@ -214,51 +249,22 @@ function firstDraw( a, b, mass ) {
 	return;
 
 	
-        drawHalf( ang1,0 );
-        drawHalf( ang1,2 );
-
 	function wedge( from, to, r, centerX, centerY, ca, cb ) {
 		ctx.beginPath();
 	
 		ctx.moveTo( centerX+100 , centerY );
 		ctx.lineTo( centerX+100 + r * Math.cos(from*Math.PI/2), centerY  + r * Math.sin( from*Math.PI/2));
-		    ctx.arc(centerX+100, centerY, r, from*Math.PI/2,  to*Math.PI/2, false);
+		ctx.arc(centerX+100, centerY, r, from*Math.PI/2,  to*Math.PI/2, false);
 		ctx.lineTo( centerX+100 , centerY );
 //ctx.closePath();
 		    ctx.fillStyle = ca;//"#77000020";
-	    ctx.fill();
+			ctx.fill();
 		if( cb ) {
-	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = cb;//"red";
-	    ctx.stroke();
+			ctx.lineWidth = 1;
+			ctx.strokeStyle = cb;//"red";
+			ctx.stroke();
 		}
 	}
-
-	function drawHalf( ang1, del ) {
-		const centerX = 150;
-		const ang = ang1/Math.PI*2;
-		//const center = 250;
-
-		if( ang1 < Math.PI/4 )  {
-			wedge( del - ang*2, del, 1.0, "#77000020", "red" );
-
-			wedge( del+0, del+2-ang*2, 1.05, "#00770020", "green" );
-	
-			wedge( del+0+ang, del+2-ang*2, 1, "#00007720", "blue" );
-
-		}else {
-
-			wedge( del - (2-ang*2), del+0, 1.0, "#77000020", "red" );
-			wedge( del+0, del+ang*2, 1.05, "#00330060", "green" );
-	
-			wedge( del+0.5, del+1.50-ang*1, 1, "#6070E740", "#33f" );
-
-		}
-
-
-	}
-
-
 }
 
 		update();
