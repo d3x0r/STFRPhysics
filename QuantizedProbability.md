@@ -13,6 +13,7 @@ This is related to Quantum Mechanics, and correlation of results, transmission o
 and the method of measure changes considerations slightly.  A Stern-Gerlach(SG) device passes every event to the next, while a polarizer
 ends up blocking the event instead, and nothing is transmitted.
 
+This is also quantized weight on a beam-balance. (This is not in conflict with Newtonian Physics, as there was nothing given for this).
 
 ## Thought Experiment (RNG simulation)
 
@@ -23,10 +24,10 @@ There are two types of sets of boxes are added to the two rows:  red-red,blue-bl
 
 This might be an example...
 
-|row|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|.|
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|1|R|B|B|R|B|R|R|R|B|R|B|R|B|R|R|B|B|B|R|R|R|B|B|B|R|R|R|B|B|R|B|B| 
-|2|B|R|R|B|B|R|R|B|R|R|R|B|B|B|B|R|R|B|B|B|B|B|R|R|B|R|R|B|B|R|R|R|
+|row|.|.|.|.|
+|---|---|---|---|---|
+|1|R|B|R|B|
+|2|B|R|R|B|
 
 
 A ball is dropped randomly initially into any box of the first row.
@@ -37,7 +38,7 @@ The second row's boxes will get inputs from only the red or blue boxes above it,
 depending on if the input came from a red or blue box, summarized by the following table. 
 
 | From | Into | Polarizer| direction | SG/Independant Observations |Same/Diff|
-|-----|-----|----|----|----|----|----|
+|-----|-----|----|----|----|----|
 | red | red | pass | right  | up/up | Same |
 | blue | red | block |  left | down/up | Different |
 | red | blue | block |  left | up/down | Different |
