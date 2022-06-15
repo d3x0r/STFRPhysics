@@ -107,12 +107,12 @@ in velocity in time.  They can be paramterized as:
 
 | Parameter | Type | Vector | Directed Distance |
 |---|---|---|--|
-| Position | accumulation | (x,y,z) | distance(d)*direction(x,y,z) |
-| velocity | differentiable| (x,y,z) | speed(v)*direction(x,y,z) |
-| Acceleration | differentiable | (x,y,z) | delta speed(a)*direction(x,y,z) |
-| Orientation | emergant/accumlative | (x,y,z) | angle(theta) * axis(x,y,z) |
-| Rotation | differentiable | (x,y,z) | (x,y,z)  angle(theta) * axis(x,y,z) |
-| Angular Acceleration | differentiable | (x,y,z) | accel(theta) * axis(x,y,z) |
+| Position | accumulation | (x,y,z) | distance(+/-d)*direction(x,y,z) |
+| velocity | differentiable| (x,y,z) | speed(+/-v)*direction(x,y,z) |
+| Acceleration | differentiable | (x,y,z) | delta speed(+/-a)*direction(x,y,z) |
+| Orientation | emergant/accumlative | (x,y,z) | angle(+/-theta) * axis(x,y,z) |
+| Rotation | differentiable | (x,y,z) | angle(+/-theta) * axis(x,y,z) |
+| Angular Acceleration | differentiable | (x,y,z) | accel(+/-theta) * axis(x,y,z) |
 
 There are applications which can benefit from having expanded versions of the coordinates, because the sign of the angle or speed otherwise is lost when multiplied with its direction vector.  Quanterions
 have no reference for the sign, and only express either all positive or all negative spins.
