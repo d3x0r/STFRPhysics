@@ -16,6 +16,7 @@ Some toys test displacing straight lines by an extrinsic curvature.
 - [Single Source](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature for a single poing displacement.
 - [4 Sources](https://d3x0r.github.io/STFRPhysics/math/gravityFields.html) - This is 4 point displacements; the points  do not move and do not scale with the displacement they generate.
 - [3D 4 sources](https://d3x0r.github.io/STFRPhysics/3d/index-gravity-field.html) - 3D stack of multiple planes; with the 'zLevel' set near 0, the planes of 'geodesic light paths' include the plane of the displacements.
+- [Inner Rotation Curve Explorer](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap3.html) - This explores what the frames are for the proposed filler curve; turns out to be geodesic rototions of a frame from one pole through the other and back to the start with the originating orientation.
 
 The `Displacment A` slider controls the inner displacment of 0.  The point that used to be at 0 is no longer at 0, but is instead
 shoved away from the 0 by some amount.  Straight lines are proportionally scaled such that there position relative to the 0 is still the same.... as the radius increases, the surface area of the spheres increase more than the radius, 
