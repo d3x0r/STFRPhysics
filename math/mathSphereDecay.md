@@ -3,11 +3,13 @@
 
 This ends up considering that gravity is a increasing gradient towards the source; the strength of gravity is stronger; rather than the convention that the kinetic energy component is large far away.  The relation between these is f(x)=1/x.
 
+Lines are straight lines to light.
 
 ## Demo
 
 - [Single Source](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature for a single poing displacement.
 - [4 Sources](https://d3x0r.github.io/STFRPhysics/math/gravityFields.html) - This is 4 point displacements; the points  do not move and do not scale with the displacement they generate.
+- [3D 4 sources](https://d3x0r.github.io/STFRPhysics/3d/index-gravity-field.html) - 3D stack of multiple planes; with the 'zLevel' set near 0, the planes of 'geodesic light paths' include the plane of the displacements.
 
 The `Displacment A` slider controls the inner displacment of 0.  The point that used to be at 0 is no longer at 0, but is instead
 shoved away from the 0 by some amount.  Straight lines are proportionally scaled such that there position relative to the 0 is still the same.... as the radius increases, the surface area of the spheres increase more than the radius, 
