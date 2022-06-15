@@ -7,6 +7,12 @@ Lines are straight lines to light.
 
 ## Demo
 
+I started testing the compression idea using geogebra.
+
+- [Geogebra 3D graph](https://www.geogebra.org/3d/mb5wpnu6) - I started testing the math here, but subtracting |x| and |y| independantly from the hyperbolic displacements make more of a bell curve instead of an arc; especially very close to 0.
+
+Some toys test displacing straight lines by an extrinsic curvature.
+
 - [Single Source](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature for a single poing displacement.
 - [4 Sources](https://d3x0r.github.io/STFRPhysics/math/gravityFields.html) - This is 4 point displacements; the points  do not move and do not scale with the displacement they generate.
 - [3D 4 sources](https://d3x0r.github.io/STFRPhysics/3d/index-gravity-field.html) - 3D stack of multiple planes; with the 'zLevel' set near 0, the planes of 'geodesic light paths' include the plane of the displacements.
