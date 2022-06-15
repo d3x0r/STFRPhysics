@@ -105,8 +105,8 @@ By my count, that makes us have a 3D world of, time, momentum, angular momentum.
 These vectors may be treated like, position, velocity and acceleration.  Position is a specific point at time, velocity is the change in position in time (the freedom to move), acceleration is a change
 in velocity in time.  They can be paramterized as:
 
-| Parameter | Vector | Directed Distance |
-|---|---|---|
+| Parameter | Type | Vector | Directed Distance |
+|---|---|---|--|
 | Position | accumulation | (x,y,z) | distance(d)*direction(x,y,z) |
 | velocity | differentiable| (x,y,z) | speed(v)*direction(x,y,z) |
 | Acceleration | differentiable | (x,y,z) | delta speed(a)*direction(x,y,z) |
@@ -160,7 +160,7 @@ separated by a '/' (which is prounouced 'per' usually), for example 'm/s' is dis
 
 --- 
 
-The following section is a step wise approach to Principia and where this might apply.
+The following section is a step wise review of Principia and where this might apply.
 
 https://redlightrobber.com/red/links_pdf/Isaac-Newton-Principia-English-1846.pdf
 
@@ -182,13 +182,14 @@ https://redlightrobber.com/red/links_pdf/Isaac-Newton-Principia-English-1846.pdf
   - place in space
   - absolute motion  (place to place over time)
   - ordering of time and space
-  - 
 
 ### Laws of Motion
 
 - Every body perseveres in its state of rest, or of uniform motion in a right line, unless it is compelled to change that state by forces impressed thereon.
 - The alteration of motion is ever proportional to the motive force impreus ed ; and is made in the direction of the right line in. which that force is impressed
 - To every action there is always opposed an equal reaction : or the mutual actions of two bodies upon each other are always equal, and directed to contrary parts.
+
+This is mostly a consideration of geometry of acceleration of centripetal force on an otherwise unchanged velocity; also Point between two gravitational bodies.
 
 
 ### Pendulums and oscillations
@@ -207,19 +208,20 @@ Section 9 in Prinicpia is on circular fluid motions; this would apply here; but 
 
 Certainly there is force applied on a lever is proportional to it's length from the fulcrum...
 
+---
+
+## (Back to your regularly scheduled program...)
+
 #### Correlaries follow
 
-Consideration of geometry of acceleration of centripetal force on an otherwise unchanged velocity.  Also Point between two gravitational bodies.
-
+Additionally to motion as a linear velocity, motion as a spin should be an addendum to the basic laws; it has similar characteristics
+of linear veocity.
 
 - A body maintains its state, unless acted on by external force.
   - a body at rest, with no velocity, remains at rest.
   - a body with a velocity ( a speed and direction ) maintains its velocity, without any forces acting on it.
   - a body wwith a spin ( an axis and angle <> 0 ) maintains its spin.
 
----
-
-## (Back to your regularly scheduled program...)
 
 ### Balance of weights
 
@@ -249,8 +251,9 @@ quarter turns.
 
 
 
-
 ### Speed of Light
+
+This is a slight modification to the units of the terms in the following; replacing a '1' previously with 'q'.
 
 Classically, wavelength(m) * frequency(1/s) = C;  this is extended with turns to be `length per quarter-cycle(m/q) * frequency(q/s) = C`. 
 Wavelength is length of a quarter cycle. frequency is quater cycles per second. or maybe `length per quarter-cycle(m/4q) * frequency(4q/s) = C`; the 
