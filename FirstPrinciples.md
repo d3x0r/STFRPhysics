@@ -256,9 +256,8 @@ quarter turns.
 This is a slight modification to the units of the terms in the following; replacing a '1' previously with 'q'.
 
 Classically, wavelength(m) * frequency(1/s) = C;  this is extended with turns to be `length per quarter-cycle(m/q) * frequency(q/s) = C`. 
-Wavelength is length of a quarter cycle. frequency is quater cycles per second. or maybe `length per quarter-cycle(m/4q) * frequency(4q/s) = C`; the 
-scalar would end up canceling out along with the units.
-
+Wavelength is length of a quarter cycle. frequency is quarter cycles per second. or maybe `length per quarter-cycle(m/4q) * frequency(4q/s) = C`; the 
+scalar would end up canceling out along with the units. 
 
 The energy of a wave is a direct relationship of its frequency; `E = hF`; where `h` is Plank's Constant that directly scaled turns per second.
 
@@ -269,6 +268,13 @@ Or momentum equals one over turns times one over meters.
 Alternatively this can be factored like `g = s/m-m-t` which is `g-m/s = 1/c 1/m`. 
 The smaller the radius, the greater the turns can be because there's less `m-t/s`. 
 (Maybe instead 1/c = g-m/s * m?)
+
+#### Regarding Quarter Cycles
+
+If 1q = 90 degrees, then cos(-1)=-1, cos(0)=0, cos(1)=1, cos(2)=0, cos(3)=-1 [cos(-1)=-1], cos(4)=0; this last term is a completed cycle and is back to 0.
+arccos(cos(q)) is >= -1 to 1; the back half of a cycle is not known.
+
+This is simmilar to using close to a gradians/100. 
 
 ### Maybe instead?
 
