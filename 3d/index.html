@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Isosurface Texture Toolbox</title>
+		<title>Twist around Lat/Long</title>
 		
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
@@ -27,7 +27,7 @@
 	<!-- info on screen display -->
 	<div id="info">
 		<div class="top">
-			Isosurface Texture Tester
+			Twist around Lat/Long (first test)
 		</div>
 		<div class="bottom" id="inlineDoc">
 			- <i><a href="https://www.github.com/d3x0r/STFRPhysics">https://www.github.com/d3x0r/STFRPhysics</a></i>
@@ -47,6 +47,7 @@
 		 - Draw Normal Ball: <input type="checkbox" id="drawNormalBall" value="checked">
 
 		</p>
+<!--
 		<p>Show Normal Texture: <input type="checkbox" id="showNormal" value="checked"></p>
 		<p>Resolution: <input type="text" id="resolution" value="0"> </p>
 		<p>Vertex count: <input type="text" id="vertcount" value="0"> </p>
@@ -60,10 +61,15 @@
 			1:10<input type="radio" name="inflationMode" id="brick">
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p>Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" checked></p>
-
-		<p>X:<input type="range" id="lnQX" min="0"  max="1000"  value="500"> Y:<input type="range" id="lnQY" min="0"  max="1000" value="500"> Z:<input type="range" id="lnQZ" min="0"  max="1000" value="500"> T:<input type="range" id="lnQT" min="0"  max="1000" value="500"><br>
-		Octive:<input type="range" id="lnQA" min="3"  max="100" value="3"></p>
-		<p>X:<SPAN id="lnQXval">-0-</SPAN> Y:<SPAN id="lnQYval">-0-</SPAN> Z:<SPAN id="lnQZval">-0-</SPAN> T:<SPAN id="lnQTval">1.0</SPAN>  Octive:<SPAN id="lnQAval">1.0</SPAN></p>
+-->
+		<p>Latitude:<input type="range" id="lnQX" min=0  max=1000  value=530 > <SPAN id="lnQXval">-0-</SPAN><br>
+			Longitude:<input type="range" id="lnQY" min="0"  max="1000" value="500"> <SPAN id="lnQYval">-0-</SPAN><br>
+			Facing:<input type="range" id="lnQZ" min="0"  max="1000" value="500"><SPAN id="lnQZval">-0-</SPAN><br>
+<div style="display:none">
+		 T:<input type="range" id="lnQT" min=0  max=1000 value=501> <SPAN id="lnQTval">1.0</SPAN><br>
+</div>
+		Octive:<input type="range" id="lnQA" min="3"  max="100" value="3"><SPAN id="lnQAval">1.0</SPAN>
+	</p>
 
 	  </div>
 	</div>
@@ -136,51 +142,10 @@
 
 	  //Update statistics
 
-	  document.getElementById("meshtime").value = (end - start) / 1000.0;
+	//  document.getElementById("meshtime").value = (end - start) / 1000.0;
 
 
 
-	  geometry.computeBoundingBox();
-	  geometry.computeBoundingSphere();
-		if( document.getElementById( "showNormal" ).checked && !document.getElementById("showGrid").checked ) {
-			material	= new THREE.MeshNormalMaterial();
-			surfacemesh	= new THREE.Mesh( geometry, material );
-			surfacemesh.doubleSided = true;
-		}
-		else {
-			if( document.getElementById("showGrid").checked )
-			{
-				if( mesher === meshers['Dual Marching Tetrahedra (DCL-volume)'] ){
-					material	= THREE.DualGridGeometryMaterial();
-					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
-					material.uniforms.elementMap3.value = fieldElements.texture.texture;
-					material.uniforms.elementX.value = fieldElements.dims[0];
-					material.uniforms.elementY.value = fieldElements.dims[1];
-					material.uniforms.elementZ.value = fieldElements.texture.halfZ;
-					material.uniforms.cursorIconTex.value = window.ttCommon.cursorIcon;
-
-					material.defines.CALCULATE_COSINE_MERGE = document.getElementById( "sharpenTransition" ).checked?1:0;
-					material.uniforms.cursorIconUp.value.set( 0, 1, 0 ); // this should update to the camera up 
-
-					surfacemesh	= new THREE.Mesh( geometry, material );
-				}else{
-					material	= THREE.GridGeometryMaterial();
-					material.uniforms.textureMap3.value = window.ttCommon.stack.smudge();
-					material.uniforms.cursorIconTex.value = window.ttCommon.cursorIcon;
-					material.defines.CALCULATE_COSINE_MERGE = document.getElementById( "sharpenTransition" ).checked?1:0;
-					material.uniforms.cursorIconUp.value.set( 0, 0, 1 ); // this should update to the camera up 
-
-					surfacemesh	= new THREE.Mesh( geometry, material );
-				}
-				//cluster.THREE_solid.add( sector.THREE_solid = new THREE.Mesh( sector.solid_geometry.geometry, geometryShader ) );
-			}else {
-				material	= new THREE.MeshPhongMaterial({
-					color:0x700070
-				});
-				surfacemesh	= new THREE.Mesh( geometry, material );
-				surfacemesh.doubleSided = true;
-			}
-		}
 		var wirematerial = new THREE.MeshBasicMaterial({
 				color : 0xffffff
 			  , wireframe : true
@@ -197,7 +162,7 @@
 			scene.add( lineSegments );
 		}
 
-		scene.add( surfacemesh );
+		if( surfacemesh )scene.add( surfacemesh );
 		scene.add( wiremesh );
 
 		}
@@ -265,7 +230,7 @@
 
 			// put a camera in the scene
 			camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
-			camera.position.set(0, 0, 80);
+			camera.position.set(0, 15, 20);
 			scene.add(camera);
 
 			// create a camera contol
@@ -383,6 +348,7 @@
 
 
 			is = document.getElementById( "lnQA" );
+			if(is)
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
@@ -403,38 +369,55 @@
 
 
 			is = document.getElementById( "inflation" );
+			if(is)
 			is.oninput = updateMesh;
 			is = document.getElementById( "noInflation" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "minimize" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "maximize" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "midify" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "harden" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "brick" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "smoothShade" );
+			if(is)
 			is.onchange = updateMesh;
+			if(is)
 			is = document.getElementById( "showNormal" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "showGrid" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "sharpenTransition" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "showCoordinateGrid" );
+			if(is)
 			is.onchange = updateMesh;
 			is = document.getElementById( "drawNormalBall" );
+			if(is)
 			is.onchange = updateMesh;
                                                
 
 			is = document.getElementById( "fillOutside" );
+			if(is)
 			is.onchange = updateTestData;
 			is = document.getElementById( "fillInside" );
+			if(is)
 			is.onchange = updateTestData;
 			is = document.getElementById( "fillOpen" );
+			if(is)
 			is.onchange = updateTestData;
 
 			function updateTestData() {
@@ -479,8 +462,8 @@
 	}
 
 
-	  surfacemesh.visible = document.getElementById("showfacets").checked;
-	  wiremesh.visible = document.getElementById("showedges").checked;
+//	  surfacemesh.visible = document.getElementById("showfacets").checked;
+//	  wiremesh.visible = document.getElementById("showedges").checked;
 
 			// actually render the scene
 			renderer.render( scene, camera );
