@@ -283,12 +283,22 @@ if( 0 ) {
 								normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
 
 							} else {
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 255))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 1))
+								if( lnQ2.θ > Math.PI ){
+								normalColors.push(new THREE.Color(2*0.5, 0, 0, 1))
+								normalColors.push(new THREE.Color(2*0.5, 0, 0, 1))
+								normalColors.push(new THREE.Color(0, 2*0.5, 0, 1))
+								normalColors.push(new THREE.Color(0, 2*0.5, 0, 1))
+								normalColors.push(new THREE.Color(0, 0, 2*0.5, 1))
+								normalColors.push(new THREE.Color(0, 0, 2*0.5, 1))
+								}else {
+									normalColors.push(new THREE.Color(0.5, 0, 0, 1))
+									normalColors.push(new THREE.Color(0.5, 0, 0, 1))
+									normalColors.push(new THREE.Color(0, 0.5, 0, 1))
+									normalColors.push(new THREE.Color(0, 0.5, 0, 1))
+									normalColors.push(new THREE.Color(0, 0, 0.5, ))
+									normalColors.push(new THREE.Color(0, 0, 0.5, 1))
+	
+								}
 
 							}
 						}
@@ -318,84 +328,6 @@ if( 0 ) {
 							normalColors.push(new THREE.Color(1.0, 1.0, 1.0, 1))
 						}
 
-						if (0) {
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale, (o[1] + lnQ2.ny) * spaceScale, (o[2] + lnQ2.nz) * spaceScale))
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ.nx) * spaceScale, (o[1] + lnQ.ny) * spaceScale, (o[2] + lnQ.nz) * spaceScale))
-							normalColors.push(new THREE.Color(0, 0, 0, 1))
-							normalColors.push(new THREE.Color(0.0, 1.0, 0.0, 1))
-						}
-
-						if (0) {
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale - 0.5 * normal_del, (o[1] + lnQ2.ny) * spaceScale, (o[2] + lnQ2.nz) * spaceScale))
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale + 0.5 * normal_del, (o[1] + lnQ2.ny) * spaceScale, (o[2] + lnQ2.nz) * spaceScale))
-
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale, (o[1] + lnQ2.ny) * spaceScale - 0.5 * normal_del, (o[2] + lnQ2.nz) * spaceScale))
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale, (o[1] + lnQ2.ny) * spaceScale + 0.5 * normal_del, (o[2] + lnQ2.nz) * spaceScale))
-
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale, (o[1] + lnQ2.ny) * spaceScale, (o[2] + lnQ2.nz) * spaceScale - 0.5 * normal_del))
-							normalVertices.push(new THREE.Vector3((o[0] + lnQ2.nx) * spaceScale, (o[1] + lnQ2.ny) * spaceScale, (o[2] + lnQ2.nz) * spaceScale + 0.5 * normal_del))
-							if (Math.abs(t) < 0.005) {
-								normalColors.push(new THREE.Color(1.0, 0.6, 0.6, 1))
-								normalColors.push(new THREE.Color(1.0, 0.6, 0.6, 1))
-								normalColors.push(new THREE.Color(0.6, 1.0, 0.6, 1))
-								normalColors.push(new THREE.Color(0.6, 1.0, 0.6, 1))
-								normalColors.push(new THREE.Color(0.6, 0.6, 1.0, 1))
-								normalColors.push(new THREE.Color(0.6, 0.6, 1.0, 1))
-							} else if (Math.abs(t - B) < 0.01) {
-								normalColors.push(new THREE.Color(1.0, 0.3, 0.3, 1))
-								normalColors.push(new THREE.Color(1.0, 0.3, 0.3, 1))
-								normalColors.push(new THREE.Color(0.3, 1.0, 0.3, 1))
-								normalColors.push(new THREE.Color(0.3, 1.0, 0.3, 1))
-								normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
-								normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
-
-							} else {
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-
-							}
-						}
-
-						if (0)
-							if (1) { // graph of rotations...
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale - 0.5 * normal_del, (o[1] + (lnQ2.θ)) * spaceScale, (o[2] + (0)) * spaceScale))
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale + 0.5 * normal_del, (o[1] + (lnQ2.θ)) * spaceScale, (o[2] + (0)) * spaceScale))
-
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale, (o[1] + (lnQ2.θ)) * spaceScale - 0.5 * normal_del, (o[2] + (0)) * spaceScale))
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale, (o[1] + (lnQ2.θ)) * spaceScale + 0.5 * normal_del, (o[2] + (0)) * spaceScale))
-
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale, (o[1] + (lnQ2.θ)) * spaceScale, (o[2] + (0)) * spaceScale - 0.5 * normal_del))
-								normalVertices.push(new THREE.Vector3((o[0] + (t) * Math.PI) * spaceScale, (o[1] + (lnQ2.θ)) * spaceScale, (o[2] + (0)) * spaceScale + 0.5 * normal_del))
-
-
-								if (Math.abs(t) < 0.05) {
-									normalColors.push(new THREE.Color(1.0, 0.6, 0.6, 1))
-									normalColors.push(new THREE.Color(1.0, 0.6, 0.6, 1))
-									normalColors.push(new THREE.Color(0.6, 1.0, 0.6, 1))
-									normalColors.push(new THREE.Color(0.6, 1.0, 0.6, 1))
-									normalColors.push(new THREE.Color(0.6, 0.6, 1.0, 1))
-									normalColors.push(new THREE.Color(0.6, 0.6, 1.0, 1))
-								} else if (Math.abs(t - B) < 0.05) {
-									normalColors.push(new THREE.Color(1.0, 0.3, 0.3, 1))
-									normalColors.push(new THREE.Color(1.0, 0.3, 0.3, 1))
-									normalColors.push(new THREE.Color(0.3, 1.0, 0.3, 1))
-									normalColors.push(new THREE.Color(0.3, 1.0, 0.3, 1))
-									normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
-									normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
-
-								} else {
-									normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-									normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-									normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-									normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-									normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-									normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-								}
-							}
 
 						// console.log( "here?" );
 						if (1) { // recti-linear scaled points ... 
@@ -427,13 +359,23 @@ if( 0 ) {
 								normalColors.push(new THREE.Color(0.3, 0.3, 1.0, 1))
 
 							} else {
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0.5, 0, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0.5, 0, 1))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-								normalColors.push(new THREE.Color(0, 0, 0.5, 1))
-							}
+								if( lnQ2.θ > Math.PI ){
+									normalColors.push(new THREE.Color(2*0.5, 0, 0, 1))
+									normalColors.push(new THREE.Color(2*0.5, 0, 0, 1))
+									normalColors.push(new THREE.Color(0, 2*0.5, 0, 1))
+									normalColors.push(new THREE.Color(0, 2*0.5, 0, 1))
+									normalColors.push(new THREE.Color(0, 0, 2*0.5, 1))
+									normalColors.push(new THREE.Color(0, 0, 2*0.5, 1))
+									}else {
+										normalColors.push(new THREE.Color(0.5, 0, 0, 1))
+										normalColors.push(new THREE.Color(0.5, 0, 0, 1))
+										normalColors.push(new THREE.Color(0, 0.5, 0, 1))
+										normalColors.push(new THREE.Color(0, 0.5, 0, 1))
+										normalColors.push(new THREE.Color(0, 0, 0.5, ))
+										normalColors.push(new THREE.Color(0, 0, 0.5, 1))
+		
+									}
+								}
 							if (E < 2)
 								drawRange(lnQ2.x, lnQ2.y, lnQ2.z, Math.PI / 64, 5);
 

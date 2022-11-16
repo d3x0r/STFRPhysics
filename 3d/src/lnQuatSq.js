@@ -17,8 +17,8 @@ const grid =[[ 0, p2, p2,  0 ]  //>0 - 1
 // it's hard to see this because they're all in the same plane...
 // not sure this is really needed, because the twist is just around this
 // same axis.		
-const grid2=[[ 0, p2, 0,  0 ]  //>0 - 1
-            ,[p2,  0,  0, p2 ]  //1-2
+const grid2=[[ 0, 0, 0,  0 ]  //>0 - 1
+            ,[0,  0,  0, p2 ]  //1-2
             ,[0, 0, 0,  p2*2 ]  //2-3
             ,[0,  0,  0, p2*2 ]   //3-4
          ];
@@ -229,11 +229,14 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 						this.dirty = true; 
 						return this.update();
 					}
-
+					while( lat < 0 ) { lat = Math.abs(lat);
+						lng += Math.PI;
+					}
 					const gridlat = Math.floor( Math.abs( lat ) / Math.PI );
 					const gridlng = Math.floor( Math.abs( lng ) / Math.PI );
 					const gridlatoct = gridlat>>2;
 					const gridlngoct = gridlng>>2;
+					// additional spin is applied...
 					const spin = ((d)?grid:grid2)[gridlat%4][gridlng%4] + ((gridlatoct+gridlngoct) * Math.PI*4);
 					const latmul = 1;//(!d)?gridn[gridlat%4][gridlng%4]:1;
 
@@ -245,14 +248,14 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					if(d) // D is a boolean to further align the tangents.
 					{
 						const q = this;
-
-						const ty = Math.cos( lat );
-						const txn = -z;
-						
 						{
+// ---------- This is the optimized twist inline function ---------------
+							// this uses a fixed offset of the latitude to turn the basis; this alignes
+							// all forward/right towards the poles and along the equator
+							const ty = Math.cos( lat );
+							const txn = -z;
 							const s = Math.sin( lat ); // double angle substituted
 							const c = 1-ty; // double angle substituted
-							
 							let angle = txn===1?lat
 									:acos( ( ty + 1 ) * ( 1 + z ) / 2 - 1 );
 							// compute the axis
@@ -262,6 +265,8 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								              :(s * x * x + s * z * (1+z) );
 		               
 							const newlen = Math.sqrt(yz*yz + xz*xz + xy*xy );
+							// newlen also should == sin(angle)
+// ----------- end of inline optmized twist ----------------------
 							if( Math.abs(newlen)>0.00000001){
 								const tmp = 1 /newlen;
 								q.nx = yz *tmp;
@@ -282,7 +287,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 								const s = Math.sin( angle ); 
 								const c1 = Math.cos( angle );
 								const c = 1-c1;
-								const cny = c * this.ny;
+								const cny = c * this.ny;// before the previous spin, this can be counted as 0
 								// compute the 'up' for the current frame
 								const ax = (cny*this.nx) - s*this.nz;
 								const ay = (cny*this.ny) + c1;
@@ -359,7 +364,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 							}	
 						}else {
 							//if(this.θ < 0 )
-								this.θ = lat;
+							//this.θ = lat;
 
 							this.x  = this.nx*this.θ;
 							this.y  = this.ny*this.θ;
@@ -1099,7 +1104,9 @@ function finishRodrigues( q, oct, ax, ay, az, th, extrinsic ) {
 	//    cos(A) (cos(x + y) - cos(x - y)) + cos(x - y) + cos(x + y)
 	// octive should have some sort of computation that gets there...
 	// would have to be a small change
-	let ang = acos( cosCo2 )*2 + oct * (Math.PI*2);
+	let ang = acos( cosCo2 )*2;
+	//if( oct & 1 ) ang = Math.PI*4 - ang;
+	//else ang += oct * (Math.PI*2);
 
 	if( ang ) {
 		const sxmy = Math.sin(xmy);
