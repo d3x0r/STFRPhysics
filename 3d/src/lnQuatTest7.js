@@ -94,6 +94,11 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		
 	}
 
+ 	if( showCoordinateGrid  ) {
+		const range = (  2 ) * Math.PI;
+		const minRange = (0 ) * Math.PI;
+		drawRange( 0,0,0, range, 12*Math.PI, Math.PI*2 );
+	}
 
 return;
 			normalVertices.push( new THREE.Vector3( (0)*spaceScale ,(0)*spaceScale    , (0)*spaceScale ))

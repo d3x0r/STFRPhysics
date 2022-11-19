@@ -1067,6 +1067,49 @@ function slerp2( q, p, t, target, external ) {
 	return finishRodrigues( target, Math.floor( q.θ/(Math.PI*2)), tmpA.x, tmpA.y, tmpA.z, angle*t );
 }
 
+//                        
+function finishRodrigues_by_Quaternion(q, oct, ax, ay, az, th, extrinsic) {
+// 3 0 2 to quaternion*2  6 0 4; and quaternion mult is 16 12
+//  and return from quaternion
+//   22 12 4  or total 34 4  + arccos and sin and 3 mults
+// and this is (29 19 6 [2sin 2cos 1acos and 1(sqrt or asin)) ])   48 total more than a matrix...
+// this would be shorter to convert to quaternion, do that multiply, and hope it comes out to be the same.
+	const q2a = Math.cos( q.θ /2 );
+	const q1s = Math.sin( q.θ /2 )
+	const q2b = q1s*q.nx;
+	const q2c = q1s*q.ny;
+	const q2d = q1s*q.nz;
+	const q1a = Math.cos( th /2 );
+	const q2s = Math.sin( th /2 );
+	const q1b = q2s*ax;
+	const q1c = q2s*ay;
+	const q1d = q2s*az;
+
+	const q3a = q1a*q2a - q1b*q2b - q1c*q2c - q1d*q2d;
+	const q3b = q1a*q2b + q1b*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1c*q2d - q1d*q2c);
+	const q3c = q1a*q2c + q1c*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1d*q2b - q1b*q2d);
+	const q3d = q1a*q2d + q1d*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1b*q2c - q1c*q2b);
+
+	oct = oct || Math.floor(q.θ / (Math.PI * 2));
+
+	let ang = acos(q3a) * 2 + oct * (Math.PI * 2);
+
+	if (ang ) {
+		const Clx = (lnQuat.sinNormal)
+			? (1/ Math.sin(ang / 2))
+			: 1 / Math.sqrt(q3b * q3b + q3c * q3c + q3d * q3d );
+
+		q.rn = Clx; // I'd like to save this to see what the normal actually was
+		q.θ = ang;
+		q.x = (q.nx = q3b * Clx) * q.θ;
+		q.y = (q.ny = q3c * Clx ) * q.θ;
+		q.z = (q.nz = q3d * Clx ) * q.θ;
+		q.dirty = false;
+	} else {
+		q.θ = 0;		
+	}
+	return q;
+}
 
 
 // q= quaternion to rotate; oct = octive to result with; ac/as cos/sin(rotation) ax/ay/az (normalized axis of rotation)
