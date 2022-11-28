@@ -103,19 +103,25 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 				q3 = q2;
 			}
 
-			const len = Math.sqrt( q3.x*q3.x+ q3.y*q3.y+q3.z*q3.z+q3.w*q3.w );
-if( Math.abs(len-1) > 0.01 ) console.log( "Result:", len, nTotal, q3 );
+			const len = Math.sqrt( q3.x*q3.x+ q3.y*q3.y+q3.z*q3.z /*+ q3.w*q3.w*/ );
+			//if( Math.abs(len-1) > 0.01 ) console.log( "Result:", len, nTotal, q3 );
 			//console.log( "resulting quat:", len );
-			const a = Math.acos( q3.w/len ) * 2;
-			const s = Math.sin( a/2 )*len;
-			lnQq.nx = q3.x / s;
-			lnQq.ny = q3.y / s;
-			lnQq.nz = q3.z / s;
+			const a_ = Math.atan2( len, q3.w ) * 2;//Math.acos( q3.w/len ) * 2;
+				// because it's *2, only 0 to PI results, which is only cos 1;0;-1  and sin 0;1;0
+				// the sqrt above is always positive.
+
+			// this is what the 0 to pi space seems to look like, when you wrap from >180 to -180<
+			const a = (a_>Math.PI)?(-2*Math.PI+a_):a_;
+			
+			//const s = Math.sin( a/2 );
+			lnQq.nx = q3.x / len;
+			lnQq.ny = q3.y / len;
+			lnQq.nz = q3.z / len;
 			lnQq.θ = a;
 			lnQq.x = a * lnQq.nx;
 			lnQq.y = a * lnQq.ny;
 			lnQq.z = a * lnQq.nz;
-                        lnQq.dirty = false;
+			lnQq.dirty = false;
 			doDrawBasis( lnQq, fibre, true );
 		}
 		else {
