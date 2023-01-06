@@ -23,7 +23,7 @@ class Frame{
 	Ph = 0;
 	Pc = 0;
 	Pt = 0;
-
+	hue = 0;
 	T_start = 0;
 
 	T_see_h = 0;
@@ -261,6 +261,7 @@ function draw(  ) {
 		f.Pc = now*V 
 		f.Ph = f.Pc+L;
 		f.Pt = f.Pc-L;
+		f.hue = 120*(now%3)-240;
 		f.T_start = now;
 		f.T_see_h = realTimeToObserverTime( now, L );
 		f.T_see_c = realTimeToObserverTime( now, 0 );
@@ -270,6 +271,7 @@ function draw(  ) {
 
 	ctx.clearRect( 0, 0, 1024, 1024);
 	ctx.strokeStyle = "blue";
+	
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	for( let f = 0; f < curFrame; f++ ) {
@@ -312,7 +314,8 @@ function draw(  ) {
 		}
 	}
 
-	if( drawP !== frames[0] )
+	if( drawP !== frames[0] ) {
+
 	if( drawP )
 		centerBoxXY( 500 + drawP.Pc*xscale, 30 );
 	if( drawP2 )
@@ -327,6 +330,40 @@ function draw(  ) {
 		tailTri( drawT.Pc-L, 30 );
 	if( drawT2 )
 		tailTri( drawT2.Pc-L, 30 );
+
+if(0) {
+	if( drawP && drawH ) {
+		var grd = ctx.createLinearGradient(0, 0, 200, 0);
+		grd.addColorStop(0, `hsl(${(drawH.hue)},100%,50%` );
+		grd.addColorStop(1, `hsl(${(drawP.hue)},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(drawH.Pc+L)*xscale, 25, (drawP.Pc-(drawH.Pc+L))*xscale, 10 );
+	}
+	if( drawP && drawT ) {
+		var grd = ctx.createLinearGradient(0, 0, 200, 0);
+		grd.addColorStop(0, `hsl(${(drawP.hue)},100%,50%` );
+		grd.addColorStop(1, `hsl(${(drawT.hue)},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(drawP.Pc)*xscale, 25, (drawT.Pc-L-(drawP.Pc))*xscale, 10 );
+	}
+
+	if( drawP2 && drawH2 ) {
+		var grd = ctx.createLinearGradient(0, 0, 200, 0);
+		grd.addColorStop(0, `hsl(${(drawP2.hue)},100%,50%` );
+		grd.addColorStop(1, `hsl(${(drawH2.hue)},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(drawP2.Pc)*xscale, 25, ((drawH2.Pc+L)-drawP2.Pc)*xscale, 10 );
+	}
+	if( drawP && drawT2 ) {
+		var grd = ctx.createLinearGradient(0, 0, 200, 0);
+		grd.addColorStop(0, `hsl(${(drawP.hue)},100%,50%` );
+		grd.addColorStop(1, `hsl(${(drawT.hue)},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(drawP.Pc)*xscale, 25, (drawT.Pc-L-(drawP.Pc))*xscale, 10 );
+	}
+}
+
+	}
 
 	if( now < last_draw_time ) {
 		ctx.fillStyle = "black";
@@ -398,6 +435,9 @@ if(1) {
 
 }
 
+
+	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
+   ctx.fillRect( 500+(now*V - L)*xscale, 15, (2*L)*xscale, 10 );
 	headTri( now*V + L, 20 );
 	tailTri( now*V - L, 20 );
 	centerBox( now*V, 20 );
