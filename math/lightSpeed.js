@@ -258,7 +258,8 @@ function draw(  ) {
 		const frame = frames[f];
 		ctx.beginPath();
 		ctx.moveTo( 500 + frame.Pc*xscale, 30 );
-		ctx.lineTo( 500, 800 );
+		const toY = D*100;
+		ctx.lineTo( 500, D*100 );
 		ctx.stroke();
 		
 		if( ( frame.T_see_c < now ) ) {
@@ -277,19 +278,19 @@ function draw(  ) {
 			const del = frame.T_see_c - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 30*(1-delT)+800*(delT) );
+			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 30*(1-delT)+toY*(delT) );
 		}
 		if( now < frame.T_see_h ) {
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			headTri( (frame.Pc+L)*(1-delT) , 10*(1-delT)+800*(delT) );
+			headTri( (frame.Pc+L)*(1-delT) , 30*(1-delT)+toY*(delT) );
 		}
 		if( now < frame.T_see_t ) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			tailTri( (frame.Pc-L)*(1-delT), 10*(1-delT)+800*(delT) );
+			tailTri( (frame.Pc-L)*(1-delT), 30*(1-delT)+toY*(delT) );
 		}
 	}
 
@@ -300,14 +301,14 @@ function draw(  ) {
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30 );
 	if( drawH !== frames[0] )
 	if( drawH )
-		headTri( drawH.Pc+L, 10 );
+		headTri( drawH.Pc+L, 30 );
 	if( drawH2 )
-		headTri( drawH2.Pc+L, 10 );
+		headTri( drawH2.Pc+L, 30 );
 	if( drawT !== frames[0] )
 	if( drawT )
-		tailTri( drawT.Pc-L, 10 );
+		tailTri( drawT.Pc-L, 30 );
 	if( drawT2 )
-		tailTri( drawT2.Pc-L, 10 );
+		tailTri( drawT2.Pc-L, 30 );
 
 	if( now < last_draw_time ) {
 		ctx.fillStyle = "black";
@@ -319,7 +320,7 @@ function draw(  ) {
 	
 
 	function headTri( t,o ) {
-		const y = 20;
+		const y = 0;
 		
 		ctx.fillStyle = "red";
 		ctx.lineWidth = 1;
@@ -331,7 +332,7 @@ function draw(  ) {
 	}
 
 	function tailTri( t,o ) {      
-		const y = 20;
+		const y = 0;
 		
 		ctx.fillStyle = "blue";
 		ctx.lineWidth = 1;
@@ -349,7 +350,7 @@ function draw(  ) {
 		ctx.beginPath();
 		ctx.moveTo( x +5, y );
 		ctx.lineTo( x, y - 5 );
-		ctx.lineTo( x, y  );
+		ctx.lineTo( x-5, y  );
 		ctx.lineTo( x, y + 5 );
 		ctx.fill();
 	}
@@ -381,8 +382,8 @@ if(0) {
 	centerBox( center[1], 120+5 );
 }
 
-	headTri( now*V + L, 0 );
-	tailTri( now*V - L, 0 );
+	headTri( now*V + L, 20 );
+	tailTri( now*V - L, 20 );
 	centerBox( now*V, 0 );
 
 
