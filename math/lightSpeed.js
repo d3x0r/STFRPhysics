@@ -51,7 +51,7 @@ sliderC.setAttribute( "type", "range" );
 controls.appendChild( sliderC );
 sliderC.addEventListener( "input", update );
 
-sliderC.setAttribute( "max",250 );
+sliderC.setAttribute( "max",1250 );
 sliderC.value = C*100;
 sliderC.style.width="250px";
 
