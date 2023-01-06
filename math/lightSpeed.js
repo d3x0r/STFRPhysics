@@ -377,19 +377,19 @@ function draw(  ) {
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-if(0) {
+if(1) {
 	const front  = observerTimeToRealTime( now,  L );
 	const center = observerTimeToRealTime( now,  0 );
 	const back   = observerTimeToRealTime( now, -L );
 
 	if( front[0] < now )
-		headTri( front[0] * V, 6 );
+		headTri( front[0] * V+L, 6 );
 	if( front[1] < now )
-		headTri( front[1] * V, 6+5 );
+		headTri( front[1] * V+L, 6+5 );
 	if( back[0] < now )
-		tailTri( back[0] * V, 6 );
+		tailTri( back[0] * V-L, 6 );
 	if( back[1] < now )
-		tailTri( back[1] * V, 6+5 );
+		tailTri( back[1] * V-L, 6+5 );
 
 	if( center[0] < now )
 		centerBox( center[0] * V, 6 );
