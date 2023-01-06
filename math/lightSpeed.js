@@ -257,9 +257,9 @@ function draw(  ) {
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
 		ctx.beginPath();
-		ctx.moveTo( 500 + frame.Pc*xscale, 30 );
-		const toY = D*100;
-		ctx.lineTo( 500, D*100 );
+		ctx.moveTo( 500 + frame.Pc*xscale, 40 );
+		const toY = D*100+40;
+		ctx.lineTo( 500, toY );
 		ctx.stroke();
 		
 		if( ( frame.T_see_c < now ) ) {
@@ -278,19 +278,19 @@ function draw(  ) {
 			const del = frame.T_see_c - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 30*(1-delT)+toY*(delT) );
+			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 40*(1-delT)+toY*(delT) );
 		}
 		if( now < frame.T_see_h ) {
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			headTri( (frame.Pc+L)*(1-delT) , 30*(1-delT)+toY*(delT) );
+			headTri( (frame.Pc+L)*(1-delT) , 40*(1-delT)+toY*(delT) );
 		}
 		if( now < frame.T_see_t ) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			tailTri( (frame.Pc-L)*(1-delT), 30*(1-delT)+toY*(delT) );
+			tailTri( (frame.Pc-L)*(1-delT), 40*(1-delT)+toY*(delT) );
 		}
 	}
 
