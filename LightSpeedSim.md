@@ -2,7 +2,7 @@
 
 ## Demo
 
-[Demo](https://[Light Speed Test (d3x0r.github.io)](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html)) This is a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.
+[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This is a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.
 
 ![Screenshot](math/lightSpeed1.jpg)
 
