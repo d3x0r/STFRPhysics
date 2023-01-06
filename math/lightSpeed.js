@@ -181,8 +181,8 @@ for( t = -5; t < 5; t += 0.02 ) {
 */
 
 function realTimeToObserverTime( T, L ) {
-	const pos = (V*T+L)/C;
-	return Math.sqrt( D*D/(C*C) + pos*pos ) + T;
+	const pos = (V*T + L);
+	return Math.sqrt( D*D + pos*pos )/C+T;
 }
 
 function observerTimeToRealTime_LoverC( T, L ) {
@@ -196,7 +196,7 @@ function observerTimeToRealTime_LoverC( T, L ) {
 			, ( -Math.sqrt( C*C*D*D + C*C+L*L + 2 * C*C*L*V*T + V*V*(C*C*T*T-D*D) ) + C*C*T + L*V ) / (C*C-V*V) ];
 }
 
-function observerTimeToRealTime( T, L ) {
+function observerTimeToRealTime_fail2( T, L ) {
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
 
@@ -205,6 +205,24 @@ function observerTimeToRealTime( T, L ) {
 	}
 	return [(  Math.sqrt( C*C*D*D + C*C*C*C*L*L + 2 * C*C*C*C*L*V*T + D*D*(C*C-V*V) ) + C*L*V +C*C*C*T) / (C*C-V*V)
 			, ( -Math.sqrt( C*C*D*D + C*C+C*C*L*L + 2 * C*C*C*C*L*V*T + D*D*(C*C-V*V) ) + C*L*V+C*C*C*T ) / (C*C-V*V) ];
+}
+
+function observerTimeToRealTime( T, L ) {
+	// things have to be able to propagate forwardly.
+	if( C <= 0 ) return [0,0];
+
+//	if( C==V ) {
+//		V=V+0.00000001*V;
+//	}
+
+	// positive solution walks backwards...
+	if( L < 0 ) {
+		L=-L;
+		return [ (C*C*T - L*V - Math.sqrt(C*C*D*D + C*C*L*L - 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V) 
+				,  (C*C*T - L*V + Math.sqrt(C*C*D*D + C*C*L*L - 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V)  ];
+	} else
+		return [ (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V) 
+				,  (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V)  ];
 }
 
 
@@ -355,8 +373,8 @@ function draw(  ) {
 		ctx.fill();
 	}
 	function centerBox( t,o ) {      
-		const y = 20;
-		centerBoxXY( 500+(t)*xscale, o+y );
+		//const y = 20;
+		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
 if(0) {
@@ -364,27 +382,25 @@ if(0) {
 	const center = observerTimeToRealTime( now,  0 );
 	const back   = observerTimeToRealTime( now, -L );
 
+	if( front[0] < now )
+		headTri( front[0] * V, 6 );
+	if( front[1] < now )
+		headTri( front[1] * V, 6+5 );
+	if( back[0] < now )
+		tailTri( back[0] * V, 6 );
+	if( back[1] < now )
+		tailTri( back[1] * V, 6+5 );
 
-	headTri( front[0] * V, 20 );
-	headTri( front[1] * V, 20+5 );
-	tailTri( back[0] * V, 20 );
-	tailTri( back[1] * V, 20+5 );
+	if( center[0] < now )
+		centerBox( center[0] * V, 6 );
+	if( center[1] < now )
+		centerBox( center[1] * V, 6+5 );
 
-	centerBox( center[0] * V, 20 );
-	centerBox( center[1] * V, 20+5 );
-
-	headTri( front[0], 120 );
-	headTri( front[1], 120+5 );
-	tailTri( back[0], 120 );
-	tailTri( back[1], 120+5 );
-
-	centerBox( center[0], 120 );
-	centerBox( center[1], 120+5 );
 }
 
 	headTri( now*V + L, 20 );
 	tailTri( now*V - L, 20 );
-	centerBox( now*V, 0 );
+	centerBox( now*V, 20 );
 
 
 	requestAnimationFrame( draw );
