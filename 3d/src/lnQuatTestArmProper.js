@@ -1269,8 +1269,12 @@ function DrawNormalBall(normalVertices,normalColors) {
 	if(drawNormalBall/*draw normal ball with twist*/)  {
 		if(!pickRandomNormals)
 		for( let h = 0; h < Math.PI; h+= 3.1/25 ) {
+			const s =  Math.sin( h );
+			const latlen = s * 150 + 0.1;
+				
+			const step = (Math.PI*4) / ( latlen )
 			//for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 0.25/2 ){
-			for( let t = -Math.PI*2; t < Math.PI*2; t+= 0.25/2 ){
+			for( let t = -Math.PI*2; t < Math.PI*2; t+= step ){
 				//if( t > (Math.PI + 0.5) ) continue;
 				const h_ = h;//-(1/1)*Math.PI + h;// - 1*Math.PI/2 - Math.PI/4;
 				const lnQ = new lnQuat( { lat: h_, lng:t }, normalizeNormalTangent );
