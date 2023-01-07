@@ -24,9 +24,11 @@ Real time observer at time `x` sees (head); should be able to have a function th
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}
 $$
 
-The above 
+The above returns the real time from an observer time `x`, and an offset along the body (L).  The resulting time times velocity and then add the offset gives the real position of the body seen.
 
 
+
+(Note sections are potentially incomplete/inaccurate).
 ## Other notes...
 
 
@@ -143,3 +145,7 @@ P_h=tv+1; T=(P_h-1)/v
 
 T=x
 
+
+$$(L V + C^2 x - sqrt(C^2 D^2 + C^2 L^2 - D^2 V^2 + 2 C^2 L V x + C^2 V^2 x^2))/(C^2 - V^2)) $$
+
+$$(C^2 (1 - (V (L + V x))/sqrt(C^2 (D^2 + (L + V x)^2) - D^2 V^2)))/(C^2 - V^2)$$

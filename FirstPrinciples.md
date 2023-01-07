@@ -49,10 +49,9 @@ but not the axis, and the vectors it contains are in the direction of being arou
 
 ## And then to really complicate things...
 
-Angles will be represented using a fraction from 0-1 for 0 to 90 degrees. A value greater than 90 degrees will be greater than 1. Partially this equates '1' to 'i' in complex numbers or quaternions, that
-1i is pi/2 radians of rotation; this is just '1'. 
+Angles will be represented using a fraction from 0-1 for 0 to 360 degrees. This equates '1/4' to 'i' in complex numbers or quaternions, that `1i` is `pi/2` radians of rotation; this is just '1/4'.  The range for angles is +/-1.   `1/2`  equates to the south pole also, going around a sphere.  
 
-Comparitively can use the number 0,1,2,3,4,.. to represent important points on a sin curve (where it's min and max and 0), that 0=0, 1=1, 2=0, 3=-1, and 4=0; 4 is a completed cycle from 0, and is back to 
+Comparitively can use the number 0,1/4,2/4,3/4,4/4,.. to represent important points on a sin curve (where it's min and max and 0), that 0/4=0, 1/4=1, 2/4=0, 3/4=-1, and 4/4=0; 4/4 is a completed cycle from 0, and is back to 
 the same value as 0. In binary, the values 00, 01, 10, 11, have a sign bit that's the left bit, and the value bit on the right side, giving +0, +1, -0, -1, +0,... for sin.  The sign on 0 is often irrelavent, but
 one might regard the sign of the 0 as the direction the curve is going when it crossees that 0, with either a positive slope at 0 or a negative slope at 2.
 
@@ -64,8 +63,11 @@ This later simplifies using the ratio of masses on a balance which yields a frac
 
 sum n=1 to N  ((x_n,...),(Alpha_n,...))
 
-FOr on dimension, the angle and the length are generally orthoganal and do not affect each other. 
- `(R_a,Theta_a) + ( R_b,Theta_b) = (R_a+R_b, Theta_a+Theta_b );` scaling is applied per term... `A(R,Theta)=(AR,ATheta)`
+For on dimension, the angle and the length are generally orthoganal and do not affect each other. 
+
+addition adds similar terms in the coordinates... `(R_a,Theta_a) + ( R_b,Theta_b) = (R_a+R_b, Theta_a+Theta_b );` 
+ 
+scaling is applied per term... `A(R,Theta)=(AR,ATheta)`
 
 To give things size, `(R_from,R_to, Theta_from, Theta_to)` or`((R_from,Theta_from), (R_to, Theta_to))`, and we should of course account for time... 
 `((R_from,Theta_from), (R_to, Theta_to), (R_velocity,Theta_rotation))`; acceleration is a temporary property that operates on a thing's state, 
@@ -94,6 +96,17 @@ to get back to the start (for a total span of 720 degrees or 4pi).
 - rotation vector space is typically a region around identity, within a range of 2pi.  Rotating around any axis by 2pi the  represented frame is the same as 0.
   - Beyond this shell, it may be possible to apply a linear offset and hop orbits; or perhaps a resonant spin that happens to come around a parallel axis.
 
+### Variations and their pros and cons
+
+ |name|expression| features| limits|
+ |----|----|----|----|
+ | axis-angle | θ(x,y,z) | maintains positive and negative rotation angles. Unit normal already present. |  |
+| angle-angle-angle | (xθ,yθ,zθ) | | loses a sign for the spin direction |
+
+When applying a rotation to another rotation, the individual signs of the input rotations are also lost; a negative input will result with a positive output from the math alone; without a special case to specify a sign based on input angles and the dot product of the rotation axises.
+
+### More on rotation vectors
+
 There are (at least) 2 vector spaces, one for linear/directional representation, and one for the orientation and anglar velocity representation.  They have their own independant inertia (law of motion; a thing that is spinning will keep spinning... a going in a direction will continue going in that direction, and neither direction has anything to do with the other; more later).
 
 There are 3 degress of freedom in 2 units of turn and distance.  There's an additional axis which enables freedom in these 2 units. They are not entirely independant vector spaces, through physics thare ways to trasfer part of a coodinte of turn into distance, and vice versa, the current and projected orientation may also modify how a rotation vector is represented in linear space.  
@@ -106,13 +119,13 @@ These vectors may be treated like, position, velocity and acceleration.  Positio
 in velocity in time.  They can be paramterized as:
 
 | Parameter | Type | Vector | Directed Distance |
-|---|---|---|--|
-| Position | accumulation | (x,y,z) | distance(+/-d)*direction(x,y,z) |
-| velocity | differentiable| (x,y,z) | speed(+/-v)*direction(x,y,z) |
-| Acceleration | differentiable | (x,y,z) | delta speed(+/-a)*direction(x,y,z) |
-| Orientation | emergant/accumlative | (x,y,z) | angle(+/-theta) * axis(x,y,z) |
-| Rotation | differentiable | (x,y,z) | angle(+/-theta) * axis(x,y,z) |
-| Angular Acceleration | differentiable | (x,y,z) | accel(+/-theta) * axis(x,y,z) |
+|---|---|---|---|
+| Position | accumulation | (x,y,z) | `distance(+/-d)*direction(x,y,z)` |
+| velocity | differentiable| (x,y,z) | `speed(+/-v)*direction(x,y,z) ` |
+| Acceleration | differentiable | (x,y,z) | `delta speed(+/-a)*direction(x,y,z)` |
+| Orientation | emergant/accumlative | (x,y,z) | `angle(+/-theta) * axis(x,y,z)` |
+| Rotation | differentiable | (x,y,z) | `angle(+/-theta) * axis(x,y,z)` |
+| Angular Acceleration | differentiable | (x,y,z) | `accel(+/-theta) * axis(x,y,z)` |
 
 There are applications which can benefit from having expanded versions of the coordinates, because the sign of the angle or speed otherwise is lost when multiplied with its direction vector.  Quanterions
 have no reference for the sign, and only express either all positive or all negative spins.

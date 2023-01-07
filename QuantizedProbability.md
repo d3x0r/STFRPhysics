@@ -40,13 +40,13 @@ depending on if the input came from a red or blue box, summarized by the followi
 | From | Into | Polarizer| direction | SG/Independant Observations |Same/Diff|
 |-----|-----|----|----|----|----|
 | red | red | pass | right  | up/up | Same |
-| blue | red | block |  left | down/up | Different |
+| blue | red | pass |  right| down/up | Different |
 | red | blue | block |  left | up/down | Different |
 | blue | blue | block | left | down/down | Same |
 
 Several questions can be asked of this setup.
-  - 
-  - How many balls 
+  - as a polarizer - how many photons pass through vs are blocked.
+  - as a SG device - how many are measured up vs down.
 
 | from first layer | second layer |  grouping |  Polarizers | SG  |
 |----|----|---|---|---|
@@ -63,9 +63,7 @@ Pairs can be (red-red,blue-blue) or (red-blue,blue-red) in any ratio.
 To this point, there is nothing special in the stipulations above compared to any other QM Inequality; until Balls that fall out of the second row are collected into 
 one of two baskets, which are put on a balance beam scale and compared.  The angle of the indicator is the intensity.
 
-U
-
-The total set size must be even, and this can be defined as `2C`. The count of boxes is then `2C = A+B`. `B=A`, `2C=2A` or `2C=2B`.
+The total set size must be even, and this can be defined as `2C`. The count of boxes is then `2C = A+B`, `B/C=2-A/C`, `2C=2A` or `2C=2B`.
 
 Then we also have `A-B` is the difference between what was counted for A and B.
 Then applying some algebra: when `B > A` or `A < 1` or `B > 1`, making `B-A=P*2B`, then `(B-A)/B=P*2`, `1-A/B=P*2`;
@@ -321,15 +319,15 @@ because of losses on the high end.
 ```    	                                                    
     experimental   angle              QM pred.  QM/Exp      LHV pred. LHV adj.    LHV/QM     LHV(Adj)/
     result	                                                                  (exp pred)   Exp. Res.
-    0.457 ± 0.009 0.00                0.464     1.015       0.5       0.486        1.07       1.06
-    0.451 ± 0.013 11.25  (0.438)      0.448     0.993       0.464     0.451        1.03       1.00
-    0.400 ± 0.007 22.5                0.401     1.003       0.4167    0.403       1.04        1.00
-    0.340 ± 0.010 33.75               0.333     0.979       0.350     0.336        1.051      0.97
-    0.249 ± 0.007 45                  0.251     1.008       0.250     0.250        0.996      1.00
-    0.164 ± 0.007 56.25               0.170     1.03        0.150     0.164        0.88       1.00
-    0.100 ± 0.003 67.5                0.100     1.0         0.083     0.095        0.83       0.95
-    0.052 ± 0.004 78.75               0.055     1.058       0.036     0.048        0.65       0.92
-    0.041 ± 0.003 90                  0.039     0.951       0.000     0.035        100        0.85 
+    0.457 ï¿½ 0.009 0.00                0.464     1.015       0.5       0.486        1.07       1.06
+    0.451 ï¿½ 0.013 11.25  (0.438)      0.448     0.993       0.464     0.451        1.03       1.00
+    0.400 ï¿½ 0.007 22.5                0.401     1.003       0.4167    0.403       1.04        1.00
+    0.340 ï¿½ 0.010 33.75               0.333     0.979       0.350     0.336        1.051      0.97
+    0.249 ï¿½ 0.007 45                  0.251     1.008       0.250     0.250        0.996      1.00
+    0.164 ï¿½ 0.007 56.25               0.170     1.03        0.150     0.164        0.88       1.00
+    0.100 ï¿½ 0.003 67.5                0.100     1.0         0.083     0.095        0.83       0.95
+    0.052 ï¿½ 0.004 78.75               0.055     1.058       0.036     0.048        0.65       0.92
+    0.041 ï¿½ 0.003 90                  0.039     0.951       0.000     0.035        100        0.85 
 ```
 
 My prediction does not account for experimental bias of 1 in 35 counts just happen, or a similar percentage of counts lost.
@@ -441,7 +439,7 @@ This variable may change cyclicly with time; that is it may evolve over a set of
 this can be done with particle detectors at Bell's Experimental Value of +/-60 degrees (or 120 and in a circle).~~
 
 ~~This LHV is a spin axis, something like a dipole moment, associated with the particle.  When a particle with a spin axis in a certain orientation (A) interacts with a particle detector aligned in another certain orientation (B), then
-A  · B, describes the result of such an interaction.  The detector and the local variable together form the result; and the result is not known by the particle ahead of time, but it does have part of the information that produces
+A  ï¿½ B, describes the result of such an interaction.  The detector and the local variable together form the result; and the result is not known by the particle ahead of time, but it does have part of the information that produces
 a result.~~
 
 ~~A spin axis is a 3 component vector that includes the spin around the X, Y and Z axii, and the sum of those vectors is a single axis of rotation, scaled by an amount of rotation around that axis; if the components were (0.1, 0.1, 0.1) the resulting

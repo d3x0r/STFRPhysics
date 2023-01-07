@@ -491,6 +491,7 @@ f(x) = f(x-1) + A;
 A = theta, R; // acceleration angle + R * wraps
 F(0) = 0, 0; // julia updates this value.
 F(0) = F(x-1) * 2 + aln( velocity angle )
+
 ```
 
 aln(velocity angle) is the equivalent of taking a `ln(N)`, but is the base of `ln(Angle)`
@@ -551,5 +552,104 @@ So dual-log-quaternions we get
    po += po.speed_normal*vs.speed_normal  *vs*t + 1/2 po.angle_normal*vs.angle_normal ac*t^2
 
 
- 
 
+```
+
+## Relativistic fields and EM together
+
+1) so fields are inextricably linked and exist
+2) relativistic contraction/time dialation causes magnetic field
+3) magnetic flux is closed and doesn't leave a volume(?)
+
+we have a motion..
+1) 600km/s in a direction
+2) 255km/s around the galaxy
+3) 30km/s around the sun
+
+a circle moving at a speed, in a circle moving at a different speed..
+
+is the 600km/s including the galactic component?  No, because that was a known value that was subtracted... 
+
+so we could be going 855km/s to 345km/sec  in a direction
+
+so if electrostatic is THE thing (could probably frame it in the other term too, however...)
+then a charge moving at a wire induces a field, the relative current in the wire (speed
+of electrons) causes the proton part of the atom to be exposed; and the higher the current the more this exposure happens.  when a voltage potential driving a current is removed, the electron motion stops... and so unwinds the magnetic field; which is not nessecarily driving the current forward .... but the current does keep going forward.  The larger the magnetic field I can build from a small current, the larger the voltage output (moving electrons that ended up stopped)
+but they don't collapse until the field is removed....
+
+'pressure mediation' so-called by ken I suppose is more teh point of it.
+
+magnetism only affects other things that have a charge and are moving.  (can be moved?)
+
+delta M causes delta E
+delta E causes delta M
+
++/- will be terrible notations for the above...
+
+1) a changing magnetic field causes induction in another wire.
+	1)  a changing moving charge field causes induction in another wire
+	2) the induced current is in the opposite direction of the orignal current
+	3) so in the stationary case, the moving electrons appear longer, and have a larger electric repulsion; this causes the electrons to want to spread out... as the charge wall moves forward, more negative are bunched up on the one side, and sent in the opposing side which is already charge defiicient.
+		1) those that have a velocity in the same velocity as the original charges will feel that negative charge less (mutual length contraction) but then still should feel the positive more?  Sort of defeats the directionality of the field.
+2) 
+
+https://en.wikipedia.org/wiki/Lorentz_force
+
+$$\displaystyle \mathbf {F} =q\,\mathbf {E} +q\,\mathbf {v} \times \mathbf {B} $$
+The above has 'v' which is relativistic because V compared to what? (Turns out to be the B field itself)   Field formation in an abundance of electrons, which form a field, and constantly are collapsing, and re-forming new fields (around the source of the magnet)
+
+As the magnet moves, the field moves with it... but does it?  Does it collapse and re-form?  If the magnet is moving at the speed of light, then won't it lose its magnetic properties?  Something like a curie-temperture but curie-speed.
+
+https://en.wikipedia.org/wiki/Relativistic_electromagnetism
+
+https://www.youtube.com/watch?v=Ii7rgIQawko# How Special Relativity Fixed Electromagnetism
+https://www.youtube.com/watch?v=IWiY5kVw9U4 # Veritasium's 'How Special Relativity Makes Magnets Work' - EXPLAINED (better)
+
+
+This supposes that the magnetic field doesn't already exist in a location, and wouldn't be detected...
+our fastest satellites are only 
+
+
+Two pancake coils separated by a half foot, still induction from electrostatic relativistics?  The fields from the electrostatic would be so blended there wouldn't literally be 
+
+
+``` js
+
+class observer {
+	#velocity = new Vector();
+	#position = new Vector();
+	get distance( observer ) {
+		return observer.#position.sub( this.#position );
+	}
+	get velocity( observer ) {
+		return observer.#velocity.sub( this.#velocity );
+	}
+}
+
+class charge extends observer {
+
+	get electricField( observer ) {
+		const velocity = observer.velocity( this );
+		const direction = observer.distance( this );
+		const speed = Math.sqrt( velocity.dot( velocity ) );
+		// if speed > 2c ?
+		if( velocity.dot(direction) < 0 ) {
+			return (1+speed/c) / distance.dot(direction)
+		} else {
+			return (1-speed/c) / distance.dot(direction)
+	}
+	get magneticField( observer ) {
+		return 1-electricField( observer );
+		
+		const speed = observer.speed( this );
+		const distance = observer.distance( this );
+		return (speed/c) / distance^2;
+	}
+	
+}
+```
+1) charge.  speed
+
+charge moving thorugh a magnetic field, will deflect until it's 90 degrees towards or away from the other.
+
+electrons moving in an opposing direction then have extra strong electrostatic force 
