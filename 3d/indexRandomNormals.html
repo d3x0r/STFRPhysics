@@ -8,8 +8,8 @@
 		<script type="module" src="./src/customShaderLoader2.js"></script>
 		<script src="./src/three.js/three.min.js"></script>
 		<script type="module" src="./src/lnQuatSq.js"></script>
-		<script src="./src/Quat.js"></script>
-		<script src="./src/lnQuatTestArmProper.js"></script>
+		<!--<script src="./src/Quat.js"></script>-->
+		<script type="module" src="./src/lnQuatTestArmProper.js"></script>
 		<!--script src="./src/TrackballControls.js"></script-->
 		<script src="./src/Detector.js"></script>
 		<script src="./src/Stats.js"></script>
@@ -191,6 +191,9 @@
 		<input type="range" id="lnQY2" min="0"  max="1000" value="501"> 
 		</td><td>
 		<input type="range" id="lnQZ2" min="0"  max="1000" value="500"> 
+		</td></tr>
+		<tr id="twist"><td colspan=5>
+		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
 		</td></tr>
 		<tr id="arm2val"><td> </td><td>
 		</td><td>
