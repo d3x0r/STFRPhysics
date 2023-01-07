@@ -1464,12 +1464,9 @@ lnQuat.prototype.getYaw = function() {
 	if( q.dirty ) q.update();
 	const s = Math.sin( q.θ ); // double angle sin
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
-
-	const c = 1- c1;
-	const cn = c*q.nx;
-
-	const rx = c1      + cn*q.nx;
-	const principal = -Math.asin( -s*q.ny  + (1- c1)*q.nx*q.nz);
+	// z of right. 
+	const principal = Math.asin( -s*q.ny  + (1- c1)*q.nx*q.nz);
+	return principal;
 	if( rx < 0 ) return principal;
 	let result;
 	if( principal < 0 ) {
