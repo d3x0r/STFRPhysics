@@ -78,13 +78,117 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 	const axis2 = {x:xRot/lB, y:yRot/lB, z:zRot/lB };
 
 	const fiberStep = ( 4*Math.PI ) / ( steps );
-	const fiberPartStep = ((fiberStep + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
+	const fiberPartStep = ((fiberStep + 1*Math.PI)/(Math.PI*2) %(2/subSteps));
 	let lnQ_=new lnQuat().set( lnQ0);
 	for( let nTotal = 0; nTotal < steps; nTotal++ ) {
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-		const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-        	const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
-		const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
+		let fibre = (nTotal/steps)/*0-1*/ * (4*Math.PI ) ;
+		const divs = 2;
+		switch( divs ) {
+		case 2:
+			switch( turnCount % 2){
+				case 0: break;
+				case 1: 
+					fibre /= 2;
+					break;
+			}
+			break;
+		case 3:
+			switch( turnCount % 3){
+				case 0: break;
+				case 1: case 2: 
+					fibre *= 3;
+					break;
+			}
+			break;
+		case 4:
+			switch( turnCount % 4){
+				case 0: break;
+				case 1: fibre *= 2; break; 
+				case 2: fibre /= 2; break;
+				case 3: fibre *= 2; break;
+			}
+			break;
+		case 5:
+			switch( turnCount % 6){
+				case 0: break;
+				default: 
+					fibre *= 5;
+					break;
+			}
+			break;
+		case 6:
+			switch( turnCount % 6){
+				case 0: break;
+				case 1: 
+					fibre *= 2;
+					break;
+				case 2: 
+					fibre *= 3;
+					break;
+				case 3: 
+					fibre *= 2;
+					break;
+				case 4: 
+					fibre *= 3;
+					break;
+				case 5: 
+					fibre *= 2;
+					break;
+			}
+			break;
+		case 24:
+			switch( turnCount % 24){
+				case 0: break;
+				default: break;
+				case 1:fibre *= 12; break; 
+				case 2:fibre *= 6; break; 
+				case 3:fibre *= 4; break; 
+				case 4:fibre *= 1.5; break; 
+				case 5:fibre *= 12; break; 
+				case 6:fibre *= 2; break; 
+				case 7:fibre *= 12; break; 
+				case 8:fibre *= 3; break; 
+				case 9:fibre *= 4; break; 
+				case 10:fibre *= 6; break; 
+				case 11:fibre *= 12; break; 
+				case 12: fibre /= 2; break;
+			}
+			break;		
+		case 23:
+			switch( turnCount % 23){
+				case 0: break;
+				default: fibre *= 23; break;
+			}
+			break;		
+		case 26:
+			switch( turnCount % 26){
+				case 0: break;
+				default: fibre *= 6.5; break;
+			}
+			break;		
+		case 27:
+			switch( turnCount % 27){
+				case 0: break;
+				default: fibre *= 27; break;
+			}
+			break;		
+		case 25:
+			switch( turnCount % 25){
+				case 0: break;
+				case 5: fibre *= 5; break;
+				case 15: fibre *= 5; break;
+				case 20: fibre *= 5; break;
+				case 10: fibre *= 5; break;
+				default: fibre *= 25; break;
+			}
+			break;		
+		}
+
+
+		//if( turnCount & 1 ) 
+     	const fiberPart =((fibre )/(Math.PI*2) %(divs/subSteps));
+		const t = (Math.PI*4)* 1/divs*subSteps*(fiberPart) ;
 		
 		if(useQuaternion)
 		{	
@@ -127,11 +231,11 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 		else {
 			const lnQ  = ( !useStepFunction ) ?
 				(externalSpin?new lnQuat( lnQ0 )
-                            	.spin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
-                                .spin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
+                            	.spin( fibre, axis1, E )
+                                .spin( t, axis2, E )
 				:new lnQuat( lnQ0 )
-                            	.freeSpin( fibre, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
-                                .freeSpin( t, {x:xRot/lB, y:yRot/lB, z:zRot/lB }, E )
+                            	.freeSpin( fibre, axis1, E )
+                                .freeSpin( t, axis2, E )
                                 )
 			       :( externalSpin?lnQ_
                             	.spin( fiberStep, {x:AxRot/lA,y:AyRot/lA,z:AzRot/lA}, E )
@@ -543,10 +647,12 @@ export function updateShapes( shapes,camera ) {
 	const lnQ0 = new lnQuat(  0, T*A/lABC, T*B/lABC, T*C/lABC ).update();
 	
         //const t = (Math.PI*4)* subSteps*((fibre + Math.PI)/(Math.PI*4) %(1/subSteps)) - (Math.PI*2);
-	const fibre = nTotal * ( 4*Math.PI ) / ( steps );
-        const fiberPart =((fibre + 1*Math.PI)/(Math.PI*2) %(1/subSteps));
-	const t = (Math.PI*4)* subSteps*(fiberPart) - (Math.PI*2);
-		
+
+		let fibre = (nTotal/steps)/*0-1*/ * (4*Math.PI ) ;
+		if( turnCount & 1 ) fibre /= 2;
+     	const fiberPart =((fibre )/(Math.PI*2) %(2/subSteps));
+		const t = (Math.PI*4)* 1/2*subSteps*(fiberPart) ;
+
 	const lA = Math.sqrt(AxRot*AxRot+AyRot*AyRot+AzRot*AzRot);
 	const lB = Math.sqrt(xRot*xRot+yRot*yRot+zRot*zRot);
 
