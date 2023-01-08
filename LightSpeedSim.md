@@ -17,38 +17,26 @@ At some time T, a body is at a position VT; the extents of the body are at `(VT+
 The position divided by the speed of light is how long that signal will travel to the observer.  
 
 Observed time of head
-$$\frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
-I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T `; but it apparently has given me the wrong answer... 
+$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
-Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get... 
+Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T`.
+
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}
 $$
 
-The above returns the real time from an observer time `x`, and an offset along the body (L).  The resulting time times velocity and then add the offset gives the real position of the body seen.
+The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead
+
+if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
+$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T
+$$
+
+And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
+$$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 
 
 
 (Note sections are potentially incomplete/inaccurate).
 ## Other notes...
-
-
-
-Observed center of body$$\sqrt{\left(\frac{D}{C}\right)^{2}+\left(\frac{VT}{C}\right)^{2}}+T
-$$
-Observed tail of body$$\sqrt{\left(\frac{D}{C}\right)^{2}+\left(\frac{VT-L}{C}\right)^{2}}+T
-$$
-
-$$\frac{-\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}$$
-
-Real time observer at time x sees (tail)
-$$\frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}-2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x-LV}{C^{2}-V^{2}}$$
-$$\frac{-\sqrt{C^{2}D^{2}+C^{2}L^{2}-2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x-LV}{C^{2}-V^{2}}$$
-
-Real time observer at time X sees body center.
-$$\frac{\sqrt{C^{2}D^{2}+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x}{C^{2}-V^{2}}$$
-$$\frac{-\sqrt{C^{2}D^{2}+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x}{C^{2}-V^{2}}$$
-
-Real time * Velocity is position where the part of body is observed.
 
 
 

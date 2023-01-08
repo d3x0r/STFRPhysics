@@ -211,9 +211,11 @@ function observerTimeToRealTime( T, L ) {
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
 
-//	if( C==V ) {
-//		V=V+0.00000001*V;
-//	}
+	if( C==V ) {
+		return [(C*C*T*T - D*D - L*L ) / (2*C*(C * T + L))
+				, (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L))
+				]
+	}
 
 	// positive solution walks backwards...
 	if( L < 0 ) {
@@ -314,7 +316,8 @@ function draw(  ) {
 		}
 	}
 
-	if( drawP !== frames[0] ) {
+	//if( drawP !== frames[0] ) 
+	{
 
 	if( drawP )
 		centerBoxXY( 500 + drawP.Pc*xscale, 30 );
@@ -362,7 +365,6 @@ if(0) {
 		ctx.fillRect( 500+(drawP.Pc)*xscale, 25, (drawT.Pc-L-(drawP.Pc))*xscale, 10 );
 	}
 }
-
 	}
 
 	if( now < last_draw_time ) {
