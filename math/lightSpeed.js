@@ -185,46 +185,96 @@ function realTimeToObserverTime( T, L ) {
 	return Math.sqrt( D*D + pos*pos )/C+T;
 }
 
-function observerTimeToRealTime_LoverC( T, L ) {
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
+// T = real time
+// P = Phase  // offset the spin phase against real time
+// Lx,Ly,Lz = body Local x,y,z to go from
+// Ax,Ay,Az = body local spin axis to apply rotation of Lx,Ly,Lz
 
-	if( C==V ) {
-		V=V+0.00000001*V;
+function realTimeToObserverTimeSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az ) {
+
+	let R = 0; // Rotation rate, implicit from velocity.
+	if( V <= C ) {
+		// compute in arc-length === physical length = 1
+		R = Math.sqrt( C^2 - V^2 )/ 2*Math.PI;
+	} else {
+		// compute in arc-length === physical length = 1
+		R = -Math.sqrt( V^2 - C^2 )/ 2*Math.PI;
 	}
-	return [ (  Math.sqrt( C*C*D*D + C*C+L*L + 2 * C*C*L*V*T + V*V*(C*C*T*T-D*D) ) + C*C*T + L*V ) / (C*C-V*V)
-			, ( -Math.sqrt( C*C*D*D + C*C+L*L + 2 * C*C*L*V*T + V*V*(C*C*T*T-D*D) ) + C*C*T + L*V ) / (C*C-V*V) ];
+	const ang = S*(T+P)*R 
+	const s = Math.sin( ang );
+	const c = Math.cos( ang );
+	const dot =  (1-c)*(( Ax * Lx ) + (Ay*Ly)+(Az*Lz));
+	const L = { x:Lx*c + s*(Ay * Lz - Az * Ly) + Ax * dot
+	          , y:Ly*c + s*(Az * Lx - Ax * Lz) + Ay * dot
+	          , z:Lz*c + s*(Ax * Ly - Ay * Lx) + Az * dot };
+
+	const pos = (V*T) + L.x;
+	return Math.sqrt( L.z*L.z + (D+L.y)*(D+L.y) + pos*pos )/C+T;
 }
 
-function observerTimeToRealTime_fail2( T, L ) {
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
+/*
+$$ x=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((V*T) + A)^2 )}/C+T;$$
 
-	if( C==V ) {
-		V=V+0.00000001*V;
-	}
-	return [(  Math.sqrt( C*C*D*D + C*C*C*C*L*L + 2 * C*C*C*C*L*V*T + D*D*(C*C-V*V) ) + C*L*V +C*C*C*T) / (C*C-V*V)
-			, ( -Math.sqrt( C*C*D*D + C*C+C*C*L*L + 2 * C*C*C*C*L*V*T + D*D*(C*C-V*V) ) + C*L*V+C*C*C*T ) / (C*C-V*V) ];
+$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
+
+
+/*
+function realTimeToObserverTimeSpin( T, Lx, Ly, Lz, Ax, Ay, Az ) {
+
+
+if(0) {
+		// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
+		const c = Math.cos(q.θ);
+		const s = Math.sin(q.θ);
+
+		const qx = q.nx, qy = q.ny, qz = q.nz;
+		const vx = v.x , vy = v.y , vz = v.z;
+		// (1-cos theta) * dot
+		// 1-cos theta * cos(angle between vectors)
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
+		return new vectorType(
+			  vx*c + s*(qy * vz - qz * vy) + qx * dot
+			, vy*c + s*(qz * vx - qx * vz) + qy * dot
+			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
 }
+}
+*/
+
+function observerTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
+
+	//Lx
+	if( C === V ) {
+		const num = Lx*Lx-C*C*TT*T + D*D + 2*D*Ly + Ly*Ly + Lz*Lz;
+		const den = C*(2*Lx+2*C*T);
+		return [ num/den, num/den ];
+	} else {
+		const num = Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
+		const num2 = -Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
+		const den = 2*(C*C-V*V);
+		return [ num/den, num2/den ];
+	}
+}
+
 
 function observerTimeToRealTime( T, L ) {
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
 
 	if( C==V ) {
-		return [(C*C*T*T - D*D - L*L ) / (2*C*(C * T + L))
-				, (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L))
-				]
+		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
+		if( a < T ) return [a];
+		return [];
 	}
 
+	const r = [];
+	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	if( a < T ) r.push(a);
 	// positive solution walks backwards...
-	if( L < 0 ) {
-		L=-L;
-		return [ (C*C*T - L*V - Math.sqrt(C*C*D*D + C*C*L*L - 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V) 
-				,  (C*C*T - L*V + Math.sqrt(C*C*D*D + C*C*L*L - 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V)  ];
-	} else
-		return [ (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V) 
-				,  (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V)  ];
+	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	if( b < T ) r.push(b); 
+	return r;
+
 }
 
 
@@ -334,43 +384,9 @@ function draw(  ) {
 	if( drawT2 )
 		tailTri( drawT2.Pc-L, 30 );
 
-if(0) {
-	if( drawP && drawH ) {
-		var grd = ctx.createLinearGradient(0, 0, 200, 0);
-		grd.addColorStop(0, `hsl(${(drawH.hue)},100%,50%` );
-		grd.addColorStop(1, `hsl(${(drawP.hue)},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(drawH.Pc+L)*xscale, 25, (drawP.Pc-(drawH.Pc+L))*xscale, 10 );
-	}
-	if( drawP && drawT ) {
-		var grd = ctx.createLinearGradient(0, 0, 200, 0);
-		grd.addColorStop(0, `hsl(${(drawP.hue)},100%,50%` );
-		grd.addColorStop(1, `hsl(${(drawT.hue)},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(drawP.Pc)*xscale, 25, (drawT.Pc-L-(drawP.Pc))*xscale, 10 );
 	}
 
-	if( drawP2 && drawH2 ) {
-		var grd = ctx.createLinearGradient(0, 0, 200, 0);
-		grd.addColorStop(0, `hsl(${(drawP2.hue)},100%,50%` );
-		grd.addColorStop(1, `hsl(${(drawH2.hue)},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(drawP2.Pc)*xscale, 25, ((drawH2.Pc+L)-drawP2.Pc)*xscale, 10 );
-	}
-	if( drawP && drawT2 ) {
-		var grd = ctx.createLinearGradient(0, 0, 200, 0);
-		grd.addColorStop(0, `hsl(${(drawP.hue)},100%,50%` );
-		grd.addColorStop(1, `hsl(${(drawT.hue)},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(drawP.Pc)*xscale, 25, (drawT.Pc-L-(drawP.Pc))*xscale, 10 );
-	}
-}
-	}
 
-	if( now < last_draw_time ) {
-		ctx.fillStyle = "black";
-		ctx.fillRect( 0, 0, 1024, 1024);		
-	}
 
 	last_draw_time = now;
 
@@ -416,26 +432,51 @@ if(0) {
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-if(1) {
 	const front  = observerTimeToRealTime( now,  L );
 	const center = observerTimeToRealTime( now,  0 );
 	const back   = observerTimeToRealTime( now, -L );
+	for( let f of front )
+		headTri( f * V+L, 6 );
+	for( let b of back )
+		tailTri( b * V-L, 6 );
+	for( let c of center )
+		centerBox( c * V, 6 );
 
-	if( front[0] < now )
-		headTri( front[0] * V+L, 6 );
-	if( front[1] < now )
-		headTri( front[1] * V+L, 6+5 );
-	if( back[0] < now )
-		tailTri( back[0] * V-L, 6 );
-	if( back[1] < now )
-		tailTri( back[1] * V-L, 6+5 );
+if(1) {
+	if( center.length > 1 && front.length > 1 ) {
+		//console.log( "blah:", center[1], front[1], back[1] );
+		var grd = ctx.createLinearGradient(500+(center[1]*V)*xscale +((front[1]*V + L) - center[1]*V)*xscale, 0, 500+(center[1]*V)*xscale, 0);
+		grd.addColorStop(0, `hsl(${(-(front[1])%3)*120},100%,50%` );
+		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(center[1]*V)*xscale, 8, ((front[1]*V + L) - center[1]*V)*xscale, 10 );
+	}
+	if( center.length > 1 && back.length > 1 ) {
+		var grd = ctx.createLinearGradient(500+(back[1]*V-L)*xscale, 0, 500+(back[1]*V-L)*xscale+( center[1]*V - (back[1]*V - L))*xscale, 0);
+		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
+		grd.addColorStop(0, `hsl(${(-(back[1])%3)*120},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(back[1]*V-L)*xscale, 8, ( center[1]*V - (back[1]*V - L))*xscale, 10 );
+	}
 
-	if( center[0] < now )
-		centerBox( center[0] * V, 6 );
-	if( center[1] < now )
-		centerBox( center[1] * V, 6+5 );
+
+	if( center.length > 0 && front.length > 0 ) {
+		var grd = ctx.createLinearGradient(500+(center[0]*V)*xscale +((front[0]*V + L) - center[0]*V)*xscale, 0, 500+(center[0]*V)*xscale, 0);
+		grd.addColorStop(0, `hsl(${((front[0])%3)*120},100%,50%` );
+		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(center[0]*V)*xscale, 8, ((front[0]*V + L) - center[0]*V)*xscale, 10 );
+	}
+	if( center.length > 0 && back.length > 0 ) {
+		var grd = ctx.createLinearGradient(500+(back[0]*V-L)*xscale, 0, 500+(back[0]*V-L)*xscale+( center[0]*V - (back[0]*V - L))*xscale, 0);
+		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
+		grd.addColorStop(0, `hsl(${((back[0])%3)*120},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(back[0]*V-L)*xscale, 8, ( center[0]*V - (back[0]*V - L))*xscale, 10 );
+	}
 
 }
+
 
 
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
