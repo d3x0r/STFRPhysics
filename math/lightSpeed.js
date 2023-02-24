@@ -277,6 +277,25 @@ function observerTimeToRealTime( T, L ) {
 
 }
 
+function observerTimeToRealPos( T, L ) {
+	// things have to be able to propagate forwardly.
+	if( C <= 0 ) return [0,0];
+
+	if( C==V ) {
+		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
+		if( a < T ) return [a*V+L];
+		return [];
+	}
+
+	const r = [];
+	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	if( a < T ) r.push(a*V+L);
+	// positive solution walks backwards...
+	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	if( b < T ) r.push(b*V+L); 
+	return r;
+
+}
 
 
 
@@ -432,47 +451,50 @@ function draw(  ) {
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-	const front  = observerTimeToRealTime( now,  L );
-	const center = observerTimeToRealTime( now,  0 );
-	const back   = observerTimeToRealTime( now, -L );
+	//const front  = observerTimeToRealTime( now,  L );
+	//const center = observerTimeToRealTime( now,  0 );
+	//const back   = observerTimeToRealTime( now, -L );
+	const front  = observerTimeToRealPos( now,  L );
+	const center = observerTimeToRealPos( now,  0 );
+	const back   = observerTimeToRealPos( now, -L );
 	for( let f of front )
-		headTri( f * V+L, 6 );
+		headTri( f, 6 );
 	for( let b of back )
-		tailTri( b * V-L, 6 );
+		tailTri( b, 6 );
 	for( let c of center )
-		centerBox( c * V, 6 );
+		centerBox( c, 6 );
 
 if(1) {
 	if( center.length > 1 && front.length > 1 ) {
 		//console.log( "blah:", center[1], front[1], back[1] );
-		var grd = ctx.createLinearGradient(500+(center[1]*V)*xscale +((front[1]*V + L) - center[1]*V)*xscale, 0, 500+(center[1]*V)*xscale, 0);
+		var grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
 		grd.addColorStop(0, `hsl(${(-(front[1])%3)*120},100%,50%` );
 		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
 		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[1]*V)*xscale, 8, ((front[1]*V + L) - center[1]*V)*xscale, 10 );
+		ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
 	}
 	if( center.length > 1 && back.length > 1 ) {
-		var grd = ctx.createLinearGradient(500+(back[1]*V-L)*xscale, 0, 500+(back[1]*V-L)*xscale+( center[1]*V - (back[1]*V - L))*xscale, 0);
+		var grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
 		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
 		grd.addColorStop(0, `hsl(${(-(back[1])%3)*120},100%,50%` );
 		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[1]*V-L)*xscale, 8, ( center[1]*V - (back[1]*V - L))*xscale, 10 );
+		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
 	}
 
 
 	if( center.length > 0 && front.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(center[0]*V)*xscale +((front[0]*V + L) - center[0]*V)*xscale, 0, 500+(center[0]*V)*xscale, 0);
+		var grd = ctx.createLinearGradient(500+(center[0])*xscale +((front[0]) - center[0])*xscale, 0, 500+(center[0])*xscale, 0);
 		grd.addColorStop(0, `hsl(${((front[0])%3)*120},100%,50%` );
 		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
 		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[0]*V)*xscale, 8, ((front[0]*V + L) - center[0]*V)*xscale, 10 );
+		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
 	}
 	if( center.length > 0 && back.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(back[0]*V-L)*xscale, 0, 500+(back[0]*V-L)*xscale+( center[0]*V - (back[0]*V - L))*xscale, 0);
+		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(back[0])*xscale+( center[0] - (back[0]))*xscale, 0);
 		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
 		grd.addColorStop(0, `hsl(${((back[0])%3)*120},100%,50%` );
 		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[0]*V-L)*xscale, 8, ( center[0]*V - (back[0]*V - L))*xscale, 10 );
+		ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
 	}
 
 }
