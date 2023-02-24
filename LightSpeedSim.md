@@ -2,7 +2,9 @@
 
 ## Demo
 
-[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This is a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.
+[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html)
+
+[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.  This also has a function to reverse calculate, and show a computed observed position.
 
 ![Screenshot](math/lightSpeed1.jpg)
 
@@ -27,8 +29,7 @@ $$
 The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead
 
 if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
-$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T
-$$
+$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
@@ -36,8 +37,47 @@ $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 
 
 (Note sections are potentially incomplete/inaccurate).
-## Other notes...
+## Generlized to a 3D coordinate, which then orientation vs the observer matters.
 
+
+For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendiculat to the line, and X aligned with the original L direction on the line.
+$$ T_O=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((T) + A)^2 )/C}+T;$$
+The inverse (except where C=V)
+$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
+
+Special case 3D formula for V=C, 
+$$ {T_O}=\sqrt{( Z*Z/(C*C) + ((D+Y)*(D+Y))/(C*C) + ((T) + A/C)^2 )}+T;$$
+Gives this formula for the inverse calulation at V=C
+$$ T = \frac { X^2 - C^2{T_O}^2 + D^2 + 2DY + YY + ZZ } { C(2A+2C{T_O}) }$$
+## Time Dilation 
+According to special relativity
+
+(?) = m-m/s-s-s-s - m-m/s-s
+$$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
+
+
+Speed Scalar (Real to observed)
+$$ T_S(x) = \frac {x} {\sqrt { CC-xx }} $$
+Speed Scalar (observed to Real)
+$$ T_R(x) = \frac {Cx} {\sqrt{xx+1 } } $$
+Time scalar (observed velocity to real time scalar)
+$$ \sqrt{CC - T_R(x)^2}$$
+$$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
+## STFR Take on it
+
+$$\theta = angle-in-cycles$$
+Lambda is the unit cycles
+$$\Lambda$$
+
+frequency(phi) * wavelength(omega) = speed of light
+$$\phi\omega = \frac \Lambda s * \frac m \Lambda = c $$
+arc length is cylces per second times meters per cycle.  
+$$ arc-length = \frac m \Lambda * \frac \Lambda s $$sqrt( Spin in arc-length squared plus velocity squared ) = speed of light
+$$\sqrt {S^2  + V^2} = c  $$
+
+a = sqrt( cc - at at ); v = at
+v = at
+p = 1/2 at^2 + vt 
 
 
 
