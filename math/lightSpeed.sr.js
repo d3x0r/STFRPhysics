@@ -4,9 +4,9 @@
 //import { tron } from "./tron.js";
 
 const testSize = 200000;
-const canvas = document.getElementById("testSurface");
-//canvas.width = 5000;
-//canvas.height = 5000;
+const canvas = testSurface;
+canvas.width = 1000;
+canvas.height = 1000;
 const ctx = canvas.getContext('2d');
 const tronCtx = tronSurface.getContext('2d');
 
@@ -26,17 +26,34 @@ let realTimeIsOne = false;
 let observerTimeIsOne = false;
 let bodyTimeIsOne = false;
 
-let B = 0.5; // bias (apparent)speed of the frame... observer is travelling at this speed...
+let B = 0; // bias (apparent)speed of the frame... observer is travelling at this speed...
+//let O = 0; // offset balance between frame bias
 let L = 1; // length of body (m)  (L/C = time of body (s))
 let C = 2; // speed of propagation (m/s)
 let D = 1; // shortest distance to moving body (m) (D/C = time to view closest event (s))
-let V = 2; // velocity  (m/s)
+let V = 2; // feel velocity  (m/s)
+let V1Real = 0; // real velocity
+let BVr = 0;
+let BTs = 0;
+let BVf = 0;
 let S = 1; // time scalar (s/s)
 let runT = 10;
+let tNow = 0;
 
-const frames = [];
-let curFrame = -1;
+let P1Of = 0;
+let BOf = 0;
+
+const A_frames = [];
+const B_frames = [];
+let curFrameA = -1;
+let curFrameB = -1;
 const nFrames = 1000;
+
+let last_draw_tick = Date.now();
+let last_draw_time = 0;
+let xscale = 50;
+let now = Date.now();
+
 
 class Frame {
 	Ph = 0;
@@ -52,7 +69,10 @@ class Frame {
 }
 
 for (let n = 0; n < nFrames; n++) {
-	frames.push(new Frame());
+	A_frames.push(new Frame());
+}
+for (let n = 0; n < nFrames; n++) {
+	B_frames.push(new Frame());
 }
 
 
@@ -64,7 +84,7 @@ controls.appendChild(span);
 //----------------------
 
 span = document.createElement("span");
-span.textContent = "B";
+span.textContent = "Bias velocity between frames";
 controls.appendChild(span);
 
 const sliderB = document.createElement("input");
@@ -72,8 +92,9 @@ sliderB.setAttribute("type", "range");
 controls.appendChild(sliderB);
 sliderB.addEventListener("input", update);
 
-sliderB.setAttribute("max", 1000);
-sliderB.value = B * 100;
+sliderB.setAttribute("min",-50000);
+sliderB.setAttribute("max", 50000);
+sliderB.value = B*5000+5000;
 sliderB.style.width = "250px";
 
 const spanB = document.createElement("span");
@@ -83,6 +104,29 @@ controls.appendChild(spanB);
 span = document.createElement("br");
 controls.appendChild(span);
 
+//----------------------
+if(false) {
+span = document.createElement("span");
+span.textContent = "Offset mid velocity between frames";
+controls.appendChild(span);
+
+const sliderO = document.createElement("input");
+sliderO.setAttribute("type", "range");
+controls.appendChild(sliderO);
+sliderO.addEventListener("input", update);
+
+sliderO.setAttribute("min", -100);
+sliderO.setAttribute("max", 100);
+//sliderO.value = O * 100;
+sliderO.style.width = "250px";
+
+const spanO = document.createElement("span");
+spanO.textContent = "1";
+controls.appendChild(spanO);
+
+span = document.createElement("br");
+controls.appendChild(span);
+}
 //----------------------
 
 span = document.createElement("span");
@@ -94,7 +138,7 @@ sliderC.setAttribute("type", "range");
 controls.appendChild(sliderC);
 sliderC.addEventListener("input", update);
 
-sliderC.setAttribute("max", 1250);
+sliderC.setAttribute("max", 12500);
 sliderC.value = C * 100;
 sliderC.style.width = "250px";
 
@@ -212,6 +256,40 @@ controls.appendChild(span);
 //----------------------
 
 span = document.createElement("span");
+span.textContent = "Now";
+controls.appendChild(span);
+
+const sliderNow = document.createElement("input");
+sliderNow.setAttribute("type", "range");
+controls.appendChild(sliderNow);
+sliderNow.addEventListener("input", update);
+
+sliderNow.setAttribute("min", -250);
+sliderNow.setAttribute("max", +250);
+sliderNow.value = 0;
+sliderRunT.style.width = "250px";
+
+const spanNow = document.createElement("span");
+spanNow.textContent = "0";
+controls.appendChild(spanNow);
+
+span = document.createElement("br");
+controls.appendChild(span);
+//----------------------
+
+span = document.createElement("span");
+span.textContent = "Stats:";
+controls.appendChild(span);
+
+const spanStats = document.createElement("span");
+spanStats.textContent = "-compute-";
+controls.appendChild(spanStats);
+
+span = document.createElement("br");
+controls.appendChild(span);
+//----------------------
+
+span = document.createElement("span");
 span.textContent = "Real Time Speed(Body):";
 controls.appendChild(span);
 
@@ -266,6 +344,13 @@ export function clockScalarRV(V) {
 	return Math.sqrt(C * C - V * V);
 }
 
+// for a given scalar between 0 and 1
+// return a velocity from C to 0; a 1:1 clock is only
+// there when V=0; and V=C when the clock scalar=0;
+export function velocityFromClockScalar(T) {
+	return Math.sqrt(C*C*(1-T*T))
+}
+
 // observer clock for observer velocity
 //  this is 1/N so (1 to infinity) range, 
 //  this applies to clocks outside of the observer, to bias
@@ -273,7 +358,37 @@ export function clockScalarRV(V) {
 export function clockScalarOV(V) {
 	// v = sr_OVtoRV(V)
 	// returns 1/(sqrt(cc-vv))
-	return Math.sqrt(C * C + V * V) / C;
+	return Math.sqrt(1 - V/C * V/C);
+	// x = sqrt(1-VV/CC)
+	// xx = 1-vv/cc  sqrt(cc(1-xx))
+}
+
+export function clockScalarOV_RV(V) {
+	// v = sr_OVtoRV(V)
+	// returns 1/(sqrt(cc-vv))
+	return Math.sqrt(C*C - V * V);
+	// x = sqrt(1-VV/CC)
+	// xx = 1-vv/cc  sqrt(cc(1-xx))
+}
+
+// returns fraction of C that the velocity feels like
+export function apparentVelocityO(V) {
+	return (V/C)/Math.sqrt(1 - V/C * V/C);
+	// xx(1-VV/CC)=VV/CC
+	// +/- C
+}
+
+// returns the Velocity V that a feels like V actually IS
+// input velocity is N of N*C; where the REAL virtual
+// velocity given is a multpler of C.
+export function realVelocityO(V) {
+	return (C*V)/Math.sqrt(V*V+1);
+}
+
+// returns the Velocity V that a feels like V actually IS
+// input velocity is V apparent. m/s
+export function realVelocityOC(V) {
+	return (V)/Math.sqrt(V/C*V/C+1);
 }
 
 // real time of an event as position L
@@ -378,38 +493,223 @@ export function observerTimeToRealTime(T, L) {
 }
 
 
-let last_draw_tick = Date.now();
-let last_draw_time = 0;
-let xscale = 50;
-let now = Date.now();
 
 
 function update(evt) {
-	B = Number(sliderB.value) / 100;
-	spanB.textContent = B.toFixed(2);
+	B = (Number(sliderB.value) )/ 100;
+	//O = (Number(sliderO.value)-50) / 50;
+	//spanO.textContent = O.toFixed(2);
 	C = Number(sliderC.value) / 100;
 	spanC.textContent = C.toFixed(2);
 	D = Number(sliderD.value) / 10;
 	spanD.textContent = D.toFixed(2);
 	V = Number(sliderV.value) / 100;
-	spanV.textContent = `${V.toFixed(2)} : ${sr_OVtoRV(B).toFixed(2)} + ${sr_OVtoRV(V).toFixed(2)} = ${sr_OVtoRV(B + V).toFixed(2)}`;
+	//(${(V*C).toFixed(2)})
+	spanV.textContent = `${(V).toFixed(2)} : ${sr_OVtoRV(B).toFixed(2)} + ${sr_OVtoRV(V).toFixed(2)} = ${sr_OVtoRV(B + V).toFixed(2)}`;
 	L = Number(sliderL.value) / 10;
 	spanL.textContent = L.toFixed(2);
 
 	S = Number(sliderS.value) / 10;
 	spanS.textContent = S.toFixed(2);
+	// V2 feels velocity 
+	BVf = ((1+B/100) * (V));
+	// V2 real from feel...
+	BVr = realVelocityOC(BVf);
+	BTs = clockScalarOV(BVr);
+	tNow = Number(sliderNow.value)/50;
+	spanNow.textContent = tNow.toFixed(2);
+
+
+	V1Real = realVelocityOC(V);
+	const T1Real = clockScalarOV( V1Real );
+	const VDel = BVf-V;
+	const TSlowest = B>0?BTs:T1Real;
+	const TFast = B<0?BTs:T1Real;
+
+	const TRat = BTs/T1Real;
+	P1Of = -findPos( V1Real )*V1Real;
+	BOf = -findPos(BVr) * BVr;
+
+	spanB.textContent = (B>0?"+":"")+(B).toFixed(2)+"% " + "("+BVf.toFixed(2)+" Real:"+BVr.toFixed(2)+"("+(BVr/C).toFixed(2)+") )" + " T:"+BTs.toFixed(2) +"("+(1/BTs).toFixed(2)+")";
 
 	runT = Number(sliderRunT.value) / 5;
 	spanRunT.textContent = runT.toFixed(2);
+	spanStats.textContent = `Body Time Scale  ${clockScalarOV(realVelocityOC(V)).toFixed(2)}(${(1/clockScalarOV(realVelocityOC(V))).toFixed(2)})
+			 IsReally ${realVelocityOC(V).toFixed(2)}(${(realVelocityOC(V)/C).toFixed(2)})
+			 other:  ${VDel.toFixed(2)} ${TRat.toFixed(2)}  ${(TSlowest).toFixed(2)}  ${TFast.toFixed(2)} `
+	spanRTB.textContent = `${findPos(BVr)} :${findPos(V1Real)} : ${findPos(BVr)*BVr} }`
+	const x = C * Math.sqrt( findPos(BVr)*findPos(BVr)+D*D )
+	const y = C * Math.sqrt( findPos(V1Real)*findPos(V1Real)+D*D )
+	spanRTO.textContent = `tests: ${x.toFixed(3)}  ${y.toFixed(3)}B realV ${sr_OVtoRV(B).toFixed(2)} BV clock:${clockScalarOV(B + V).toFixed(2)} B clock:${clockScalarOV(B).toFixed(2)} delReal*BVclk${((sr_OVtoRV(B + V) - sr_OVtoRV(B)) * clockScalarOV(B + V)).toFixed(3)} ${sr_OVtoRV(V) * clockScalarOV(B + V)}`;
 
-	spanRTB.textContent = `${clockScalarOV(B).toFixed(2)} :${clockScalarOV(B + V).toFixed(2)} : ${clockScalarOV(sr_OVtoRV(B + V)).toFixed(2)} ${sr_OVtoRV(clockScalarOV(B)).toFixed(2)} }`
-	spanRTO.textContent = `OV... BV RealV ${sr_OVtoRV(B + V).toFixed(2)} B realV ${sr_OVtoRV(B).toFixed(2)} BV clock:${clockScalarOV(B + V).toFixed(2)} B clock:${clockScalarOV(B).toFixed(2)} delReal*BVclk${((sr_OVtoRV(B + V) - sr_OVtoRV(B)) * clockScalarOV(B + V)).toFixed(3)} ${sr_OVtoRV(V) * clockScalarOV(B + V)}`;
-	//draw(  );
+	for( let fr = 0; fr < 1000; fr++ ){
+		const now = ((fr-500)/500)*runT;
+		{
+			const f = A_frames[fr];
+			// position center, head, tail
+			f.Pc = P1Of + now * V1Real;
+			f.Ph = f.Pc + L;
+			f.Pt = f.Pc - L;
+			f.hue = 120 * (now % 3) - 240;
+			// time these events were emitted...
+			f.T_start = now;
+			f.T_see_h = realTimeToObserverTime(now, L);
+			f.T_see_c = realTimeToObserverTime(now, 0);
+			f.T_see_t = realTimeToObserverTime(now, -L);
+		}
+		{
+			const f = B_frames[fr];
+			// position center, head, tail
+			f.Pc = BOf + now * BVr;
+			f.Ph = f.Pc + L;
+			f.Pt = f.Pc - L;
+			f.hue = 120 * (now % 3) - 240;
+			// time these events were emitted...
+			f.T_start = now;
+			f.T_see_h = realTimeToObserverTime(now, L);
+			f.T_see_c = realTimeToObserverTime(now, 0);
+			f.T_see_t = realTimeToObserverTime(now, -L);
+		}
+	}
+
+	draw(  );
+}
+
+function findPos( V, T ) {
+	// V*T*V*T + D/C * D/C  = TC*TC
+	// TT*(VV-CC) = DD/CC
+	// sqrt( DD/CC / (VV-CC))
+	return Math.sqrt( (D*D)/(C*C) / (C*C-V*V));
 }
 
 function draw() {
 	const curtime = Date.now();
-	const now = (((curtime * S) % (runT * 1000)) / 1000) - runT / 2;
+	const now = tNow;//(((curtime * S) % (runT * 1000)) / 1000) - runT / 2;
+
+	const frame = Math.floor((now + runT / 2) * 10);
+	ctx.clearRect(0, 0, 1024, 1024);
+
+	let adraw = null;
+	let bdraw = null;
+	for( let f = 0; f < A_frames.length; f++ ) {
+		if( A_frames[f].T_start >= now ) {
+			const fr = A_frames[f];
+			adraw = fr;
+			ctx.strokeStyle = "green";
+			ctx.beginPath();
+			ctx.moveTo(500 + fr.Pc * xscale, 40);
+			ctx.lineTo(500 + fr.Pc * xscale, 60);
+			ctx.stroke();
+			break;
+		}
+	}
+	for( let f = 0; f < B_frames.length; f++ ) {
+		if( B_frames[f].T_start >= now ) {
+			const fr = B_frames[f];
+			bdraw = fr;
+			ctx.strokeStyle = "red";
+			ctx.beginPath();
+			ctx.moveTo(500 + fr.Pc * xscale, 80);
+			ctx.lineTo(500 + fr.Pc * xscale, 100);
+			ctx.stroke();			
+			break;
+		}
+	}
+
+	for( let f = 0; f < B_frames.length; f++ ) {
+		const fr = B_frames[f];
+		// distance from B to A (A to B?)
+		const dist = adraw.Pc-fr.Pc;
+		// how long(T) the light had to go.
+		const dt = Math.sqrt( dist*dist + D*D) / C;
+		if( (fr.T_start + dt) >= now ) {
+			ctx.strokeStyle = "blue";
+			ctx.beginPath();
+			ctx.moveTo(500 + fr.Pc * xscale, 90);
+			ctx.lineTo(500 + adraw.Pc * xscale, 50);
+			ctx.stroke();			
+			break;
+		}
+	}
+
+	for( let f = 0; f < A_frames.length; f++ ) {
+		const fr = A_frames[f];
+		// distance from B to A (A to B?)
+		const dist = bdraw.Pc-fr.Pc;
+		// how long(T) the light had to go.
+		const dt = Math.sqrt( dist*dist + D*D) / C;
+		if( (fr.T_start + dt) >= now ) {
+			ctx.strokeStyle = "orange";
+			ctx.beginPath();
+			ctx.moveTo(500 + bdraw.Pc * xscale, 90);
+			ctx.lineTo(500 + fr.Pc * xscale, 50);
+			ctx.stroke();			
+			break;
+		}
+
+	}
+	/*
+	if (curFrameA < 0 || curFrameA != frame) {
+		while( frame >= A_frames.length)
+			A_frames.push(new Frame());
+		curFrameA = frame;
+	}
+	{
+		const f = A_frames[curFrameA];
+
+		if (f) {
+			// position center, head, tail
+			f.Pc = P1Of + now * V1Real;
+			f.Ph = f.Pc + L;
+			f.Pt = f.Pc - L;
+			f.hue = 120 * (now % 3) - 240;
+			// time these events were emitted...
+			f.T_start = now;
+			f.T_see_h = realTimeToObserverTime(now, L);
+			f.T_see_c = realTimeToObserverTime(now, 0);
+			f.T_see_t = realTimeToObserverTime(now, -L);
+
+			ctx.strokeStyle = "green";
+			ctx.beginPath();
+			ctx.moveTo(500 + f.Pc * xscale, 40);
+			ctx.lineTo(500 + f.Pc * xscale, 60);
+			ctx.stroke();
+		
+		}
+	}
+
+	if (curFrameB < 0 || curFrameB != frame) {
+		while( frame >= B_frames.length)
+			B_frames.push(new Frame());
+		curFrameB = frame;
+	}
+	{
+		const f = B_frames[curFrameB];
+		if (f) {
+			// position center, head, tail
+			f.Pc = BOf + now * BVr;
+			f.Ph = f.Pc + L;
+			f.Pt = f.Pc - L;
+			f.hue = 120 * (now % 3) - 240;
+			// time these events were emitted...
+			f.T_start = now;
+			f.T_see_h = realTimeToObserverTime(now, L);
+			f.T_see_c = realTimeToObserverTime(now, 0);
+			f.T_see_t = realTimeToObserverTime(now, -L);
+
+			ctx.strokeStyle = "red";
+			ctx.beginPath();
+			ctx.moveTo(500 + f.Pc * xscale, 80);
+			ctx.lineTo(500 + f.Pc * xscale, 100);
+			ctx.stroke();
+		
+		}
+	}
+
+	*/
+
+
+
 
 	if(0) {
 	const beamX = canvas.width / 2;
@@ -611,7 +911,7 @@ function draw() {
 		tron.draw(  tronCtx);
 	}
 
-	requestAnimationFrame(draw);
+	//requestAnimationFrame(draw);
 
 	return;
 

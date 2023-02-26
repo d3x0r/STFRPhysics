@@ -83,6 +83,7 @@ p = 1/2 at^2 + vt
 
 ### Dev Notes
 
+( incomplete sentence fragments follow.  This was setting up how to think about the points... )
 a craft that is 3 long (-1,0,1) is moving along.
 
 at any given time T the craft is a color that  cycles through colors by changing the hue.
@@ -177,3 +178,40 @@ T=x
 $$(L V + C^2 x - sqrt(C^2 D^2 + C^2 L^2 - D^2 V^2 + 2 C^2 L V x + C^2 V^2 x^2))/(C^2 - V^2)) $$
 
 $$(C^2 (1 - (V (L + V x))/sqrt(C^2 (D^2 + (L + V x)^2) - D^2 V^2)))/(C^2 - V^2)$$
+
+
+---
+# SR Devnotes
+
+'if two observers have clocks, and are in motion relative to one another at high velocities, then each should see the other's time as moving slower than theirs. when they meet back up, what determines which observer's clock has ticked more?'  from a user on physics discord.. 
+
+"depends on whether they are approaching or leaving each other whether they see clocks tick faster or slower; a rule I saw someone say was the one that accelerated more will have the slower clock (much like someone deeper in a gravity well has a slower clock and feels like there's more acceleration).   " ... 
+
+and then I could continue on... but this is only a bit of it
+" If one was travelling towards the other at the speed of light, then all of its clock ticks would be seen at once which makes for seeing a very fast clock.  (although if they are each going 1/2 the speed of light toward each other, then the light has time to travel away and ahead of each, so you don't see all ticks at once).  "
+
+Because then, with SR, the lightspeed craft has 0 ticks, and the clock doesn't 'go' and the stationary observer sees for all time that it was the same tick until some point before the craft was AT light speed.
+
+But then shifting the problem, they are each `sqrt(2)/2`  for their time scalar, so I should then apply that to when ticks are emitted from their clocks (in theory each tick generates a photon that can be seen at some point in the future...)
+
+At emmision, the photon source knows its position, and it is treated as a stationary point, and the other end is the difference in velocities to calculate where the light has to go, to know how long the light will take to get to be seen....
+
+'ticks in the air'  is really where the missing information on the clocks goes, other than when a clock is also retarded.  Tron experiment, it was decided that the slowest clock would be used as the tick rate for the game;   This means in terms of the simulator, players that are going slower than the fastest player goes even slower....  The world clock ticks VERY fast overall though.
+
+### Tron-lightcycles
+
+There's several frames of importance - the arena, and the people in it, and each player's local frame.
+
+A player going 0.707x LS  means the world is 1.414x faster (vendors in the stands would rush around)   
+A player going 0.894x LS means the world is 2x faster(?) not really - but the player is feeling like 2x the speed of light.   so anything from light sources is received 2x as fast?  Then how is the other 1.414x at 1x speed of light?
+
+
+## math/indexLightSpeed-SR.html
+
+Initial conditions...
+1) both bodies start at some negative time T such that at T=0 both observe a signal sent from the other (including offset between them).
+2)  `T=Math.sqrt( (D*D)/(C*C) / (C*C-V*V));` given V=Real velocity (sublight).
+3) the next signal they emit will be ... 
+
+
+
