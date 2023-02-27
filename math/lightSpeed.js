@@ -365,6 +365,8 @@ function draw(  ) {
 			if( drawT ) drawT2 = frame;
 			else drawT = frame;
 		}
+		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
+
 		if( now < frame.T_see_c ) {
 			const del = frame.T_see_c - frame.T_start;
 			const passed = now - frame.T_start;
@@ -414,7 +416,7 @@ function draw(  ) {
 	function headTri( t,o ) {
 		const y = 0;
 		
-		ctx.fillStyle = "red";
+		//ctx.fillStyle = "red";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( 500+(t) * xscale + 5, o+y );
@@ -426,7 +428,7 @@ function draw(  ) {
 	function tailTri( t,o ) {      
 		const y = 0;
 		
-		ctx.fillStyle = "blue";
+		//ctx.fillStyle = "blue";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( 500+(t) * xscale - 5, o+y );
@@ -437,7 +439,7 @@ function draw(  ) {
 
 	function centerBoxXY( x,y ) {      
 		
-		ctx.fillStyle = "green";
+		//ctx.fillStyle = "green";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( x +5, y );
@@ -451,9 +453,9 @@ function draw(  ) {
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-	//const front  = observerTimeToRealTime( now,  L );
-	//const center = observerTimeToRealTime( now,  0 );
-	//const back   = observerTimeToRealTime( now, -L );
+	const frontT  = observerTimeToRealTime( now,  L );
+	const centerT = observerTimeToRealTime( now,  0 );
+	const backT   = observerTimeToRealTime( now, -L );
 	const front  = observerTimeToRealPos( now,  L );
 	const center = observerTimeToRealPos( now,  0 );
 	const back   = observerTimeToRealPos( now, -L );
@@ -465,37 +467,44 @@ function draw(  ) {
 		centerBox( c, 6 );
 
 if(1) {
+	if( drawP && drawH )
 	if( center.length > 1 && front.length > 1 ) {
 		//console.log( "blah:", center[1], front[1], back[1] );
 		var grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
-		grd.addColorStop(0, `hsl(${(-(front[1])%3)*120},100%,50%` );
-		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
+		grd.addColorStop(0, `hsl(${drawH.hue},100%,50%` );
+		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
 		ctx.fillStyle = grd;
 		ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
 	}
+	if( drawP && drawT )
 	if( center.length > 1 && back.length > 1 ) {
 		var grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
-		grd.addColorStop(1, `hsl(${(-(center[1])%3)*120},100%,50%` );
-		grd.addColorStop(0, `hsl(${(-(back[1])%3)*120},100%,50%` );
+		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
+		grd.addColorStop(0, `hsl(${drawT.hue},100%,50%` );
 		ctx.fillStyle = grd;
 		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
 	}
-
-
+	drawP = drawP2 || drawP;
+	drawH = drawH2 || drawH;
+	drawT = drawT2 || drawT;
+	if( drawP && drawH )
 	if( center.length > 0 && front.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(center[0])*xscale +((front[0]) - center[0])*xscale, 0, 500+(center[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((front[0])%3)*120},100%,50%` );
-		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
+		var grd = ctx.createLinearGradient(500+(center[0])*xscale , 0, 500+(front[0])*xscale, 0);
+		grd.addColorStop(0, `hsl(${((drawP.hue))},100%,50%` );
+		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
 		ctx.fillStyle = grd;
 		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
 	}
+	if( drawP && drawT )
 	if( center.length > 0 && back.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(back[0])*xscale+( center[0] - (back[0]))*xscale, 0);
-		grd.addColorStop(1, `hsl(${((center[0])%3)*120},100%,50%` );
-		grd.addColorStop(0, `hsl(${((back[0])%3)*120},100%,50%` );
+		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(center[0])*xscale, 0);
+		grd.addColorStop(0, `hsl(${((drawT.hue))},100%,50%` );
+		grd.addColorStop(1, `hsl(${((drawP.hue))},100%,50%` );
 		ctx.fillStyle = grd;
 		ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
 	}
+
+	ctx.fillStyle = "black"
 
 }
 
