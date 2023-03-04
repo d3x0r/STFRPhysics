@@ -469,7 +469,7 @@ function draw(  ) {
 	if( animate ) {
 		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
 		sliderNow.value =100*now*2/runT
-	spanNow.textContent = now.toFixed(2);
+		spanNow.textContent = now.toFixed(2);
 	}
 	const frame = Math.floor( (now+runT/2)*100 );
 if(0)
