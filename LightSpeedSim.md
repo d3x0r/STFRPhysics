@@ -80,15 +80,15 @@ solved for T...
 
 $X=((TV)- (+L))$
 
-$ \frac {AV+ \sqrt { X^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
+$\frac {AV+ \sqrt { X^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
 
-$ \frac {((TV)- (+L))V+ \sqrt { (((TV)- (+L)))^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
+$\frac {((TV)- (+L))V+ \sqrt { (((TV)- (+L)))^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
+ 
+$\frac {(TV-L)(V+C)} {C^2-V^2}$
 
-$ \frac {(TV-L)(V+C)} {C^2-V^2}$
+$X = TV $
 
-$ X = TV $
-
-$ \frac {(X-L)(V+C)} {C^2-V^2}$
+$\frac {(X-L)(V+C)} {C^2-V^2}$
 
 This is getting closer to the lorentz transform than the above... but still to use this time span, it has to be added to the current time `T`...
 
