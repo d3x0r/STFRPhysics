@@ -15,7 +15,7 @@ let V=2; // velocity  (m/s)
 let S=1; // time scalar (s/s)
 let runT = 10;
 let now = 0;
-let animate = false;
+let animate = true;
 
 const frames = [];
 let curFrame = -1;

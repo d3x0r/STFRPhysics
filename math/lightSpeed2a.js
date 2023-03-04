@@ -16,7 +16,7 @@ let S=1.0; // time scalar (s/s)
 let runT = 10;
 let E = 0;
 let now = 0;
-let animate = false;
+let animate = true;
 const step = 10;
 
 const frames = [];

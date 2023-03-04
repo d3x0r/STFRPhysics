@@ -17,7 +17,7 @@ let S=1.0; // time scalar (s/s)
 let runT = 4;
 let E = 0;
 let now = 0;
-let animate = false;
+let animate = true;
 const step = 10;
 
 const frames = [];
@@ -418,11 +418,15 @@ function update( evt ) {
 		eventFrame = -1;
 	}
 
-	const Tofs = Math.sqrt( D*D + L*L ) /C;
-
 	const hLen = (L-D2)/(C+V) ;
 	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
 		//2(CD+LV)/(CC-VV)
+
+		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
+		// A+B = 2D
+		// a = A/D   b = A/D
+		// a+b=2
+		// 1-a/b = b/a-1 = 0   QM balance.
 
 
 	for( let n = 0; n < nFrames; n++ ) {
