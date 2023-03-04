@@ -51,11 +51,10 @@ This is a more typical example was on Physics Discord...
 
 "While you're having breakfast in the morning, a creature in the Andromeda galaxy is doing the same. We call the two breakfast events event X (on Earth) and event Y (in the Andromeda galaxy). "Simultaneously" means simultaneous in your reference frame. If instead we describe the two events in another reference frame, that of a space traveler who is traveling at a very high speed from the Andromeda galaxy towards Earth, which of the following statements is correct?
 
-  A. Event X and event Y are simultaneous.
-  B. Event X occurs before event Y.
-  C. Event Y occurs before event X.
-  D. The question is not well-defined, as we cannot define simultaneity for events that do not occur at the same place in space.
-
+  - A. Event X and event Y are simultaneous.
+  - B. Event X occurs before event Y.
+  - C. Event Y occurs before event X.
+  - D. The question is not well-defined, as we cannot define simultaneity for events that do not occur at the same place in space.
 
 I get that it has something to do with that the traveler is going at relativistic speeds which means things will move slower relative to him. I just don't get how the gamma factor ties in to the problem context"
 
