@@ -117,6 +117,27 @@ This is getting closer to the lorentz transform than the above... but still to u
 
 ```
 
+### Homework Reframed
+
+Okay looking at https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
+example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer. 
+
+[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
+
+This is non-lorentz transformed, and probably falls under a Gallilean relativity; arguably, I could put a mesh of sensors which must also receive the light around the train at the speed of light, so the inside
+experience can't be much different; arguably a laser sensor of the occupant would measure the position in proper light speed/2 ticks.
+
+``` js
+" T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
+```
+Difference in time, that an external observer notes between when the chained observer will first see the light to when they will see the other simultaneous event.
+
+$$\frac{ -2(CD+LV)}{CC-VV}$$
+
+Difference in time, noted by the observer on the train between the signals.
+
+$$-2*(CD+LV)$$
+
 
 (Note sections are potentially incomplete/inaccurate).
 
