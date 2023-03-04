@@ -14,11 +14,20 @@ The 0 time event is centered on the line, and the simulation starts at -1/2 Run 
 
 
 ## The Math
-At some time T, a body is at a position VT; the extents of the body are at `(VT+L)` and `(VT-L)`.  Each part of the body emits a signal at the position it is, and that signal time to the observer is recorded.
+
+Each part of the body emits a signal at the position it is, and that signal time to the observer is recorded.
+
+At some time T, a body is at a position VT; the extents of the body are at `(VT+L)` and `(VT-L)`.  
+A relatively stationary observer, at some `D` distance from the body; then `Do = sqrt(DD+(VT+L)^2)` is the photon has to travel
+to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = TV/C`).
+
+
+(correction?) observed at `(VT'+L)/C`. `T' = T \gamma`; `gamma = 1/sqrt(C^2-V^2)`   
 
 The position divided by the speed of light is how long that signal will travel to the observer.  
 
-Observed time of head
+Observed time of (some position along body L) ( head, center, tail)
+
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
 Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T`.
@@ -34,21 +43,91 @@ $$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 
+### Lorentz Problem
+
+This is a more typical example was on Physics Discord...
+
+---
+
+"While you're having breakfast in the morning, a creature in the Andromeda galaxy is doing the same. We call the two breakfast events event X (on Earth) and event Y (in the Andromeda galaxy). "Simultaneously" means simultaneous in your reference frame. If instead we describe the two events in another reference frame, that of a space traveler who is traveling at a very high speed from the Andromeda galaxy towards Earth, which of the following statements is correct?
+
+  A. Event X and event Y are simultaneous.
+  B. Event X occurs before event Y.
+  C. Event Y occurs before event X.
+  D. The question is not well-defined, as we cannot define simultaneity for events that do not occur at the same place in space.
+
+
+I get that it has something to do with that the traveler is going at relativistic speeds which means things will move slower relative to him. I just don't get how the gamma factor ties in to the problem context"
+
+---
+
+I solved this as above, but assuming that a moving observer would basically see the same times as the other sim (Although, to get a single answer, I had to interpret that the breakfast was simulateous *to 'you' eating breakfast*);
+otherwise there are multiple choices.  And even made an image.
+
+![Probability Image](RelativityHomework.png)
+
+Which shows the light cones of the problem, and several observers in different times, all going exactly the same speed (was very careful to copy the lines and not re-draw them); which clearly shows observers that can answer more than one
+answer... The conversation continued, and then we have to go learn about the derviation of the Lorentz Transform (including gamme factor); not just the derivation, but the justification of why that math works.
+
+[This demo](math/indexLightspeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).
+
+There is a triangle, `CT` that is for some time seconds the speed of light long.  Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
+The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus `VT` or some velocity in time.
+
+$$(CT)^2 = (D)^2 + (A+VT)^2$$ 
+
+solved for T...
+
+$$A=((TV)- (+L))$$
+
+f(T,A) iff (A<0) $$	 \frac {-{-AV- \sqrt { A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+		else $$	\frac {AV+\sqrt{A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+
+
+
+``` js
+	hLen = /* time until light emission from head and ship intersect*/ A=TV-L
+		// f(T,TV-L)
+	tLen = /* time until light emission from tail and ship intersect*/ A=TV+L
+		// f(T,TV+L)
+
+		const nowE = (del * runT)-runT/2;
+		frame.hue =120*(Treal%3)-240;
+		frame.Pc = Treal*V;
+		// position head intersects observer
+		frame.Ph = frame.Pc + hLen*V;
+		frame.Pt = frame.Pc + tLen*V;
+		frame.T_start = Treal;
+
+		// time head intersects observer
+		frame.T_see_h = Treal+hLen;
+		
+		// time tail intersects observer
+		frame.T_see_t = Treal+tLen;
+
+```
 
 
 (Note sections are potentially incomplete/inaccurate).
-## Generlized to a 3D coordinate, which then orientation vs the observer matters.
 
+## Generalized to a 3D coordinate, which then orientation vs the observer matters.
 
 For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendiculat to the line, and X aligned with the original L direction on the line.
+
 $$ T_O=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((T) + A)^2 )/C}+T;$$
+
 The inverse (except where C=V)
+
 $$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
 
-Special case 3D formula for V=C, 
+Special case 3D formula for V=C (bad variable subsittution?), 
+
 $$ {T_O}=\sqrt{( Z*Z/(C*C) + ((D+Y)*(D+Y))/(C*C) + ((T) + A/C)^2 )}+T;$$
+
 Gives this formula for the inverse calulation at V=C
+
 $$ T = \frac { X^2 - C^2{T_O}^2 + D^2 + 2DY + YY + ZZ } { C(2A+2C{T_O}) }$$
+
 ## Time Dilation 
 According to special relativity
 
@@ -57,12 +136,19 @@ $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
 
 
 Speed Scalar (Real to observed)
+
 $$ T_S(x) = \frac {x} {\sqrt { CC-xx }} $$
+
 Speed Scalar (observed to Real)
+
 $$ T_R(x) = \frac {Cx} {\sqrt{xx+1 } } $$
+
 Time scalar (observed velocity to real time scalar)
+
 $$ \sqrt{CC - T_R(x)^2}$$
+
 $$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
+
 ## STFR Take on it
 
 $$\theta = angle-in-cycles$$
