@@ -8,16 +8,21 @@ const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
 
-let L=1; // length of body (m)  (L/C = time of body (s))
+let L=3.2; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
 let D=1; // shortest distance to moving body (m) (D/C = time to view closest event (s))
-let V=2; // velocity  (m/s)
-let S=1; // time scalar (s/s)
+let V=0.90; // velocity  (m/s)
+let S=1.0; // time scalar (s/s)
 let runT = 10;
+let E = 0;
+let now = 0;
+let animate = false;
+const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 1000;
+const nFrames = 101;
+let eventFrame = -1;
 
 class Frame{
 	Ph = 0;
@@ -25,6 +30,7 @@ class Frame{
 	Pt = 0;
 	hue = 0;
 	T_start = 0;
+	Event = 0;
 
 	T_see_h = 0;
 	T_see_c = 0;
@@ -148,6 +154,28 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.textContent = "Time of sim. event: ";
+controls.appendChild( span );
+
+const sliderE = document.createElement( "input" );
+sliderE.setAttribute( "type", "range" );
+controls.appendChild( sliderE );
+sliderE.addEventListener( "input", update );
+
+sliderE.setAttribute( "min",-100 );
+sliderE.setAttribute( "max",+100 );
+sliderE.value = E*10;
+sliderE.style.width="250px";
+
+const spanE = document.createElement( "span" );
+spanE.textContent = "1";
+controls.appendChild( spanE );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
+
+span = document.createElement( "span" );
 span.textContent = "Run-Time";
 controls.appendChild( span );
 
@@ -167,6 +195,37 @@ controls.appendChild( spanRunT );
 span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
+
+span = document.createElement( "span" );
+span.textContent = "Now";
+controls.appendChild( span );
+
+const sliderNow = document.createElement( "input" );
+sliderNow.setAttribute( "type", "range" );
+controls.appendChild( sliderNow );
+sliderNow.addEventListener( "input", update );
+
+sliderNow.setAttribute( "min",-100 );
+sliderNow.setAttribute( "max",100 );
+sliderNow.value = now*runT;
+sliderNow.style.width="250px";
+
+const spanNow = document.createElement( "span" );
+spanNow.textContent = "1";
+controls.appendChild( spanNow );
+
+const spanChkNow = document.createElement( "span" );
+spanChkNow.textContent = " |Animate";
+controls.appendChild( spanChkNow );
+
+const chkLblNow = document.createElement( "input" );
+chkLblNow.setAttribute( "type", "checkbox" );
+controls.appendChild( chkLblNow );
+chkLblNow.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
 update();
 
 const body = [];
@@ -178,12 +237,41 @@ for( t = -5; t < 5; t += 0.02 ) {
 	const appear = { t: delay.t+t, c:delay.c+t, h:delay.h+t };
 	body.push( { hue:(t%3)*60, pos:b, delay, appear } );
 }
+
+// speed around clock
+// CT = VT + Ct
+//
+x' =   g -gv   x
+t'    -gv g    t
+ x(1 - v) / sqrt( cc-vv)
+
+g t(1 - v)
+
+
+g   gv   x'
+gv  g    t'
+
+g x'(1 + v)
+g t'(1 + v)
+ 
 */
+
+
 
 function realTimeToObserverTime( T, L ) {
 	const pos = (V*T + L);
-	return Math.sqrt( D*D + pos*pos )/C+T;
+	return Math.sqrt( D*D + pos*pos )/C + T;
+
+	{const pos = (V*T);
+	return  Math.sqrt(pos*pos)/C + T;}
+
+	{return Math.abs(TV)/C+T;}
 }
+
+// rt2ot( T, 0)
+//   obsT = T(V/C+1)
+// rt2ot( T+e, 0 );
+//   (T+e)(V/C+1)
 
 // T = real time
 // P = Phase  // offset the spin phase against real time
@@ -269,6 +357,8 @@ function observerTimeToRealTime( T, L ) {
 
 	const r = [];
 	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+//	const a =   C*T(C - V )/(C*C - V*V);
+
 	if( a < T ) r.push(a);
 	// positive solution walks backwards...
 	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
@@ -303,29 +393,94 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	D = Number(sliderD.value)/10;
-	spanD.textContent = D.toFixed(2);
+	spanD.textContent = D.toFixed(1);
 	V = Number(sliderV.value)/100;
 	spanV.textContent = V.toFixed(2);
 	L = Number(sliderL.value)/10;
-	spanL.textContent = L.toFixed(2);
-
+	spanL.textContent = L.toFixed(1);
+	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
+	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
-	spanS.textContent = S.toFixed(2);
+	spanS.textContent = S.toFixed(1);
 
+	animate = chkLblNow.checked;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
+
+	if( animate ) {
+	}else
+		now = Number(sliderNow.value)/100*runT/2;
+	spanNow.textContent = now.toFixed(2);
+
+	if( eventFrame>=0 ) {
+		frames[eventFrame].event = false;
+		eventFrame = -1;
+	}
+
+	const Tofs = Math.sqrt( D*D + L*L ) /C;
+
+	for( let n = 0; n < nFrames; n++ ) {
+		const del = n/nFrames;
+		const Treal = (del * runT)-runT/2;
+		const frame = frames[n];
+		// offset observer's time to be in place later.
+		const obs_now = (del * runT)-runT/2 - Tofs;
+		const x = obs_now * V;
+
+	const B = ((Treal*V)- L);
+//	if( A < 0 ) continue;
+	const hLen = (true)?((B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V))
+			:(B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+
+		//const hLen = Math.sqrt( D*D + (L- x- V*Treal  )*( L- x- V*Treal  ) ) /C;
+
+
+	//	const tLen = Math.sqrt( D*D + (x+ -V*Treal+L )*(x+ -V*Treal+L ) ) /C;
+	const A = ((Treal*V)- -L);
+//	if( A < 0 ) continue;
+	const tLen = (A<0)?((A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V))
+			:(A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+
+		const nowE = (del * runT)-runT/2;
+		frame.hue =120*(Treal%3)-240;
+		frame.Pc = Treal*V;
+		frame.Ph = frame.Pc + hLen*V;
+		frame.Pt = frame.Pc + tLen*V;
+		frame.T_start = Treal;
+
+		frame.T_see_h = Treal+hLen;
+		frame.T_see_t = Treal+tLen;
+	}
+
+	         /*
+context.beginPath();
+context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+context.fillStyle = 'green';
+context.fill();
+context.lineWidth = 5;
+context.strokeStyle = '#003300';
+context.stroke()
+*/
 
 	//draw(  );
 }
 let last_draw_time = 0;
-let xscale = 50;
+const xscale = 50;
+const yscale = 50;
+let didEvent = false;
+const photonStart = 100;
 function draw(  ) {
 	
 	const beamX = canvas.width/2;
 	const beamY = canvas.height/2 + 40;
 
-	const now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
-	const frame = Math.floor( (now+runT/2)*10 );
+	if( animate ) {
+		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
+		sliderNow.value =100*now*2/runT
+	spanNow.textContent = now.toFixed(2);
+	}
+	const frame = Math.floor( (now+runT/2)*100 );
+if(0)
 	if( curFrame < 0 || curFrame != frame ) {
 		curFrame = frame; 
 		const f = frames[curFrame];
@@ -334,6 +489,12 @@ function draw(  ) {
 		f.Pt = f.Pc-L;
 		f.hue = 120*(now%3)-240;
 		f.T_start = now;
+		if( now > E && !didEvent) {			
+			if( eventFrame< 0 ) {
+				eventFrame = frame;
+				f.event = true;
+			}
+		}
 		f.T_see_h = realTimeToObserverTime( now, L );
 		f.T_see_c = realTimeToObserverTime( now, 0 );
 		f.T_see_t = realTimeToObserverTime( now, -L );
@@ -342,15 +503,24 @@ function draw(  ) {
 
 	ctx.clearRect( 0, 0, 1024, 1024);
 	ctx.strokeStyle = "blue";
-	
+	curFrame = nFrames;
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
+	const toY = D*yscale+photonStart;
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
+		if( frame.T_start < now ) {
+
+
+		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 		ctx.beginPath();
-		ctx.moveTo( 500 + frame.Pc*xscale, 40 );
-		const toY = D*xscale+40;
-		ctx.lineTo( 500, toY );
+		ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
+		ctx.lineTo( 500 + xscale*frame.Pt, toY );
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.moveTo( 500 +L*xscale, photonStart );
+		ctx.lineTo( 500 + xscale*frame.Ph, toY );
 		ctx.stroke();
 		
 		if( ( frame.T_see_c < now ) ) {
@@ -365,74 +535,113 @@ function draw(  ) {
 			if( drawT ) drawT2 = frame;
 			else drawT = frame;
 		}
-		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
-		ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
-
-		if( now < frame.T_see_c ) {
-			const passed = now - frame.T_start;
-			const del = frame.T_see_c - frame.T_start;
-			const delT = passed/del;
-			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 40*(1-delT)+toY*(delT) );
-if(1){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500+frame.Pc*xscale, 40, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
 		}
-		if( now < frame.T_see_h ) {
+		ctx.fillStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
+
+
+
+/*
+		if( now < frame.T_see_c ) {
+			const del = frame.T_see_c - frame.T_start;
+			const passed = now - frame.T_start;
+			const delT = passed/del;
+			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), photonStart*(1-delT)+toY*(delT), false );
+			if( frame.event ) {
+				eventMark( (frame.Pc)*(1-delT), photonStart*(1-delT)+toY*(delT), true );
+			}
+		}
+*/
+
+		const willBe = frame.Phc + V*(frame.T_start-now);
+		if( frame.T_start <now && frame.T_see_h>now) {
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			headTri( (frame.Pc+L)*(1-delT) , 40*(1-delT)+toY*(delT) );
-if(0){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500+frame.Ph*xscale, 40, C*(now-frame.T_start)*(100), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
+			headTri( (+L)*(1-delT) +(delT)*frame.Ph, photonStart*(1-delT)+toY*(delT) );
+			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
+ctx.beginPath();
+ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
+ctx.stroke()
+
 		}
-		if( now < frame.T_see_t ) {
+		if( frame.T_start <now && frame.T_see_t>now) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			tailTri( (frame.Pc-L)*(1-delT), 40*(1-delT)+toY*(delT) );
-if(0){ // draw circles around tail
+			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
+			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT), true );
+if(1){ // draw circles around tail
 	ctx.beginPath();
-	ctx.arc(500+frame.Pt*xscale, 40, C*(now-frame.T_start)*(100), 0, 2 * Math.PI, false);
+	ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
 	ctx.stroke()
 }
 		}
 	}
 
+	centerBoxXY( (500+V*now*xscale), toY, true );
+
+if( eventFrame >= 0 )
+	{
+	 	const frame = frames[eventFrame];
+		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
+if(0)
+		if( now < frame.T_see_c ) {
+			centerBoxXY( (500+frame.Pc*xscale), 40, false );
+			if( frame.event ) {
+				eventMark( (frame.Pc), 40, true );
+			}
+		}
+		if( now < frame.T_see_h ) {
+			headTri( (frame.Pc+L) , 40 );
+			if( frame.event ) eventMark( (frame.Pc+L) , 40, true );
+		}
+		if( now < frame.T_see_t ) {
+			tailTri( (frame.Pc-L), 40 );
+			if( frame.event ) eventMark( (frame.Pc-L), 40, true );
+		}
+
+	}
 	//if( drawP !== frames[0] ) 
 	{
 
+/*
 	if( drawP )
-		centerBoxXY( 500 + drawP.Pc*xscale, 30 );
+		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
 	if( drawP2 )
-		centerBoxXY( 500 + drawP2.Pc*xscale, 30 );
+		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
 	if( drawH !== frames[0] )
 	if( drawH )
-		headTri( drawH.Pc+L, 30 );
+		headTri( drawH.Pc+L, 30, true );
 	if( drawH2 )
-		headTri( drawH2.Pc+L, 30 );
+		headTri( drawH2.Pc+L, 30, true );
 	if( drawT !== frames[0] )
 	if( drawT )
-		tailTri( drawT.Pc-L, 30 );
+		tailTri( drawT.Pc-L, 30, true );
 	if( drawT2 )
-		tailTri( drawT2.Pc-L, 30 );
+		tailTri( drawT2.Pc-L, 30, true );
 
+*/
 	}
-
 
 
 	last_draw_time = now;
 
-	
-
-	function headTri( t,o ) {
+	function eventMark( t,o,f ) {
 		const y = 0;
 		
-		//ctx.fillStyle = "red";
+		if(f)ctx.strokeStyle = "magenta";
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.moveTo( 500+(t) * xscale + 10, o+y );
+		ctx.lineTo( 500+(t) * xscale - 10, o+y );
+		ctx.stroke();
+	}
+	
+
+	function headTri( t,o,f ) {
+		const y = 0;
+		
+		if(f)ctx.fillStyle = "red";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( 500+(t) * xscale + 5, o+y );
@@ -441,10 +650,10 @@ if(0){ // draw circles around tail
 		ctx.fill();
 	}
 
-	function tailTri( t,o ) {      
+	function tailTri( t,o,f ) {      
 		const y = 0;
 		
-		//ctx.fillStyle = "blue";
+		if(f)ctx.fillStyle = "blue";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( 500+(t) * xscale - 5, o+y );
@@ -453,9 +662,9 @@ if(0){ // draw circles around tail
 		ctx.fill();
 	}
 
-	function centerBoxXY( x,y ) {      
+	function centerBoxXY( x,y,f ) {      
 		
-		//ctx.fillStyle = "green";
+		if(f)ctx.fillStyle = "green";
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo( x +5, y );
@@ -482,7 +691,7 @@ if(0){ // draw circles around tail
 	for( let c of center )
 		centerBox( c, 6 );
 
-if(1) {
+if(0) { // old realtive calculation (motionless thing)
 	if( drawP && drawH )
 	if( center.length > 1 && front.length > 1 ) {
 		//console.log( "blah:", center[1], front[1], back[1] );
@@ -521,16 +730,15 @@ if(1) {
 	}
 
 	ctx.fillStyle = "black"
-
 }
 
 
 
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-   ctx.fillRect( 500+(now*V - L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri( now*V + L, 20 );
-	tailTri( now*V - L, 20 );
-	centerBox( now*V, 20 );
+	ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
+	headTri(  + L, 20, true );
+	tailTri(  - L, 20, true );
+	centerBox( 0, 20, true );
 
 
 	requestAnimationFrame( draw );
