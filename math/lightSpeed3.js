@@ -398,7 +398,7 @@ function update( evt ) {
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
 	D2 = (Number(sliderD.value)/50-1)*L;
-	spanD.textContent = D2.toFixed(1) + " T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
+	spanD.textContent = D2.toFixed(1) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
@@ -411,7 +411,7 @@ function update( evt ) {
 	if( animate ) {
 	}else
 		now = (Number(sliderNow.value)/100*runT/2);
-	spanNow.textContent = "T(world):" +  (now).toFixed(2) + " T(obs):" + (now*(C*C-V*V)).toFixed(2);
+	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame>=0 ) {
 		frames[eventFrame].event = false;
