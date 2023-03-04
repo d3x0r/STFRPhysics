@@ -78,9 +78,9 @@ $$(CT)^2 = (D)^2 + (A+VT)^2$$
 
 solved for T...
 
-$$X=((TV)- (+L))$$
+$$A=((TV)- (+L))$$
 
-$$\frac {AV+ \sqrt { X^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+$$\frac {AV+ \sqrt { A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
 
 and some tinkering with refactoring
 
