@@ -14,6 +14,8 @@ let D=1; // shortest distance to moving body (m) (D/C = time to view closest eve
 let V=2; // velocity  (m/s)
 let S=1; // time scalar (s/s)
 let runT = 10;
+let now = 0;
+let animate = false;
 
 const frames = [];
 let curFrame = -1;
@@ -167,6 +169,37 @@ controls.appendChild( spanRunT );
 span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
+
+span = document.createElement( "span" );
+span.textContent = "Now";
+controls.appendChild( span );
+
+const sliderNow = document.createElement( "input" );
+sliderNow.setAttribute( "type", "range" );
+controls.appendChild( sliderNow );
+sliderNow.addEventListener( "input", update );
+
+sliderNow.setAttribute( "min",-100 );
+sliderNow.setAttribute( "max",100 );
+sliderNow.value = now*runT;
+sliderNow.style.width="250px";
+
+const spanNow = document.createElement( "span" );
+spanNow.textContent = "1";
+controls.appendChild( spanNow );
+
+const spanChkNow = document.createElement( "span" );
+spanChkNow.textContent = " |Animate";
+controls.appendChild( spanChkNow );
+
+const chkLblNow = document.createElement( "input" );
+chkLblNow.setAttribute( "type", "checkbox" );
+controls.appendChild( chkLblNow );
+chkLblNow.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
 update();
 
 const body = [];
@@ -315,6 +348,11 @@ function update( evt ) {
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
+	animate = chkLblNow.checked;
+	if( animate ) {
+	}else
+		now = Number(sliderNow.value)/100*runT/2;
+	spanNow.textContent = now.toFixed(2);
 	//draw(  );
 }
 let last_draw_time = 0;
@@ -324,7 +362,11 @@ function draw(  ) {
 	const beamX = canvas.width/2;
 	const beamY = canvas.height/2 + 40;
 
-	const now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
+	if( animate ) {
+		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
+		sliderNow.value =100*now*2/runT
+	spanNow.textContent = now.toFixed(2);
+	}
 	const frame = Math.floor( (now+runT/2)*10 );
 	if( curFrame < 0 || curFrame != frame ) {
 		curFrame = frame; 
@@ -373,7 +415,7 @@ function draw(  ) {
 			const del = frame.T_see_c - frame.T_start;
 			const delT = passed/del;
 			centerBoxXY( (500+frame.Pc*xscale)*(1-delT) + (500)*(delT), 40*(1-delT)+toY*(delT) );
-if(1){ // draw circles around tail
+if(1 && (now-frame.T_start>0)){ // draw circles around tail
 	ctx.beginPath();
 	ctx.arc(500+frame.Pc*xscale, 40, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 	ctx.stroke()
