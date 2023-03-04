@@ -414,6 +414,12 @@ function update( evt ) {
 		const obs_now = (del * runT)-runT/2 - Tofs;
 		const x = obs_now * V;
 
+		// (t,x) and (t',x') 
+		const gamma = 1/Math.sqrt( 1-V*V/C*C);
+		const X = V*Treal; //(observer's moving distance)
+		const tt = gamma * (Treal - X*V/(C*C));
+		const xx = gamma * (X-V*Treal);
+
 		const hLen = Math.sqrt( D*D + (L-(x- V*Treal) )*( L-(x- V*Treal) ) ) /C;
 
 
@@ -422,12 +428,12 @@ function update( evt ) {
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
 		frame.Pc = Treal*V;
-		frame.Ph = frame.Pc + hLen*V;
+		frame.Ph = xx;
 		frame.Pt = frame.Pc + tLen*V;
 		frame.T_start = Treal;
 
-		frame.T_see_h = Treal+hLen;
-		frame.T_see_t = Treal+tLen;
+		frame.T_see_h = tt;
+		frame.T_see_t = tt;
 	}
 
 	         /*
