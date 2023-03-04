@@ -139,6 +139,27 @@ Difference in time, noted by the observer on the train between the signals.
 $$-2*(CD+LV)$$
 
 
+# Connection to Quantum Mechanical Correlations
+
+The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
+
+The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
+(see previous demo - Homework Rework).
+
+[Quantized Probablity](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md) was a earlier project, using a LHV of quantum mechanics called 'spin axis' led me to this method of calculation QM probabliities.
+It's within 3% of QM predictions, which is less than experimental apparatus error bars...
+
+```
+		//2(CD+LV)/(CC-VV)
+
+		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
+		// A+B = 2D
+		// a = A/D   b = B/D
+		// a+b=2
+		// 1-a/b = b/a-1 = 0   QM balance.
+```
+
+
 (Note sections are potentially incomplete/inaccurate).
 
 ## Generalized to a 3D coordinate, which then orientation vs the observer matters.
