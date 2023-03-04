@@ -411,7 +411,7 @@ function update( evt ) {
 	if( animate ) {
 	}else
 		now = (Number(sliderNow.value)/100*runT/2);
-	spanNow.textContent = (now*Math.sqrt(1-V/C)).toFixed(2);
+	spanNow.textContent = "T(world):" +  (now).toFixed(2) + " T(obs):" + (now*(C*C-V*V)).toFixed(2);
 
 	if( eventFrame>=0 ) {
 		frames[eventFrame].event = false;
@@ -420,18 +420,16 @@ function update( evt ) {
 
 	const Tofs = Math.sqrt( D*D + L*L ) /C;
 
+	const hLen = (L-D2)/(C+V) ;
+	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
+		//2(CD+LV)/(CC-VV)
+
+
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const Treal = (del * runT)-runT/2;
 		const frame = frames[n];
-		// offset observer's time to be in place later.
-		const obs_now = (del * runT)-runT/2 - Tofs;
-		const x = obs_now * V;
 
-	const hLen = (L-D2)/(C+V) ;
-	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
-
-		//2(CD+LV)/(CC-VV)
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
