@@ -428,18 +428,10 @@ function update( evt ) {
 		const x = obs_now * V;
 
 	const B = ((Treal*V)- L);
-//	if( A < 0 ) continue;
-	const hLen = (true)?((B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V))
-			:(B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+	const hLen = (B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
 
-		//const hLen = Math.sqrt( D*D + (L- x- V*Treal  )*( L- x- V*Treal  ) ) /C;
-
-
-	//	const tLen = Math.sqrt( D*D + (x+ -V*Treal+L )*(x+ -V*Treal+L ) ) /C;
 	const A = ((Treal*V)- -L);
-//	if( A < 0 ) continue;
-	const tLen = (A<0)?((A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V))
-			:(A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+	const tLen = (A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;

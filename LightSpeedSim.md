@@ -28,20 +28,20 @@ The position divided by the speed of light is how long that signal will travel t
 
 Observed time of (some position along body L) ( head, center, tail)
 
-$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
+$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$
 
 Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T`.
 
-$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}
-$$
+$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}
+$
 
 The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead
 
 if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
-$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
+$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
-$$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
+$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
 
 ### Lorentz Problem
 
@@ -69,27 +69,34 @@ otherwise there are multiple choices.  And even made an image.
 Which shows the light cones of the problem, and several observers in different times, all going exactly the same speed (was very careful to copy the lines and not re-draw them); which clearly shows observers that can answer more than one
 answer... The conversation continued, and then we have to go learn about the derviation of the Lorentz Transform (including gamme factor); not just the derivation, but the justification of why that math works.
 
-[This demo](math/indexLightspeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).
+[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightspeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).
 
 There is a triangle, `CT` that is for some time seconds the speed of light long.  Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
-The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus `VT` or some velocity in time.
+The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion `VT` or some velocity in time.
 
 $$(CT)^2 = (D)^2 + (A+VT)^2$$ 
 
 solved for T...
 
-$$A=((TV)- (+L))$$
+$X=((TV)- (+L))$
 
-f(T,A) iff (A<0) $$	 \frac {-{-AV- \sqrt { A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
-		else $$	\frac {AV+\sqrt{A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+$ \frac {AV+ \sqrt { X^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
 
+$ \frac {((TV)- (+L))V+ \sqrt { (((TV)- (+L)))^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$
 
+$ \frac {(TV-L)(V+C)} {C^2-V^2}$
+
+$ X = TV $
+
+$ \frac {(X-L)(V+C)} {C^2-V^2}$
+
+This is getting closer to the lorentz transform than the above... but still to use this time span, it has to be added to the current time `T`...
 
 ``` js
 	hLen = /* time until light emission from head and ship intersect*/ A=TV-L
 		// f(T,TV-L)
-	tLen = /* time until light emission from tail and ship intersect*/ A=TV+L
-		// f(T,TV+L)
+	tLen = /* time until light emission from tail and ship intersect*/ A=TV-(-L)
+		// f(T,TV-(-L))
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
