@@ -221,6 +221,7 @@ controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
+chkLblNow.checked = animate;
 controls.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
@@ -551,15 +552,6 @@ ctx.arc(500+(L-V*(now-frame.T_start))*xscale, photonStart, C*(now-frame.T_start)
 ctx.stroke()
 
 		}
-if(0)		if( frame.T_see_h <now && frame.T_end >now) {
-			const del = frame.T_see_h - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-ctx.beginPath();
-ctx.arc(500+(D2-V*(now-frame.T_see_h))*xscale, photonStart, C*(now-frame.T_see_h)*(xscale), 0, 2 * Math.PI, false);
-ctx.stroke()
-
-		}
 		if( frame.T_start <now && frame.T_see_t>now) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
@@ -687,6 +679,7 @@ if(0)
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
+/*
 	const frontT  = observerTimeToRealTime( now,  L );
 	const centerT = observerTimeToRealTime( now,  0 );
 	const backT   = observerTimeToRealTime( now, -L );
@@ -699,7 +692,7 @@ if(0)
 		tailTri( b, 6 );
 	for( let c of center )
 		centerBox( c, 6 );
-
+*/
 if(0) { // old realtive calculation (motionless thing)
 	if( drawP && drawH )
 	if( center.length > 1 && front.length > 1 ) {

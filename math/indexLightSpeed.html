@@ -1,12 +1,20 @@
 
 <html>
-<head><title>Light Speed Test</title></head>
+<head>
+    <title>Light Speed Test - Observer and events moving together </title>
+    <link rel="stylesheet" href="visualization.css">
+</head>
 <body style="font-size:125%">
-   <p> Explain... <A HREF="https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md">Simple document with math</A>
+    <header>
+        <div class="avatar-container">
+            <img id="avatar" />
+        </div>
+        <div id="userName"></div>
+    </header>
 
-
-
-
+    <main>
+        <h1 id="title"></h1>
+        <hr />
 
 	<div id="controls"></div>
 	<div style="position:absolute;top:0">
@@ -14,10 +22,17 @@
     <CANVAS WIDTH=1024 height=800 ID="testSurface" ></CANVAS>
 	</div>
 
+        <div id="readme-text"></div>
+
+
+        <p><A HREF="https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md">Readme Source</A></p>
+    </main>
 
 
 </body>
 <script type="module" src="lightSpeed.js"> </script>
+<script type="module" src="getReadme.js"> </script>
+
 </html>
 
 

@@ -25,17 +25,17 @@ function getReadme(owner, repo, path) {
             var endPos = content.indexOf(")",pos);
             // get full path
             var pathWithAFile = content.substring(pos+1, endPos);
-            console.log("path with file = ");
-            console.log( pathWithAFile );
+            //console.log("path with file = ");
+            //console.log( pathWithAFile );
             // get file
             pos = pathWithAFile.lastIndexOf("/");
             var path = pathWithAFile.substring(0, pos);
-            console.log( path );
+            //console.log( path );
             // get local folder
             pos = path.lastIndexOf("/");
             var localFolder = path.substring(pos+1, path.length);
             var pathWithoutLocal = path.substring( 0, pos );
-            console.log( localFolder );
+            //console.log( localFolder );
             // replace local folder with full path
             content = content.replace('![Screenshot](' + localFolder, '![Screenshot](' + path);
             // find if no folder on image
@@ -51,7 +51,7 @@ function getReadme(owner, repo, path) {
                     // get the filename
                     var newPos = pos + 7;
                     var substituteStr = content.substring( newPos, endPos)
-                    console.log( substituteStr );
+                    //console.log( substituteStr );
                     content = content.replace(substituteStr, pathWithoutLocal + '/' + substituteStr );
                 }
                 ++pos;
@@ -59,7 +59,7 @@ function getReadme(owner, repo, path) {
                 ++max;
             }
             
-            console.log( content );
+            //console.log( content );
             // now lets post it again to convert it to html
             fetch(`https://api.github.com/markdown/raw`, {
                 method: "POST"

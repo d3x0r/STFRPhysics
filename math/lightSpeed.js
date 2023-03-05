@@ -194,6 +194,7 @@ controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
+chkLblNow.checked = animate;
 controls.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 

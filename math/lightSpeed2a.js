@@ -220,6 +220,7 @@ controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
+chkLblNow.checked = animate;
 controls.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
@@ -472,48 +473,46 @@ function draw(  ) {
 		spanNow.textContent = now.toFixed(2);
 	}
 	const frame = Math.floor( (now+runT/2)*100 );
-if(0)
-	if( curFrame < 0 || curFrame != frame ) {
-		curFrame = frame; 
-		const f = frames[curFrame];
-		f.Pc = now*V 
-		f.Ph = f.Pc+L;
-		f.Pt = f.Pc-L;
-		f.hue = 120*(now%3)-240;
-		f.T_start = now;
-		if( now > E && !didEvent) {			
-			if( eventFrame< 0 ) {
-				eventFrame = frame;
-				f.event = true;
-			}
-		}
-		f.T_see_h = realTimeToObserverTime( now, L );
-		f.T_see_c = realTimeToObserverTime( now, 0 );
-		f.T_see_t = realTimeToObserverTime( now, -L );
-	}
-
 
 	ctx.clearRect( 0, 0, 1024, 1024);
 	ctx.strokeStyle = "blue";
-	curFrame = nFrames;
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*yscale+photonStart;
-	for( let f = 0; f < curFrame; f++ ) {
+	for( let f = 0; f < nFrames; f++ ) {
 		const frame = frames[f];
-		if( frame.T_start < now ) {
-
+		if( frame.T_start > now ) continue;
+//		if(( frame.T_see_h < now ) && ( frame.T_see_t < now ) )continue;
 
 		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
+
+		if( frame.T_see_t > now && frame.T_see_t < runT/2 ) {
 		ctx.beginPath();
 		ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
 		ctx.lineTo( 500 + xscale*frame.Pt, toY );
 		ctx.stroke();
 
+			const del = frame.T_see_t - frame.T_start;
+			const passed = now - frame.T_start;
+			const delT = passed/del;
+			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
+			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT), true );
+
+		}
+
+		if( frame.T_see_h > now && frame.T_see_h < runT/2 ) {
 		ctx.beginPath();
 		ctx.moveTo( 500 +L*xscale, photonStart );
 		ctx.lineTo( 500 + xscale*frame.Ph, toY );
 		ctx.stroke();
+
+			const del = frame.T_see_h - frame.T_start;
+			const passed = now - frame.T_start;
+			const delT = passed/del;
+			headTri( (+L)*(1-delT) +(delT)*frame.Ph, photonStart*(1-delT)+toY*(delT) );
+			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
+
+		}
 		
 		if( ( frame.T_see_c < now ) ) {
 			if( drawP ) drawP2 = frame;
@@ -527,7 +526,8 @@ if(0)
 			if( drawT ) drawT2 = frame;
 			else drawT = frame;
 		}
-		}
+
+
 		ctx.fillStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 
 
@@ -545,23 +545,13 @@ if(0)
 */
 
 		const willBe = frame.Phc + V*(frame.T_start-now);
-		if( frame.T_start <now && frame.T_see_h>now) {
-			const del = frame.T_see_h - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			headTri( (+L)*(1-delT) +(delT)*frame.Ph, photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
+		if( frame.T_start <now && frame.T_see_h>now && frame.T_see_h < runT/2) {
 ctx.beginPath();
 ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
 ctx.stroke()
 
 		}
-		if( frame.T_start <now && frame.T_see_t>now) {
-			const del = frame.T_see_t - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT), true );
+		if( frame.T_start <now && frame.T_see_t>now&& frame.T_see_t < runT/2) {
 if(1){ // draw circles around tail
 	ctx.beginPath();
 	ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
@@ -570,6 +560,7 @@ if(1){ // draw circles around tail
 		}
 	}
 
+	// the moving observer.
 	centerBoxXY( (500+V*now*xscale), toY, true );
 
 if( eventFrame >= 0 )
@@ -669,20 +660,21 @@ if(0)
 		//const y = 20;
 		centerBoxXY( 500+(t)*xscale, o );
 	}
-	
+/*	
 	const frontT  = observerTimeToRealTime( now,  L );
 	const centerT = observerTimeToRealTime( now,  0 );
 	const backT   = observerTimeToRealTime( now, -L );
 	const front  = observerTimeToRealPos( now,  L );
 	const center = observerTimeToRealPos( now,  0 );
 	const back   = observerTimeToRealPos( now, -L );
+
 	for( let f of front )
 		headTri( f, 6 );
 	for( let b of back )
 		tailTri( b, 6 );
 	for( let c of center )
 		centerBox( c, 6 );
-
+*/
 if(0) { // old realtive calculation (motionless thing)
 	if( drawP && drawH )
 	if( center.length > 1 && front.length > 1 ) {
@@ -727,10 +719,10 @@ if(0) { // old realtive calculation (motionless thing)
 
 
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-	ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri(  + L, 20, true );
-	tailTri(  - L, 20, true );
-	centerBox( 0, 20, true );
+	ctx.fillRect( 500+(-L)*xscale, photonStart-10, (2*L)*xscale, 10 );
+	headTri(  + L, photonStart-5, true );
+	tailTri(  - L, photonStart-5, true );
+	centerBox( 0, photonStart-5, true );
 
 
 	requestAnimationFrame( draw );
