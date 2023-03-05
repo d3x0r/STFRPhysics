@@ -1,0 +1,48 @@
+body {
+    font-size: 125%;
+    background: #333;
+    color: #FFF;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+a {
+    color: #ccc;
+}
+header {
+    width: 100%;
+    display: flex;
+    background-color: #000;
+    height: 6vh;
+    color: turquoise;
+}
+main {
+    margin: 0 2vw;
+}
+canvas {
+    background-color: #ddd;
+}
+#avatar {
+    height: 6vh;
+}
+#userName {
+    font-size: 5vh;
+    margin-left: 1vw;
+    vertical-align: center;
+}
+#controls {
+    display: block !important;
+}
+#controls span {
+    width: 10vw;
+    display: inline-block;
+    margin-bottom: 1vh;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+#controls {
+    margin-right: 3vw;
+}
