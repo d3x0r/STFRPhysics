@@ -19,7 +19,7 @@ let animate = true;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 1000;
+const nFrames = 200;
 
 class Frame{
 	Ph = 0;
@@ -353,6 +353,38 @@ function update( evt ) {
 	}else
 		now = Number(sliderNow.value)/100*runT/2;
 	spanNow.textContent = now.toFixed(2);
+
+
+
+
+	//const hLen = (L-D2)/(C+V) ;
+	//const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
+		//2(CD+LV)/(CC-VV)
+
+		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
+		// A+B = 2D
+		// a = A/D   b = A/D
+		// a+b=2
+		// 1-a/b = b/a-1 = 0   QM balance.
+
+
+	for( let n = 0; n < nFrames; n++ ) {
+		const del = n/nFrames;
+		const now = (del * runT)-runT/2;
+
+		const f = frames[n];
+		f.Pc = now*V 
+		f.Ph = f.Pc+L;
+		f.Pt = f.Pc-L;
+		f.hue = 120*(now%3)-240;
+		f.T_start = now;
+		f.T_see_h = realTimeToObserverTime( now, L );
+		f.T_see_c = realTimeToObserverTime( now, 0 );
+		f.T_see_t = realTimeToObserverTime( now, -L );
+
+	}
+
+
 	//draw(  );
 }
 let last_draw_time = 0;
@@ -365,21 +397,9 @@ function draw(  ) {
 	if( animate ) {
 		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
 		sliderNow.value =100*now*2/runT
-	spanNow.textContent = now.toFixed(2);
+		spanNow.textContent = now.toFixed(2);
 	}
 	const frame = Math.floor( (now+runT/2)*10 );
-	if( curFrame < 0 || curFrame != frame ) {
-		curFrame = frame; 
-		const f = frames[curFrame];
-		f.Pc = now*V 
-		f.Ph = f.Pc+L;
-		f.Pt = f.Pc-L;
-		f.hue = 120*(now%3)-240;
-		f.T_start = now;
-		f.T_see_h = realTimeToObserverTime( now, L );
-		f.T_see_c = realTimeToObserverTime( now, 0 );
-		f.T_see_t = realTimeToObserverTime( now, -L );
-	}
 
 
 	ctx.clearRect( 0, 0, 1024, 1024);
@@ -387,8 +407,11 @@ function draw(  ) {
 	
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
-	for( let f = 0; f < curFrame; f++ ) {
+	for( let f = 0; f < frames.length; f++ ) {
 		const frame = frames[f];
+
+		if( frame.T_start <= now ) {
+
 		ctx.beginPath();
 		ctx.moveTo( 500 + frame.Pc*xscale, 40 );
 		const toY = D*xscale+40;
@@ -443,6 +466,8 @@ if(0){ // draw circles around tail
 	ctx.stroke()
 }
 		}
+		}
+
 	}
 
 	//if( drawP !== frames[0] ) 
