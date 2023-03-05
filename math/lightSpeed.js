@@ -450,22 +450,13 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 			const passed = now - frame.T_start;
 			const delT = passed/del;
 			headTri( (frame.Pc+L)*(1-delT) , 40*(1-delT)+toY*(delT) );
-if(0){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500+frame.Ph*xscale, 40, C*(now-frame.T_start)*(100), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
+
 		}
 		if( now < frame.T_see_t ) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
 			tailTri( (frame.Pc-L)*(1-delT), 40*(1-delT)+toY*(delT) );
-if(0){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500+frame.Pt*xscale, 40, C*(now-frame.T_start)*(100), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
 		}
 		}
 
