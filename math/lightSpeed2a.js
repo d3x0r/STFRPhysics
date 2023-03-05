@@ -547,14 +547,14 @@ function draw(  ) {
 		const willBe = frame.Phc + V*(frame.T_start-now);
 		if( frame.T_start <now && frame.T_see_h>now && frame.T_see_h < runT/2) {
 ctx.beginPath();
-ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
+ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 ctx.stroke()
 
 		}
 		if( frame.T_start <now && frame.T_see_t>now&& frame.T_see_t < runT/2) {
 if(1){ // draw circles around tail
 	ctx.beginPath();
-	ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(toY-photonStart), 0, 2 * Math.PI, false);
+	ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 	ctx.stroke()
 }
 		}
