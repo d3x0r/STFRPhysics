@@ -18,7 +18,7 @@ function getReadme(owner, repo, path) {
             //console.log( cleaned );
             var lines = content.split('\n');
             var title = lines[0].replace("#", "");
-            document.getElementById( 'title' ).innerHTML = title;
+//            document.getElementById( 'title' ).innerHTML = title;
             // get string from start to pos
             var pos = content.indexOf("(https:");
             // get until )
