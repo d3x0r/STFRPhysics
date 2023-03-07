@@ -12,7 +12,7 @@ let L=1; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
 let D=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let D2=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
-let V=0.50; // velocity  (m/s)
+let V=0.6184; // velocity  (m/s)
 let S=1.0; // time scalar (s/s)
 let runT = 4;
 let E = 0;
@@ -53,19 +53,51 @@ class D3xTransform {
 	
 	static get gamma() { return  (C*C-V*V)/C*C };
  	static getObservedTime(X,T) {
-		const willSee = realTimeToObserverTime( T, 0 );
-		const dist = Math.sqrt( (X)*(X) + (D*D) )/C;
-		return (T-dist)*D3xTransform.gamma;
+		const willSee = realTimeToObserverTime( T, L );
+		const dist = Math.sqrt( (X)*(X) + (D*D) );
+		return (T/C-dist);// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
 	}
  	static getObservedPlace(X,T) {
-		const willSee = realTimeToObserverTime( T, 0 );
-		const willSeeAt = X+willSee * V;
-		return willSeeAt;
+		const willSee = realTimeToObserverTime( T, L );
+		const willSeeAt =  X+willSee*V/C;
+		return willSeeAt ;
+	}
+ 	static getObservedPlace2(X,T) {
+		const willSee = realTimeToObserverTime( T, X );
+		const willSeeAt = X-willSee*V/C;
+		return willSeeAt ;
 	}
 
+
 	static drawCoords(  ) {
-	 const xscale_ = xscale/10;
-		const ofs = xscale_ * 12;
+	 const xscale_ = xscale/4;
+		const ofs = xscale_ * 13;
+
+
+
+// velocity ratio line.
+
+		ctx.beginPath();
+ctx.strokeStyle= "white";
+		ctx.moveTo( ofs , ofs  );
+		ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C) ) );
+		ctx.stroke();
+
+// Lorentz Transform Grid, based on velocity ratio line.
+		for( let X = -10; X < 10; X++ ) 
+{
+		ctx.beginPath();
+		ctx.strokeStyle= "white";
+if( X > 0 ){
+		ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X) );
+		ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C)-X ) );
+		ctx.moveTo( ofs - (xscale_)*(0*(V/C)-X), ofs  - (xscale_)*(-0) );
+		ctx.lineTo( ofs + (xscale_)*(10*(V/C)+X), ofs + (xscale_)*(-10 ) );
+}
+		ctx.stroke();
+}	
+
+
 		for( let X = -10; X < 10; X++ ) {
 			for( let T = 10; T > -10; T-- ) {
 {
@@ -77,16 +109,59 @@ ctx.strokeStyle= "blue";
 		ctx.lineTo( ofs + (xscale_)*(X), ofs + (xscale_)*(T-1) );
 		ctx.stroke();
 }	
+if( false ) {
 		ctx.beginPath();
-		const ox = D3xTransform.getObservedPlace(X,T);
-		const oxo = D3xTransform.getObservedPlace(X+1,T);
-		const oxt = D3xTransform.getObservedPlace(X,T-1);
-		const ot = D3xTransform.getObservedTime(X,T);
+		const ox  = D3xTransform.getObservedPlace2(X,T);
+		const oxo = D3xTransform.getObservedPlace2(X+1,T);
+		const oxt = D3xTransform.getObservedPlace2(X,T-1);
+		const ot  = D3xTransform.getObservedTime(X,T);
 		const oto = D3xTransform.getObservedTime(X+1,T);
 		const ott = D3xTransform.getObservedTime(X,T-1);
+if( T === 0 ){
+ctx.lineWidth = 5;
+ctx.strokeStyle= "green";
+}
+else{
 ctx.strokeStyle= "yellow";
+}
 		ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
 		ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
+		ctx.stroke();
+
+if( T === 0 ){
+ctx.lineWidth = 2;
+}
+		ctx.beginPath();
+ctx.strokeStyle= "red";
+		ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
+		ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
+		ctx.stroke();
+
+}
+
+if( true ) { // draw what happens to me relative to a stationary world. (show real velocity)
+		ctx.beginPath();
+		const ox  = D3xTransform.getObservedPlace(X,T);
+		const oxo = D3xTransform.getObservedPlace(X+1,T);
+		const oxt = D3xTransform.getObservedPlace(X,T-1);
+		const ot  = D3xTransform.getObservedTime(X,T);
+		const oto = D3xTransform.getObservedTime(X+1,T);
+		const ott = D3xTransform.getObservedTime(X,T-1);
+if( T === 0 ){
+ctx.lineWidth = 5;
+ctx.strokeStyle= "green";
+}
+else{
+ctx.strokeStyle= "yellow";
+}
+		ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
+		ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
+		ctx.stroke();
+
+if( T === 0 ){
+ctx.lineWidth = 2;
+}
+		ctx.beginPath();
 ctx.strokeStyle= "red";
 		ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
 		ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
@@ -95,6 +170,7 @@ ctx.strokeStyle= "red";
 			}
 		}
 	}
+}
 }
 
 //------------------ Create Controls ---------------------------
@@ -449,7 +525,7 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/1000*C;
-	spanV.textContent = V.toFixed(3);
+	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V);
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
 	D2 = (Number(sliderD.value)/50-1)*L;
@@ -487,6 +563,7 @@ function update( evt ) {
 	//		(time scalar)        (tail time)              (tail return time)                 (scaled tail time = 2)                           (scaled head time = 2)
 	//+ " : "+ (C*C-V*V)/(C*C) +" : "+ tLen.toFixed(2) + " :" + trLen.toFixed(2) + " : " + ((C*C-V*V)/(C*C)*(tLen+trLen)).toFixed(2) + " : " + ((C*C-V*V)/(C*C)*(hLen+hrLen)).toFixed(2);
 
+	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) +" realTail: "+ tLen.toFixed(2) + " returnTail:" + trLen.toFixed(2) + " TailRT: " + ((C*C-V*V)/(C*C)*(tLen+trLen)).toFixed(2) + " HeadRT: " + ((C*C-V*V)/(C*C)*(hLen+hrLen)).toFixed(2);
 
 		//2(CD+LV)/(CC-VV)
 
