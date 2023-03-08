@@ -53,13 +53,13 @@ class D3xTransform {
 	
 	static get gamma() { return  (C*C-V*V)/C*C };
  	static getObservedTime(X,T) {
-		const willSee = realTimeToObserverTime( T, L );
-		const dist = Math.sqrt( (X)*(X) + (D*D) );
-		return (T/C-dist);// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
+		//const willSee = realTimeToObserverTime( T, L );
+		const dist = Math.sqrt( (X)*(X) + (D*D) )/C;
+		return  (T-dist)*(1/(C*C-V*V));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
 	}
  	static getObservedPlace(X,T) {
-		const willSee = realTimeToObserverTime( T, L );
-		const willSeeAt =  X+willSee*V/C;
+		const willSee = realTimeToObserverTime( (1/(C*C-V*V))*T, X );
+		const willSeeAt =  (X/C + willSee*V/C);
 		return willSeeAt ;
 	}
  	static getObservedPlace2(X,T) {
@@ -83,6 +83,14 @@ ctx.strokeStyle= "white";
 		ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C) ) );
 		ctx.stroke();
 
+		ctx.beginPath();
+ctx.lineWidth = 5;
+ctx.strokeStyle= "red";
+		ctx.moveTo( ofs , ofs  );
+		ctx.lineTo( ofs + 10*(xscale_)*(V/(C*C-V*V)), ofs - 10*xscale_ );
+		ctx.stroke();
+ctx.lineWidth = 2;
+		  if(0)
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 {
@@ -398,7 +406,7 @@ function realTimeToObserverTime( T, L ) {
 	{const pos = (V*T);
 	return  Math.sqrt(pos*pos)/C + T;}
 
-	{return Math.abs(TV)/C+T;}
+	{return Math.abs(T*V)/C+T;}
 }
 
 // rt2ot( T, 0)
