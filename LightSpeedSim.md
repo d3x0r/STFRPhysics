@@ -1,6 +1,10 @@
-# Minimized speed of light test
 
-## Demo
+# Reality of Relativity
+
+I started this project ([step-by-step](#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
+I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (even clocks that are seen).  I've later refined portions of this to include special relativity.
+
+## Demos
 
 [Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html)
 
@@ -22,23 +26,23 @@ A relatively stationary observer, at some `D` distance from the body; then `Do =
 to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = TV/C`).
 
 
-(correction?) observed at `(VT'+L)/C`. `T' = T \gamma`; `gamma = 1/sqrt(C^2-V^2)`   
+(correction?) observed at `(VT'+L)/C`. `T' = T \gamma`; `gamma = (C^2-V^2)/2C`  not `1/sqrt(C^2-V^2)`
+
 
 The position divided by the speed of light is how long that signal will travel to the observer.  
 
 Observed time of (some position along body L) ( head, center, tail)
 
-$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$
+$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
 Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T`.
 
-$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}
-$
+$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}$$
 
 The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead
 
 if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
-$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$
+$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
@@ -353,3 +357,99 @@ Initial conditions...
 
 
 
+# Revisited Math
+
+Basic Posulates 
+  - the two way speed of light is measured as C.
+  - the clock dialation is measured with a horizontal photon clock, that is parallel to the direction of travel.  ![Photon Clock orirentations](PhotonClocks.png) Classically the photon clock is arranged to be perpendicular ot the direction of travel. 
+    This has problems, that you would have to angle the mirrors based not only on your acceleratinn but on your velocity.  Instead the photon clock is put in the worst-case scenario.  The dilation is then computed with 
+
+
+```
+  tf(x) = L/(C+V)  // time of front - moving forward, signals from head are C+V.
+  tb(x) = L/(C-V)  // time of back - signals from the rear are C-V.
+  c(x) = 1/C     // the unit length of the length of the clock
+
+  tf(x)+tb(x) = 2LC
+
+// well... this scalar is from the triangles?   
+//  d(x) = CC/(CC-VV) // clock scalar (result)
+//         C/2 (1/(C+V) + 1/(V-C)
+//
+
+   (ta(x)+tb(x)) * ((CC-xx)/CC) = 2LC(seconds)
+
+```
+
+I don't see how light in every direction in every frame is the speed of light in one direction; especially when moving very fast, the light from the back of the craft to an observer in the middel and the time from the front are logically different.
+
+
+This makes what feels like travelling at the speed of light only `0.6184` time the speed of light with an unscaled clock; this is the golden ratio.
+
+# Step-by-Step
+
+This is a detailed summary of how I approached building the simulation.
+
+ - define the speed of light C.  This is a value that starts at 1, but can be changed (and should be to confirm equivalent realtionships).
+ - define a train having length 2L.  +L is the head of the train and -L is the tail of the train with the center of the train at 0.
+ - define an observer that is some distance D from the train (don't want them(it?) to be run over).
+ - define a variable V that can be used to control the velocity of the train(or observer).
+ - define a run length 2R, such that that time goes from -R to R.
+ - define a clock that has 'now', and picks a moment between -R to R.
+ - define storage `frames=[]` for the above, a number of steps(N) are allocated ahead of time.
+
+ - create a canvas/drawing surface
+ - figure out an x/y spatial coordinate system for that surface. I'm working around '1' so maybe +/-10 across the drawing surface?
+ - multiple points of view of situations look different; and since this is about what's being observed by an observer in a situation, there are several independant modes.
+   - one simulation with a stationary observer and a moving train.
+   - consider more general situation of V1 and V2... or `V` and `V*ratio` where the ratio is like +/-100%.
+   - another simulation with a stationary train, and a moving observer.
+   - another simulation with a moving train which has on it a stationary observer.
+ - first simulation
+   - for each step to compute each frame's information  `frame = frames[step]`
+     - `T = frame.time = step/steps * 2*R - R`.  Scale the steps from -R to R run time.
+     - `frame.hue = (frame.time % 3)*120`.  Assign a color per second to the frame, this helps later to know which time you're seeing now.
+     - `frame.position = T * V`.  At a constant velocity the position of a body is VT.
+     - `frame.head_position = V*T+L` and `frame.tail_position = V*T-L`
+     - `Math.sqrt( D*D + (V*T+/* 0, +L, -L*/)*(V*T+/* 0, +L, -L*/))/C`. Compute how long light takes to get from each of the previous positions to the observer.  The observer has a position `D` perpendicular to the body moving.  The distance divided by the speed of light = Time.
+     - `frame.observed_center = Math.sqrt( D*D + V*T*V*T )/C + T`;  The final time that it will be seen by the observer is the frame's now plus the time it takes for light to get from a point to another point.
+     - `frame.observed_head = Math.sqrt( D*D + (V*T+L)*(V*T+L) )/C + T`; ...
+     - `frame.observed_tail = Math.sqrt( D*D + (V*T-L)*(V*T-L) )/C + T`;  ...
+     - together, the last three are referred to as 'frame.observed_times' and means do the same thing to all 3; frame.observed_time refers to any one of the 3.
+   - draw the resulting frames...
+     - for some 'now' if `frame.time < now` draw the frame.  If any of the frame.observed_times are less than now, then it no longer needs to be drawn.
+     - draw markers of the photons scaled from the origin point (frame.position, 0) to (0, D), iterated by (now-frame.time)~0 and (frame.observed_time-frame.time)~1; `del = (now-frame.time)/(frame_observed_time-frame.time)`; then `photon position = (frame.position*(1-del)+0*(del), 0*(1-del),D*(del))`.
+     - draw lines from frame.position to observer's position.
+     - draw the body at (now * V) and it's head and tail at (now*V) +/-L.
+   - observe the behavior.  Notice there's a thing called 'length expansion' that happens too, and lengths are not just contracted. 
+   - Solve all of the above factors for the inverse function, such that given a D, T and L, I can know when some part of a train was in that position that it would be seen.
+     - $T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$  time-observed from time-event.
+     - $f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}$ get the time of the event from time-observed.
+     - Not such a friendly inverse; and honestly I had Wolfram Alpha help.
+   - revisit drawing, add circles that animate simply from each `frame.position` and have a radius of `now * C`.  These should coincide with the above photon marks.  (double check nothing went wrong in the math)
+ - Second simluation, very much like the first, except in the frame computations.
+  -  for each step to compute each frame's information  `frame = frames[step]`
+     - `T = frame.time = step/steps * 2*R - R`.  Scale the steps from -R to R run time.
+     - `frame.hue = (frame.time % 3)*120`.  Assign a color per second to the frame, this helps later to know which time you're seeing now.
+     - `frame.position = 0`.  At a constant velocity the position of a body is VT.
+     - `frame.head_position = +L` and `frame.tail_position = -L`
+     - `Math.sqrt( D*D + (V*T- /* +/-L */)^2 )/C`. Compute how long light takes to get from each of the previous positions to the observer.  The observer has a position `((VT +/-L),D)` to the stationary train.  The distance divided by the speed of light = Time.
+     - `frame.observed_center = Math.sqrt( D*D + V*T*V*T )/C + T`;  The final time that it will be seen by the observer is the frame's now plus the time it takes for light to get from a point to another point.
+     - `frame.observed_head = Math.sqrt( D*D + (V*T-L)*(V*T-L) )/C + T`; ...
+     - `frame.observed_tail = Math.sqrt( D*D + (V*T+L)*(V*T+L) )/C + T`;  ...
+     - together, the last three are referred to as 'frame.observed_times' and means do the same thing to all 3; frame.observed_time refers to any one of the 3.
+   - draw (same as above)
+   - observe the behavior, a stationary object will not appear contracted or expanded.  The photons received from the train are in the same position always.  If it had a small velocity itself, then the light received will come from a different time, and be in a different place.
+   - solve the reverse... which appears to be very much the same?)
+ - Third simluation, very much like the first, except in the frame computations.
+  -  for each step to compute each frame's information  `frame = frames[step]`
+     - `T = frame.time = step/steps * 2*R - R`.  Scale the steps from -R to R run time.
+     - `frame.hue = (frame.time % 3)*120`.  Assign a color per second to the frame, this helps later to know which time you're seeing now.
+     - `frame.position = T * V`.  At a constant velocity the position of a body is VT.
+     - `frame.head_position = V*T+L` and `frame.tail_position = V*T-L`
+     - `( (V*T+(L-D)) )/C`, `( (V*T-(L-D)) )/C`.  The observer is in the train, so the D in this case is an offset within the train.
+     - `frame.observed_center = `, well, in this case, don't really need the center to show... the center is the observer, except offset
+     - `frame.observed_head = ( (V*T+(L-D)) )/C + T`; ...
+     - `frame.observed_tail = ( (V*T-(L-D)) )/C + T`;  ...
+     - together, the last three are referred to as 'frame.observed_times' and means do the same thing to all 3; frame.observed_time refers to any one of the 3.
+   - draw (same as above)
