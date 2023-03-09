@@ -13,6 +13,7 @@ let C=1; // speed of propagation (m/s)
 let D=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let D2=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let V=0.6184; // velocity  (m/s)
+let myV=0.6184; // velocity  (m/s)
 let S=1.0; // time scalar (s/s)
 let runT = 20;
 let E = 0;
@@ -309,6 +310,15 @@ sliderV.addEventListener( "input", update );
 sliderV.setAttribute( "max",1000 );
 sliderV.value = V*1000;
 sliderV.style.width="250px";
+
+const sliderMyV = document.createElement( "input" );
+sliderMyV.setAttribute( "type", "range" );
+controls.appendChild( sliderMyV );
+sliderMyV.addEventListener( "input", update );
+
+sliderMyV.setAttribute( "max", 1000 );
+sliderMyV.value = myV*1000;
+sliderMyV.style.width="250px";
 
 const spanV = document.createElement( "span" );
 spanV.textContent = "1";
