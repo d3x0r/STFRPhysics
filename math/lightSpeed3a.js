@@ -7,6 +7,7 @@ const canvas = document.getElementById( "testSurface" );
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
 
+let doLog = false;
 
 let L=1; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
@@ -56,7 +57,7 @@ class D3xTransform {
  	static getObservedTime(X,T,myV) {
 		//const willSee = realTimeToObservedTime( T, L );
 		const dist = Math.sqrt( (X)*(X) + (D*D) )/C;
-		return  (T-dist)*(1/(C*C-myV*myV));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
+		return  (T-dist)*(1/(C*C-V*V));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
 	}
  	static getObservedPlace(X,T,myV) {
 		return observerTimeToRealPos( T, X, myV )
@@ -122,10 +123,10 @@ if( T > atNow ) break;
 			if( back.length ) back = back[0];
 			
 	
-			const Tc=D3xTransform.getObservedTime(0,T, 0)
-			const Th=D3xTransform.getObservedTime(L,T, 0)
-			const Tt=D3xTransform.getObservedTime(-L,T, 0)
-
+			const Tc=D3xTransform.getObservedTime(frame.Pc,T, 0)
+			const Th=D3xTransform.getObservedTime(frame.Ph,T, 0)
+			const Tt=D3xTransform.getObservedTime(frame.Pt,T, 0)
+if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 			var grd = ctx.createLinearGradient(ofs+(back)*xscale_ , 0
 							, ofs+(front)*xscale_, 0);
 			grd.addColorStop(0, `hsl(${Math.floor((1+Tt%3)*120)},100%,50%` );
@@ -137,17 +138,18 @@ if( T > atNow ) break;
 			//ctx.lineTo( ofs + center*xscale_, ofs + Tc*xscale_ );
 			//ctx.lineTo( ofs + front*xscale_, ofs + Th*xscale_ );
 			
-			ctx.moveTo( ofs + back*xscale_, ofs + T*xscale_ );
-			ctx.lineTo( ofs + center*xscale_, ofs + T*xscale_ );
-			ctx.lineTo( ofs + front*xscale_, ofs + T*xscale_ );
+			ctx.moveTo( ofs + back*xscale_, ofs - Tt*xscale_ );
+			ctx.lineTo( ofs + center*xscale_, ofs - Tc*xscale_ );
+			ctx.lineTo( ofs + front*xscale_, ofs - Th*xscale_ );
 			
 			ctx.stroke();
-			if(0) {
+}
+			if(1) {
 				// draw ship in real space...
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
-				ctx.moveTo( ofs + frame.Pt*xscale_, ofs + T*xscale_ );
-				ctx.lineTo( ofs + frame.Ph*xscale_, ofs + T*xscale_ );
+				ctx.moveTo( ofs + frame.Pt*xscale_, ofs - T*xscale_ );
+				ctx.lineTo( ofs + frame.Ph*xscale_, ofs - T*xscale_ );
 
 				ctx.stroke();
 			}
@@ -210,8 +212,8 @@ ctx.strokeStyle= "red";
 				else{
 					ctx.strokeStyle= "yellow";
 				}
-				ctx.moveTo( ofs + (xscale_)*(ox), ofs + (xscale_)*(ot) );
-				ctx.lineTo( ofs + (xscale_)*(oxo), ofs + (xscale_)*(oto) );
+				ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
+				ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
 				ctx.stroke();
 
 				if( T === 0 ){
@@ -219,8 +221,8 @@ ctx.strokeStyle= "red";
 				}
 				ctx.beginPath();
 				ctx.strokeStyle= "red";
-				ctx.moveTo( ofs +  (xscale_)*(ox), ofs + (xscale_)*(ot) );
-				ctx.lineTo( ofs + (xscale_)*(oxt), ofs + (xscale_)*(ott) );
+				ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
+				ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
 				ctx.stroke();
 			}
 		}
@@ -526,7 +528,7 @@ if(0) {
 }
 */
 
-function observerTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
+function observedTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
 
 	//Lx
 	if( C === V ) {
@@ -542,7 +544,7 @@ function observerTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
 }
 
 
-function observerTimeToRealTime( T, L ) {
+function observedTimeToRealTime( T, L ) {
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
 
@@ -560,12 +562,13 @@ function observerTimeToRealTime( T, L ) {
 	// positive solution walks backwards...
 	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
 	if( b < T ) r.push(b); 
+	if( doLog ) console.log( "B was", b)
 	return r;
 
 }
 
 function observerTimeToRealPos( T, L, myV ) {
-	if( myV === undefined ) myV = V;
+//	if( myV === undefined ) myV = V*V; else myV = myV*myV;
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
 
@@ -576,11 +579,15 @@ function observerTimeToRealPos( T, L, myV ) {
 	}
 
 	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - myV*myV);
-	if( a < T ) r.push(a*V+L);
 	// positive solution walks backwards...
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - myV*myV);
+	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	doLog && console.log( "A was", T, L, a)
+	//if( L > T*V ) if( Math.abs(a) < T ) r.push(a*V+L);
+	if( a < T ) r.push(a*V+L);
+	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	//if( L > T*V ) if( Math.abs(b) < T ) r.push(b*V+L);
 	if( b < T ) r.push(b*V+L); 
+	doLog && console.log( "B was", T, L, b)
 	return r;
 
 }
@@ -626,6 +633,7 @@ function update( evt ) {
 
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) +" realTail: "+ tLen.toFixed(2) + " returnTail:" + trLen.toFixed(2) + " TailRT: " + ((C*C-V*V)/(C*C)*(tLen+trLen)).toFixed(2) + " HeadRT: " + ((C*C-V*V)/(C*C)*(hLen+hrLen)).toFixed(2);
+	doLog = true;
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const now = (del * runT)-runT/2;
@@ -640,6 +648,9 @@ function update( evt ) {
 			frame.T_see_h = realTimeToObservedTime( now, L );
 			frame.T_see_c = realTimeToObservedTime( now, 0 );
 			frame.T_see_t = realTimeToObservedTime( now, -L );
+			let front  = observerTimeToRealPos( now,  L, 0 );
+			let center = observerTimeToRealPos( now,  0, 0 );
+			console.log( "Tick:", now.toFixed(2), " c:", center, "f:", front)
 		}else{
 			frame.Pc = D2;
 			frame.Ph = D2;
@@ -650,6 +661,7 @@ function update( evt ) {
 		}
 	}
 
+	doLog = false;
 	//draw(  );
 }
 let last_draw_time = 0;
@@ -884,9 +896,9 @@ if(0)
 	}
 	
 /*
-	const frontT  = observerTimeToRealTime( now,  L );
-	const centerT = observerTimeToRealTime( now,  0 );
-	const backT   = observerTimeToRealTime( now, -L );
+	const frontT  = observedTimeToRealTime( now,  L );
+	const centerT = observedTimeToRealTime( now,  0 );
+	const backT   = observedTimeToRealTime( now, -L );
 	const front  = observerTimeToRealPos( now,  L );
 	const center = observerTimeToRealPos( now,  0 );
 	const back   = observerTimeToRealPos( now, -L );
@@ -922,7 +934,7 @@ if(0) { // old realtive calculation (motionless thing)
 	if( center.length > 0 && front.length > 0 ) {
 		var grd = ctx.createLinearGradient(500+(center[0])*xscale , 0, 500+(front[0])*xscale, 0);
 		grd.addColorStop(0, `hsl(${((drawP.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
++		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
 		ctx.fillStyle = grd;
 		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
 	}
