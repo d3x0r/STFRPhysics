@@ -27,10 +27,7 @@ A relatively stationary observer, at some `D` distance from the body; then `Do =
 to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = TV/C`).
 
 
-(correction?) observed at `(VT'+L)/C`. `T' = T \gamma`; `gamma = (C^2-V^2)/2C`  not `1/sqrt(C^2-V^2)`
-
-
-The position divided by the speed of light is how long that signal will travel to the observer.  
+The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  
 
 Observed time of (some position along body L) ( head, center, tail)
 
@@ -40,10 +37,17 @@ Real time observer at time `x` sees (head); should be able to have a function th
 
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}$$
 
-The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead
+The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
 if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
 $$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
+
+
+Simplified, and this is again still having a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)=\frac{\left(\sqrt{VVCCxx}+CCx\right)}{CC-VV}$$ 
+or
+$$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
+
+
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
