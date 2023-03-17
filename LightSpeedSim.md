@@ -51,7 +51,7 @@ $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
 
 https://www.desmos.com/calculator/fbl7sujtzp
 
-Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$
+Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
 
 Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{\left(cc+xx\right)}}\right)$
 
