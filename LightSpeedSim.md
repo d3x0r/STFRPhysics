@@ -43,7 +43,7 @@ if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
 $$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 
 
-Simplified, and this is again still having a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)=\frac{\left(\sqrt{VVCCxx}+CCx\right)}{CC-VV}$$ 
+Simplified, and this is again still having a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)=\frac{\sqrt{VVCCxx}+CCx}{CC-VV}$$ 
 or
 $$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
 
