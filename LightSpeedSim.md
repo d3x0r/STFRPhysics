@@ -51,13 +51,26 @@ $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
 
 https://www.desmos.com/calculator/fbl7sujtzp
 
+This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
+
 Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
+
+At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
+takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
+determine that this is the speed the moving body feels)
 
 Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
 
+This is the gamma factor for two-way speed of light...
+
 Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
 
+which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
+may be different, as long as the total of 2 bounces is 2 ticks.
+
 from: $a+b=2$, $a=1/(c+x)$, $b=1/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
+
+Again the inverse from feels like to real velocity, but for the two-way speed of light.
 
 Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
 
