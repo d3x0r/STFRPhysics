@@ -53,9 +53,9 @@ https://www.desmos.com/calculator/fbl7sujtzp
 
 Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
 
-Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{\left(cc+xx\right)}}\right)$
+Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
 
-Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$
+Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
 
 Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
 
