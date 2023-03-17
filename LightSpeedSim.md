@@ -47,6 +47,20 @@ $$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
 
+## Gamma
+
+https://www.desmos.com/calculator/fbl7sujtzp
+
+Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$
+
+Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{\left(cc+xx\right)}}\right)$
+
+Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$
+
+Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
+
+
+
 ### Lorentz Problem
 
 This is a more typical example was on Physics Discord...
