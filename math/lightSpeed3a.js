@@ -57,10 +57,11 @@ class D3xTransform {
  	static getObservedTime(X,T,myV) {
 		//const willSee = realTimeToObservedTime( T, L );
 		const dist = Math.sqrt( (X)*(X) + (D*D) )/C;
-		return  (T-dist);//*(1/(C*C-V*V));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
+const v = V-myV;
+		return  (T-dist)*(1/(C*C-v*v));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
 	}
- 	static getObservedPlace(X,T,myV) {
-		return observerTimeToRealPos( T, X, myV )
+ 	static getObservedPlace(X,T,V,myV) {
+		return observerTimeToRealPos( T, X, V, myV )
 		const willSee = realTimeToObservedTime( (1/(C*C-myV*myV))*T, X );
 		const willSeeAt =  (X/C + willSee*V/C);
 		return willSeeAt ;
@@ -71,12 +72,21 @@ class D3xTransform {
 		return willSeeAt ;
 	}
 
+	static GetSeenSpace( C, now, pos, V, L, D ) {
+		const A = pos;//((now*V)- L);
+		// how long it will take to be seen at the current velocities...
+		//const gamma = (C*C-V*V)/C;
+		const hLen = ((A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V));
+		return { now, pos:now*V, see_pos:pos+now*V+hLen*V, seen:now+hLen }
+		//frame.T_start = now;
+		//frame.Ph = frame.Pc + hLen*V;
+		//frame.T_see_h = now+hLen;
+
+	}
 
 	static drawCoords( atNow ) {
 		const xscale_ = xscale/4;
 		const ofs = 500;//xscale_ * 13;
-
-
 
 // velocity ratio line.
 /*
@@ -97,7 +107,7 @@ class D3xTransform {
 		ctx.lineWidth = 2;
 	}
 
-	  if(0)
+	  if(1)
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
@@ -118,13 +128,13 @@ if(1)
 				ctx.lineWidth = 5;
 				ctx.strokeStyle= "green";
 
-				const ot  = D3xTransform.getObservedTime(-runT,now, 0);
-				const oto = D3xTransform.getObservedTime(0,now, 0);
-				const oto2 = D3xTransform.getObservedTime(runT,now, 0);
+				const ot  = D3xTransform.getObservedTime(-runT,now, myV);
+				const oto = D3xTransform.getObservedTime(0,now, myV);
+				const oto2 = D3xTransform.getObservedTime(runT,now, myV);
 
-				const ox  = D3xTransform.getObservedPlace(-runT,0,0);
-				const oxo = D3xTransform.getObservedPlace(0,0,0);
-				const oxo2 = D3xTransform.getObservedPlace(runT,0,0);
+				const ox  = D3xTransform.getObservedPlace(-runT,0,0,myV);
+				const oxo = D3xTransform.getObservedPlace(0,0,0,myV);
+				const oxo2 = D3xTransform.getObservedPlace(runT,0,0,myV);
 				
 				ctx.moveTo( ofs + (xscale_)*(-runT), ofs - (xscale_)*(-now) );
 				ctx.lineTo( ofs + (xscale_)*(runT), ofs - (xscale_)*(-now) );
@@ -196,6 +206,7 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 
 		for( let X = -10; X < 10; X+=1 ) {
 			for( let T = 10; T > -10; T-=1 ) {
+
 				{
 					ctx.beginPath();
 					ctx.strokeStyle= "blue";
@@ -205,37 +216,64 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					ctx.lineTo( ofs + (xscale_)*(X), ofs + (xscale_)*(T-1) );
 					ctx.stroke();
 				}	
-if( false ) {
-		ctx.beginPath();
-		const ox  = D3xTransform.getObservedPlace2(X,T);
-		const oxo = D3xTransform.getObservedPlace2(X+1,T);
-		const oxt = D3xTransform.getObservedPlace2(X,T-1);
-		const ot  = D3xTransform.getObservedTime(X,T);
-		const oto = D3xTransform.getObservedTime(X+1,T);
-		const ott = D3xTransform.getObservedTime(X,T-1);
-if( T === 0 ){
-	ctx.lineWidth = 5;
-	ctx.strokeStyle= "green";
-}
-else{
-	ctx.strokeStyle= "yellow";
-}
-		ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
-		ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
-		ctx.stroke();
 
-		if( T === 0 ){
-			ctx.lineWidth = 2;
-		}
-		ctx.beginPath();
-ctx.strokeStyle= "red";
-		ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
-		ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
-		ctx.stroke();
+				if(1) // this is the transform my the observer moving...
+				{
+					const see = D3xTransform.GetSeenSpace(C,T,X,myV,0,D);
+					const seex = D3xTransform.GetSeenSpace(C,T,X+1,myV,0,D);
+					const seet = D3xTransform.GetSeenSpace(C,T+1,X,myV,0,D);
 
-}
+					ctx.beginPath();
+					
+					if( T === 0 ){
+						ctx.lineWidth = 5;
+						ctx.strokeStyle= "green";
+					}
+					else{
+						ctx.strokeStyle= "yellow";
+					}
+					ctx.moveTo( ofs + (xscale_)*(see.see_pos), ofs - (xscale_)*(see.seen) );
+					ctx.lineTo( ofs + (xscale_)*(seex.see_pos), ofs - (xscale_)*(seex.seen) );
+					ctx.stroke();
+			
+					if( T === 0 ){
+						ctx.lineWidth = 2;
+					}
+					ctx.beginPath();
+					ctx.strokeStyle= "red";
+					ctx.moveTo( ofs +  (xscale_)*(see.see_pos), ofs - (xscale_)*(see.seen) );
+					ctx.lineTo( ofs + (xscale_)*(seet.see_pos), ofs - (xscale_)*(seet.seen) );
+					ctx.stroke();
+				}
+			if( false ) {
+					ctx.beginPath();
+					const ox  = D3xTransform.getObservedPlace2(X,T);
+					const oxo = D3xTransform.getObservedPlace2(X+1,T);
+					const oxt = D3xTransform.getObservedPlace2(X,T-1);
+					const ot  = D3xTransform.getObservedTime(X,T);
+					const oto = D3xTransform.getObservedTime(X+1,T);
+					const ott = D3xTransform.getObservedTime(X,T-1);
+			if( T === 0 ){
+				ctx.lineWidth = 5;
+				ctx.strokeStyle= "green";
+			}
+			else{
+				ctx.strokeStyle= "yellow";
+			}
+					ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
+					ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
+					ctx.stroke();
 
+					if( T === 0 ){
+						ctx.lineWidth = 2;
+					}
+					ctx.beginPath();
+			ctx.strokeStyle= "red";
+					ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
+					ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
+					ctx.stroke();
 
+			}
 
 			if( false ) { // draw what happens to me relative to a stationary world. (show real velocity)
 				ctx.beginPath();
@@ -607,26 +645,27 @@ function observedTimeToRealTime( T, L ) {
 
 }
 
-function observerTimeToRealPos( T, L, myV ) {
+function observerTimeToRealPos( T, L, V, myV ) {
 //	if( myV === undefined ) myV = V*V; else myV = myV*myV;
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
-
+	
 	if( C==V ) {
 		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
 		if( a < T ) return [a*V+L];
 		return [];
 	}
 
+	const v = myV-V;
 	const r = [];
 	// positive solution walks backwards...
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	const a =  (C*C*T + L*v - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*v*T + v*v*(C*C*T*T- D*D)))/(C*C - v*v) * (C*C-v*v);
 	doLog && console.log( "A was", T, L, a)
-	//if( L > T*V ) if( Math.abs(a) < T ) r.push(a*V+L);
-	if( a < T ) r.push(a*V+L);
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	//if( L > T*V ) if( Math.abs(b) < T ) r.push(b*V+L);
-	if( b < T ) r.push(b*V+L); 
+	//if( L > T*v ) if( Math.abs(a) < T ) r.push(a*v+L);
+	if( a < T ) r.push(a*v+L);
+	const b = (C*C*T + L*v + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*v*T + v*v*(C*C*T*T- D*D)))/(C*C - v*v) * (C*C-v*v);
+	//if( L > T*v ) if( Math.abs(b) < T ) r.push(b*v+L);
+	if( b < T ) r.push(b*v+L); 
 	doLog && console.log( "B was", T, L, b)
 	return r;
 
@@ -637,7 +676,8 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/1000*C;
-	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V);
+	myV = Number(sliderMyV.value)/1000*C;
+	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V) + " : " + myV;
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
 	D2 = (Number(sliderD.value)/50-1)*L;

@@ -415,7 +415,8 @@ function update( evt ) {
 		const x = obs_now * V;
 
 		// (t,x) and (t',x') 
-		const gamma = 1/Math.sqrt( 1-V*V/C*C);
+		const gamma = (C*C-V*V)/C;
+		//1/Math.sqrt( 1-V*V/C*C);
 		const X = V*Treal; //(observer's moving distance)
 		const tt = gamma * (Treal - X*V/(C*C));
 		const xx = gamma * (X-V*Treal);
