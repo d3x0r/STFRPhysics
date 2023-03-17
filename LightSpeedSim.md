@@ -1,12 +1,13 @@
 
 # Reality of Relativity
 
-I started this project ([step-by-step](#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
+I started this project ([step-by-step](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
 I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (even clocks that are seen).  I've later refined portions of this to include special relativity.
 
 ## Demos
 
-[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html)
+~~[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html) not completed...is just 
+about showing clocks... ~~
 
 [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.  This also has a function to reverse calculate, and show a computed observed position.
 
