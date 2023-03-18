@@ -34,7 +34,7 @@ canvas {
     display: block !important;
 }
 #controls span {
-    width: 10vw;
+    width: 30vw;
     display: inline-block;
     margin-bottom: 1vh;
 }
