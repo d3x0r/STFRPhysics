@@ -33,10 +33,23 @@ canvas {
 #controls {
     display: block !important;
 }
-#controls span {
-    width: 30vw;
+
+
+#controls span .right {
+    width: 10vw;
+    display: inline-block;
+    margin-bottom: 0.8vh;
+}
+
+#controls  span .left{
+    width: 10vw;
     display: inline-block;
     margin-bottom: 1vh;
+}
+.left { 
+    margin-bottom: 1vh;
+    display: inline-block;
+	width:10vw;
 }
 
 .container {

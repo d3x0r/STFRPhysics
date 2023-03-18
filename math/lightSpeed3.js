@@ -50,6 +50,7 @@ let span = document.createElement( "br" );
 controls.appendChild( span );
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "C";
 controls.appendChild( span );
 
@@ -71,6 +72,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Time Scale";
 controls.appendChild( span );
 
@@ -92,6 +94,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Distance";
 controls.appendChild( span );
 
@@ -100,8 +103,8 @@ sliderD.setAttribute( "type", "range" );
 controls.appendChild( sliderD );
 sliderD.addEventListener( "input", update );
 
-sliderD.setAttribute( "max",100 );
-sliderD.value = (D2+5)*10;
+sliderD.setAttribute( "max",1000 );
+sliderD.value = (D2+5)*100;
 sliderD.style.width="250px";
 
 const spanD = document.createElement( "span" );
@@ -113,6 +116,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Velocity";
 controls.appendChild( span );
 
@@ -134,6 +138,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Half-Length";
 controls.appendChild( span );
 
@@ -155,6 +160,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Time of sim. event: ";
 //controls.appendChild( span );
 
@@ -177,6 +183,7 @@ span = document.createElement( "br" );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Run-Time";
 controls.appendChild( span );
 
@@ -198,6 +205,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Now";
 controls.appendChild( span );
 
@@ -395,11 +403,11 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/1000*C;
-	spanV.textContent = V.toFixed(2);
+	spanV.textContent = V.toFixed(3);
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
-	D2 = (Number(sliderD.value)/50-1)*L;
-	spanD.textContent = D2.toFixed(1) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
+	D2 = (Number(sliderD.value)/500-1)*L;
+	spanD.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
