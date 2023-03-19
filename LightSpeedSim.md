@@ -73,7 +73,7 @@ Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{c
 which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
 may be different, as long as the total of 2 bounces is 2 ticks.
 
-from: $a+b=2$, $a=1/(c+x)$, $b=1/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
+from: $a+b=2$, $a=c/(c+x)$, $b=c/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
 
 Again the inverse from feels like to real velocity, but for the two-way speed of light.
 
@@ -239,6 +239,26 @@ $$ \sqrt{CC - T_R(x)^2}$$
 
 $$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
 
+## Extended clock rotations
+
+[This Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
+while keeping the orientation of the moving frame the same direction.  This then required a function like this...
+
+$$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)\right)}{\left(CC-VV\right)}$$
+
+to compute when the observed signal would go away.  (position is not draw ATM).
+
+https://www.desmos.com/calculator/ryles5r3h4 This graph encapsulates the various parameters... Across the X axis is angle
+of the velocity.  This shows the various speeds observed from various angles around an offet.  
+The X and Y parameters are the X and Y
+offset from a point source emitter. I did add green and blue horizontal lines, and a vertical marker for 90 degree rotation.
+At 90 degrees, the clock should work like the standard Lorentz Transformation clock.  The green line intersects with the
+Purple and is the computed Loretnz gamma factor.  The Blue horizontal line is 1/2 max+min clock speeds - as if the clock
+was always horizontal. There's probably a third option that's roughly the average of the areas under the curve.
+
+I'm really fine with either gamma factor... neither corrects every condition enough to matter.
+
+
 ## STFR Take on it
 
 $$\theta = angle-in-cycles$$
@@ -354,6 +374,25 @@ T=x
 $$(L V + C^2 x - sqrt(C^2 D^2 + C^2 L^2 - D^2 V^2 + 2 C^2 L V x + C^2 V^2 x^2))/(C^2 - V^2)) $$
 
 $$(C^2 (1 - (V (L + V x))/sqrt(C^2 (D^2 + (L + V x)^2) - D^2 V^2)))/(C^2 - V^2)$$
+
+what about turning the clock?  $\frac 1 {C+V(2-\sin(\theta))} + \frac {1} {C-V(2-\sin(\theta))} = 2C$  then 90 degrees the velocity part disappears... really probably should still include lorentz 1-way...
+
+simulation 3: D = -V  sqrt( D^2 + (L+V)^2 )  L-V
+   // at a frame, position = ( cos(A)VT+L,sin(A)VT )
+   //  is seen at ( D_2+cos(A)V(T+T_2),D+sin(A)V(T+T_2) )
+   //  
+   //  CT_2 = sqrt( ((D_2+cos(A)V(T+T_2) - cos(A)VT+L)^2 +
+                    ((D+sin(A)V(T+T_2)-sin(A)VT)^2 ) ) )
+
+   //  CT_2 = sqrt( ((D_2+cos(A)V T_2 - L)^2 +
+                    ((D+sin(A)V(T_2))^2 ) ) )
+
+`solve C*T_2 = sqrt( ((D_2+cos(A)V*T_2 - L)^2 +       ((D+sin(A)*V*(T_2))^2 ) ) ) for T_2 `
+
+```
+T_2 = (sqrt(V^2 (-2 D sin(A) - 2 D_2 cos(A) + 2 L cos(A))^2 - 4 (-D^2 + 2 D_2 L - D_2^2 - L^2) (-V^2 sin^2(A) - V^2 cos^2(A) + C^2)) - V (-2 D sin(A) - 2 D_2 cos(A) + 2 L cos(A)))/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
+
+```
 
 
 ---
