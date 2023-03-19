@@ -455,7 +455,7 @@ function update( evt ) {
 	A = Number(sliderA.value)/100*Math.PI;
 	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
 
-	D = (Number(sliderD.value)/500-1)*20;
+	D = (Number(sliderD.value)/500-1)*5;
 	spanD.textContent = D.toFixed(3) ;
 
 	D2 = (Number(sliderD2.value)/500-1)*L;
@@ -465,8 +465,10 @@ function update( evt ) {
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
-
-	animate = chkLblNow.checked;
+	if( animate != chkLblNow.checked ) {
+		animate = chkLblNow.checked;
+		if( animate ) draw();
+	}
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
@@ -507,13 +509,89 @@ function update( evt ) {
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
-		frame.Pc = D2;
-		frame.Ph = D2;
-		frame.Pt = D2;
+		const ca = Math.cos(A);
+		const sa = -Math.sin(A);
+		frame.Po = {x:ca*V*Treal + D2,y:sa*V*Treal+D};
+		frame.Pc = {x:ca*V*Treal + 0,y:sa*V*Treal};
+		frame.Ph = {x:ca*V*Treal + L,y:sa*V*Treal};
+		frame.Pt = {x:ca*V*Treal + -L,y:sa*V*Treal};
+
+		const delxh = frame.Po.x - frame.Ph.x;
+		const delyh = frame.Po.y - frame.Ph.y;
+		const delxt = frame.Po.x - frame.Pt.x;
+		const delyt = frame.Po.y - frame.Pt.y;
+		// if I was stationary, the time would be delxh
+		// this should basically be V*TReal
+		const delxyh = Math.sqrt( delxh*delxh + delyh*delyh );
+		// this should basically be V*TReal
+		const delxyt = Math.sqrt( delxt*delxt + delyt*delyt );
+
+		// + ca*V*T_2, sa*V*T_2
+		// C*T2 = (Po-Ph)+V*T2
+		// C*T2 = Math.sqrt( (delxh + ca*V*T2)^2 +(delyh + sa*V*T2)^2 )
+		//  T_2 = (sqrt(  -4 V^2 X^2 sin^2(a) 
+		//                + 8 V^2 X Y sin(a) cos(a) 
+		//                - 4 V^2 Y^2 cos^2(a) 
+		//                + 4 C^2 X^2 + 4 C^2 Y^2) 
+		//         + 2 V X cos(a) + 2 V Y sin(a))
+		//       /(2 (-V^2 sin^2(a) - V^2 cos^2(a) + C^2))
+		//
+
+		//  T_2 = (sqrt(  -4 V^2 X^2 sin^2(a) 
+		//                - 4 V^2 Y^2 cos^2(a) 
+		//                + 8 V^2 X Y sin(a) cos(a) 
+		//                + 4 C^2 X^2 
+		//                + 4 C^2 Y^2
+		//              ) 
+        //        + 2 V X cos(a) + 2 V Y sin(a))
+		//      /(2 *( C^2-V^2 ))
+
+		// (sin=1 a = 90 degrees)
+		//  delx = -L
+		//  dely = 0
+		//  T_2 = (sqrt(  -4 V^2 X^2
+		//                + 4 C^2 X^2 
+		//                + 4 C^2 Y^2
+		//              ) 
+        //          + 2 V Y )
+		//      /(2 *( C^2-V^2 ))
+
+		// (cos=1 a = 0 degrees)
+		//  delx = -L
+		//  dely = 0
+		//  T_2 = (2*sqrt( - V^2 Y^2 
+		//                 + C^2 X^2 
+		//                 + C^2 Y^2
+		//              ) 
+        //        + 2 V X )
+		//      /(2 *( C^2-V^2 ))
+
+
+		// (C-V)*T2 = (Po-Ph)
+		//   (Po-Ph) / (C-V)
+		const txh = ( Math.sqrt( -4*V*V*delxh*delxh*sa*sa
+							   -4*V*V*delyh*delyh*ca*ca 
+							   +8*V*V*delyh*delyh*sa*ca
+							   +4*C*C*delxh*delxh
+							   +4*C*C*delyh*delyh
+							  )
+					  +2*V*delxh*ca+2*V*delyh*sa )
+					/ (2*(C*C-V*V) )
+		const txt = ( Math.sqrt( -4*V*V*delxt*delxt*sa*sa
+							   -4*V*V*delyt*delyt*ca*ca 
+							   +8*V*V*delyt*delyt*sa*ca
+							   +4*C*C*delxt*delxt
+							   +4*C*C*delyt*delyt
+							  )
+					  +2*V*delxt*ca+2*V*delyt*sa )
+					/ (2*(C*C-V*V) )
+		//const tyh = delyh/(sa*(C-V))
+		//const txt = delxyt/(ca*(C-V))
+
 		frame.T_start = Treal;
 		frame.T_end = Treal+hLen+tLen;
-		frame.T_see_h = Treal + hLen;
-		frame.T_see_t = Treal + tLen;
+		frame.T_see_h = Treal + txh;
+		frame.T_see_t = Treal + txt;
 	}
 
 	         /*
@@ -525,8 +603,8 @@ context.lineWidth = 5;
 context.strokeStyle = '#003300';
 context.stroke()
 */
-
-	//draw(  );
+	if( !animate )
+		draw(  );
 }
 let last_draw_time = 0;
 const xscale = 150;
@@ -609,15 +687,27 @@ t' = L/C s
 		}
 */
 
+if( frame.T_start <now ) {
+	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
+ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
+	headTri( frame.Ph.x, 500+frame.Ph.y*xscale, true );
+	tailTri(  frame.Pt.x, 500+frame.Pt.y*xscale,  true );
+	centerBox( frame.Pc.x, 500+frame.Pc.y*xscale, true );
+	centerBox( frame.Po.x, 500+frame.Po.y*xscale, true );
+}
+
+
 		const willBe = frame.Phc + V*(frame.T_start-now);
 		if( frame.T_start <now && frame.T_see_h>now) {
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
 			headTri( (+L)*(1-delT) +(delT)*frame.Ph, photonStart*(1-delT)+toY*(delT) );
+
 			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
 ctx.beginPath();
-ctx.arc(500+(L-Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+//ctx.arc(500+(L-Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+ctx.arc(500+(frame.Ph.x)*xscale, 500+(frame.Ph.y)*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 ctx.stroke()
 
 		}
@@ -629,7 +719,8 @@ ctx.stroke()
 			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
 if(1){ // draw circles around tail
 	ctx.beginPath();
-	ctx.arc(500-(L+Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+	//ctx.arc(500-(L+Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+	ctx.arc(500+(frame.Pt.x)*xscale, 500+(frame.Pt.y)*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 	ctx.stroke()
 }
 		}
@@ -743,9 +834,9 @@ if(0)
 		ctx.lineTo( x, y + 5 );
 		ctx.fill();
 	}
-	function centerBox( t,o ) {      
+	function centerBox( t,o,f ) {      
 		//const y = 20;
-		centerBoxXY( 500+(t)*xscale, o );
+		centerBoxXY( 500+(t)*xscale, o,f );
 	}
 	
 /*
@@ -805,13 +896,7 @@ if(0) { // old realtive calculation (motionless thing)
 
 
 
-	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-	ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri(  + L, 20, true );
-	tailTri(  - L, 20, true );
-	centerBox( 0, 20, true );
-
-
+if( animate )
 	requestAnimationFrame( draw );
 
 	return;
