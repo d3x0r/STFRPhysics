@@ -248,7 +248,8 @@ $$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\ri
 
 to compute when the observed signal would go away.  (position is not draw ATM).
 
-https://www.desmos.com/calculator/ryles5r3h4 This graph encapsulates the various parameters... Across the X axis is angle
+https://www.desmos.com/calculator/ryles5r3h4 https://www.desmos.com/calculator/qucxqp3wsq These graphs encapsulate
+ the various parameters... Across the X axis is angle
 of the velocity.  This shows the various speeds observed from various angles around an offet.  
 The X and Y parameters are the X and Y
 offset from a point source emitter. I did add green and blue horizontal lines, and a vertical marker for 90 degree rotation.
@@ -256,7 +257,16 @@ At 90 degrees, the clock should work like the standard Lorentz Transformation cl
 Purple and is the computed Loretnz gamma factor.  The Blue horizontal line is 1/2 max+min clock speeds - as if the clock
 was always horizontal. There's probably a third option that's roughly the average of the areas under the curve.
 
+The second graph I added (f(x)+f(x+pi)/2) and the mid point of that would probably be a best choice.
 I'm really fine with either gamma factor... neither corrects every condition enough to matter.
+
+Result maybe - (C+sqrt(CC-VV)) / 2(CC-VV)
+
+6 way speed of light doesn't appear to be much better... https://geogebra.org/3d/twjua74e
+Using a 4 way speed of light calculated with `(f(x)+f(x+pi/2)+f(x+pi)+f(x+3*pi/2))/4` is actually itself
+fairly constant.  This is slightly slower occastionally than the worse-case two-way and one-way gamma factors averaged.
+But, is the minimum error at either worst/best cases, and inbetween has only a slight error at even `0.404c` at which 
+time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
 
 
 ## STFR Take on it
