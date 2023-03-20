@@ -631,19 +631,24 @@ function draw(  ) {
 	const toY = D*yscale+photonStart;
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
-		if( frame.T_start < now ) {
-
-
-		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
-		ctx.beginPath();
-		ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
-		ctx.lineTo( 500 + xscale*frame.Pt, toY );
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.moveTo( 500 +L*xscale, photonStart );
-		ctx.lineTo( 500 + xscale*frame.Ph, toY );
-		ctx.stroke();
+		if( frame.T_start < now   ) 
+		{
+			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
+			if( frame.T_see_t > now ) {
+				ctx.beginPath();
+				ctx.moveTo( 500 +frame.Pt.x*xscale/*+ frame.Pc*xscale*/, 500+frame.Pt.y*xscale );
+				ctx.lineTo( 500 +(frame.Po.x + (frame.T_see_t-frame.T_start)*Math.cos(A)*V)*xscale
+							, 500 +(frame.Po.y - (frame.T_see_t-frame.T_start)*Math.sin(A)*V)*xscale );
+				ctx.stroke();
+			}
+	   
+			if( frame.T_see_h > now ) {
+				ctx.beginPath();
+				ctx.moveTo( 500 +frame.Ph.x*xscale/*+ frame.Pc*xscale*/, 500+frame.Ph.y*xscale );
+				ctx.lineTo( 500 +(frame.Po.x + (frame.T_see_h-frame.T_start)*Math.cos(A)*V)*xscale
+							, 500 +(frame.Po.y - (frame.T_see_h-frame.T_start)*Math.sin(A)*V)*xscale );
+				ctx.stroke();
+			}
 		
 		if( ( frame.T_see_c < now ) ) {
 			if( drawP ) drawP2 = frame;
@@ -687,7 +692,7 @@ t' = L/C s
 		}
 */
 
-if( frame.T_start <now ) {
+if( Math.abs(frame.T_start- now) < 0.01) {
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
 ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
 	headTri( frame.Ph.x, 500+frame.Ph.y*xscale, true );
