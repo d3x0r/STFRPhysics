@@ -739,10 +739,10 @@ t' = L/C s
 */
 
 if( Math.abs(frame.T_start- now) < 0.01) {
-	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-	ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
 	const ca = Math.cos(A);
 	const sa = Math.sin(A);
+	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
+	ctx.fillRect( 500+(ca*V*now-L)*xscale, 500-(sa*V*now)*xscale-5, (2*L)*xscale, 10 );
 	headTri( frame.Ph.x-ca*V*(frame.T_see_h-now), 500+(frame.Ph.y+sa*V*(frame.T_see_h-now))*xscale, true );
 	tailTri(  frame.Pt.x-ca*V*(frame.T_see_t-now), 500+(frame.Pt.y+sa*V*(frame.T_see_t-now))*xscale,  true );
 
