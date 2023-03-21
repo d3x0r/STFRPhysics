@@ -15,6 +15,10 @@ let D2=0; // shortest distance to moving body (m) (D/C = time to view closest ev
 let V=0.50; // velocity  (m/s)
 let S=1.0; // time scalar (s/s)
 let A=0; // length of body (m)  (L/C = time of body (s))
+let sa = 0;// Math.sin(A);
+let ca = 0;//Math.cos(A);
+
+
 let runT = 4;
 let E = 0;
 let now = 0;
@@ -442,7 +446,17 @@ function observerTimeToRealPos( T, L ) {
 
 }
 
+function getObservedTimePos( delxt, delyt ){
+	return ( Math.sqrt( -V*V*delxt*delxt*sa*sa
+		-V*V*delyt*delyt*ca*ca 
+		+2*V*V*delyt*delyt*sa*ca
+		+C*C*delxt*delxt
+		+C*C*delyt*delyt
+	   )
+			+V*delxt*ca+V*delyt*sa )
+		/ ((C*C-V*V) )
 
+}
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
@@ -453,6 +467,9 @@ function update( evt ) {
 	spanL.textContent = L.toFixed(1);
 
 	A = Number(sliderA.value)/100*Math.PI;
+	sa = -Math.sin(A);
+	ca = Math.cos(A);
+
 	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
 
 	D = (Number(sliderD.value)/500-1)*5;
@@ -500,6 +517,8 @@ function update( evt ) {
 		// a+b=2
 		// 1-a/b = b/a-1 = 0   QM balance.
 
+		//const ca = Math.cos(A);
+		//const sa = -Math.sin(A);
 
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
@@ -509,8 +528,6 @@ function update( evt ) {
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
-		const ca = Math.cos(A);
-		const sa = -Math.sin(A);
 		frame.Po = {x:ca*V*Treal + D2,y:sa*V*Treal+D};
 		frame.Pc = {x:ca*V*Treal + 0,y:sa*V*Treal};
 		frame.Ph = {x:ca*V*Treal + L,y:sa*V*Treal};
@@ -524,9 +541,9 @@ function update( evt ) {
 		const delyt = frame.Po.y - frame.Pt.y;
 		// if I was stationary, the time would be delxh
 		// this should basically be V*TReal
-		const delxyh = Math.sqrt( delxh*delxh + delyh*delyh );
+		//const delxyh = Math.sqrt( delxh*delxh + delyh*delyh );
 		// this should basically be V*TReal
-		const delxyt = Math.sqrt( delxt*delxt + delyt*delyt );
+		//const delxyt = Math.sqrt( delxt*delxt + delyt*delyt );
 
 		// + ca*V*T_2, sa*V*T_2
 		// C*T2 = (Po-Ph)+V*T2
@@ -571,7 +588,9 @@ function update( evt ) {
 
 		// (C-V)*T2 = (Po-Ph)
 		//   (Po-Ph) / (C-V)
-		const txc = ( Math.sqrt( -4*V*V*delxc*delxc*sa*sa
+		const txc = getObservedTimePos( delxc, delyc );
+		/*
+		( Math.sqrt( -4*V*V*delxc*delxc*sa*sa
 							   -4*V*V*delyc*delyc*ca*ca 
 							   +8*V*V*delyc*delyc*sa*ca
 							   +4*C*C*delxc*delxc
@@ -579,7 +598,8 @@ function update( evt ) {
 							  )
 					  +2*V*delxc*ca+2*V*delyc*sa )
 					/ (2*(C*C-V*V) )
-		const txh = ( Math.sqrt( -4*V*V*delxh*delxh*sa*sa
+					*/
+		const txh = getObservedTimePos( delxh, delyh );/*( Math.sqrt( -4*V*V*delxh*delxh*sa*sa
 							   -4*V*V*delyh*delyh*ca*ca 
 							   +8*V*V*delyh*delyh*sa*ca
 							   +4*C*C*delxh*delxh
@@ -587,7 +607,8 @@ function update( evt ) {
 							  )
 					  +2*V*delxh*ca+2*V*delyh*sa )
 					/ (2*(C*C-V*V) )
-		const txt = ( Math.sqrt( -4*V*V*delxt*delxt*sa*sa
+					*/
+		const txt = getObservedTimePos( delxt, delyt );/*( Math.sqrt( -4*V*V*delxt*delxt*sa*sa
 							   -4*V*V*delyt*delyt*ca*ca 
 							   +8*V*V*delyt*delyt*sa*ca
 							   +4*C*C*delxt*delxt
@@ -595,6 +616,7 @@ function update( evt ) {
 							  )
 					  +2*V*delxt*ca+2*V*delyt*sa )
 					/ (2*(C*C-V*V) )
+					*/
 		//const tyh = delyh/(sa*(C-V))
 		//const txt = delxyt/(ca*(C-V))
 
@@ -640,6 +662,8 @@ function draw(  ) {
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*yscale+photonStart;
+
+
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
 		if( frame.T_start < now   ) 
@@ -675,6 +699,8 @@ function draw(  ) {
 		}
 		}
 		ctx.fillStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
+
+
 
 
 	/*
@@ -713,6 +739,14 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 
 	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y+sa*V*(frame.T_see_c-now))*xscale, true );
 	centerBox( frame.Po.x, 500+frame.Po.y*xscale, true );
+
+	for( let n = -20; n <= 20; n++ ) {
+		const t = (n/20)*L;
+		const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
+		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
+		centerBox( (frame.Pc.x+t)-ca*V*(time), 500+(frame.Pc.y+sa*V*(time))*xscale, false );
+	}
+
 }
 
 
