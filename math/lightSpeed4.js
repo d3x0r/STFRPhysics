@@ -743,7 +743,7 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 	for( let n = -20; n <= 20; n++ ) {
 		const t = (n/20)*L;
 		const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
-		ctx.fillStyle =  `hsl(${(time%3)*120+120},100%,50%`
+		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
 		centerBox( (frame.Pc.x+t)-ca*V*(time), 500+(frame.Pc.y+sa*V*(time))*xscale, false );
 	}
 
