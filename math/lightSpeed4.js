@@ -447,7 +447,7 @@ function observerTimeToRealPos( T, L ) {
 }
 
 function getObservedTimePos( delxt, delyt ){
-	return ( Math.sqrt( -V*V*delxt*delxt*sa*sa
+	const a = ( Math.sqrt( -V*V*delxt*delxt*sa*sa
 		-V*V*delyt*delyt*ca*ca 
 		+2*V*V*delyt*delyt*sa*ca
 		+C*C*delxt*delxt
@@ -455,7 +455,16 @@ function getObservedTimePos( delxt, delyt ){
 	   )
 			+V*delxt*ca+V*delyt*sa )
 		/ ((C*C-V*V) )
-
+	if( a > 0 ) return a;
+	const b = ( -Math.sqrt( -V*V*delxt*delxt*sa*sa
+		-V*V*delyt*delyt*ca*ca 
+		+2*V*V*delyt*delyt*sa*ca
+		+C*C*delxt*delxt
+		+C*C*delyt*delyt
+	   )
+			+V*delxt*ca+V*delyt*sa )
+		/ ((C*C-V*V) )
+	return b;
 }
 
 function update( evt ) {
