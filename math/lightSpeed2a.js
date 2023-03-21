@@ -479,9 +479,10 @@ function draw(  ) {
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*yscale+photonStart;
-	for( let f = 0; f < nFrames; f++ ) {
+	let f = 0;
+	for( f = 0; f < nFrames; f++ ) {
 		const frame = frames[f];
-		if( frame.T_start > now ) continue;
+		if( frame.T_start > now ) break;
 //		if(( frame.T_see_h < now ) && ( frame.T_see_t < now ) )continue;
 
 		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
@@ -558,6 +559,26 @@ if(1){ // draw circles around tail
 	ctx.stroke()
 }
 		}
+	}
+
+	{
+		const frame = frames[f];  // frame of now...
+		//if( frame.t_see_h < now && frame.t_see_t < now ) 
+		//(frame.Pc*frame.Pc)-(L*L)
+		// how long ago do I see Tail?
+		// Math.sqrt( (V*now-L)*(V*now-L)+D*D ) / C;
+		
+		const Tt = Math.sqrt( (V*now- -L)*(V*now- -L)+D*D ) / C - now;
+		const Tc = Math.sqrt( (V*now)*(V*now)+D*D ) / C - now;
+		const Th = Math.sqrt( (V*now- +L)*(V*now- +L)+D*D ) / C - now;
+			//console.log( "blah:", center[1], front[1], back[1] );
+		var grd = ctx.createLinearGradient(500+(-L)*xscale, 0, 500+(L)*xscale, 0);
+		
+		grd.addColorStop(0, `hsl(${(-Tt%3)*120+120},100%,50%` );
+		grd.addColorStop(0.5, `hsl(${(-Tc%3)*120+120},100%,50%` );
+		grd.addColorStop(1, `hsl(${(-Th%3)*120+120},100%,50%` );
+		ctx.fillStyle = grd;
+		ctx.fillRect( 500+(-L)*xscale, 20, (2*L)*xscale, 10 );
 	}
 
 	// the moving observer.
