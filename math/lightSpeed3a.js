@@ -30,17 +30,23 @@ let eventFrame = -1;
 //------------------ Storage for information about a frame ---------------------------
 
 class Frame{
-	Ph = 0;
-	Pc = 0;
-	Pt = 0;
+	Po = 0; // position observer
+	Ph = 0; // position head
+	Pc = 0; // postion center
+	Pt = 0; // position tail
 	hue = 0;
-	T_start = 0;
+	T_start = 0; // time start event
 	Event = 0;
 
-	T_see_h = 0;
-	T_see_c = 0;
-	T_see_t = 0;
-	T_end = 0;
+	T_see_h = 0; // when head is seen by observer
+	T_see_c = 0; // when center is seen by observer                      
+	T_see_t = 0; // when tail is seen by observer
+
+	P_see_h = 0; // when head is seen by observer
+	P_see_c = 0; // when center is seen by observer                      
+	P_see_t = 0; // when tail is seen by observer
+
+	T_end = 0; // when we can stop drawing...
 }
 
 for( let n = 0; n < nFrames; n++ ) {
@@ -107,7 +113,7 @@ const v = V-myV;
 		ctx.lineWidth = 2;
 	}
 
-	  if(1)
+	  if(0)
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
@@ -217,7 +223,7 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					ctx.stroke();
 				}	
 
-				if(1) // this is the transform my the observer moving...
+				if(0) // this is the transform my the observer moving...
 				{
 					const see = D3xTransform.GetSeenSpace(C,T,X,myV,0,D);
 					const seex = D3xTransform.GetSeenSpace(C,T,X+1,myV,0,D);
@@ -316,6 +322,7 @@ let span = document.createElement( "br" );
 controls.appendChild( span );
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "C";
 controls.appendChild( span );
 
@@ -337,6 +344,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Time Scale";
 controls.appendChild( span );
 
@@ -358,6 +366,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Distance";
 controls.appendChild( span );
 
@@ -379,6 +388,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Velocity";
 controls.appendChild( span );
 
@@ -409,6 +419,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Half-Length";
 controls.appendChild( span );
 
@@ -430,6 +441,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Time of sim. event: ";
 //controls.appendChild( span );
 
@@ -452,6 +464,7 @@ span = document.createElement( "br" );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Run-Time";
 controls.appendChild( span );
 
@@ -473,6 +486,7 @@ controls.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
+span.className = "left";
 span.textContent = "Now";
 controls.appendChild( span );
 
@@ -536,6 +550,105 @@ g t'(1 + v)
 
 
 function realTimeToObservedTime( T, L ) {
+	const meNow = myV*T;
+	const themNow = V*T + L;
+	let A = 0;
+	let A2 = 0;
+	let hadA = false;
+	let B = 0;
+	if( meNow > themNow ) 
+	{
+		// (C-V)
+
+		const tmp = (-2 * L - 2 * T * V + 2 * T * myV);
+		A = (-Math.sqrt((4 * (2 * myV - C) * ((-D*D * myV*myV)/(C*C) 
+								+ (2 * D*D * myV)/C - D*D 
+								- L*L - 2 * L * T * V + 2 * L * T * myV - T*T * V*V - T*T * myV*myV + 2 * T*T * V * myV)
+								)/C + (myV*myV * (tmp*tmp))/(C*C)) - (myV * (tmp))/C
+			 )/(2 * (2 * myV - C))
+
+		return A+T;
+ 		hadA = true;
+	}
+	if( hadA ) {
+		const meAtA = myV*(T+A);
+		const themAtA = V * (T+A) + L;if(0)
+		if( meAtA < themAtA ) {
+			// A is only valid up to the time it passed... so now I have to run a different
+			// calculation to find when it passed and start from there.
+			const B = (L-T*myV+T*V) / (myV - V);
+			T += B;
+			A = 0;
+		}
+	//	else 
+	}
+
+		// (C+V)
+		const tmp = (2 * L + 2 * T * V - 2 * T * myV);
+		A2 = (Math.sqrt((4 * (C + 2 * myV) * ((D*D * myV*myV)/(C*C) 
+								+ (2 * D*D * myV)/C + D*D 
+								+ L*L + 2 * L * T * V - 2 * L * T * myV + T*T * V*V + T*T * myV*myV - 2 * T*T * V * myV)
+								)/C + (myV*myV * (tmp*tmp))/(C*C)) - (myV * (tmp))/C
+			 )/(2 * (C + 2 * myV))
+	return A2+T;
+		{
+			const meAtC = myV*(T+A2);
+			const themAtC = V * (T+A2) + L;
+			if( meAtC > themAtC ) {
+				//console.log( "Observer passed observed..." );
+			}
+		}
+	/*
+	const meWillBe = myV*T + myV*To;
+	const themWillBe = V*T+L + V * To;
+	Math.sqrt((meWillBe-themWillBe)^2+DD)/C 
+
+	// solve sqrt( ((( (V_1 T) + (V_1 A) )   // my position from now until sometime... myV*T + myV*A
+						- ( V_0 T+L))/(C+V) // body position from now until sometime... V*T+L + V0*A
+						)^2  + D*D ) = CA for A
+
+	// solve sqrt( ((( (V_1 T) + (V_1 A) ) - ( V_0 T+L))/(C+V) )^2  + D*D ) = CA for A
+
+
+	// solve sqrt( ((( (V_1 T) + (V_1 A) )   // my position from now until sometime... myV*T + myV*A
+						- (( V_0 T+L)+(V_0 A)))/(C+V) // body position from now until sometime... V*T+L + V0*A
+						)^2  + D*D ) = CA for A
+
+	// solve sqrt( ((( (V_1 T) + (V_1 A) )  - (( V_0 T+L)+(V_0 A)))/(C+V)  )^2  + D*D ) = CA for A
+
+	//A = (sqrt(C^2 D^2 + C^2 L^2 + 2 C^2 L T V_0 - 2 C^2 L T V_1 + C^2 T^2 V_0^2 + C^2 T^2 V_1^2 
+	//		  - 2 C^2 T^2 V_0 V_1 - D^2 V_0^2 - D^2 V_1^2 + 2 D^2 V_0 V_1) 
+	//     + L V_0 - L V_1 + T V_0^2 - 2 T V_1 V_0 + T V_1^2)
+	//           /(C^2 - V_0^2 - V_1^2 + 2 V_0 V_1)
+	//
+
+
+	//A = (sqrt((2 L V_1 - 2 L V_0 - 2 T V_1^2 + 4 T V_0 V_1 - 2 T V_0^2)^2 
+		- 4 (C^4 + 2 C^3 V + C^2 V^2 - V_1^2 - V_0^2 + 2 V_1 V_0) (-C^2 D^2 - 2 C D^2 V 
+			- D^2 V^2 - L^2 + 2 L T V_1 - 2 L T V_0 - T^2 V_1^2 - T^2 V_0^2 + 2 T^2 V_1 V_0)) 
+			- 2 L V_1 + 2 L V_0 + 2 T V_1^2 - 4 T V_0 V_1 + 2 T V_0^2)
+			/(2 (C^4 + 2 C^3 V + C^2 V^2 - V_1^2 - V_0^2 + 2 V_1 V_0))
+
+
+	//A = (sqrt((2 L V_1 - 2 L V_0 - 2 T V_1^2 + 4 T V_0 V_1 - 2 T V_0^2)^2 
+		- 4 (C^4 - 2 C^3 V + C^2 V^2 - V_1^2 - V_0^2 + 2 V_1 V_0) (-C^2 D^2 + 2 C D^2 V 
+			- D^2 V^2 - L^2 + 2 L T V_1 - 2 L T V_0 - T^2 V_1^2 - T^2 V_0^2 + 2 T^2 V_1 V_0)) 
+			- 2 L V_1 + 2 L V_0 + 2 T V_1^2 - 4 T V_0 V_1 + 2 T V_0^2)
+			/(2 (C^4 - 2 C^3 V + C^2 V^2 - V_1^2 - V_0^2 + 2 V_1 V_0))
+
+
+		( (V_1 T) + (V_1 T_o) ) - ( V_0 T)+(V_0 T_o) ) + DD ) = 0;
+
+		T_o = - ( DD - TV0+TV1 ) / (V0+V1)
+	*/
+	//const distance = (-Math.sqrt( ( V-myV )*(V-myV)-4*C*C*(-D*D+T*V-T*myV) ) - V + myV)/(2*C*C);
+
+	const distance = (Math.sqrt( C*C*D*D + C*C*L*L + 2*C*C*L*T*V - 2*C*C*L*T*myV + C*C*T*T*V*V + C*C*T*T*myV*myV 
+				- 2*C*C*T*T*V*myV  - D*D*V*V - D*D*myV*myV + 2*D*D*V*myV) 
+					+ L*V - L*myV + T*V*V - 2*T*V*myV + T*myV*myV ) 
+						/ (C*C - V*V - myV*myV + 2*V*myV);
+	return distance+T;
+
 	const pos = (V*T + L);
 	return Math.sqrt( D*D + pos*pos )/C + T;
 
@@ -682,7 +795,7 @@ function update( evt ) {
 	spanL.textContent = L.toFixed(1);
 	D2 = (Number(sliderD.value)/50-1)*L;
 	D =10* (Number(sliderD.value)/50-1);
-	spanD.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
+	spanD.textContent = D.toFixed(3) + " T(world s):" + (-2*(C*D+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
@@ -702,18 +815,9 @@ function update( evt ) {
 		eventFrame = -1;
 	}
 
-	const gamma = D3xTransform.gamma;
-
-	const hLen = (L-D2)/(C+V) ;
-	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
-
-	// test return time length.
-	const hrLen = (L-D2)/(C-V) ;
-	const trLen = ((L+D2)/(C+V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
-
-
-	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) +" realTail: "+ tLen.toFixed(2) + " returnTail:" + trLen.toFixed(2) + " TailRT: " + ((C*C-V*V)/(C*C)*(tLen+trLen)).toFixed(2) + " HeadRT: " + ((C*C-V*V)/(C*C)*(hLen+hrLen)).toFixed(2);
+	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 	doLog = true;
+
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const now = (del * runT)-runT/2;
@@ -721,24 +825,19 @@ function update( evt ) {
 		const frame = frames[n];
 		frame.hue =120*(now%3)-240;
 		frame.T_start = now;
-		if(true ) {
+
+			frame.Po = now*myV;
 			frame.Pc = now*V 
 			frame.Ph = frame.Pc+L;
 			frame.Pt = frame.Pc-L;
 			frame.T_see_h = realTimeToObservedTime( now, L );
 			frame.T_see_c = realTimeToObservedTime( now, 0 );
 			frame.T_see_t = realTimeToObservedTime( now, -L );
-			let front  = observerTimeToRealPos( now,  L, 0 );
-			let center = observerTimeToRealPos( now,  0, 0 );
-			console.log( "Tick:", now.toFixed(2), " c:", center, "f:", front)
-		}else{
-			frame.Pc = D2;
-			frame.Ph = D2;
-			frame.Pt = D2;
-			frame.T_end = Treal+hLen+tLen;
-			frame.T_see_h = Treal + hLen;
-			frame.T_see_t = Treal + tLen;
-		}
+
+			frame.P_see_h = frame.T_see_h * myV;
+			frame.P_see_c = frame.T_see_c * myV;
+			frame.P_see_t = frame.T_see_t * myV;
+
 	}
 
 	doLog = false;
@@ -801,8 +900,8 @@ function update( evt ) {
 
 
 let last_draw_time = 0;
-const xscale = 150;
-const yscale = 50;
+const xscale = 100;
+const yscale = 100;
 let didEvent = false;
 const photonStart = 100;
 function draw(  ) {
@@ -826,42 +925,16 @@ function draw(  ) {
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
 		if( frame.T_start < now ) {
-
-
-		if( true ) { // stationary observer, moving train
+			// stationary observer, moving train
 			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 			ctx.beginPath();
 			ctx.moveTo( 500 + frame.Pc*xscale, photonStart );
-			ctx.lineTo( 500 , toY );
+			ctx.lineTo( 500 + frame.P_see_c*xscale, toY );
+			//ctx.moveTo( 500 + frame.Pt*xscale, photonStart );
+			//ctx.lineTo( 500 + frame.P_see_t*xscale, toY );
+			//ctx.moveTo( 500 + frame.Ph*xscale, photonStart );
+			//ctx.lineTo( 500 + frame.P_see_h*xscale, toY );
 			ctx.stroke();
-	
-	
-		}else {  // stationary observer on moving train
-			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
-			ctx.beginPath();
-			ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
-			ctx.lineTo( 500 + xscale*frame.Pt, toY );
-			ctx.stroke();
-	
-			ctx.beginPath();
-			ctx.moveTo( 500 +L*xscale, photonStart );
-			ctx.lineTo( 500 + xscale*frame.Ph, toY );
-			ctx.stroke();
-	
-		}
-		
-		if( ( frame.T_see_c < now ) ) {
-			if( drawP ) drawP2 = frame;
-			else drawP = frame;
-		}
-		if( ( frame.T_see_h < now ) ) {
-			if( drawH ) drawH2 = frame;
-			else drawH = frame;
-		}
-		if( ( frame.T_see_t < now ) ) {
-			if( drawT ) drawT2 = frame;
-			else drawT = frame;
-		}
 		}
 		ctx.fillStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 
@@ -886,10 +959,13 @@ t' = L/C s
 			const passed = now - frame.T_start;
 			const delT = passed/del;
 			
-			centerBoxXY( (ofs+frame.Pc*xscale)*(1-delT) + (ofs)*(delT), photonStart*(1-delT)+toY*(delT), false );
+			centerBoxXY( (ofs+frame.Pc*xscale)*(1-delT) + (ofs+frame.P_see_c*xscale)*(delT), photonStart*(1-delT)+toY*(delT), false );
 			if( frame.event ) {
 				eventMark( (frame.Pc)*(1-delT), photonStart*(1-delT)+toY*(delT), true );
 			}
+			ctx.beginPath();
+			ctx.arc(500+(frame.Pc)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+			ctx.stroke()
 		}
 
 		const willBe = frame.Phc + V*(frame.T_start-now);
@@ -897,37 +973,24 @@ t' = L/C s
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			headTri( (frame.Ph)*(1-delT) +(delT)*(0), photonStart*(1-delT)+toY*(delT) );
+			headTri( (frame.Ph)*(1-delT) +(delT)*(frame.P_see_h), photonStart*(1-delT)+toY*(delT) );
 			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
-ctx.beginPath();
-ctx.arc(500+(frame.Ph)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-ctx.stroke()
+			ctx.beginPath();
+			ctx.arc(500+(frame.Ph)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+			ctx.stroke()
 
 		}
 		if( frame.T_start <now && frame.T_see_t>now) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			tailTri( (frame.Pt)*(1-delT)+(delT)*(0), photonStart*(1-delT)+toY*(delT) );
+			tailTri( (frame.Pt)*(1-delT)+(delT)*(frame.P_see_t), photonStart*(1-delT)+toY*(delT) );
 			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
-if(1){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500+(frame.Pt)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
-		}
-if(0)
-		if( frame.T_see_t <now && frame.T_end >now) {
-			const del = frame.T_see_t - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
-if(1){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500-(L+V*(now-frame.T_start))*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
+			if(1){ // draw circles around tail
+				ctx.beginPath();
+				ctx.arc(500+(frame.Pt)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+				ctx.stroke()
+			}
 		}
 	}
 
