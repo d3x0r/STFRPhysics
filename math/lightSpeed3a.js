@@ -223,6 +223,24 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					ctx.stroke();
 				}	
 
+				{
+					const bias = timeBiasAtPos( X, T, D );
+					const bias2 = timeBiasAtPos( X+1, T, D );
+					const bias3 = timeBiasAtPos( X, T-1, D );
+					const xAtBias = X+V*bias;
+					const xAtBias2 = X+V*bias2;
+					const xAtBias3 = X+V*bias3;
+					const yAtBias = 0;
+
+					ctx.beginPath();
+					ctx.strokeStyle= "red";
+					ctx.moveTo( ofs + (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
+					ctx.lineTo( ofs + (xscale_)*(xAtBias2), ofs + (xscale_)*(T) );
+					ctx.moveTo( ofs +  (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
+					ctx.lineTo( ofs + (xscale_)*(xAtBias3), ofs + (xscale_)*(T-1) );
+					ctx.stroke();
+				}
+
 				if(0) // this is the transform my the observer moving...
 				{
 					const see = D3xTransform.GetSeenSpace(C,T,X,myV,0,D);
@@ -784,6 +802,20 @@ function observerTimeToRealPos( T, L, V, myV ) {
 
 }
 
+
+
+function timeBiasAtPos( X, Y, Z ) {
+	//$b(x,y)=-\sqrt {  (x<0, \frac {\sqrt{x^{2} C C-x^{2} V V}} {C-V}, {\frac {\sqrt{x^{2} C C-x^{2} V V}} {C+V} } )^{2}+(\frac {\sqrt{y^{2} C C+y^{2} V V}} {C})^{2} + (\frac{\sqrt{Z Z C C+Z Z V V}}{C})^{2}}$
+	const div1 = ( C*C+V*V ) / (C-V)
+	const div2 = ( C*C+V*V ) / (C+V)
+	const div3 = ( C*C+V*V ) / (C)
+
+	const xx = (X<0?( Math.abs(X) * div1):(Math.abs(X)*div2));
+	const yy = Math.abs(Y)*div3;
+	const zz = Math.abs(Z)*div3;
+	const b = -Math.sqrt( xx*xx + yy*yy + zz*zz );
+	return b;
+}
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
