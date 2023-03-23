@@ -52,6 +52,12 @@ $$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
 
+### Space time index
+
+https://geogebra.org/3d/bsv5xcnx
+
+The graph shows light seconds away, and how long ago you're seeing that point.
+
 ## Gamma
 
 https://www.desmos.com/calculator/fbl7sujtzp
