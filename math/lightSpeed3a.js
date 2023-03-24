@@ -128,7 +128,7 @@ const v = V-myV;
 			ctx.stroke();
 		}	
 
-if(1)
+if(0)
 		{
 				ctx.beginPath();
 				ctx.lineWidth = 5;
@@ -205,8 +205,8 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 				// draw ship in real space...
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
- 				const T1 = timeBiasAtPos( frame.Pt, D, 0 )
- 				const T2 = timeBiasAtPos( frame.Ph, D, 0 )
+ 				const T1 = timeBiasAtPos( V, frame.Pt, D, 0 )
+ 				const T2 = timeBiasAtPos( V, frame.Ph, D, 0 )
 				ctx.moveTo( ofs + (frame.Pt+ T1*V)*xscale_, ofs + (T)*xscale_ );
 				ctx.lineTo( ofs + (frame.Ph + T2*V ) *xscale_, ofs + (T)*xscale_ );
 
@@ -214,7 +214,7 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 			}
 		}
 
-		for( let X = -10; X < 10; X+=1 ) {
+		for( let X = -10; X < 40; X+=1 ) {
 			for( let T = 10; T > -10; T-=1 ) {
 
 				{
@@ -228,9 +228,9 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 				}	
 
 				{
-					const bias = timeBiasAtPos( X, T, D );
-					const bias2 = timeBiasAtPos( X+1, T, D );
-					const bias3 = timeBiasAtPos( X, T-1, D );
+					const bias = timeBiasAtPos( myV, X, T, D );
+					const bias2 = timeBiasAtPos( myV, X+1, T, D );
+					const bias3 = timeBiasAtPos( myV, X, T-1, D );
 					const xAtBias = X+V*bias;
 					const xAtBias2 = X+1+V*bias2;
 					const xAtBias3 = X+V*bias3;
@@ -238,8 +238,10 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 
 					ctx.beginPath();
 					ctx.strokeStyle= "red";
+					ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 					ctx.moveTo( ofs + (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(xAtBias2), ofs + (xscale_)*(T) );
+					ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 					ctx.moveTo( ofs +  (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(xAtBias3), ofs + (xscale_)*(T-1) );
 					ctx.stroke();
@@ -808,7 +810,7 @@ function observerTimeToRealPos( T, L, V, myV ) {
 
 
 
-function timeBiasAtPos( X, Y, Z ) {
+function timeBiasAtPos( V, X, Y, Z ) {
 	//b(x,y)=-sqrt((x If(x<0, ((C+V)/(C-V)), ((C-V)/(C+V))))^(2)+(y ((sqrt(C C+V V))/(C)))^(2)+(Z ((sqrt(C C+V V))/(C)))^(2))
 	const div1 = ( C+V ) / (C-V)
 	const div2 = ( C-V ) / (C+V)
@@ -991,6 +993,8 @@ t= -v x / cc
 t' = L/C s
 */
 		const ofs = 500;
+
+if(0) {		
 		if( frame.T_start <now && frame.T_see_c>now) {
 			const del = frame.T_see_c - frame.T_start;
 			const passed = now - frame.T_start;
@@ -1029,6 +1033,7 @@ t' = L/C s
 				ctx.stroke()
 			}
 		}
+	}
 	}
 
 	centerBoxXY( (500+D2*xscale), toY, true );
