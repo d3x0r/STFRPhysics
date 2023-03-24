@@ -58,6 +58,12 @@ https://geogebra.org/3d/bsv5xcnx
 
 The graph shows light seconds away, and how long ago you're seeing that point.
 
+$$b(x,y,z)=-\sqrt {  (|x|*(x<0,  \frac { C+V} {C-V}, {\frac { C-V} {C+V} } ))^{2}+(|y|\frac {\sqrt{ C C+ V V}} {C})^{2} + (|z|\frac{\sqrt{ C C+V V}}{C})^{2}}$$
+
+Then if space was moving, instead of myself... [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3a.html)
+
+`b(x,y,z)*V+x, y, z`
+
 ## Gamma
 
 https://www.desmos.com/calculator/fbl7sujtzp
