@@ -134,6 +134,7 @@ if(1)
 				ctx.lineWidth = 5;
 				ctx.strokeStyle= "green";
 
+				//timeBiasAtPos( X, D, 0 )
 				const ot  = D3xTransform.getObservedTime(-runT,now, myV);
 				const oto = D3xTransform.getObservedTime(0,now, myV);
 				const oto2 = D3xTransform.getObservedTime(runT,now, myV);
@@ -181,6 +182,7 @@ if( T > atNow ) break;
 			const Th=D3xTransform.getObservedTime(frame.Ph,T, 0)
 			const Tt=D3xTransform.getObservedTime(frame.Pt,T, 0)
 
+
 if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 			var grd = ctx.createLinearGradient(ofs+(back)*xscale_ , 0
 							, ofs+(front)*xscale_, 0);
@@ -203,8 +205,10 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 				// draw ship in real space...
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
-				ctx.moveTo( ofs + frame.Pt*xscale_, ofs + T*xscale_ );
-				ctx.lineTo( ofs + frame.Ph*xscale_, ofs + T*xscale_ );
+ 				const T1 = timeBiasAtPos( frame.Pt, D, 0 )
+ 				const T2 = timeBiasAtPos( frame.Ph, D, 0 )
+				ctx.moveTo( ofs + (frame.Pt+ T1*V)*xscale_, ofs + (T)*xscale_ );
+				ctx.lineTo( ofs + (frame.Ph + T2*V ) *xscale_, ofs + (T)*xscale_ );
 
 				ctx.stroke();
 			}
@@ -228,7 +232,7 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					const bias2 = timeBiasAtPos( X+1, T, D );
 					const bias3 = timeBiasAtPos( X, T-1, D );
 					const xAtBias = X+V*bias;
-					const xAtBias2 = X+V*bias2;
+					const xAtBias2 = X+1+V*bias2;
 					const xAtBias3 = X+V*bias3;
 					const yAtBias = 0;
 
@@ -805,16 +809,17 @@ function observerTimeToRealPos( T, L, V, myV ) {
 
 
 function timeBiasAtPos( X, Y, Z ) {
-	//$b(x,y)=-\sqrt {  (x<0, \frac {\sqrt{x^{2} C C-x^{2} V V}} {C-V}, {\frac {\sqrt{x^{2} C C-x^{2} V V}} {C+V} } )^{2}+(\frac {\sqrt{y^{2} C C+y^{2} V V}} {C})^{2} + (\frac{\sqrt{Z Z C C+Z Z V V}}{C})^{2}}$
-	const div1 = ( C*C+V*V ) / (C-V)
-	const div2 = ( C*C+V*V ) / (C+V)
-	const div3 = ( C*C+V*V ) / (C)
+	//b(x,y)=-sqrt((x If(x<0, ((C+V)/(C-V)), ((C-V)/(C+V))))^(2)+(y ((sqrt(C C+V V))/(C)))^(2)+(Z ((sqrt(C C+V V))/(C)))^(2))
+	const div1 = ( C+V ) / (C-V)
+	const div2 = ( C-V ) / (C+V)
+	const div3 = Math.sqrt( C*C+V*V ) / (C)
 
 	const xx = (X<0?( Math.abs(X) * div1):(Math.abs(X)*div2));
 	const yy = Math.abs(Y)*div3;
 	const zz = Math.abs(Z)*div3;
 	const b = -Math.sqrt( xx*xx + yy*yy + zz*zz );
 	return b;
+
 }
 
 function update( evt ) {
