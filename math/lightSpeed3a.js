@@ -9,6 +9,13 @@ const ctx = canvas.getContext( '2d' );
 
 let doLog = false;
 
+let A=0;
+let ca = Math.cos(A);
+let sa = -Math.sin(A);
+let A_o = 0;
+let ca_o = Math.cos( A_o );
+let sa_o = -Math.sin( A_o );
+
 let L=1; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
 let D=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
@@ -67,7 +74,7 @@ const v = V-myV;
 		return  (T-dist)*(1/(C*C-v*v));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
 	}
  	static getObservedPlace(X,T,V,myV) {
-		return observerTimeToRealPos( T, X, V, myV )
+		return observerTimeToRealPos( T, D, X, V, myV )
 		const willSee = realTimeToObservedTime( (1/(C*C-myV*myV))*T, X );
 		const willSeeAt =  (X/C + willSee*V/C);
 		return willSeeAt ;
@@ -170,9 +177,9 @@ if(0)
 if( T > atNow ) break;
 			ctx.beginPath();
 			
-			let front  = observerTimeToRealPos( T,  L, 0 );
-			let center = observerTimeToRealPos( T,  0, 0 );
-			let back   = observerTimeToRealPos( T, -L, 0 );
+			let front  = observerTimeToRealPos( T, D, L, 0, myV );
+			let center = observerTimeToRealPos( T, D, 0, 0, myV );
+			let back   = observerTimeToRealPos( T, D, -L, 0, myV );
 			if( front.length ) front = front[0];
 			if( center.length ) center = center[0];
 			if( back.length ) back = back[0];
@@ -228,9 +235,37 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 				}	
 
 				{
+					let here  = observedTimeToRealTimeXYZ2( now, V, X, T, 0, myV, 0, 0, D );
+					const hx =  here * (V) * ca + X;
+					const hy =  here * (V) * sa + T;
+					let right = observedTimeToRealTimeXYZ2( now, V, X+1, T, 0, myV, 0, 0, D );
+					const rx =  right * (V) * ca + (X+1);
+					const ry =  right * (V) * sa + T;
+					let next   = observedTimeToRealTimeXYZ2( now, V, X, T+1, 0, myV, 0, 0, D );
+					const nx =  next * (V) * ca + X;
+					const ny =  next * (V) * sa + (T+1);
+
+					ctx.beginPath();
+					ctx.strokeStyle= "red";
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
+					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
+					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+					ctx.stroke();
+		
+				}
+
+				if(0) 
+				{
+					// this is attempt 1 - using just what I see, and what the spece would be
+					// when seen that long ago...  (mostly fits thought experiment, other than AT speed of light)
 					const bias = timeBiasAtPos( myV, X, T, D );
 					const bias2 = timeBiasAtPos( myV, X+1, T, D );
 					const bias3 = timeBiasAtPos( myV, X, T-1, D );
+
+					
 					const xAtBias = X+V*bias;
 					const xAtBias2 = X+1+V*bias2;
 					const xAtBias3 = X+V*bias3;
@@ -241,7 +276,7 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 					ctx.moveTo( ofs + (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(xAtBias2), ofs + (xscale_)*(T) );
-					ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 					ctx.moveTo( ofs +  (xscale_)*(xAtBias), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(xAtBias3), ofs + (xscale_)*(T-1) );
 					ctx.stroke();
@@ -459,6 +494,28 @@ sliderL.style.width="250px";
 const spanL = document.createElement( "span" );
 spanL.textContent = "1";
 controls.appendChild( spanL );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
+
+span = document.createElement( "span" );
+span.className = "left";
+span.textContent = "Direction";
+controls.appendChild( span );
+
+const sliderA = document.createElement( "input" );
+sliderA.setAttribute( "type", "range" );
+controls.appendChild( sliderA );
+sliderA.addEventListener( "input", update );
+
+sliderA.setAttribute( "max",200 );
+sliderA.value = A*100;
+sliderA.style.width="250px";
+
+const spanA = document.createElement( "span" );
+spanA.textContent = "1";
+controls.appendChild( spanA );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -759,6 +816,90 @@ function observedTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
 }
 
 
+function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o ){ 
+	//solve B = ( sqrt((Z-F)^2+( (Y-G) + -sin(A)VT +sin(E)*J*B)^2+(cos(A)VT+(X-H)-cos(E)*J*B)^2))/C+T  for T
+	//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
+
+	//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
+	const xd = X-X_o;
+	const yd = Y-Y_o;
+	const zd = Z-Z_o;
+
+	if( V === C ) {
+		//T = (sqrt(-2 B^2 C J cos(A - E) + B^2 J^2 cos^2(A - E) + 2 B C X cos(A) + 2 B C Y sin(A) - 2 B J X cos(A) cos(A - E) - 2 B J Y sin(A) cos(A - E) + X^2 cos^2(A) + 2 X Y sin(A) cos(A) + Y^2 sin^2(A) + B^2 C^2)/C + (B J sin(A) sin(E))/C + (B J cos(A) cos(E))/C - (X cos(A))/C - (Y sin(A))/C - B)/(sin^2(A) + cos^2(A) - 1)
+		/*
+		T = (sqrt(-2 B^2 C J cos(A - E) 
+					+ B^2 J^2 cos^2(A - E) 
+					+ 2 B C X cos(A) 
+					+ 2 B C Y sin(A) 
+					- 2 B J X cos(A) cos(A - E) 
+					- 2 B J Y sin(A) cos(A - E) 
+					+ X^2 cos^2(A) + 2 X Y sin(A) cos(A) 
+					+ Y^2 sin^2(A) + B^2 C^2)/C 
+				+ (B J sin(A) sin(E))/C 
+				+ (B J cos(A) cos(E))/C 
+				- (X cos(A))/C 
+				- (Y sin(A))/C 
+				- B)/(1 - 1)
+		*/
+	}
+
+	{
+		const tmp = (
+			T_o * V_o * V * ( sa * sa_o + ca * ca_o )
+			- V * xd * ca 
+			- V * yd * sa 
+			- T_o * C*C);
+		const T = (-Math.sqrt( tmp*tmp 
+				- (C*C-V*V) 
+					* (   T_o*T_o * C*C
+						- T_o*T_o * V_o*V_o 
+						+ 2 * T_o * V_o * xd * ca_o 
+						+ 2 * T_o * V_o * yd * sa_o 
+						- xd*xd - yd*yd
+						- zd*zd
+					)) 
+			- T_o * V_o * V * sa * sa_o 
+			- T_o * V_o * V * ca * ca_o 
+			+ V * xd * ca 
+			+ V * yd * sa 
+			+ T_o * C*C)
+			/ ( C*C-V*V)
+		return T;
+	}
+}
+
+function observedTimeToRealTimeXYZ( T_o, V, X, Y, Z ){
+	// T_o = ( sqrt(Z^2+( Y + -sin(A)VT)^2+(cos(A)VT+X)^2))/C+T
+	const answer = [];
+	{
+		const tmp = -(V * X * ca
+			+ V * Y * sa 
+			+ T_o * C*C);
+		const A = (-Math.sqrt(tmp*tmp 
+				- (C*C-V*V ) * (T_o*T_o * C*C - X*X - Y*Y - Z*Z)) 
+				+ V * X * ca
+				+ V * Y * sa
+				+ T_o * C*C)
+			/(C*C - V*V );
+
+		answer.push(A);
+	}
+	{
+		const tmp = -(V * X * ca
+			+ V * Y * sa
+			+ T_o * C^2)
+		const A = (Math.sqrt(tmp*tmp 
+			- (C*C-V*V)*(T_o*T_o * C*C - X*X - Y*Y - Z*Z)) 
+			+ V * X * ca
+			+ V * Y * sa
+			+ T_o * C*C)
+			/(C*C - V*V);
+		answer.push(A);
+	}
+	return answer;
+}
+
 function observedTimeToRealTime( T, L ) {
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
@@ -782,7 +923,7 @@ function observedTimeToRealTime( T, L ) {
 
 }
 
-function observerTimeToRealPos( T, L, V, myV ) {
+function observerTimeToRealPos( T, D, L, V, myV ) {
 //	if( myV === undefined ) myV = V*V; else myV = myV*myV;
 	// things have to be able to propagate forwardly.
 	if( C <= 0 ) return [0,0];
@@ -793,7 +934,7 @@ function observerTimeToRealPos( T, L, V, myV ) {
 		return [];
 	}
 
-	const v = myV-V;
+	const v = V-myV;
 	const r = [];
 	// positive solution walks backwards...
 	const a =  (C*C*T + L*v - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*v*T + v*v*(C*C*T*T- D*D)))/(C*C - v*v) * (C*C-v*v);
@@ -832,6 +973,12 @@ function update( evt ) {
 	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V) + " : " + myV;
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
+
+	A = Number(sliderA.value)/100*Math.PI;
+	sa = -Math.sin(A);
+	ca = Math.cos(A);
+	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
+
 	D2 = (Number(sliderD.value)/50-1)*L;
 	D =10* (Number(sliderD.value)/50-1);
 	spanD.textContent = D.toFixed(3) + " T(world s):" + (-2*(C*D+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
