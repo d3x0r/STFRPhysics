@@ -99,7 +99,7 @@ const v = V-myV;
 
 	static drawCoords( atNow ) {
 		const xscale_ = xscale/4;
-		const ofs = 500;//xscale_ * 13;
+		const ofs = 300;//xscale_ * 13;
 
 // velocity ratio line.
 /*
@@ -189,8 +189,8 @@ if( T > atNow ) break;
 			const Th=D3xTransform.getObservedTime(frame.Ph,T, 0)
 			const Tt=D3xTransform.getObservedTime(frame.Pt,T, 0)
 
-
-if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
+			if(0)
+		if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 			var grd = ctx.createLinearGradient(ofs+(back)*xscale_ , 0
 							, ofs+(front)*xscale_, 0);
 			grd.addColorStop(0, `hsl(${Math.floor((1+Tt%3)*120)},100%,50%` );
@@ -207,8 +207,8 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 			ctx.lineTo( ofs + front*xscale_, ofs + Th*xscale_ );
 			
 			ctx.stroke();
-}
-			if(1) {
+		}
+			if(0) {
 				// draw ship in real space...
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
@@ -235,13 +235,20 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 				}	
 
 				{
-					let here  = observedTimeToRealTimeXYZ2( now, V, X, T, 0, myV, 0, 0, D );
+					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, D, 0, myV, 0, 0, 0 );
+					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, D, 0, myV, 0, 0, 0 );
+					const hdx =  head * (V) * ca +L;
+					const hdy =  head * (V) * sa +D ;
+					const tx =  tail * (V) * ca - L;
+					const ty =  tail * (V) * sa +D;
+
+					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T, 0, myV, 0, 0, D );
 					const hx =  here * (V) * ca + X;
 					const hy =  here * (V) * sa + T;
-					let right = observedTimeToRealTimeXYZ2( now, V, X+1, T, 0, myV, 0, 0, D );
+					let right = observedTimeToRealTimeXYZ2( now, V, +V*now + X+1, T, 0, myV, 0, 0, D );
 					const rx =  right * (V) * ca + (X+1);
 					const ry =  right * (V) * sa + T;
-					let next   = observedTimeToRealTimeXYZ2( now, V, X, T+1, 0, myV, 0, 0, D );
+					let next   = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T+1, 0, myV, 0, 0, D );
 					const nx =  next * (V) * ca + X;
 					const ny =  next * (V) * sa + (T+1);
 
@@ -254,7 +261,15 @@ if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
 					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
 					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
 					ctx.stroke();
-		
+
+					ctx.beginPath();
+					ctx.strokeStyle= "yellow";
+					ctx.strokeWidth= 5;
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+					ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+					ctx.stroke();
+					
 				}
 
 				if(0) 
@@ -1110,6 +1125,8 @@ function draw(  ) {
 	const toY = D*yscale+photonStart;
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
+
+		if(0)
 		if( frame.T_start < now ) {
 			// stationary observer, moving train
 			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
