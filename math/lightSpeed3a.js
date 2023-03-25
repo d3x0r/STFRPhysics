@@ -235,22 +235,22 @@ if( T > atNow ) break;
 				}	
 
 				{
-					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, D, 0, myV, 0, 0, 0 );
-					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, D, 0, myV, 0, 0, 0 );
+					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, 0-D, 0, myV, 0, 0, 0 );
+					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, 0-D, 0, myV, 0, 0, 0 );
 					const hdx =  head * (V) * ca +L;
-					const hdy =  head * (V) * sa +D ;
+					const hdy =  head * (V) * sa -D ;
 					const tx =  tail * (V) * ca - L;
-					const ty =  tail * (V) * sa +D;
+					const ty =  tail * (V) * sa -D;
 
-					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T, 0, myV, 0, 0, D );
+					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T-D, 0, myV, 0, 0, 0 );
 					const hx =  here * (V) * ca + X;
-					const hy =  here * (V) * sa + T;
-					let right = observedTimeToRealTimeXYZ2( now, V, +V*now + X+1, T, 0, myV, 0, 0, D );
+					const hy =  here * (V) * sa + T-D;
+					let right = observedTimeToRealTimeXYZ2( now, V, +V*now + X+1, T-D, 0, myV, 0, 0, 0 );
 					const rx =  right * (V) * ca + (X+1);
-					const ry =  right * (V) * sa + T;
-					let next   = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T+1, 0, myV, 0, 0, D );
+					const ry =  right * (V) * sa + T-D;
+					let next   = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T+1-D, 0, myV, 0, 0, 0 );
 					const nx =  next * (V) * ca + X;
-					const ny =  next * (V) * sa + (T+1);
+					const ny =  next * (V) * sa + (T+1)-D;
 
 					ctx.beginPath();
 					ctx.strokeStyle= "red";
