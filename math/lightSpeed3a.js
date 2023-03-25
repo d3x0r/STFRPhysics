@@ -235,8 +235,8 @@ if( T > atNow ) break;
 				}	
 
 				{
-					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, 0-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
-					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, 0-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
 					const hdx =  head * (V) * ca +L - now*myV*ca_o;
 					const hdy =  head * (V) * sa -D  - now*myV*sa_o;
 					const tx =  tail * (V) * ca - L - now*myV*ca_o;
