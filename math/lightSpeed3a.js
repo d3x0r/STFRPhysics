@@ -360,37 +360,88 @@ if( T > atNow ) break;
 
 		ctx.strokeStyle= "yellow";
 		ctx.strokeWidth= 3;
-		for( let seg = 0; seg < 20; seg++ ){
-			let tail  = observedTimeToRealTimeXYZ2( now, V, -L+(seg/10)*L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-			let head  = observedTimeToRealTimeXYZ2( now, V, -L+((seg+1)/10)*L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+		for( let seg = 0; seg < 20; seg++ ){ 
+			{
+			let tail  = observedTimeToRealTimeXYZ2( now, V, -L+(seg/10)*L+V*now*ca, -L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+			let head  = observedTimeToRealTimeXYZ2( now, V, -L+((seg+1)/10)*L+V*now*ca, -L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 
 			const hdx =  head * (V) * ca -L +((seg+1)/10)*L - now*myV*ca_o;
-			const hdy =  head * (V) * sa -D  - now*myV*sa_o;
+			const hdy =  head * (V) * sa -L-D  - now*myV*sa_o;
 			const tx =  tail * (V) * ca - L+((seg)/10)*L - now*myV*ca_o;
-			const ty =  tail * (V) * sa -D - now*myV*sa_o;
+			const ty =  tail * (V) * sa -L-D - now*myV*sa_o;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
 			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
 			ctx.stroke();
+			}
+			{
+				let tail  = observedTimeToRealTimeXYZ2( now, V, -L+(seg/10)*L+V*now*ca, L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+				let head  = observedTimeToRealTimeXYZ2( now, V, -L+((seg+1)/10)*L+V*now*ca, L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+	
+				const hdx =  head * (V) * ca -L +((seg+1)/10)*L - now*myV*ca_o;
+				const hdy =  head * (V) * sa +L-D  - now*myV*sa_o;
+				const tx =  tail * (V) * ca - L+((seg)/10)*L - now*myV*ca_o;
+				const ty =  tail * (V) * sa +L-D - now*myV*sa_o;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
+				}
+			{
+			let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now*ca, -L+(seg/10)*L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+			let head  = observedTimeToRealTimeXYZ2( now, V, -L+V*now*ca, -L+((seg+1)/10)*L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 
+			const hdx =  head * (V) * ca -L - now*myV*ca_o;
+			const hdy =  head * (V) * sa -L +((seg+1)/10)*L-D  - now*myV*sa_o;
+			const tx =  tail * (V) * ca - L - now*myV*ca_o;
+			const ty =  tail * (V) * sa -L+((seg)/10)*L-D - now*myV*sa_o;
+			ctx.beginPath();
+			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+			ctx.stroke();
+			}
+			{
+				let tail  = observedTimeToRealTimeXYZ2( now, V, L+V*now*ca, -L+(seg/10)*L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+				let head  = observedTimeToRealTimeXYZ2( now, V, L+V*now*ca, -L+((seg+1)/10)*L-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+	
+				const hdx =  head * (V) * ca +L - now*myV*ca_o;
+				const hdy =  head * (V) * sa -L +((seg+1)/10)*L-D  - now*myV*sa_o;
+				const tx =  tail * (V) * ca + L - now*myV*ca_o;
+				const ty =  tail * (V) * sa -L+((seg)/10)*L-D - now*myV*sa_o;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
+			}
 		}
 
 		ctx.strokeStyle= "cyan";
-		for( let seg = 0; seg < 20; seg++ ){
-			let tail  = observedTimeToRealTimeXYZ2( now, myV, -L+(seg/10)*L+myV*now*ca_o, 0+myV*now*sa_o, 0, V, now*V*ca, now*V*sa-D, 0, ca_o, sa_o, ca, sa );
-			let head  = observedTimeToRealTimeXYZ2( now, myV, -L+((seg+1)/10)*L+myV*now*ca_o, 0+myV*now*sa_o, 0, V, now*V*ca, now*V*sa-D, 0, ca_o, sa_o, ca, sa );
-
-			const hdx =  head * (myV) * ca_o -L +((seg+1)/10)*L - now*V*ca;
-			const hdy =  head * (myV) * sa_o +D  - now*V*sa;
-			const tx =  tail * (myV) * ca_o - L+((seg)/10)*L - now*V*ca;
-			const ty =  tail * (myV) * sa_o +D - now*V*sa;
+		function doSeg( seg ) {
+			function _doSeg(tailx,taily, headx, heady) {
+			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+myV*now*ca_o, taily+myV*now*sa_o, 0, V, now*V*ca, now*V*sa-D, 0, ca_o, sa_o, ca, sa );
+			let head  = observedTimeToRealTimeXYZ2( now, myV, headx+myV*now*ca_o, heady+myV*now*sa_o, 0, V, now*V*ca, now*V*sa-D, 0, ca_o, sa_o, ca, sa );
+			const hdx =  head * (myV) * ca_o +headx - now*V*ca;
+			const hdy =  head * (myV) * sa_o +heady +D  - now*V*sa;
+			const tx =  tail * (myV) * ca_o +tailx - now*V*ca;
+			const ty =  tail * (myV) * sa_o +taily +D - now*V*sa;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
 			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
 			ctx.stroke();
 
+			}
+			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		}
+		for( let seg = 0; seg < 20; seg++ ){
+			doSeg( seg );
 		}
 
 	}
