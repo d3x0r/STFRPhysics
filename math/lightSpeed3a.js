@@ -224,7 +224,7 @@ if( T > atNow ) break;
 		ctx.strokeWidth= 1.5;
 
 
-		for( let X = -20; X < 20; X+=1 ) {
+		for( let X = -10; X < 20; X+=1 ) {
 			for( let T = 10; T > -10; T-=1 ) {
 
 				{
@@ -264,7 +264,9 @@ if( T > atNow ) break;
 					const ny =  next * (V) * sa + (T+1)-D - now*myV*sa_o;
 
 					ctx.beginPath();
+				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
 					ctx.strokeStyle= "red";
+					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
 					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
@@ -905,7 +907,6 @@ function observedTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
 
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
-	//solve B = ( sqrt((Z-F)^2+( (Y-G) + -sin(A)VT +sin(E)*J*B)^2+(cos(A)VT+(X-H)-cos(E)*J*B)^2))/C+T  for T
 	//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
 
 	//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
@@ -914,23 +915,47 @@ function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa
 	const zd = Z-Z_o;
 
 	if( V === C ) {
-		//T = (sqrt(-2 B^2 C J cos(A - E) + B^2 J^2 cos^2(A - E) + 2 B C X cos(A) + 2 B C Y sin(A) - 2 B J X cos(A) cos(A - E) - 2 B J Y sin(A) cos(A - E) + X^2 cos^2(A) + 2 X Y sin(A) cos(A) + Y^2 sin^2(A) + B^2 C^2)/C + (B J sin(A) sin(E))/C + (B J cos(A) cos(E))/C - (X cos(A))/C - (Y sin(A))/C - B)/(sin^2(A) + cos^2(A) - 1)
-		/*
-		T = (sqrt(-2 B^2 C J cos(A - E) 
-					+ B^2 J^2 cos^2(A - E) 
-					+ 2 B C X cos(A) 
-					+ 2 B C Y sin(A) 
-					- 2 B J X cos(A) cos(A - E) 
-					- 2 B J Y sin(A) cos(A - E) 
-					+ X^2 cos^2(A) + 2 X Y sin(A) cos(A) 
-					+ Y^2 sin^2(A) + B^2 C^2)/C 
-				+ (B J sin(A) sin(E))/C 
-				+ (B J cos(A) cos(E))/C 
-				- (X cos(A))/C 
-				- (Y sin(A))/C 
-				- B)/(1 - 1)
-		*/
+		// solve (B-T)^2 = (((Z/C)^2+( (Y/C) + sin(A)*T -sin(E)*B)^2+((X/C)+cos(A)*T-cos(E)*B)^2))   for T
+		//
+		//T = (-2 B C X cos(E) - 2 B C Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C cos(A - E) - X cos(A) - Y sin(A) - B C))
+		//T = (B^2 C^2 J^2 - B^2 C^2 - 2 B C J X cos(E) - 2 B C J Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C J cos(A - E) - X cos(A) - Y sin(A) - B C))
+		// only A=0
+
+		// this is close... but somehow large numbers are also small?
+			const T = (T_o*T_o * C*C * V_o*V_o 
+						- T_o*T_o * C*C 
+						- 2 * (T_o) * C * V_o * (xd) * ca_o
+						- 2 * (T_o) * C * V_o * yd * sa_o
+						+ xd*xd + yd*yd + zd*zd
+					) /(2 * C * (T_o * C * V_o * ( ca*ca_o + sa*sa_o ) 
+						- (xd) * ca 
+						- (yd) * sa 
+						- T_o * C))
+			if( T < T_o )
+				return T;
+			return -Math.Infinity;
 	}
+
+{
+	//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V yd sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J yd sin(E) - X^2 - yd^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V yd sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
+	const tmp = (T_o * V_o * V * sa * sa_o
+					+ T_o * V_o * V * ca * ca_o
+					- V * xd * ca
+					- V * yd * sa 
+					- T_o * C*C);
+	const T = (-Math.sqrt(tmp*tmp 
+					- (C*C-V*V ) 
+					*(T_o*T_o * C*C 
+						- T_o*T_o * V_o*V_o
+						+ 2 * T_o * V_o * xd * ca_o
+						+ 2 * T_o * V_o * yd * sa_o - xd*xd - yd*yd - zd*zd)) 
+				- T_o * V_o * V * sa * sa_o
+				- T_o * V_o * V * ca * ca_o
+				+ V * xd * ca
+				+ V * yd * sa
+				+ T_o * C*C)/(C*C-V*V);
+	return T;
+}	
 
 	{
 		const tmp = (
@@ -940,7 +965,7 @@ function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa
 			- T_o * C*C);
 		const T = (-Math.sqrt( tmp*tmp 
 				- (C*C-V*V) 
-					* (   T_o*T_o * C*C
+					* ( T_o*T_o * C*C
 						- T_o*T_o * V_o*V_o 
 						+ 2 * T_o * V_o * xd * ca_o 
 						+ 2 * T_o * V_o * yd * sa_o 
