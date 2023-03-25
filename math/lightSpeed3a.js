@@ -235,22 +235,22 @@ if( T > atNow ) break;
 				}	
 
 				{
-					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, 0-D, 0, myV, 0, 0, 0 );
-					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, 0-D, 0, myV, 0, 0, 0 );
-					const hdx =  head * (V) * ca +L;
-					const hdy =  head * (V) * sa -D ;
-					const tx =  tail * (V) * ca - L;
-					const ty =  tail * (V) * sa -D;
+					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now, 0-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now, 0-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					const hdx =  head * (V) * ca +L - now*myV*ca_o;
+					const hdy =  head * (V) * sa -D  - now*myV*sa_o;
+					const tx =  tail * (V) * ca - L - now*myV*ca_o;
+					const ty =  tail * (V) * sa -D - now*myV*sa_o;
 
-					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T-D, 0, myV, 0, 0, 0 );
-					const hx =  here * (V) * ca + X;
-					const hy =  here * (V) * sa + T-D;
-					let right = observedTimeToRealTimeXYZ2( now, V, +V*now + X+1, T-D, 0, myV, 0, 0, 0 );
-					const rx =  right * (V) * ca + (X+1);
-					const ry =  right * (V) * sa + T-D;
-					let next   = observedTimeToRealTimeXYZ2( now, V, +V*now + X, T+1-D, 0, myV, 0, 0, 0 );
-					const nx =  next * (V) * ca + X;
-					const ny =  next * (V) * sa + (T+1)-D;
+					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now*ca + X, T+V*now*sa-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					const hx =  here * (V) * ca + X - now*myV*ca_o;
+					const hy =  here * (V) * sa + T-D - now*myV*sa_o;
+					let right = observedTimeToRealTimeXYZ2( now, V, +V*now*ca + X+1, T+V*now*sa-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					const rx =  right * (V) * ca + (X+1) - now*myV*ca_o;
+					const ry =  right * (V) * sa + T-D - now*myV*sa_o;
+					let next   = observedTimeToRealTimeXYZ2( now, V, +V*now*ca + X, T+V*now*sa+1-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0 );
+					const nx =  next * (V) * ca + X - now*myV*ca_o;
+					const ny =  next * (V) * sa + (T+1)-D - now*myV*sa_o;
 
 					ctx.beginPath();
 					ctx.strokeStyle= "red";
@@ -531,6 +531,19 @@ sliderA.style.width="250px";
 const spanA = document.createElement( "span" );
 spanA.textContent = "1";
 controls.appendChild( spanA );
+
+const sliderA_o = document.createElement( "input" );
+sliderA_o.setAttribute( "type", "range" );
+controls.appendChild( sliderA_o );
+sliderA_o.addEventListener( "input", update );
+
+sliderA_o.setAttribute( "max",200 );
+sliderA_o.value = A_o*100;
+sliderA_o.style.width="250px";
+
+const spanA_o = document.createElement( "span" );
+spanA_o.textContent = "1";
+controls.appendChild( spanA_o );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -993,6 +1006,12 @@ function update( evt ) {
 	sa = -Math.sin(A);
 	ca = Math.cos(A);
 	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
+
+	
+	A_o = Number(sliderA_o.value)/100*Math.PI;
+	sa_o = -Math.sin(A_o);
+	ca_o = Math.cos(A_o);
+	spanA_o.textContent = (A_o/Math.PI).toFixed(3) + "π";
 
 	D2 = (Number(sliderD.value)/50-1)*L;
 	D =10* (Number(sliderD.value)/50-1);
