@@ -763,6 +763,8 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	if( VV === C*C ) {
 		//solve (S-T)^2 = ((D/C T - J /sqrt(J*J+K*K+L*L) S + X/C)^2 + (E/C T - K /sqrt(J*J+K*K+L*L)S + Y/C)^2 + (F/C T - L/sqrt(J*J+K*K+L*L) S + Z/C)^2)  for S
 		//S = (sqrt(J^2 + K^2 + L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2))/(2 C (C T sqrt(J^2 + K^2 + L^2) - D J T - E K T - F L T - J X - K Y - L Z))		
+		//solve S = sqrt((D T - J S + X)^2 + (E T - K S + Y)^2 + (F T - L S + Z)^2)/sqrt(J*J+K*K+L*L) + T for S
+		//S = (D^2 T^2 + 2 D T X + F^2 T^2 + 2 F T Z - J^2 T^2 - K^2 T^2 - L^2 T^2 + e^2 T^2 + 2 e T Y + X^2 + Y^2 + Z^2)/(2 (D J T + F L T + J^2 (-T) + J X - K^2 T + e K T + K Y - L^2 T + L Z))
 	}
 
 	{
@@ -824,20 +826,17 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	if( VV == C*C ) {
 		//solve (S-T)^2 = ((D/sqrt(D*D+E*E+F*F) T - J /CS + X/C)^2 + (E/sqrt(D*D+E*E+F*F) T - K /CS + Y/C)^2 + (F/sqrt(D*D+E*E+F*F) T - L /CS + Z/C)^2)  for T
 		//T = (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2)/(2 (C^2 (-S) + (C D J S)/sqrt(D^2 + E^2 + F^2) + (C E K S)/sqrt(D^2 + E^2 + F^2) + (C F L S)/sqrt(D^2 + E^2 + F^2) - (C D X)/sqrt(D^2 + E^2 + F^2) - (C E Y)/sqrt(D^2 + E^2 + F^2) - (C F Z)/sqrt(D^2 + E^2 + F^2)))
-
-		const T =   (-C*C * S*S 
-						+ J*J * S*S - 2 * J * S * X 
-						+ K*K * S*S - 2 * K * S * Y 
-						+ L*L * S*S - 2 * L * S * Z 
-						+ X*X + Y*Y + Z*Z
-					)/(2 * (C*C * (-S) 
-						+ C * ( ( D * J * S) + (E * K * S) + (F * L * S) - (D * X) - (E * Y) - (F * Z)) /v))
-		if( T < T_o ) return T; 
+		//solve S = sqrt((D T - J S + X)^2 + (E T - K S + Y)^2 + (F T - L S + Z)^2)/sqrt(D*D+E*E+F*F) + T for T
+		//T = (D^2 S^2 + F^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z + e^2 S^2 - X^2 - Y^2 - Z^2)/(2 (D^2 S - D J S + D X + F^2 S - F L S + F Z - e K S + e^2 S + e Y))
 		{
-			//console.log( "Overflowed:", P, V, P_o, V_o, T_o, T );
+			const T = ( S*S *(  D*D + E*E + F*F )
+						- J*J * S*S + 2 * S * J * X - X*X 
+						- K*K * S*S + 2 * S * K * Y - Y*Y 
+						- L*L * S*S + 2 * S * L * Z - Z*Z
+					)/(2 * ( ( D*D + F*F + E*E ) * S - D * J * S - F * L * S - E * K * S + D * X + F * Z + E * Y))
+			if( T < T_o ) return T;
 			return -Math.Infinity;
 		}
-		//const T =   (- S*S + J*J * S*S - 2 * J * S * X + X*X )/(2 * ( (-S) +  ( ( D * J * S) - (D * X) ) /v))
 	}
 	{
 
