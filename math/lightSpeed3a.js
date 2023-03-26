@@ -294,8 +294,11 @@ if(0)
 			}
 		}
 
+		ctx.font = "lighter 24px serif";
 		ctx.strokeStyle= "yellow";
 		ctx.strokeWidth= 3;
+		ctx.fillStyle= "yellow";
+		ctx.fillText( "Observed", 10, 10 + 0.5*xscale_);//-L*xscale_ ); 
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
@@ -322,7 +325,39 @@ if(0)
 			doSegA( seg );
 		}
 
+		ctx.strokeStyle= "orange";
+		ctx.fillStyle= "orange";
+		ctx.fillText( "Observed(self)", 10, 10+1.5*xscale_);//-L*xscale_ ); 
+		function doSegASelf( seg ) {
+
+			function _doSeg(tailx,taily, headx, heady) {
+			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily, 0, V, 0, 0, 0, ca, sa, ca, sa ) - now;
+			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady, 0, V, 0, 0, 0, ca, sa, ca, sa ) - now;
+
+			const hdx =  head * (V) * ca +headx ;
+			const hdy =  head * (V) * sa +heady ;
+			const tx =  tail * (V) * ca +tailx ;
+			const ty =  tail * (V) * sa +taily ;
+			ctx.beginPath();
+			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+			ctx.stroke();
+			}
+
+			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		}
+		for( let seg = 0; seg < 20; seg++ ){ 
+			doSegASelf( seg );
+		}
+
+
 		ctx.strokeStyle= "cyan";
+		ctx.fillStyle= "cyan";
+		ctx.fillText( "Observer(from observed)", 10, 10 + 2.5*xscale_);//-L*xscale_ ); 
 		function doSeg( seg ) {
 			function _doSeg(tailx,taily, headx, heady) {
 			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+0*myV*now*ca_o, taily+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
@@ -347,6 +382,32 @@ if(0)
 			doSeg( seg );
 		}
 
+		ctx.strokeStyle= "magenta";
+		ctx.fillStyle= "magenta";
+		ctx.fillText( "Observer(Self)", 10, 10 + 3.5*xscale_);//-L*xscale_ ); 
+		function doSegSelf( seg ) {
+			function _doSeg(tailx,taily, headx, heady) {
+			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )-now;
+			let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )-now;
+			const hdx =  head * (myV) * ca_o +headx ;
+			const hdy =  head * (myV) * sa_o +heady ;
+			const tx =  tail * (myV) * ca_o +tailx ;
+			const ty =  tail * (myV) * sa_o +taily ;
+			ctx.beginPath();
+			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+			ctx.stroke();
+
+			}
+			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		}
+		for( let seg = 0; seg < 20; seg++ ){
+			doSegSelf( seg );
+		}
 	}
 }
 }
@@ -791,12 +852,12 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	const L = V_o.z;
 
 	if( VV == C*C ) {
-		VV -= 0.000000000001;
+		//VV -= 0.000000000001;
 		//solve (S-T)^2 = ((D/sqrt(D*D+E*E+F*F) T - J /CS + X/C)^2 + (E/sqrt(D*D+E*E+F*F) T - K /CS + Y/C)^2 + (F/sqrt(D*D+E*E+F*F) T - L /CS + Z/C)^2)  for T
 		//T = (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2)/(2 (C^2 (-S) + (C D J S)/sqrt(D^2 + E^2 + F^2) + (C E K S)/sqrt(D^2 + E^2 + F^2) + (C F L S)/sqrt(D^2 + E^2 + F^2) - (C D X)/sqrt(D^2 + E^2 + F^2) - (C E Y)/sqrt(D^2 + E^2 + F^2) - (C F Z)/sqrt(D^2 + E^2 + F^2)))
 		//solve S = sqrt((D T - J S + X)^2 + (E T - K S + Y)^2 + (F T - L S + Z)^2)/sqrt(D*D+E*E+F*F) + T for T
 		//T = (D^2 S^2 + F^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z + e^2 S^2 - X^2 - Y^2 - Z^2)/(2 (D^2 S - D J S + D X + F^2 S - F L S + F Z - e K S + e^2 S + e Y))
-		if(0)
+		//if(0)
 		{
 			const T = ( S*S *(  D*D + E*E + F*F )
 						- J*J * S*S + 2 * S * J * X - X*X 
