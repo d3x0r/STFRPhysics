@@ -753,8 +753,126 @@ function realTimeToObservedTime( T, L ) {
 	{return Math.abs(T*V)/C+T;}
 }
 
+function ObservedTime( T, V, P, V_o, P_o ) {
+	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+	const xd = P.x-P_o.x;
+	const yd = P.y-P_o.y;
+	const zd = P.z-P_o.z;
+	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+
+	if( VV === C*C ) {
+		//solve (S-T)^2 = ((D/C T - J /sqrt(J*J+K*K+L*L) S + X/C)^2 + (E/C T - K /sqrt(J*J+K*K+L*L)S + Y/C)^2 + (F/C T - L/sqrt(J*J+K*K+L*L) S + Z/C)^2)  for S
+		//S = (sqrt(J^2 + K^2 + L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2))/(2 C (C T sqrt(J^2 + K^2 + L^2) - D J T - E K T - F L T - J X - K Y - L Z))		
+	}
+
+	{
+	const X = xd;
+	const Y = yd;
+	const Z = zd;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	const tmp = (-C*C * T + D * J * T 
+							+ E * K * T 
+							+ F * L * T 
+							+ J * X + K * Y + L * Z);
+	const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
+	const S = (Math.sqrt(tmp*tmp
+						 - CV
+							*(C*C * T*T
+							- D*D * T*T 
+							- 2 * D * T * X 
+							- E*E * T*T 
+							- 2 * E * T * Y 
+							- F*F * T*T 
+							- 2 * F * T * Z 
+							- xd*xd - yd*yd - zd*zd)
+						) 
+				+ C*C * T - D * J * T - E * K * T - F * L * T - J * X - K * Y - L * Z
+				) / CV;
+	return S;
+	}
+}
+
+function RealTime( T_o, V, P, V_o, P_o ) {
+	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 - 4 (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+	const xd = P.x-P_o.x;
+	const yd = P.y-P_o.y;
+	const zd = P.z-P_o.z;
+	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+	const v = Math.sqrt(VV);
+
+	const S = T_o;
+	const X = xd;
+	const Y = yd;
+	const Z = zd;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	if( VV == C*C ) {
+		//solve (S-T)^2 = ((D/sqrt(D*D+E*E+F*F) T - J /CS + X/C)^2 + (E/sqrt(D*D+E*E+F*F) T - K /CS + Y/C)^2 + (F/sqrt(D*D+E*E+F*F) T - L /CS + Z/C)^2)  for T
+		//T = (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2)/(2 (C^2 (-S) + (C D J S)/sqrt(D^2 + E^2 + F^2) + (C E K S)/sqrt(D^2 + E^2 + F^2) + (C F L S)/sqrt(D^2 + E^2 + F^2) - (C D X)/sqrt(D^2 + E^2 + F^2) - (C E Y)/sqrt(D^2 + E^2 + F^2) - (C F Z)/sqrt(D^2 + E^2 + F^2)))
+
+		const T =   (-C*C * S*S 
+						+ J*J * S*S - 2 * J * S * X 
+						+ K*K * S*S - 2 * K * S * Y 
+						+ L*L * S*S - 2 * L * S * Z 
+						+ X*X + Y*Y + Z*Z
+					)/(2 * (C*C * (-S) 
+						+ C * ( ( D * J * S) + (E * K * S) + (F * L * S) - (D * X) - (E * Y) - (F * Z)) /v))
+		if( T < T_o ) return T; 
+		{
+			//console.log( "Overflowed:", P, V, P_o, V_o, T_o, T );
+			return -Math.Infinity;
+		}
+		//const T =   (- S*S + J*J * S*S - 2 * J * S * X + X*X )/(2 * ( (-S) +  ( ( D * J * S) - (D * X) ) /v))
+	}
+	{
+
+	const tmp = (-C*C * S 
+					+ D * J * S - D * X 
+					+ E * K * S - E * Y 
+					+ F * L * S - F * Z
+					);
+	const CV = C*C - D*D - E*E - F*F;
+	const T = (-Math.sqrt(tmp*tmp 
+							- CV * (C*C * S*S
+									- J*J * S*S 
+									+ 2 * J * S * X 
+									- K*K * S*S 
+									+ 2 * K * S * Y 
+									- L*L * S*S
+									+ 2 * L * S * Z 
+									- X*X - Y*Y - Z*Z)
+							) 
+					+ C*C * S 
+					- D * J * S 
+					+ D * X 
+					- E * K * S 
+					+ E * Y 
+					- F * L * S 
+					+ F * Z
+				)/CV;
+		return T;
+	}
+}
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
+//		if( V !== C )
+	return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
+
 	const xd = X-X_o;
 	const yd = Y-Y_o;
 	const zd = Z-Z_o;
@@ -852,6 +970,7 @@ function update( evt ) {
 
 	showXTGraph = chkLblXTGraph.checked;
 
+	const didAnimate = animate;
 	animate = chkLblNow.checked;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
@@ -862,7 +981,11 @@ function update( evt ) {
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
-	//draw(  );
+
+	if( !animate ) {
+		draw(  );
+	} else if( !didAnimate ) draw();
+
 }
 
 
@@ -926,7 +1049,7 @@ function draw(  ) {
 
 	last_draw_time = now;
 
-
+	if( animate )
 	requestAnimationFrame( draw );
 
 	return;
