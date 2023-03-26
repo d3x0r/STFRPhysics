@@ -446,26 +446,124 @@ function observerTimeToRealPos( T, L ) {
 
 }
 
-function getObservedTimePos( delxt, delyt ){
-	const a = ( Math.sqrt( -V*V*delxt*delxt*sa*sa
-		-V*V*delyt*delyt*ca*ca 
-		+2*V*V*delyt*delyt*sa*ca
-		+C*C*delxt*delxt
-		+C*C*delyt*delyt
-	   )
-			+V*delxt*ca+V*delyt*sa )
-		/ ((C*C-V*V) )
-	if( a > 0 ) return a;
-	const b = ( -Math.sqrt( -V*V*delxt*delxt*sa*sa
-		-V*V*delyt*delyt*ca*ca 
-		+2*V*V*delyt*delyt*sa*ca
-		+C*C*delxt*delxt
-		+C*C*delyt*delyt
-	   )
-			+V*delxt*ca+V*delyt*sa )
-		/ ((C*C-V*V) )
-	return b;
+
+function ObservedTime( T, V, P, V_o, P_o ) {
+	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+	const xd = P.x-P_o.x;
+	const yd = P.y-P_o.y;
+	const zd = P.z-P_o.z;
+	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+
+	if( VV === C*C ) {
+		//solve (S-T)^2 = ((D/C T - J /sqrt(J*J+K*K+L*L) S + X/C)^2 + (E/C T - K /sqrt(J*J+K*K+L*L)S + Y/C)^2 + (F/C T - L/sqrt(J*J+K*K+L*L) S + Z/C)^2)  for S
+		//S = (sqrt(J^2 + K^2 + L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2))/(2 C (C T sqrt(J^2 + K^2 + L^2) - D J T - E K T - F L T - J X - K Y - L Z))		
+	}
+
+	{
+	const X = xd;
+	const Y = yd;
+	const Z = zd;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	const tmp = (-C*C * T + D * J * T 
+							+ E * K * T 
+							+ F * L * T 
+							+ J * X + K * Y + L * Z);
+	const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
+	const S = (Math.sqrt(tmp*tmp
+						 - CV
+							*(C*C * T*T
+							- D*D * T*T 
+							- 2 * D * T * X 
+							- E*E * T*T 
+							- 2 * E * T * Y 
+							- F*F * T*T 
+							- 2 * F * T * Z 
+							- xd*xd - yd*yd - zd*zd)
+						) 
+				+ C*C * T - D * J * T - E * K * T - F * L * T - J * X - K * Y - L * Z
+				) / CV;
+	return S;
+	}
 }
+
+function RealTime( T_o, V, P, V_o, P_o ) {
+	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 - 4 (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+	const xd = P.x-P_o.x;
+	const yd = P.y-P_o.y;
+	const zd = P.z-P_o.z;
+	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+	const v = Math.sqrt(VV);
+
+	const S = T_o;
+	const X = xd;
+	const Y = yd;
+	const Z = zd;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	if( VV == C*C ) {
+		//solve (S-T)^2 = ((D/sqrt(D*D+E*E+F*F) T - J /CS + X/C)^2 + (E/sqrt(D*D+E*E+F*F) T - K /CS + Y/C)^2 + (F/sqrt(D*D+E*E+F*F) T - L /CS + Z/C)^2)  for T
+		//T = (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2)/(2 (C^2 (-S) + (C D J S)/sqrt(D^2 + E^2 + F^2) + (C E K S)/sqrt(D^2 + E^2 + F^2) + (C F L S)/sqrt(D^2 + E^2 + F^2) - (C D X)/sqrt(D^2 + E^2 + F^2) - (C E Y)/sqrt(D^2 + E^2 + F^2) - (C F Z)/sqrt(D^2 + E^2 + F^2)))
+
+		const T =   (-C*C * S*S 
+						+ J*J * S*S - 2 * J * S * X 
+						+ K*K * S*S - 2 * K * S * Y 
+						+ L*L * S*S - 2 * L * S * Z 
+						+ X*X + Y*Y + Z*Z
+					)/(2 * (C*C * (-S) 
+						+ C * ( ( D * J * S) + (E * K * S) + (F * L * S) - (D * X) - (E * Y) - (F * Z)) /v))
+		if( T < T_o ) return T; 
+		{
+			//console.log( "Overflowed:", P, V, P_o, V_o, T_o, T );
+			return -Math.Infinity;
+		}
+		//const T =   (- S*S + J*J * S*S - 2 * J * S * X + X*X )/(2 * ( (-S) +  ( ( D * J * S) - (D * X) ) /v))
+	}
+	{
+
+	const tmp = (-C*C * S 
+					+ D * J * S - D * X 
+					+ E * K * S - E * Y 
+					+ F * L * S - F * Z
+					);
+	const CV = C*C - D*D - E*E - F*F;
+	const T = (-Math.sqrt(tmp*tmp 
+							- CV * (C*C * S*S
+									- J*J * S*S 
+									+ 2 * J * S * X 
+									- K*K * S*S 
+									+ 2 * K * S * Y 
+									- L*L * S*S
+									+ 2 * L * S * Z 
+									- X*X - Y*Y - Z*Z)
+							) 
+					+ C*C * S 
+					- D * J * S 
+					+ D * X 
+					- E * K * S 
+					+ E * Y 
+					- F * L * S 
+					+ F * Z
+				)/CV;
+		return T;
+	}
+}
+
+
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
@@ -542,98 +640,15 @@ function update( evt ) {
 		frame.Ph = {x:ca*V*Treal + L,y:sa*V*Treal};
 		frame.Pt = {x:ca*V*Treal + -L,y:sa*V*Treal};
 
-		const delxc = frame.Po.x - frame.Pc.x;
-		const delyc = frame.Po.y - frame.Pc.y;
-		const delxh = frame.Po.x - frame.Ph.x;
-		const delyh = frame.Po.y - frame.Ph.y;
-		const delxt = frame.Po.x - frame.Pt.x;
-		const delyt = frame.Po.y - frame.Pt.y;
-		// if I was stationary, the time would be delxh
-		// this should basically be V*TReal
-		//const delxyh = Math.sqrt( delxh*delxh + delyh*delyh );
-		// this should basically be V*TReal
-		//const delxyt = Math.sqrt( delxt*delxt + delyt*delyt );
-
-		// + ca*V*T_2, sa*V*T_2
-		// C*T2 = (Po-Ph)+V*T2
-		// C*T2 = Math.sqrt( (delxh + ca*V*T2)^2 +(delyh + sa*V*T2)^2 )
-		//  T_2 = (sqrt(  -4 V^2 X^2 sin^2(a) 
-		//                + 8 V^2 X Y sin(a) cos(a) 
-		//                - 4 V^2 Y^2 cos^2(a) 
-		//                + 4 C^2 X^2 + 4 C^2 Y^2) 
-		//         + 2 V X cos(a) + 2 V Y sin(a))
-		//       /(2 (-V^2 sin^2(a) - V^2 cos^2(a) + C^2))
-		//
-
-		//  T_2 = (sqrt(  -4 V^2 X^2 sin^2(a) 
-		//                - 4 V^2 Y^2 cos^2(a) 
-		//                + 8 V^2 X Y sin(a) cos(a) 
-		//                + 4 C^2 X^2 
-		//                + 4 C^2 Y^2
-		//              ) 
-        //        + 2 V X cos(a) + 2 V Y sin(a))
-		//      /(2 *( C^2-V^2 ))
-
-		// (sin=1 a = 90 degrees)
-		//  delx = -L
-		//  dely = 0
-		//  T_2 = (sqrt(  -4 V^2 X^2
-		//                + 4 C^2 X^2 
-		//                + 4 C^2 Y^2
-		//              ) 
-        //          + 2 V Y )
-		//      /(2 *( C^2-V^2 ))
-
-		// (cos=1 a = 0 degrees)
-		//  delx = -L
-		//  dely = 0
-		//  T_2 = (2*sqrt( - V^2 Y^2 
-		//                 + C^2 X^2 
-		//                 + C^2 Y^2
-		//              ) 
-        //        + 2 V X )
-		//      /(2 *( C^2-V^2 ))
-
-
-		// (C-V)*T2 = (Po-Ph)
-		//   (Po-Ph) / (C-V)
-		const txc = getObservedTimePos( delxc, delyc );
-		/*
-		( Math.sqrt( -4*V*V*delxc*delxc*sa*sa
-							   -4*V*V*delyc*delyc*ca*ca 
-							   +8*V*V*delyc*delyc*sa*ca
-							   +4*C*C*delxc*delxc
-							   +4*C*C*delyc*delyc
-							  )
-					  +2*V*delxc*ca+2*V*delyc*sa )
-					/ (2*(C*C-V*V) )
-					*/
-		const txh = getObservedTimePos( delxh, delyh );/*( Math.sqrt( -4*V*V*delxh*delxh*sa*sa
-							   -4*V*V*delyh*delyh*ca*ca 
-							   +8*V*V*delyh*delyh*sa*ca
-							   +4*C*C*delxh*delxh
-							   +4*C*C*delyh*delyh
-							  )
-					  +2*V*delxh*ca+2*V*delyh*sa )
-					/ (2*(C*C-V*V) )
-					*/
-		const txt = getObservedTimePos( delxt, delyt );/*( Math.sqrt( -4*V*V*delxt*delxt*sa*sa
-							   -4*V*V*delyt*delyt*ca*ca 
-							   +8*V*V*delyt*delyt*sa*ca
-							   +4*C*C*delxt*delxt
-							   +4*C*C*delyt*delyt
-							  )
-					  +2*V*delxt*ca+2*V*delyt*sa )
-					/ (2*(C*C-V*V) )
-					*/
-		//const tyh = delyh/(sa*(C-V))
-		//const txt = delxyt/(ca*(C-V))
+		const ot = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x:-L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
+		const oc = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: 0, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
+		const oh = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
 
 		frame.T_start = Treal;
-		frame.T_end = Treal+hLen+tLen;
-		frame.T_see_c = Treal + txc;
-		frame.T_see_h = Treal + txh;
-		frame.T_see_t = Treal + txt;
+		frame.T_end = (ot>oc)?(oh>ot)?oh:ot :(oc>oh)?oc:oh;
+		frame.T_see_c = oc;
+		frame.T_see_h = oh;
+		frame.T_see_t = ot;
 	}
 
 	         /*
@@ -751,7 +766,10 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 
 	for( let n = -20; n <= 20; n++ ) {
 		const t = (n/20)*L;
-		const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
+		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
+		const time = now-RealTime( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
+
+
 		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
 		centerBox( (frame.Pc.x+t)-ca*V*(time), 500+(frame.Pc.y+sa*V*(time))*xscale, false );
 	}
