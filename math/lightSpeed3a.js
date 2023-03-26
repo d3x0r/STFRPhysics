@@ -7,8 +7,7 @@ const canvas = document.getElementById( "testSurface" );
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
 
-let doLog = false;
-
+let showXTGraph = false;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -31,7 +30,7 @@ const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 201;
+const nFrames = 1;
 let eventFrame = -1;
 
 //------------------ Storage for information about a frame ---------------------------
@@ -68,21 +67,18 @@ class D3xTransform {
 	
 	static get gamma() { return  (C*C-V*V)/C*C };
  	static getObservedTime(X,T,myV) {
-		//const willSee = realTimeToObservedTime( T, L );
-		const dist = Math.sqrt( (X)*(X) + (D*D) )/C;
-const v = V-myV;
-		return  (T-dist)*(1/(C*C-v*v));// (  (1/(C*C-V*V)) * T/C-dist)*D3xTransform.gamma/C;
+		myV = myV || 0;
+		const willSee = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
+		return willSee;
 	}
  	static getObservedPlace(X,T,V,myV) {
-		return observerTimeToRealPos( T, D, X, V, myV )
-		const willSee = realTimeToObservedTime( (1/(C*C-myV*myV))*T, X );
-		const willSeeAt =  (X/C + willSee*V/C);
-		return willSeeAt ;
+ 	   myV = myV || 0;
+		const willSee = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
+		return willSee * V + X;
 	}
  	static getObservedPlace2(X,T) {
-		const willSee = realTimeToObservedTime( T, X );
-		const willSeeAt = X+willSee*V/C;
-		return willSeeAt ;
+		const willSee2 = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
+		return willSee2 * V + X;
 	}
 
 	static GetSeenSpace( C, now, pos, V, L, D ) {
@@ -150,8 +146,8 @@ if(0)
 				const oxo = D3xTransform.getObservedPlace(0,0,0,myV);
 				const oxo2 = D3xTransform.getObservedPlace(runT,0,0,myV);
 				
-				ctx.moveTo( ofs + (xscale_)*(-runT), ofs - (xscale_)*(-now) );
-				ctx.lineTo( ofs + (xscale_)*(runT), ofs - (xscale_)*(-now) );
+				ctx.moveTo( ofs + (xscale_)*(-runT), ofs - (xscale_)*(now) );
+				ctx.lineTo( ofs + (xscale_)*(runT), ofs - (xscale_)*(now) );
 
 				ctx.moveTo( ofs + (xscale_)*(ox), ofs + (xscale_)*(ot) );
 				ctx.lineTo( ofs + (xscale_)*(oxo), ofs + (xscale_)*(oto) );
@@ -170,61 +166,11 @@ if(0)
 
 
 
-	
-		for(let f = 0; f < nFrames; f++ ){
-			const frame = frames[f];
-			const T = frame.T_start;
-if( T > atNow ) break;
-			ctx.beginPath();
-			
-			let front  = observerTimeToRealPos( T, D, L, 0, myV );
-			let center = observerTimeToRealPos( T, D, 0, 0, myV );
-			let back   = observerTimeToRealPos( T, D, -L, 0, myV );
-			if( front.length ) front = front[0];
-			if( center.length ) center = center[0];
-			if( back.length ) back = back[0];
-			
-	
-			const Tc=D3xTransform.getObservedTime(frame.Pc,T, 0)
-			const Th=D3xTransform.getObservedTime(frame.Ph,T, 0)
-			const Tt=D3xTransform.getObservedTime(frame.Pt,T, 0)
-
-			if(0)
-		if( Tc >= -runT && Tc <= runT && frame.T_see_c > -runT)  {
-			var grd = ctx.createLinearGradient(ofs+(back)*xscale_ , 0
-							, ofs+(front)*xscale_, 0);
-			grd.addColorStop(0, `hsl(${Math.floor((1+Tt%3)*120)},100%,50%` );
-			grd.addColorStop(0.5, `hsl(${Math.floor((1+Tc%3)*120)},100%,50%` );
-			grd.addColorStop(1, `hsl(${Math.floor((1+Th%3)*120)},100%,50%` );
-			ctx.strokeStyle= grd;
-
-			//ctx.moveTo( ofs + back*xscale_, ofs + Tt*xscale_ );
-			//ctx.lineTo( ofs + center*xscale_, ofs + Tc*xscale_ );
-			//ctx.lineTo( ofs + front*xscale_, ofs + Th*xscale_ );
-			
-			ctx.moveTo( ofs + back*xscale_, ofs + Tt*xscale_ );
-			ctx.lineTo( ofs + center*xscale_, ofs + Tc*xscale_ );
-			ctx.lineTo( ofs + front*xscale_, ofs + Th*xscale_ );
-			
-			ctx.stroke();
-		}
-			if(0) {
-				// draw ship in real space...
-				ctx.beginPath();
-				ctx.strokeStyle =  `hsl(${frame.hue},100%,50%`
- 				const T1 = timeBiasAtPos( V, frame.Pt, D, 0 )
- 				const T2 = timeBiasAtPos( V, frame.Ph, D, 0 )
-				ctx.moveTo( ofs + (frame.Pt+ T1*V)*xscale_, ofs + (T)*xscale_ );
-				ctx.lineTo( ofs + (frame.Ph + T2*V ) *xscale_, ofs + (T)*xscale_ );
-
-				ctx.stroke();
-			}
-		}
 
 		ctx.strokeWidth= 1.5;
 
 
-		for( let X = -10; X < 20; X+=1 ) {
+		for( let X = -20; X < 20; X+=1 ) {
 			for( let T = 10; T > -10; T-=1 ) {
 
 				{
@@ -236,22 +182,8 @@ if( T > atNow ) break;
 					ctx.lineTo( ofs + (xscale_)*(X), ofs + (xscale_)*(T-1) );
 					ctx.stroke();
 				}	
-
+				if(1)
 				{
-					/*
-					let tail  = observedTimeToRealTimeXYZ2( now, V, -L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-					let head  = observedTimeToRealTimeXYZ2( now, V, +L+V*now*ca, 0-D+V*now*sa, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-
-					const hdx =  head * (V) * ca +L - now*myV*ca_o;
-					const hdy =  head * (V) * sa -D  - now*myV*sa_o;
-					const tx =  tail * (V) * ca - L - now*myV*ca_o;
-					const ty =  tail * (V) * sa -D - now*myV*sa_o;
-					ctx.beginPath();
-					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-					ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
-					ctx.stroke();
-					*/
 
 					let here  = observedTimeToRealTimeXYZ2( now, V, +V*now*ca + X, T+V*now*sa-D, 0, myV, now*myV*ca_o, now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 					const hx =  here * (V) * ca + X - now*myV*ca_o;
@@ -296,11 +228,11 @@ if( T > atNow ) break;
 					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
 					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
 					ctx.stroke();
-}
+					}
 					
 				}
 
-			if( false ) {
+			if( showXTGraph) {
 					ctx.beginPath();
 					const ox  = D3xTransform.getObservedPlace2(X,T);
 					const oxo = D3xTransform.getObservedPlace2(X+1,T);
@@ -313,6 +245,7 @@ if( T > atNow ) break;
 				ctx.strokeStyle= "green";
 			}
 			else{
+				ctx.lineWidth = 2;
 				ctx.strokeStyle= "yellow";
 			}
 					ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
@@ -329,6 +262,7 @@ if( T > atNow ) break;
 					ctx.stroke();
 
 			}
+		ctx.lineWidth = 1;
 
 			if( false ) { // draw what happens to me relative to a stationary world. (show real velocity)
 				ctx.beginPath();
@@ -675,6 +609,7 @@ const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
+//- - - - - - - - - - - - - - 
 const spanChkNow = document.createElement( "span" );
 spanChkNow.textContent = " |Animate";
 controls.appendChild( spanChkNow );
@@ -685,39 +620,28 @@ chkLblNow.checked = animate;
 controls.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
+//- - - - - - - - - - - - - - 
+const spanChkXTGraph = document.createElement( "span" );
+spanChkXTGraph.textContent = " |XT Graph";
+controls.appendChild( spanChkXTGraph );
+
+const chkLblXTGraph = document.createElement( "input" );
+chkLblXTGraph.setAttribute( "type", "checkbox" );
+chkLblXTGraph.checked = showXTGraph;
+controls.appendChild( chkLblXTGraph );
+chkLblXTGraph.addEventListener( "input", update );
+
+//----------------------
+
 span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
+
+
+
 update();
 
 const body = [];
-
-/*
-for( t = -5; t < 5; t += 0.02 ) {
-	const b = { t : V*t - 1, c:V*t, h:V*t+1 };
-	const delay = { t: Math.sqrt( ((D*D)/(C*C)) + b.t*b.t), c: Math.sqrt( ((D*D)/(C*C)) + b.c*b.c), h: Math.sqrt( ((D*D)/(C*C)) + b.h*b.h) };
-	const appear = { t: delay.t+t, c:delay.c+t, h:delay.h+t };
-	body.push( { hue:(t%3)*60, pos:b, delay, appear } );
-}
-
-// speed around clock
-// CT = VT + Ct
-//
-x' =   g -gv   x
-t'    -gv g    t
- x(1 - v) / sqrt( cc-vv)
-
-g t(1 - v)
-
-
-g   gv   x'
-gv  g    t'
-
-g x'(1 + v)
-g t'(1 + v)
- 
-*/
-
 
 
 function realTimeToObservedTime( T, L ) {
@@ -829,87 +753,8 @@ function realTimeToObservedTime( T, L ) {
 	{return Math.abs(T*V)/C+T;}
 }
 
-// rt2ot( T, 0)
-//   obsT = T(V/C+1)
-// rt2ot( T+e, 0 );
-//   (T+e)(V/C+1)
-
-// T = real time
-// P = Phase  // offset the spin phase against real time
-// Lx,Ly,Lz = body Local x,y,z to go from
-// Ax,Ay,Az = body local spin axis to apply rotation of Lx,Ly,Lz
-
-function realTimeToObservedTimeSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az ) {
-
-	let R = 0; // Rotation rate, implicit from velocity.
-	if( V <= C ) {
-		// compute in arc-length === physical length = 1
-		R = Math.sqrt( C^2 - V^2 )/ 2*Math.PI;
-	} else {
-		// compute in arc-length === physical length = 1
-		R = -Math.sqrt( V^2 - C^2 )/ 2*Math.PI;
-	}
-	const ang = S*(T+P)*R 
-	const s = Math.sin( ang );
-	const c = Math.cos( ang );
-	const dot =  (1-c)*(( Ax * Lx ) + (Ay*Ly)+(Az*Lz));
-	const L = { x:Lx*c + s*(Ay * Lz - Az * Ly) + Ax * dot
-	          , y:Ly*c + s*(Az * Lx - Ax * Lz) + Ay * dot
-	          , z:Lz*c + s*(Ax * Ly - Ay * Lx) + Az * dot };
-
-	const pos = (V*T) + L.x;
-	return Math.sqrt( L.z*L.z + (D+L.y)*(D+L.y) + pos*pos )/C+T;
-}
-
-/*
-$$ x=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((V*T) + A)^2 )}/C+T;$$
-
-$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
-
-
-/*
-function realTimeToObservedTimeSpin( T, Lx, Ly, Lz, Ax, Ay, Az ) {
-
-
-if(0) {
-		// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
-		const c = Math.cos(q.θ);
-		const s = Math.sin(q.θ);
-
-		const qx = q.nx, qy = q.ny, qz = q.nz;
-		const vx = v.x , vy = v.y , vz = v.z;
-		// (1-cos theta) * dot
-		// 1-cos theta * cos(angle between vectors)
-		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
-		return new vectorType(
-			  vx*c + s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
-}
-}
-*/
-
-function observedTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
-
-	//Lx
-	if( C === V ) {
-		const num = Lx*Lx-C*C*TT*T + D*D + 2*D*Ly + Ly*Ly + Lz*Lz;
-		const den = C*(2*Lx+2*C*T);
-		return [ num/den, num/den ];
-	} else {
-		const num = Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const num2 = -Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const den = 2*(C*C-V*V);
-		return [ num/den, num2/den ];
-	}
-}
-
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
-	//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
-
-	//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
 	const xd = X-X_o;
 	const yd = Y-Y_o;
 	const zd = Z-Z_o;
@@ -936,14 +781,15 @@ function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa
 			return -Math.Infinity;
 	}
 
-{
-	//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V yd sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J yd sin(E) - X^2 - yd^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V yd sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
-	const tmp = (T_o * V_o * V * sa * sa_o
+	{
+		//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
+		//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
+		const tmp = (T_o * V_o * V * sa * sa_o
 					+ T_o * V_o * V * ca * ca_o
 					- V * xd * ca
 					- V * yd * sa 
 					- T_o * C*C);
-	const T = (-Math.sqrt(tmp*tmp 
+		const T = (-Math.sqrt(tmp*tmp 
 					- (C*C-V*V ) 
 					*(T_o*T_o * C*C 
 						- T_o*T_o * V_o*V_o
@@ -954,133 +800,11 @@ function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa
 				+ V * xd * ca
 				+ V * yd * sa
 				+ T_o * C*C)/(C*C-V*V);
-	return T;
-}	
-
-	{
-		const tmp = (
-			T_o * V_o * V * ( sa * sa_o + ca * ca_o )
-			- V * xd * ca 
-			- V * yd * sa 
-			- T_o * C*C);
-		const T = (-Math.sqrt( tmp*tmp 
-				- (C*C-V*V) 
-					* ( T_o*T_o * C*C
-						- T_o*T_o * V_o*V_o 
-						+ 2 * T_o * V_o * xd * ca_o 
-						+ 2 * T_o * V_o * yd * sa_o 
-						- xd*xd - yd*yd
-						- zd*zd
-					)) 
-			- T_o * V_o * V * sa * sa_o 
-			- T_o * V_o * V * ca * ca_o 
-			+ V * xd * ca 
-			+ V * yd * sa 
-			+ T_o * C*C)
-			/ ( C*C-V*V);
-		if( T < T_o )
 		return T;
-		const T2 = (Math.sqrt( tmp*tmp 
-				- (C*C-V*V) 
-					* (   T_o*T_o * C*C
-						- T_o*T_o * V_o*V_o 
-						+ 2 * T_o * V_o * xd * ca_o 
-						+ 2 * T_o * V_o * yd * sa_o 
-						- xd*xd - yd*yd
-						- zd*zd
-					)) 
-			- T_o * V_o * V * sa * sa_o 
-			- T_o * V_o * V * ca * ca_o 
-			+ V * xd * ca 
-			+ V * yd * sa 
-			+ T_o * C*C)
-			/ ( C*C-V*V);
-		if( T < T_o )
-		return T2;
-		return 0;
-		//debugger;
-	}
-}
-
-function observedTimeToRealTimeXYZ( T_o, V, X, Y, Z ){
-	// T_o = ( sqrt(Z^2+( Y + -sin(A)VT)^2+(cos(A)VT+X)^2))/C+T
-	const answer = [];
-	{
-		const tmp = -(V * X * ca
-			+ V * Y * sa 
-			+ T_o * C*C);
-		const A = (-Math.sqrt(tmp*tmp 
-				- (C*C-V*V ) * (T_o*T_o * C*C - X*X - Y*Y - Z*Z)) 
-				+ V * X * ca
-				+ V * Y * sa
-				+ T_o * C*C)
-			/(C*C - V*V );
-
-		answer.push(A);
-	}
-	{
-		const tmp = -(V * X * ca
-			+ V * Y * sa
-			+ T_o * C^2)
-		const A = (Math.sqrt(tmp*tmp 
-			- (C*C-V*V)*(T_o*T_o * C*C - X*X - Y*Y - Z*Z)) 
-			+ V * X * ca
-			+ V * Y * sa
-			+ T_o * C*C)
-			/(C*C - V*V);
-		answer.push(A);
-	}
-	return answer;
-}
-
-function observedTimeToRealTime( T, L ) {
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
-
-	if( C==V ) {
-		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a];
-		return [];
-	}
-
-	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-//	const a =   C*T(C - V )/(C*C - V*V);
-
-	if( a < T ) r.push(a);
-	// positive solution walks backwards...
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( b < T ) r.push(b); 
-	if( doLog ) console.log( "B was", b)
-	return r;
+	}	
 
 }
 
-function observerTimeToRealPos( T, D, L, V, myV ) {
-//	if( myV === undefined ) myV = V*V; else myV = myV*myV;
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
-	
-	if( C==V ) {
-		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a*V+L];
-		return [];
-	}
-
-	const v = V-myV;
-	const r = [];
-	// positive solution walks backwards...
-	const a =  (C*C*T + L*v - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*v*T + v*v*(C*C*T*T- D*D)))/(C*C - v*v) * (C*C-v*v);
-	doLog && console.log( "A was", T, L, a)
-	//if( L > T*v ) if( Math.abs(a) < T ) r.push(a*v+L);
-	if( a < T ) r.push(a*v+L);
-	const b = (C*C*T + L*v + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*v*T + v*v*(C*C*T*T- D*D)))/(C*C - v*v) * (C*C-v*v);
-	//if( L > T*v ) if( Math.abs(b) < T ) r.push(b*v+L);
-	if( b < T ) r.push(b*v+L); 
-	doLog && console.log( "B was", T, L, b)
-	return r;
-
-}
 
 
 
@@ -1126,6 +850,8 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
 
+	showXTGraph = chkLblXTGraph.checked;
+
 	animate = chkLblNow.checked;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
@@ -1135,52 +861,10 @@ function update( evt ) {
 		now = (Number(sliderNow.value)/100*runT/2);
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
-	if( eventFrame>=0 ) {
-		frames[eventFrame].event = false;
-		eventFrame = -1;
-	}
-
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
-	doLog = true;
-
-	for( let n = 0; n < nFrames; n++ ) {
-		const del = n/nFrames;
-		const now = (del * runT)-runT/2;
-		const Treal = (del * runT)-runT/2;
-		const frame = frames[n];
-		frame.hue =120*(now%3)-240;
-		frame.T_start = now;
-
-			frame.Po = now*myV;
-			frame.Pc = now*V 
-			frame.Ph = frame.Pc+L;
-			frame.Pt = frame.Pc-L;
-			frame.T_see_h = realTimeToObservedTime( now, L );
-			frame.T_see_c = realTimeToObservedTime( now, 0 );
-			frame.T_see_t = realTimeToObservedTime( now, -L );
-
-			frame.P_see_h = frame.T_see_h * myV;
-			frame.P_see_c = frame.T_see_c * myV;
-			frame.P_see_t = frame.T_see_t * myV;
-
-	}
-
-	doLog = false;
 	//draw(  );
 }
 
-
-	function eventMark( t,o,f ) {
-		const y = 0;
-		
-		if(f)ctx.strokeStyle = "magenta";
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-		ctx.moveTo( 500+(t) * xscale + 10, o+y );
-		ctx.lineTo( 500+(t) * xscale - 10, o+y );
-		ctx.stroke();
-	}
-	
 
 	function headTri( t,o,f ) {
 		const y = 0;
@@ -1223,7 +907,6 @@ function update( evt ) {
 	}
 
 
-
 let last_draw_time = 0;
 const xscale = 100;
 const yscale = 100;
@@ -1231,210 +914,17 @@ let didEvent = false;
 const photonStart = 100;
 function draw(  ) {
 	
-	const beamX = canvas.width/2;
-	const beamY = canvas.height/2 + 40;
-
 	if( animate ) {
 		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
 		sliderNow.value =100*now*2/runT
 		spanNow.textContent = now.toFixed(2);
 	}
-
-	ctx.clearRect( 0, 0, 1024, 1024);
-	ctx.strokeStyle = "blue";
+	ctx.clearRect( 0, 0, canvas.width, canvas.height );
     D3xTransform.drawCoords( now );
-	curFrame = nFrames;  // draw all frames
-	let drawP = null, drawT = null, drawH = null;
-	let drawP2 = null,drawT2 = null,drawH2 = null;
-	const toY = D*yscale+photonStart;
-	for( let f = 0; f < curFrame; f++ ) {
-		const frame = frames[f];
 
-		if(0)
-		if( frame.T_start < now ) {
-			// stationary observer, moving train
-			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
-			ctx.beginPath();
-			ctx.moveTo( 500 + frame.Pc*xscale, photonStart );
-			ctx.lineTo( 500 + frame.P_see_c*xscale, toY );
-			//ctx.moveTo( 500 + frame.Pt*xscale, photonStart );
-			//ctx.lineTo( 500 + frame.P_see_t*xscale, toY );
-			//ctx.moveTo( 500 + frame.Ph*xscale, photonStart );
-			//ctx.lineTo( 500 + frame.P_see_h*xscale, toY );
-			ctx.stroke();
-		}
-		ctx.fillStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
-
-
-	/*
-// from that link in docs about train...
-dt = t'+vx'/cc  / sqrt(1-vv/cc)
-
-t/sqrt = -vx/cc /sqrt
-
-t= -v x / cc
-
-     -13s
-
-0 = t' + L/c  // goes away... / sqrt(0.5)     /0.707/
-
-t' = L/C s
-*/
-		const ofs = 500;
-
-if(0) {		
-		if( frame.T_start <now && frame.T_see_c>now) {
-			const del = frame.T_see_c - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			
-			centerBoxXY( (ofs+frame.Pc*xscale)*(1-delT) + (ofs+frame.P_see_c*xscale)*(delT), photonStart*(1-delT)+toY*(delT), false );
-			if( frame.event ) {
-				eventMark( (frame.Pc)*(1-delT), photonStart*(1-delT)+toY*(delT), true );
-			}
-			ctx.beginPath();
-			ctx.arc(500+(frame.Pc)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-			ctx.stroke()
-		}
-
-		const willBe = frame.Phc + V*(frame.T_start-now);
-		if( frame.T_start <now && frame.T_see_h>now) {
-			const del = frame.T_see_h - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			headTri( (frame.Ph)*(1-delT) +(delT)*(frame.P_see_h), photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
-			ctx.beginPath();
-			ctx.arc(500+(frame.Ph)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-			ctx.stroke()
-
-		}
-		if( frame.T_start <now && frame.T_see_t>now) {
-			const del = frame.T_see_t - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			tailTri( (frame.Pt)*(1-delT)+(delT)*(frame.P_see_t), photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
-			if(1){ // draw circles around tail
-				ctx.beginPath();
-				ctx.arc(500+(frame.Pt)*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-				ctx.stroke()
-			}
-		}
-	}
-	}
-
-	centerBoxXY( (500+D2*xscale), toY, true );
-
-if( eventFrame >= 0 )
-	{
-	 	const frame = frames[eventFrame];
-		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
-if(0)
-		if( now < frame.T_see_c ) {
-			centerBoxXY( (500+frame.Pc*xscale), 40, false );
-			if( frame.event ) {
-				eventMark( (frame.Pc), 40, true );
-			}
-		}
-		if( now < frame.T_see_h ) {
-			headTri( (frame.Pc+L) , 40 );
-			if( frame.event ) eventMark( (frame.Pc+L) , 40, true );
-		}
-		if( now < frame.T_see_t ) {
-			tailTri( (frame.Pc-L), 40 );
-			if( frame.event ) eventMark( (frame.Pc-L), 40, true );
-		}
-
-	}
-	//if( drawP !== frames[0] ) 
-	{
-
-/*
-	if( drawP )
-		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
-	if( drawP2 )
-		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
-	if( drawH !== frames[0] )
-	if( drawH )
-		headTri( drawH.Pc+L, 30, true );
-	if( drawH2 )
-		headTri( drawH2.Pc+L, 30, true );
-	if( drawT !== frames[0] )
-	if( drawT )
-		tailTri( drawT.Pc-L, 30, true );
-	if( drawT2 )
-		tailTri( drawT2.Pc-L, 30, true );
-
-*/
-	}
 
 
 	last_draw_time = now;
-
-	
-/*
-	const frontT  = observedTimeToRealTime( now,  L );
-	const centerT = observedTimeToRealTime( now,  0 );
-	const backT   = observedTimeToRealTime( now, -L );
-	const front  = observerTimeToRealPos( now,  L );
-	const center = observerTimeToRealPos( now,  0 );
-	const back   = observerTimeToRealPos( now, -L );
-	for( let f of front )
-		headTri( f, 6 );
-	for( let b of back )
-		tailTri( b, 6 );
-	for( let c of center )
-		centerBox( c, 6 );
-*/
-if(0) { // old realtive calculation (motionless thing)
-	if( drawP && drawH )
-	if( center.length > 1 && front.length > 1 ) {
-		//console.log( "blah:", center[1], front[1], back[1] );
-		var grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
-		grd.addColorStop(0, `hsl(${drawH.hue},100%,50%` );
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
-	}
-	if( drawP && drawT )
-	if( center.length > 1 && back.length > 1 ) {
-		var grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		grd.addColorStop(0, `hsl(${drawT.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
-	}
-	drawP = drawP2 || drawP;
-	drawH = drawH2 || drawH;
-	drawT = drawT2 || drawT;
-	if( drawP && drawH )
-	if( center.length > 0 && front.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(center[0])*xscale , 0, 500+(front[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawP.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
-	}
-	if( drawP && drawT )
-	if( center.length > 0 && back.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(center[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawT.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawP.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
-	}
-
-	ctx.fillStyle = "black"
-}
-
-
-
-	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-	ctx.fillRect( 500+(-L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri(  + L, 20, true );
-	tailTri(  - L, 20, true );
-	centerBox( 0, 20, true );
 
 
 	requestAnimationFrame( draw );
