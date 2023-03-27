@@ -783,23 +783,10 @@ function realTimeToObservedTime( T, L ) {
 
 function ObservedTime( T, V, P, V_o, P_o ) {
 	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
-	const xd = P.x-P_o.x;
-	const yd = P.y-P_o.y;
-	const zd = P.z-P_o.z;
+	const X = P.x-P_o.x;
+	const Y = P.y-P_o.y;
+	const Z = P.z-P_o.z;
 	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
-
-	if( VV === C*C ) {
-		//solve (S-T)^2 = ((D/C T - J /sqrt(J*J+K*K+L*L) S + X/C)^2 + (E/C T - K /sqrt(J*J+K*K+L*L)S + Y/C)^2 + (F/C T - L/sqrt(J*J+K*K+L*L) S + Z/C)^2)  for S
-		//S = (sqrt(J^2 + K^2 + L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2))/(2 C (C T sqrt(J^2 + K^2 + L^2) - D J T - E K T - F L T - J X - K Y - L Z))		
-		//solve S = sqrt((D T - J S + X)^2 + (E T - K S + Y)^2 + (F T - L S + Z)^2)/sqrt(J*J+K*K+L*L) + T for S
-		//S = (D^2 T^2 + 2 D T X + F^2 T^2 + 2 F T Z - J^2 T^2 - K^2 T^2 - L^2 T^2 + e^2 T^2 + 2 e T Y + X^2 + Y^2 + Z^2)/(2 (D J T + F L T + J^2 (-T) + J X - K^2 T + e K T + K Y - L^2 T + L Z))
-	}
-
-	{
-	const X = xd;
-	const Y = yd;
-	const Z = zd;
-
 	const D = V.x;
 	const E = V.y;
 	const F = V.z;
@@ -808,24 +795,23 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	const K = V_o.y;
 	const L = V_o.z;
 
-	const tmp = (-C*C * T + D * J * T 
-							+ E * K * T 
-							+ F * L * T 
-							+ J * X + K * Y + L * Z);
+	const jsx = X+J*T;
+	const ksy = Y+K*T;
+	const lsz = Z+L*T;
+
+	const tmp = (-C*C * T + jsx + ksy + lsz );
+	const tmp2 = ( T*T * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
+
+	if( Math.abs(VV - C*C) < 0.000001 ) {
+		const T =  tmp2/( 2*tmp )
+		if( T < T_o ) return T;
+		return -Math.Infinity;
+	}
+
+	{
+
 	const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
-	const S = (Math.sqrt(tmp*tmp
-						 - CV
-							*(C*C * T*T
-							- D*D * T*T 
-							- 2 * D * T * X 
-							- E*E * T*T 
-							- 2 * E * T * Y 
-							- F*F * T*T 
-							- 2 * F * T * Z 
-							- xd*xd - yd*yd - zd*zd)
-						) 
-				+ C*C * T - D * J * T - E * K * T - F * L * T - J * X - K * Y - L * Z
-				) / CV;
+	const S = (Math.sqrt(tmp*tmp + CV*tmp) + tmp2 ) / CV;
 	return S;
 	}
 }
@@ -836,7 +822,6 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	const yd = P.y-P_o.y;
 	const zd = P.z-P_o.z;
 	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
-	const v = Math.sqrt(VV);
 
 	const S = T_o;
 	const X = xd;
@@ -851,76 +836,23 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	const K = V_o.y;
 	const L = V_o.z;
 
-	if( VV == C*C ) {
-		//VV -= 0.000000000001;
-		//solve (S-T)^2 = ((D/sqrt(D*D+E*E+F*F) T - J /CS + X/C)^2 + (E/sqrt(D*D+E*E+F*F) T - K /CS + Y/C)^2 + (F/sqrt(D*D+E*E+F*F) T - L /CS + Z/C)^2)  for T
-		//T = (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2)/(2 (C^2 (-S) + (C D J S)/sqrt(D^2 + E^2 + F^2) + (C E K S)/sqrt(D^2 + E^2 + F^2) + (C F L S)/sqrt(D^2 + E^2 + F^2) - (C D X)/sqrt(D^2 + E^2 + F^2) - (C E Y)/sqrt(D^2 + E^2 + F^2) - (C F Z)/sqrt(D^2 + E^2 + F^2)))
-		//solve S = sqrt((D T - J S + X)^2 + (E T - K S + Y)^2 + (F T - L S + Z)^2)/sqrt(D*D+E*E+F*F) + T for T
-		//T = (D^2 S^2 + F^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z + e^2 S^2 - X^2 - Y^2 - Z^2)/(2 (D^2 S - D J S + D X + F^2 S - F L S + F Z - e K S + e^2 S + e Y))
-		//if(0)
-		{
-			const T = ( S*S *(  D*D + E*E + F*F )
-						- J*J * S*S + 2 * S * J * X - X*X 
-						- K*K * S*S + 2 * S * K * Y - Y*Y 
-						- L*L * S*S + 2 * S * L * Z - Z*Z
-					)/(2 * ( ( D*D + F*F + E*E ) * S - D * J * S - F * L * S - E * K * S + D * X + F * Z + E * Y))
-			if( T < T_o ) return T;
-			if(0)  // this is a bad solve...
-			{
-				//solve S = sqrt((-D T + J S + X)^2 + (-E T + K S + Y)^2 + (-F T +L S + Z)^2)/sqrt(D*D+E*E+F*F) + T for T
-				//T = (-D^2 S^2 - F^2 S^2 + J^2 S^2 + 2 J S X + K^2 S^2 + 2 K S Y + L^2 S^2 + 2 L S Z - e^2 S^2 + X^2 + Y^2 + Z^2)/(-2 D^2 S + 2 D J S + 2 D X - 2 F^2 S + 2 F L S + 2 F Z + 2 e K S - 2 e^2 S + 2 e Y)
-				const T =  (-D*D * S*S 
-									- E*E * S*S
-									- F*F * S*S 
-									+ J*J * S*S + 2 * J * S * X 
-									+ K*K * S*S + 2 * K * S * Y 
-									+ L*L * S*S + 2 * L * S * Z 
-									+ X*X + Y*Y + Z*Z
-								)/(-2 * D*D * S + 2 * D * J * S + 2 * D * X - 2 * F*F * S + 2 * F * L * S + 2 * F * Z + 2 * E * K * S - 2 * E*E * S + 2 * E * Y)
-			if( T < T_o ) return T;
-				return T;
-			}
-			{
-				// T = (D^2 S^2 + F^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z + e^2 S^2 - X^2 - Y^2 - Z^2)/(2 (D^2 S - D J S + D X + F^2 S - F L S + F Z - e K S + e^2 S + e Y))
-				const T = (D*D * S*S + F*F * S*S 
-							- J*J * S*S + 2 * J * S * X 
-							- K*K * S*S + 2 * K * S * Y 
-							- L*L * S*S + 2 * L * S * Z + E*E * S*S - X*X - Y*Y - Z*Z
-						)/(2 * (D*D * S - D * J * S + D * X + F*F * S - F * L * S + F * Z - E * K * S + E*E * S + E * Y))
-				if( T < T_o ) return T;
-			}
+	const jsx = X-J*S;
+	const ksy = Y-K*S;
+	const lsz = Z-L*S;
 
-			return -Math.Infinity;
-		}
+	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
+	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
+
+	if( Math.abs(VV - C*C) < 0.000001 ) {
+		const T =  tmp2/( 2*tmp )
+		if( T < T_o ) return T;
+
+		return -Math.Infinity;
 	}
-	{
-
-	const tmp = (-C*C * S 
-					+ D * J * S - D * X 
-					+ E * K * S - E * Y 
-					+ F * L * S - F * Z
-					);
+	
 	const CV = C*C - VV;
-	const T = (-Math.sqrt(tmp*tmp 
-							- CV * (C*C * S*S
-									- J*J * S*S 
-									+ 2 * J * S * X 
-									- K*K * S*S 
-									+ 2 * K * S * Y 
-									- L*L * S*S
-									+ 2 * L * S * Z 
-									- X*X - Y*Y - Z*Z)
-							) 
-					+ C*C * S 
-					- D * J * S 
-					+ D * X 
-					- E * K * S 
-					+ E * Y 
-					- F * L * S 
-					+ F * Z
-				)/CV;
-		return T;
-	}
+	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+	return T;
 }
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
