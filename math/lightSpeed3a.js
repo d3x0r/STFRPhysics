@@ -19,8 +19,8 @@ let L=1; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
 let D=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let D2=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
-let V=0.6184; // velocity  (m/s)
-let myV=0.6184; // velocity  (m/s)
+let V=0.6184/5; // velocity  (m/s)
+let myV=0.5*0.6184/5; // velocity  (m/s)
 let S=1.0; // time scalar (s/s)
 let runT = 20;
 let E = 0;
@@ -69,16 +69,16 @@ class D3xTransform {
  	static getObservedTime(X,T,myV) {
 		myV = myV || 0;
 		const willSee = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
-		return willSee;
+		return willSee[0];
 	}
  	static getObservedPlace(X,T,V,myV) {
  	   myV = myV || 0;
 		const willSee = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
-		return willSee * V + X;
+		return willSee[0] * V + X;
 	}
  	static getObservedPlace2(X,T) {
 		const willSee2 = observedTimeToRealTimeXYZ2( T, V, X, D, 0, myV, 0, 0, 0, 1, 0, 1, 0 );
-		return willSee2 * V + X;
+		return willSee2[0] * V + X;
 	}
 
 	static GetSeenSpace( C, now, pos, V, L, D ) {
@@ -186,14 +186,14 @@ if(0)
 				{
 
 					let here  = observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-					const hx =  here * (V) * ca + X - now*myV*ca_o;
-					const hy =  here * (V) * sa + T-D - now*myV*sa_o;
+					const hx =  here[0] * (V) * ca + X - now*myV*ca_o;
+					const hy =  here[0] * (V) * sa + T-D - now*myV*sa_o;
 					let right = observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X+1, T+0*V*now*sa-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-					const rx =  right * (V) * ca + (X+1) - now*myV*ca_o;
-					const ry =  right * (V) * sa + T-D - now*myV*sa_o;
+					const rx =  right[0] * (V) * ca + (X+1) - now*myV*ca_o;
+					const ry =  right[0] * (V) * sa + T-D - now*myV*sa_o;
 					let next   = observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa+1-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-					const nx =  next * (V) * ca + X - now*myV*ca_o;
-					const ny =  next * (V) * sa + (T+1)-D - now*myV*sa_o;
+					const nx =  next[0] * (V) * ca + X - now*myV*ca_o;
+					const ny =  next[0] * (V) * sa + (T+1)-D - now*myV*sa_o;
 
 					ctx.beginPath();
 				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
@@ -206,18 +206,39 @@ if(0)
 					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
 					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
 					ctx.stroke();
+					if( here.length > 1 )
+					{
+					const hx =  here[1] * (V) * ca + X - now*myV*ca_o;
+					const hy =  here[1] * (V) * sa + T-D - now*myV*sa_o;
+					const rx =  right[1] * (V) * ca + (X+1) - now*myV*ca_o;
+					const ry =  right[1] * (V) * sa + T-D - now*myV*sa_o;
+					const nx =  next[1] * (V) * ca + X - now*myV*ca_o;
+					const ny =  next[1] * (V) * sa + (T+1)-D - now*myV*sa_o;
+
+					ctx.beginPath();
+				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
+					ctx.strokeStyle= "red";
+					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
+					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
+					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+					ctx.stroke();
+					}
 
 					{
 					let here  = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const hx =  here * (myV) * ca_o + X - now*V*ca;
-					const hy =  here * (myV) * sa_o + T+D - now*V*sa;
+					const hx =  here[0] * (myV) * ca_o + X - now*V*ca;
+					const hy =  here[0] * (myV) * sa_o + T+D - now*V*sa;
 
 					let right = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X+1, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const rx =  right * (myV) * ca_o + (X+1) - now*V*ca;
-					const ry =  right * (myV) * sa_o + T+D - now*V*sa;
+					const rx =  right[0] * (myV) * ca_o + (X+1) - now*V*ca;
+					const ry =  right[0] * (myV) * sa_o + T+D - now*V*sa;
 					let next   = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T+1, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const nx =  next * (myV) * ca_o + X - now*V*ca;
-					const ny =  next * (myV) * sa_o + (T+1)+D - now*V*sa;
+					const nx =  next[0] * (myV) * ca_o + X - now*V*ca;
+					const ny =  next[0] * (myV) * sa_o + (T+1)+D - now*V*sa;
 
 					ctx.beginPath();
 					ctx.strokeStyle= "green";
@@ -305,16 +326,28 @@ if(0)
 			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx+0*V*now*ca, taily+0*V*now*sa, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 			let head  = observedTimeToRealTimeXYZ2( now, V, headx+0*V*now*ca, heady+0*V*now*sa, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 
-			const hdx =  head * (V) * ca +headx - now*myV*ca_o;
-			const hdy =  head * (V) * sa +heady  - now*myV*sa_o;
-			const tx =  tail * (V) * ca +tailx - now*myV*ca_o;
-			const ty =  tail * (V) * sa +taily - now*myV*sa_o;
+			const hdx =  head[0] * (V) * ca +headx - now*myV*ca_o;
+			const hdy =  head[0] * (V) * sa +heady  - now*myV*sa_o;
+			const tx =  tail[0] * (V) * ca +tailx - now*myV*ca_o;
+			const ty =  tail[0] * (V) * sa +taily - now*myV*sa_o;
+			ctx.beginPath();
+			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+			ctx.stroke();
+			if( head.length > 1 ) {
+			const hdx =  head[1] * (V) * ca +headx - now*myV*ca_o;
+			const hdy =  head[1] * (V) * sa +heady  - now*myV*sa_o;
+			const tx =  tail[1] * (V) * ca +tailx - now*myV*ca_o;
+			const ty =  tail[1] * (V) * sa +taily - now*myV*sa_o;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
 			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
 			ctx.stroke();
 			}
+
+		}
 
 			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
 			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
@@ -331,8 +364,8 @@ if(0)
 		function doSegASelf( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily, 0, V, 0, 0, 0, ca, sa, ca, sa ) - now;
-			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady, 0, V, 0, 0, 0, ca, sa, ca, sa ) - now;
+			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
+			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
 
 			const hdx =  head * (V) * ca +headx ;
 			const hdy =  head * (V) * sa +heady ;
@@ -362,10 +395,10 @@ if(0)
 			function _doSeg(tailx,taily, headx, heady) {
 			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+0*myV*now*ca_o, taily+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
 			let head  = observedTimeToRealTimeXYZ2( now, myV, headx+0*myV*now*ca_o, heady+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
-			const hdx =  head * (myV) * ca_o +headx - now*V*ca;
-			const hdy =  head * (myV) * sa_o +heady +D  - now*V*sa;
-			const tx =  tail * (myV) * ca_o +tailx - now*V*ca;
-			const ty =  tail * (myV) * sa_o +taily +D - now*V*sa;
+			const hdx =  head[0] * (myV) * ca_o +headx - now*V*ca;
+			const hdy =  head[0] * (myV) * sa_o +heady +D  - now*V*sa;
+			const tx =  tail[0] * (myV) * ca_o +tailx - now*V*ca;
+			const ty =  tail[0] * (myV) * sa_o +taily +D - now*V*sa;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
@@ -387,8 +420,8 @@ if(0)
 		ctx.fillText( "Observer(Self)", 10, 10 + 3.5*xscale_);//-L*xscale_ ); 
 		function doSegSelf( seg ) {
 			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )-now;
-			let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )-now;
+			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
+			let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
 			const hdx =  head * (myV) * ca_o +headx ;
 			const hdy =  head * (myV) * sa_o +heady ;
 			const tx =  tail * (myV) * ca_o +tailx ;
@@ -782,11 +815,14 @@ function realTimeToObservedTime( T, L ) {
 }
 
 function ObservedTime( T, V, P, V_o, P_o ) {
-	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for S and T.
+	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) 
+	//                    *(C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) 
+	//     + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 	const X = P.x-P_o.x;
 	const Y = P.y-P_o.y;
 	const Z = P.z-P_o.z;
-	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+	const VV = V_o.x*V_o.x+V_o.y*V_o.y+V_o.z*V_o.z;
 	const D = V.x;
 	const E = V.y;
 	const F = V.z;
@@ -795,12 +831,17 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	const K = V_o.y;
 	const L = V_o.z;
 
-	const jsx = X+J*T;
-	const ksy = Y+K*T;
-	const lsz = Z+L*T;
-
-	const tmp = (-C*C * T + jsx + ksy + lsz );
-	const tmp2 = ( T*T * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
+	const dsx = X+D*T;
+	const esy = Y+E*T;
+	const fsz = Z+F*T;
+/*
+	const pos = (P-P_o)+V*T;
+	const a = pos * V_o;
+	const tmp = (-C*C * T + sum(a) );
+	const tmp2 = ( T*T * C*C - sum(pos*pos) );
+*/	
+	const tmp = (-C*C * T + J*dsx + K*esy + L*fsz );
+	const tmp2 = ( T*T * C*C - dsx*dsx - esy*esy - fsz*fsz );
 
 	if( Math.abs(VV - C*C) < 0.000001 ) {
 		const T =  tmp2/( 2*tmp )
@@ -809,24 +850,24 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	}
 
 	{
-
-	const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
-	const S = (Math.sqrt(tmp*tmp + CV*tmp) + tmp2 ) / CV;
-	return S;
+		const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
+		const S = (Math.sqrt(tmp*tmp + CV*tmp2) - tmp ) / CV;
+		return S;
 	}
 }
 
 function RealTime( T_o, V, P, V_o, P_o ) {
-	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 - 4 (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
-	const xd = P.x-P_o.x;
-	const yd = P.y-P_o.y;
-	const zd = P.z-P_o.z;
+	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
+	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
+	//                       - 4 (C^2 - D^2 - E^2 - F^2) 
+	//                          * (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) 
+	//            + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+	const X = P.x-P_o.x;
+	const Y = P.y-P_o.y;
+	const Z = P.z-P_o.z;
 	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
 
 	const S = T_o;
-	const X = xd;
-	const Y = yd;
-	const Z = zd;
 
 	const D = V.x;
 	const E = V.y;
@@ -846,13 +887,19 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	if( Math.abs(VV - C*C) < 0.000001 ) {
 		const T =  tmp2/( 2*tmp )
 		if( T < T_o ) return T;
-
 		return -Math.Infinity;
 	}
 	
 	const CV = C*C - VV;
 	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
-	return T;
+	if( T > T_o ) {
+
+		const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+		if( T2 < T_o ) return [T2];
+		return [];
+	}
+	const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+	return (T2<T_o)?[T,T2]:[T];
 }
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
@@ -929,8 +976,8 @@ function timeBiasAtPos( V, X, Y, Z ) {
 function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
-	V = Number(sliderV.value)/1000*C;
-	myV = Number(sliderMyV.value)/1000*C;
+	V = Number(sliderV.value)/200*C;
+	myV = Number(sliderMyV.value)/200*C;
 	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V) + " : " + myV;
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
