@@ -214,6 +214,18 @@ It's within 3% of QM predictions, which is less than experimental apparatus erro
 
 ## Generalized to a 3D coordinate, which then orientation vs the observer matters.
 
+$S = ( left double bracketing bar {{X, Y, Z} + {D, E, F} T - {J, K, L} S} right double bracketing bar )/C + T$
+
+`(D,E,F)` and `(J,K,L)` are velocity vectors; T is the real time, and S is the observed time.
+
+$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for S and T.
+
+$S = ( \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - \overrightarrow{V_o} S} \rVert )/C + T$ 
+
+$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+
+$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 - 4 (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+
 For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendiculat to the line, and X aligned with the original L direction on the line.
 
 $$ T_O=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((T) + A)^2 )/C}+T;$$
@@ -229,6 +241,8 @@ $$ {T_O}=\sqrt{( Z*Z/(C*C) + ((D+Y)*(D+Y))/(C*C) + ((T) + A/C)^2 )}+T;$$
 Gives this formula for the inverse calulation at V=C
 
 $$ T = \frac { X^2 - C^2{T_O}^2 + D^2 + 2DY + YY + ZZ } { C(2A+2C{T_O}) }$$
+
+Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
 
 ## Time Dilation 
 According to special relativity
