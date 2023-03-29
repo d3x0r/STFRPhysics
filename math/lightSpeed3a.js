@@ -883,7 +883,7 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 		// T = ((J^2 S^2) - (2 J S X) + (K^2 S^2) - (2 K S Y) + (L^2 S^2) - (2 L S Z) + X^2 + Y^2 + Z^2 - S^2*C)
 		//        /((2)*( (D J S) + (e K S) + (F L S) - (D X) - (e Y) - (F Z) - S C))
 
-		const T =  ( S*S * C - jsx*jsx - ksy*ksy - lsz*lsz ) / ( 2*( ( C * S + D*jsx + E*ksy + F*lsz ) ) )
+		const T =  ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz ) / ( 2*( ( C * S*C + D*jsx + E*ksy + F*lsz ) ) )
 		if( T < T_o ) return [T];
 		return -Math.Infinity;
 	}
