@@ -251,46 +251,18 @@ class D3xTransform {
 			}
 			ctx.lineWidth = 1;
 
-			if( false ) { // draw what happens to me relative to a stationary world. (show real velocity)
-				ctx.beginPath();
-				const ox  = D3xTransform.getObservedPlace(X,T,0);
-				const oxo = D3xTransform.getObservedPlace(X+1,T,0);
-				const oxt = D3xTransform.getObservedPlace(X,T-1,0);
-				const ot  = D3xTransform.getObservedTime(X,T, 0);
-				const oto = D3xTransform.getObservedTime(X+1,T, 0);
-				const ott = D3xTransform.getObservedTime(X,T-1, 0);
-				if( T === 0 ){
-					ctx.lineWidth = 5;
-					ctx.strokeStyle= "green";
-				}
-				else{
-					ctx.strokeStyle= "yellow";
-				}
-				ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
-				ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
-				ctx.stroke();
-
-				if( T === 0 ){
-					ctx.lineWidth = 2;
-				}
-				ctx.beginPath();
-				ctx.strokeStyle= "red";
-				ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
-				ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
-				ctx.stroke();
-			}
 		}
 
 		ctx.font = "lighter 24px serif";
 		ctx.strokeStyle= "yellow";
-		ctx.strokeWidth= 3;
+		ctx.strokeWidth= 1;
 		ctx.fillStyle= "yellow";
 		ctx.fillText( "Observed Space", 10, 10 + 0.5*xscale_);//-L*xscale_ ); 
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx+0*V*now*ca, taily+0*V*now*sa, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
-			let head  = observedTimeToRealTimeXYZ2( now, V, headx+0*V*now*ca, heady+0*V*now*sa, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx+0*V*now*ca, taily+0*V*now*sa-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
+			let head  = observedTimeToRealTimeXYZ2( now, V, headx+0*V*now*ca, heady+0*V*now*sa-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 
 			const hdx =  head[0] * (V) * ca +headx - now*myV*ca_o;
 			const hdy =  head[0] * (V) * sa +heady  - now*myV*sa_o;
@@ -298,8 +270,8 @@ class D3xTransform {
 			const ty =  tail[0] * (V) * sa +taily - now*myV*sa_o;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
+			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
 			ctx.stroke();
 			if( head.length > 1 ) {
 				const hdx =  head[1] * (V) * ca +headx - now*myV*ca_o;
@@ -308,8 +280,8 @@ class D3xTransform {
 				const ty =  tail[1] * (V) * sa +taily - now*myV*sa_o;
 				ctx.beginPath();
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
 				ctx.stroke();
 			}
 
@@ -322,6 +294,27 @@ class D3xTransform {
 		}
 		for( let seg = 0; seg < 20; seg++ ){ 
 			doSegA( seg );
+		}
+		{
+			ctx.beginPath();
+			ctx.strokeWidth= 3;
+			ctx.moveTo( ofs + (xscale_)* (now*V*ca-L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa-L/3 - now*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (now*V*ca+L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa+L/3 - now*myV*sa_o-D) )
+			ctx.moveTo( ofs + (xscale_)* (now*V*ca+L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa-L/3 - now*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (now*V*ca-L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa+L/3 - now*myV*sa_o-D) )
+			ctx.stroke();
+			if(0)
+			{
+			ctx.beginPath();
+			ctx.strokeStyle = "#FFF"
+			let shootAt  = ObservedTime( now, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0}, {x:myV*ca_o,y:myV*sa_o, z:0}, {x:0,y:0,z:0} );
+			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca-L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L - shootAt*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca+L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L - shootAt*myV*sa_o-D) )
+			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca+L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L - shootAt*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca-L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L - shootAt*myV*sa_o-D) )
+			ctx.stroke();
+			}
+			ctx.strokeWidth= 1;
 		}
 
 		if( showSelf ) {
