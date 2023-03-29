@@ -303,15 +303,19 @@ class D3xTransform {
 			ctx.moveTo( ofs + (xscale_)* (now*V*ca+L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa-L/3 - now*myV*sa_o-D) )
 			ctx.lineTo( ofs + (xscale_)* (now*V*ca-L/3 - now*myV*ca_o), ofs+(xscale_)*(now*V*sa+L/3 - now*myV*sa_o-D) )
 			ctx.stroke();
-			if(0)
+			if(1)
 			{
 			ctx.beginPath();
 			ctx.strokeStyle = "#FFF"
-			let shootAt  = ObservedTime( now, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0}, {x:myV*ca_o,y:myV*sa_o, z:0}, {x:0,y:0,z:0} );
-			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca-L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L - shootAt*myV*sa_o-D) )
-			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca+L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L - shootAt*myV*sa_o-D) )
-			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca+L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L - shootAt*myV*sa_o-D) )
-			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca-L - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L - shootAt*myV*sa_o-D) )
+			let shootAt  = ObservedTime( now, {x:myV*ca_o,y:myV*sa_o, z:0}, {x:0,y:0,z:0}, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0} );
+			ctx.beginPath();
+			ctx.arc(ofs+(shootAt*V*ca-shootAt*myV*ca_o)*xscale_, ofs+(shootAt*V*sa-shootAt*myV*sa_o-D)*xscale_, (0.33)*(xscale_), 0, 2 * Math.PI, false);
+			ctx.stroke()
+
+			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca-L/3 - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L/3 - shootAt*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca+L/3 - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L/3 - shootAt*myV*sa_o-D) )
+			ctx.moveTo( ofs + (xscale_)* (shootAt*V*ca+L/3 - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa-L/3 - shootAt*myV*sa_o-D) )
+			ctx.lineTo( ofs + (xscale_)* (shootAt*V*ca-L/3 - shootAt*myV*ca_o), ofs+(xscale_)*(shootAt*V*sa+L/3 - shootAt*myV*sa_o-D) )
 			ctx.stroke();
 			}
 			ctx.strokeWidth= 1;
@@ -828,14 +832,14 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	const tmp2 = ( T*T * C*C - dsx*dsx - esy*esy - fsz*fsz );
 
 	if( Math.abs(VV - C*C) < 0.000001 ) {
-		const T =  tmp2/( 2*tmp )
-		if( T < T_o ) return T;
+		const T_o =  tmp2/( 2*tmp )
+		if( T_o < T ) return T;
 		return -Math.Infinity;
 	}
 
 	{
 		const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
-		const S = (Math.sqrt(tmp*tmp + CV*tmp2) - tmp ) / CV;
+		const S = (Math.sqrt(tmp*tmp - CV*tmp2) - tmp ) / CV;
 		return S;
 	}
 }
