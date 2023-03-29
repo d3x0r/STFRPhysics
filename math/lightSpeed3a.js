@@ -872,15 +872,25 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	const ksy = Y-K*S;
 	const lsz = Z-L*S;
 
-	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
-	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
 
 	if( Math.abs(VV - C*C) < 0.000001 ) {
-		const T =  tmp2/( 2*tmp )
-		if( T < T_o ) return T;
+		// D*D+E*E+F*F = C
+		// solve (S-T)^2 = ( ( (X+D*T-J*S)^2+(Y+E*T - K*S)^2+(Z + F*T - L* S)^2) )/(D*D+E*E+F*F) for T
+		// T = ((J^2 S^2)/(D^2 + F^2 + e^2) - (2 J S X)/(D^2 + F^2 + e^2) + (K^2 S^2)/(D^2 + F^2 + e^2) - (2 K S Y)/(D^2 + F^2 + e^2) + (L^2 S^2)/(D^2 + F^2 + e^2) - (2 L S Z)/(D^2 + F^2 + e^2) + X^2/(D^2 + F^2 + e^2) + Y^2/(D^2 + F^2 + e^2) + Z^2/(D^2 + F^2 + e^2) - S^2)
+		//        /((2 D J S)/(D^2 + F^2 + e^2) + (2 e K S)/(D^2 + F^2 + e^2) + (2 F L S)/(D^2 + F^2 + e^2) - (2 D X)/(D^2 + F^2 + e^2) - (2 e Y)/(D^2 + F^2 + e^2) - (2 F Z)/(D^2 + F^2 + e^2) - 2 S)
+		// T = ((J^2 S^2)/C - (2 J S X)/C + (K^2 S^2)/C - (2 K S Y)/C + (L^2 S^2)/C - (2 L S Z)/C + X^2/C + Y^2/C + Z^2/C - S^2)
+		//        /((2 D J S)/C + (2 e K S)/C + (2 F L S)/C - (2 D X)/C - (2 e Y)/C - (2 F Z)/C - 2 S)
+		// T = ((J^2 S^2) - (2 J S X) + (K^2 S^2) - (2 K S Y) + (L^2 S^2) - (2 L S Z) + X^2 + Y^2 + Z^2 - S^2*C)
+		//        /((2)*( (D J S) + (e K S) + (F L S) - (D X) - (e Y) - (F Z) - S C))
+
+		const T =  ( S*S * C - jsx*jsx - ksy*ksy - lsz*lsz ) / ( 2*( ( C * S + D*jsx + E*ksy + F*lsz ) ) )
+		if( T < T_o ) return [T];
 		return -Math.Infinity;
 	}
 	
+	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
+	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
+
 	const CV = C*C - VV;
 	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
 	if( T > T_o ) {
