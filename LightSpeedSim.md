@@ -214,7 +214,7 @@ It's within 3% of QM predictions, which is less than experimental apparatus erro
 
 ## Generalized to a 3D coordinate, which then orientation vs the observer matters.
 
-$S = ( \lVert {{X, Y, Z} + {D, E, F} T - {J, K, L} S} \lVert )/C + T$
+$S = ( \lVert {(X, Y, Z) + (D, E, F) T - (J, K, L) S} \lVert )/C + T$
 
 `(D,E,F)` and `(J,K,L)` are velocity vectors; T is the real time, and S is the observed time.
 
