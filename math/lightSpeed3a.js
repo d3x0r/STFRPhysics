@@ -8,6 +8,8 @@ const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
 let showXTGraph = false;
+let showSelf = false;
+let showObserver = false;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -94,8 +96,8 @@ class D3xTransform {
 	}
 
 	static drawCoords( atNow ) {
-		const xscale_ = xscale/4;
-		const ofs = 300;//xscale_ * 13;
+		const xscale_ = xscale/3;
+		const ofs = 500;//xscale_ * 13;
 
 // velocity ratio line.
 /*
@@ -116,13 +118,14 @@ class D3xTransform {
 		ctx.lineWidth = 2;
 	}
 
-	  if(0)
+	  if(showXTGraph)
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
 			ctx.beginPath();
 			ctx.strokeStyle= "white";
-			if( X > 0 ){
+			//if( X > 0 )
+			{
 				ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X) );
 				ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C)-X ) );
 				ctx.moveTo( ofs - (xscale_)*(0*(V/C)-X), ofs  - (xscale_)*(-0) );
@@ -130,42 +133,6 @@ class D3xTransform {
 			}
 			ctx.stroke();
 		}	
-
-if(0)
-		{
-				ctx.beginPath();
-				ctx.lineWidth = 5;
-				ctx.strokeStyle= "green";
-
-				//timeBiasAtPos( X, D, 0 )
-				const ot  = D3xTransform.getObservedTime(-runT,now, myV);
-				const oto = D3xTransform.getObservedTime(0,now, myV);
-				const oto2 = D3xTransform.getObservedTime(runT,now, myV);
-
-				const ox  = D3xTransform.getObservedPlace(-runT,0,0,myV);
-				const oxo = D3xTransform.getObservedPlace(0,0,0,myV);
-				const oxo2 = D3xTransform.getObservedPlace(runT,0,0,myV);
-				
-				ctx.moveTo( ofs + (xscale_)*(-runT), ofs - (xscale_)*(now) );
-				ctx.lineTo( ofs + (xscale_)*(runT), ofs - (xscale_)*(now) );
-
-				ctx.moveTo( ofs + (xscale_)*(ox), ofs + (xscale_)*(ot) );
-				ctx.lineTo( ofs + (xscale_)*(oxo), ofs + (xscale_)*(oto) );
-				ctx.lineTo( ofs + (xscale_)*(oxo2), ofs + (xscale_)*(oto2) );
-				ctx.stroke()
-
-			ctx.beginPath();
-			ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-			ctx.fillRect( ofs+(now*V-L)*xscale_, ofs+(now)*xscale_, (2*L)*xscale_, 10 );
-
-			headTri(  + L, 20, true );
-			tailTri(  - L, 20, true );
-			centerBox( 0, 20, true );
-
-		}		
-
-
-
 
 		ctx.strokeWidth= 1.5;
 
@@ -208,49 +175,48 @@ if(0)
 					ctx.stroke();
 					if( here.length > 1 )
 					{
-					const hx =  here[1] * (V) * ca + X - now*myV*ca_o;
-					const hy =  here[1] * (V) * sa + T-D - now*myV*sa_o;
-					const rx =  right[1] * (V) * ca + (X+1) - now*myV*ca_o;
-					const ry =  right[1] * (V) * sa + T-D - now*myV*sa_o;
-					const nx =  next[1] * (V) * ca + X - now*myV*ca_o;
-					const ny =  next[1] * (V) * sa + (T+1)-D - now*myV*sa_o;
+						const hx =  here[1] * (V) * ca + X - now*myV*ca_o;
+						const hy =  here[1] * (V) * sa + T-D - now*myV*sa_o;
+						const rx =  right[1] * (V) * ca + (X+1) - now*myV*ca_o;
+						const ry =  right[1] * (V) * sa + T-D - now*myV*sa_o;
+						const nx =  next[1] * (V) * ca + X - now*myV*ca_o;
+						const ny =  next[1] * (V) * sa + (T+1)-D - now*myV*sa_o;
 
-					ctx.beginPath();
-				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
-					ctx.strokeStyle= "red";
-					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
-					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
-					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
-					ctx.stroke();
+						ctx.beginPath();
+					//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
+						ctx.strokeStyle= "red";
+						//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
+						//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+						ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
+						ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+						//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+						ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
+						ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+						ctx.stroke();
 					}
-
+					if( showObserver )
 					{
-					let here  = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const hx =  here[0] * (myV) * ca_o + X - now*V*ca;
-					const hy =  here[0] * (myV) * sa_o + T+D - now*V*sa;
+						let here  = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						const hx =  here[0] * (myV) * ca_o + X - now*V*ca;
+						const hy =  here[0] * (myV) * sa_o + T+D - now*V*sa;
 
-					let right = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X+1, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const rx =  right[0] * (myV) * ca_o + (X+1) - now*V*ca;
-					const ry =  right[0] * (myV) * sa_o + T+D - now*V*sa;
-					let next   = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T+1, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
-					const nx =  next[0] * (myV) * ca_o + X - now*V*ca;
-					const ny =  next[0] * (myV) * sa_o + (T+1)+D - now*V*sa;
+						let right = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X+1, 0*now*myV*sa_o+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						const rx =  right[0] * (myV) * ca_o + (X+1) - now*V*ca;
+						const ry =  right[0] * (myV) * sa_o + T+D - now*V*sa;
+						let next   = observedTimeToRealTimeXYZ2( now, myV, 0*now*myV*ca_o+X, 0*now*myV*sa_o+T+1, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						const nx =  next[0] * (myV) * ca_o + X - now*V*ca;
+						const ny =  next[0] * (myV) * sa_o + (T+1)+D - now*V*sa;
 
-					ctx.beginPath();
-					ctx.strokeStyle= "green";
-					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
-					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
-					ctx.stroke();
+						ctx.beginPath();
+						ctx.strokeStyle= "green";
+						//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+						ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
+						ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+						//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+						ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
+						ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+						ctx.stroke();
 					}
-					
 				}
 
 			if( showXTGraph) {
@@ -258,17 +224,17 @@ if(0)
 					const ox  = D3xTransform.getObservedPlace2(X,T);
 					const oxo = D3xTransform.getObservedPlace2(X+1,T);
 					const oxt = D3xTransform.getObservedPlace2(X,T-1);
-					const ot  = D3xTransform.getObservedTime(X,T);
-					const oto = D3xTransform.getObservedTime(X+1,T);
-					const ott = D3xTransform.getObservedTime(X,T-1);
-			if( T === 0 ){
-				ctx.lineWidth = 5;
-				ctx.strokeStyle= "green";
-			}
-			else{
-				ctx.lineWidth = 2;
-				ctx.strokeStyle= "yellow";
-			}
+					const ot  = D3xTransform.getObservedTime(X,T)+Math.abs(X);
+					const oto = D3xTransform.getObservedTime(X+1,T)+Math.abs(X)+(X>-1?1:-1);
+					const ott = D3xTransform.getObservedTime(X,T-1)+Math.abs(X);
+					if( T === 0 ){
+						ctx.lineWidth = 5;
+						ctx.strokeStyle= "green";
+					}
+					else{
+						ctx.lineWidth = 2;
+						ctx.strokeStyle= "yellow";
+					}
 					ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
 					ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto) );
 					ctx.stroke();
@@ -277,13 +243,13 @@ if(0)
 						ctx.lineWidth = 2;
 					}
 					ctx.beginPath();
-			ctx.strokeStyle= "red";
+					ctx.strokeStyle= "red";
 					ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
 					ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
 					ctx.stroke();
 
 			}
-		ctx.lineWidth = 1;
+			ctx.lineWidth = 1;
 
 			if( false ) { // draw what happens to me relative to a stationary world. (show real velocity)
 				ctx.beginPath();
@@ -319,7 +285,7 @@ if(0)
 		ctx.strokeStyle= "yellow";
 		ctx.strokeWidth= 3;
 		ctx.fillStyle= "yellow";
-		ctx.fillText( "Observed", 10, 10 + 0.5*xscale_);//-L*xscale_ ); 
+		ctx.fillText( "Observed Space", 10, 10 + 0.5*xscale_);//-L*xscale_ ); 
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
@@ -336,15 +302,15 @@ if(0)
 			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
 			ctx.stroke();
 			if( head.length > 1 ) {
-			const hdx =  head[1] * (V) * ca +headx - now*myV*ca_o;
-			const hdy =  head[1] * (V) * sa +heady  - now*myV*sa_o;
-			const tx =  tail[1] * (V) * ca +tailx - now*myV*ca_o;
-			const ty =  tail[1] * (V) * sa +taily - now*myV*sa_o;
-			ctx.beginPath();
-			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
-			ctx.stroke();
+				const hdx =  head[1] * (V) * ca +headx - now*myV*ca_o;
+				const hdy =  head[1] * (V) * sa +heady  - now*myV*sa_o;
+				const tx =  tail[1] * (V) * ca +tailx - now*myV*ca_o;
+				const ty =  tail[1] * (V) * sa +taily - now*myV*sa_o;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
 			}
 
 		}
@@ -358,88 +324,92 @@ if(0)
 			doSegA( seg );
 		}
 
-		ctx.strokeStyle= "orange";
-		ctx.fillStyle= "orange";
-		ctx.fillText( "Observed(self)", 10, 10+1.5*xscale_);//-L*xscale_ ); 
-		function doSegASelf( seg ) {
+		if( showSelf ) {
+			ctx.strokeStyle= "orange";
+			ctx.fillStyle= "orange";
+			ctx.fillText( "Observed(self)", 10, 10+1.5*xscale_);//-L*xscale_ ); 
+			function doSegASelf( seg ) {
 
-			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
-			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
+				function _doSeg(tailx,taily, headx, heady) {
+				let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
+				let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady, 0, V, 0, 0, 0, ca, sa, ca, sa )[0] - now;
 
-			const hdx =  head * (V) * ca +headx ;
-			const hdy =  head * (V) * sa +heady ;
-			const tx =  tail * (V) * ca +tailx ;
-			const ty =  tail * (V) * sa +taily ;
-			ctx.beginPath();
-			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
-			ctx.stroke();
+				const hdx =  head * (V) * ca +headx ;
+				const hdy =  head * (V) * sa +heady ;
+				const tx =  tail * (V) * ca +tailx ;
+				const ty =  tail * (V) * sa +taily ;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
+				}
+
+				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
 			}
-
-			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
-		}
-		for( let seg = 0; seg < 20; seg++ ){ 
-			doSegASelf( seg );
-		}
-
-
-		ctx.strokeStyle= "cyan";
-		ctx.fillStyle= "cyan";
-		ctx.fillText( "Observer(from observed)", 10, 10 + 2.5*xscale_);//-L*xscale_ ); 
-		function doSeg( seg ) {
-			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+0*myV*now*ca_o, taily+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
-			let head  = observedTimeToRealTimeXYZ2( now, myV, headx+0*myV*now*ca_o, heady+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
-			const hdx =  head[0] * (myV) * ca_o +headx - now*V*ca;
-			const hdy =  head[0] * (myV) * sa_o +heady +D  - now*V*sa;
-			const tx =  tail[0] * (myV) * ca_o +tailx - now*V*ca;
-			const ty =  tail[0] * (myV) * sa_o +taily +D - now*V*sa;
-			ctx.beginPath();
-			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
-			ctx.stroke();
-
+			for( let seg = 0; seg < 20; seg++ ){ 
+				doSegASelf( seg );
 			}
-			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
-		}
-		for( let seg = 0; seg < 20; seg++ ){
-			doSeg( seg );
 		}
 
-		ctx.strokeStyle= "magenta";
-		ctx.fillStyle= "magenta";
-		ctx.fillText( "Observer(Self)", 10, 10 + 3.5*xscale_);//-L*xscale_ ); 
-		function doSegSelf( seg ) {
-			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
-			let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
-			const hdx =  head * (myV) * ca_o +headx ;
-			const hdy =  head * (myV) * sa_o +heady ;
-			const tx =  tail * (myV) * ca_o +tailx ;
-			const ty =  tail * (myV) * sa_o +taily ;
-			ctx.beginPath();
-			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
-			ctx.stroke();
+		if( showObserver ) {
+			ctx.strokeStyle= "cyan";
+			ctx.fillStyle= "cyan";
+			ctx.fillText( "Observer(from observed)", 10, 10 + 2.5*xscale_);//-L*xscale_ ); 
+			function doSeg( seg ) {
+				function _doSeg(tailx,taily, headx, heady) {
+				let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+0*myV*now*ca_o, taily+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
+				let head  = observedTimeToRealTimeXYZ2( now, myV, headx+0*myV*now*ca_o, heady+0*myV*now*sa_o, 0, V, 0*now*V*ca, 0*now*V*sa-D, 0, ca_o, sa_o, ca, sa );
+				const hdx =  head[0] * (myV) * ca_o +headx - now*V*ca;
+				const hdy =  head[0] * (myV) * sa_o +heady +D  - now*V*sa;
+				const tx =  tail[0] * (myV) * ca_o +tailx - now*V*ca;
+				const ty =  tail[0] * (myV) * sa_o +taily +D - now*V*sa;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
 
+				}
+				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
 			}
-			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+			for( let seg = 0; seg < 20; seg++ ){
+				doSeg( seg );
+			}
 		}
-		for( let seg = 0; seg < 20; seg++ ){
-			doSegSelf( seg );
+		if( showSelf && showObserver ) {
+			ctx.strokeStyle= "magenta";
+			ctx.fillStyle= "magenta";
+			ctx.fillText( "Observer(Self)", 10, 10 + 3.5*xscale_);//-L*xscale_ ); 
+			function doSegSelf( seg ) {
+				function _doSeg(tailx,taily, headx, heady) {
+				let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
+				let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, myV, 0, 0, 0, ca_o, sa_o, ca_o, sa_o )[0]-now;
+				const hdx =  head * (myV) * ca_o +headx ;
+				const hdy =  head * (myV) * sa_o +heady ;
+				const tx =  tail * (myV) * ca_o +tailx ;
+				const ty =  tail * (myV) * sa_o +taily ;
+				ctx.beginPath();
+				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
+				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.stroke();
+
+				}
+				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+			}
+			for( let seg = 0; seg < 20; seg++ ){
+				doSegSelf( seg );
+			}
 		}
 	}
 }
@@ -671,27 +641,48 @@ spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
 //- - - - - - - - - - - - - - 
-const spanChkNow = document.createElement( "span" );
-spanChkNow.textContent = " |Animate";
-controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
+const spanChkNow = document.createElement( "label" );
+spanChkNow.textContent = " |Animate";
+spanChkNow.appendChild( chkLblNow );
+controls.appendChild( spanChkNow );
 //- - - - - - - - - - - - - - 
-const spanChkXTGraph = document.createElement( "span" );
-spanChkXTGraph.textContent = " |XT Graph";
-controls.appendChild( spanChkXTGraph );
 
 const chkLblXTGraph = document.createElement( "input" );
 chkLblXTGraph.setAttribute( "type", "checkbox" );
 chkLblXTGraph.checked = showXTGraph;
-controls.appendChild( chkLblXTGraph );
+//controls.appendChild( chkLblXTGraph );
 chkLblXTGraph.addEventListener( "input", update );
 
+const spanChkXTGraph = document.createElement( "label" );
+spanChkXTGraph.textContent = " |XT Graph";
+spanChkXTGraph.appendChild( chkLblXTGraph );
+controls.appendChild( spanChkXTGraph );
+//- - - - - - - - - - - - - - 
+const chkLblShowObserver = document.createElement( "input" );
+chkLblShowObserver.setAttribute( "type", "checkbox" );
+chkLblShowObserver.checked = showObserver;
+chkLblShowObserver.addEventListener( "input", update );
+
+const spanChkShowObserver = document.createElement( "label" );
+spanChkShowObserver.textContent = " |Show Observer";
+spanChkShowObserver.appendChild( chkLblShowObserver );
+controls.appendChild( spanChkShowObserver );
+//- - - - - - - - - - - - - - 
+const chkLblShowSelf = document.createElement( "input" );
+chkLblShowSelf.setAttribute( "type", "checkbox" );
+chkLblShowSelf.checked = showSelf;
+chkLblShowSelf.addEventListener( "input", update );
+
+const spanChkShowSelf = document.createElement( "label" );
+spanChkShowSelf.textContent = " |Show Self";
+spanChkShowSelf.appendChild( chkLblShowSelf );
+controls.appendChild( spanChkShowSelf );
 //----------------------
 
 span = document.createElement( "br" );
@@ -1002,6 +993,8 @@ function update( evt ) {
 	spanS.textContent = S.toFixed(1);
 
 	showXTGraph = chkLblXTGraph.checked;
+	showSelf = chkLblShowSelf.checked;
+	showObserver = chkLblShowObserver.checked;
 
 	const didAnimate = animate;
 	animate = chkLblNow.checked;
