@@ -70,16 +70,16 @@ class D3xTransform {
 	static get gamma() { return  (C*C-V*V)/C*C };
  	static getObservedTime(X,T,myV) {
 		myV = myV || 0;
-		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:0, Z:0}, {x:myV,y:0,z:0}, {x:0, y:0, Z:0} );
+		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:0, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} );
 		return willSee[0];
 	}
  	static getObservedPlace(X,T,V,myV) {
  	   myV = myV || 0;
-		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, Z:0}, {x:myV,y:0,z:0}, {x:0, y:0, Z:0} ); 
+		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} ); 
 		return willSee[0] * V + X;
 	}
  	static getObservedPlace2(X,T) {
-		const willSee2 = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, Z:0}, {x:myV,y:0,z:0}, {x:0, y:0, Z:0} ); 
+		const willSee2 = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} ); 
 		return willSee2[0] * V + X;
 	}
 
