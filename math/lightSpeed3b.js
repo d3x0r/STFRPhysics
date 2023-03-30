@@ -332,7 +332,7 @@ class D3xTransform {
 			{
 			ctx.beginPath();
 			ctx.strokeStyle = "#FFF"
-			let shootAt  = ShotTime( now, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0}, {x:myV*ca_o,y:myV*sa_o, z:0}, {x:myX,y:myY,z:0} );
+			let shootAt  = ShotTime( now, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0}, {x:myV*ca_o,y:myV*sa_o, z:0}, {x:0,y:0,z:0} );
 			//let shootAt  = ShotTime( now, {x:V*ca,y:V*sa,z:0}, {x:posX,y:posY+D,z:0}, {x:0,y:0, z:0}, {x:myX,y:myY,z:0} );
 			let toPos;
 			//let shootAt  = ShotTime( now, {x:V*ca,y:V*sa,z:0}, {x:0,y:D,z:0}, {x:0,y:0, z:0}, {x:myX,y:myY,z:0} );
