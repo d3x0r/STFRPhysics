@@ -282,6 +282,9 @@ class D3xTransform {
 			const ty =  tail[0] * (V) * sa +taily - myY;
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			if( !showSelf && !showObserver )
+				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
+
 			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
 			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
 			ctx.stroke();
@@ -316,6 +319,8 @@ class D3xTransform {
 							, { x:posX, y:posY+D, z:0 }
 							, { x:ca_o*myV, y:sa_o*myV, z: 0 }
 							, { x:0, y:0, z:0 } );
+			ctx.moveTo( ofs + (xscale_)* (posX+runT*V*ca  -myX), ofs+(xscale_)*(posY+runT*V*sa -D -myY) )
+			ctx.lineTo( ofs + (xscale_)* (posX-runT*V*ca  -myX), ofs+(xscale_)*(posY-runT*V*sa -D -myY) )
 			ctx.moveTo( ofs + (xscale_)* (posX-L/3  -myX), ofs+(xscale_)*(posY-L/3 -D -myY) )
 			ctx.lineTo( ofs + (xscale_)* (posX+L/3  -myX), ofs+(xscale_)*(posY+L/3 -D -myY) )
 			ctx.moveTo( ofs + (xscale_)* (posX+L/3  -myX), ofs+(xscale_)*(posY-L/3 -D -myY) )
@@ -827,6 +832,8 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	const lsz = Z-L*S;
 
 
+	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
+	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
 	const CV = C*C - VV;
 	if( Math.abs(CV) < 0.000001 ) {
 		// D*D+E*E+F*F = C
@@ -838,13 +845,11 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 		// T = ((J^2 S^2) - (2 J S X) + (K^2 S^2) - (2 K S Y) + (L^2 S^2) - (2 L S Z) + X^2 + Y^2 + Z^2 - S^2*C)
 		//        /((2)*( (D J S) + (e K S) + (F L S) - (D X) - (e Y) - (F Z) - S C))
 
-		const T =  ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz ) / ( 2*( ( C * S*C + D*jsx + E*ksy + F*lsz ) ) )
+		const T =  ( tmp2 ) / ( 2*( tmp ) )
 		if( T < T_o ) return [T];
 		return -Math.Infinity;
 	}
 	
-	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
-	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
 
 	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
 	if( T > T_o ) {
@@ -858,57 +863,7 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 }
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
-//		if( V !== C )
 	return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
-
-	const xd = X-X_o;
-	const yd = Y-Y_o;
-	const zd = Z-Z_o;
-
-	if( V === C ) {
-		// solve (B-T)^2 = (((Z/C)^2+( (Y/C) + sin(A)*T -sin(E)*B)^2+((X/C)+cos(A)*T-cos(E)*B)^2))   for T
-		//
-		//T = (-2 B C X cos(E) - 2 B C Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C cos(A - E) - X cos(A) - Y sin(A) - B C))
-		//T = (B^2 C^2 J^2 - B^2 C^2 - 2 B C J X cos(E) - 2 B C J Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C J cos(A - E) - X cos(A) - Y sin(A) - B C))
-		// only A=0
-
-		// this is close... but somehow large numbers are also small?
-			const T = (T_o*T_o * C*C * V_o*V_o 
-						- T_o*T_o * C*C 
-						- 2 * (T_o) * C * V_o * (xd) * ca_o
-						- 2 * (T_o) * C * V_o * yd * sa_o
-						+ xd*xd + yd*yd + zd*zd
-					) /(2 * C * (T_o * C * V_o * ( ca*ca_o + sa*sa_o ) 
-						- (xd) * ca 
-						- (yd) * sa 
-						- T_o * C))
-			if( T < T_o )
-				return T;
-			return -Math.Infinity;
-	}
-
-	{
-		//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
-		//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
-		const tmp = (T_o * V_o * V * sa * sa_o
-					+ T_o * V_o * V * ca * ca_o
-					- V * xd * ca
-					- V * yd * sa 
-					- T_o * C*C);
-		const T = (-Math.sqrt(tmp*tmp 
-					- (C*C-V*V ) 
-					*(T_o*T_o * C*C 
-						- T_o*T_o * V_o*V_o
-						+ 2 * T_o * V_o * xd * ca_o
-						+ 2 * T_o * V_o * yd * sa_o - xd*xd - yd*yd - zd*zd)) 
-				- T_o * V_o * V * sa * sa_o
-				- T_o * V_o * V * ca * ca_o
-				+ V * xd * ca
-				+ V * yd * sa
-				+ T_o * C*C)/(C*C-V*V);
-		return T;
-	}	
-
 }
 
 
