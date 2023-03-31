@@ -47,10 +47,10 @@ Simplified, and this is again still having a sqrt, which has to be at least an a
 or
 $$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
 
-
-
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
+
+https://mathb.in/74833
 
 ### Space time index
 
@@ -212,7 +212,7 @@ It's within 3% of QM predictions, which is less than experimental apparatus erro
 
 (Note sections are potentially incomplete/inaccurate).
 
-## Generalized to a 3D coordinate, which then orientation vs the observer matters.
+## Generalized to 3D Vectors
 
 `(D,E,F)` and `(J,K,L)` are velocity vectors; T is the real time, and S is the observed time.
 
