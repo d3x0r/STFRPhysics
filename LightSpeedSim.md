@@ -220,9 +220,9 @@ $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || } {C} + T$; solve for
 
 $S = \frac { \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - \overrightarrow{V_o} S} \rVert } {C} + T$ 
 
-$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+$S = \frac {\sqrt{(-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)} + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 
-$T = \frac {\sqrt((-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$
+$T = \frac {\sqrt{(-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)} + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$
 
 For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendicular to the line, and X aligned with the original L direction on the line.
 
