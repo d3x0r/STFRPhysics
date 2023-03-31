@@ -315,10 +315,7 @@ class D3xTransform {
 			ctx.beginPath();
 			ctx.strokeStyle= "yellow";
 			ctx.strokeWidth= 3;
-			const obsNow = 0*RealTime( now, { x: V*ca, y: V*sa, z: 0 }
-							, { x:posX, y:posY+D, z:0 }
-							, { x:ca_o*myV, y:sa_o*myV, z: 0 }
-							, { x:0, y:0, z:0 } );
+
 			ctx.moveTo( ofs + (xscale_)* (posX+runT*V*ca  -myX), ofs+(xscale_)*(posY+runT*V*sa -D -myY) )
 			ctx.lineTo( ofs + (xscale_)* (posX-runT*V*ca  -myX), ofs+(xscale_)*(posY-runT*V*sa -D -myY) )
 			ctx.moveTo( ofs + (xscale_)* (posX-L/3  -myX), ofs+(xscale_)*(posY-L/3 -D -myY) )
@@ -328,10 +325,10 @@ class D3xTransform {
 			ctx.stroke();
 			ctx.beginPath();
 			ctx.strokeStyle = "#55A"
-			ctx.moveTo( ofs + (xscale_)* (-L/3 ), ofs+(xscale_)*(-L/3 -D) )
-			ctx.lineTo( ofs + (xscale_)* (+L/3 ), ofs+(xscale_)*(+L/3 -D) )
-			ctx.moveTo( ofs + (xscale_)* (+L/3 ), ofs+(xscale_)*(-L/3 -D) )
-			ctx.lineTo( ofs + (xscale_)* (-L/3 ), ofs+(xscale_)*(+L/3 -D) )
+			ctx.moveTo( ofs + (xscale_)* (-L/3 ), ofs+(xscale_)*(-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (+L/3 ), ofs+(xscale_)*(+L/3 ) )
+			ctx.moveTo( ofs + (xscale_)* (+L/3 ), ofs+(xscale_)*(-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (-L/3 ), ofs+(xscale_)*(+L/3 ) )
 			ctx.stroke();
 			if(1)
 			{
