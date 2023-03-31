@@ -224,23 +224,25 @@ $S = ( \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - 
 
 $S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 
-$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 - 4 (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+$T = \frac {\sqrt((-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$
 
-For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendiculat to the line, and X aligned with the original L direction on the line.
+For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendicular to the line, and X aligned with the original L direction on the line.
 
-$$ T_O=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((T) + A)^2 )/C}+T;$$
+---
+Another refactor of above
+$T_o = \frac { \lVert ({\overrightarrow{X}-\overrightarrow{X_o}) + \overrightarrow{V} T - \overrightarrow{V_o} {T_o}} \rVert } {C} + T$ 
 
-The inverse (except where C=V)
+$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o $
 
-$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
+$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$
 
-Special case 3D formula for V=C (bad variable subsittution?), 
+$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$
 
-$$ {T_O}=\sqrt{( Z*Z/(C*C) + ((D+Y)*(D+Y))/(C*C) + ((T) + A/C)^2 )}+T;$$
+$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$
 
-Gives this formula for the inverse calulation at V=C
+if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+---
 
-$$ T = \frac { X^2 - C^2{T_O}^2 + D^2 + 2DY + YY + ZZ } { C(2A+2C{T_O}) }$$
 
 Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
 
