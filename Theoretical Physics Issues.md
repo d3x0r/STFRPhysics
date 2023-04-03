@@ -101,3 +101,10 @@ The same signals emitted from a stationary object (magenta square) will also tak
 However, the stationay body that is 2 light-seconds square, the observer will always see the opposing sides 2 seconds apart, even though that light might have taken a longer time to get to the observer, and appear to 'tick' slower after the moving body has passed, and 'tick faster' as the moving body approaches.
 
 ![[TransformedBody-0.9c-stationarytime.png]]
+However, I guess it's interesting to note, that while the shape is not actually distorted, time is...
+![[StationaryBody-0.9c-0sec.png]]
+The above image has the body of the stationary object at 0, and what is seen is 1 second in the past, all red.  If the body had emitted the red signal 1 second ago, then as the train passes it sees that simultaneously.
+![[StationaryBody-0.9c-0.5sec.png]]
+But, if the green signal at `T=0` is the intersting one, then it sees that signal here(at 0.5 seconds), a long time before it sees the green from the left side....
+![[StationaryBody-0.9c-10sec.png]]
+then 10 seconds after passing `T=0` it sees the event from the back.  I'm not quite sure how this justifies that the speed of light is still constant to that observer.
