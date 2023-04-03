@@ -45,7 +45,7 @@ Other than 2) disregards any idea about velocity becoming...
 
 This yeilds that a non-moving body is not contracted/dilated.  A body moving towards an observer appears expanded/elongated in the direction of motion, while a body moving away appears contracted.  
 
-After considering the later time dilation effect, the example shows that an observer might interpret the speed of light as constant to themselves, if they use what they see as the length the light traveled raather than the length they know their body to be.
+After considering the later time dilation effect, the example shows that an observer might interpret the speed of light as constant to themselves, if they use what they see as the length the light traveled rather than the length they know their body to be.  However, this doesn't account for the difference in time from stationary events- which 1 light second away still take the same amount of time, but it's quite clear that their position is a net 2 light seconds apart... when you track back the ray, and especially all rays continuously emitted, they are still coming from the same place.
 
 ### 4.1) Inequivalence of Equivalence Principle 
 First, if a body sees a non-moving body, then the non-moving body appears exactly the same; so if a body is itself moving fast, and assumes itself to be at rest, and the other body is moving, would be predicted to have length elongation/contraction, but this is not what would be observed.
@@ -93,3 +93,7 @@ Also, it can be known that the light is from 10 seconds ago... the above image a
 
 ---
 Okay; then multiply by some Lorentz Gamma Factor to correct the clock, and scale the length appropriately.  Though, really you know how long hour ship was, and although a moving train/ship/body to something on the body looks a lot like it looks to an external observer, its front length observed contracted and it's back observed long, then the speed of light is technically still correct by what you're observing.  But you know that the two events happen to you at some different time, and can know that light was travelling at less then or more than C from one end or the other.
+
+Although that's true only in regards to the signals emitted from the train/body itself.
+![[TransformedBody-0.9c-stationary.png]]
+The same signals emitted from a stationary object (magenta square) will also take 10 seconds to get there from the left, and 0.52 secons from the front, and it's position will not appear to be anywhere else.  It was, is and will be always where it was.  In the moving bodies case, where it is at various times changes over time.  And when it was 'red' at the back of the train, and emitted (10 seconds ago) that's where it was.
