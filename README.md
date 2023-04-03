@@ -6,8 +6,12 @@ Mostly this project is just about exploring the rotation space of log-quaternion
 
 ## Introduction
 
-I have this stubborn idea that rotations should be intrinsic instead of extrinsic; my rotation matrices
-implemented a long while ago, worked very well, but were all rotations around internal axes.  I carried
+This is a development sandbox for a physics engine.  It started with an investigation into keeping rotations as rotation vectors, eventually tackling quantum probability, and even Lorentz transformation and relativity.  It's still very much a work in progress, and is far from 'production ready'.  The investigations have been enlightening.
+
+## State of Development
+
+I am of the opinion that rotations should be intrinsic instead of extrinsic (that is be motivated by torque sources mounted to, and contained within, the body, rather than an external axis to which a body is attached; the rotation matrices
+implemented a long while ago, were all rotations around internal axes.  I carried
 that forward, and after a lot of trial and error, found the Rodrigues Rotation Formula for Composite Rotations
 on the wikipedia page for quaternions used for rotations; this formula could be used to just rotate axis and angle,
 and I was able to implement that function to exactly match the intrinsic rotations generated with matrices.

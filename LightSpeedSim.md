@@ -6,9 +6,6 @@ I didn't concern myself so much with practical limitations like clocks would tic
 
 ## Demos
 
-~~[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html) not completed...is just 
-about showing clocks... ~~
-
 [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.  This also has a function to reverse calculate, and show a computed observed position.
 
 ![Screenshot](math/lightSpeed1.jpg)
@@ -20,24 +17,31 @@ The 0 time event is centered on the line, and the simulation starts at -1/2 Run 
 
 ## The Math
 
+This is only concerning the minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given.
+
 Each part of the body emits a signal at the position it is, and that signal time to the observer is recorded.
 
 At some time T, a body is at a position VT; the extents of the body are at `(VT+L)` and `(VT-L)`.  
-A relatively stationary observer, at some `D` distance from the body; then `Do = sqrt(DD+(VT+L)^2)` is the photon has to travel
-to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = TV/C`).
+A relatively stationary observer, at some `D` distance from the body; then `Do = sqrt(DD+(VT+L)^2)` is the distance a photon has to travel
+to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = sqrt(VVTT)/C`, which Lorentz implified to `To=VT/C`, and this later formula yields the wrong results).
 
-
-The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  
-
-Observed time of (some position along body L) ( head, center, tail)
+Observed time of (some position along body L) ( head(+L), center(+0), tail(-L))
 
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
-Real time observer at time `x` sees (head); should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T`.
+Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'.
 
-$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LVx+V^{2}\left(\ C^{2}x^{2}-D^{2}\right)}+C^{2}x+LV}{C^{2}-V^{2}}$$
+$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{T_o}+V^{2}\left(\ C^{2}{T_o}^{2}-D^{2}\right)}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+(slight refactor)
+$$f(T_o,L) = \frac{\sqrt{C^{2}(D^{2}+L^{2}+2LV{T_o}+{V^{2}T_o}^{2}) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
-The above returns the real time from an observer time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
+$$f(T_o,L) = \frac{\sqrt{C^{2}(D^{2}+(L+VT)^2) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+
+$$f(T_o,L) = \frac{ {C{VT_o} }+C^{2}{T_o}}{C^{2}-V^{2}}$$
+
+
+
+The above returns the real time from an observers time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
 if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
 $$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
@@ -63,35 +67,6 @@ $$b(x,y,z)=-\sqrt {  (|x|*(x<0,  \frac { C+V} {C-V}, {\frac { C-V} {C+V} } ))^{2
 Then if space was moving, instead of myself... [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3a.html)
 
 `b(x,y,z)*V+x, y, z`
-
-## Gamma
-
-https://www.desmos.com/calculator/fbl7sujtzp
-
-This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
-
-Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
-
-At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
-takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
-determine that this is the speed the moving body feels)
-
-Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
-
-This is the gamma factor for two-way speed of light...
-
-Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
-
-which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
-may be different, as long as the total of 2 bounces is 2 ticks.
-
-from: $a+b=2$, $a=c/(c+x)$, $b=c/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
-
-Again the inverse from feels like to real velocity, but for the two-way speed of light.
-
-Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
-
-
 
 ### Lorentz Problem
 
@@ -188,30 +163,6 @@ Difference in time, noted by the observer on the train between the signals.
 
 $$-2*(CD+LV)$$
 
-
-# Connection to Quantum Mechanical Correlations
-
-The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
-
-The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
-(see previous demo - Homework Rework).
-
-[Quantized Probablity](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md) was a earlier project, using a LHV of quantum mechanics called 'spin axis' led me to this method of calculation QM probabliities.
-It's within 3% of QM predictions, which is less than experimental apparatus error bars...
-
-```
-		//2(CD+LV)/(CC-VV)
-
-		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
-		// A+B = 2D
-		// a = A/D   b = B/D
-		// a+b=2
-		// 1-a/b = b/a-1 = 0   QM balance.
-```
-
-
-(Note sections are potentially incomplete/inaccurate).
-
 ## Generalized to 3D Vectors
 
 `(D,E,F)` and `(J,K,L)` are velocity vectors; T is the real time, and S is the observed time.
@@ -242,7 +193,10 @@ $$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$$
 $$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$$
 
 if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+
 ---
+
+
 
 
 ## Time Dilation 
@@ -265,13 +219,46 @@ Time scalar (observed velocity to real time scalar)
 $$ \sqrt{CC - T_R(x)^2}$$
 
 $$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
+## Gamma
 
-## Extended clock rotations
+https://www.desmos.com/calculator/fbl7sujtzp
 
-[This Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
+This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
+
+Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
+
+At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
+takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
+determine that this is the speed the moving body feels)
+
+Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
+
+This is the gamma factor for two-way speed of light...
+
+Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
+
+which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
+may be different, as long as the total of 2 bounces is 2 ticks.
+
+from: $a+b=2$, $a=c/(c+x)$, $b=c/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
+
+Again the inverse from feels like to real velocity, but for the two-way speed of light.
+
+Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
+
+## Applying time dilation
+
+~~[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html) not completed...is just 
+about showing clocks... ~~
+
+
+
+## Extended velocity rotations
+
+[This Demo(4)](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
 while keeping the orientation of the moving frame the same direction.  This then required a function like this...
 
-$$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)\right)}{\left(CC-VV\right)}$$
+$$f\left(a\right)=\frac{\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)}{CC-VV}$$
 
 to compute when the observed signal would go away.  (position is not draw ATM).
 
@@ -284,10 +271,10 @@ At 90 degrees, the clock should work like the standard Lorentz Transformation cl
 Purple and is the computed Loretnz gamma factor.  The Blue horizontal line is 1/2 max+min clock speeds - as if the clock
 was always horizontal. There's probably a third option that's roughly the average of the areas under the curve.
 
-The second graph I added (f(x)+f(x+pi)/2) and the mid point of that would probably be a best choice.
-I'm really fine with either gamma factor... neither corrects every condition enough to matter.
+Can add a graph line $\frac{\left(f\left(x\right)+f\left(x+\pi\right)\right)}{2}$ which shows all opposing 2-way times for light to span the clock; this curve is also not very constant.  Adding the two way speed for 2 clocks 90 degrees to each other : $\frac{\left(f\left(x\right)+f\left(x+\frac{\pi}{2}\right)+f\left(x+\pi\right)+f\left(x+\frac{3\pi}{2}\right)\right)}{4}$  Is closer to a constant, and close to the average of Lorentz Gamma factor and my calculated Gamma.
 
-Result maybe - (C+sqrt(CC-VV)) / 2(CC-VV)
+
+Result maybe -$\frac{\sqrt{\left(CC-VV\right)}+C}{2(CC-VV)}$
 
 6 way speed of light doesn't appear to be much better... https://geogebra.org/3d/twjua74e
 Using a 4 way speed of light calculated with `(f(x)+f(x+pi/2)+f(x+pi)+f(x+3*pi/2))/4` is actually itself
@@ -296,22 +283,29 @@ But, is the minimum error at either worst/best cases, and inbetween has only a s
 time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
 
 
-## STFR Take on it
 
-$$\theta = angle-in-cycles$$
-Lambda is the unit cycles
-$$\Lambda$$
+# Connection to Quantum Mechanical Correlations
 
-frequency(phi) * wavelength(omega) = speed of light
-$$\phi\omega = \frac \Lambda s * \frac m \Lambda = c $$
-arc length is cylces per second times meters per cycle.  
-$$ arc-length = \frac m \Lambda * \frac \Lambda s $$sqrt( Spin in arc-length squared plus velocity squared ) = speed of light
-$$\sqrt {S^2  + V^2} = c  $$
+The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
 
-a = sqrt( cc - at at ); v = at
-v = at
-p = 1/2 at^2 + vt 
+The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
+(see previous demo - Homework Rework).
 
+[Quantized Probablity](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md) was a earlier project, using a LHV of quantum mechanics called 'spin axis' led me to this method of calculation QM probabliities.
+It's within 3% of QM predictions, which is less than experimental apparatus error bars...
+
+```
+		//2(CD+LV)/(CC-VV)
+
+		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
+		// A+B = 2D
+		// a = A/D   b = B/D
+		// a+b=2
+		// 1-a/b = b/a-1 = 0   QM balance.
+```
+
+
+(Note sections are potentially incomplete/inaccurate).
 
 
 ### Dev Notes
@@ -470,7 +464,7 @@ Initial conditions...
 # Revisited Math
 
 Basic Posulates 
-  - the two way speed of light is measured as C.
+  - the way speed of light is measured as C.
   - the clock dialation is measured with a horizontal photon clock, that is parallel to the direction of travel.  ![Photon Clock orirentations](PhotonClocks.png) Classically the photon clock is arranged to be perpendicular ot the direction of travel. 
     This has problems, that you would have to angle the mirrors based not only on your acceleratinn but on your velocity.  Instead the photon clock is put in the worst-case scenario.  The dilation is then computed with 
 

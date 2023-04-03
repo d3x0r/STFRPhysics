@@ -215,7 +215,7 @@ GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minu
 
 ## CHSH Experiment
 
-https://qubit.guide/9.3-chsh-inequality.html
+https://qubit.guide/10.3-chsh-inequality.html
 
 QM Max correlation `2*sqrt(2)` = 2.828.
 
