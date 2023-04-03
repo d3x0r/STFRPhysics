@@ -83,11 +83,11 @@ And, real, static, at rest, stationary space, does not contract or expand, becau
 
 Maybe 0.5c is a bad choice.  0.9c.  makes the lengths `1/(1.9)` and `1/0.1` or `0.52` and `10`.  So the light from the front is seen at 1/(c+v) and the tail 1/(c-v).
 
-![[TransformedBody-0.9c.png]]
+![](TransformedBody-0.9c.png)
 
 So this shows a moving body at 0.9c; without time scaling, looks like it is 10 long, so light 'should' take 10 seconds to get there, but really it's that it did take 10 seconds to get there; and 0.5(2) contracted, because it did take 0.52 seconds to get to the observer in the center of his body.  The body is 1 light-second square; and really the observer in the ship knows that - they can pace it out, and measure the length; although each step to the back will make the back seem to approach faster than 1 step worth of space, while the front will receed at less than 1 step worth of space.
 
-![[TransformedBody-0.9c-time.png]]
+![](TransformedBody-0.9c-time.png)
 
 Also, it can be known that the light is from 10 seconds ago... the above image adds shading for time.  Green is 'now', the order of time is green-blue-red-green; so the sides near the `X` are red, because they are 1 second in the past, the blue sides are 2 seconds in the past, etc... going back until the back of the ship is 10 seconds in the past.
 
@@ -95,22 +95,23 @@ Also, it can be known that the light is from 10 seconds ago... the above image a
 Okay; then multiply by some Lorentz Gamma Factor to correct the clock, and scale the length appropriately.  Though, really you know how long hour ship was, and although a moving train/ship/body to something on the body looks a lot like it looks to an external observer, its front length observed contracted and it's back observed long, then the speed of light is technically still correct by what you're observing.  But you know that the two events happen to you at some different time, and can know that light was travelling at less then or more than C from one end or the other.
 
 Although that's true only in regards to the signals emitted from the train/body itself.
-![[TransformedBody-0.9c-stationary.png]]
+![](TransformedBody-0.9c-stationary.png)
 The same signals emitted from a stationary object (magenta square) will also take 10 seconds to get there from the left, and 0.52 secons from the front, and it's position will not appear to be anywhere else.  It was, is and will be always where it was.  In the moving bodies case, where it is at various times changes over time.  And when it was 'red' at the back of the train, and emitted (10 seconds ago) that's where it was.  
 
 However, the stationay body that is 2 light-seconds square, the observer will always see the opposing sides 2 seconds apart, even though that light might have taken a longer time to get to the observer, and appear to 'tick' slower after the moving body has passed, and 'tick faster' as the moving body approaches.
 
-![[TransformedBody-0.9c-stationarytime.png]]
+![](TransformedBody-0.9c-stationarytime.png)
 
 ### Stationary Body Times
 
 However, I guess it's interesting to note, that while the shape is not actually distorted, time is...
-![[StationaryBody-0.9c-0sec.png]]
+![](StationaryBody-0.9c-0sec.png)
 The above image has the body of the stationary object at 0, and what is seen is 1 second in the past, all red.  If the body had emitted the red signal 1 second ago, then as the train passes it sees that simultaneously.
 
-![[StationaryBody-0.9c-0.5sec.png]]
+![](StationaryBody-0.9c-0.5sec.png)
 But, if the green signal at `T=0` is the intersting one, then it sees that signal here(at 0.5 seconds), a long time before it sees the green from the left side....
 
-![[StationaryBody-0.9c-10sec.png]]
+![stationary body at 0.9c after 10sec](StationaryBody-0.9c-10sec.png)
+
 then 10 seconds after passing `T=0` it sees the event from the back.  I'm not quite sure how this justifies that the speed of light is still constant to that observer.
 
