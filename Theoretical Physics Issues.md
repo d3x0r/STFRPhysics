@@ -43,7 +43,9 @@ Other than 2) disregards any idea about velocity becoming...
 
  2) As measured in any inertial frame of reference, light is always propagated in empty [space](https://en.wikipedia.org/wiki/Space "Space") with a definite velocity _c_.
 
-This yeilds that a non-moving body is not contracted/dilated.  A body moving towards an observer appears expanded/elongated in the direction of motion, while a body moving away appears contracted.
+This yeilds that a non-moving body is not contracted/dilated.  A body moving towards an observer appears expanded/elongated in the direction of motion, while a body moving away appears contracted.  
+
+After considering the later time dilation effect, the example shows that an observer might interpret the speed of light as constant to themselves, if they use what they see as the length the light traveled raather than the length they know their body to be.
 
 ### 4.1) Inequivalence of Equivalence Principle 
 First, if a body sees a non-moving body, then the non-moving body appears exactly the same; so if a body is itself moving fast, and assumes itself to be at rest, and the other body is moving, would be predicted to have length elongation/contraction, but this is not what would be observed.
@@ -71,3 +73,23 @@ As noted in this expanded thought experiment, the frequency of light for fast mo
 
 Since 'Dave' on the moving frame observes his own lights at an unmodified frequency, any red shift for the motion in the light frequency itself is compressed by the observing device also moving at the same rate as the light that was emitted. 
 
+---
+
+Lorentz Transformation, the length is 'shorter' so the front light to the observer still covers this 'short' distance at `1/c`; the front distance is `1` to start, and at V, it's `1/(c+v)`, so then the length divided by C is `c/(c+v)`; but then their clock is dilated by the Lorentz Gamma Factor `1/sqrt(1-v/c)`; so it covers the same distance in a longer time... but c/(c+v) does match (1c/1.5 or 2/3m/s.  So without the clock dilation, this example appears to work.
+
+Let's consider the other side, which is also supposed to be shorter ( it's not, it's expanded )  and its length is `1`, and at `V` is `1/(c-v)`, and `c/(c-v)` or `1/0.5` is 2.  so it makes sense to have traveled 2 seconds to reach the observer.  Only, again their clock is slow, so it's still not the speed of light.
+
+And, real, static, at rest, stationary space, does not contract or expand, because any signal emitted from where it is is always from where it is.  
+
+Maybe 0.5c is a bad choice.  0.9c.  makes the lengths `1/(1.9)` and `1/0.1` or `0.52` and `10`.  So the light from the front is seen at 1/(c+v) and the tail 1/(c-v).
+
+![[TransformedBody-0.9c.png]]
+
+So this shows a moving body at 0.9c; without time scaling, looks like it is 10 long, so light 'should' take 10 seconds to get there, but really it's that it did take 10 seconds to get there; and 0.5(2) contracted, because it did take 0.52 seconds to get to the observer in the center of his body.  The body is 1 light-second square; and really the observer in the ship knows that - they can pace it out, and measure the length; although each step to the back will make the back seem to approach faster than 1 step worth of space, while the front will receed at less than 1 step worth of space.
+
+![[TransformedBody-0.9c-time.png]]
+
+Also, it can be known that the light is from 10 seconds ago... the above image adds shading for time.  Green is 'now', the order of time is green-blue-red-green; so the sides near the `X` are red, because they are 1 second in the past, the blue sides are 2 seconds in the past, etc... going back until the back of the ship is 10 seconds in the past.
+
+---
+Okay; then multiply by some Lorentz Gamma Factor to correct the clock, and scale the length appropriately.  Though, really you know how long hour ship was, and although a moving train/ship/body to something on the body looks a lot like it looks to an external observer, its front length observed contracted and it's back observed long, then the speed of light is technically still correct by what you're observing.  But you know that the two events happen to you at some different time, and can know that light was travelling at less then or more than C from one end or the other.
