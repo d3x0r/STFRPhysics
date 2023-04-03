@@ -96,7 +96,7 @@ class D3xTransform {
 	}
 
 	static drawCoords( atNow ) {
-		const xscale_ = xscale/3;
+		const xscale_ = xscale/3.5;
 		const ofs = 500;//xscale_ * 13;
 
 // velocity ratio line.
@@ -366,18 +366,20 @@ class D3xTransform {
 				const tx =  tail * (V) * ca +tailx ;
 				const ty =  tail * (V) * sa +taily ;
 				ctx.beginPath();
+				ctx.strokeStyle =  `hsl(${(head%3)*120+120},100%,50%)`
+
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
 				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
 				ctx.stroke();
 				}
 
-				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+				_doSeg( -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L, -L );
+				_doSeg( -L +((seg)/30)*L, L, -L +((seg+1)/30)*L, L );
+				_doSeg( -L, -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L );
+				_doSeg( L, -L +((seg)/30)*L, L, -L +((seg+1)/30)*L );
 			}
-			for( let seg = 0; seg < 20; seg++ ){ 
+			for( let seg = 0; seg < 60; seg++ ){ 
 				doSegASelf( seg );
 			}
 		}
