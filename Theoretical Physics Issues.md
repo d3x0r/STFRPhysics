@@ -96,4 +96,8 @@ Okay; then multiply by some Lorentz Gamma Factor to correct the clock, and scale
 
 Although that's true only in regards to the signals emitted from the train/body itself.
 ![[TransformedBody-0.9c-stationary.png]]
-The same signals emitted from a stationary object (magenta square) will also take 10 seconds to get there from the left, and 0.52 secons from the front, and it's position will not appear to be anywhere else.  It was, is and will be always where it was.  In the moving bodies case, where it is at various times changes over time.  And when it was 'red' at the back of the train, and emitted (10 seconds ago) that's where it was.
+The same signals emitted from a stationary object (magenta square) will also take 10 seconds to get there from the left, and 0.52 secons from the front, and it's position will not appear to be anywhere else.  It was, is and will be always where it was.  In the moving bodies case, where it is at various times changes over time.  And when it was 'red' at the back of the train, and emitted (10 seconds ago) that's where it was.  
+
+However, the stationay body that is 2 light-seconds square, the observer will always see the opposing sides 2 seconds apart, even though that light might have taken a longer time to get to the observer, and appear to 'tick' slower after the moving body has passed, and 'tick faster' as the moving body approaches.
+
+![[TransformedBody-0.9c-stationarytime.png]]

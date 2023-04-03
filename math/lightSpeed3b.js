@@ -397,6 +397,8 @@ class D3xTransform {
 				const tx =  tail[0] * (myV) * ca_o +tailx - posX;
 				const ty =  tail[0] * (myV) * sa_o +taily +D - posY;
 				ctx.beginPath();
+				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
+
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
 				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
