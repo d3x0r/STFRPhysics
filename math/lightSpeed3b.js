@@ -208,14 +208,14 @@ class D3xTransform {
 					}
 					if( showObserver )
 					{
-						let here  = observedTimeToRealTimeXYZ2( now, myV, myX+X, myY+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						let here  = observedTimeToRealTimeXYZ2( now, myV, X, T, 0, V, 0, 0, 0, ca_o, sa_o, ca, sa );
 						const hx =  here[0] * (myV) * ca_o + X - posX;
 						const hy =  here[0] * (myV) * sa_o + T+D - posY;
 
-						let right = observedTimeToRealTimeXYZ2( now, myV, myX+X+1, myY+T, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						let right = observedTimeToRealTimeXYZ2( now, myV, X+1, T, 0, V, +0, 0, 0, ca_o, sa_o, ca, sa );
 						const rx =  right[0] * (myV) * ca_o + (X+1) - posX;
 						const ry =  right[0] * (myV) * sa_o + T+D - posY;
-						let next   = observedTimeToRealTimeXYZ2( now, myV, myX+X, myY+T+1, 0, V, +0*V*now*ca, 0*V*now*sa, 0, ca_o, sa_o, ca, sa );
+						let next   = observedTimeToRealTimeXYZ2( now, myV, X, T+1, 0, V, +0, 0, 0, ca_o, sa_o, ca, sa );
 						const nx =  next[0] * (myV) * ca_o + X - posX;
 						const ny =  next[0] * (myV) * sa_o + (T+1)+D - posY;
 
@@ -390,12 +390,14 @@ class D3xTransform {
 			ctx.fillText( "Observer(from observed)", 10, 10 + 2.5*xscale_);//-L*xscale_ ); 
 			function doSeg( seg ) {
 				function _doSeg(tailx,taily, headx, heady) {
-				let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx+myV*now*ca_o, taily+myV*now*sa_o, 0, V, 0*posX, 0*posY-D, 0, ca_o, sa_o, ca, sa );
-				let head  = observedTimeToRealTimeXYZ2( now, myV, headx+myV*now*ca_o, heady+myV*now*sa_o, 0, V, 0*posX, 0*posY-D, 0, ca_o, sa_o, ca, sa );
+
+				let tail  = observedTimeToRealTimeXYZ2( now, myV, tailx, taily, 0, V, 0*posX, 0*posY-D, 0, ca_o, sa_o, ca, sa );
+				let head  = observedTimeToRealTimeXYZ2( now, myV, headx, heady, 0, V, 0*posX, 0*posY-D, 0, ca_o, sa_o, ca, sa );
 				const hdx =  head[0] * (myV) * ca_o +headx - posX;
 				const hdy =  head[0] * (myV) * sa_o +heady +D  - posY;
 				const tx =  tail[0] * (myV) * ca_o +tailx - posX;
 				const ty =  tail[0] * (myV) * sa_o +taily +D - posY;
+
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
 
