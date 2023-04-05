@@ -678,7 +678,8 @@ chkLblXTGraph.addEventListener( "input", update );
 const spanChkXTGraph = document.createElement( "label" );
 spanChkXTGraph.textContent = " |XT Graph";
 spanChkXTGraph.appendChild( chkLblXTGraph );
-controls.appendChild( spanChkXTGraph );
+//controls.appendChild( spanChkXTGraph );
+
 //- - - - - - - - - - - - - - 
 const chkLblShowObserver = document.createElement( "input" );
 chkLblShowObserver.setAttribute( "type", "checkbox" );

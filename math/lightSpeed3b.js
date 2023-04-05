@@ -121,8 +121,10 @@ class D3xTransform {
 	const myY = now*myV*sa_o;
 	const posX = now*V*ca;
 	const posY = now*V*sa;
+	if(showXTGraph) {
+		const gamma = (C-V)/C;  // This matches the matrual curve (at C=1)
+		//const gamma = Math.sqrt( C*C-V*V);
 
-	  if(showXTGraph)
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
@@ -130,14 +132,14 @@ class D3xTransform {
 			ctx.strokeStyle= "white";
 			//if( X > 0 )
 			{
-				ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X) );
-				ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C)-X ) );
-				ctx.moveTo( ofs - (xscale_)*(0*(V/C)-X), ofs  - (xscale_)*(-0) );
-				ctx.lineTo( ofs + (xscale_)*(10*(V/C)+X), ofs + (xscale_)*(-10 ) );
+				ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X)*(gamma) );
+				ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*((-10*V/C-X*(gamma))) );
+				ctx.moveTo( ofs + (xscale_)*((X))*(gamma), ofs  - (xscale_)*(-0) );
+				ctx.lineTo( ofs + (xscale_)*(10*V/C+X*(gamma)), ofs + (xscale_)*(-10 ) );
 			}
 			ctx.stroke();
 		}	
-
+	}
 		ctx.strokeWidth= 1.5;
 
 
