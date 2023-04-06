@@ -196,13 +196,8 @@ if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 
 $\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o$;$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$;$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$;$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$;$T = \frac {\sqrt{ B^2-DA } +B} {D}$
+
 ---
-
-
-
-
-
-
 ### Including self velocity to make 3 body.
 
 $$T_2-T_1= \frac { \lVert (((\overrightarrow{X_1}-\overrightarrow{X_0})-(\overrightarrow{X_2}-\overrightarrow{X_0})) + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_2}) \rVert } {C} $$
