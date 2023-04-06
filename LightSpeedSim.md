@@ -213,7 +213,7 @@ $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrig
  $V_0T_1$ disappears, so the general offset of the event from the speed doesn't matter.  But a $V_0T_2$ term remains.
 $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + \overrightarrow{V_1} {T_1} - \overrightarrow{V_2} ({T_1}+{T_2}) +\overrightarrow{V_0}{T_2}\rVert } {C} $$
 
-The original solve can still be used, with the velocity terms substituted ($V=V_1-V_0$) and ($V_o=V_2-V_0$); the above expression is just an interested note.  I was refactoring to see if $V_0$ was actually a relevant factor, or like $X_0$ it disappears.   It does remain as an additional distance(delay) between $T_1$ and $T_2$.
+The original solve can still be used, with the velocity terms substituted ($V=V_1-V_0$) and ($V_o=V_2-V_0$); the above expression is just an interested note.  I was refactoring to see if $V_0$ was actually a relevant factor, or if, like $X_0$, it disappears.   It does remain as an additional distance(delay) between $T_1$ and $T_2$.
 
 ## Time Dilation 
 
