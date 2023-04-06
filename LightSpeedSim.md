@@ -201,19 +201,20 @@ $\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_
 ### Including self velocity to make 3 body.
 
 $$T_2-T_1= \frac { \lVert (((\overrightarrow{X_1}-\overrightarrow{X_0})-(\overrightarrow{X_2}-\overrightarrow{X_0})) + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_2}) \rVert } {C} $$
-The third body (X_0,V_0) with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the X_0 factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
+The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
 
-T2 includes T1; and is the sum of T+T_o where T_o is the time it takes between emission and detection.  So expanding this...
+$T_2$ includes $T_1$; and is the sum of $T+T_o$ where or $T_o=T_2-T_1$ is the time it takes between emission and detection.  So expanding this...
 
 $$T_2-T_1 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) {T_2} \rVert } {C} $$
 
-It could be refactored to compute just the delta, and internally use T_1+T_2 as the total time the observer moved, then `V_0T_1` disappears, so the general offset of the event from the speed doesn't matter.  But a `V_0T_2` term remains.
+It could be refactored to compute just the delta, and internally use $T_1+T_2$ as the total time the observer moved, then $V_0T_1$ disappears, so the general offset of the event from the speed doesn't matter.  But a $V_0T_2$ $term remains.
 $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_1}+{T_2}) \rVert } {C} $$
 $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + \overrightarrow{V_1} {T_1} - \overrightarrow{V_2} ({T_1}+{T_2}) +\overrightarrow{V_0}{T_2}\rVert } {C} $$
 
-Caveat: The original solve can be used, and the terms substituted; just an interested note.  I was refactoring to see if `V_0` was actually a relevant factor, of if like `X_0` it disappeared.   Something, somewhere, relative to something else is itself a net of 0. 
+Caveat: The original solve can be used, and the terms substituted; just an interested note.  I was refactoring to see if $V_0$ was actually a relevant factor, or like $X_0$ it disappears.   It does remain as an additional distance(delay) between $T_1$ and $T_2$.
 
 ## Time Dilation 
+
 According to special relativity
 
 (?) = m-m/s-s-s-s - m-m/s-s
