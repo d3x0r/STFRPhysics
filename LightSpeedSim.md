@@ -194,10 +194,28 @@ $$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$$
 
 if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
+
+$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o$;$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$;$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$;$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$;$T = \frac {\sqrt{ B^2-DA } +B} {D}$
 ---
 
 
 
+
+
+
+### Including self velocity to make 3 body.
+
+$$T_2-T_1= \frac { \lVert (((\overrightarrow{X_1}-\overrightarrow{X_0})-(\overrightarrow{X_2}-\overrightarrow{X_0})) + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_2}) \rVert } {C} $$
+The third body (X_0,V_0) with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the X_0 factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
+
+T2 includes T1; and is the sum of T+T_o where T_o is the time it takes between emission and detection.  So expanding this...
+
+$$T_2-T_1 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) {T_2} \rVert } {C} $$
+It could be refactored to compute just the delta, and internally use T_1+T_2 as the total time the observer moved, then `V_0T_1` disappears, so the general offset of the event from the speed doesn't matter.  But a `V_0T_2` term remains.
+$$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_1}+{T_2}) \rVert } {C} $$
+$$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + \overrightarrow{V_1} {T_1} - \overrightarrow{V_2} ({T_1}+{T_2}) +\overrightarrow{V_0}{T_2}\rVert } {C} $$
+
+Caveat: The original solve can be used, and the terms substituted; just an interested note.  I was refactoring to see if `V_0` was actually a relevant factor, of if like `X_0` it disappeared.   Something, somewhere, relative to something else is itself a net of 0. 
 
 ## Time Dilation 
 According to special relativity
@@ -226,6 +244,8 @@ https://www.desmos.com/calculator/fbl7sujtzp
 This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
 
 Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
+
+Gamma which I scale the isometric grid simulation is `C-V` as the gamma factor.  https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html `XT Graph` option, the white grid is sloped by Lorentz's Transform, and scaled to match the native math of one observer seeing another.
 
 At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
 takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
