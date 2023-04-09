@@ -165,11 +165,15 @@ $$-2*(CD+LV)$$
 
 ## Generalized to 3D Vectors
 
-`(D,E,F)` and `(J,K,L)` are velocity vectors; T is the real time, and S is the observed time.
+`(D,E,F)` and `(J,K,L)` are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted; it should be removed from the position the event is observed from.  $(\vec X + VT)-  (\vec 0+ \vec V_o S)$ divided by the speed of light $C$, is the time it takes to see something.
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || } {C} + T$; solve for S and for T.
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T.
 
 $S = \frac { \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - \overrightarrow{V_o} S} \rVert } {C} + T$ 
+
+$$T = (\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z)/(2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2))$$
+
+THe above has not had '2' removed'... 
 
 $S = \frac {\sqrt{(-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)} + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 
@@ -214,6 +218,24 @@ $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrig
 $$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + \overrightarrow{V_1} {T_1} - \overrightarrow{V_2} ({T_1}+{T_2}) +\overrightarrow{V_0}{T_2}\rVert } {C} $$
 
 The original solve can still be used, with the velocity terms substituted ($V=V_1-V_0$) and ($V_o=V_2-V_0$); the above expression is just an interested note.  I was refactoring to see if $V_0$ was actually a relevant factor, or if, like $X_0$, it disappears.   It does remain as an additional distance(delay) between $T_1$ and $T_2$.
+
+
+### Double check on right first equation
+
+$T=T_1$
+$T_2 = T_o-T$
+$T_o = T_2+T$
+$T_1 = T$
+
+$$T_2 = \frac { \lVert{ (\vec{X_1} + \vec{V_1} T_1) - (\vec{X_2}+ \vec{V_2} ({T_1}+{T_2} ))  }\rVert } {C}$$
+replacing $T_2$ and $T_1$ with  $T_o$ , and  $T$...
+$$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  + \vec{V_2} (T+T_o-T) }\rVert } {C}$$
+or
+$$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o ) }\rVert } {C}$$
+
+This is the same thing again, but might be phrased as 'The difference in positions, plus the difference in velocities until the event is emitted, minus the additional velocity times the delta time until it's received. (I had applied a + to the additional postion, thinking it was 'increasing the time', but really from above, it's a difference in positions).
+$$T_2 = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + (\vec{V_1}-\vec{V_2}) {T_1} - \vec{V_2} {T_2} ) }\rVert } {C}$$
+
 
 ## Time Dilation 
 
