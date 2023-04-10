@@ -14,37 +14,53 @@ Sliders allow adjusting `C` or the speed of light, the time scale (run faster/sl
 
 The 0 time event is centered on the line, and the simulation starts at -1/2 Run time; or -5 seconds with the default settings.  The default has the velocity at 2 times the speed of light, so for the first 5 seconds, you don't actually see anything, then you see an image of the ship continuing forward, and reverting backward to its source.  Neither of these images travel faster than the speed of light.
 
+Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overall progression is then red to green to blue to red...
+|T|  hue| 
+|---|---|
+| -1 | red |
+| 0 | green |
+|1 | blue |
+| 2 | red | 
+| 3 | green |
+
+[First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer
+[Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
+[Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
+[Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
+[Last Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
+
 
 ## The Math
 
-This is only concerning the minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given.
+This is only concerning the minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.
 
-Each part of the body emits a signal at the position it is, and that signal time to the observer is recorded.
+Each part of the body emits a signal at the position it is, and that signal's time to the observer is recorded.
 
-At some time T, a body is at a position VT; the extents of the body are at `(VT+L)` and `(VT-L)`.  
-A relatively stationary observer, at some `D` distance from the body; then `Do = sqrt(DD+(VT+L)^2)` is the distance a photon has to travel
-to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  `To = sqrt(DD+(VT+L)^2)/C` is the time it takes (the C can be factored into the expression as `C^2`).  (Special case `D=0`,`L=0`, `To = sqrt(VVTT)/C`, which Lorentz implified to `To=VT/C`, and this later formula yields the wrong results).
+At some time $T$, a body is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
+A relatively stationary observer, at some $D$ distance from the body
+; then $D_o = sqrt(D^2+(VT+L)^2)$ is the distance a photon has to travel
+to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = sqrt(D^2+(VT+L)^2)/C$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz implified to $T_o=VT/C$, and this latter formula yields the wrong results).
 
 Observed time of (some position along body L) ( head(+L), center(+0), tail(-L))
 
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
-Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'.
+Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o').
 
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{T_o}+V^{2}\left(\ C^{2}{T_o}^{2}-D^{2}\right)}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 (slight refactor)
-$$f(T_o,L) = \frac{\sqrt{C^{2}(D^{2}+L^{2}+2LV{T_o}+{V^{2}T_o}^{2}) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
 $$f(T_o,L) = \frac{\sqrt{C^{2}(D^{2}+(L+VT)^2) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
-$$f(T_o,L) = \frac{ {C{VT_o} }+C^{2}{T_o}}{C^{2}-V^{2}}$$
+setting $D=0$, $L=0$, and over-simpified to remove the sqrt : (broken, loses the absolute value....)
+$$f(T_o) = \frac{ {C{VT_o} }+C^{2}{T_o}}{C^{2}-V^{2}}$$
 
 
+The above returns the real time from an observers time $T_O$, and an offset along the body ($L$).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
-The above returns the real time from an observers time `T_O`, and an offset along the body (`L`).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
+if (V=C), then `V/C = 1`, so equation 1 simplifies to this... the T under the square root is $\frac V C$ which $=1$.
 
-if (V=C), then `V/C = 1`, so equation 1 simplifies to this...
-$$T_O = \sqrt{\left(\frac{DD}{CC}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
+$$T_O = \sqrt{\left(\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
 
 
 Simplified, and this is again still having a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)=\frac{\sqrt{VVCCxx}+CCx}{CC-VV}$$ 
@@ -52,21 +68,11 @@ or
 $$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
-$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$
+$$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 
 https://mathb.in/74833
+https://mathb.in/74928 (updated)
 
-### Space time index
-
-https://geogebra.org/3d/bsv5xcnx
-
-The graph shows light seconds away, and how long ago you're seeing that point.
-
-$$b(x,y,z)=-\sqrt {  (|x|*(x<0,  \frac { C+V} {C-V}, {\frac { C-V} {C+V} } ))^{2}+(|y|\frac {\sqrt{ C C+ V V}} {C})^{2} + (|z|\frac{\sqrt{ C C+V V}}{C})^{2}}$$
-
-Then if space was moving, instead of myself... [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3a.html)
-
-`b(x,y,z)*V+x, y, z`
 
 ### Lorentz Problem
 
@@ -144,8 +150,8 @@ This is getting closer to the lorentz transform than the above... but still to u
 
 ### Homework Reframed
 
-Okay looking at https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
-example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer. 
+Another example, with a slightly different metaphor, but the same idea : https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
+example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer (when using Lorentz transform, it's an observer 0 distance, observing the 0 point at 0 time or more).
 
 [This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
 
@@ -186,14 +192,13 @@ Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogeb
 ---
 Another refactor of above
 
-$$T_o = \frac { \lVert ({\overrightarrow{X}-\overrightarrow{X_o}) + \overrightarrow{V} T - \overrightarrow{V_o} {T_o}} \rVert } {C} + T$$
-
+$$T
+_o = \frac { \lVert ({\overrightarrow{X}-\overrightarrow{X_o}) + \overrightarrow{V} T - \overrightarrow{V_o} {T_o}} \rVert } {C} + T$$
+---
+Solved for T:
 $$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o $$
-
 $$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$$
-
 $$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$$
-
 $$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$$
 
 if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
@@ -202,8 +207,9 @@ if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 $\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o$ ; $A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$ ; $B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$ ; $D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$ ; $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 ---
-### Including self velocity to make 3 body.
+### Including self velocity to make 3 body
 
+Arguably I could defend 'no rest frame' by making the above relative to a third frame; but in computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  
 $$T_2-T_1= \frac { \lVert (((\overrightarrow{X_1}-\overrightarrow{X_0})-(\overrightarrow{X_2}-\overrightarrow{X_0})) + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_2}) \rVert } {C} $$
 The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
 
@@ -222,6 +228,8 @@ The original solve can still be used, with the velocity terms substituted ($V=V_
 
 ### Double check on right first equation
 
+It came to be that I was pondering why the above was $-V_oS$ .  It might be reasonable to think about $X+VT$ as the position an event happens and $X_o+V_oT$ where the observer was at that time, and subtract those; then $+V_o(T_o-T)$ is an additional distance the observer moved from the time it happened; but that's really relative to the origin of the frame, and should be subtracted.  It is really $(X+VT) -(X_o+V_oT+V_oT)$, which makes the last term just a subtraction.
+
 $T=T_1$
 $T_2 = T_o-T$
 $T_o = T_2+T$
@@ -232,10 +240,6 @@ replacing $T_2$ and $T_1$ with  $T_o$ , and  $T$...
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  + \vec{V_2} (T+T_o-T) }\rVert } {C}$$
 or
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o ) }\rVert } {C}$$
-
-This is the same thing again, but might be phrased as 'The difference in positions, plus the difference in velocities until the event is emitted, minus the additional velocity times the delta time until it's received. (I had applied a + to the additional postion, thinking it was 'increasing the time', but really from above, it's a difference in positions).
-$$T_2 = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + (\vec{V_1}-\vec{V_2}) {T_1} - \vec{V_2} {T_2} ) }\rVert } {C}$$
-
 
 ## Time Dilation 
 
@@ -258,6 +262,10 @@ Time scalar (observed velocity to real time scalar)
 $$ \sqrt{CC - T_R(x)^2}$$
 
 $$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
+
+---
+However, plotting the X-T graph 
+
 ## Gamma
 
 https://www.desmos.com/calculator/fbl7sujtzp
@@ -349,126 +357,10 @@ It's within 3% of QM predictions, which is less than experimental apparatus erro
 (Note sections are potentially incomplete/inaccurate).
 
 
-### Dev Notes
-
-( incomplete sentence fragments follow.  This was setting up how to think about the points... )
-a craft that is 3 long (-1,0,1) is moving along.
-
-at any given time T the craft is a color that  cycles through colors by changing the hue.
-(maybe the brightness/saturation can be scaled for distance? no?)
-
-at some time T=1, the craft is centered on 2, and its color is green(or subgradient from red to green).   The observer is 1 unit away  from the point 0 that is centered... so 
-at 0, the craft is seen 1 second after where it is, as red.
-
-
-|T|  a| p | ends| observer|
-|---|---|---|---|---|
-| -1 | red | 0 |  -1,1| (observes pre-time) |
-| 0 | green | 0 |  -1,1| (observes pre-time) |
-|1 | blue | 2 | 1,3|   observes green-red, green-red past time positions other than the center |
-| 2 | red | 4 | 3,5|  1.414 seconds for tail(partially red-green at +1 tick) and sqrt(10)=3.16 to see the front) |
-| 3 | green | 6 | 5,7| 
-
-so at T=2, the observer needs to know how far the ship would have gone to have a light line that is 2 long.
-
-(center-tail)
-$$t*t = (x+vt)^2 + d^2$$
-$$ \sqrt(t^2-d^2)-vt=x $$
-
-at T=1 I do see the center at 0, but the front would be from a time in the past... so it wouldn't be where it is, based on its velocity.... because when I do see it at T=1.414 both the head and tail are in the same (correct 1:1 ratio) position... and green.
-
-
-
-At some time T<0, the front of the space craft would have been seen at T=1 ... T=-0.1  H= c+h+vt; 
-A=time 
-B=time offset
-
-A+B=1
-
-(A+B) = 
-c+h+vB ; c+h+v(T-A)
-
-
-FTL condition...
-T=-1; observer won't see anything, until after 0 (get hit with the bullet before seeing it).
-T=0; observer doesn't see anything
-T=0.5; observer sees nose of craft pass 0 point.
-T=1, observer sees the craft center pass the 0 point. (some time before 1 it can see some thing?)
-T=1.5, observer sees tail of craft pass 0 point.
-
-T= 2, observer sees the craft receeding where it came from, and where it's going to; but slower than the craft actually goes. light from the past is finally getting to this point
-
-STL condition...
-T=-1; observer sees at a distance; all of the images will be superimposed on each other... 
-T=0; 
-T=1; observer sees the craft center at 0
-T=2, observer sees the craft past the center, all light from past is gone
-
-T=-0.5, H=0, and is 1 second away; but this will appear at 0.5 then, so 0.5 seconds after need 
-T=-0.3, H = (C+H+VT)
-T=0.5, T=0, and is 1 second away.
-
-I can scale the X into a total time.
-How do I find out when the Head is seen at a time T?  The time T at say 1.1 
-
-
-
-1) real position of the object
-2) apparent position of the object (1 second later)
-
-
-sqrt( xx - CC) = +/- numberline seen at some time given C propagation
-
-when head is at that number... sqrt( (x+h)^2 - CC ) = +/-
-
-
-v=2 (2x speed of light)
-d=1 (closest distance)
-c=1 (speed of light)
-T_r = sqrt( xx+dd/cc )
-
-X_r = +/- sqrt( xx - dd/cc )
-
-T=0 does not see anything on line... 
-T_1=D/C first instanct closest point can be seen.
-
-T_1 + 0.1 can see  
-
-X_r(T_1+0.1) is a spot I see.
-The ships front was at that spot at (C+H+v)
-P_h=tv+1; T=(P_h-1)/v
-
-?? X_r(T_1+0.1) = (P_h-1)/v  
-
-T=x
-
-
-$$(L V + C^2 x - sqrt(C^2 D^2 + C^2 L^2 - D^2 V^2 + 2 C^2 L V x + C^2 V^2 x^2))/(C^2 - V^2)) $$
-
-$$(C^2 (1 - (V (L + V x))/sqrt(C^2 (D^2 + (L + V x)^2) - D^2 V^2)))/(C^2 - V^2)$$
-
-what about turning the clock?  $\frac 1 {C+V(2-\sin(\theta))} + \frac {1} {C-V(2-\sin(\theta))} = 2C$  then 90 degrees the velocity part disappears... really probably should still include lorentz 1-way...
-
-simulation 3: D = -V  sqrt( D^2 + (L+V)^2 )  L-V
-   // at a frame, position = ( cos(A)VT+L,sin(A)VT )
-   //  is seen at ( D_2+cos(A)V(T+T_2),D+sin(A)V(T+T_2) )
-   //  
-   //  CT_2 = sqrt( ((D_2+cos(A)V(T+T_2) - cos(A)VT+L)^2 +
-                    ((D+sin(A)V(T+T_2)-sin(A)VT)^2 ) ) )
-
-   //  CT_2 = sqrt( ((D_2+cos(A)V T_2 - L)^2 +
-                    ((D+sin(A)V(T_2))^2 ) ) )
-
-`solve C*T_2 = sqrt( ((D_2+cos(A)V*T_2 - L)^2 +       ((D+sin(A)*V*(T_2))^2 ) ) ) for T_2 `
-
-```
-T_2 = (sqrt(V^2 (-2 D sin(A) - 2 D_2 cos(A) + 2 L cos(A))^2 - 4 (-D^2 + 2 D_2 L - D_2^2 - L^2) (-V^2 sin^2(A) - V^2 cos^2(A) + C^2)) - V (-2 D sin(A) - 2 D_2 cos(A) + 2 L cos(A)))/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
-
-```
-
-
 ---
 # SR Devnotes
+
+(Clock display has not been done yet, what an observer sees for a clock on the thing observed, this own clock, the real clock, ... what the clock on the observer actually is (increased distance increases clock ticks 'in the air'))
 
 'if two observers have clocks, and are in motion relative to one another at high velocities, then each should see the other's time as moving slower than theirs. when they meet back up, what determines which observer's clock has ticked more?'  from a user on physics discord.. 
 
@@ -500,36 +392,30 @@ Initial conditions...
 2)  `T=Math.sqrt( (D*D)/(C*C) / (C*C-V*V));` given V=Real velocity (sublight).
 3) the next signal they emit will be ... 
 
+### Space time index
+
+https://geogebra.org/3d/ckphajff  is the fixed version from the correct top math... 
+
+speed of light case is nice and simple though... h(x,y)=((-x^(2)-y^(2))/(2 x))
+
+
+The graph shows light seconds away, and how long ago you're seeing that point.
 
 
 # Revisited Math
 
 Basic Posulates 
-  - the way speed of light is measured as C.
-  - the clock dialation is measured with a horizontal photon clock, that is parallel to the direction of travel.  ![Photon Clock orirentations](PhotonClocks.png) Classically the photon clock is arranged to be perpendicular ot the direction of travel. 
-    This has problems, that you would have to angle the mirrors based not only on your acceleratinn but on your velocity.  Instead the photon clock is put in the worst-case scenario.  The dilation is then computed with 
+  - the speed of light is measured as C; once it is emitted it travels in a direction (all directions) from that point at the same speed, regardless of the observer's velocity.
+  - the clock dialation is the amount required to scale an isometric grid matching the upper right quadrant of an XT graph.  This is $(C-V)$; and the time dilation is $\frac 1 {C-V}$.  (This is the worst-case time, and really only applies for a 1 way clock from the negative direction of velocity) 
+  
+This makes 1/2 the speed of light feel like the speed of light; according to your clock and the velocity you're going, you travel 1 light second per second.  If you are emitting 1 pulse every second by your clock, it would take 2 real seconds for you to get 1 light second, but you would pulse once every light second an observer sees you.   2/3c feels like 3 times the speed of light 3/4c feels like four times, $\frac {cN} {N+1}$ feels like N times the speed of light.
 
+ - The other possible clock dilation is the N-way speed of light, that sums all possible speeds and gets a result - the 4-way speed of light comes close...
 
-```
-  tf(x) = L/(C+V)  // time of front - moving forward, signals from head are C+V.
-  tb(x) = L/(C-V)  // time of back - signals from the rear are C-V.
-  c(x) = 1/C     // the unit length of the length of the clock
+$$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)\right)}{\left(CC-VV\right)}$$
+$$f\left(a\right)=\frac{\sqrt{-\left( VX\sin\left(a\right)+ VY\cos\left(a\right)\right)^2+C^2X^2+C^2Y^2}+V\left(X\cos\left(a\right)+Y\sin\left(a\right)\right)}{CC-VV}$$
 
-  tf(x)+tb(x) = 2LC
-
-// well... this scalar is from the triangles?   
-//  d(x) = CC/(CC-VV) // clock scalar (result)
-//         C/2 (1/(C+V) + 1/(V-C)
-//
-
-   (ta(x)+tb(x)) * ((CC-xx)/CC) = 2LC(seconds)
-
-```
-
-I don't see how light in every direction in every frame is the speed of light in one direction; especially when moving very fast, the light from the back of the craft to an observer in the middel and the time from the front are logically different.
-
-
-This makes what feels like travelling at the speed of light only `0.6184` time the speed of light with an unscaled clock; this is the golden ratio.
+$$\frac{\int_{x=0}^\pi  f({x)} } {\pi}$$
 
 # Step-by-Step
 
