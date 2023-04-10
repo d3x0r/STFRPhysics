@@ -23,11 +23,11 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 | 2 | red | 
 | 3 | green |
 
-[First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer
-[Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
-[Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
-[Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
-[Last Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
+- [First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer
+- [Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
+- [Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
+- [Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
+- [Last Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
 
 
 ## The Math
