@@ -39,7 +39,7 @@ Each part of the body emits a signal at the position it is, and that signal's ti
 At some time $T$, a body is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
 A relatively stationary observer, at some $D$ distance from the body
 ; then $D_o = sqrt(D^2+(VT+L)^2)$ is the distance a photon has to travel
-to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = sqrt(D^2+(VT+L)^2)/C$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz implified to $T_o=VT/C$, and this latter formula yields the wrong results).
+to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = sqrt(D^2+(VT+L)^2)/C$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results).
 
 Observed time of (some position along body L) ( head(+L), center(+0), tail(-L))
 
@@ -410,11 +410,12 @@ Basic Posulates
   
 This makes 1/2 the speed of light feel like the speed of light; according to your clock and the velocity you're going, you travel 1 light second per second.  If you are emitting 1 pulse every second by your clock, it would take 2 real seconds for you to get 1 light second, but you would pulse once every light second an observer sees you.   2/3c feels like 3 times the speed of light 3/4c feels like four times, $\frac {cN} {N+1}$ feels like N times the speed of light.
 
- - The other possible clock dilation is the N-way speed of light, that sums all possible speeds and gets a result - the 4-way speed of light comes close...
+ - The other possible clock dilation is the N-way speed of light, that sums all possible speeds and gets a result - the 4-way speed of light comes close... 
 
 $$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)\right)}{\left(CC-VV\right)}$$
-$$f\left(a\right)=\frac{\sqrt{-\left( VX\sin\left(a\right)+ VY\cos\left(a\right)\right)^2+C^2X^2+C^2Y^2}+V\left(X\cos\left(a\right)+Y\sin\left(a\right)\right)}{CC-VV}$$
-
+a simple case starts with clock to the origin with (X=1, Y=0)...
+$$f\left(a\right)=\frac{\sqrt{-\left( V\sin\left(a\right)\right)^2+C^2}+V\cos\left(a\right)}{C^2-V^2}$$
+$$f(x)=\frac{\sqrt{C^{2}-V^{2}\sin(x)^{2}}\ +V\cos\left(x\right)}{C^2-V^2}$$
 $$\frac{\int_{x=0}^\pi  f({x)} } {\pi}$$
 
 # Step-by-Step
