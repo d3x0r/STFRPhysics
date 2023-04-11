@@ -855,11 +855,11 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 		return -Math.Infinity;
 	}
 	
-
-	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+	const delT = Math.sqrt(tmp*tmp - CV * tmp2	);
+	const T = (-delT + tmp )/CV;
 	if( T > T_o ) {
 
-		const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+		const T2 = (+delT + tmp )/CV;
 		if( T2 < T_o ) return [T2];
 		return [];
 	}

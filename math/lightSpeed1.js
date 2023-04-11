@@ -297,16 +297,16 @@ function observerTimeToRealTime( T, L ) {
 
 	if( C==V ) {
 		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a];
+		if( a <= T ) return [a];
 		return [];
 	}
 
 	const r = [];
 	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( a < T ) r.push(a);
+	if( a <= T ) r.push(a);
 	// positive solution walks backwards...
 	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( b < T ) r.push(b); 
+	if( b <= T ) r.push(b); 
 	return r;
 
 }
@@ -317,16 +317,16 @@ function observerTimeToRealPos( T, L ) {
 
 	if( C==V ) {
 		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a*V+L];
+		if( a <= T ) return [a*V+L];
 		return [];
 	}
 
 	const r = [];
 	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( a < T ) r.push(a*V+L);
+	if( a <= T ) r.push(a*V+L);
 	// positive solution walks backwards...
 	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( b < T ) r.push(b*V+L); 
+	if( b <= T ) r.push(b*V+L); 
 	return r;
 
 }
@@ -534,7 +534,7 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-	const frontT  = observerTimeToRealTime( now,  L );
+  	const frontT  = observerTimeToRealTime( now,  L );
 	const centerT = observerTimeToRealTime( now,  0 );
 	const backT   = observerTimeToRealTime( now, -L );
 	const front  = observerTimeToRealPos( now,  L );
@@ -547,55 +547,45 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 	for( let c of center )
 		centerBox( c, 6 );
 
-if(1) {
-	if( drawP && drawH )
-	if( center.length > 1 && front.length > 1 ) {
-		//console.log( "blah:", center[1], front[1], back[1] );
-		var grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
-		grd.addColorStop(0, `hsl(${drawH.hue},100%,50%` );
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
+  	if( back.length && center.length ) {
+			let grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(back[0])*xscale+( center[0] - (back[0]))*xscale, 0);
+			grd.addColorStop(0, `hsl(${120+120*(back[0]%3)},100%,50%` );
+			grd.addColorStop(1, `hsl(${120+120*(center[0]%3)},100%,50%` );
+			ctx.fillStyle = grd;
+			ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
+	
+  		if( back.length > 1 && center.length > 1 ) {
+				grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
+				grd.addColorStop(0, `hsl(${120+120*(back[1]%3)},100%,50%` );
+				grd.addColorStop(1, `hsl(${120+120*(center[1]%3)},100%,50%` );
+				ctx.fillStyle = grd;
+	   		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
+	  	}
 	}
-	if( drawP && drawT )
-	if( center.length > 1 && back.length > 1 ) {
-		var grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		grd.addColorStop(0, `hsl(${drawT.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
+	
+	if( center.length && front.length ) {
+			let grd = ctx.createLinearGradient(500+(center[0])*xscale +((front[0]) - center[0])*xscale, 0, 500+(center[0])*xscale, 0);
+			grd.addColorStop(0, `hsl(${120+120*(front[0]%3)},100%,50%` );
+			grd.addColorStop(1, `hsl(${120+120*(center[0]%3)},100%,50%` );
+			ctx.fillStyle = grd;
+			ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
+	
+  		if( center.length> 1 && front.length > 1 ) {
+				grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
+	   		grd.addColorStop(0, `hsl(${120+120*(front[1]%3)},100%,50%` );
+	  			grd.addColorStop(1, `hsl(${120+120*(center[1]%3)},100%,50%` );
+				ctx.fillStyle = grd;
+				ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
+		}
 	}
-	drawP = drawP2 || drawP;
-	drawH = drawH2 || drawH;
-	drawT = drawT2 || drawT;
-	if( drawP && drawH )
-	if( center.length > 0 && front.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(center[0])*xscale , 0, 500+(front[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawP.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
-	}
-	if( drawP && drawT )
-	if( center.length > 0 && back.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(center[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawT.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawP.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
-	}
-
-	ctx.fillStyle = "black"
-
-}
-
-
-
-	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-   ctx.fillRect( 500+(now*V - L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri( now*V + L, 20 );
-	tailTri( now*V - L, 20 );
-	centerBox( now*V, 20 );
+		
+		
+		
+			ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
+   	   ctx.fillRect( 500+(now*V - L)*xscale, 15, (2*L)*xscale, 10 );
+		headTri( now*V + L, 20 );
+		tailTri( now*V - L, 20 );
+   	centerBox( now*V, 20 );
 
 
 	requestAnimationFrame( draw );
