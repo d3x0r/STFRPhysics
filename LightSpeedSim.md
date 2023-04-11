@@ -240,6 +240,29 @@ replacing $T_2$ and $T_1$ with  $T_o$ , and  $T$...
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  + \vec{V_2} (T+T_o-T) }\rVert } {C}$$
 or
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o ) }\rVert } {C}$$
+## Practical examples of failures
+
+A classic example, although somewhat simplified from reality.  A boat on water bobs; we should really be somewhat more precise and say I have a mechanism that taps water periodically, and causes waves to emit from a certain point.  The wave pool is infinite, and there are no boundary reflections.  An observer can see the height of water in a region and see that it goes up and down.  It can deduce from the direction the waves are going which direction the other body is, and with a couple detectors, can detect distance. 
+
+So instead can we just say, there's a boat, on water, that bobs, it emits waves in a circle around it.  Another boat can only use the height of these waves in order to see the other boat.  The boat has perfect sensors that absorb all energy from incoming waves, and do not reflect any waves themselves, other than from their bobbing motion, but it cannot see that there was a outgoing change, because those waves will never return to the source.
+
+Now, we simply start moving one boat, and see the changes in the pattern of waves.  The direction one boat sees another boat going will be because the center of the waves changed - at some time later than the observed boat actually moved.  Hoever, the moving boat cannot say that the source of the waves is really changing very much when he senses the waves from the first stationary boat.
+
+---
+If there are 2 boats, and they are sitting there bobbing, and one takes off with a velocity, then a bow-wake sort of forms, not to mention the tail wake, but, then at some later point that boat can't go, 'wait, I have no wake in the water, it's the other boat that's moving away from me, and has a wake from it's after'.
+
+
+### One Velocity
+
+Body A and Body B are moving apart at 0.5c, (the arrow from B to A on the top left is meant to be A moving away from B, not B moving towards A).  The velocity between B or A might belong to A, and have it be $(0,0.5,0)$, or it might belong to B and be $(0,-0.5,0)$; it could be split and be $(0,0.25,0)$ and $(0,-0.25,0)$... although Lorentz transform always biases the observer as 0; so if the observer is at B, then A has a velocity away at 0.5c.
+
+![](relative-velocities.png)
+
+On the top right, A accelerates laterally to B, and the result is a vector from B to A that's 0.5c and is still their separation.  This would look exactly like the above case, only rotated.  
+
+However, the true relative speeds of each body are given, which means to B, A is moving to the right, which means that A should be leaving a wake(shown in blue) of waves towards the lower right, while B leaves a wake(shown in red) of waves going up the drawing, and not that A has a wake of waves on a velocity line in-line with B (shown in green).
+ 
+
 
 ## Time Dilation 
 
