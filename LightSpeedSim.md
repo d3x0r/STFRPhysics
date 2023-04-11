@@ -262,7 +262,15 @@ On the top right, A accelerates laterally to B, and the result is a vector from 
 
 However, the true relative speeds of each body are given, which means to B, A is moving to the right, which means that A should be leaving a wake(shown in blue) of waves towards the lower right, while B leaves a wake(shown in red) of waves going up the drawing, and not that A has a wake of waves on a velocity line in-line with B (shown in green).
  
+### Lorentz calculated vs real positions
+The purple line is the previous positions of the body calculated from the relative velocity.  The yellow X's are the actual positions in space - when the space ship was going by, it dropped a bouy at each of those spots (sort of, they are inertialess so they stop at the proper X Y frame position).  If there's a lateral motion in the velocity component of the observed, or even just a simple distance to the observer, then the positions a ship actually came from (and emitted light from to be seen) does not lie along the forward vector.
 
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
+
+If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, but then there's no complex calculation for a lateral motion that has no acceleration, but has a non-constant velocity observed.
+
+
+![Sample screenshot from current demo](Lorentz-v-real.png)
 
 ## Time Dilation 
 
