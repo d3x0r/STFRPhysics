@@ -32,13 +32,16 @@ const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 1;
+const nFrames = 101;
 let eventFrame = -1;
 
 //------------------ Storage for information about a frame ---------------------------
 
 class Frame{
-	Po = 0; // position observer
+	PobsrX = 0; // position observer
+	PobsrY = 0; // position observer
+	PobsdX = 0; // position observer
+	PobsdY = 0; // position observer
 	Ph = 0; // position head
 	Pc = 0; // postion center
 	Pt = 0; // position tail
@@ -121,6 +124,59 @@ class D3xTransform {
 	const myY = now*myV*sa_o;
 	const posX = now*V*ca;
 	const posY = now*V*sa;
+
+	const delVX = V*ca - myV*ca_o ;
+	const delVY = V*sa - myV*sa_o ;
+
+					let seen  = RealTime( now, { x: V*ca, y: V*sa, z: 0 }
+									, { x:0, y:0, z:0 }
+									, { x:ca_o*myV, y:sa_o*myV, z: 0 }
+									, { x:0, y:0, z:0 } );
+
+//seen
+			ctx.beginPath();
+			ctx.strokeStyle = "#0F0"
+			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3 -myY) )
+			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3 -myY) )
+			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3 -myY) )
+			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3 -myY) )
+			ctx.stroke();
+
+
+	for( let n = 0; n < nFrames; n++ ) {
+		const frame = frames[n];
+			ctx.strokeWidth = 1;
+		if( frame.T_start < now ) {
+			ctx.beginPath();
+			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
+			//ctx.lineTo( ofs + (xscale_)* (frame.PobsrX+L/3 ), ofs+(xscale_)*(frame.PobsrY+L/3 ) )
+			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX+L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
+			//ctx.lineTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY+L/3 ) )
+			ctx.strokeStyle = "#f0f"
+
+			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(delVY*frame.T_start-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(delVY*frame.T_start+L/3 ) )
+			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(delVY*frame.T_start-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(delVY*frame.T_start+L/3 ) )
+			ctx.stroke();
+			ctx.beginPath();
+
+			if( Math.abs(frame.T_start - now ) < 0.001 ) 
+				ctx.strokeStyle= "green";
+			else
+				ctx.strokeStyle = "yellow"
+
+			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX-L/3 -myX), ofs+(xscale_)*(frame.PobsdY-L/3-myY ) )
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
+			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY-L/3-myY ) )
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX-L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
+
+			ctx.stroke();
+		}
+
+	}
+
+
 	if(showXTGraph) {
 		const gamma = (C-V)/C;  // This matches the matrual curve (at C=1)
 		//const gamma = Math.sqrt( C*C-V*V);
@@ -239,7 +295,7 @@ class D3xTransform {
 					const oxo = D3xTransform.getObservedPlace2(X+1,T);
 					const oxt = D3xTransform.getObservedPlace2(X,T-1);
 					const ot  = D3xTransform.getObservedTime(X,T)+Math.abs(X);
-					const oto = D3xTransform.getObservedTime(X+1,T)+Math.abs(X)+(X>-1?1:-1);
+					const oto = D3xTransform.getObservedTime(X+1,T)+(Math.abs(X)+(X>-1?1:-1));
 					const ott = D3xTransform.getObservedTime(X,T-1)+Math.abs(X);
 					if( T === 0 ){
 						ctx.lineWidth = 5;
@@ -932,11 +988,24 @@ function update( evt ) {
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 
+	for( let n = 0; n < nFrames; n++ ) {
+		const frame = frames[n];
+		const del = n/nFrames;
+		const Treal = (del * runT)-runT/2;
+		frame.T_start = Treal;
+		frame.PobsrX = ca_o * myV * Treal;
+		frame.PobsrY = sa_o * myV * Treal;
+		frame.PobsdX = ca * V * Treal;
+		frame.PobsdY = sa * V * Treal+D;
+	}
+
+
 	if( !animate ) {
 		draw(  );
 	} else if( !didAnimate ) draw();
 
 }
+
 
 
 	function headTri( t,o,f ) {
