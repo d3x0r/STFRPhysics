@@ -129,23 +129,15 @@ class D3xTransform {
 	const delVY = V*sa - myV*sa_o ;
 
 					let seen  = RealTime( now, { x: V*ca, y: V*sa, z: 0 }
-									, { x:0, y:0, z:0 }
+									, { x:0, y:-D, z:0 }
 									, { x:ca_o*myV, y:sa_o*myV, z: 0 }
 									, { x:0, y:0, z:0 } );
 
 //seen
-			ctx.beginPath();
-			ctx.strokeStyle = "#0F0"
-			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3 -myY) )
-			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3 -myY) )
-			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3 -myY) )
-			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3 -myY) )
-			ctx.stroke();
 
-
+			ctx.lineWidth = 0.5;
 	for( let n = 0; n < nFrames; n++ ) {
 		const frame = frames[n];
-			ctx.strokeWidth = 1;
 		if( frame.T_start < now ) {
 			ctx.beginPath();
 			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
@@ -175,6 +167,16 @@ class D3xTransform {
 		}
 
 	}
+
+			ctx.lineWidth = 4;
+			ctx.beginPath();
+			ctx.strokeStyle = "#0F0"
+			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3-D -myY) )
+			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3-D -myY) )
+			ctx.moveTo( ofs + (xscale_)* (V*seen[0]*ca+L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa-L/3-D -myY) )
+			ctx.lineTo( ofs + (xscale_)* (V*seen[0]*ca-L/3 -myX), ofs+(xscale_)*(V*seen[0]*sa+L/3-D -myY) )
+			ctx.stroke();
+			ctx.lineWidth = 1;
 
 
 	if(showXTGraph) {
