@@ -32,7 +32,7 @@ const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 101;
+const nFrames = 51;
 let eventFrame = -1;
 
 //------------------ Storage for information about a frame ---------------------------
@@ -996,7 +996,7 @@ function update( evt ) {
 		frame.PobsrX = ca_o * myV * Treal;
 		frame.PobsrY = sa_o * myV * Treal;
 		frame.PobsdX = ca * V * Treal;
-		frame.PobsdY = sa * V * Treal+D;
+		frame.PobsdY = sa * V * Treal-D;
 	}
 
 
