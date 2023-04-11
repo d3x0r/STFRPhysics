@@ -546,7 +546,7 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		tailTri( b, 6 );
 	for( let c of center )
 		centerBox( c, 6 );
-
+try {
   	if( back.length && center.length ) {
 			let grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(back[0])*xscale+( center[0] - (back[0]))*xscale, 0);
 			grd.addColorStop(0, `hsl(${120+120*(back[0]%3)},100%,50%` );
@@ -578,7 +578,9 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 				ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
 		}
 	}
-		
+} catch(err) {
+	console.log( "Sometimes math blows up and context throws an error:", err );
+}		
 		
 		
 			ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
