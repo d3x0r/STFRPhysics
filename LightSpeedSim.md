@@ -273,7 +273,7 @@ If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, 
 ![Sample screenshot from current demo](Lorentz-v-real.png)
 
 The following image shows the actual relative velocity between the two frames... (I mean, if you really want to use a relative velocity then this is what it would be).  Both velocities between the frames are actually constant themselves.
-![[relative-velocity-vectors.png]]
+![screenshot of demo with relative velocities enabled](relative-velocity-vectors.png)
 ### Another Way to look at it
 
 This is a graph of relative velocity for a body travelling past 
