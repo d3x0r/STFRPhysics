@@ -99,16 +99,18 @@ function aberration( X, Vo, Xo ) {
 		const len = Math.sqrt(len2);
 		const Vlen = Math.sqrt(Vlen2);
 		const norm = Vlen*len;
+ 		const vAng = Math.acos( Vo.x/Vlen ) * (Vo.y<0?1:-1);
+//console.log( "velocity angle:", vAng, "from", Vlen );
 		const CosVDot = Vdot/(norm);
 		const ang = Math.acos(CosVDot);
-		const zz_x = Math.acos( ( CosVDot + Vlen/C ) / ( 1 + Vlen/C * CosVDot ) );
+		const zz_x = -vAng + Math.acos( ( CosVDot + Vlen/C ) / ( 1 + Vlen/C * CosVDot ) )*((Vcrs.z<0)?-1:1);
 //console.log( "was", ang, "is", zz_x );
 		const useC = Math.cos( zz_x );
 		const useS = Math.sin( zz_x );
 		
 		const SinVDot = Math.sqrt( 1-CosVDot*CosVDot );
 		Xr.x = Xo.x + len * useC;
-		Xr.y = Math.sign( Vcrs.z ) * (Xo.y - len * useS);
+		Xr.y = (Xo.y - len * useS);
 		Xr.z = X.z ;
 	}
 	return Xr;
