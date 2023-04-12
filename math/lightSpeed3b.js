@@ -66,6 +66,49 @@ for( let n = 0; n < nFrames; n++ ) {
 }
 
 
+function aberration_orig(th,V) {
+	const a = Math.acos( (Math.cos(th)+V/C)/(1+V/C*Math.cos(th)) )
+	return a;
+}
+
+
+function aberration( X, Vo, Xo ) {
+	// light direction (X-Xo) dot Vo/C = Vdot = |X-Xo||1|cos(th)
+	//    Vdot/||(X-Xo) = cos(th)
+	//  sindot =  sin(th) =  sqrt( 1-cos*cos );
+	//  X += sinDot * Vo/C
+	const Xr = {x:0,y:0,z:0}
+	const delx = X.x-Xo.x;
+	const dely = X.y-Xo.y;
+	const delz = X.z-Xo.z;
+	const len2 = delx*delx+dely*dely+delz*delz;
+	const Vlen2 = Vo.x*Vo.x+Vo.y*Vo.y+Vo.z*Vo.z;
+	const Vdot = delx * Vo.x + dely * Vo.y + delz * Vo.z;
+	const Vcrs = { x: delz*Vo.y-dely*Vo.z, y: delz*Vo.x-delx*Vo.z, z: dely*Vo.x-delx*Vo.y }
+	if( len2 < 0.0000001 || Vlen2 < 0.000001) {
+		// not far enough away to change...
+		Xr.x = X.x;
+		Xr.y = X.y;
+		Xr.z = X.z;
+		
+	} else {
+		const len = Math.sqrt(len2);
+		const Vlen = Math.sqrt(Vlen2);
+		const norm = Vlen*len;
+		const CosVDot = Vdot/(norm);
+		const ang = Math.acos(CosVDot);
+		const zz_x = Math.acos( ( CosVDot + Vlen/C ) / ( 1 + Vlen/C * CosVDot ) );
+//console.log( "was", ang, "is", zz_x );
+		const useC = Math.cos( zz_x );
+		const useS = Math.sin( zz_x );
+		
+		const SinVDot = Math.sqrt( 1-CosVDot*CosVDot );
+		Xr.x = Xo.x + len * useC;
+		Xr.y = Math.sign( Vcrs.z ) * (Xo.y - len * useS);
+		Xr.z = X.z ;
+	}
+	return Xr;
+}
 
 //const d3xTransform = new D3xTransform();
 class D3xTransform {
@@ -84,7 +127,7 @@ class D3xTransform {
 	}
  	static getObservedPlace2(X,T) {
 		const willSee2 = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} ); 
-		return willSee2[0] * V + X;
+		return willSee2[0] * V + X - willSee2[0]*myV;
 	}
 
 	static GetSeenSpace( C, now, pos, V, L, D ) {
@@ -245,6 +288,7 @@ class D3xTransform {
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 					const hx =  here[0] * (V) * ca + X - myX;
 					const hy =  here[0] * (V) * sa + T-D - myY;
+					const here_abb = aberration( {x:hx, y:hy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 					let right = RealTime( now, { x: V*ca, y: V*sa, z: 0 }
 											, { x:X+1, y:T-D, z:0 }
 											, { x:ca_o*myV, y:sa_o*myV, z: 0 }
@@ -252,21 +296,26 @@ class D3xTransform {
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X+1, T+0*V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 					const rx =  right[0] * (V) * ca + (X+1) - myX;
 					const ry =  right[0] * (V) * sa + T-D - myY;
+
+					const right_abb = aberration( {x:rx, y:ry, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
+					
 					let next   = RealTime( now, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:T+1-D, z:0 }, { x:ca_o*myV, y:sa_o*myV, z: 0 }, { x:0, y:0, z:0 } );
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa+1-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 					const nx =  next[0] * (V) * ca + X - myX;
 					const ny =  next[0] * (V) * sa + (T+1)-D - myY;
+
+					const next_abb = aberration( {x:nx, y:ny, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 
 					ctx.beginPath();
 				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
 					ctx.strokeStyle= "red";
 					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+					ctx.moveTo( ofs + (xscale_)*(here_abb.x), ofs + (xscale_)*(here_abb.y) );
+					ctx.lineTo( ofs + (xscale_)*(right_abb.x), ofs + (xscale_)*(right_abb.y) );
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+					ctx.moveTo( ofs +  (xscale_)*(here_abb.x), ofs + (xscale_)*(here_abb.y) );
+					ctx.lineTo( ofs + (xscale_)*(next_abb.x), ofs + (xscale_)*(next_abb.y) );
 					ctx.stroke();
 					if( here.length > 1 )
 					{
@@ -318,10 +367,10 @@ class D3xTransform {
 					ctx.beginPath();
 					const ox  = D3xTransform.getObservedPlace2(X,T);
 					const oxo = D3xTransform.getObservedPlace2(X+1,T);
-					const oxt = D3xTransform.getObservedPlace2(X,T-1);
+					const oxt = D3xTransform.getObservedPlace2(X,T+1);
 					const ot  = D3xTransform.getObservedTime(X,T)+Math.abs(X);
 					const oto = D3xTransform.getObservedTime(X+1,T)+(Math.abs(X)+(X>-1?1:-1));
-					const ott = D3xTransform.getObservedTime(X,T-1)+Math.abs(X);
+					const ott = D3xTransform.getObservedTime(X,T+1)+Math.abs(X);
 					if( T === 0 ){
 						ctx.lineWidth = 5;
 						ctx.strokeStyle= "green";
@@ -356,8 +405,8 @@ class D3xTransform {
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx+0*V*now*ca, taily+0*V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
-			let head  = observedTimeToRealTimeXYZ2( now, V, headx+0*V*now*ca, heady+0*V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
+			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
+			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
 
 			const hdx =  head[0] * (V) * ca +headx - myX;
 			const hdy =  head[0] * (V) * sa +heady  - myY;
