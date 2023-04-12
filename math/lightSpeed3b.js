@@ -11,6 +11,7 @@ let showXTGraph = false;
 let showSelf = false;
 let showObserver = false;
 let showRelativeVelocities = false;
+let includeAberration = true;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -77,6 +78,9 @@ function aberration( X, Vo, Xo ) {
 	//    Vdot/||(X-Xo) = cos(th)
 	//  sindot =  sin(th) =  sqrt( 1-cos*cos );
 	//  X += sinDot * Vo/C
+	if( !includeAberration ) {
+		return X;
+	}
 	const Xr = {x:0,y:0,z:0}
 	const delx = X.x-Xo.x;
 	const dely = X.y-Xo.y;
@@ -317,6 +321,8 @@ class D3xTransform {
 					ctx.moveTo( ofs +  (xscale_)*(here_abb.x), ofs + (xscale_)*(here_abb.y) );
 					ctx.lineTo( ofs + (xscale_)*(next_abb.x), ofs + (xscale_)*(next_abb.y) );
 					ctx.stroke();
+
+if(0)
 					if( here.length > 1 )
 					{
 						const hx =  here[1] * (V) * ca + X - myX;
@@ -338,6 +344,7 @@ class D3xTransform {
 						ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
 						ctx.stroke();
 					}
+
 					if( showObserver )
 					{
 						let here  = observedTimeToRealTimeXYZ2( now, myV, X, T, 0, V, 0, 0, 0, ca_o, sa_o, ca, sa );
@@ -412,23 +419,30 @@ class D3xTransform {
 			const hdy =  head[0] * (V) * sa +heady  - myY;
 			const tx =  tail[0] * (V) * ca +tailx - myX;
 			const ty =  tail[0] * (V) * sa +taily - myY;
+
+			const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
+			const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
+
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
 			if( !showSelf && !showObserver )
 				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
 
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
+			ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y-D) );
+			ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y-D) );
 			ctx.stroke();
 			if( head.length > 1 ) {
 				const hdx =  head[1] * (V) * ca +headx - myX;
 				const hdy =  head[1] * (V) * sa +heady  - myY;
 				const tx =  tail[1] * (V) * ca +tailx - myX;
 				const ty =  tail[1] * (V) * sa +taily - myY;
+
+				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
+				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 				ctx.beginPath();
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
-				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
+				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y-D) );
+				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y-D) );
 				ctx.stroke();
 			}
 
@@ -497,12 +511,16 @@ class D3xTransform {
 				const hdy =  head * (V) * sa +heady ;
 				const tx =  tail * (V) * ca +tailx ;
 				const ty =  tail * (V) * sa +taily ;
+
+				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
+				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
+
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${(head%3)*120+120},100%,50%)`
 
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 				ctx.stroke();
 				}
 
@@ -530,12 +548,15 @@ class D3xTransform {
 				const tx =  tail[0] * (myV) * ca_o +tailx - posX;
 				const ty =  tail[0] * (myV) * sa_o +taily +D - posY;
 
+				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
+				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
+
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
 
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 				ctx.stroke();
 
 				}
@@ -560,10 +581,12 @@ class D3xTransform {
 				const hdy =  head * (myV) * sa_o +heady ;
 				const tx =  tail * (myV) * ca_o +tailx ;
 				const ty =  tail * (myV) * sa_o +taily ;
+				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
+				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 				ctx.beginPath();
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy) );
-				ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty) );
+				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 				ctx.stroke();
 
 				}
@@ -858,6 +881,16 @@ const spanChkShowVelocities = document.createElement( "label" );
 spanChkShowVelocities.textContent = " |Show Velocities";
 spanChkShowVelocities.appendChild( chkLblShowVelocities );
 controls.appendChild( spanChkShowVelocities );
+//- - - - - - - - - - - - - - 
+const chkLblShowAberration = document.createElement( "input" );
+chkLblShowAberration.setAttribute( "type", "checkbox" );
+chkLblShowAberration.checked = includeAberration;
+chkLblShowAberration.addEventListener( "input", update );
+
+const spanChkShowAberration = document.createElement( "label" );
+spanChkShowAberration.textContent = " |Show Aberration";
+spanChkShowAberration.appendChild( chkLblShowAberration );
+controls.appendChild( spanChkShowAberration );
 //----------------------
 
 span = document.createElement( "br" );
@@ -1060,6 +1093,7 @@ function update( evt ) {
 	showSelf = chkLblShowSelf.checked;
 	showRelativeVelocities = chkLblShowVelocities.checked;
 	showObserver = chkLblShowObserver.checked;
+	includeAberration = chkLblShowAberration.checked;
 
 	const didAnimate = animate;
 	animate = chkLblNow.checked;
