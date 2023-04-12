@@ -154,8 +154,8 @@ class D3xTransform {
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX - (speed * (frame.PobsdX-frame.PobsrX))*5 -myX)
 							, ofs+(xscale_)*(frame.PobsdY - (speed*(frame.PobsdX-frame.PobsrX))*5 -myY) )
 */
-			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX - ((frame.delX)-(frame0.delX))*5 -myX)
-							, ofs+(xscale_)*(frame.PobsdY - ((frame.delY)-(frame0.delY))*5 -myY) )
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.delX)-(frame0.delX))*10 -myX)
+							, ofs+(xscale_)*(frame.PobsdY + ((frame.delY)-(frame0.delY))*10 -myY) )
 			ctx.strokeStyle = "#fff";
 			ctx.lineWidth = 1;
 			ctx.stroke();
