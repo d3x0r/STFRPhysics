@@ -1,4 +1,4 @@
-
+6
 //import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 const testSize= 200000;
@@ -10,6 +10,7 @@ const ctx = canvas.getContext( '2d' );
 let showXTGraph = false;
 let showSelf = false;
 let showObserver = false;
+let showRelativeVelocities = false;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -136,12 +137,25 @@ class D3xTransform {
 //seen
 
 			ctx.lineWidth = 0.5;
+
+			if( showRelativeVelocities ) 
 	for( let n = 0; n < nFrames; n++ ) {
 		const frame = frames[n];
-		if( frame.T_start < now ) {
+		if( frame.T_start <= seen[0] ) {
+			if( showRelativeVelocities ) {
+			if( n > 1 )  {
+			const frame0 = frames[n-1];
 			ctx.beginPath();
-			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
-			//ctx.lineTo( ofs + (xscale_)* (frame.PobsrX+L/3 ), ofs+(xscale_)*(frame.PobsrY+L/3 ) )
+			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX -myX), ofs+(xscale_)*(frame.PobsdY-myY ) )
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.PobsdX-frame.PobsrX)-(frame0.PobsdX-frame0.PobsrX))*3 -myX)
+							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsdY))*3 -myY) )
+			ctx.strokeStyle = "#fff";
+			ctx.lineWidth = 1;
+			ctx.stroke();
+			ctx.lineWidth = 0.5;
+			}
+			}
+			ctx.beginPath();
 			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX+L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
 			//ctx.lineTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY+L/3 ) )
 			ctx.strokeStyle = "#f0f"
@@ -153,7 +167,8 @@ class D3xTransform {
 			ctx.stroke();
 			ctx.beginPath();
 
-			if( Math.abs(frame.T_start - now ) < 0.001 ) 
+			if( frame.T_start <= seen[0] ){
+			if( Math.abs(frame.T_start - seen[0] ) < 0.001 ) 
 				ctx.strokeStyle= "green";
 			else
 				ctx.strokeStyle = "yellow"
@@ -162,6 +177,7 @@ class D3xTransform {
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
 			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY-L/3-myY ) )
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX-L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
+			}
 
 			ctx.stroke();
 		}
@@ -776,6 +792,16 @@ const spanChkShowSelf = document.createElement( "label" );
 spanChkShowSelf.textContent = " |Show Self";
 spanChkShowSelf.appendChild( chkLblShowSelf );
 controls.appendChild( spanChkShowSelf );
+//- - - - - - - - - - - - - - 
+const chkLblShowVelocities = document.createElement( "input" );
+chkLblShowVelocities.setAttribute( "type", "checkbox" );
+chkLblShowVelocities.checked = showRelativeVelocities;
+chkLblShowVelocities.addEventListener( "input", update );
+
+const spanChkShowVelocities = document.createElement( "label" );
+spanChkShowVelocities.textContent = " |Show Velocities";
+spanChkShowVelocities.appendChild( chkLblShowVelocities );
+controls.appendChild( spanChkShowVelocities );
 //----------------------
 
 span = document.createElement( "br" );
@@ -976,6 +1002,7 @@ function update( evt ) {
 
 	showXTGraph = chkLblXTGraph.checked;
 	showSelf = chkLblShowSelf.checked;
+	showRelativeVelocities = chkLblShowVelocities.checked;
 	showObserver = chkLblShowObserver.checked;
 
 	const didAnimate = animate;
@@ -993,12 +1020,14 @@ function update( evt ) {
 	for( let n = 0; n < nFrames; n++ ) {
 		const frame = frames[n];
 		const del = n/nFrames;
-		const Treal = (del * runT)-runT/2;
+		const Treal = 2*((del * runT)-runT/2);
 		frame.T_start = Treal;
 		frame.PobsrX = ca_o * myV * Treal;
 		frame.PobsrY = sa_o * myV * Treal;
 		frame.PobsdX = ca * V * Treal;
 		frame.PobsdY = sa * V * Treal-D;
+		frame.delX = frame.PobsrX - frame.PobsdX;
+		frame.delY = frame.PobsrY - frame.PobsdY;
 	}
 
 
