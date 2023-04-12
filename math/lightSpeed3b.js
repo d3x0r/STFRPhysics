@@ -33,7 +33,7 @@ const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 51;
+const nFrames = 101;
 let eventFrame = -1;
 
 //------------------ Storage for information about a frame ---------------------------
@@ -147,8 +147,15 @@ class D3xTransform {
 			const frame0 = frames[n-1];
 			ctx.beginPath();
 			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX -myX), ofs+(xscale_)*(frame.PobsdY-myY ) )
-			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.PobsdX-frame.PobsrX)-(frame0.PobsdX-frame0.PobsrX))*3 -myX)
-							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsrY))*3 -myY) )
+//			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.PobsdX-frame.PobsrX)-(frame0.PobsdX-frame0.PobsrX))*3 -myX)
+//							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsrY))*3 -myY) )
+/*
+			const speed = Math.sqrt( (frame.delX-frame0.delX) * (frame.delX-frame0.delX) + (frame.delY-frame0.delY) * (frame.delY-frame0.delY));
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX - (speed * (frame.PobsdX-frame.PobsrX))*5 -myX)
+							, ofs+(xscale_)*(frame.PobsdY - (speed*(frame.PobsdX-frame.PobsrX))*5 -myY) )
+*/
+			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX - ((frame.delX)-(frame0.delX))*5 -myX)
+							, ofs+(xscale_)*(frame.PobsdY - ((frame.delY)-(frame0.delY))*5 -myY) )
 			ctx.strokeStyle = "#fff";
 			ctx.lineWidth = 1;
 			ctx.stroke();
@@ -1026,8 +1033,8 @@ function update( evt ) {
 		frame.PobsrY = sa_o * myV * Treal;
 		frame.PobsdX = ca * V * Treal;
 		frame.PobsdY = sa * V * Treal-D;
-		frame.delX = frame.PobsrX - frame.PobsdX;
-		frame.delY = frame.PobsrY - frame.PobsdY;
+		frame.delX = Math.abs(frame.PobsdX - frame.PobsrX); // distance, non directed
+		frame.delY = Math.abs(frame.PobsdY - frame.PobsrY); // distance, non directed
 	}
 
 
