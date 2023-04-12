@@ -1,4 +1,4 @@
-6
+
 //import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 const testSize= 200000;
@@ -148,7 +148,7 @@ class D3xTransform {
 			ctx.beginPath();
 			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX -myX), ofs+(xscale_)*(frame.PobsdY-myY ) )
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.PobsdX-frame.PobsrX)-(frame0.PobsdX-frame0.PobsrX))*3 -myX)
-							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsdY))*3 -myY) )
+							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsrY))*3 -myY) )
 			ctx.strokeStyle = "#fff";
 			ctx.lineWidth = 1;
 			ctx.stroke();
