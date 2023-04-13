@@ -240,6 +240,22 @@ replacing $T_2$ and $T_1$ with  $T_o$ , and  $T$...
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  + \vec{V_2} (T+T_o-T) }\rVert } {C}$$
 or
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o ) }\rVert } {C}$$
+## Light Aberration
+
+[Desmos playground](https://www.desmos.com/calculator/0tqxxfzsgp)
+[Implemented from](https://phys.libretexts.org/Bookshelves/Astronomy__Cosmology/Celestial_Mechanics_(Tatum)/11%3A_Photographic_Astrometry/11.03%3A_Refinements_and_Corrections/11.3.04%3A_Aberration_of_Light#:~:text=ccos%CF%87%E2%80%B2%3Dccos,is%20%E2%88%92csin%CF%87%E2%80%B2)
+
+In the 3b example there is an 'aberration' function.  It takes where you saw something, your speed, and where you saw it, uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
+
+This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
+
+![](aberration.png)
+
+Without aberation, the things directly to the side of you actually appear somewhat to the back, and would have a longer distance, in the above image, the aberration doesn't bring what's lateral exacty to 1, but it's slightly longer, which makes it take slightly longer to cover that distance.  So rods that are lateral to a body do appear longer. (But then any plane attached to that cylinder is still at that distance)
+![](aberration-disable.png)
+
+
+
 ## Practical examples of failures
 
 A classic example, although somewhat simplified from reality.  A boat on water bobs; we should really be somewhat more precise and say I have a mechanism that taps water periodically, and causes waves to emit from a certain point.  The wave pool is infinite, and there are no boundary reflections.  An observer can see the height of water in a region and see that it goes up and down.  It can deduce from the direction the waves are going which direction the other body is, and with a couple detectors, can detect distance. 
