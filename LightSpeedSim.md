@@ -260,7 +260,11 @@ This is two bodies travelling at 0.62c.  The purple/red line through the vertica
 Without aberation, the things directly to the side of you actually appear somewhat to the back, and would have a longer distance, in the above image, the aberration doesn't bring what's lateral exacty to 1, but it's slightly longer, which makes it take slightly longer to cover that distance.  So rods that are lateral to a body do appear longer. (But then any plane attached to that cylinder is still at that distance)
 ![](aberration-disable.png)
 
+#### My Hypothetical
 
+A classic view might say that a photon is a wave, that has some length in the direction of its emission.  When the photon first hits the detector in a location, that sort of grabs the photon's foot, and drags it forward as the rest of the photon is subsequently emitted, then the detector moves a right-triangle amount forward in the amount of time the rest of the wavelength of the light hits the detector.   This causes a deflection towards the front; or that it will subsequently be picked up by a sensor from a direction that is further forward... 
+
+The resulting vector IS back-tipped, which in a logical sense might seem that 'well then the wave should appear to be coming from behind, since that's the natural direction overall of the wave'; but this isn't that.  It is that the photon had an angle to hit a lense in a certain spot, and then was skewed toward the front; while the photon that started in the backward sense would have struck the lense in a different angle to start with.  It's all actually quite classical, and a sensor that read waves from other boats might do the same thing.  
 
 ## Practical examples of failures
 
