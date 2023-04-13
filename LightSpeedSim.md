@@ -245,7 +245,13 @@ $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o
 [Desmos playground](https://www.desmos.com/calculator/0tqxxfzsgp)
 [Implemented from](https://phys.libretexts.org/Bookshelves/Astronomy__Cosmology/Celestial_Mechanics_(Tatum)/11%3A_Photographic_Astrometry/11.03%3A_Refinements_and_Corrections/11.3.04%3A_Aberration_of_Light#:~:text=ccos%CF%87%E2%80%B2%3Dccos,is%20%E2%88%92csin%CF%87%E2%80%B2)
 
-In the 3b example there is an 'aberration' function.  It takes where you saw something, your speed, and where you saw it, uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
+Demo: https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
+
+Added light aberration correction.  It's a toggle, but enabled to start.  It's a correction factor for the change in incidence angle when photons hit a moving body.
+
+In the example source there is an 'aberration' function.  It takes 'where you something was that you can see(detect)', 'your speed', and 'where you were when you saw(detected) it', uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
+
+and something like $f\left(x\right)=\arccos\left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos).
 
 This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
 
