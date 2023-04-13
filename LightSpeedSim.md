@@ -1,3 +1,4 @@
+(math renders properly [github version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md))
 
 # Reality of Relativity
 
