@@ -106,7 +106,7 @@ function aberration( X, Vo, Xo ) {
 		const zz_x = -vAng + Math.acos( ( CosVDot + Vlen/C ) / ( 1 + Vlen/C * CosVDot ) )*((Vcrs.z<0)?-1:1);
 //console.log( "was", ang, "is", zz_x );
 		const useC = Math.cos( zz_x );
-		const useS = Math.sin( zz_x );
+		const useS = -Math.sin( zz_x );
 		
 		const SinVDot = Math.sqrt( 1-CosVDot*CosVDot );
 		Xr.x = Xo.x + len * useC;
@@ -418,9 +418,9 @@ if(0)
 			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
 
 			const hdx =  head[0] * (V) * ca +headx - myX;
-			const hdy =  head[0] * (V) * sa +heady  - myY;
+			const hdy =  head[0] * (V) * sa +heady  - myY-D;
 			const tx =  tail[0] * (V) * ca +tailx - myX;
-			const ty =  tail[0] * (V) * sa +taily - myY;
+			const ty =  tail[0] * (V) * sa +taily - myY-D;
 
 			const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 			const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
@@ -430,21 +430,21 @@ if(0)
 			if( !showSelf && !showObserver )
 				ctx.strokeStyle =  `hsl(${(head[0]%3)*120+120},100%,50%)`
 
-			ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y-D) );
-			ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y-D) );
+			ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y) );
+			ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 			ctx.stroke();
 			if( head.length > 1 ) {
 				const hdx =  head[1] * (V) * ca +headx - myX;
-				const hdy =  head[1] * (V) * sa +heady  - myY;
+				const hdy =  head[1] * (V) * sa +heady  - myY-D;
 				const tx =  tail[1] * (V) * ca +tailx - myX;
-				const ty =  tail[1] * (V) * sa +taily - myY;
+				const ty =  tail[1] * (V) * sa +taily - myY-D;
 
 				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:myV*ca_o, y:myV*sa_o, z:0 }, {x:0, y:0, z:0} );
 				ctx.beginPath();
 				//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y-D) );
-				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y-D) );
+				ctx.moveTo( ofs + (xscale_)*(head_abb.x), ofs + (xscale_)*(head_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 				ctx.stroke();
 			}
 
