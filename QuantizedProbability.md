@@ -1,12 +1,11 @@
 
-* WORK IN PROGRESS, probably not the final product *
 
 # Quantized Probability
 
-This looks at the probability of events happening, based on the ratio of events that were the Same or Different.
+This is a long exploration of correlation of events between two different observers with 2 outcomes each, it computes the correlation of events that happened, based on the ratio of events that were the Same or Different.  This differs from the method required by Bell's Theorum and CHSH for local hidden variables(LHV), and gives a result that is compatible with the ratio that Quantum Mechanics provides (they require a ratio of samples to the total samples, while the QM result is the ratio of one type of sample vs another, and not vs the total.)
 
-There are two ratios though, one that's a ratio of Same, and one that's a ratio of Different. If the results have more same
-than different, then the ratio of how many differed (Same-Different) to how many Same happened; otherwise with more differences the ratio of how many
+There are two ratios, depending on which is larger, one that's a ratio of Same, and one that's a ratio of Different. If the results have more Same
+than Different, then the ratio of how many differed (Same-Different) to how many Same happened; otherwise with more differences the ratio of how many
 differed to the total Different happened.
 
 This is related to Quantum Mechanics, and correlation of results, transmission of polarizers. There are different measurements you can do,

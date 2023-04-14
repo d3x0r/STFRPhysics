@@ -10,6 +10,12 @@ This demonstrates the polar graph overlaps one would get from a proper coordinat
 
 ## 2) Bell's Theorum
 The paper that Bell wrote proposes a upper limit of local hidden variables(LHV) as a ratio of 'yes'/'no' vs the total samples; while the quantum mechanical term is a ratio of 'yes' to 'no' and not to the total.  A ratio of 'yes' to 'no' for LHV yields a curve very much like the quantum version.
+
+Note: The slope of the change in the ratio of probability for N samples with 1 not correlated, is -0.5.
+QM's prediction of cos(theta) has slope 0, and is near 0 for a long time before it is `-0.5` at `cos(0.5)`.
+
+[More Information](QuantizedProbability.md)
+
 ![Bell Comparison](bell-comparison-calc.png)
 
 The blue line is `cos(theta)` and the green line ratio of `a` to `b` from `a+b=2`; Red is the error between the curves.  There's actually quite a wide error bar.  at `pi/3` is exactly 50% just like the quantum result; and as the predicted value in Bell's paper.  
