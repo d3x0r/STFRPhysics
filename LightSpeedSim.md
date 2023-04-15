@@ -229,7 +229,7 @@ The original solve can still be used, with the velocity terms substituted ($V=V_
 
 ### Double check on right first equation
 
-It came to be that I was pondering why the above was $-V_oS$ .  It might be reasonable to think about $X+VT$ as the position an event happens and $X_o+V_oT$ where the observer was at that time, and subtract those; then $+V_o(T_o-T)$ is an additional distance the observer moved from the time it happened; but that's really relative to the origin of the frame, and should be subtracted.  It is really $(X+VT) -(X_o+V_oT+V_oT)$, which makes the last term just a subtraction.
+It came to be that I was pondering why the above was $-V_oS$ .  It might be reasonable to think about $X+VT$ as the position an event happens and $X_o+V_oT$ where the observer was at that time, and subtract those; then $+V_o(T_o-T)$ is an additional distance the observer moved from the time it happened; but that's really relative to the origin of the frame, and should be subtracted.  It is really $T_o= \sqrt{ ( (X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))^2}+T$; $||\vec x||=\sqrt {\vec{x}\cdot\vec{x}}= \sqrt{x^2}$, or assuming 1D: $T_o=  |(X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))|+T$ which makes the last term just a subtraction.
 
 $T=T_1$
 $T_2 = T_o-T$
