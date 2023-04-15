@@ -194,7 +194,8 @@ Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogeb
 Another refactor of above
 
 $$T
-_o = \frac { \lVert ({\overrightarrow{X}-\overrightarrow{X_o}) + \overrightarrow{V} T - \overrightarrow{V_o} {T_o}} \rVert } {C} + T$$
+_o = \frac { \lVert ({\vec{X}-\vec{X_o}) + \vec{V} T - \vec{V_o} {T_o}} \rVert } {C} + T$$
+
 ---
 Solved for T:
 $$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o $$
