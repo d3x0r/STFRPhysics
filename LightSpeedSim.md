@@ -174,7 +174,7 @@ $$-2*(CD+LV)$$
 
 `(D,E,F)` and `(J,K,L)` are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted; it should be removed from the position the event is observed from.  $(\vec X + VT)-  (\vec 0+ \vec V_o S)$ divided by the speed of light $C$, is the time it takes to see something.
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T.
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask Wolfram Aalpha to solve for...).
 
 $S = \frac { \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - \overrightarrow{V_o} S} \rVert } {C} + T$ 
 
@@ -197,7 +197,7 @@ $$T
 _o = \frac { \lVert ({\vec{X}-\vec{X_o}) + \vec{V} T - \vec{V_o} {T_o}} \rVert } {C} + T$$
 
 ---
-Solved for T:
+Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above WA result into vectors):
 $$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o $$
 $$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$$
 $$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$$
@@ -310,7 +310,9 @@ https://www.desmos.com/calculator/4jsuiamohh
 
 ## Time Dilation 
 
-According to special relativity
+According to special relativity... (this section in progress; still haven't figured a definitive gamma for time dilation; it could come from light aberration and speed... probably have to do with the circumference of circles at a velocity...)
+
+Matching the isometric portion of the graph with the appropriate scaling factor would imply that gamma is $\frac 1 {C-V}$ or the worst case clock time (which is when you get maximum contraction, when the craft is moving away from you with a negative velocity).  However, that neglects clocks that are in various other orientations....
 
 (?) = m-m/s-s-s-s - m-m/s-s
 $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
