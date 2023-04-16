@@ -29,7 +29,7 @@ The sliders in the `Turn Angle` column control the angle of the turn before begi
 
 ## Links
 
-![Youtube Video?](https://youtu.be/7B2ChJCag7w)
+[Youtube Video?](https://youtu.be/7B2ChJCag7w)
 
 [See Also](https://github.com/d3x0r/STFRPhysics/blob/master/math/TheNotBang.md); more on spatial displacments...
 
