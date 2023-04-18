@@ -32,9 +32,31 @@ canvas {
 }
 #controls {
     display: block !important;
-	position:absolute
+	position:absolute;
+	z-index:1;
 }
 
+.offset-canvas{
+	position:relative;
+	top:15em;
+}
+.offset-right-canvas{
+	position:absolute;
+	left:15em;
+	top:10vh;
+	z-index:0;
+}
+
+#readme-text.offset-canvas{
+	position:relative;
+	top:15em;
+}
+
+#readme-text.offset-right-canvas {
+	position:relative;
+	left:0;
+	top:15em;
+}
 
 #controls span .right {
     width: 10vw;
