@@ -8,10 +8,12 @@ const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
 let showXTGraph = false;
+let showXTGraph_unbiased = false;
 let showSelf = false;
 let showObserver = false;
 let showRelativeVelocities = false;
 let includeAberration = true;
+let lockVelocity = false;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -254,12 +256,13 @@ class D3xTransform {
 	if(showXTGraph) {
 		const gamma = (C-V)/C;  // This matches the matrual curve (at C=1)
 		//const gamma = Math.sqrt( C*C-V*V);
-
+		const gamma2 = (C+V)/C;
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
 			ctx.beginPath();
 			ctx.strokeStyle= "white";
+			ctx.lineWidth = 3;
 			//if( X > 0 )
 			{
 				ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X)*(gamma) );
@@ -267,10 +270,22 @@ class D3xTransform {
 				ctx.moveTo( ofs + (xscale_)*((X))*(gamma), ofs  - (xscale_)*(-0) );
 				ctx.lineTo( ofs + (xscale_)*(10*V/C+X*(gamma)), ofs + (xscale_)*(-10 ) );
 			}
+
+
+			{
+				ctx.moveTo( ofs - (xscale_)*(0), ofs  - (xscale_)*(+X)*(gamma2) );
+				ctx.lineTo( ofs + (xscale_)*(-10), ofs + (xscale_)*((10*V/C-X*(gamma2))) );
+				ctx.moveTo( ofs + (xscale_)*((-X))*(gamma2), ofs  - (xscale_)*(-0) );
+				ctx.lineTo( ofs + (xscale_)*(-10*V/C-X*(gamma2)), ofs + (xscale_)*(10 ) );
+			}
+
 			ctx.stroke();
 		}	
 	}
-		ctx.strokeWidth= 1.5;
+
+
+
+	ctx.strokeWidth= 1.5;
 
 
 		for( let X = -20; X < 20; X+=1 ) {
@@ -402,6 +417,43 @@ if(0)
 					ctx.stroke();
 
 			}
+
+			if( showXTGraph_unbiased) {
+				ctx.beginPath();
+				const ox  = D3xTransform.getObservedPlace2(X,T);
+				const oxo = D3xTransform.getObservedPlace2(X+1,T);
+				const oxt = D3xTransform.getObservedPlace2(X,T+1);
+				const ot  = D3xTransform.getObservedTime(X,T);
+				const oto = D3xTransform.getObservedTime(X+1,T);
+				const ott = D3xTransform.getObservedTime(X,T+1);
+				if( T === 0 ){
+					ctx.lineWidth = 5;
+					ctx.strokeStyle= "green";
+				}
+				else{
+					ctx.lineWidth = 2;
+					ctx.strokeStyle= "yellow";
+				}
+				const ox_abb = aberration( {x:ox, y:ot, z:0 }, {x:myV, y:0, z:0 }, {x:0, y:0, z:0} );
+				const ot_abb = aberration( {x:oxo, y:oto, z:0 }, {x:myV, y:0, z:0 }, {x:0, y:0, z:0} );
+				const ott_abb = aberration( {x:oxt, y:ott, z:0 }, {x:myV, y:0, z:0 }, {x:0, y:0, z:0} );
+	
+
+				ctx.moveTo( ofs + (xscale_)*(ox_abb.x), ofs - (xscale_)*(ox_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(ot_abb.x), ofs - (xscale_)*(ot_abb.y) );
+				ctx.stroke();
+
+				if( T === 0 ){
+					ctx.lineWidth = 2;
+				}
+				ctx.beginPath();
+				ctx.strokeStyle= "red";
+				ctx.moveTo( ofs +  (xscale_)*(ox_abb.x), ofs - (xscale_)*(ox_abb.y) );
+				ctx.lineTo( ofs + (xscale_)*(ott_abb.x), ofs - (xscale_)*(ott_abb.y) );
+				ctx.stroke();
+
+		}
+
 			ctx.lineWidth = 1;
 
 		}
@@ -516,7 +568,14 @@ if(0)
 
 				const head_abb = aberration( {x:hdx, y:hdy, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
 				const tail_abb = aberration( {x:tx, y:ty, z:0 }, {x:V*ca, y:V*sa, z:0 }, {x:0, y:0, z:0} );
-
+/*
+				const head_s = Math.sqrt( head_abb.x * head_abb.x + head_abb.y*head_abb.y )
+				const tail_s = Math.sqrt( tail_abb.x * tail_abb.x + tail_abb.y*tail_abb.y )
+				head_abb.x *= 1/head_s;
+				head_abb.y *= 1/head_s;
+				tail_abb.x *= 1/tail_s;
+				tail_abb.y *= 1/tail_s;
+*/
 				ctx.beginPath();
 				ctx.strokeStyle =  `hsl(${(head%3)*120+120},100%,50%)`
 
@@ -873,6 +932,10 @@ const spanChkShowSelf = document.createElement( "label" );
 spanChkShowSelf.textContent = " |Show Self";
 spanChkShowSelf.appendChild( chkLblShowSelf );
 controls.appendChild( spanChkShowSelf );
+//----------------------
+
+span = document.createElement( "br" );
+controls.appendChild( span );
 //- - - - - - - - - - - - - - 
 const chkLblShowVelocities = document.createElement( "input" );
 chkLblShowVelocities.setAttribute( "type", "checkbox" );
@@ -893,6 +956,16 @@ const spanChkShowAberration = document.createElement( "label" );
 spanChkShowAberration.textContent = " |Show Aberration";
 spanChkShowAberration.appendChild( chkLblShowAberration );
 controls.appendChild( spanChkShowAberration );
+//- - - - - - - - - - - - - - 
+const chkLblLockVelocity = document.createElement( "input" );
+chkLblLockVelocity.setAttribute( "type", "checkbox" );
+chkLblLockVelocity.checked = lockVelocity;
+chkLblLockVelocity.addEventListener( "input", update );
+
+const spanChkLockVelocity = document.createElement( "label" );
+spanChkLockVelocity.textContent = " |Lock Velocities";
+spanChkLockVelocity.appendChild( chkLblLockVelocity );
+controls.appendChild( spanChkLockVelocity );
 //----------------------
 
 span = document.createElement( "br" );
@@ -1064,10 +1137,15 @@ function timeBiasAtPos( V, X, Y, Z ) {
 }
 
 function update( evt ) {
+
+	lockVelocity = chkLblLockVelocity.checked;
+
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/200*C;
-	myV = Number(sliderMyV.value)/200*C;
+
+	if( lockVelocity ) myV = V;
+	else myV = Number(sliderMyV.value)/200*C;
 	spanV.textContent = V.toFixed(3) + " : " + V*C*C/(C*C-V*V) + " : " + myV;
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
