@@ -404,6 +404,9 @@ time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
 
 # Connection to Quantum Mechanical Correlations
 
+(losely related... C+V and C-V with a ratio of C+V=2 hasn't really surfaced yet... )
+
+
 The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
 
 The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
@@ -470,11 +473,61 @@ speed of light case is nice and simple though... h(x,y)=((-x^(2)-y^(2))/(2 x))
 
 The graph shows light seconds away, and how long ago you're seeing that point.
 
+## GLSL Implementation
+
+This is just a reference implentation for GLSL to calculate offsets of position.
+
+GLSL code
+``` glsl
+uniform float time;
+uniform vec3 velocity1;
+uniform vec3 velocity2;
+const float C = 1.0;
+
+vec3 tmp = position - velocity2*time;
+float A = time*time*C*C - dot(tmp,tmp);
+float B = time*C*C + dot(velocity1, tmp );
+float D = C*C-velocity1*velocity1;
+float T;
+if( abs(D) < 0.0000001 ) T = B/2*A;
+else T = (sqrt( B*B - D*A ) + B)/D;
+
+```
+
+GLSL version of light aberration routine (2D though... still needs to be updated for 3D).
+
+```glsl
+vec3 aberration( vec3 X, vec3 Xo, vec3 Vo ) {
+	vec3 result;
+	vec3 del = X-Xo;
+	float len2 = dot(del,del);
+	float vlen2 = dot( Vo, Vo);
+	float Vdot = dot( del, vo );
+	vec3 Vcrs = cross( del, vo );
+	if( len2 < 0.000001 && Vlen2 < 0.0000001 ) {
+		result = X;
+	} else {
+		float len = sqrt(len2);
+		float vlen = sqrt(vlen2 );
+		float norm = len*vlen;
+		float vAng = acos( Vo.x/Vlen ) 
+				* Vo.y<0.0?1.0:-1.0;
+		float cosvdot = Vdot/norm;
+		float resultangle = -vAng + acos( (cosvdot+Vlen/C)/(1 + Vlen/C * cosvdot)) * ((Vcrs.z<0)?-1.0:1.0);
+		const resultCos = cos( resultangle );
+		const resultSin = -sin( resultangle );
+		result.x = Xo.x+len * resultCos;
+		result.y = Xo.y + len * resultSin;
+		result.z = X.z;
+	}
+	return result;
+}
+```
 
 # Revisited Math
 
 Basic Posulates 
-  - the speed of light is measured as C; once it is emitted it travels in a direction (all directions) from that point at the same speed, regardless of the observer's velocity.
+  - the speed of light is measured as C; once it is emitted it travels in all directions from that point at the same speed.
   - the clock dialation is the amount required to scale an isometric grid matching the upper right quadrant of an XT graph.  This is $(C-V)$; and the time dilation is $\frac 1 {C-V}$.  (This is the worst-case time, and really only applies for a 1 way clock from the negative direction of velocity) 
   
 This makes 1/2 the speed of light feel like the speed of light; according to your clock and the velocity you're going, you travel 1 light second per second.  If you are emitting 1 pulse every second by your clock, it would take 2 real seconds for you to get 1 light second, but you would pulse once every light second an observer sees you.   2/3c feels like 3 times the speed of light 3/4c feels like four times, $\frac {cN} {N+1}$ feels like N times the speed of light.
