@@ -40,7 +40,7 @@ Each part of the body emits a signal at the position it is, and that signal's ti
 At some time $T$, a body is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
 A relatively stationary observer, at some $D$ distance from the body
 ; then $D_o = sqrt(D^2+(VT+L)^2)$ is the distance a photon has to travel
-to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = sqrt(D^2+(VT+L)^2)/C$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results).
+to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results).
 
 Observed time of (some position along body L) ( head(+L), center(+0), tail(-L))
 
@@ -172,7 +172,7 @@ $$-2*(CD+LV)$$
 
 ## Generalized to 3D Vectors
 
-`(D,E,F)` and `(J,K,L)` are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted; it should be removed from the position the event is observed from.  $(\vec X + VT)-  (\vec 0+ \vec V_o S)$ divided by the speed of light $C$, is the time it takes to see something.
+`(D,E,F)` and `(J,K,L)` are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted; it should be removed from the position the event is observed from.  $(\vec X + VT)-  (\vec 0+ \vec {V_o} S)$ divided by the speed of light $C$, is the time it takes to see something.
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask Wolfram Aalpha to solve for...).
 
@@ -484,19 +484,22 @@ uniform vec3 velocity1;
 uniform vec3 velocity2;
 const float C = 1.0;
 
-vec3 tmp = position - velocity2*time;
-float A = time*time*C*C - dot(tmp,tmp);
-float B = time*C*C + dot(velocity1, tmp );
-float D = C*C-velocity1*velocity1;
-float T;
-if( abs(D) < 0.0000001 ) T = B/2*A;
-else T = (sqrt( B*B - D*A ) + B)/D;
-
+        vec3 delpos = position-cameraPosition;
+        vec3 tmp = delpos - velocity2*time;
+        float A = time*time*C*C - dot(tmp,tmp);
+        float B = time*C*C + dot(velocity1, tmp );
+        float D = C*C-dot(velocity1,velocity1);
+        float T;
+        if( abs(D) < 0.0000001 ) T = B/(2.0*A);
+        else T = (sqrt( B*B - D*A ) + B)/D;
+        vec3 real_position = position + T*velocity1;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( real_position, 1.0 );
 ```
 
 GLSL version of light aberration routine (2D though... still needs to be updated for 3D).
 
 ```glsl
+// this has to take negative velocity
 vec3 aberration( vec3 X, vec3 Xo, vec3 Vo ) {
 	vec3 result;
 	vec3 del = X-Xo;
@@ -507,18 +510,28 @@ vec3 aberration( vec3 X, vec3 Xo, vec3 Vo ) {
 	if( len2 < 0.000001 && Vlen2 < 0.0000001 ) {
 		result = X;
 	} else {
-		float len = sqrt(len2);
-		float vlen = sqrt(vlen2 );
-		float norm = len*vlen;
-		float vAng = acos( Vo.x/Vlen ) 
-				* Vo.y<0.0?1.0:-1.0;
-		float cosvdot = Vdot/norm;
-		float resultangle = -vAng + acos( (cosvdot+Vlen/C)/(1 + Vlen/C * cosvdot)) * ((Vcrs.z<0)?-1.0:1.0);
-		const resultCos = cos( resultangle );
-		const resultSin = -sin( resultangle );
-		result.x = Xo.x+len * resultCos;
-		result.y = Xo.y + len * resultSin;
-		result.z = X.z;
+        float len = sqrt(len2);
+        float vlen = sqrt(vlen2 );
+        float norm = len*vlen;
+        float CosVDot = Vdot/norm;
+
+        const float baseAng = acos( CosVDot );
+        const float delAng = acos( ( CosVDot + Vlen/C )
+                / ( 1 + Vlen/C * CosVDot ) );//*((Vcrs.z<0)?-1:1);
+if( abs( delAng ) < 0.0000001  ) {
+	return X;
+}
+        const c = Math.cos(delAng);
+        const s = Math.sin(delAng);
+        const n = Math.sqrt( Vcrs.x*Vcrs.x+Vcrs.y*Vcrs.y+Vcrs.z*Vcrs.z);
+		
+		const qx = Vcrs.x/n, qy = Vcrs.y/n, qz = Vcrs.z/n;
+        const vx = delx , vy = dely , vz = delz;
+  
+        const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+        Xr.x = Xo.x + vx*c + s*(qy * vz - qz * vy) + qx * dot;
+        Xr.y = Xo.y + vy*c + s*(qz * vx - qx * vz) + qy * dot;
+        Xr.z = Xo.z + vz*c + s*(qx * vy - qy * vx) + qz * dot;        result = Xo+rpos;               
 	}
 	return result;
 }

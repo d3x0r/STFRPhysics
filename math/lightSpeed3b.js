@@ -6,6 +6,7 @@ const canvas = document.getElementById( "testSurface" );
 //canvas.width = 5000;
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
+import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 let showXTGraph = false;
 let showXTGraph_unbiased = false;
@@ -90,7 +91,7 @@ function aberration( X, Vo, Xo ) {
 	const len2 = delx*delx+dely*dely+delz*delz;
 	const Vlen2 = Vo.x*Vo.x+Vo.y*Vo.y+Vo.z*Vo.z;
 	const Vdot = delx * Vo.x + dely * Vo.y + delz * Vo.z;
-	const Vcrs = { x: delz*Vo.y-dely*Vo.z, y: delz*Vo.x-delx*Vo.z, z: dely*Vo.x-delx*Vo.y }
+	const Vcrs = { x: delz*Vo.y-dely*Vo.z, y: delx*Vo.z-delz*Vo.x, z: dely*Vo.x-delx*Vo.y }
 	if( len2 < 0.0000001 || Vlen2 < 0.000001) {
 		// not far enough away to change...
 		Xr.x = X.x;
@@ -101,19 +102,43 @@ function aberration( X, Vo, Xo ) {
 		const len = Math.sqrt(len2);
 		const Vlen = Math.sqrt(Vlen2);
 		const norm = Vlen*len;
- 		const vAng = Math.acos( Vo.x/Vlen ) * (Vo.y<0?1:-1);
-//console.log( "velocity angle:", vAng, "from", Vlen );
+ 		//const vAng = Math.acos( Vo.x/Vlen ) * (Vo.y<0?1:-1);
+		 //console.log( "velocity angle:", vAng, "from", Vlen );
 		const CosVDot = Vdot/(norm);
-		const ang = Math.acos(CosVDot);
-		const zz_x = -vAng + Math.acos( ( CosVDot + Vlen/C ) / ( 1 + Vlen/C * CosVDot ) )*((Vcrs.z<0)?-1:1);
-//console.log( "was", ang, "is", zz_x );
-		const useC = Math.cos( zz_x );
-		const useS = -Math.sin( zz_x );
+		const baseAng = Math.acos( CosVDot );
+		const delAng = Math.acos( ( CosVDot + Vlen/C ) 
+				/ ( 1 + Vlen/C * CosVDot ) )-baseAng;//*((Vcrs.z<0)?-1:1);
+
+		if( !delAng ) {
+			Xr.x = X.x;
+			Xr.y = X.y;
+			Xr.z = X.z;
+			return Xr;
+		}
+		const c = Math.cos(delAng);
+		const s = Math.sin(delAng);
+		const n = Math.sqrt( Vcrs.x*Vcrs.x+Vcrs.y*Vcrs.y+Vcrs.z*Vcrs.z);
+//console.log( "blah?", norm, );
+		const qx = Vcrs.x/n;
+		const qy = Vcrs.y/n;
+		const qz = Vcrs.z/n;
+
+		const vx = delx , vy = dely , vz = delz;
+
+		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+		Xr.x = Xo.x + vx*c + s*(qy * vz - qz * vy) + qx * dot;
+		Xr.y = Xo.y + vy*c + s*(qz * vx - qx * vz) + qy * dot;
+		Xr.z = Xo.z + vz*c + s*(qx * vy - qy * vx) + qz * dot;
 		
-		const SinVDot = Math.sqrt( 1-CosVDot*CosVDot );
-		Xr.x = Xo.x + len * useC;
-		Xr.y = (Xo.y - len * useS);
-		Xr.z = X.z ;
+/*
+		const lnQ = new lnQuat( delAng, Vcrs ); // normalizes vector
+		const delVec = {x:delx, y:dely, z:delz };
+		const newDel = lnQ.apply( delVec )
+
+		Xr.x = Xo.x + newDel.x;
+		Xr.y = Xo.y + newDel.y;
+		Xr.z = Xo.z + newDel.z;
+*/
 	}
 	return Xr;
 }

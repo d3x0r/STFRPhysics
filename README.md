@@ -74,21 +74,20 @@ This is a sketch of trying to compute the vector for the twist operation of the 
  - quat - short for 'quaternion'.
  - quats - plural of `quaternion`.
  - lnQuat - short for 'quaternion in natural log mapping'  (lnQuats for plural); may also be said as 'log-quaternion' or 'Log Quat'.
- - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later).
- - Quat - the type `class Quat`.
+ - dlnQuat - short for 'dual log-quaternion'; this adds a separate x/y/z coordinate that represents the translation/location of the quaternion; this point is the 'origin' of any child frames (more later) (not fully implemented; linear translations and rotations are really separate dimensions). 
 
-## Frame Computation Using Dual Log-Quaternions
+## Frame Computation Using Log-Quaternions
 
 I've come to relearn much about the quaternions and complex numbers especially with applications to rotation.
 Quaternions have a natural logarithm function, and the natural log quaternion has an exponential function. 
 
 Although natural log means, for multiplication of scalars that `exp(ln(A)+ln(B))=A+B`, and this is as much true here,
 the actual operation of rotation is actually a cross product, and not multiplication, hence `exp(ln(Q) ⨯ ln(P)) = Q⨯P`.
-And although this system does become additive, it only applies for virtual object rotations (in a full time step), and velocity/acceleration.
-A difference or differential does give the shortest path between two rates of rotation; and can compare relatively the similarity
+And although this system does become additive, it only applies for virtual object rotations (in a full time step), and acceleration or torque.
+A difference or differential does give the shortest path between two rates of rotation; and one can compare relatively the similarity
 of two rotations, which can be used to synchronize rotation.  The ability to rotate in any direction is often constrained by
 physical limitations, such as a rocket's engine is on a certain rigid point, and the thrust direction varies with the rotation of the
-rocket itself; so knowing when/how to apply a trust in order to get to the target spin is different than knowing spin differential.
+rocket itself; so requires knowing when/how to apply a trust in order to get to the target spin is different than knowing spin differential.
 
 
 ### Hypothetical failure case
