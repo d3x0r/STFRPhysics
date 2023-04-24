@@ -38,42 +38,58 @@ This is only concerning the minimal degrees of freedom; later, a more general ap
 Each part of the body emits a signal at the position it is, and that signal's time to the observer is recorded.
 
 At some time $T$, a body is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
-A relatively stationary observer, at some $D$ distance from the body
-; then $D_o = sqrt(D^2+(VT+L)^2)$ is the distance a photon has to travel
-to the observer.  The relative distanct to the position divided by the speed of light is how long that signal will travel to the observer.  $T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $T_o = \sqrt {V^2T^2}/C$, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results).
+A relatively stationary observer, at some $D$ distance from the body (this is the closest distance to the line defined by VT+L; but concerning only 1 dimension, the distance is perpendicular to the velocity)
+; then $D_o = \sqrt{D^2+(VT+L)^2}$ is the distance a photon has to travel
+to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
 
-Observed time of (some position along body L) ( head(+L), center(+0), tail(-L))
+Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then T_o is the real time the event is seen.
 
-$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
+(equation 1)$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
+-or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
 
-Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o').
+Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
 
-$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{T_o}+V^{2}\left(\ C^{2}{T_o}^{2}-D^{2}\right)}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
 (slight refactor)
 
-$$f(T_o,L) = \frac{\sqrt{C^{2}(D^{2}+(L+VT)^2) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+$$ A=D^2+(L+VT_o)^2  $$
 
-setting $D=0$, $L=0$, and over-simpified to remove the sqrt : (broken, loses the absolute value....)
-$$f(T_o) = \frac{ {C{VT_o} }+C^{2}{T_o}}{C^{2}-V^{2}}$$
+$$f(T_o,L) = \frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+
+setting $D=0$, $L=0$, and over-simpified to remove the sqrt : replace with absolute value.
+$$f(T_o) = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
 
 
 The above returns the real time from an observers time $T_O$, and an offset along the body ($L$).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
-if (V=C), then `V/C = 1`, so equation 1 simplifies to this... the T under the square root is $\frac V C$ which $=1$.
+In the special case that $V=C$, then $V/C = 1$, so equation 1 simplifies to this... the T under the square root is $\frac V C$ which $=1$.
 
-$$T_O = \sqrt{\left(\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}\right)}+T$$
+$$T_O = \sqrt{\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}}+T$$
 
 
-Simplified, and this is again still having a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)=\frac{\sqrt{VVCCxx}+CCx}{CC-VV}$$ 
+Simplified, and this is again will still have a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)={\sqrt{xx^2}+x}$$ 
 or
-$$T_{real2}\left(x\right)=\frac{VC\left|x\right|+CCx}{CC-VV}$$
+$$T_{real2}\left(x\right)=\left|x\right|+x$$
 
 And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
+or (when D=0, L=0)
+$$T = \frac { {T_O} } {2 }$$
 
 https://mathb.in/74833
 https://mathb.in/74928 (updated)
 
+### Then with T....
+once you have the real time, the real observed position is $(L+VT)$. 
+
+$$ A=D^2+(L+VT_o)^2  $$
+
+$$Position(T_o,L) = L+V\left(\frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}\right)$$
+
+
+### That was the simple case
+
+The above assumes the observer is stationary, at a fixed position, with some distance between them and an object travelling along a line at a Velocity.  
 
 ### Lorentz Problem
 
@@ -103,9 +119,9 @@ answer... The conversation continued, and then we have to go learn about the der
 [This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).
 
 There is a triangle, `CT` that is for some time seconds the speed of light long.  Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
-The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion `VT` or some velocity in time.
+The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion $VT$ or some velocity in time.
 
-$$(CT)^2 = (D)^2 + (A+VT)^2$$ 
+$$(CT)^2 = (D)^2 + (VT-L)^2$$ 
 
 solved for T...
 
@@ -176,54 +192,66 @@ $$-2*(CD+LV)$$
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask Wolfram Aalpha to solve for...).
 
-$S = \frac { \lVert {\overrightarrow{X}-\overrightarrow{X_o} + \overrightarrow{V} T - \overrightarrow{V_o} S} \rVert } {C} + T$ 
+(equation 2)$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
 
-$$T = (\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z)/(2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2))$$
+$$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
 
-THe above has not had '2' removed'... 
+The above has not had '2' removed'... 
 
 $S = \frac {\sqrt{(-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)} + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 
 $T = \frac {\sqrt{(-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)} + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$
 
+Refatoring the above is left as an excersize for the reader.  It's several expressions that are squared; pairing up the factors one can find the relations.  (It became easier to just express with the vectors below)
+
 For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendicular to the line, and X aligned with the original L direction on the line.
 
 Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
 
+#### V=C
+
+This is a copy of the full expression.
+$$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {(2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
+
+This is refactored into vector components.
+$$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { |\vec V| } -{T_o}C^2)}$$
+
 ---
-Another refactor of above
+Another refactor of equation 2
 
 $$T
-_o = \frac { \lVert ({\vec{X}-\vec{X_o}) + \vec{V} T - \vec{V_o} {T_o}} \rVert } {C} + T$$
+_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
 
 ---
-Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above WA result into vectors):
-$$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o $$
-$$A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$$
-$$B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$$
-$$D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$$
+Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors):
+$$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
+$$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
+$$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
+$$D = C^2-\vec{V}\cdot\vec{V}$$
 
-if( D ~ 0 ) $T = B/2A$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 
-$\overrightarrow{a}=(\overrightarrow{X}-\overrightarrow{X_o})-\overrightarrow{V_o}T_o$ ; $A = C^2{T_o}^2 - \overrightarrow{a}\cdot\overrightarrow{a}$ ; $B = C^2{T_o} + \overrightarrow{V}\cdot\overrightarrow{a}$ ; $D = C^2-\overrightarrow{V}\cdot\overrightarrow{V}$ ; $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+#### single line expression
+
+$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$ ; $B = C^2{T_o} + \vec{V}\cdot\vec{a}$ ; $D = C^2-\vec{V}\cdot\vec{V}$ ; $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 ---
 ### Including self velocity to make 3 body
 
 Arguably I could defend 'no rest frame' by making the above relative to a third frame; but in computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  
-$$T_2-T_1= \frac { \lVert (((\overrightarrow{X_1}-\overrightarrow{X_0})-(\overrightarrow{X_2}-\overrightarrow{X_0})) + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_2}) \rVert } {C} $$
+$$T_2-T_1= \frac { \lVert (((\vec{X_1}-\vec{X_0})-(\vec{X_2}-\vec{X_0})) + (\vec{V_1}+ \vec{V_0}) {T_1} - (\vec{V_2}+ \vec{V_0}) ({T_2}) \rVert } {C} $$
 The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
 
 $T_2$ includes $T_1$; and is the sum of $T+T_o$ where or $T_o=T_2-T_1$ is the time it takes between emission and detection.  So expanding this...
 
-$$T_2-T_1 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) {T_2} \rVert } {C} $$
+$$T_2-T_1 = \frac { \lVert ((\vec{X_2}-\vec{X_1})  + (\vec{V_1}+ \vec{V_0}) {T_1} - (\vec{V_2}+ \vec{V_0}) {T_2} \rVert } {C} $$
 
 It could be refactored to compute just the delta, and internally use $T_1+T_2$ as the total time the observer moved.
-$$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + (\overrightarrow{V_1}+ \overrightarrow{V_0}) {T_1} - (\overrightarrow{V_2}+ \overrightarrow{V_0}) ({T_1}+{T_2}) \rVert } {C} $$
+$$T_2 = \frac { \lVert ((\vec{X_2}-\vec{X_1})  + (\vec{V_1}+ \vec{V_0}) {T_1} - (\vec{V_2}+ \vec{V_0}) ({T_1}+{T_2}) \rVert } {C} $$
 
  $V_0T_1$ disappears, so the general offset of the event from the speed doesn't matter.  But a $V_0T_2$ term remains.
-$$T_2 = \frac { \lVert ((\overrightarrow{X_2}-\overrightarrow{X_1})  + \overrightarrow{V_1} {T_1} - \overrightarrow{V_2} ({T_1}+{T_2}) +\overrightarrow{V_0}{T_2}\rVert } {C} $$
+$$T_2 = \frac { \lVert ((\vec{X_2}-\vec{X_1})  + \vec{V_1} {T_1} - \vec{V_2} ({T_1}+{T_2}) +\vec{V_0}{T_2}\rVert } {C} $$
 
 The original solve can still be used, with the velocity terms substituted ($V=V_1-V_0$) and ($V_o=V_2-V_0$); the above expression is just an interested note.  I was refactoring to see if $V_0$ was actually a relevant factor, or if, like $X_0$, it disappears.   It does remain as an additional distance(delay) between $T_1$ and $T_2$.
 
