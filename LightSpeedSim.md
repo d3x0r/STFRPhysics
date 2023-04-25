@@ -330,10 +330,29 @@ If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, 
 
 The following image shows the actual relative velocity between the two frames... (I mean, if you really want to use a relative velocity then this is what it would be).  Both velocities between the frames are actually constant themselves.
 ![screenshot of demo with relative velocities enabled](relative-velocity-vectors.png)
+
+The above white lines show the apparent relative velocity, based on the actual change in distance to the observer.  With an offset and a skew, there appears to be up to 3 regions that the velocity changes, with rather sharp regions of change inbetween.
+
+
 ### Another Way to look at it
 
 This is a graph of relative velocity for a body travelling past 
 https://www.desmos.com/calculator/4jsuiamohh
+
+
+## 3D Voxel world with perspective camera
+
+I wanted to see if maybe the distortion above would behave differently with perspective.  But in the above cases of a 2D plane, `(x,y)/sqrt(xx+yy)` is just a circle... it normalizes the coordinate to a unit circle; but then that's what open GL does for 3D right?
+
+https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html
+
+![Screen shot of above demo](Voxel-relativity.png)
+
+The left is an orthographic camera, that shows the displaced pixels that are warped as in the 2D case, and basically is looking at the scene as if it were 2D.  The right camera is from the same camera point of view, same position, same orientation, but with a perspetive camera matrix applied instead.  When the velocities of the observer and observed are the same, the result in a very square projection.  ( There is a length contraction applied before either the extended lorentz function or light aberration is applied; which squares the result more; This gamma is only approximate, and is not $\sqrt{ 1-( {\frac V C} )^2}$; but it is also not $C+V$ or $C-V$ but is a curve somewhere inbetween. )
+
+Without the length contraction, there is a general elongation that happens, the aberration pushes things very far forward, and the lorentz transform pushes them very far backward.  Unlocking the velocities can show these two effects and how they transform the world - so that at the same speed, in perspective, a warped surface looks square; that was not a goal of this, when when I started above, with the hypothesis of perspective, I didn't expect it to be the thing that squared up an observer riding in a ship at the speed of light, such that the ship still looks the same and square.
+
+
 
 
 ## Time Dilation 
