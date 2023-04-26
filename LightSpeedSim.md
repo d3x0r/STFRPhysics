@@ -33,21 +33,26 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 
 ## The Math
 
-This is only concerning the minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.
+~~This is non-lorentz transformed, and probably falls under a Gallilean relativity; arguably, I could put a mesh of sensors which must also receive the light around the train at the speed of light, so the inside
+experience can't be much different; arguably a laser sensor of the occupant would measure the position in proper light speed/2 ticks.~~ (This is a defense on the validity, since although I use the same terms, it's arguable I'm defining a static rest frame)
 
-Each part of the body emits a signal at the position it is, and that signal's time to the observer is recorded.
+This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame.  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.   
 
-At some time $T$, a body is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
-A relatively stationary observer, at some $D$ distance from the body (this is the closest distance to the line defined by VT+L; but concerning only 1 dimension, the distance is perpendicular to the velocity)
+The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
+
+In the demos, each part of the body emits a signal at the position it is, and that signal's time to the observer is recorded.  Initially they calculated based on whether the time had spanned the life of the computed line from a position, and it would have had to precompute all positions beforehand; but expanding on what the math actually is, any time an event is observed, a simple calculation can be used to figure out where the body that emitted that signal was located (where it is seen from).
+
+At some time $T$, a body to observe is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
+A relatively stationary observer exists, at some $D$ distance from the body (this is the closest distance to the line defined by $VT$; the distance is perpendicular to the velocity)
 ; then $D_o = \sqrt{D^2+(VT+L)^2}$ is the distance a photon has to travel
-to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$,$L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
+to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$, $L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
 
 Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then T_o is the real time the event is seen.
 
 (equation 1)$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 -or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
 
-Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
+Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
 
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
 (slight refactor)
@@ -71,10 +76,10 @@ Simplified, and this is again will still have a sqrt, which has to be at least a
 or
 $$T_{real2}\left(x\right)=\left|x\right|+x$$
 
-And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.
+And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.  ( `solve S=sqrt(D^2 / C^2 +\left(T+ L/C)^2)+T  for T`)
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 or (when D=0, L=0)
-$$T = \frac { {T_O} } {2 }$$
+$$T = \frac {T_O} {2}$$
 
 https://mathb.in/74833
 https://mathb.in/74928 (updated)
@@ -93,7 +98,7 @@ The above assumes the observer is stationary, at a fixed position, with some dis
 
 ### Lorentz Problem
 
-This is a more typical example was on Physics Discord...
+This is a more typical example was on Physics Discord... The 'correct' answer to this is wrong, so what does that make the Lorentz Transform?  Incomplete and limited in scope? or wrong?  Anyhow here's the problem...
 
 ---
 
@@ -113,13 +118,17 @@ otherwise there are multiple choices.  And even made an image.
 
 ![Probability Image](RelativityHomework.png)
 
-Which shows the light cones of the problem, and several observers in different times, all going exactly the same speed (was very careful to copy the lines and not re-draw them); which clearly shows observers that can answer more than one
-answer... The conversation continued, and then we have to go learn about the derviation of the Lorentz Transform (including gamme factor); not just the derivation, but the justification of why that math works.
+The left graph (1) is the interpretation, that the event from A is seen on E at the same time as E is having breakfast.  This yields one answer that is "C - Event Y occurs before event X."; but (B) is the right answer, so that's not a correct interpretation.
 
-[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).
+The light cones of the problem, shown in black, and several observers in different times, shown in pink, all going exactly the same speed (was careful to copy the lines and not re-draw them).  The observer intersecting a black line can see the associated event at that time and position in space. The right side graph (2)  clearly shows observers that can answer more than one
+answer... 
 
-There is a triangle, `CT` that is for some time seconds the speed of light long.  Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
-The other side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion $VT$ or some velocity in time.
+The 'correct' answer, as interpreted using the Lorentz Tranform, says that B is the one answer; that the event on Earth is always observed before the event on Andromeda.   
+
+[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).  (Time of simulataneous event is any time you want to match the colors emitted with.  This demo should also be updated with aberration).  
+
+There is a triangle, `CT` that is for some time seconds the speed of light long; Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
+The third side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion $VT$ or some velocity in time.  
 
 $$(CT)^2 = (D)^2 + (VT-L)^2$$ 
 
@@ -172,8 +181,7 @@ example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specifi
 
 [This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
 
-This is non-lorentz transformed, and probably falls under a Gallilean relativity; arguably, I could put a mesh of sensors which must also receive the light around the train at the speed of light, so the inside
-experience can't be much different; arguably a laser sensor of the occupant would measure the position in proper light speed/2 ticks.
+
 
 ``` js
 " T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
@@ -188,33 +196,25 @@ $$-2*(CD+LV)$$
 
 ## Generalized to 3D Vectors
 
-`(D,E,F)` and `(J,K,L)` are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted; it should be removed from the position the event is observed from.  $(\vec X + VT)-  (\vec 0+ \vec {V_o} S)$ divided by the speed of light $C$, is the time it takes to see something.
+$\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted $T_o=\Delta {T_o} + T$ ; it should be removed from the position the event is observed from.  $(\vec X + \vec V T)-  (\vec 0+ \vec {V_o} {T_o})$ divided by the speed of light $C$, is the time it takes to see something.  ($S=T_o$ because subscript variables don't work well on Wolfram Alpha(WA))
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask Wolfram Aalpha to solve for...).
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
 (equation 2)$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
-
+solved for T; raw result copied from WA.
 $$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
 
-The above has not had '2' removed'... 
+The simplest refactor removes a 2 from numerator and denominator... 
 
-$S = \frac {\sqrt{(-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)} + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+$$S = \frac {\sqrt{(-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)} + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$$
 
-$T = \frac {\sqrt{(-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)} + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$
+$$T = \frac {\sqrt{(-C^2 S + D J S + E K S + F L S - D X - E Y - F Z)^2 - (C^2 - D^2 - E^2 - F^2) (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)} + C^2 S - D J S - E K S - F L S + D X + E Y + F Z}{C^2 - D^2 - E^2 - F^2}$$
 
 Refatoring the above is left as an excersize for the reader.  It's several expressions that are squared; pairing up the factors one can find the relations.  (It became easier to just express with the vectors below)
 
 For a more general 3D case, with Y aligned with direction of D to path; Z aligned perpendicular to the line, and X aligned with the original L direction on the line.
 
 Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
-
-#### V=C
-
-This is a copy of the full expression.
-$$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {(2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
-
-This is refactored into vector components.
-$$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { |\vec V| } -{T_o}C^2)}$$
 
 ---
 Another refactor of equation 2
@@ -234,13 +234,27 @@ if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 #### single line expression
 
-$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$ ; $B = C^2{T_o} + \vec{V}\cdot\vec{a}$ ; $D = C^2-\vec{V}\cdot\vec{V}$ ; $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$ ; $B = C^2{T_o} + \vec{V}\cdot\vec{a}$ ; $D = C^2-\vec{V}\cdot\vec{V}$ ; if $||\vec V||=C$ then $T=\frac {A} {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+
+#### V=C
+
+In the case that the velocity is the same as $C$, then a version of (equation 2) replaces $C$ with $\vec V$. Having a more complex denominator prevents solving into a form with a constant 0 in the denominator.
+
+This is a copy of the full solved expression.
+$$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {(2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
+
+This is refactored into vector components.
+$$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { |\vec V| } -{T_o}C^2)}$$
+The above solution works when $||\vec V||=C$.  Otherwise the normal form can be used; When greater than C, the negative square root should be considered as a possible answer.   (This are events that haven't reached you yet, but will, and happen after the observed body passes you; the relative speed of these events may exceed the speed of light).
+
 
 ---
 ### Including self velocity to make 3 body
 
-Arguably I could defend 'no rest frame' by making the above relative to a third frame; but in computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  
-$$T_2-T_1= \frac { \lVert (((\vec{X_1}-\vec{X_0})-(\vec{X_2}-\vec{X_0})) + (\vec{V_1}+ \vec{V_0}) {T_1} - (\vec{V_2}+ \vec{V_0}) ({T_2}) \rVert } {C} $$
+Arguably I could defend 'no rest frame' by making the above relative to a third relative frame; but in computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  The original bodies are defined by $(\vec{V_1},X_1)=(\vec {V},{X})$, $(\vec{V_2},X_2)=(\vec {V_o},{X_o})$.
+
+$$T_2-T_1= \frac { \lVert ((\vec{X_1}-\vec{X_0})+ (\vec{V_1}+ \vec{V_0}) {T_1} )-((\vec{X_2}-\vec{X_0}) + (\vec{V_2}+ \vec{V_0}) ({T_2}))  \rVert } {C} $$
+
 The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
 
 $T_2$ includes $T_1$; and is the sum of $T+T_o$ where or $T_o=T_2-T_1$ is the time it takes between emission and detection.  So expanding this...
@@ -258,7 +272,7 @@ The original solve can still be used, with the velocity terms substituted ($V=V_
 
 ### Double check on right first equation
 
-It came to be that I was pondering why the above was $-V_oS$ .  It might be reasonable to think about $X+VT$ as the position an event happens and $X_o+V_oT$ where the observer was at that time, and subtract those; then $+V_o(T_o-T)$ is an additional distance the observer moved from the time it happened; but that's really relative to the origin of the frame, and should be subtracted.  It is really $T_o= \sqrt{ ( (X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))^2}+T$; $||\vec x||=\sqrt {\vec{x}\cdot\vec{x}}= \sqrt{x^2}$, or assuming 1D: $T_o=  |(X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))|+T$ which makes the last term just a subtraction.
+It came to be that I was pondering why the equation was $-V_oS$ ; that change is position of the observer reduces the length, while  It might be reasonable to think about $X+VT$ as the position an event happens and $X_o+V_oT$ where the observer was at that time, and subtract those; then $+V_o(T_o-T)$ is an additional distance the observer moved from the time it happened; but that's really relative to the origin of the frame, and should be subtracted.  It is really $T_o= \sqrt{ ( (X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))^2}+T$; $||\vec x||=\sqrt {\vec{x}\cdot\vec{x}}= \sqrt{x^2}$, or assuming 1D: $T_o=  |(X+VT) -(X_o+{V_o}T+{V_o}{(T_o}-T))|+T$ which makes the last term just a subtraction.
 
 $T=T_1$
 $T_2 = T_o-T$
@@ -281,7 +295,13 @@ Added light aberration correction.  It's a toggle, but enabled to start.  It's a
 
 In the example source there is an 'aberration' function.  It takes 'where you something was that you can see(detect)', 'your speed', and 'where you were when you saw(detected) it', uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
 
-and something like $f\left(x\right)=\arccos\left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos).
+and something like $f\left(x\right)=\arccos \left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos link above).  $V= ||\vec V||$; $\cos(x)= \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||}$; $\theta = x = \arccos( \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||})$
+
+$$f(\vec X,\vec V)=\frac {C \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||} +||\vec V||} {C + \frac {\vec X \cdot \vec V} {||\vec X||}}$$
+
+rotation axis = $\frac {\vec X \times \vec V} {||\vec X|| * ||\vec V||}$; rotation angle = $\arccos \left(f(\vec X, \vec V)\right)-\theta$
+
+`observedPosition = new lnQuat( rotationAngle, rotationAxis ).apply( `$\vec X$ `)`
 
 This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
 
@@ -298,6 +318,8 @@ The resulting vector IS back-tipped, which in a logical sense might seem that 'w
 
 ## Practical examples of failures
 
+After some pondering on the Lorentz Transform, I considered where its shortcomings actually manifest.
+
 A classic example, although somewhat simplified from reality.  A boat on water bobs; we should really be somewhat more precise and say I have a mechanism that taps water periodically, and causes waves to emit from a certain point.  The wave pool is infinite, and there are no boundary reflections.  An observer can see the height of water in a region and see that it goes up and down.  It can deduce from the direction the waves are going which direction the other body is, and with a couple detectors, can detect distance. 
 
 So instead can we just say, there's a boat, on water, that bobs, it emits waves in a circle around it.  Another boat can only use the height of these waves in order to see the other boat.  The boat has perfect sensors that absorb all energy from incoming waves, and do not reflect any waves themselves, other than from their bobbing motion, but it cannot see that there was a outgoing change, because those waves will never return to the source.
@@ -309,6 +331,8 @@ If there are 2 boats, and they are sitting there bobbing, and one takes off with
 
 
 ### One Velocity
+
+Having a single relative velocity between two bodies, those two bodies can only technically approach or regress from each other; although really, the error in the equation means what seems like a negative velocity, is also a body regressing, but in the opposite direction. (that's probably hard to justify at this place in the document; VT can be positive or negative.  Lorentz VT positive is V regressing, and time advancing, VT negative is V regressing and time receeding (going into the past)... the sign of V doesn't actually change).  If a body passes another body, the sign of the relative velocity changes from negative to positive; and there is no consideration for the changing of the sign.
 
 Body A and Body B are moving apart at 0.5c, (the arrow from B to A on the top left is meant to be A moving away from B, not B moving towards A).  The velocity between B or A might belong to A, and have it be $(0,0.5,0)$, or it might belong to B and be $(0,-0.5,0)$; it could be split and be $(0,0.25,0)$ and $(0,-0.25,0)$... although Lorentz transform always biases the observer as 0; so if the observer is at B, then A has a velocity away at 0.5c.
 
@@ -365,7 +389,7 @@ Matching the isometric portion of the graph with the appropriate scaling factor 
 $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
 
 
-Speed Scalar (Real to observed)
+ Speed Scalar (Real to observed)
 
 $$ T_S(x) = \frac {x} {\sqrt { CC-xx }} $$
 
