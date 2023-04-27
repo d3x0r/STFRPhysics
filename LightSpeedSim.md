@@ -9,7 +9,7 @@ I didn't concern myself so much with practical limitations like clocks would tic
 
 [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.  This also has a function to reverse calculate, and show a computed observed position.
 
-![Screenshot](math/lightSpeed1.jpg)
+![Screenshot](https://github.com/d3x0r/STFRPhysics/raw/master/math/lightSpeed1.jpg)
 
 Sliders allow adjusting `C` or the speed of light, the time scale (run faster/slower), the distance of the observer from the line of the path being observed, velocity of the body moving along a line, Half-Length of the body (a length of 1 is 2, and is center (0) +L and -L); and the run-time... or how far into the past/future the time extends.
 
@@ -28,8 +28,9 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 - [Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
 - [Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
 - [Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
-- [Last Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
-
+- [Fifth 2D Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
+- [3D Perspective test](https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html)This is a modified [Voxelarium](https://github.com/d3x0r/Voxelarium.js)voxel world with relatistic corrections applied.  When the speed of the observer and the speed of the observed is the same, the world is very square in perspective.  This shows a orthographic camera (on the left) which shows the real transformations applied to the surface and a perspective camera(on the right) which shows the world from the observers viewpoint; and completes the transformation to be square. ([More info...](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#3d-voxel-world-with-perspective-camera))
+- [3D Shape test](https://d3x0r.github.io/IsoSurface-MultiTexture/index-blackvoxel-lorentz.html)Used the [marching tetrahedra](https://github.com/d3x0r/IsoSurface-MultiTexture) framework to show a shape with an observer in the center, being able to apply an offset to that observer, but use the orbit camera (with a perspective matrix) to show what the observer sees, but not from the observer's perspective.  
 
 ## The Math
 
@@ -48,6 +49,8 @@ A relatively stationary observer exists, at some $D$ distance from the body (thi
 to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$, $L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
 
 Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then T_o is the real time the event is seen.
+
+### Equations
 
 (equation 1)$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 -or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
@@ -116,7 +119,7 @@ I get that it has something to do with that the traveler is going at relativisti
 I solved this as above, but assuming that a moving observer would basically see the same times as the other sim (Although, to get a single answer, I had to interpret that the breakfast was simulateous *to 'you' eating breakfast*);
 otherwise there are multiple choices.  And even made an image.
 
-![Probability Image](RelativityHomework.png)
+![Probability Image](https://github.com/d3x0r/STFRPhysics/raw/master/RelativityHomework.png)
 
 The left graph (1) is the interpretation, that the event from A is seen on E at the same time as E is having breakfast.  This yields one answer that is "C - Event Y occurs before event X."; but (B) is the right answer, so that's not a correct interpretation.
 
@@ -299,16 +302,21 @@ and something like $f\left(x\right)=\arccos \left(\frac{\left(C\cos\left(x\right
 
 $$f(\vec X,\vec V)=\frac {C \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||} +||\vec V||} {C + \frac {\vec X \cdot \vec V} {||\vec X||}}$$
 
-rotation axis = $\frac {\vec X \times \vec V} {||\vec X|| * ||\vec V||}$; rotation angle = $\arccos \left(f(\vec X, \vec V)\right)-\theta$
+rotation axis = $\frac {\vec X \times \vec V} {||\vec X|| * ||\vec V||}$; rotation angle =  $\theta -\arccos \left(f(\vec X, \vec V)\right)$
 
 `observedPosition = new lnQuat( rotationAngle, rotationAxis ).apply( `$\vec X$ `)`
 
+### 2D aberration
+
+$\theta = \arccos({\frac d {\sqrt{xx+dd}}})$
+$f(x)= arccos( \frac {C*{\frac d {\sqrt{xx+dd}}} + |V| } {C+|V| {\frac d {\sqrt{xx+dd}}}} )$
+
 This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
 
-![](aberration.png)
+![](https://github.com/d3x0r/STFRPhysics/raw/master/aberration.png)
 
 Without aberation, the things directly to the side of you actually appear somewhat to the back, and would have a longer distance, in the above image, the aberration doesn't bring what's lateral exacty to 1, but it's slightly longer, which makes it take slightly longer to cover that distance.  So rods that are lateral to a body do appear longer. (But then any plane attached to that cylinder is still at that distance)
-![](aberration-disable.png)
+![](https://github.com/d3x0r/STFRPhysics/raw/master/aberration-disable.png)
 
 #### My Hypothetical
 
@@ -336,7 +344,7 @@ Having a single relative velocity between two bodies, those two bodies can only 
 
 Body A and Body B are moving apart at 0.5c, (the arrow from B to A on the top left is meant to be A moving away from B, not B moving towards A).  The velocity between B or A might belong to A, and have it be $(0,0.5,0)$, or it might belong to B and be $(0,-0.5,0)$; it could be split and be $(0,0.25,0)$ and $(0,-0.25,0)$... although Lorentz transform always biases the observer as 0; so if the observer is at B, then A has a velocity away at 0.5c.
 
-![](relative-velocities.png)
+![](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocities.png)
 
 On the top right, A accelerates laterally to B, and the result is a vector from B to A that's 0.5c and is still their separation.  This would look exactly like the above case, only rotated.  
 
@@ -350,10 +358,10 @@ https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
 If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, but then there's no complex calculation for a lateral motion that has no acceleration, but has a non-constant velocity observed.
 
 
-![Sample screenshot from current demo](Lorentz-v-real.png)
+![Sample screenshot from current demo](https://github.com/d3x0r/STFRPhysics/raw/master/Lorentz-v-real.png)
 
 The following image shows the actual relative velocity between the two frames... (I mean, if you really want to use a relative velocity then this is what it would be).  Both velocities between the frames are actually constant themselves.
-![screenshot of demo with relative velocities enabled](relative-velocity-vectors.png)
+![screenshot of demo with relative velocities enabled](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocity-vectors.png)
 
 The above white lines show the apparent relative velocity, based on the actual change in distance to the observer.  With an offset and a skew, there appears to be up to 3 regions that the velocity changes, with rather sharp regions of change inbetween.
 
@@ -370,7 +378,7 @@ I wanted to see if maybe the distortion above would behave differently with pers
 
 https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html
 
-![Screen shot of above demo](Voxel-relativity.png)
+![Screen shot of above demo](https://github.com/d3x0r/STFRPhysics/raw/master/Voxel-relativity.png)
 
 The left is an orthographic camera, that shows the displaced pixels that are warped as in the 2D case, and basically is looking at the scene as if it were 2D.  The right camera is from the same camera point of view, same position, same orientation, but with a perspetive camera matrix applied instead.  When the velocities of the observer and observed are the same, the result in a very square projection.  ( There is a length contraction applied before either the extended lorentz function or light aberration is applied; which squares the result more; This gamma is only approximate, and is not $\sqrt{ 1-( {\frac V C} )^2}$; but it is also not $C+V$ or $C-V$ but is a curve somewhere inbetween. )
 
