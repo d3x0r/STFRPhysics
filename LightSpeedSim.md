@@ -52,7 +52,8 @@ Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)),
 
 ### Equations
 
-(equation 1) $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
+(equation 1) 
+$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 -or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
 
 Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
@@ -203,7 +204,8 @@ $\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the real t
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
-(equation 2)$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
+(equation 2)
+$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
 solved for T; raw result copied from WA.
 $$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
 
