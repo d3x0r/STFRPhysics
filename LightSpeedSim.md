@@ -65,7 +65,10 @@ $$ A=D^2+(L+VT_o)^2  $$
 
 $$f(T_o,L) = \frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
-setting $D=0$, $L=0$, and over-simpified to remove the sqrt : replace with absolute value.
+[Skip to usage...](#convert-a-time-to-position)
+### Special case to approach Lorentz Transform
+
+Setting $D=0$, $L=0$, and over-simpified to remove the sqrt : replace with absolute value.
 $$f(T_o) = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
 
 
@@ -85,11 +88,12 @@ $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 or (when D=0, L=0)
 $$T = \frac {T_O} {2}$$
 
-https://mathb.in/74833
-https://mathb.in/74928 (updated)
+- https://mathb.in/74833
+- https://mathb.in/74928 
+- https://mathb.in/75151 (updated; fixed A/2B at V=C)
 
-### Then with T....
-once you have the real time, the real observed position is $(L+VT)$. 
+### Convert a Time to Position
+Once you have the real time, the real observed position is $(L+VT)$. 
 
 $$ A=D^2+(L+VT_o)^2  $$
 
@@ -98,7 +102,11 @@ $$Position(T_o,L) = L+V\left(\frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^
 
 ### That was the simple case
 
+At this point, you have most of the position offset from time-delayed signals received from an emitter (observable) to a detector(observer). 
+
 The above assumes the observer is stationary, at a fixed position, with some distance between them and an object travelling along a line at a Velocity.  
+
+[Skip to 3D math](#generalized-to-3d-vectors)
 
 ### Lorentz Problem
 
@@ -290,9 +298,10 @@ $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  + \vec{V_2} (T+
 or
 $$T_o-T = \frac { \lVert{ (\vec{X_1}-\vec{X_2}) + \vec{V_1} {T}  - \vec{V_2} T_o ) }\rVert } {C}$$
 ## Light Aberration
+This is a phenomenon that applies when an observer is moving.  The observed angle of a signal is advanced an amount according to the observer's velocity, around the velocity vector.
 
-[Desmos playground](https://www.desmos.com/calculator/0tqxxfzsgp)
-[Implemented from](https://phys.libretexts.org/Bookshelves/Astronomy__Cosmology/Celestial_Mechanics_(Tatum)/11%3A_Photographic_Astrometry/11.03%3A_Refinements_and_Corrections/11.3.04%3A_Aberration_of_Light#:~:text=ccos%CF%87%E2%80%B2%3Dccos,is%20%E2%88%92csin%CF%87%E2%80%B2)
+[Desmos playground](https://www.desmos.com/calculator/0tqxxfzsgp) (Initial tests)
+[Implemented from](https://phys.libretexts.org/Bookshelves/Astronomy__Cosmology/Celestial_Mechanics_(Tatum)/11%3A_Photographic_Astrometry/11.03%3A_Refinements_and_Corrections/11.3.04%3A_Aberration_of_Light#:~:text=ccos%CF%87%E2%80%B2%3Dccos,is%20%E2%88%92csin%CF%87%E2%80%B2) (Some random link that described the math)
 
 Demo: https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
 
@@ -300,13 +309,21 @@ Added light aberration correction.  It's a toggle, but enabled to start.  It's a
 
 In the example source there is an 'aberration' function.  It takes 'where you something was that you can see(detect)', 'your speed', and 'where you were when you saw(detected) it', uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
 
-and something like $f\left(x\right)=\arccos \left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos link above).  $V= ||\vec V||$; $\cos(x)= \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||}$; $\theta = x = \arccos( \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||})$
+and something like (equation 3) $f\left(x\right)=\arccos \left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos link above).  
+### Details of implementation
+The dot product of a position relative to an observer and the velocity gives the cosine of base angle of the observed signal; dividing by the length of velocity and distance to point leaves the `cos(x)` factor.  Then it is computed at a new position using the light aberration formula above (equation 3). 
+
+$V= ||\vec V||$; $\cos(x)= \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||}$; $\theta = x = \arccos( \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||})$
 
 $$f(\vec X,\vec V)=\frac {C \frac {\vec X \cdot \vec V} {||\vec X|| * ||\vec V||} +||\vec V||} {C + \frac {\vec X \cdot \vec V} {||\vec X||}}$$
 
 rotation axis = $\frac {\vec X \times \vec V} {||\vec X|| * ||\vec V||}$; rotation angle =  $\theta -\arccos \left(f(\vec X, \vec V)\right)$
 
 `observedPosition = new lnQuat( rotationAngle, rotationAxis ).apply( `$\vec X$ `)`
+
+The new angle may be used with the cross product of the position with the velocity, which, when normalized, gives the axis of rotation for the point, and the resulting angle minus the base angle is the angle of rotation.
+
+The Light Aberration formula above only changes angle, not distance.
 
 ### 2D aberration
 
