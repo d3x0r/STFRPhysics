@@ -3,17 +3,17 @@
 # Reality of Relativity
 
 I started this project ([step-by-step](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
-I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (even clocks that are seen).  I've later refined portions of this to include special relativity.
+I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (clocks that are seen).  I've later refined portions of this to include special relativity(there's actually still some question marks there).
 
 ## Demos
 
-[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; when they pass the observer, the apparent position is indicated on the reference line.  This also has a function to reverse calculate, and show a computed observed position.
+[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; until they pass the observer, the apparent position is indicated on the reference line; once observed, the line and related photon circle disappear.  This has been updated to test a function to reverse calculate, and show a computed observed position(dicussed under 'The Math').
 
 ![Screenshot](https://github.com/d3x0r/STFRPhysics/raw/master/math/lightSpeed1.jpg)
 
 Sliders allow adjusting `C` or the speed of light, the time scale (run faster/slower), the distance of the observer from the line of the path being observed, velocity of the body moving along a line, Half-Length of the body (a length of 1 is 2, and is center (0) +L and -L); and the run-time... or how far into the past/future the time extends.
 
-The 0 time event is centered on the line, and the simulation starts at -1/2 Run time; or -5 seconds with the default settings.  The default has the velocity at 2 times the speed of light, so for the first 5 seconds, you don't actually see anything, then you see an image of the ship continuing forward, and reverting backward to its source.  Neither of these images travel faster than the speed of light.
+The 0 time event is centered on the line (sort of like x=0), and the simulation starts at -1/2 Run time; or -5 seconds with the default settings.  The default has the velocity at 2 times the speed of light, so for the first 5 seconds, you don't actually see anything, then you see an image of the ship continuing forward, and reverting backward to its source, as the ship passes you.  The reversed image might appear to have a velocity greater than the speed of light(although the faster the ship goes, the slower the reverse image goes, and only near slightly faster than the speed of light does the image go very fast), but the image of it having passed you does not travel faster than the speed of light.
 
 Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overall progression is then red to green to blue to red...
 |T|  hue| 
@@ -34,10 +34,9 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 
 ## The Math
 
-~~This is non-lorentz transformed, and probably falls under a Gallilean relativity; arguably, I could put a mesh of sensors which must also receive the light around the train at the speed of light, so the inside
-experience can't be much different; arguably a laser sensor of the occupant would measure the position in proper light speed/2 ticks.~~ (This is a defense on the validity, since although I use the same terms, it's arguable I'm defining a static rest frame)
+This is a non-lorentz transform, and at times I do attempt to regress/redress the Lorentz Transform(LT), this is a more general solution, and as such is a super set of LT.
 
-This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame.  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.   
+This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it is).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.   
 
 The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
 
@@ -208,7 +207,7 @@ $$-2*(CD+LV)$$
 
 ## Generalized to 3D Vectors
 
-$\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the real time, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted $T_o=\Delta {T_o} + T$ ; it should be removed from the position the event is observed from.  $(\vec X + \vec V T)-  (\vec 0+ \vec {V_o} {T_o})$ divided by the speed of light $C$, is the time it takes to see something.  ($S=T_o$ because subscript variables don't work well on Wolfram Alpha(WA))
+$\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the time an event was emitted, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted $T_o=\Delta {T_o} + T$ ; it should be removed from the position the event is observed from.  $(\vec X + \vec V T)-  (\vec 0+ \vec {V_o} {T_o})$ divided by the speed of light $C$, is the time it takes to see something.  ($S=T_o$ because subscript variables don't work well on Wolfram Alpha(WA))
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
@@ -236,7 +235,7 @@ $$T
 _o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
 
 ---
-Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors):
+Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$.
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
 $$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
 $$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
@@ -253,22 +252,24 @@ $\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{
 
 In the case that the velocity is the same as $C$, then a version of (equation 2) replaces $C$ with $\vec V$. Having a more complex denominator prevents solving into a form with a constant 0 in the denominator.
 
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$; solve for S and for T (ask WA to solve for...).
+
 This is a copy of the full solved expression.
 $$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {(2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
 
 This is refactored into vector components.
-$$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { |\vec V| } -{T_o}C^2)}$$
+$$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { ||\vec V|| } -{T_o}C^2)}$$
 The above solution works when $||\vec V||=C$.  Otherwise the normal form can be used; When greater than C, the negative square root should be considered as a possible answer.   (This are events that haven't reached you yet, but will, and happen after the observed body passes you; the relative speed of these events may exceed the speed of light).
 
 
 ---
 ### Including self velocity to make 3 body
 
-Arguably I could defend 'no rest frame' by making the above relative to a third relative frame; but in computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  The original bodies are defined by $(\vec{V_1},X_1)=(\vec {V},{X})$, $(\vec{V_2},X_2)=(\vec {V_o},{X_o})$.
+Consider modifying the above to be a full 3 body problem, where the relative velocities specified are relative to a third body, similarly their positions are relative to the third body's position.  In computer games, this would mean they are like boxes on the deck of a ship, or shapes hanging from a hanging mobile.  The original bodies are defined by $(\vec{V_1},\vec {X_1})=(\vec {V},\vec{X})$, $(\vec{V_2},\vec{X_2})=(\vec {V_o},\vec {X_o})$, the additonal body is $(\vec {V_0},{\vec {X_0}})$.  Note, these subscripts are numeric.
 
 $$T_2-T_1= \frac { \lVert ((\vec{X_1}-\vec{X_0})+ (\vec{V_1}+ \vec{V_0}) {T_1} )-((\vec{X_2}-\vec{X_0}) + (\vec{V_2}+ \vec{V_0}) ({T_2}))  \rVert } {C} $$
 
-The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additivly.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Although, because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
+The third body $(X_0,V_0)$ with a velocity itself biases the other two bodies additively.  The position might add or subtract, either way the $X_0$ factor disappears, since it won't matter to the other two bodies where the third body is.  Because their velocity is also relative to the third's velocity, that should be accounted for when computing the total velocity.
 
 $T_2$ includes $T_1$; and is the sum of $T+T_o$ where or $T_o=T_2-T_1$ is the time it takes between emission and detection.  So expanding this...
 
@@ -310,6 +311,7 @@ Added light aberration correction.  It's a toggle, but enabled to start.  It's a
 In the example source there is an 'aberration' function.  It takes 'where you something was that you can see(detect)', 'your speed', and 'where you were when you saw(detected) it', uses the dot product of the velocity and the difference in positions (their distance) to find the angle of incidence, and applies the light aberration correction to the angle, and re-projects the value with the angle of the `( velocity + corrected angle ) * distance`. 
 
 and something like (equation 3) $f\left(x\right)=\arccos \left(\frac{\left(C\cos\left(x\right)+V\right)}{\left(C+V\cos\left(x\right)\right)}\right)$  (from desmos link above).  
+
 ### Details of implementation
 The dot product of a position relative to an observer and the velocity gives the cosine of base angle of the observed signal; dividing by the length of velocity and distance to point leaves the `cos(x)` factor.  Then it is computed at a new position using the light aberration formula above (equation 3). 
 
@@ -329,6 +331,8 @@ The Light Aberration formula above only changes angle, not distance.
 
 $\theta = \arccos({\frac d {\sqrt{xx+dd}}})$
 $f(x)= arccos( \frac {C*{\frac d {\sqrt{xx+dd}}} + |V| } {C+|V| {\frac d {\sqrt{xx+dd}}}} )$
+
+### Examples Including Aberration
 
 This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
 
@@ -588,7 +592,7 @@ const float C = 1.0;
         float B = time*C*C + dot(velocity1, tmp );
         float D = C*C-dot(velocity1,velocity1);
         float T;
-        if( abs(D) < 0.0000001 ) T = B/(2.0*A);
+        if( abs(D) < 0.0000001 ) T = A/(2.0*B);
         else T = (sqrt( B*B - D*A ) + B)/D;
         vec3 real_position = position + T*velocity1;
         gl_Position = projectionMatrix * modelViewMatrix * vec4( real_position, 1.0 );
