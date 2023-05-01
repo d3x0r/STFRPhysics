@@ -1,3 +1,5 @@
+(Frequently Answered Questions)
+
 I do know the intent of relativity, but it's an idea that I think reality just can't aspire to reach.  The Lorentz Transform is incomplete in its scope; plus the part that it does have that matches reality (and for practical purposes is all you need in many cases), doesn't work over distances greater than a fraction of a light-second (or whatever light-time-unit you're using.).
 
 In a model that matches what I would think reality would be (and is honestly just very classical), there is assymetry; and there would be a bias towards stillness.  At some point, it's a lot more efficient to slow down than speed up for example; using thrust on-board.
