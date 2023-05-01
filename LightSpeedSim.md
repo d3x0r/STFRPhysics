@@ -29,12 +29,14 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 - [Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
 - [Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
 - [Fifth 2D Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html) : Two independent spaces moving relative to each other that can observe each other.  Each has their own velocity, which then gives a relative velocity between the bodies.
+- [Wheel Spinning - on ground](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel.html) This demonstration shows a spinning wheel with some spokes, it is rolling along the ground with one side stationary and the other moving.  This is set as if the axle passes at the position of the viewer.  Have to adjust the distance by -1 to be at the edge of the wheel.  (This does take a little time for the object to show up from the left side of the screen).
+- [Wheel Spinning - stationary](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel2.html) This demonstration shows a spinning wheel, but not moving laterally.  This lets you look at the wheel with just a distance between you and the axle.
 - [3D Perspective test](https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html)This is a modified [Voxelarium](https://github.com/d3x0r/Voxelarium.js)voxel world with relatistic corrections applied.  When the speed of the observer and the speed of the observed is the same, the world is very square in perspective.  This shows a orthographic camera (on the left) which shows the real transformations applied to the surface and a perspective camera(on the right) which shows the world from the observers viewpoint; and completes the transformation to be square. ([More info...](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#3d-voxel-world-with-perspective-camera))
 - [3D Shape test](https://d3x0r.github.io/IsoSurface-MultiTexture/index-blackvoxel-lorentz.html)Used the [marching tetrahedra](https://github.com/d3x0r/IsoSurface-MultiTexture) framework to show a shape with an observer in the center, being able to apply an offset to that observer, but use the orbit camera (with a perspective matrix) to show what the observer sees, but not from the observer's perspective.  
 
 ## The Math
 
-This is a non-lorentz transform, and at times I do attempt to regress/redress the Lorentz Transform(LT), this is a more general solution, and as such is a super set of LT.
+This is a non-Lorentz Transform(augmented? extended?), and at times I do attempt to regress/redress the Lorentz Transform(LT), this is a more general solution, there is an intersection with the domain of LT.
 
 This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it is).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.   
 
@@ -408,6 +410,41 @@ The left is an orthographic camera, that shows the displaced pixels that are war
 Without the length contraction, there is a general elongation that happens, the aberration pushes things very far forward, and the lorentz transform pushes them very far backward.  Unlocking the velocities can show these two effects and how they transform the world - so that at the same speed, in perspective, a warped surface looks square; that was not a goal of this, when when I started above, with the hypothesis of perspective, I didn't expect it to be the thing that squared up an observer riding in a ship at the speed of light, such that the ship still looks the same and square.
 
 
+## Alcubierre Drive and FTL
+Given that we want to curve space, and take a portion of space with us, such that we're not actually going the speed of light, the laws of relativy apply more to that still frame than the frame where the rest of your space is relative to all other space.
+
+Doesn't that make space sort of an Aether or medium?  the fields that QFT operates in, related within a region? 
+
+A light signal crossing the boundary between the spaces is going to be where most of the transform is, but if done right, light from space not within the bubble just go around the bubble - but take a slightly longer time than one would expect.
+
+(Skinwalker Ranch S04E02, had a lidar measuring device around an area they are investigating.  It got readings as if there was a cloaked ship - something with space folded around it - such that they registered a return time longer than it should have been - it wasn't that the dots hit something early, there was just a huge skew in the data around a region.  I would have wanted to immediately gone back and move the lidar to see if the shadow moved... where its boundary was.  But it's early in the season, and this is from like a year ago realtime... so maybe there's hope? )
+
+However, On pondering this, if that space is now 'stationary' then your previous velocity would ... a) come to an abrupt stop b) your space is a subset of real space and flows around you as if you were going that speed, and then it wouldn't be a very good bubble - maybe good for accelerations...  c) what if you have to get to a place where you are stationary, then warp the space, and then go around with the space.   Unless d) there IS an Aether drag around the earth that keeps relative space moving with the masses in it... then your bit of space you're dragging with you would make everything seem locally different than everything else... which isn't the case; there's still velocity-drag on anything that isn't the observer; there's still a light aberration because the observer is moving with the thing... which is why it still appears square.
+
+(side-side note: I'm thinking for story purposes I'll chose 'must get to a relatively stationary velocity', and when you drop out of warped space, you will have to catch up to whatever you're going after.)  But then I'm also not sure about the re-integration of that space with 'flat space' (universe-space?) ) This doesn't really align with observations of UFO's though - but maybe they come close in that warped space, and don't actually drop out of warp?  But then if they've landed, and take off again, how to accelerate so very fast away?  Maybe just wait until the right time, and let the planet go away as you drop into stationary space?)
+
+## The Rolling Wheel (WIP, Dev-notes)
+
+- (situation 1)the velocity at the tangent of the top of a wheel is rotating at velocity V, along the ground, and the bottom velocity is 0.
+- (situation 2)the tangent to the top and bottom of the wheel is rotating at V and -V.
+
+### case 1 
+linear velocity at the axle is V/2 - the Linear speed of the circle is V/2.
+
+$R$ =radius = \sqrt(xx+yy)
+angular change = $\frac{V}{R}$radians 
+center V = V;
+
+1) $(S-T)^2=\frac {||(cos(\frac V R T)*R+(\frac {VT} 2),sin(\frac V R T)*R)||} C$
+
+Not an easy solve - brute force it is.
+for each frame
+for each center of each seg on circle is marked for when it will be seen.
+make some spoke segments, and similarly mark the center of each of those for visibility.
+
+draw arc segments for fixed locations around the circle.  I guess the spoke positions do update, but the circle doesn't actually rotate, it will just translate.
+
+math/indexLightSpeed4-wheel2.html
 
 
 ## Time Dilation 
