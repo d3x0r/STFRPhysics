@@ -72,5 +72,21 @@ It's not electrostatic forces that polarize light in a  certain direction; becau
 
 https://www.hyiq.org/Downloads/Edward-Leedskalnin-Magnetic-Current.pdf original scan
 
-(another source, not as good) http://www.rexresearch.com/leedskal/leedskal.htm  Edward leedskalnin noticed an attraction and a repulsion - if you reverse the current, then the magnetic fields oppose and push the wires apart.  It's partially to resist this change in motion that another current might be induced in another nearby condductor that doesn't already have a potential driving it.
+(another source, not as good) http://www.rexresearch.com/leedskal/leedskal.htm  Edward leedskalnin noticed an attraction and a repulsion - if you reverse the current, then the magnetic fields oppose and push the wires apart.  It's partially to resist this change in motion that another current might be induced in another nearby conductor that doesn't already have a potential driving it.
+
+### Electrostatic vs Electrodynamic
+It's been a good paradigm to say 'a moving charge generates a magnetic field'.  But that is indistinguishable from 'a charge that moves is a magnetic field'.  
+An electron that's stationary, has a position and a field. An electron that's moving has a velocity and a field; although the field when it's moving is magnetic and is aligned along the velocity of the motion.  Once that magnetic field collapses back into an electron somewhere, the it goes back to being a position, and asserting itself as an attraction and repulsion depending on whether it's against a different or same other charge in the area.  When an electron is in a place, it has a momentum relative to its local  rest frame, not relative to the photon frame.  
+An electron as a magnetic field has an uncertain position, and a electron in a place has an uncertain velocity; until induced in a direction.  
+
+Electrons passing through a homogenous magnetic field experience a change in velocity direction; this is considered to be an acceleration.  This is a torque on the magnetic field that's aligned in the direction of the velocity, that causes a precession of the magnetic field, which then when it's collapsing, it induces other collapsed electrons into motion in the new direction.
+
+The current through an inductor is the same until the magnetic field of the inductor is 0, and no further current can be induced.
+
+- See also Eric Dollard's Lone Pine Writings - these are somewhat incomplete but cover a lot of the basics of the electro static(capacitors ) and electromagnetic (inductors), and the flow of energy between the two - while in a conductor the electrons are both electrostatic and electromagnetic with a high rate of change between states- electrons in a capacitor have a position, and electrons in an inductor have a momentum/inertia, which continues to push current forward until it's depleted.   
+
+
+A approaching north pole and a receeding south pole look the same, as with a approaching south pole and receeding north pole.   
+
+A approaching north pole induces a current in other inductors (if available) that generates a field opposite to itself; and the current it generates when collapsing is in the opposite direction from the original current.  But then that increased current generates a rising magnetic field, such that if there's a lag in the other conductor, it will help carry that current forward in the other direction.  If the field doesn't collapse anywhere else, it will collapse back into the wire itself... although it doesn't have to ever collapse (?) Permanent magnets - the electrons that are the field never really collapse back into motion (otherwise you might have induction in a wire just near a magnet as the fields constantlly form and collapse)... or in a PMH (Leedskalnin) - basically a U core wound with some turns of wire, and a bar - but really two halves of a block with a single conductor running through it will cause a magnetic lock.  (https://www.youtube.com/watch?v=eWSAcMoxITw )
 
