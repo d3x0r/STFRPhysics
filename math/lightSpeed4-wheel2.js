@@ -54,7 +54,7 @@ class Arc{
 		this.baseAngle = baseAngle;
 	}
 	set( R, V, T ){
-		this.pos = 0;//V*T;
+		this.pos = D2+0;//V*T;
 		this.angle = V/R*T+ this.baseAngle;
 		const cm = this.pos + R*Math.cos( V/R*T+ this.baseAngle );
 		const sm = D        + R*Math.sin( V/R*T+ this.baseAngle );
@@ -98,7 +98,7 @@ class Spoke{
 		const c = Math.cos(angle);
 		const s = Math.sin(angle );
 		const spokelen = L/SPOKE_SEGS;
-		const center = 0;//V*T;
+		const center = D2+ 0;//V*T;
 		for( let n = 0; n < SPOKE_SEGS; n++ )  {
 			const slen = (spokelen*n);
 			const midx = center+c*(slen+spokelen/2);
@@ -136,17 +136,32 @@ for( let n = 0; n < nFrames; n++ ) {
 
 const controls = document.getElementById( "controls" );
 
-let span = document.createElement( "br" );
-controls.appendChild( span );
+let span;
+
+const box = document.createElement( "div" );
+box.classname = "control-box";
+controls.appendChild( box );
+          	
+const spanChkHide = document.createElement( "label" );
+spanChkHide.textContent = "Hide Controls";
+controls.appendChild( spanChkHide );
+
+const chkLblHide = document.createElement( "input" );
+chkLblHide.setAttribute( "type", "checkbox" );
+chkLblHide.checked = animate;
+spanChkHide.appendChild( chkLblHide );
+chkLblHide.addEventListener( "input", update );
+
+
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "C";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderC = document.createElement( "input" );
 sliderC.setAttribute( "type", "range" );
-controls.appendChild( sliderC );
+box.appendChild( sliderC );
 sliderC.addEventListener( "input", update );
 
 sliderC.setAttribute( "max",1250 );
@@ -155,20 +170,20 @@ sliderC.style.width="250px";
 
 const spanC = document.createElement( "span" );
 spanC.textContent = "1";
-controls.appendChild( spanC );
+box.appendChild( spanC );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Time Scale";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderS = document.createElement( "input" );
 sliderS.setAttribute( "type", "range" );
-controls.appendChild( sliderS );
+box.appendChild( sliderS );
 sliderS.addEventListener( "input", update );
 
 sliderS.setAttribute( "max",250 );
@@ -177,20 +192,20 @@ sliderS.style.width="250px";
 
 const spanS = document.createElement( "span" );
 spanS.textContent = "1";
-controls.appendChild( spanS );
+box.appendChild( spanS );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Distance";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderD = document.createElement( "input" );
 sliderD.setAttribute( "type", "range" );
-controls.appendChild( sliderD );
+box.appendChild( sliderD );
 sliderD.addEventListener( "input", update );
 
 sliderD.setAttribute( "max",1000 );
@@ -199,20 +214,20 @@ sliderD.style.width="250px";
 
 const spanD = document.createElement( "span" );
 spanD.textContent = "1";
-controls.appendChild( spanD );
+box.appendChild( spanD );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Offset";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderD2 = document.createElement( "input" );
 sliderD2.setAttribute( "type", "range" );
-controls.appendChild( sliderD2 );
+box.appendChild( sliderD2 );
 sliderD2.addEventListener( "input", update );
 
 sliderD2.setAttribute( "max",1000 );
@@ -221,20 +236,20 @@ sliderD2.style.width="250px";
 
 const spanD2 = document.createElement( "span" );
 spanD2.textContent = "1";
-controls.appendChild( spanD2 );
+box.appendChild( spanD2 );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Velocity";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderV = document.createElement( "input" );
 sliderV.setAttribute( "type", "range" );
-controls.appendChild( sliderV );
+box.appendChild( sliderV );
 sliderV.addEventListener( "input", update );
 
 sliderV.setAttribute( "max",1000 );
@@ -243,20 +258,20 @@ sliderV.style.width="250px";
 
 const spanV = document.createElement( "span" );
 spanV.textContent = "1";
-controls.appendChild( spanV );
+box.appendChild( spanV );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Half-Length";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderL = document.createElement( "input" );
 sliderL.setAttribute( "type", "range" );
-controls.appendChild( sliderL );
+box.appendChild( sliderL );
 sliderL.addEventListener( "input", update );
 
 sliderL.setAttribute( "max",100 );
@@ -265,20 +280,20 @@ sliderL.style.width="250px";
 
 const spanL = document.createElement( "span" );
 spanL.textContent = "1";
-controls.appendChild( spanL );
+box.appendChild( spanL );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Direction";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderA = document.createElement( "input" );
 sliderA.setAttribute( "type", "range" );
-controls.appendChild( sliderA );
+box.appendChild( sliderA );
 sliderA.addEventListener( "input", update );
 
 sliderA.setAttribute( "max",200 );
@@ -287,20 +302,20 @@ sliderA.style.width="250px";
 
 const spanA = document.createElement( "span" );
 spanA.textContent = "1";
-controls.appendChild( spanA );
+box.appendChild( spanA );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Time of sim. event: ";
-//controls.appendChild( span );
+//box.appendChild( span );
 
 const sliderE = document.createElement( "input" );
 sliderE.setAttribute( "type", "range" );
-//controls.appendChild( sliderE );
+//box.appendChild( sliderE );
 sliderE.addEventListener( "input", update );
 
 sliderE.setAttribute( "min",-100 );
@@ -310,20 +325,20 @@ sliderE.style.width="250px";
 
 const spanE = document.createElement( "span" );
 spanE.textContent = "1";
-//controls.appendChild( spanE );
+//box.appendChild( spanE );
 
 span = document.createElement( "br" );
-//controls.appendChild( span );
+//box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Run-Time";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderRunT = document.createElement( "input" );
 sliderRunT.setAttribute( "type", "range" );
-controls.appendChild( sliderRunT );
+box.appendChild( sliderRunT );
 sliderRunT.addEventListener( "input", update );
 
 sliderRunT.setAttribute( "max",250 );
@@ -332,20 +347,20 @@ sliderRunT.style.width="250px";
 
 const spanRunT = document.createElement( "span" );
 spanRunT.textContent = "1";
-controls.appendChild( spanRunT );
+box.appendChild( spanRunT );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Now";
-controls.appendChild( span );
+box.appendChild( span );
 
 const sliderNow = document.createElement( "input" );
 sliderNow.setAttribute( "type", "range" );
-controls.appendChild( sliderNow );
+box.appendChild( sliderNow );
 sliderNow.addEventListener( "input", update );
 
 sliderNow.setAttribute( "min",-100 );
@@ -355,20 +370,20 @@ sliderNow.style.width="250px";
 
 const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
-controls.appendChild( spanNow );
+box.appendChild( spanNow );
 
 const spanChkNow = document.createElement( "span" );
 spanChkNow.textContent = " |Animate";
-controls.appendChild( spanChkNow );
+box.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
+box.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
 span = document.createElement( "br" );
-controls.appendChild( span );
+box.appendChild( span );
 //----------------------
 update();
 
@@ -651,6 +666,10 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 
 
 function update( evt ) {
+
+	if( chkLblHide.checked ) box.style.display="none";
+	else box.style.display="";
+
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/1000*C;
@@ -667,7 +686,7 @@ function update( evt ) {
 	D = (Number(sliderD.value)/500-1)*5;
 	spanD.textContent = D.toFixed(3) ;
 
-	D2 = (Number(sliderD2.value)/500-1)*L;
+	D2 = (Number(sliderD2.value)/500-1)*5;
 	spanD2.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 
 	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
