@@ -8,21 +8,22 @@ const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
 
-let L=1; // length of body (m)  (L/C = time of body (s))
-let C=1; // speed of propagation (m/s)
+let L=5; // length of body (m)  (L/C = time of body (s))
+let C=3; // speed of propagation (m/s)
 let D=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let D2=0; // shortest distance to moving body (m) (D/C = time to view closest event (s))
-let V=0.80; // velocity  (m/s)
-let S=1.0; // time scalar (s/s)
+let V=0.616; // velocity  (m/s)
+let S=3.0; // time scalar (s/s)
 let A=0; // length of body (m)  (L/C = time of body (s))
 let sa = 0;// Math.sin(A);
 let ca = 0;//Math.cos(A);
 
 
-let runT = 12;
+let runT = 30;
 
 let E = 0;
 let now = 0;
+let wasNow = 0; // trqacks slider value of now
 let animate = true;
 const step = 10;
 
@@ -31,8 +32,8 @@ let curFrame = -1;
 const nFrames = 1001;
 let eventFrame = -1;
 let last_draw_time = 0;
-const xscale = 100;
-const yscale = 100;
+let xscale = 20;
+let yscale = 20;
 let didEvent = false;
 const photonStart = 100;
 
@@ -680,8 +681,17 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 }
 
 
-
 function update( evt ) {
+	let newSliderNow;
+	if( wasNow != (newSliderNow = Number(sliderNow.value)) ) {
+		wasNow = newSliderNow;
+		now = (wasNow/100*runT/2 + runT/4);
+		if( !animate )
+			draw(  );
+		return; // changing now shouldn't recompute the world.
+	}
+	
+
 	if( chkLblHide.checked ) box.style.display="none";
 	else box.style.display="";
 	C = Number(sliderC.value)/100;
@@ -715,8 +725,10 @@ function update( evt ) {
 	spanRunT.textContent = runT.toFixed(2);
 
 	if( animate ) {
-	}else
-		now = (Number(sliderNow.value)/100*runT/2);
+	}else {
+		now = (wasNow/100*runT/2 + runT/4);
+	}
+
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame>=0 ) {
@@ -789,8 +801,10 @@ function draw(  ) {
 	const beamY = canvas.height/2 + 40;
 
 	if( animate ) {
-		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
-		sliderNow.value =100*now*2/runT
+		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2 + runT/4;
+
+		wasNow = sliderNow.value = Math.floor(100*((now-runT/4)*2/runT));
+		
 		spanNow.textContent = now.toFixed(2);
 	}
 
