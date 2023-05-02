@@ -23,6 +23,7 @@ let runT = 12;
 
 let E = 0;
 let now = 0;
+let wasNow = 0; // trqacks slider value of now
 let animate = true;
 const step = 10;
 
@@ -666,6 +667,14 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 
 
 function update( evt ) {
+	let newSliderNow;
+	if( wasNow != (newSliderNow = Number(sliderNow.value)) ) {
+		wasNow = newSliderNow;
+		now = (wasNow/100*runT/2 + Math.sqrt( D*D+D2*D2)/C);
+		if( !animate )
+			draw(  );
+		return; // changing now shouldn't recompute the world.
+	}
 
 	if( chkLblHide.checked ) box.style.display="none";
 	else box.style.display="";
@@ -702,7 +711,7 @@ function update( evt ) {
 
 	if( animate ) {
 	}else
-		now = (Number(sliderNow.value)/100*runT/2);
+		now = (wasNow/100*runT/2) + Math.sqrt( D*D+D2*D2)/C;
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame>=0 ) {
@@ -775,8 +784,8 @@ function draw(  ) {
 	const beamY = canvas.height/2 + 40;
 
 	if( animate ) {
-		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
-		sliderNow.value =100*now*2/runT
+		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2 + runT/4;
+		wasNow = sliderNow.value = Math.floor(100*((now-runT/4)*2/runT));
 		spanNow.textContent = now.toFixed(2);
 	}
 
