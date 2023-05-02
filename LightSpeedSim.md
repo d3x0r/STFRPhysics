@@ -390,6 +390,18 @@ The following image shows the actual relative velocity between the two frames...
 
 The above white lines show the apparent relative velocity, based on the actual change in distance to the observer.  With an offset and a skew, there appears to be up to 3 regions that the velocity changes, with rather sharp regions of change inbetween.
 
+### Rescue of Lorentz Transform?
+
+When Light Aberration is also included, often, the path of the object seen and the Lorentz single relative velocity (shown in purple above), actually tracks with the body being observed.  (not always).
+
+When both a offset translation, and a rotation of the velocity vector for one of the bodies occurs, then there are jogs in the path.
+
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
+
+Lock Velocity, Show Velocities, change the first direction slider to $0.5\pi$.  towards the end of the animation, the body was following the lorentz path, but then jogs off of the path.  (this is hard to show with a static image).
+
+That is to say - it actually covers itself it you assume that it is both Light Aberration AND the Lorentz Transform, but applying both will give a double skew to the system; and really the math that resembles reality should just be used.
+
 
 ### Another Way to look at it
 
@@ -435,20 +447,21 @@ $R$ =radius = \sqrt(xx+yy)
 angular change = $\frac{V}{R}$radians 
 center V = V;
 
-1) $(S-T)^2=\frac {||(cos(\frac V R T)*R+(\frac {VT} 2),sin(\frac V R T)*R)||} C$
-
+1) $S=\frac {||(R\cos(\frac V R T)+VT,R\sin(\frac V R T)+D)||} C + T$ Includes the Distance offset, with a position defined by $VT$
+2) $S=\frac {||(R\cos(\frac V R T)+X,R\sin(\frac V R T)+Y)||} C +T$ add position offset X and Y since there's no linear velocity.
 Not an easy solve - brute force it is.
 for each frame
 for each center of each seg on circle is marked for when it will be seen.
 make some spoke segments, and similarly mark the center of each of those for visibility.
 
-draw arc segments for fixed locations around the circle.  I guess the spoke positions do update, but the circle doesn't actually rotate, it will just translate.
+draw arc segments for fixed locations around the circle.  I guess the spoke positions do update, but the circle doesn't actually rotate, it will just translate.  Display segments that are +/- 1/2 Frame step from 'now'.  `(Math.abs(time_seen - now) < frameStep/2)`.
 
-math/indexLightSpeed4-wheel2.html
-
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel.html
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel2.html
 
 ## Time Dilation 
 
+(see also [Realtivity Faq](Relativity.FAQ.md) )
 According to special relativity... (this section in progress; still haven't figured a definitive gamma for time dilation; it could come from light aberration and speed... probably have to do with the circumference of circles at a velocity...)
 
 Matching the isometric portion of the graph with the appropriate scaling factor would imply that gamma is $\frac 1 {C-V}$ or the worst case clock time (which is when you get maximum contraction, when the craft is moving away from you with a negative velocity).  However, that neglects clocks that are in various other orientations....
