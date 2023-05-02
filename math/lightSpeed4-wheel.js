@@ -113,7 +113,9 @@ class Spoke{
 
 class Frame{
 	arcs = [];
+	drewArcs = [];
 	spokes = [];
+	drewSpoke = [];
 	hue = 0;
 	T_start = 0;
 	Event = 0;
@@ -121,10 +123,24 @@ class Frame{
 	constructor() {
 		for( let a = 0; a < ARCS; a++  ) {
 			this.arcs.push( new Arc(a*(Math.PI*2)/ARCS) );
+			this.drewArcs.push(false);
 		}
 		for( let a = 0; a < SPOKES; a++  ) {
 			this.spokes.push( new Spoke( a*(Math.PI*2)/SPOKES) );
+			const spokeSeg = [];
+			this.drewSpoke.push(spokeSeg);
+			for( let s = 0; s < SPOKE_SEGS; s++ ) spokeSeg.push(false);
 		}
+	}
+	resetDraw() {
+		for( let a = 0; a < ARCS; a++  ) {
+			this.drewArcs[a] = false;
+		}
+		for( let a = 0; a < SPOKES; a++  ) {
+			const segs = this.drewSpoke[a];
+			for( let s = 0; s < SPOKE_SEGS; s++ ) segs[s] = false;
+		}
+
 	}
 }
 
@@ -690,8 +706,8 @@ function update( evt ) {
 		eventFrame = -1;
 	}
 
-	frameStep = 1/runT;
-	halfFrame = frameStep/2;
+	frameStep = 1/nFrames *runT;
+	halfFrame = frameStep;
 	
 	const hLen = (L-D2)/(C+V) ;
 	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
@@ -780,23 +796,69 @@ function draw(  ) {
 	curFrame = nFrames;  // draw all frames
 	const toY = D*yscale+photonStart;
 
-
+	for( let f = 0; f < curFrame; f++ ) {
+		frames[f].resetDraw();
+	}
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = frames[f];
-		if( frame.T_start <= now  && frame.T_end >= now ) 
+		if( frame.T_start > now ) continue;
+		if( frame.T_end < now) continue;
+
 		{
 			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
-			for( let arc of frame.arcs ) {
-				const del = Math.abs( arc.T_see - now );
-				if( del < halfFrame ) {
+			for( let a=0; a < ARCS; a++ ) {
+				if( frame.drewArcs[a] )continue;
+				let arc = frame.arcs[a];
+				let ofs = 0;
+				let test = 0;
+				let del = Math.abs( arc.T_see - now );
+				if( del >= halfFrame ) continue;
+				if(0)
+				while((f+ofs+1<frames.length) &&  (test = Math.abs( frames[f+ofs+1].arcs[a].T_see - now ))< del) {
+					frames[f+ofs].drewArcs[a] = true;
+					ofs++;
+					del = test;
+				}
+				if( ofs ) {
+					frames[f+ofs].drewArcs[a] = true;
+					frames[f+ofs].arcs[a].draw(ctx );
+				} else					
+				{
+					frame.drewArcs[a] = true;
 					arc.draw( ctx );
 				}
+				if(0)							
+				while((f+ofs+1<frames.length) &&  ( Math.abs( frames[f+ofs+1].arcs[a].T_see - now ))<= halfFrame) {
+					ofs++;
+					frames[f+ofs].drewArcs[a] = true;
+				}
+
 			}
-			for( let spoke of frame.spokes ) {
+			for( let s= 0; s < SPOKES; s++ ) {
+				const spoke = frame.spokes[s];
 				for( let n = 0; n < SPOKE_SEGS; n++ ) {
-					const del = Math.abs( spoke.T_see[n] - now );
-					if( del < halfFrame )
-						spoke.draw( ctx, n)
+					if( frame.drewSpoke[s][n] )continue;
+					let ofs = 0;
+					let test = 0;
+					let del = Math.abs( spoke.T_see[n] - now );
+					if( del < halfFrame ) {
+						if(0)
+						while( (f+ofs+1<frames.length) && (test = Math.abs( frames[f+ofs+1].spokes[s].T_see[n] - now ))< del) {
+							frames[f+ofs].drewSpoke[s][n] = true;
+							ofs++;
+							del = test;
+						}
+						frames[f+ofs].drewSpoke[s][n] = true;
+						if( ofs ) 
+							frames[f+ofs].spokes[s].draw( ctx, n )
+						else
+							spoke.draw( ctx, n)
+						if(0)							
+						while( (f+ofs+1<frames.length) && ( Math.abs( (f+ofs+1<frames.length) && frames[f+ofs+1].spokes[s].T_see[n] - now ))<= halfFrame) {
+							ofs++;
+							frames[f+ofs].drewSpoke[s][n] = true;
+						}
+					}
 				}
 			}
 		}
