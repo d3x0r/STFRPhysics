@@ -1,12 +1,12 @@
 (Frequently Answered Questions)
 
-I do know the intent of relativity, but it's an idea that I think reality just can't aspire to reach.  The Lorentz Transform is incomplete in its scope; plus the part that it does have that matches reality (and for practical purposes is all you need in many cases), doesn't work over distances greater than a fraction of a light-second (or whatever light-time-unit you're using.).
+The Lorentz Transform is incomplete in its scope, and only accounts for $V*T$ and $V*-T$, which means even a negative velocity is treated as a positive velocity in negative time;  the part that it does have that matches reality (and for practical purposes is all you need in many cases), doesn't work over distances greater than a fraction of a light-second (or whatever light-time-unit you're using.).
 
 In a model that matches what I would think reality would be (and is honestly just very classical), there is assymetry; and there would be a bias towards stillness.  At some point, it's a lot more efficient to slow down than speed up for example; using thrust on-board.
 
 # Null experiments
 
-frequency and wavelength aren't changed by speed.  They are changed by having the space light goes through change (LIGO), such as gravitational waves.  This is a change in gravity, not a change in speed... and as such has a different effect than moving at speed.
+Length contraction along the velocity vector means that a shorter length, for the worst-case light travel time, that it's the same time as light covers a perpendicular distance which is not contracted.
 
 Mirrors reflect with aberration applied, and once a photon interacts with a thing in the local frame, it pretty much continues as if it was in that local frame.   Flowing Water does drag light; so if there is a medium, light can move with it.  Space as distorted by mass seems to make light move with it (or in this case makes light move around mass).  
 

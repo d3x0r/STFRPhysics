@@ -75,6 +75,8 @@ $$f(T_o) = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
 
 The above returns the real time from an observers time $T_O$, and an offset along the body ($L$).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
+#### Special case V=C
+
 In the special case that $V=C$, then $V/C = 1$, so equation 1 simplifies to this... the T under the square root is $\frac V C$ which $=1$.
 
 $$T_O = \sqrt{\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}}+T$$
@@ -257,7 +259,7 @@ In the case that the velocity is the same as $C$, then a version of (equation 2)
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$; solve for S and for T (ask WA to solve for...).
 
 This is a copy of the full solved expression.
-$$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {(2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
+$$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
 
 This is refactored into vector components.
 $$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { ||\vec V|| } -{T_o}C^2)}$$
@@ -435,7 +437,7 @@ However, On pondering this, if that space is now 'stationary' then your previous
 
 (side-side note: I'm thinking for story purposes I'll chose 'must get to a relatively stationary velocity', and when you drop out of warped space, you will have to catch up to whatever you're going after.)  But then I'm also not sure about the re-integration of that space with 'flat space' (universe-space?) ) This doesn't really align with observations of UFO's though - but maybe they come close in that warped space, and don't actually drop out of warp?  But then if they've landed, and take off again, how to accelerate so very fast away?  Maybe just wait until the right time, and let the planet go away as you drop into stationary space?)
 
-## The Rolling Wheel (WIP, Dev-notes)
+## The Rolling Wheel (Dev-notes)
 
 - (situation 1)the velocity at the tangent of the top of a wheel is rotating at velocity V, along the ground, and the bottom velocity is 0.
 - (situation 2)the tangent to the top and bottom of the wheel is rotating at V and -V.
@@ -459,33 +461,84 @@ draw arc segments for fixed locations around the circle.  I guess the spoke posi
 https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel.html
 https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel2.html
 
+### Possible computable solution
+The circle itself should still be the circle, although each segment of the circle has an independant velocity.  The time of that segment determines the overall rotation of the wheel, and a segment, that at that time is rotated so there is a spoke can start a spoke connected to the center (still with somewhat of a sweeping velocity I suppose... it's position is still sourced from a line)
+
+
+#### Length Contraction to the rescue?
+
+Without length contraction, then parallel to the velocity is the longest 2-way time; velocity along the perpendicular is the shortest 2-way time.  The velocity direction defines what is 'front' and 'back', any other perpendicular direction is 'lateral'.  The side you look at in the direction of the velocity is 'front', while the side you look at in a direction opposing the velocity is 'back'.
+
+So, for the worst case time, take 1 light-second $(1s\cdot C)$ with units(m-s/s), and divide by the speed from the back to the front, which is $C-V$.  The signal propagates to the front at the speed of light (C), but the front moves away, which makes that relative speed $C-V$.  $\frac C {C-V}$ (which has units m-s-s/m-s) seconds is then how long the signal takes to go from the back to the front.
+
+The best case time, using the same 1 light-second, has a relative speed of $C+V$, while the signal propagates at the speed of light (C), the back also catches up with the signal, making the effective relative speed $C+V$.  $\frac C{C+V}$ is how many seconds it takes for the back to see the front.  
+
+A) Adding the worse and best case times $\frac C {C-V} + \frac C {C+V} = \frac {2CC} {CC-VV}$.  If the distance is multiplied by the inverse of this ($A=\frac {CC-VV} {2CC}$), that is the distance that would be covered in 2 seconds to cover forward and backward.  
+
+ - Sidenote: Another approach might be to consider the velocity $(C+V)*1$ and get the distance covered in 1 second; and the other $(C-V)*1$, so the total $(C+V)+(C-V)=2C$.  This is not the correct answer.
+
+However, since the speed of light is limited to C, when going forward, the lateral time for the signal to cross 1 light-second is $\frac {1s \cdot C} {\sqrt{CC-VV}}$.  The reciprocal of this is the lateral distance covered in 1 second; so $B=\frac {2C} {\sqrt{CC-VV}}$ is the equivalent distance for 2-way time.
+
+Then, scaling the distance by dividing by A and multiplying by B $\frac {CC-VV} {2CC} \cdot \frac {2C} {\sqrt{CC-VV}}$ = $\frac {2({CC-VV})} {2C\sqrt{CC-VV}}$= $\frac {\sqrt{CC-VV}} {C}$.  This final expression is the length contraction factor.  The inverse is the time contraction.
+
+#### Another derivation
+
+Parallel time = $\frac C {C+V} + \frac C {C-V}$ = $\frac {2CC} {CC-VV}$; (total wavelengths = $\frac{CC-VV} {2CC}$), either are unitless.
+
+Perpendicular time = $\frac {C} {\sqrt{CC-VV}}$ which gives a total wavelength of $\frac {\sqrt{CC-VV}} {C}$, and 2 of these lengths have to be counted: $2 \frac {\sqrt{CC-VV}}{C}$.
+
+So the common wavelengths = $\frac {2C}{\sqrt{CC-VV}}$  and ${\frac {CC-VV} {2CC} }$
+
+Combining the above, to reduce the total length, and scale back up for the time delay sideways $\frac {CC-VV} {2CC} \cdot \frac{2C}{\sqrt{CC-VV}}$ = $\frac {CC-VV} {C \sqrt{CC-VV}}$ = $\frac {\sqrt{CC-VV}} C$
+
+So : Length Contraction : $\beta = \frac{\sqrt{CC-VV}} {C}$; this is also Time-contraction (the clock on the body is slowed by this much $t'=\beta t$.  1 tick on the observer's clock = $\beta$ ticks on the moving bodies clock.)
+
+## Length and Time Contraction
+
+https://www.desmos.com/calculator/tibw8kuy9v (older version; C factor was included in scalar expressions)
+https://www.desmos.com/calculator/uazzijpkei
+https://www.desmos.com/calculator/o7eyerh7bc (Revised version; in the long run, for steps 1,2,3, 1 to 2 and 2 to 3 multiply by a reciprocal, so skipping from 1 to 3 deletes a bit of math)
+
+Given the variables $T$ is a time scalar in (s), $V$ is velocity in (m/s), C is the velocity of light in (m/s).  The length will be given with $CT$ which is in (m), and is light-seconds.   The function parameter $x$, below, is a velocity.  The function parameter $a$ is the angle of the line light travels relative to V; at $a=0$ the line is aligned with the velocity, at $a=\frac {\pi} 2$ the line is perpendicular to the velocity.
+
+The function s() takes a velocity, and results in how long light takes to span a round trip of a distance (multiplied by 2) at that velocity; at 0, the function is 1, and at C the function is infinity.  Multiplying by this value gives a scaled time that light will travel a unit distance.
+$$s(x)=\frac {CC\sqrt{CC-xx}} {C({CC-xx})}$$
+or
+$$s(x)=\frac {C} {\sqrt{CC-xx}}$$
+
+The function t() takes a velocity, and results in the how long it takes light to span a round trip at that velocity.  This is the worst-case round trip where the direction of the light is parallel to the velocity.  Dividing by this value gives a scaled length that light will travel in a unit time.
+
+$$t(x)= \frac 1 2 \cdot \frac {2CC} {CC-xx}$$ 
+The function p() takes a velocity, and results in how long it takes light to span a distance.
+$$ p(x)=\frac {\sqrt{CC-xx}} {C}$$
+
+$f_x(a)$ is the scaled X coordinate (the velocity is assumed to be along the X axis) based on the angle of the line considered, and velocity. The absolute value of $cos(a)$ is used because it's an absolute length at that angle. 
+$$f_x(a)=\frac {|\cos(a)|D} {t(V)}$$
+$f_y(a)$ is the scaled Y coordinate (no scaling) of a line at angle $a$. The absolute value of $sin(a)$ is used because it's an absolute length at that angle.
+$$f_y(a) = |sin(a)|D$$
+$f_{xt}(a)$ is the average time it takes light to cover the round-trip of the scaled distance ($f_x(a)$)  along the X axis (in the direction of velocity).  $\frac {f_x(a)} C$ converts the distance to time. 
+$$f_{xt}(a)={f_x(a)} \cdot s(V)$$
+$f_{yt}(a)$ is the time it takes to span the distance perpendicular to the velocity.  $\frac {f_x(a)} C$ converts the distance to time;  (m)/(m/s) = (m)(s/m) = (s).
+$$f_{yt}(a)={f_x(a)} \cdot p(V)$$
+$h(a)$ is the total time it takes light to travel along a line in some direction $a$. 
+$$h(a)=\sqrt{f_{xt}(a)^2 + f_{yt}(a)^2}$$
+If the scalars $t(x)$ and $s(x)$ for $f_x$ and $f_{xt}$ are combined, the result is just $p(x)$; however the exact change in length is lost.
+$$\frac {2C} {\sqrt{CC-xx}} \cdot \frac {CC-xx} {2CC} = \frac {\sqrt{CC-xx}} C$$
+
+However, the following might be used for the expressions.
+$$  D {\frac {\sqrt{CC-VV}} C}( |\cos(a)|, |\sin(a)|)$$
+
+
 ## Time Dilation 
 
 (see also [Realtivity Faq](Relativity.FAQ.md) )
-According to special relativity... (this section in progress; still haven't figured a definitive gamma for time dilation; it could come from light aberration and speed... probably have to do with the circumference of circles at a velocity...)
 
 Matching the isometric portion of the graph with the appropriate scaling factor would imply that gamma is $\frac 1 {C-V}$ or the worst case clock time (which is when you get maximum contraction, when the craft is moving away from you with a negative velocity).  However, that neglects clocks that are in various other orientations....
 
-(?) = m-m/s-s-s-s - m-m/s-s
+(This is another equation I should adress someday.)
 $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
+Time dilation is $\frac {C} {\sqrt{CC-VV}}$, aka the reciprocal of the length contraction.  Even as the length contracts - the lateral time still takes longer and longer to complete a trip.
 
-
- Speed Scalar (Real to observed)
-
-$$ T_S(x) = \frac {x} {\sqrt { CC-xx }} $$
-
-Speed Scalar (observed to Real)
-
-$$ T_R(x) = \frac {Cx} {\sqrt{xx+1 } } $$
-
-Time scalar (observed velocity to real time scalar)
-
-$$ \sqrt{CC - T_R(x)^2}$$
-
-$$ \sqrt{CC - \frac {CCxx} {xx+1}} = C/\sqrt{(xx+1)}$$
-
----
-However, plotting the X-T graph 
 
 ## Gamma
 
