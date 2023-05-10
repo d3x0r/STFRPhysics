@@ -13,6 +13,7 @@ let C=1; // speed of propagation (m/s)
 let D=1; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let V=2; // velocity  (m/s)
 let S=1; // time scalar (s/s)
+let lengthContract = 1;
 let runT = 10;
 let now = 0;
 let animate = true;
@@ -188,15 +189,29 @@ const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
-const spanChkNow = document.createElement( "span" );
+const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = " |Animate";
 controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
+spanChkNow.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
+
+const spanChkContract = document.createElement( "label" );
+spanChkContract.textContent = " Length Contract";
+controls.appendChild( spanChkContract );
+
+const chkLblContract = document.createElement( "input" );
+chkLblContract.setAttribute( "type", "checkbox" );
+chkLblContract.checked = animate;
+spanChkContract.appendChild( chkLblContract );
+chkLblContract.addEventListener( "input", update );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -215,7 +230,7 @@ for( t = -5; t < 5; t += 0.02 ) {
 */
 
 function realTimeToObserverTime( T, L ) {
-	const pos = (V*T + L);
+	const pos = (V*T + L*lengthContract);
 	return Math.sqrt( D*D + pos*pos )/C+T;
 }
 
@@ -346,6 +361,7 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(2);
 
+	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
@@ -375,8 +391,8 @@ function update( evt ) {
 
 		const f = frames[n];
 		f.Pc = now*V 
-		f.Ph = f.Pc+L;
-		f.Pt = f.Pc-L;
+		f.Ph = f.Pc+L*lengthContract;
+		f.Pt = f.Pc-L*lengthContract;
 		f.hue = 120*(now%3)-240;
 		f.T_start = now;
 		f.T_see_h = realTimeToObserverTime( now, L );
@@ -449,14 +465,14 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			headTri( (frame.Pc+L)*(1-delT) , 40*(1-delT)+toY*(delT) );
+			headTri( (frame.Pc+L*lengthContract)*(1-delT) , 40*(1-delT)+toY*(delT) );
 
 		}
 		if( now < frame.T_see_t ) {
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
-			tailTri( (frame.Pc-L)*(1-delT), 40*(1-delT)+toY*(delT) );
+			tailTri( (frame.Pc-L*lengthContract)*(1-delT), 40*(1-delT)+toY*(delT) );
 		}
 		}
 
@@ -471,14 +487,14 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30 );
 	if( drawH !== frames[0] )
 	if( drawH )
-		headTri( drawH.Pc+L, 30 );
+		headTri( drawH.Pc+L*lengthContract, 30 );
 	if( drawH2 )
-		headTri( drawH2.Pc+L, 30 );
+		headTri( drawH2.Pc+L*lengthContract, 30 );
 	if( drawT !== frames[0] )
 	if( drawT )
-		tailTri( drawT.Pc-L, 30 );
+		tailTri( drawT.Pc-L*lengthContract, 30 );
 	if( drawT2 )
-		tailTri( drawT2.Pc-L, 30 );
+		tailTri( drawT2.Pc-L*lengthContract, 30 );
 
 	}
 
@@ -528,12 +544,12 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-	const frontT  = observerTimeToRealTime( now,  L );
+	const frontT  = observerTimeToRealTime( now,  L*lengthContract );
 	const centerT = observerTimeToRealTime( now,  0 );
-	const backT   = observerTimeToRealTime( now, -L );
-	const front  = observerTimeToRealPos( now,  L );
+	const backT   = observerTimeToRealTime( now, -L*lengthContract );
+	const front  = observerTimeToRealPos( now,  L*lengthContract );
 	const center = observerTimeToRealPos( now,  0 );
-	const back   = observerTimeToRealPos( now, -L );
+	const back   = observerTimeToRealPos( now, -L*lengthContract );
 	for( let f of front )
 		headTri( f, 6 );
 	for( let b of back )
@@ -586,9 +602,9 @@ if(1) {
 
 
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-   ctx.fillRect( 500+(now*V - L)*xscale, 15, (2*L)*xscale, 10 );
-	headTri( now*V + L, 20 );
-	tailTri( now*V - L, 20 );
+   ctx.fillRect( 500+(now*V - L*lengthContract)*xscale, 15, (2*L*lengthContract)*xscale, 10 );
+	headTri( now*V + L*lengthContract, 20 );
+	tailTri( now*V - L*lengthContract, 20 );
 	centerBox( now*V, 20 );
 
 

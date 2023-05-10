@@ -1,3 +1,4 @@
+import {RealTime,ObservedTime} from "./lightspeed.util.js"
 
 //import {lnQuat} from "../3d/src/lnQuatSq.js"
 
@@ -6,7 +7,6 @@ const canvas = document.getElementById( "testSurface" );
 //canvas.width = 5000;
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
-
 
 let L=3.2; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
