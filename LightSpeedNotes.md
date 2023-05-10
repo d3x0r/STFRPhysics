@@ -43,3 +43,38 @@ $$ h(a)=100000(g(a)-g(a+pi/2))$$
 at $V=0.0013$ (slightly faster than we're going); assuming the right angle arms are aligned on the plane with the velocity vector,  The best error is 0.072/100000 = 0.000072% difference.
 
 But, we get to use light, so there's a bonus, light is  400 THz to 800 THz, or 400,000Ghz so or 400,000-800,000 per foot?  so that ends up being like 0.288 or 28.8% per foot.
+
+
+
+# Connection to Quantum Mechanical Correlations
+
+(losely related... C+V and C-V with a ratio of C+V=2 hasn't really surfaced yet... )
+
+
+The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
+
+The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
+(see previous demo - Homework Rework).
+
+[Quantized Probablity](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md) was a earlier project, using a LHV of quantum mechanics called 'spin axis' led me to this method of calculation QM probabliities.
+It's within 3% of QM predictions, which is less than experimental apparatus error bars...
+
+```
+		//2(CD+LV)/(CC-VV)
+
+		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
+		// A+B = 2D
+		// a = A/D   b = B/D
+		// a+b=2
+		// 1-a/b = b/a-1 = 0   QM balance.
+```
+
+
+(Note sections are potentially incomplete/inaccurate).
+
+### Tron-lightcycles
+
+There's several frames of importance - the arena, and the people in it, and each player's local frame.
+
+A player going 0.707x LS  means the world is 1.414x faster (vendors in the stands would rush around)   
+A player going 0.894x LS means the world is 2x faster(?) not really - but the player is feeling like 2x the speed of light.   so anything from light sources is received 2x as fast?  Then how is the other 1.414x at 1x speed of light?

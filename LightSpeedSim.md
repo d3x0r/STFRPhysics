@@ -3,7 +3,7 @@
 # Reality of Relativity
 
 I started this project ([step-by-step](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
-I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (clocks that are seen).  I've later refined portions of this to include special relativity(there's actually still some question marks there).
+I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (clocks that are seen).  I've later refined portions of this to include light aberration, length contraction, and time dilation (special relativity).
 
 ## Demos
 
@@ -24,7 +24,10 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 | 2 | red | 
 | 3 | green |
 
+### List of Demos
+
 - [First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer
+- [First Demo - Speed Limited](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer; velocity is always a fraction of C.
 - [Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
 - [Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
 - [Fourth Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) : fast moving body, stationary observer on the body, the direction of the velocity that space is moving around the body is added.
@@ -34,22 +37,25 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 - [3D Perspective test](https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html)This is a modified [Voxelarium](https://github.com/d3x0r/Voxelarium.js)voxel world with relatistic corrections applied.  When the speed of the observer and the speed of the observed is the same, the world is very square in perspective.  This shows a orthographic camera (on the left) which shows the real transformations applied to the surface and a perspective camera(on the right) which shows the world from the observers viewpoint; and completes the transformation to be square. ([More info...](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#3d-voxel-world-with-perspective-camera))
 - [3D Shape test](https://d3x0r.github.io/IsoSurface-MultiTexture/index-blackvoxel-lorentz.html)Used the [marching tetrahedra](https://github.com/d3x0r/IsoSurface-MultiTexture) framework to show a shape with an observer in the center, being able to apply an offset to that observer, but use the orbit camera (with a perspective matrix) to show what the observer sees, but not from the observer's perspective.  
 
+## Conventions
+
+There are places I use an expression like $CC$ which is the same as $C*C$ or $C^2$.  Variables used in the math expressions are a single letter, unless they have a subscript.  One reason might be that it's fewer characters, but more often it's harder to see superscript in inline equations.
+
 ## The Math
 
-This is a non-Lorentz Transform(augmented? extended?), and at times I do attempt to regress/redress the Lorentz Transform(LT), this is a more general solution, there is an intersection with the domain of LT.
+This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
 
-This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it is).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.   
+This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it should otherwise be; [more on this here](math/TheNotBang.md)).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.
 
 The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
 
-In the demos, each part of the body emits a signal at the position it is, and that signal's time to the observer is recorded.  Initially they calculated based on whether the time had spanned the life of the computed line from a position, and it would have had to precompute all positions beforehand; but expanding on what the math actually is, any time an event is observed, a simple calculation can be used to figure out where the body that emitted that signal was located (where it is seen from).
+In the demos, observable body has 3 parts, the tail, the center and thead head; the tail follows the head, and the head is in the direction of the velocity.  Each part emits a signal at the position it is, and that signal's time to the observer is recorded.  At each frame, the time is compared to when the signal should be seen by the observer, and the frame with a time nearest to the current time is used to show where the body was seen. The expected time is used to span the computed line from a part on the body with a marker.  All frames were precomputed beforehand.   After observing what the calculation was, the inverse calculation was obtained.  This calculation can be used to figure out where the body part that emitted a signal was located when it was finally seen.
 
-At some time $T$, a body to observe is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ and $(VT-L)$.
-A relatively stationary observer exists, at some $D$ distance from the body (this is the closest distance to the line defined by $VT$; the distance is perpendicular to the velocity)
+At some time $T$, a body to observe is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ for the head and $(VT-L)$ for the tail. A relatively stationary observer exists, at some $D$ distance from the body (this is the closest distance to the line defined by $VT$; the distance is perpendicular to the velocity)
 ; then $D_o = \sqrt{D^2+(VT+L)^2}$ is the distance a photon has to travel
 to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$, $L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
 
-Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then T_o is the real time the event is seen.
+Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then $T_o$ is the real time the event is seen.
 
 ### Equations
 
@@ -60,7 +66,7 @@ $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
 
 $$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
-(slight refactor)
+(slight refactor into partial expressions)
 
 $$ A=D^2+(L+VT_o)^2  $$
 
@@ -71,7 +77,6 @@ $$f(T_o,L) = \frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
 Setting $D=0$, $L=0$, and over-simpified to remove the sqrt : replace with absolute value.
 $$f(T_o) = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
-
 
 The above returns the real time from an observers time $T_O$, and an offset along the body ($L$).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
@@ -111,103 +116,16 @@ The above assumes the observer is stationary, at a fixed position, with some dis
 
 [Skip to 3D math](#generalized-to-3d-vectors)
 
-### Lorentz Problem
+### Length Contraction Applied
 
-This is a more typical example was on Physics Discord... The 'correct' answer to this is wrong, so what does that make the Lorentz Transform?  Incomplete and limited in scope? or wrong?  Anyhow here's the problem...
+After computing what length dilation should be for a body, should back-apply this to 2D demos.
 
----
-
-"While you're having breakfast in the morning, a creature in the Andromeda galaxy is doing the same. We call the two breakfast events event X (on Earth) and event Y (in the Andromeda galaxy). "Simultaneously" means simultaneous in your reference frame. If instead we describe the two events in another reference frame, that of a space traveler who is traveling at a very high speed from the Andromeda galaxy towards Earth, which of the following statements is correct?
-
-  - A. Event X and event Y are simultaneous.
-  - B. Event X occurs before event Y.
-  - C. Event Y occurs before event X.
-  - D. The question is not well-defined, as we cannot define simultaneity for events that do not occur at the same place in space.
-
-I get that it has something to do with that the traveler is going at relativistic speeds which means things will move slower relative to him. I just don't get how the gamma factor ties in to the problem context"
-
----
-
-I solved this as above, but assuming that a moving observer would basically see the same times as the other sim (Although, to get a single answer, I had to interpret that the breakfast was simulateous *to 'you' eating breakfast*);
-otherwise there are multiple choices.  And even made an image.
-
-![Probability Image](https://github.com/d3x0r/STFRPhysics/raw/master/RelativityHomework.png)
-
-The left graph (1) is the interpretation, that the event from A is seen on E at the same time as E is having breakfast.  This yields one answer that is "C - Event Y occurs before event X."; but (B) is the right answer, so that's not a correct interpretation.
-
-The light cones of the problem, shown in black, and several observers in different times, shown in pink, all going exactly the same speed (was careful to copy the lines and not re-draw them).  The observer intersecting a black line can see the associated event at that time and position in space. The right side graph (2)  clearly shows observers that can answer more than one
-answer... 
-
-The 'correct' answer, as interpreted using the Lorentz Tranform, says that B is the one answer; that the event on Earth is always observed before the event on Andromeda.   
-
-[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).  (Time of simulataneous event is any time you want to match the colors emitted with.  This demo should also be updated with aberration).  
-
-There is a triangle, `CT` that is for some time seconds the speed of light long; Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
-The third side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion $VT$ or some velocity in time.  
-
-$$(CT)^2 = (D)^2 + (VT-L)^2$$ 
-
-solved for T...
-
-$$A=((TV)- (+L))$$
-
-$$\frac {AV+ \sqrt { A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
-
-and some tinkering with refactoring
-
-$$\frac {((TV)- (+L))V+ \sqrt { (((TV)- (+L)))^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
- 
-since the problem assumed `D=0` then this will simplify...
-
-$$\frac {(TV-L)(V+C)} {C^2-V^2}$$
-
-$$X = TV $$
-
-$$\frac {(X-L)(V+C)} {C^2-V^2}$$
-
-This is getting closer to the lorentz transform than the above... but still to use this time span, it has to be added to the current time `T`...
-
-``` js
-	hLen = /* time until light emission from head and ship intersect*/ A=TV-L
-		// f(T,TV-L)
-	tLen = /* time until light emission from tail and ship intersect*/ A=TV-(-L)
-		// f(T,TV-(-L))
-
-		const nowE = (del * runT)-runT/2;
-		frame.hue =120*(Treal%3)-240;
-		frame.Pc = Treal*V;
-		// position head intersects observer
-		frame.Ph = frame.Pc + hLen*V;
-		frame.Pt = frame.Pc + tLen*V;
-		frame.T_start = Treal;
-
-		// time head intersects observer
-		frame.T_see_h = Treal+hLen;
-		
-		// time tail intersects observer
-		frame.T_see_t = Treal+tLen;
-
-```
-
-### Homework Reframed
-
-Another example, with a slightly different metaphor, but the same idea : https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
-example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer (when using Lorentz transform, it's an observer 0 distance, observing the 0 point at 0 time or more).
-
-[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
+$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\frac {L\sqrt{C^2-V^2}}{C^2} }\right)^{2}}} C+T$$
+$$\alpha = \frac {\sqrt{CC-VV}}{CC}$$
+$$T = \frac {C^2 {T_O}^2 -  D^2 - ((\alpha L)^2} {2 C (C {T_O} + \alpha L)}$$
+$$Position(T_o,L) = \alpha L+VT$$
 
 
-
-``` js
-" T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
-```
-Difference in time, that an external observer notes between when the chained observer will first see the light to when they will see the other simultaneous event.
-
-$$\frac{ -2(CD+LV)}{CC-VV}$$
-
-Difference in time, noted by the observer on the train between the signals.
-
-$$-2*(CD+LV)$$
 
 ## Generalized to 3D Vectors
 
@@ -351,47 +269,6 @@ A classic view might say that a photon is a wave, that has some length in the di
 
 The resulting vector IS back-tipped, which in a logical sense might seem that 'well then the wave should appear to be coming from behind, since that's the natural direction overall of the wave'; but this isn't that.  It is that the photon had an angle to hit a lense in a certain spot, and then was skewed toward the front; while the photon that started in the backward sense would have struck the lense in a different angle to start with.  It's all actually quite classical, and a sensor that read waves from other boats might do the same thing.  
 
-## Practical examples of failures
-
-After some pondering on the Lorentz Transform, I considered where its shortcomings actually manifest.
-
-A classic example, although somewhat simplified from reality.  A boat on water bobs; we should really be somewhat more precise and say I have a mechanism that taps water periodically, and causes waves to emit from a certain point.  The wave pool is infinite, and there are no boundary reflections.  An observer can see the height of water in a region and see that it goes up and down.  It can deduce from the direction the waves are going which direction the other body is, and with a couple detectors, can detect distance. 
-
-So instead can we just say, there's a boat, on water, that bobs, it emits waves in a circle around it.  Another boat can only use the height of these waves in order to see the other boat.  The boat has perfect sensors that absorb all energy from incoming waves, and do not reflect any waves themselves, other than from their bobbing motion, but it cannot see that there was a outgoing change, because those waves will never return to the source.
-
-Now, we simply start moving one boat, and see the changes in the pattern of waves.  The direction one boat sees another boat going will be because the center of the waves changed - at some time later than the observed boat actually moved.  Hoever, the moving boat cannot say that the source of the waves is really changing very much when he senses the waves from the first stationary boat.
-
----
-If there are 2 boats, and they are sitting there bobbing, and one takes off with a velocity, then a bow-wake sort of forms, not to mention the tail wake, but, then at some later point that boat can't go, 'wait, I have no wake in the water, it's the other boat that's moving away from me, and has a wake from it's after'.
-
-
-### One Velocity
-
-Having a single relative velocity between two bodies, those two bodies can only technically approach or regress from each other; although really, the error in the equation means what seems like a negative velocity, is also a body regressing, but in the opposite direction. (that's probably hard to justify at this place in the document; VT can be positive or negative.  Lorentz VT positive is V regressing, and time advancing, VT negative is V regressing and time receeding (going into the past)... the sign of V doesn't actually change).  If a body passes another body, the sign of the relative velocity changes from negative to positive; and there is no consideration for the changing of the sign.
-
-Body A and Body B are moving apart at 0.5c, (the arrow from B to A on the top left is meant to be A moving away from B, not B moving towards A).  The velocity between B or A might belong to A, and have it be $(0,0.5,0)$, or it might belong to B and be $(0,-0.5,0)$; it could be split and be $(0,0.25,0)$ and $(0,-0.25,0)$... although Lorentz transform always biases the observer as 0; so if the observer is at B, then A has a velocity away at 0.5c.
-
-![](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocities.png)
-
-On the top right, A accelerates laterally to B, and the result is a vector from B to A that's 0.5c and is still their separation.  This would look exactly like the above case, only rotated.  
-
-However, the true relative speeds of each body are given, which means to B, A is moving to the right, which means that A should be leaving a wake(shown in blue) of waves towards the lower right, while B leaves a wake(shown in red) of waves going up the drawing, and not that A has a wake of waves on a velocity line in-line with B (shown in green).
- 
-### Lorentz calculated vs real positions
-The purple line is the previous positions of the body calculated from the relative velocity.  The yellow X's are the actual positions in space - when the space ship was going by, it dropped a bouy at each of those spots (sort of, they are inertialess so they stop at the proper X Y frame position).  If there's a lateral motion in the velocity component of the observed, or even just a simple distance to the observer, then the positions a ship actually came from (and emitted light from to be seen) does not lie along the forward vector.
-
-https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
-
-If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, but then there's no complex calculation for a lateral motion that has no acceleration, but has a non-constant velocity observed.
-
-
-![Sample screenshot from current demo](https://github.com/d3x0r/STFRPhysics/raw/master/Lorentz-v-real.png)
-
-The following image shows the actual relative velocity between the two frames... (I mean, if you really want to use a relative velocity then this is what it would be).  Both velocities between the frames are actually constant themselves.
-![screenshot of demo with relative velocities enabled](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocity-vectors.png)
-
-The above white lines show the apparent relative velocity, based on the actual change in distance to the observer.  With an offset and a skew, there appears to be up to 3 regions that the velocity changes, with rather sharp regions of change inbetween.
-
 ### Rescue of Lorentz Transform?
 
 When Light Aberration is also included, often, the path of the object seen and the Lorentz single relative velocity (shown in purple above), actually tracks with the body being observed.  (not always).
@@ -419,9 +296,9 @@ https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html
 
 ![Screen shot of above demo](https://github.com/d3x0r/STFRPhysics/raw/master/Voxel-relativity.png)
 
-The left is an orthographic camera, that shows the displaced pixels that are warped as in the 2D case, and basically is looking at the scene as if it were 2D.  The right camera is from the same camera point of view, same position, same orientation, but with a perspetive camera matrix applied instead.  When the velocities of the observer and observed are the same, the result in a very square projection.  ( There is a length contraction applied before either the extended lorentz function or light aberration is applied; which squares the result more; This gamma is only approximate, and is not $\sqrt{ 1-( {\frac V C} )^2}$; but it is also not $C+V$ or $C-V$ but is a curve somewhere inbetween. )
+The left is an orthographic camera, that shows the displaced pixels that are warped as in the 2D case, and basically is looking at the scene as if it were 2D.  The right camera is from the same camera point of view, same position, same orientation, but with a perspetive camera matrix applied instead.  When the velocities of the observer and observed are the same, the result in a very square projection.  There is an (optional) length contraction applied before either the extended lorentz function or light aberration is applied, which makes the result appear more square when changing velocities.  [More on this later](#length-and-time-contraction).
 
-Without the length contraction, there is a general elongation that happens, the aberration pushes things very far forward, and the lorentz transform pushes them very far backward.  Unlocking the velocities can show these two effects and how they transform the world - so that at the same speed, in perspective, a warped surface looks square; that was not a goal of this, when when I started above, with the hypothesis of perspective, I didn't expect it to be the thing that squared up an observer riding in a ship at the speed of light, such that the ship still looks the same and square.
+Without the length contraction, there is a general elongation that happens, the aberration pushes things very far forward, and the Lorentz Transform pushes them very far backward.  Unlocking the velocities can show these two effects and how they transform the world - so that at the same speed, in perspective, a warped surface looks square; that was not a goal of this, when when I started above, with the hypothesis of perspective, I didn't expect it to be the thing that squared up an observer riding in a ship at the speed of light, such that the ship still looks the same and square.
 
 
 ## Alcubierre Drive and FTL
@@ -437,32 +314,6 @@ However, On pondering this, if that space is now 'stationary' then your previous
 
 (side-side note: I'm thinking for story purposes I'll chose 'must get to a relatively stationary velocity', and when you drop out of warped space, you will have to catch up to whatever you're going after.)  But then I'm also not sure about the re-integration of that space with 'flat space' (universe-space?) ) This doesn't really align with observations of UFO's though - but maybe they come close in that warped space, and don't actually drop out of warp?  But then if they've landed, and take off again, how to accelerate so very fast away?  Maybe just wait until the right time, and let the planet go away as you drop into stationary space?)
 
-## The Rolling Wheel (Dev-notes)
-
-- (situation 1)the velocity at the tangent of the top of a wheel is rotating at velocity V, along the ground, and the bottom velocity is 0.
-- (situation 2)the tangent to the top and bottom of the wheel is rotating at V and -V.
-
-### case 1 
-linear velocity at the axle is V/2 - the Linear speed of the circle is V/2.
-
-$R$ =radius = \sqrt(xx+yy)
-angular change = $\frac{V}{R}$radians 
-center V = V;
-
-1) $S=\frac {||(R\cos(\frac V R T)+VT,R\sin(\frac V R T)+D)||} C + T$ Includes the Distance offset, with a position defined by $VT$
-2) $S=\frac {||(R\cos(\frac V R T)+X,R\sin(\frac V R T)+Y)||} C +T$ add position offset X and Y since there's no linear velocity.
-Not an easy solve - brute force it is.
-for each frame
-for each center of each seg on circle is marked for when it will be seen.
-make some spoke segments, and similarly mark the center of each of those for visibility.
-
-draw arc segments for fixed locations around the circle.  I guess the spoke positions do update, but the circle doesn't actually rotate, it will just translate.  Display segments that are +/- 1/2 Frame step from 'now'.  `(Math.abs(time_seen - now) < frameStep/2)`.
-
-https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel.html
-https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel2.html
-
-### Possible computable solution
-The circle itself should still be the circle, although each segment of the circle has an independant velocity.  The time of that segment determines the overall rotation of the wheel, and a segment, that at that time is rotated so there is a spoke can start a spoke connected to the center (still with somewhat of a sweeping velocity I suppose... it's position is still sourced from a line)
 
 
 #### Length Contraction to the rescue?
@@ -501,7 +352,7 @@ https://www.desmos.com/calculator/o7eyerh7bc (Revised version; in the long run, 
 
 Given the variables $T$ is a time scalar in (s), $V$ is velocity in (m/s), C is the velocity of light in (m/s).  The length will be given with $CT$ which is in (m), and is light-seconds.   The function parameter $x$, below, is a velocity.  The function parameter $a$ is the angle of the line light travels relative to V; at $a=0$ the line is aligned with the velocity, at $a=\frac {\pi} 2$ the line is perpendicular to the velocity.
 
-The function s() takes a velocity, and results in how long light takes to span a round trip of a distance (multiplied by 2) at that velocity; at 0, the function is 1, and at C the function is infinity.  Multiplying by this value gives a scaled time that light will travel a unit distance.
+The function s() takes a velocity, and results in how long light takes to span a round trip of a distance (multiplied by 2) at some velocity(x); at 0, the function is 1, and at C the function is infinity.  Multiplying by this value gives a scaled time that light will travel a unit distance.  
 $$s(x)=\frac {CC\sqrt{CC-xx}} {C({CC-xx})}$$
 or
 $$s(x)=\frac {C} {\sqrt{CC-xx}}$$
@@ -528,53 +379,33 @@ $$\frac {2C} {\sqrt{CC-xx}} \cdot \frac {CC-xx} {2CC} = \frac {\sqrt{CC-xx}} C$$
 However, the following might be used for the expressions.
 $$  D {\frac {\sqrt{CC-VV}} C}( |\cos(a)|, |\sin(a)|)$$
 
+Vector A ($\vec{A}$), is a temporary expression which is the normalized velocity vector which is a unit vector in the direction of the velocity, with the position projected on that vector; it has the length of $\vec{X}$ and the $\cos(\theta)$ where $\theta$ is the angle between the point and the velocity direction.  (This angle may be useful in the application of light aberration)
+
+If the length of velocity is 0, then no modification should take place.  This may be easier to manage with a direction vector and speed scalar.
+
+$$\vec{A}=\frac {\vec {V}(\vec{X} \cdot \vec{V})} {||\vec{V}||} $$
+Subtracting the projected vector, and then add back in the contracted part.
+
+$$\vec {X'} = \vec{X}-\vec{A} + \vec{A} \frac{\sqrt{CC-VV}}{C} $$
+This is a refactor of the previous equation
+
+$$\vec {X'} = \vec{X}-\vec{A}(1 - \frac{\sqrt{CC-VV}}{C}) $$
 
 ## Time Dilation 
 
 (see also [Realtivity Faq](Relativity.FAQ.md) )
 
-Matching the isometric portion of the graph with the appropriate scaling factor would imply that gamma is $\frac 1 {C-V}$ or the worst case clock time (which is when you get maximum contraction, when the craft is moving away from you with a negative velocity).  However, that neglects clocks that are in various other orientations....
+Time dilation is $\frac {C} {\sqrt{CC-VV}}$ or $\frac {C} {\sqrt{1-\frac{V^2}{C^2}}}$, which is the reciprocal of the length contraction.  Even as the length contracts - the lateral time still takes longer and longer to complete a trip.  The contracted length still uses its 2-way time of $\frac {CC} {CC-VV}$, so multiplying a contracted length $\frac{\sqrt{CC-VV}} C \cdot \frac {CC} {CC-VV} = \frac {C} {\sqrt{CC-VV}}$, and the time dilation, from length contraction still matches the contracted time laterally - and in all directions of a circle.
 
-(This is another equation I should adress someday.)
+
+(This is another equation I should adress someday.) Spin squared plus velocity squared equals c squared.
 $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
-Time dilation is $\frac {C} {\sqrt{CC-VV}}$, aka the reciprocal of the length contraction.  Even as the length contracts - the lateral time still takes longer and longer to complete a trip.
 
-
-## Gamma
-
-https://www.desmos.com/calculator/fbl7sujtzp
-
-This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
-
-Lorentz Gamma: $f\left(x\right)=\frac{c}{\sqrt{cc-xx}}$ or $\frac{1}{\sqrt{\left(1-\frac{xx}{cc}\right)}}$
-
-Gamma which I scale the isometric grid simulation is `C-V` as the gamma factor.  https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html `XT Graph` option, the white grid is sloped by Lorentz's Transform, and scaled to match the native math of one observer seeing another.
-
-At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
-takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
-determine that this is the speed the moving body feels)
-
-Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
-
-This is the gamma factor for two-way speed of light...
-
-Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
-
-which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
-may be different, as long as the total of 2 bounces is 2 ticks.
-
-from: $a+b=2$, $a=c/(c+x)$, $b=c/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
-
-Again the inverse from feels like to real velocity, but for the two-way speed of light.
-
-Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
 
 ## Applying time dilation
 
 ~~[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html) not completed...is just 
 about showing clocks... ~~
-
-
 
 ## Extended velocity rotations
 
@@ -607,31 +438,6 @@ time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
 
 
 
-# Connection to Quantum Mechanical Correlations
-
-(losely related... C+V and C-V with a ratio of C+V=2 hasn't really surfaced yet... )
-
-
-The above last two sections, to answer a textbook question (still can't get the 'right' answer, so I shouldn't help people with their homework or to learn the material everyone else has learned.)   I just derrived it all myself.
-
-The 'gamma factor' in Lorentz Transform is just a clock scalar, and is applied to the `T`, which is really used for everything else since `position= V*T`, and time Passed is T... so everything that has time gets gamma if you just scale the clock. 
-(see previous demo - Homework Rework).
-
-[Quantized Probablity](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md) was a earlier project, using a LHV of quantum mechanics called 'spin axis' led me to this method of calculation QM probabliities.
-It's within 3% of QM predictions, which is less than experimental apparatus error bars...
-
-```
-		//2(CD+LV)/(CC-VV)
-
-		// 2D  //  V=0, L=any(any time after a fixed start point is same), C=1  sqrt(1-v/c)=1
-		// A+B = 2D
-		// a = A/D   b = B/D
-		// a+b=2
-		// 1-a/b = b/a-1 = 0   QM balance.
-```
-
-
-(Note sections are potentially incomplete/inaccurate).
 
 
 ---
@@ -654,12 +460,6 @@ At emmision, the photon source knows its position, and it is treated as a statio
 
 'ticks in the air'  is really where the missing information on the clocks goes, other than when a clock is also retarded.  Tron experiment, it was decided that the slowest clock would be used as the tick rate for the game;   This means in terms of the simulator, players that are going slower than the fastest player goes even slower....  The world clock ticks VERY fast overall though.
 
-### Tron-lightcycles
-
-There's several frames of importance - the arena, and the people in it, and each player's local frame.
-
-A player going 0.707x LS  means the world is 1.414x faster (vendors in the stands would rush around)   
-A player going 0.894x LS means the world is 2x faster(?) not really - but the player is feeling like 2x the speed of light.   so anything from light sources is received 2x as fast?  Then how is the other 1.414x at 1x speed of light?
 
 
 ## math/indexLightSpeed-SR.html
@@ -743,7 +543,7 @@ if( abs( delAng ) < 0.0000001  ) {
 ```
 
 # Revisited Math
-
+(incomplete, incorrect)
 Basic Posulates 
   - the speed of light is measured as C; once it is emitted it travels in all directions from that point at the same speed.
   - the clock dialation is the amount required to scale an isometric grid matching the upper right quadrant of an XT graph.  This is $(C-V)$; and the time dilation is $\frac 1 {C-V}$.  (This is the worst-case time, and really only applies for a 1 way clock from the negative direction of velocity) 
@@ -757,6 +557,34 @@ a simple case starts with clock to the origin with (X=1, Y=0)...
 $$f\left(a\right)=\frac{\sqrt{-\left( V\sin\left(a\right)\right)^2+C^2}+V\cos\left(a\right)}{C^2-V^2}$$
 $$f(x)=\frac{\sqrt{C^{2}-V^{2}\sin(x)^{2}}\ +V\cos\left(x\right)}{C^2-V^2}$$
 $$\frac{\int_{x=0}^\pi  f({x)} } {\pi}$$
+
+## The Rolling Wheel (Dev-notes)
+
+- (situation 1)the velocity at the tangent of the top of a wheel is rotating at velocity V, along the ground, and the bottom velocity is 0.
+- (situation 2)the tangent to the top and bottom of the wheel is rotating at V and -V.
+
+### case 1 
+linear velocity at the axle is V/2 - the Linear speed of the circle is V/2.
+
+$R$ =radius = \sqrt(xx+yy)
+angular change = $\frac{V}{R}$radians 
+center V = V;
+
+1) $S=\frac {||(R\cos(\frac V R T)+VT,R\sin(\frac V R T)+D)||} C + T$ Includes the Distance offset, with a position defined by $VT$
+2) $S=\frac {||(R\cos(\frac V R T)+X,R\sin(\frac V R T)+Y)||} C +T$ add position offset X and Y since there's no linear velocity.
+Not an easy solve - brute force it is.
+for each frame
+for each center of each seg on circle is marked for when it will be seen.
+make some spoke segments, and similarly mark the center of each of those for visibility.
+
+draw arc segments for fixed locations around the circle.  I guess the spoke positions do update, but the circle doesn't actually rotate, it will just translate.  Display segments that are +/- 1/2 Frame step from 'now'.  `(Math.abs(time_seen - now) < frameStep/2)`.
+
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel.html
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4-wheel2.html
+
+### Possible computable solution
+The circle itself should still be the circle, although each segment of the circle has an independant velocity.  The time of that segment determines the overall rotation of the wheel, and a segment, that at that time is rotated so there is a spoke can start a spoke connected to the center (still with somewhat of a sweeping velocity I suppose... it's position is still sourced from a line)
+
 
 # Step-by-Step
 
@@ -825,3 +653,180 @@ This is a detailed summary of how I approached building the simulation.
      - `frame.observed_tail = ( (V*T-(L-D)) )/C + T`;  ...
      - together, the last three are referred to as 'frame.observed_times' and means do the same thing to all 3; frame.observed_time refers to any one of the 3.
    - draw (same as above)
+
+
+``` js
+	hLen = /* time until light emission from head and ship intersect*/ A=TV-L
+		// f(T,TV-L)
+	tLen = /* time until light emission from tail and ship intersect*/ A=TV-(-L)
+		// f(T,TV-(-L))
+
+		const nowE = (del * runT)-runT/2;
+		frame.hue =120*(Treal%3)-240;
+		frame.Pc = Treal*V;
+		// position head intersects observer
+		frame.Ph = frame.Pc + hLen*V;
+		frame.Pt = frame.Pc + tLen*V;
+		frame.T_start = Treal;
+
+		// time head intersects observer
+		frame.T_see_h = Treal+hLen;
+		
+		// time tail intersects observer
+		frame.T_see_t = Treal+tLen;
+
+```
+
+
+## (Duplicate sections?)
+
+
+## Gamma
+
+
+
+https://www.desmos.com/calculator/fbl7sujtzp
+
+This is derrived from a clock perpendicular to the velocity, that each time a photon hits a side of the clock is 1 tick.
+
+Lorentz Gamma: $f\left(x\right)=\frac{C}{\sqrt{CC-xx}}$ or $\frac{C}{\sqrt{\left(1-\frac{xx}{CC}\right)}}$
+
+Gamma which I scale the isometric grid simulation is `C-V` as the gamma factor (for a single velocity of an observed body and a stationary observer).  https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html `XT Graph` option, the white grid is sloped by Lorentz's Transform, and scaled to match the native math of one observer seeing another.
+
+At a fraction of the speed of light, a body feels a certain effective speed; which is their real speed * gamma.  The following function
+takes some speed a body feels like it is going, and results in the fraction of the speed of light.  (which can conversely be taken to 
+determine that this is the speed the moving body feels)
+
+Velocity Lorentz Real for feels like x:  $V_{lr}\left(x\right)=\left(\ \frac{cx}{\sqrt{cc+xx}}\right)$
+
+This is the gamma factor for two-way speed of light...
+
+Two-Way SoL Gamma: $g\left(x\right)=\frac{cc}{cc-xx}$ or $\frac{1}{1-\frac{xx}{cc}}$
+
+which comes from, A+B=2C; a=A/C; b=B/C; a+b=2; that going one way and the other way is 2 ticks.  The time between one side and the other
+may be different, as long as the total of 2 bounces is 2 ticks.
+
+from: $a+b=2$, $a=c/(c+x)$, $b=c/(c-x)$, $1=1 second$, $\frac{c}{2\left(c+x\right)}+\frac{c}{2\left(c-x\right)}=1 = \frac{cc}{cc-xx}$
+
+Again the inverse from feels like to real velocity, but for the two-way speed of light.
+
+Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
+
+# Problems This has Highlighted
+
+## Practical examples of failures
+
+After some pondering on the Lorentz Transform, I considered where its shortcomings actually manifest.
+
+A classic example, although somewhat simplified from reality.  A boat on water bobs; we should really be somewhat more precise and say I have a mechanism that taps water periodically, and causes waves to emit from a certain point.  The wave pool is infinite, and there are no boundary reflections.  An observer can see the height of water in a region and see that it goes up and down.  It can deduce from the direction the waves are going which direction the other body is, and with a couple detectors, can detect distance. 
+
+So instead can we just say, there's a boat, on water, that bobs, it emits waves in a circle around it.  Another boat can only use the height of these waves in order to see the other boat.  The boat has perfect sensors that absorb all energy from incoming waves, and do not reflect any waves themselves, other than from their bobbing motion, but it cannot see that there was a outgoing change, because those waves will never return to the source.
+
+Now, we simply start moving one boat, and see the changes in the pattern of waves.  The direction one boat sees another boat going will be because the center of the waves changed - at some time later than the observed boat actually moved.  Hoever, the moving boat cannot say that the source of the waves is really changing very much when he senses the waves from the first stationary boat.
+
+---
+If there are 2 boats, and they are sitting there bobbing, and one takes off with a velocity, then a bow-wake sort of forms, not to mention the tail wake, but, then at some later point that boat can't go, 'wait, I have no wake in the water, it's the other boat that's moving away from me, and has a wake from it's after'.
+
+
+### One Velocity
+
+Having a single relative velocity between two bodies, those two bodies can only technically approach or regress from each other; although really, the error in the equation means what seems like a negative velocity, is also a body regressing, but in the opposite direction. (that's probably hard to justify at this place in the document; VT can be positive or negative.  Lorentz VT positive is V regressing, and time advancing, VT negative is V regressing and time receeding (going into the past)... the sign of V doesn't actually change).  If a body passes another body, the sign of the relative velocity changes from negative to positive; and there is no consideration for the changing of the sign.
+
+Body A and Body B are moving apart at 0.5c, (the arrow from B to A on the top left is meant to be A moving away from B, not B moving towards A).  The velocity between B or A might belong to A, and have it be $(0,0.5,0)$, or it might belong to B and be $(0,-0.5,0)$; it could be split and be $(0,0.25,0)$ and $(0,-0.25,0)$... although Lorentz Transform always biases the observer as 0; so if the observer is at B, then A has a velocity away at 0.5c.
+
+![](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocities.png)
+
+On the top right, A accelerates laterally to B, and the result is a vector from B to A that's 0.5c and is still their separation.  This would look exactly like the above case, only rotated.  
+
+However, the true relative speeds of each body are given, which means to B, A is moving to the right, which means that A should be leaving a wake(shown in blue) of waves towards the lower right, while B leaves a wake(shown in red) of waves going up the drawing, and not that A has a wake of waves on a velocity line in-line with B (shown in green).
+ 
+### Lorentz calculated vs real positions
+The purple line is the previous positions of the body calculated from the relative velocity.  The yellow X's are the actual positions in space - when the space ship was going by, it dropped a bouy at each of those spots (sort of, they are inertialess so they stop at the proper X Y frame position).  If there's a lateral motion in the velocity component of the observed, or even just a simple distance to the observer, then the positions a ship actually came from (and emitted light from to be seen) does not lie along the forward vector.
+
+https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
+
+If one frame has a velocity of 0 (ala Lorentz), then the spots do always align, but then there's no complex calculation for a lateral motion that has no acceleration, but has a non-constant velocity observed.
+
+
+![Sample screenshot from current demo](https://github.com/d3x0r/STFRPhysics/raw/master/Lorentz-v-real.png)
+
+The following image shows the actual relative velocity between the two frames... (I mean, if you really want to use a relative velocity then this is what it would be).  Both velocities between the frames are actually constant themselves.
+![screenshot of demo with relative velocities enabled](https://github.com/d3x0r/STFRPhysics/raw/master/relative-velocity-vectors.png)
+
+The above white lines show the apparent relative velocity, based on the actual change in distance to the observer.  With an offset and a skew, there appears to be up to 3 regions that the velocity changes, with rather sharp regions of change inbetween.
+
+### Lorentz Problem
+
+This is a more typical example was on Physics Discord... The 'correct' answer to this is wrong, so what does that make the Lorentz Transform?  Incomplete and limited in scope? or wrong?  Anyhow here's the problem...
+
+---
+
+"While you're having breakfast in the morning, a creature in the Andromeda galaxy is doing the same. We call the two breakfast events event X (on Earth) and event Y (in the Andromeda galaxy). "Simultaneously" means simultaneous in your reference frame. If instead we describe the two events in another reference frame, that of a space traveler who is traveling at a very high speed from the Andromeda galaxy towards Earth, which of the following statements is correct?
+
+  - A. Event X and event Y are simultaneous.
+  - B. Event X occurs before event Y.
+  - C. Event Y occurs before event X.
+  - D. The question is not well-defined, as we cannot define simultaneity for events that do not occur at the same place in space.
+
+I get that it has something to do with that the traveler is going at relativistic speeds which means things will move slower relative to him. I just don't get how the gamma factor ties in to the problem context"
+
+---
+
+I solved this as above, but assuming that a moving observer would basically see the same times as the other sim (Although, to get a single answer, I had to interpret that the breakfast was simulateous *to 'you' eating breakfast*);
+otherwise there are multiple choices.  And even made an image.
+
+![Probability Image](https://github.com/d3x0r/STFRPhysics/raw/master/RelativityHomework.png)
+
+The left graph (1) is the interpretation, that the event from A is seen on E at the same time as E is having breakfast.  This yields one answer that is "C - Event Y occurs before event X."; but (B) is the right answer, so that's not a correct interpretation.
+
+The light cones of the problem, shown in black, and several observers in different times, shown in pink, all going exactly the same speed (was careful to copy the lines and not re-draw them).  The observer intersecting a black line can see the associated event at that time and position in space. The right side graph (2)  clearly shows observers that can answer more than one
+answer... 
+
+The 'correct' answer, as interpreted using the Lorentz Tranform, says that B is the one answer; that the event on Earth is always observed before the event on Andromeda.   
+
+[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) was revised, to calculate a different projection factor from a large relatively stationary event that occurs at 2 distant places.   (The Half-(L)ength must be large).  (Time of simulataneous event is any time you want to match the colors emitted with.  This demo should also be updated with aberration).  
+
+There is a triangle, `CT` that is for some time seconds the speed of light long; Another side is the distance from the observed events (defaults to 1 light second offset, gives the observer some space to avoid planets events might be generated on).
+The third side is the current position `A` of the craft relative to an event (the event on the left is `-L` and the event on the right is `L` in terms of the demo), plus the craft's actual postion $VT$ or some velocity in time.  
+
+$$(CT)^2 = (D)^2 + (VT-L)^2$$ 
+
+solved for T...
+
+$$A=((TV)- (+L))$$
+
+$$\frac {AV+ \sqrt { A^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+
+and some tinkering with refactoring
+
+$$\frac {((TV)- (+L))V+ \sqrt { (((TV)- (+L)))^2C^2+D^2(C^2-V^2)}} {C^2-V^2}$$
+ 
+since the problem assumed `D=0` then this will simplify...
+
+$$\frac {(TV-L)(V+C)} {C^2-V^2}$$
+
+$$X = TV $$
+
+$$\frac {(X-L)(V+C)} {C^2-V^2}$$
+
+This is getting closer to the Lorentz Transform than the above... but still to use this time span, it has to be added to the current time `T`...
+
+### Homework Reframed
+
+Another example, with a slightly different metaphor, but the same idea : https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
+example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer (when using Lorentz transform, it's an observer 0 distance, observing the 0 point at 0 time or more).
+
+[This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
+
+
+
+``` js
+" T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
+```
+Difference in time, that an external observer notes between when the chained observer will first see the light to when they will see the other simultaneous event.
+
+$$\frac{ -2(CD+LV)}{CC-VV}$$
+
+Difference in time, noted by the observer on the train between the signals.
+
+$$-2*(CD+LV)$$
