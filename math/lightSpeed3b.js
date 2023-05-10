@@ -15,6 +15,7 @@ let showObserver = false;
 let showRelativeVelocities = false;
 let includeAberration = true;
 let lockVelocity = false;
+let lengthContract = 1;
 let A=0;
 let ca = Math.cos(A);
 let sa = -Math.sin(A);
@@ -279,9 +280,9 @@ class D3xTransform {
 
 
 	if(showXTGraph) {
-		const gamma = (C-V)/C;  // This matches the matrual curve (at C=1)
+		const gamma = lengthContract*(C-V)/C;  // This matches the matrual curve (at C=1)
 		//const gamma = Math.sqrt( C*C-V*V);
-		const gamma2 = (C+V)/C;
+		const gamma2 = lengthContract*(C+V)/C;
 // Lorentz Transform Grid, based on velocity ratio line.
 		for( let X = -10; X < 10; X++ ) 
 		{
@@ -313,7 +314,7 @@ class D3xTransform {
 	ctx.strokeWidth= 1.5;
 
 
-		for( let X = -20; X < 20; X+=1 ) {
+		for( let X = -20*lengthContract; X < 20*lengthContract; X+=1*lengthContract ) {
 			for( let T = 10; T > -10; T-=1 ) {
 
 				{
@@ -491,6 +492,7 @@ if(0)
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
+
 			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
 			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
 
@@ -527,10 +529,18 @@ if(0)
 
 		}
 
-			_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-			_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-			_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-			_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		function __doSeg( a,b,c,d ) {
+			const _a = a - a*ca * ( 1 - lengthContract );
+			const _b = b - b*sa * ( 1 - lengthContract );
+			const _c = c - c*ca * ( 1 - lengthContract );
+			const _d = d - d*sa * ( 1 - lengthContract );
+			return _doSeg( _a,_b,_c,_d );
+		}
+
+			__doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+			__doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+			__doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+			__doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
 		}
 		for( let seg = 0; seg < 20; seg++ ){ 
 			doSegA( seg );
@@ -609,11 +619,19 @@ if(0)
 				ctx.lineTo( ofs + (xscale_)*(tail_abb.x), ofs + (xscale_)*(tail_abb.y) );
 				ctx.stroke();
 				}
+		function __doSeg( a,b,c,d ) {
+			const _a = a - a*ca * ( 1 - lengthContract );
+			const _b = b - b*sa * ( 1 - lengthContract );
+			const _c = c - c*ca * ( 1 - lengthContract );
+			const _d = d - d*sa * ( 1 - lengthContract );
+			return _doSeg( _a,_b,_c,_d );
+		}
 
-				_doSeg( -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L, -L );
-				_doSeg( -L +((seg)/30)*L, L, -L +((seg+1)/30)*L, L );
-				_doSeg( -L, -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L );
-				_doSeg( L, -L +((seg)/30)*L, L, -L +((seg+1)/30)*L );
+
+				__doSeg( -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L, -L );
+				__doSeg( -L +((seg)/30)*L, L, -L +((seg+1)/30)*L, L );
+				__doSeg( -L, -L +((seg)/30)*L, -L, -L +((seg+1)/30)*L );
+				__doSeg( L, -L +((seg)/30)*L, L, -L +((seg+1)/30)*L );
 			}
 			for( let seg = 0; seg < 60; seg++ ){ 
 				doSegASelf( seg );
@@ -646,10 +664,18 @@ if(0)
 				ctx.stroke();
 
 				}
-				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		function __doSeg( a,b,c,d ) {
+			const _a = a - a*ca * ( 1 - lengthContract );
+			const _b = b - b*sa * ( 1 - lengthContract );
+			const _c = c - c*ca * ( 1 - lengthContract );
+			const _d = d - d*sa * ( 1 - lengthContract );
+			return _doSeg( _a,_b,_c,_d );
+		}
+
+				__doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+				__doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+				__doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+				__doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
 			}
 			for( let seg = 0; seg < 20; seg++ ){
 				doSeg( seg );
@@ -676,10 +702,19 @@ if(0)
 				ctx.stroke();
 
 				}
-				_doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
-				_doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
-				_doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
-				_doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
+		function __doSeg( a,b,c,d ) {
+			const _a = a - a*ca * ( 1 - lengthContract );
+			const _b = b - b*sa * ( 1 - lengthContract );
+			const _c = c - c*ca * ( 1 - lengthContract );
+			const _d = d - d*sa * ( 1 - lengthContract );
+			return _doSeg( _a,_b,_c,_d );
+		}
+
+
+				__doSeg( -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L, -L );
+				__doSeg( -L +((seg)/10)*L, L, -L +((seg+1)/10)*L, L );
+				__doSeg( -L, -L +((seg)/10)*L, -L, -L +((seg+1)/10)*L );
+				__doSeg( L, -L +((seg)/10)*L, L, -L +((seg+1)/10)*L );
 			}
 			for( let seg = 0; seg < 20; seg++ ){
 				doSegSelf( seg );
@@ -991,6 +1026,16 @@ const spanChkLockVelocity = document.createElement( "label" );
 spanChkLockVelocity.textContent = " |Lock Velocities";
 spanChkLockVelocity.appendChild( chkLblLockVelocity );
 controls.appendChild( spanChkLockVelocity );
+//- - - - - - - - - - - - - - 
+const chkLblContract = document.createElement( "input" );
+chkLblContract.setAttribute( "type", "checkbox" );
+chkLblContract.checked = true;
+chkLblContract.addEventListener( "input", update );
+
+const spanChkContract = document.createElement( "label" );
+spanChkContract.textContent = " |Length Contraction";
+spanChkContract.appendChild( chkLblContract );
+controls.appendChild( spanChkContract );
 //----------------------
 
 span = document.createElement( "br" );
@@ -1090,10 +1135,17 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	//                       - 4 (C^2 - D^2 - E^2 - F^2) 
 	//                          * (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) 
 	//            + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
-	const X = P.x-P_o.x;
-	const Y = P.y-P_o.y;
-	const Z = P.z-P_o.z;
+	const X_ = P.x-P_o.x;
+	const Y_ = P.y-P_o.y;
+	const Z_ = P.z-P_o.z;
 	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
+
+	const VLen = (VV>0)?Math.sqrt(VV):1;
+	const dot = VLen===0?1:(X_*V.x + Y_*V.y + Z_*V.z)/VLen;
+	const X = X_ - V.x*dot/VLen * (1-lengthContract)
+	const Y = Y_ - V.y*dot/VLen * (1-lengthContract)
+	const Z = Z_ - V.z*dot/VLen * (1-lengthContract)
+
 
 	const S = T_o;
 
@@ -1168,6 +1220,8 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
 	V = Number(sliderV.value)/200*C;
+
+	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
 
 	if( lockVelocity ) myV = V;
 	else myV = Number(sliderMyV.value)/200*C;
