@@ -78,3 +78,12 @@ There's several frames of importance - the arena, and the people in it, and each
 
 A player going 0.707x LS  means the world is 1.414x faster (vendors in the stands would rush around)   
 A player going 0.894x LS means the world is 2x faster(?) not really - but the player is feeling like 2x the speed of light.   so anything from light sources is received 2x as fast?  Then how is the other 1.414x at 1x speed of light?
+
+
+
+Solve for $T$ in $T_0=\frac{\sqrt{D^2+(VT+L)^2}}{C}+T\implies C\cdot T_0=\sqrt{D^2+(VT+L)^2}+C\cdot T$ now assume $z=VT+L$ also move $CT$ over $\implies C(T_0-T)=\sqrt{D^2-z^2}\implies C^2(T_0-T)^2=D^2-z^2\implies C^2(T_0^2-2TT_0+T^2)=D^2-z^2\implies$\fbox{$T^2-2T_0T+T_0^2-\frac{D^2-z^2}{C^2}=0$}\\~\\
+
+That's great and all... but then you get what
+
+$(T-T_o)^2 = \frac {(D+(VT+L))(D-(VT+L)} {C^2}$
+

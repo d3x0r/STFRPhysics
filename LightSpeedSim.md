@@ -41,6 +41,13 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 
 There are places I use an expression like $CC$ which is the same as $C*C$ or $C^2$.  Variables used in the math expressions are a single letter, unless they have a subscript.  One reason might be that it's fewer characters, but more often it's harder to see superscript in inline equations.
 
+## Differences in Terminology
+
+The end result requires different terms to describe than were previously established with the Lortenz Transform and General or Special Relativity.
+
+ - Time contraction : This is the reciprocal of 'Time dilation', and refers to how much a moving clock slows down; how much less time ticks per real-tick.  Given that observers are able to observe their own velocity, they can also adjust their clock appropriately knowing that this happens.
+ - Length Expansion : there is an asymmetry in the observed shape of a moving body.  Before passing an observer the length of the body appears to be extended/expanded.  The length of the body is effectively lengthened; for example, if the back of a ship is 1 light second behind an observer on the ship, then at a high velocity, the back of the ship would appear (from LT only) N light-seconds long, and the light will take N seconds to get to you(on a non-contracted clock), and be the speed of light.  N will be a value greater than 1.
+
 ## The Math
 
 This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
@@ -65,33 +72,31 @@ $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
 Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
 
-$$f(x,L) = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
-(slight refactor into partial expressions)
+
+$$T = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
+(slight refactor into partial expressions, revert 'x' to 'T_o')
 
 $$ A=D^2+(L+VT_o)^2  $$
 
-$$f(T_o,L) = \frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
+$$T = \frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}$$
 
 [Skip to usage...](#convert-a-time-to-position)
+
+The above returns the real time from an observers time $T_O$, and an offset along the body ($L$) and some distance (D) from the line defined by the velocity over time.  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
+
 ### Special case to approach Lorentz Transform
 
-Setting $D=0$, $L=0$, and over-simpified to remove the sqrt : replace with absolute value.
-$$f(T_o) = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
+Setting $D=0$, $L=0$, and replace the sqrt  with absolute value. The resulting gamma factor in this result is only for what is seen, and is not the gamma for length or time contraction.
+$$T = \frac{ {C|{{V}{T_o}}| }+C^{2}{T_o}}{C^{2}-V^{2}}$$
 
-The above returns the real time from an observers time $T_O$, and an offset along the body ($L$).  The resulting time times velocity and then add the offset gives the real position of the body seen.  The above reverse equation has a singularity when `C` equals `V`; so this equation is used instead:
 
 #### Special case V=C
 
-In the special case that $V=C$, then $V/C = 1$, so equation 1 simplifies to this... the T under the square root is $\frac V C$ which $=1$.
+In the special case that $V=C$, then $V/C = 1$, so equation 1(above) simplifies to this... the T under the square root has the coefficient $\frac V C$ which $=1$.
 
 $$T_O = \sqrt{\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}}+T$$
 
-
-Simplified, and this is again will still have a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(x\right)={\sqrt{xx^2}+x}$$ 
-or
-$$T_{real2}\left(x\right)=\left|x\right|+x$$
-
-And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.  ( `solve S=sqrt(D^2 / C^2 +\left(T+ L/C)^2)+T  for T`)
+And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.  ( `solve S=sqrt(D^2 / C^2 +(T+ L/C)^2)+T  for T` , 'T_o' is replaced with 'S')
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 or (when D=0, L=0)
 $$T = \frac {T_O} {2}$$
@@ -99,6 +104,12 @@ $$T = \frac {T_O} {2}$$
 - https://mathb.in/74833
 - https://mathb.in/74928 
 - https://mathb.in/75151 (updated; fixed A/2B at V=C)
+
+### The Lorentz Case
+
+Simplified, and this is again will still have a sqrt, which has to be at least an absolute value on the distance from the observer. (D=0, L=0) $$T_{real}\left(T\right)={\sqrt{(T)^2}+T}$$ 
+or
+$$T_{real2}\left(T\right)=\left|T\right|+T$$
 
 ### Convert a Time to Position
 Once you have the real time, the real observed position is $(L+VT)$. 
@@ -133,7 +144,7 @@ $\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the time a
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
-(equation 2)
+(equation 2) the above long expression expressed as vectors
 $$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
 solved for T; raw result copied from WA.
 $$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
@@ -166,11 +177,11 @@ $$D = C^2-\vec{V}\cdot\vec{V}$$
 if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 
-#### single line expression
+#### Single Line Expression
 
 $\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$ ; $B = C^2{T_o} + \vec{V}\cdot\vec{a}$ ; $D = C^2-\vec{V}\cdot\vec{V}$ ; if $||\vec V||=C$ then $T=\frac {A} {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
-#### V=C
+#### Special case for V=C
 
 In the case that the velocity is the same as $C$, then a version of (equation 2) replaces $C$ with $\vec V$. Having a more complex denominator prevents solving into a form with a constant 0 in the denominator.
 
@@ -269,9 +280,9 @@ A classic view might say that a photon is a wave, that has some length in the di
 
 The resulting vector IS back-tipped, which in a logical sense might seem that 'well then the wave should appear to be coming from behind, since that's the natural direction overall of the wave'; but this isn't that.  It is that the photon had an angle to hit a lense in a certain spot, and then was skewed toward the front; while the photon that started in the backward sense would have struck the lense in a different angle to start with.  It's all actually quite classical, and a sensor that read waves from other boats might do the same thing.  
 
-### Rescue of Lorentz Transform?
+### Fixed Lorentz plus Light Aberration
 
-When Light Aberration is also included, often, the path of the object seen and the Lorentz single relative velocity (shown in purple above), actually tracks with the body being observed.  (not always).
+When Light Aberration is also included, often, the path of the object seen and the Lorentz single relative velocity (shown in purple above), actually tracks with the body being observed.  (More so when observed with a perspetive transform as in a common perspective matrix used for 3D graphics).
 
 When both a offset translation, and a rotation of the velocity vector for one of the bodies occurs, then there are jogs in the path.
 
@@ -279,13 +290,9 @@ https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3b.html
 
 Lock Velocity, Show Velocities, change the first direction slider to $0.5\pi$.  towards the end of the animation, the body was following the lorentz path, but then jogs off of the path.  (this is hard to show with a static image).
 
-That is to say - it actually covers itself it you assume that it is both Light Aberration AND the Lorentz Transform, but applying both will give a double skew to the system; and really the math that resembles reality should just be used.
+That is to say - it actually covers itself it you assume that it is both Light Aberration AND the Lorentz Transform, but applying both will give a double skew to the system; and really the math that resembles reality should just be used. 
 
-
-### Another Way to look at it
-
-This is a graph of relative velocity for a body travelling past 
-https://www.desmos.com/calculator/4jsuiamohh
+It could be said that the existing Lorentz Transform encapsulates both, but there are still cases where this isn't true
 
 
 ## 3D Voxel world with perspective camera
@@ -404,143 +411,12 @@ $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
 
 ## Applying time dilation
 
+Do clock synchronization protocols really have to be considered before publishing?  
+
 ~~[Demo + Special relativity](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-SR.html) not completed...is just 
 about showing clocks... ~~
 
-## Extended velocity rotations
 
-[This Demo(4)](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
-while keeping the orientation of the moving frame the same direction.  This then required a function like this...
-
-$$f\left(a\right)=\frac{\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)}{CC-VV}$$
-
-to compute when the observed signal would go away.  (position is not draw ATM).
-
-https://www.desmos.com/calculator/ryles5r3h4 https://www.desmos.com/calculator/qucxqp3wsq These graphs encapsulate
- the various parameters... Across the X axis is angle
-of the velocity.  This shows the various speeds observed from various angles around an offet.  
-The X and Y parameters are the X and Y
-offset from a point source emitter. I did add green and blue horizontal lines, and a vertical marker for 90 degree rotation.
-At 90 degrees, the clock should work like the standard Lorentz Transformation clock.  The green line intersects with the
-Purple and is the computed Loretnz gamma factor.  The Blue horizontal line is 1/2 max+min clock speeds - as if the clock
-was always horizontal. There's probably a third option that's roughly the average of the areas under the curve.
-
-Can add a graph line $\frac{\left(f\left(x\right)+f\left(x+\pi\right)\right)}{2}$ which shows all opposing 2-way times for light to span the clock; this curve is also not very constant.  Adding the two way speed for 2 clocks 90 degrees to each other : $\frac{\left(f\left(x\right)+f\left(x+\frac{\pi}{2}\right)+f\left(x+\pi\right)+f\left(x+\frac{3\pi}{2}\right)\right)}{4}$  Is closer to a constant, and close to the average of Lorentz Gamma factor and my calculated Gamma.
-
-
-Result maybe -$\frac{\sqrt{\left(CC-VV\right)}+C}{2(CC-VV)}$
-
-6 way speed of light doesn't appear to be much better... https://geogebra.org/3d/twjua74e
-Using a 4 way speed of light calculated with `(f(x)+f(x+pi/2)+f(x+pi)+f(x+3*pi/2))/4` is actually itself
-fairly constant.  This is slightly slower occastionally than the worse-case two-way and one-way gamma factors averaged.
-But, is the minimum error at either worst/best cases, and inbetween has only a slight error at even `0.404c` at which 
-time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
-
-
-
-
-
----
-# SR Devnotes
-
-(Clock display has not been done yet, what an observer sees for a clock on the thing observed, this own clock, the real clock, ... what the clock on the observer actually is (increased distance increases clock ticks 'in the air'))
-
-'if two observers have clocks, and are in motion relative to one another at high velocities, then each should see the other's time as moving slower than theirs. when they meet back up, what determines which observer's clock has ticked more?'  from a user on physics discord.. 
-
-"depends on whether they are approaching or leaving each other whether they see clocks tick faster or slower; a rule I saw someone say was the one that accelerated more will have the slower clock (much like someone deeper in a gravity well has a slower clock and feels like there's more acceleration).   " ... 
-
-and then I could continue on... but this is only a bit of it
-" If one was travelling towards the other at the speed of light, then all of its clock ticks would be seen at once which makes for seeing a very fast clock.  (although if they are each going 1/2 the speed of light toward each other, then the light has time to travel away and ahead of each, so you don't see all ticks at once).  "
-
-Because then, with SR, the lightspeed craft has 0 ticks, and the clock doesn't 'go' and the stationary observer sees for all time that it was the same tick until some point before the craft was AT light speed.
-
-But then shifting the problem, they are each `sqrt(2)/2`  for their time scalar, so I should then apply that to when ticks are emitted from their clocks (in theory each tick generates a photon that can be seen at some point in the future...)
-
-At emmision, the photon source knows its position, and it is treated as a stationary point, and the other end is the difference in velocities to calculate where the light has to go, to know how long the light will take to get to be seen....
-
-'ticks in the air'  is really where the missing information on the clocks goes, other than when a clock is also retarded.  Tron experiment, it was decided that the slowest clock would be used as the tick rate for the game;   This means in terms of the simulator, players that are going slower than the fastest player goes even slower....  The world clock ticks VERY fast overall though.
-
-
-
-## math/indexLightSpeed-SR.html
-
-Initial conditions...
-1) both bodies start at some negative time T such that at T=0 both observe a signal sent from the other (including offset between them).
-2)  `T=Math.sqrt( (D*D)/(C*C) / (C*C-V*V));` given V=Real velocity (sublight).
-3) the next signal they emit will be ... 
-
-### Space time index
-
-https://geogebra.org/3d/ckphajff  is the fixed version from the correct top math... 
-
-speed of light case is nice and simple though... h(x,y)=((-x^(2)-y^(2))/(2 x))
-
-
-The graph shows light seconds away, and how long ago you're seeing that point.
-
-## GLSL Implementation
-
-This is just a reference implentation for GLSL to calculate offsets of position.
-
-GLSL code
-``` glsl
-uniform float time;
-uniform vec3 velocity1;
-uniform vec3 velocity2;
-const float C = 1.0;
-
-        vec3 delpos = position-cameraPosition;
-        vec3 tmp = delpos - velocity2*time;
-        float A = time*time*C*C - dot(tmp,tmp);
-        float B = time*C*C + dot(velocity1, tmp );
-        float D = C*C-dot(velocity1,velocity1);
-        float T;
-        if( abs(D) < 0.0000001 ) T = A/(2.0*B);
-        else T = (sqrt( B*B - D*A ) + B)/D;
-        vec3 real_position = position + T*velocity1;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( real_position, 1.0 );
-```
-
-GLSL version of light aberration routine (2D though... still needs to be updated for 3D).
-
-```glsl
-// this has to take negative velocity
-vec3 aberration( vec3 X, vec3 Xo, vec3 Vo ) {
-	vec3 result;
-	vec3 del = X-Xo;
-	float len2 = dot(del,del);
-	float vlen2 = dot( Vo, Vo);
-	float Vdot = dot( del, vo );
-	vec3 Vcrs = cross( del, vo );
-	if( len2 < 0.000001 && Vlen2 < 0.0000001 ) {
-		result = X;
-	} else {
-        float len = sqrt(len2);
-        float vlen = sqrt(vlen2 );
-        float norm = len*vlen;
-        float CosVDot = Vdot/norm;
-
-        const float baseAng = acos( CosVDot );
-        const float delAng = acos( ( CosVDot + Vlen/C )
-                / ( 1 + Vlen/C * CosVDot ) );//*((Vcrs.z<0)?-1:1);
-if( abs( delAng ) < 0.0000001  ) {
-	return X;
-}
-        const c = Math.cos(delAng);
-        const s = Math.sin(delAng);
-        const n = Math.sqrt( Vcrs.x*Vcrs.x+Vcrs.y*Vcrs.y+Vcrs.z*Vcrs.z);
-		
-		const qx = Vcrs.x/n, qy = Vcrs.y/n, qz = Vcrs.z/n;
-        const vx = delx , vy = dely , vz = delz;
-  
-        const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-        Xr.x = Xo.x + vx*c + s*(qy * vz - qz * vy) + qx * dot;
-        Xr.y = Xo.y + vy*c + s*(qz * vx - qx * vz) + qy * dot;
-        Xr.z = Xo.z + vz*c + s*(qx * vy - qy * vx) + qz * dot;        result = Xo+rpos;               
-	}
-	return result;
-}
-```
 
 # Revisited Math
 (incomplete, incorrect)
@@ -678,8 +554,146 @@ This is a detailed summary of how I approached building the simulation.
 ```
 
 
-## (Duplicate sections?)
 
+# (Duplicate sections?)
+
+## Rotating Photon Clocks
+
+This is about having a constant length photon clock which has a static orientation, but the velocity it's moving changes direction.   This demonstrates worst-case and best-case times for time dilation.  While intersting, this is not what finally led to the calculation for length contraction or time contraction(dilation).
+
+### Extended velocity rotations
+
+[This Demo(4)](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
+while keeping the orientation of the moving frame the same direction.  This then required a function like this...
+
+$$f\left(a\right)=\frac{\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)}{CC-VV}$$
+
+to compute when the observed signal would go away.  (position is not drawn at this time).
+
+### Time dilation graphs
+
+https://www.desmos.com/calculator/ryles5r3h4 https://www.desmos.com/calculator/qucxqp3wsq These graphs encapsulate
+ the various parameters... Across the X axis is angle
+of the velocity.  This shows the various speeds observed from various angles around an offet.  
+The X and Y parameters are the X and Y
+offset from a point source emitter. I did add green and blue horizontal lines, and a vertical marker for 90 degree rotation.
+At 90 degrees, the clock should work like the standard Lorentz Transformation clock.  The green line intersects with the
+Purple and is the computed Loretnz gamma factor.  The Blue horizontal line is 1/2 max+min clock speeds - as if the clock
+was always horizontal. There's probably a third option that's roughly the average of the areas under the curve.
+
+Can add a graph line $\frac{\left(f\left(x\right)+f\left(x+\pi\right)\right)}{2}$ which shows all opposing 2-way times for light to span the clock; this curve is also not very constant.  Adding the two way speed for 2 clocks 90 degrees to each other : $\frac{\left(f\left(x\right)+f\left(x+\frac{\pi}{2}\right)+f\left(x+\pi\right)+f\left(x+\frac{3\pi}{2}\right)\right)}{4}$  Is closer to a constant, and close to the average of Lorentz Gamma factor and my calculated Gamma.
+
+
+Result maybe -$\frac{\sqrt{\left(CC-VV\right)}+C}{2(CC-VV)}$
+
+6 way speed of light doesn't appear to be much better... https://geogebra.org/3d/twjua74e
+Using a 4 way speed of light calculated with `(f(x)+f(x+pi/2)+f(x+pi)+f(x+3*pi/2))/4` is actually itself
+fairly constant.  This is slightly slower occastionally than the worse-case two-way and one-way gamma factors averaged.
+But, is the minimum error at either worst/best cases, and inbetween has only a slight error at even `0.404c` at which 
+time it's about a 1% deviation.  (https://www.desmos.com/calculator/pbconetjkf)
+
+
+---
+# SR Devnotes
+
+(Clock display has not been done yet, what an observer sees for a clock on the thing observed, this own clock, the real clock, ... what the clock on the observer actually is (increased distance increases clock ticks 'in the air'))
+
+'if two observers have clocks, and are in motion relative to one another at high velocities, then each should see the other's time as moving slower than theirs. when they meet back up, what determines which observer's clock has ticked more?'  from a user on physics discord.. 
+
+"depends on whether they are approaching or leaving each other whether they see clocks tick faster or slower; a rule I saw someone say was the one that accelerated more will have the slower clock (much like someone deeper in a gravity well has a slower clock and feels like there's more acceleration).   " ... 
+
+and then I could continue on... but this is only a bit of it
+" If one was travelling towards the other at the speed of light, then all of its clock ticks would be seen at once which makes for seeing a very fast clock.  (although if they are each going 1/2 the speed of light toward each other, then the light has time to travel away and ahead of each, so you don't see all ticks at once).  "
+
+Because then, with SR, the lightspeed craft has 0 ticks, and the clock doesn't 'go' and the stationary observer sees for all time that it was the same tick until some point before the craft was AT light speed.
+
+But then shifting the problem, they are each `sqrt(2)/2`  for their time scalar, so I should then apply that to when ticks are emitted from their clocks (in theory each tick generates a photon that can be seen at some point in the future...)
+
+At emmision, the photon source knows its position, and it is treated as a stationary point, and the other end is the difference in velocities to calculate where the light has to go, to know how long the light will take to get to be seen....
+
+'ticks in the air'  is really where the missing information on the clocks goes, other than when a clock is also retarded.  Tron experiment, it was decided that the slowest clock would be used as the tick rate for the game;   This means in terms of the simulator, players that are going slower than the fastest player goes even slower....  The world clock ticks VERY fast overall though.
+
+
+
+## math/indexLightSpeed-SR.html
+
+Initial conditions...
+1) both bodies start at some negative time T such that at T=0 both observe a signal sent from the other (including offset between them).
+2)  `T=Math.sqrt( (D*D)/(C*C) / (C*C-V*V));` given V=Real velocity (sublight).
+3) the next signal they emit will be ... 
+
+### Space time index
+
+https://geogebra.org/3d/ckphajff  is the fixed version from the correct top math... 
+
+speed of light case is nice and simple though... h(x,y)=((-x^(2)-y^(2))/(2 x))
+
+
+The graph shows light seconds away, and how long ago you're seeing that point.
+
+## GLSL Implementation
+
+This is just a reference implentation for GLSL to calculate offsets of position.
+
+GLSL code
+``` glsl
+uniform float time;
+uniform vec3 velocity1;
+uniform vec3 velocity2;
+const float C = 1.0;
+
+        vec3 delpos = position-cameraPosition;
+        vec3 tmp = delpos - velocity2*time;
+        float A = time*time*C*C - dot(tmp,tmp);
+        float B = time*C*C + dot(velocity1, tmp );
+        float D = C*C-dot(velocity1,velocity1);
+        float T;
+        if( abs(D) < 0.0000001 ) T = A/(2.0*B);
+        else T = (sqrt( B*B - D*A ) + B)/D;
+        vec3 real_position = position + T*velocity1;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( real_position, 1.0 );
+```
+
+GLSL version of light aberration routine (2D though... still needs to be updated for 3D).
+
+```glsl
+// this has to take negative velocity
+vec3 aberration( vec3 X, vec3 Xo, vec3 Vo ) {
+	vec3 result;
+	vec3 del = X-Xo;
+	float len2 = dot(del,del);
+	float vlen2 = dot( Vo, Vo);
+	float Vdot = dot( del, vo );
+	vec3 Vcrs = cross( del, vo );
+	if( len2 < 0.000001 && Vlen2 < 0.0000001 ) {
+		result = X;
+	} else {
+        float len = sqrt(len2);
+        float vlen = sqrt(vlen2 );
+        float norm = len*vlen;
+        float CosVDot = Vdot/norm;
+
+        const float baseAng = acos( CosVDot );
+        const float delAng = acos( ( CosVDot + Vlen/C )
+                / ( 1 + Vlen/C * CosVDot ) );//*((Vcrs.z<0)?-1:1);
+if( abs( delAng ) < 0.0000001  ) {
+	return X;
+}
+        const c = Math.cos(delAng);
+        const s = Math.sin(delAng);
+        const n = Math.sqrt( Vcrs.x*Vcrs.x+Vcrs.y*Vcrs.y+Vcrs.z*Vcrs.z);
+		
+		const qx = Vcrs.x/n, qy = Vcrs.y/n, qz = Vcrs.z/n;
+        const vx = delx , vy = dely , vz = delz;
+  
+        const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+        Xr.x = Xo.x + vx*c + s*(qy * vz - qz * vy) + qx * dot;
+        Xr.y = Xo.y + vy*c + s*(qz * vx - qx * vz) + qy * dot;
+        Xr.z = Xo.z + vz*c + s*(qx * vy - qy * vx) + qz * dot;        result = Xo+rpos;               
+	}
+	return result;
+}
+```
 
 ## Gamma
 
@@ -713,6 +727,13 @@ Again the inverse from feels like to real velocity, but for the two-way speed of
 Velocity Real for Feels like x: $V_{r}\left(x\right)=\frac{\left(\sqrt{\left(c^{4}+4c^{2}x^{2}\right)}-cc\right)}{2x}$ 
 
 # Problems This has Highlighted
+
+### What is a relative velocity?
+
+This is a graph of relative velocity for a body travelling past an observer at some distance.  The relative velocity isn't the same as the constant velocity of the body.  The Lorentz Transform also truly uses this constant velocity, and not truly a relative velocity between bodies.
+
+https://www.desmos.com/calculator/4jsuiamohh
+
 
 ## Practical examples of failures
 
