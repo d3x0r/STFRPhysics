@@ -145,6 +145,7 @@ $$\alpha = \frac {\sqrt{CC-VV}}{CC}$$
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\alpha L}\right)^{2}}} C+T$$
 
 $$T = \frac {C^2 {T_O}^2 -  D^2 - ((\alpha L)^2} {2 C (C {T_O} + \alpha L)}$$
+
 $$Position(T_o,L) = \alpha L+VT$$
 
 
@@ -278,11 +279,11 @@ $f(x)= arccos( \frac {C*{\frac d {\sqrt{xx+dd}}} + |V| } {C+|V| {\frac d {\sqrt{
 
 ### Examples Including Aberration
 
-This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  
+This is two bodies travelling at 0.62c.  The purple/red line through the vertical center is directly across from them, that they would see each other; This means that a light clock would bounce the photon apparently back and forth, but really be receiving it ahead of itself, and projecting ahead of itself.  (These screen shots do not include Length Contraction)
 
 ![](https://github.com/d3x0r/STFRPhysics/raw/master/aberration.png)
 
-Without aberation, the things directly to the side of you actually appear somewhat to the back, and would have a longer distance, in the above image, the aberration doesn't bring what's lateral exacty to 1, but it's slightly longer, which makes it take slightly longer to cover that distance.  So rods that are lateral to a body do appear longer. (But then any plane attached to that cylinder is still at that distance)
+Without aberation, the things directly to the side of you actually appear somewhat to the back, and would have a longer distance, in the above image, the aberration doesn't bring what's lateral exacty to 1, but it's slightly longer, which makes it take slightly longer to cover that distance.  So rods that are lateral to a body do appear longer. (But then any plane attached to that cylinder is still at that distance) (These screen shots do not include Length Contraction)
 ![](https://github.com/d3x0r/STFRPhysics/raw/master/aberration-disable.png)
 
 #### My Hypothetical
