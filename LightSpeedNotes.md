@@ -150,7 +150,6 @@ $$T = \frac{\sqrt{C^{2}(D^2+(L+VT_o)^2) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}
 
 ## 3D Math solution
 
-This is a work in progresss.
 
 This uses the same procedure as the previous, but solves with more terms and vectors instead of individual variables.  A solution for T is found, all that remains is simplifying terms at the end.
 
@@ -197,17 +196,22 @@ move odd term to the right, divide by the coefficient of T...
 
 Multiply top and bottom by $\frac {\sqrt{C^2-\vec{V}\vec{V}}}{\sqrt{C^2-\vec{V}\vec{V}}}$
 
-- Equation 9a: $T   = \frac { \sqrt{(C^2S+\vec{V}\cdot\vec{a})^2 -  (C^2-\vec{V}\vec{V})(C^2S^2 - \vec{a}\cdot\vec{a}) } +C^2S+\vec{V}\cdot\vec{a} } {C^2- \vec{V}\vec{V}}$
+- Equation 9: $T   = \frac { \sqrt{(C^2S+\vec{V}\cdot\vec{a})^2 -  (C^2-\vec{V}\vec{V})(C^2S^2 - \vec{a}\cdot\vec{a}) } +C^2S+\vec{V}\cdot\vec{a} } {C^2- \vec{V}\vec{V}}$
 
-Define $A$, $B$ and $D$.
 
 
 ### Solution 2:
 
+Define $A$, $B$ and $D$.
+
 $\vec a = X-(X_o+V_oT)$; 
+
 $A = C^2{S}^2 - \vec{a}\cdot\vec{a}$;
+
 $B=(C^2S+\vec{V}\cdot\vec{a})$;
+
 $D = C^2 - \vec{V}\vec{V}$
+
 
 $$T   = \frac { \sqrt{B^2 -  DA } +B } {D}$$
 
