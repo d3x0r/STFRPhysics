@@ -41,18 +41,23 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 
 There are places I use an expression like $CC$ which is the same as $C*C$ or $C^2$.  Variables used in the math expressions are a single letter, unless they have a subscript.  One reason might be that it's fewer characters, but more often it's harder to see superscript in inline equations.
 
+## Disclaimer
+
+This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
+
+If you're expectation is that this will be exactly the same, it's not.  However, time in the future (after now), and positive relative velocities works out to be the same as Lorentz Transform (also with a small fraction of the speed of siganl propagation).
+
 ## Differences in Terminology
 
 The end result requires different terms to describe than were previously established with the Lortenz Transform and General or Special Relativity.
 
  - Time contraction : This is the reciprocal of 'Time dilation', and refers to how much a moving clock slows down; how much less time ticks per real-tick.  Given that observers are able to observe their own velocity, they can also adjust their clock appropriately knowing that this happens.
- - Length Expansion : there is an asymmetry in the observed shape of a moving body.  Before passing an observer the length of the body appears to be extended/expanded.  The length of the body is effectively lengthened; for example, if the back of a ship is 1 light second behind an observer on the ship, then at a high velocity, the back of the ship would appear (from LT only) N light-seconds long, and the light will take N seconds to get to you(on a non-contracted clock), and be the speed of light.  N will be a value greater than 1.
+ - Length Expansion : there is an asymmetry in the observed shape of a moving body.  Before passing an observer the length of the body appears to be extended/expanded.  The length of the body is effectively lengthened; for example, if the back of a ship is 1 light second behind an observer on the ship, then at a high velocity, the back of the ship would appear (from LT only) N light-seconds long, and the light will take N seconds to get to you(on a non-contracted clock), and be the speed of light.  N will be a value greater than 1.  The length expansion is often further dilated by Light Aberration, which makes a very distant back of thte ship still seem to be where it always was in perspective.
 
 ## The Math
 
-This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
 
-This is generally based on using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from that point; and the origin of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it should otherwise be; [more on this here](math/TheNotBang.md)).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.
+This model is generally built using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from a stationary point; and the location of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it should otherwise be; [more on this here](math/TheNotBang.md)).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.
 
 The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
 
@@ -60,9 +65,9 @@ In the demos, observable body has 3 parts, the tail, the center and thead head; 
 
 At some time $T$, a body to observe is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ for the head and $(VT-L)$ for the tail. A relatively stationary observer exists, at some $D$ distance from the body (this is the closest distance to the line defined by $VT$; the distance is perpendicular to the velocity)
 ; then $D_o = \sqrt{D^2+(VT+L)^2}$ is the distance a photon has to travel
-to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$, $L=0$, $\Delta T_o = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
+to the observer.  The relative distance divided by the speed of light is how long that signal will travel to the observer (delta time to be observed).  $\Delta T_o = \frac {\sqrt{D^2+(VT+L)^2}} {C}$ is the time it takes (the C can be factored into the expression as $C^2$).  (Special case $D=0$, $L=0$, $\Delta {T_o} = \frac{\sqrt {V^2T^2}}{C}$~~, which Lorentz simplified to $T_o=VT/C$, and this latter formula yields the wrong results~~; a more suitable version would be ${\Delta T_o}=\frac {|VT|} C$).
 
-Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then $T_o$ is the real time the event is seen.
+Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)), including the $T$ime that the event happened, then $T_o=\Delta T_o + T$ is the real time the event is seen.
 
 ### Equations
 
@@ -70,10 +75,10 @@ Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)),
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 -or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
 
-Real time observer at time `T` sees the position on the body; should be able to have a function that includes the base time, and the position along the craft to get the following; I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
-
+The above is real time that an observer sees an event emitted at at time $T$ from a position on the body. Then the above can be solved for $T$ such that at some time an observer saw an event ($T_o$), can find the time the event was emitted ($T$).  I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
 
 $$T = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
+
 (slight refactor into partial expressions, revert 'x' to 'T_o')
 
 $$ A=D^2+(L+VT_o)^2  $$
@@ -96,9 +101,15 @@ In the special case that $V=C$, then $V/C = 1$, so equation 1(above) simplifies 
 
 $$T_O = \sqrt{\frac{D^2}{C^2}+\left(T+\frac{L}{C}\right)^{2}}+T$$
 
-And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; `-L/C` is the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.  ( `solve S=sqrt(D^2 / C^2 +(T+ L/C)^2)+T  for T` , 'T_o' is replaced with 'S')
+And the inverse when (V=C) is this; which has a singullarity when C=0; which is irrelavent, if events don't propagate than they never go anywhere.  When `T_O=-L/C`; that the time the ship if first 'seen'; and is the oldest signal from the ship first; each closer signal has slightly more slope to get to the observer.  ( `solve S=sqrt(D^2 / C^2 +(T+ L/C)^2)+T  for T` , 'T_o' is replaced with 'S')
+
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
-or (when D=0, L=0)
+
+(or -V=C)
+$$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} - L)}$$
+
+
+or (when D=0, L=0).  This seems wrong; at seen -10 real time is -5, which is in the future.
 $$T = \frac {T_O} {2}$$
 
 - https://mathb.in/74833
@@ -112,11 +123,10 @@ or
 $$T_{real2}\left(T\right)=\left|T\right|+T$$
 
 ### Convert a Time to Position
-Once you have the real time, the real observed position is $(L+VT)$. 
+Once you have the real time, the real observed position is $X=(L+VT)$. 
 
-$$ A=D^2+(L+VT_o)^2  $$
 
-$$Position(T_o,L) = L+V\left(\frac{\sqrt{C^{2}(A) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}\right)$$
+$$X = L+V\left(\frac{\sqrt{C^{2}(D^2+(L+VT_o)^2) -V^{2}D^{2}}+C^{2}{T_o}+LV}{C^{2}-V^{2}}\right)$$
 
 
 ### That was the simple case
@@ -129,10 +139,11 @@ The above assumes the observer is stationary, at a fixed position, with some dis
 
 ### Length Contraction Applied
 
-After computing what length dilation should be for a body, should back-apply this to 2D demos.
+After computing what length contraction should be for a body, it was applied to several 2D demos.  This scales any $L$ offset on the body towards 0.
 
-$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\frac {L\sqrt{C^2-V^2}}{C^2} }\right)^{2}}} C+T$$
 $$\alpha = \frac {\sqrt{CC-VV}}{CC}$$
+$$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\alpha L}\right)^{2}}} C+T$$
+
 $$T = \frac {C^2 {T_O}^2 -  D^2 - ((\alpha L)^2} {2 C (C {T_O} + \alpha L)}$$
 $$Position(T_o,L) = \alpha L+VT$$
 
