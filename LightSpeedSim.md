@@ -75,7 +75,7 @@ Observed time of (some position along body L) ( head(+L), center(+0), tail(-L)),
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 -or- $$T_O = \sqrt{\left( \frac D C \right)^{2}+\left({{\frac V C }T+{\frac L C}}\right)^{2}}+T$$
 
-The above is real time that an observer sees an event emitted at at time $T$ from a position on the body. Then the above can be solved for $T$ such that at some time an observer saw an event ($T_o$), can find the time the event was emitted ($T$).  I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o'). 
+The above is real time that an observer sees an event emitted at at time $T$ from a position on the body. Then the above can be solved for $T$ such that at some time an observer saw an event ($T_o$), can find the time the event was emitted ($T$).  I asked Wolfram Alpha(WA)f to solve this... `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` (I had to use 'x' instead of 'T_o').  I got impatient and solved this by hand here: [long hand solution.](LightSpeedNotes.md#15d-step-by-step-derivation)
 
 $$T = \frac{\sqrt{C^{2}D^{2}+C^{2}L^{2}+2C^{2}LV{x}+V^{2}\left(\ C^{2}{x}^{2}-D^{2}\right)}+C^{2}{x}+LV}{C^{2}-V^{2}}$$
 
