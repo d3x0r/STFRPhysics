@@ -166,14 +166,14 @@ $$C^2(S-T)^2 =  (  (\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {S}) )\cdot ((
 
 Expand expressions....
 
-- Equation 3:$C^2S^2-2C^2ST+C^2T^2 = (\vec{X} + \vec{V} T )(\vec{X} + \vec{V} T ) -2 (\vec{X} + \vec{V} T )( \vec{X_o}+ \vec{V_o} S) + ( \vec{X_o}+ \vec{V_o} S)^2$
+- Equation 3: $C^2S^2-2C^2ST+C^2T^2 = (\vec{X} + \vec{V} T )(\vec{X} + \vec{V} T ) -2 (\vec{X} + \vec{V} T )( \vec{X_o}+ \vec{V_o} S) + ( \vec{X_o}+ \vec{V_o} S)^2$
 
 Expand expressions which involve T...
 - Equation 4: $C^2S^2-2C^2ST+C^2T^2 = \vec{X}\vec{X} +2\vec{X}\vec{V}T + \vec{V}\vec{V} T^2  -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S -2 \vec{V} T\vec{X_o}-2 \vec{V}\vec{V_o}TS + ( \vec{X_o}+ \vec{V_o} S)^2$
 
 move T terms to the left, else to the right; also combined terms and reversed some signs...
 
-- Equation 5:$(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}S)T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} S)^2$
+- Equation 5: $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}S)T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} S)^2$
 - $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}S)T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}(\vec{X_o} +\vec{V_o}S)  + ( \vec{X_o}+ \vec{V_o} S)^2$
 - Equation 5a: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
    - $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S})T= -C^2S^2 + (\vec{X}   -(\vec{X_o} +\vec{V_o}S))^2$
@@ -185,11 +185,11 @@ figure out the square, minus the odd part....
 
 - Equation 6: $\left( \sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}} \right) ^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 = -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} {S})^2$
 - Equation 6a: $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{V}\cdot\vec{a})T= -C^2S^2 + (\vec{a})^2$
-- Equation 6a2:$\left(\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 -\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} = -C^2S^2 + (\vec{a})^2$
+- Equation 6a2: $\left(\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 -\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} = -C^2S^2 + (\vec{a})^2$
 
 Move odd term to the right, and take the square root of both sides.
 
-- Equation 7:$\sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2}$
+- Equation 7: $\sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2}$
 - Equation 7a: $$\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{+\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} -C^2S^2 + (\vec{a})^2 }$$
 
 move odd term to the right, divide by the coefficient of T... 
