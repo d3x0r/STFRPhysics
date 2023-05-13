@@ -38,7 +38,7 @@ $$f\left(a\right)=\frac{\left(CC-VV\right)}{\sqrt{CC-VV\sin\left(a\right)\sin\le
 This is the ratio of how many waves are in a 2-way span of light, for an arm in said angle.  $f(a)$ is the amount 1 direction and $f(a+\pi)$ is the amount in the other direction.
 $$g(a)=\frac {f(a)+f(a+\pi)} 2$$
 This is a large scalar times the difference in the ratio of waves between two arms at a right angle.  This is the worst case difference.
-$$ h(a)=100000(g(a)-g(a+pi/2))$$
+$$h(a)=100000(g(a)-g(a+pi/2))$$
 
 at $V=0.0013$ (slightly faster than we're going); assuming the right angle arms are aligned on the plane with the velocity vector,  The best error is 0.072/100000 = 0.000072% difference.
 
@@ -201,13 +201,15 @@ Multiply top and bottom by $\frac {\sqrt{C^2-\vec{V}\vec{V}}}{\sqrt{C^2-\vec{V}\
 
 Define $A$, $B$ and $D$.
 
-$B=(C^2S+\vec{V}\cdot\vec{a})$
-$D = C^2 - \vec{V}\vec{V}$
-$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$
 
-- Equation 10a: $$ T   = \frac { \sqrt{B^2 -  DA } +B } {D} $$
-The otther path led to something like this.... earlier simpflification of $\vec{a}$ helped...
-$$T = \frac {  \sqrt{ C^2S^2V^2 +  C^2\vec{X}\vec{X} -V^2\vec{X}\vec{X}   -2C^2\vec{X}\vec{X_o} +2\vec{V}\vec{V}\vec{X}\vec{X_o} -2C^2\vec{X}\vec{V_o}T_o +2\vec{V}\vec{V}\vec{X}\vec{V_o}S +  \vec{X_o}\vec{X_o}+2\vec{X_o}\vec{V_o}{T_o}+ \vec{V_o}\vec{V_o} {S}^2 - 2CCSV\vec{a}- \vec{V}\vec{V} * \vec{a}\cdot\vec{a})} + {C^2S+\vec {V}\cdot\vec{a}}   } {(C^2- \vec{V}\vec{V}) }$$
+### Solution 2:
+
+$\vec a = X-(X_o+V_oT)$; 
+$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$;
+$B=(C^2S+\vec{V}\cdot\vec{a})$;
+$D = C^2 - \vec{V}\vec{V}$
+
+$$T   = \frac { \sqrt{B^2 -  DA } +B } {D}$$
 
 ### 3D Target
 
