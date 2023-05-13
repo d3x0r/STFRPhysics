@@ -100,13 +100,13 @@ Expand both sides, move the C to the left anyway...
 
 Combine T terms from (3) and other terms.
 
-- Equation 4:${C^2}{T^2} - {{V^2}{T^2}} - {2ST}{C^2} - {2VLT} = -{C^2}{S^2}+{ {{D}^{2}} +{L^2}}$
+- Equation 4: ${C^2}{T^2} - {{V^2}{T^2}} - {2ST}{C^2} - {2VLT} = -{C^2}{S^2}+{ {{D}^{2}} +{L^2}}$
 
-Group common factors of T from (3) set equal to 0
+Group common factors of T from (4) set equal to 0
 
 - Equation 5: $(C^2-V^2)T^2 - (2SC^2+2VL)T+C^2S^2-D^2-L^2=0$
 
-Group common factors of T from (3), and move other parts to the right.
+Group common factors of T from (4), and move other parts to the right.
 
 - Equation 6: $({C^2}-{V^2}){T^2} - ({S}{C^2} - {VL} )2T = { {{D}^{2}} +{L^2}}-{C^2}{S^2}$
 
@@ -116,7 +116,7 @@ Factor out 1 $T$ from (6); no further references to (7)
 
 Quadratic formula on T parts, leaving a remainder outside. from (6)
 
-- Equation 8:$\left(\sqrt{{C^2}-{V^2}}){T} - \frac {({S}{C^2} - {VL} )} {\sqrt{CC-VV}}\right)^2 - \frac { (SC^2-VL)^2}{CC-VV} = { {{D}^{2}} +{L^2}}-{C^2}{S^2}$
+- Equation 8: $\left(\sqrt{{C^2}-{V^2}}){T} - \frac {({S}{C^2} - {VL} )} {\sqrt{CC-VV}}\right)^2 - \frac { (SC^2-VL)^2}{CC-VV} = { {{D}^{2}} +{L^2}}-{C^2}{S^2}$
 
 Move non-T expresssion to the right, Square both sides... from (8)
 - Equation 9: $\sqrt{{C^2}-{V^2}}){T} - \frac {({S}{C^2} - {VL} )} {\sqrt{CC-VV}}  = \sqrt{{ {{D}^{2}} +{L^2}}-{C^2}{S^2} + \frac { (SC^2-VL)^2}{CC-VV}}$
