@@ -154,31 +154,67 @@ _o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVe
 
 Replace T_o with S; convert length expression to sqrt of dot product. move C, square both sides.
 
+Equation 2:
 $$C^2(S-T)^2 =  (  (\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o}) )\cdot (({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o}))} $$
 
 Expand expressions....
 
-$$C^2S^2-2C^2ST+C^2T^2 = (\vec{X} + \vec{V} T )(\vec{X} + \vec{V} T ) -2 (\vec{X} + \vec{V} T )( \vec{X_o}+ \vec{V_o} {T_o}) + ( \vec{X_o}+ \vec{V_o} {T_o})^2  $$
+Equation 3:$C^2S^2-2C^2ST+C^2T^2 = (\vec{X} + \vec{V} T )(\vec{X} + \vec{V} T ) -2 (\vec{X} + \vec{V} T )( \vec{X_o}+ \vec{V_o} {T_o}) + ( \vec{X_o}+ \vec{V_o} {T_o})^2$
 
-Expand expressions...
-$$C^2S^2-2C^2ST+C^2T^2 = \vec{X}\vec{X} +2\vec{X}\vec{V}T + \vec{V}\vec{V} T^2  -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o -2 \vec{V} T\vec{X_o}-2 \vec{V}\vec{V_o}T{T_o} + ( \vec{X_o}+ \vec{V_o} {T_o})^2  $$
+Expand expressions which involve T...
+Equation 4: $C^2S^2-2C^2ST+C^2T^2 = \vec{X}\vec{X} +2\vec{X}\vec{V}T + \vec{V}\vec{V} T^2  -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o -2 \vec{V} T\vec{X_o}-2 \vec{V}\vec{V_o}T{T_o} + ( \vec{X_o}+ \vec{V_o} {T_o})^2$
 
 move T terms to the left, else to the right; also combined terms and reversed some signs...
 
-$$(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o})T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2  $$
+Equation 5:$(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o})T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2$
 
-figure out the square, plus the odd part.... 
+figure out the square, minus the odd part.... 
 
-$$ \left( \sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}} \right) ^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 = -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2  $$
+Equation 6: $\left( \sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}} \right) ^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 = -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2$
 
-Move odd term to the right, and square both sides.
+Move odd term to the right, and take the square root of both sides.
 
-$$  \sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2} $$
+Equation 7:$\sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2}$
 
 move odd term to the right, divide by the coefficient of T... 
 
-$$  T   = \frac {\sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2} + - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}  } {\sqrt{(C^2- \vec{V}\vec{V})} }$$
+Equation 8: $T   = \frac {\sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} + \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2} + - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}  } {\sqrt{(C^2- \vec{V}\vec{V})} }$
 
 Multiply top and bottom by $\frac {\sqrt{C^2-\vec{V}\vec{V}}}{\sqrt{C^2-\vec{V}\vec{V}}}$
 
-$$  T   = \frac {\sqrt{ (C^2-\vec{V}\vec{V}) \left( -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2\right)} - {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}}   } {(C^2- \vec{V}\vec{V}) }$$
+Equation 9: $T   = \frac {\sqrt{ (C^2-\vec{V}\vec{V}) \left( -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2\right)} - {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}}   } {(C^2- \vec{V}\vec{V}) }$
+
+Remove inner fractional part in the radical.
+
+Equation 10: $T = \frac {\sqrt{ (C^2-\vec{V}\vec{V}) \left( -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {T_o})^2\right) +\left( C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}\right)^2} - {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}}   } {(C^2- \vec{V}\vec{V}) }$
+
+Probably expand inner terms...
+
+$(CCS+V((X-X_o)-V_oT)) * (CCS+V((X-X_o)-V_oT))$
+
+$(CCCCSS+2CCSV((X-X_o)-V_oT)+ VV((X-X_o)-V_oT)^2$
+
+$\vec a = (X-X_o)-V_oT$;  $A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$
+
+$(CCCCSS+2CCSV\vec{a}+ \vec{V}\vec{V} * \vec{a}\cdot\vec{a})$
+
+Replace inner squared product with the term just computed.
+
+Equation 11: $T = \frac {\sqrt{ (C^2-\vec{V}\vec{V}) \left( -C^2S^2 + \vec{X}(\vec{X}    -2\vec{X_o} -2\vec{V_o}T_o) +  \vec{X_o}\vec{X_o}+2\vec{X_o}\vec{V_o}{T_o}+ \vec{V_o}\vec{V_o} {T_o}^2\right) + (CCCCSS+2CCSV\vec{a}+ \vec{V}\vec{V} * \vec{a}\cdot\vec{a})} - {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}}   } {(C^2- \vec{V}\vec{V}) }$
+remove $C^4S^2$
+
+Equation 12:
+ $T = \frac {  \sqrt{ C^2S^2V^2 + (C^2-\vec{V}\vec{V}) \left(  \vec{X}(\vec{X}    -2\vec{X_o} -2\vec{V_o}T_o) +  \vec{X_o}\vec{X_o}+2\vec{X_o}\vec{V_o}{T_o}+ \vec{V_o}\vec{V_o} {T_o}^2\right) - (2CCSV\vec{a}+ \vec{V}\vec{V} * \vec{a}\cdot\vec{a})} - {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}}   } {(C^2- \vec{V}\vec{V}) }$
+
+
+TODO - Finish Simplification.... I'm sure it's going to work out OK from here in, just it's SO long.
+
+
+### 3D Target
+
+$$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
+$$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
+$$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
+$$D = C^2-\vec{V}\cdot\vec{V}$$
+
+if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
