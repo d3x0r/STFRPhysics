@@ -109,8 +109,12 @@ $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} + L)}$$
 $$T = \frac {C^2 {T_O}^2 -  D^2 - L^2} {2 C (C {T_O} - L)}$$
 
 
-or (when D=0, L=0).  This seems wrong; at seen -10 real time is -5, which is in the future.
-$$T = \frac {T_O} {2}$$
+or (when D=0, L=0); which should simplify to $T=\frac {T_o} 2$, but this seems wrong; at seen -10 real time is -5, which is in the future.   This expression should be split, if T_o < 0, and positive velocity, then any time T is seen at +T from there, and the difference is 0.   If T_o > 0 and positive velocity, then the craft appears to be going away at 1/2 the speed of light.  If the sign of the velocity is the other direction, the conditions are reversed.
+
+$$VT_o<0 : T=T_o $$
+
+$$VT_o>0 : T=\frac {T_o} 2 $$
+
 
 - https://mathb.in/74833
 - https://mathb.in/74928 
@@ -141,7 +145,7 @@ The above assumes the observer is stationary, at a fixed position, with some dis
 
 After computing what length contraction should be for a body, it was applied to several 2D demos.  This scales any $L$ offset on the body towards 0.
 
-$$\alpha = \frac {\sqrt{CC-VV}}{CC}$$
+$$\alpha = \frac {\sqrt{CC-VV}}{C}$$
 
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\alpha L}\right)^{2}}} C+T$$
 
