@@ -142,6 +142,7 @@ The above assumes the observer is stationary, at a fixed position, with some dis
 After computing what length contraction should be for a body, it was applied to several 2D demos.  This scales any $L$ offset on the body towards 0.
 
 $$\alpha = \frac {\sqrt{CC-VV}}{CC}$$
+
 $$T_O = \frac {\sqrt{{D}^{2}+\left({VT+\alpha L}\right)^{2}}} C+T$$
 
 $$T = \frac {C^2 {T_O}^2 -  D^2 - ((\alpha L)^2} {2 C (C {T_O} + \alpha L)}$$
