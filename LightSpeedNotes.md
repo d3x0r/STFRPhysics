@@ -177,30 +177,27 @@ move T terms to the left, else to the right; also combined terms and reversed so
 - $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}S)T= -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}(\vec{X_o} +\vec{V_o}S)  + ( \vec{X_o}+ \vec{V_o} S)^2$
 - Equation 5a: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
    - $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S})T= -C^2S^2 + (\vec{X}   -(\vec{X_o} +\vec{V_o}S))^2$
+
 Define partial term $\vec{a}$.
 
 $\vec a = X-(X_o+V_oT)$; 
 
-figure out the square, minus the odd part.... 
+figure out the square, minus the odd part.... substitute $\vec{a}$
 
-- Equation 6: $\left( \sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}} \right) ^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 = -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} {S})^2$
-- Equation 6a: $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{V}\cdot\vec{a})T= -C^2S^2 + (\vec{a})^2$
-- Equation 6a2: $\left(\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 -\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} = -C^2S^2 + (\vec{a})^2$
+- Equation 6: $(C^2- \vec{V}\vec{V}) T^2  -2(C^2S+\vec{V}\cdot\vec{a})T= -C^2S^2 + (\vec{a})^2$
+- Equation 6a: $\left(\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}\right)^2 -\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} = -C^2S^2 + (\vec{a})^2$
 
 Move odd term to the right, and take the square root of both sides.
 
-- Equation 7: $\sqrt{(C^2- \vec{V}\vec{V})} T  - \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}S  + ( \vec{X_o}+ \vec{V_o} {T_o})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2}$
-- Equation 7a: $$\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{+\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} -C^2S^2 + (\vec{a})^2 }$$
+- Equation 7: $\sqrt{C^2- \vec{V}\vec{V}} T  -\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}  = \sqrt{+\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} -C^2S^2 + (\vec{a})^2 }$
 
 move odd term to the right, divide by the coefficient of T... 
 
-- Equation 8: $T   = \frac {\sqrt{-C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {S})^2 -\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} + \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2} +\frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}} {\sqrt{C^2-\vec{V}\vec{V}}}  } {\sqrt{(C^2- \vec{V}\vec{V})} }$
-- Equation 8a: $$ T   = \frac { \sqrt{+\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} -C^2S^2 + \vec{a}\cdot\vec{a} } +\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}} {\sqrt{C^2- \vec{V}\vec{V}}} $$
+- Equation 8: $T   = \frac { \sqrt{+\frac{(C^2S+\vec{V}\cdot\vec{a})^2}{C^2-\vec{V}\vec{V}} -C^2S^2 + \vec{a}\cdot\vec{a} } +\frac{(C^2S+\vec{V}\cdot\vec{a})}{\sqrt{C^2-\vec{V}\vec{V}}}} {\sqrt{C^2- \vec{V}\vec{V}}}$
 
 Multiply top and bottom by $\frac {\sqrt{C^2-\vec{V}\vec{V}}}{\sqrt{C^2-\vec{V}\vec{V}}}$
 
-- Equation 9: $T   = \frac {\sqrt{ (C^2-\vec{V}\vec{V}) \left( -C^2S^2 + \vec{X}\vec{X}    -2 \vec{X}\vec{X_o} -2\vec{X}\vec{V_o}T_o  + ( \vec{X_o}+ \vec{V_o} {S})^2 +\left( \frac {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{T_o}} {\sqrt{C^2-\vec{V}\vec{V}}}\right)^2\right)} + {C^2S+\vec{X}\vec{V}- \vec{V} \vec{X_o} - \vec{V}\vec{V_o}{S}}   } {(C^2- \vec{V}\vec{V}) }$
-- Equation 9a: $$ T   = \frac { \sqrt{(C^2S+\vec{V}\cdot\vec{a})^2 -  (C^2-\vec{V}\vec{V})(C^2S^2 - \vec{a}\cdot\vec{a}) } +C^2S+\vec{V}\cdot\vec{a} } {C^2- \vec{V}\vec{V}} $$
+- Equation 9a: $T   = \frac { \sqrt{(C^2S+\vec{V}\cdot\vec{a})^2 -  (C^2-\vec{V}\vec{V})(C^2S^2 - \vec{a}\cdot\vec{a}) } +C^2S+\vec{V}\cdot\vec{a} } {C^2- \vec{V}\vec{V}}$
 
 Define $A$, $B$ and $D$.
 
