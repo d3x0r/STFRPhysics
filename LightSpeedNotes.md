@@ -192,7 +192,7 @@ move T terms to the left, else to the right; also combined terms and reversed so
 
 Define partial term $\vec{a}$.
 
-$\vec a = X-(X_o+V_oT)$; 
+$\vec a = X-(X_o+V_oS)$; 
 
 figure out the square, minus the odd part.... substitute $\vec{a}$
 
@@ -217,7 +217,7 @@ Multiply top and bottom by $\frac {\sqrt{C^2-\vec{V}\vec{V}}}{\sqrt{C^2-\vec{V}\
 
 Define $A$, $B$ and $D$.
 
-$\vec a = X-(X_o+V_oT)$; 
+$\vec a = X-(X_o+V_oS)$; 
 
 $A = C^2{S}^2 - \vec{a}\cdot\vec{a}$;
 
@@ -247,7 +247,7 @@ $$S = \frac { || {(\vec{X}-\vec{X_o}) + \vec{V} T - \vec{V_o} S} || } {||\vec{V}
 Equation 2: These terms are all part of 'in terms of' for the solution.
 $$\vec{a} =\vec{X}-\vec{X_o}-\vec{V_o}S $$
 
-Equation 3: convert normal bars to square root of length; replace with $\vec{a}$.
+Equation 3: convert normal bars to square root of length; replace with $\vec{a}$. All vector multiplications are performed as a dot product.
 $$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ ({\vec{a} + \vec{V} T})^2}   $$
 Equation 4: Expand term in radical.
 $$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ (\vec{a}\vec{a} + 2\vec{a}\vec{V}T + \vec{V}\vec{V} T  T )}   $$
@@ -283,3 +283,65 @@ $$T = \frac { T_o^2{C^2}-(\vec{X}-\vec{X_o}-\vec{V_o}T_o)\cdot(\vec{X}-\vec{X_o}
 
 This is only valid for T_o > 0 ; T=1/2 T_o
  at T < -1/2X (before the point it's first seen) all positions are seen at the same time according to their offset along the shp.
+
+
+
+
+## Alternate 3D Math solution
+
+
+This uses the same procedure as the previous, but solves with more terms and vectors instead of individual variables.  A solution for T is found, all that remains is simplifying terms at the end.
+
+Equation 1:
+
+$$T
+_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
+
+- Equation 2:
+$$\vec{a} = \vec{X}-\vec{X_o}-\vec{V_o}{T_o}$$
+Replace T_o with S; convert length expression to sqrt of dot product. move C, square both sides.
+- Equation 2:
+$$C^2(S-T)^2 =  (  \vec{a}+\vec{V}T )\cdot (\vec{a}+\vec{V}T ) $$
+
+Expand expressions....
+
+- Equation 3: $$C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT $$
+- Equation 4: define D
+$$ D = (C^2-\vec{V}\vec{V})$$
+
+move T terms to the left, else to the right; also combined terms and reversed some signs...
+
+- Equation 5:  $$ (C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$$
+- Define B and A:  $$B=C^2S+\vec{a}\vec{V}$$
+$$A=C^2S^2-\vec{a}\vec{a}$$
+
+
+- Equation 6:  $$ DT^2 -2(B)T   = -A$$
+
+- Equation 5a: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
+   - $$ (\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$$
+
+ move the odd term, Take the square root of both sides,  move the remaining non $T$ term
+
+- Equation 6:$$ \sqrt{D}T  = \sqrt{-A+ \frac {B^2} D}+\frac{B}{\sqrt{D}} $$
+
+Move odd term to the right, and take the square root of both sides.
+
+- Equation 7: $$ T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$$
+multiply top and bottom of left expression by $\sqrt{D}$; which in the radical is $D$.
+
+- Equation 8: $$ T  = \frac{\sqrt{B^2-DA}+B}{D}$$
+
+### Solution 4:
+
+Define $\vec{a}$, $A$, $B$ and $D$.
+
+$\vec a = X-(X_o+V_oS)$; 
+
+$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$;
+
+$B=(C^2S+\vec{V}\cdot\vec{a})$;
+
+$D = C^2 - \vec{V}\vec{V}$
+
+$$T   = \frac { \sqrt{B^2 -  DA } +B } {D}$$
