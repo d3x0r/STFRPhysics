@@ -185,7 +185,8 @@ $$T
 _o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
 
 ---
-Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$.
+Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution)
+
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
 $$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
 $$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
@@ -202,7 +203,7 @@ $\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{
 
 In the case that the velocity is the same as $C$, then a version of (equation 2) replaces $C$ with $\vec V$. Having a more complex denominator prevents solving into a form with a constant 0 in the denominator.
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$; solve for S and for T (ask WA to solve for...).
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$ or $S = \frac { || {\vec{X} + \vec{V} T - \vec{V_o} S} || } {||\vec{V}||} + T$; solve for S and for T (ask WA to solve for...).
 
 This is a copy of the full solved expression.
 $$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$
@@ -421,6 +422,11 @@ $$\vec {X'} = \vec{X}-\vec{A}(1 - \frac{\sqrt{CC-VV}}{C}) $$
 
 Time dilation is $\frac {C} {\sqrt{CC-VV}}$ or $\frac {C} {\sqrt{1-\frac{V^2}{C^2}}}$, which is the reciprocal of the length contraction.  Even as the length contracts - the lateral time still takes longer and longer to complete a trip.  The contracted length still uses its 2-way time of $\frac {CC} {CC-VV}$, so multiplying a contracted length $\frac{\sqrt{CC-VV}} C \cdot \frac {CC} {CC-VV} = \frac {C} {\sqrt{CC-VV}}$, and the time dilation, from length contraction still matches the contracted time laterally - and in all directions of a circle.
 
+  - the clock dialation is $\frac {C} {\sqrt{CC-VV}}$, clock contraction is $\frac {\sqrt{CC-VV}} C$. 
+  - ${V_{real}} = \frac{VC}{\sqrt{CC+VV}}$ ; This expression results with the real ratio of the speed of light that some velocity $V$ that a body feels like it is going.  This speed can be many times the speed of light.
+  - $V_{feel}=\frac{VC}{\sqrt{CC-VV}}$; This expression results in what a real velocity V (limited by the speed of light) feels like.
+ 
+This makes 0.707c feel like the speed of light; according to your clock and the velocity you're going, you travel 1 light second per second.  If you are emitting 1 pulse every second by your clock, it would take 1.414 real seconds for you to go 1 light second, but you would pulse once every light second.   Another example 0.949c feels like 3 times the speed of light.
 
 (This is another equation I should adress someday.) Spin squared plus velocity squared equals c squared.
 $$ \Delta s^{2}\,=\,c^{2}\Delta t^{2}-\Delta x^{2}$$
@@ -435,21 +441,6 @@ about showing clocks... ~~
 
 
 
-# Revisited Math
-(incomplete, incorrect)
-Basic Posulates 
-  - the speed of light is measured as C; once it is emitted it travels in all directions from that point at the same speed.
-  - the clock dialation is the amount required to scale an isometric grid matching the upper right quadrant of an XT graph.  This is $(C-V)$; and the time dilation is $\frac 1 {C-V}$.  (This is the worst-case time, and really only applies for a 1 way clock from the negative direction of velocity) 
-  
-This makes 1/2 the speed of light feel like the speed of light; according to your clock and the velocity you're going, you travel 1 light second per second.  If you are emitting 1 pulse every second by your clock, it would take 2 real seconds for you to get 1 light second, but you would pulse once every light second an observer sees you.   2/3c feels like 3 times the speed of light 3/4c feels like four times, $\frac {cN} {N+1}$ feels like N times the speed of light.
-
- - The other possible clock dilation is the N-way speed of light, that sums all possible speeds and gets a result - the 4-way speed of light comes close... 
-
-$$f\left(a\right)=\frac{\left(\sqrt{\left(\left(\left(-VVXX\right)\sin\left(a\right)\sin\left(a\right)-VVYY\cdot\cos\left(a\right)\cdot\cos\left(a\right)+2\cdot VVXY\ \cdot\sin\left(a\right)\cdot\cos\left(a\right)+CCXX+CCYY\right)\right)}+VX\cdot\cos\left(a\right)+VY\left(\sin\left(a\right)\right)\right)}{\left(CC-VV\right)}$$
-a simple case starts with clock to the origin with (X=1, Y=0)...
-$$f\left(a\right)=\frac{\sqrt{-\left( V\sin\left(a\right)\right)^2+C^2}+V\cos\left(a\right)}{C^2-V^2}$$
-$$f(x)=\frac{\sqrt{C^{2}-V^{2}\sin(x)^{2}}\ +V\cos\left(x\right)}{C^2-V^2}$$
-$$\frac{\int_{x=0}^\pi  f({x)} } {\pi}$$
 
 ## The Rolling Wheel (Dev-notes)
 
@@ -546,29 +537,6 @@ This is a detailed summary of how I approached building the simulation.
      - `frame.observed_tail = ( (V*T-(L-D)) )/C + T`;  ...
      - together, the last three are referred to as 'frame.observed_times' and means do the same thing to all 3; frame.observed_time refers to any one of the 3.
    - draw (same as above)
-
-
-``` js
-	hLen = /* time until light emission from head and ship intersect*/ A=TV-L
-		// f(T,TV-L)
-	tLen = /* time until light emission from tail and ship intersect*/ A=TV-(-L)
-		// f(T,TV-(-L))
-
-		const nowE = (del * runT)-runT/2;
-		frame.hue =120*(Treal%3)-240;
-		frame.Pc = Treal*V;
-		// position head intersects observer
-		frame.Ph = frame.Pc + hLen*V;
-		frame.Pt = frame.Pc + tLen*V;
-		frame.T_start = Treal;
-
-		// time head intersects observer
-		frame.T_see_h = Treal+hLen;
-		
-		// time tail intersects observer
-		frame.T_see_t = Treal+tLen;
-
-```
 
 
 
