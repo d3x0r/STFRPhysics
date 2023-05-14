@@ -99,7 +99,7 @@ This is a manual solution for a moving body with a stationary observer.  It's no
 
 `solve for T  x=sqrt( D^2+(VT+L)^2)/C+T` This command works on wolfram alpha to generate a solution.
 
-![[Discord-math-help-9-1.png]]
+![Discord help link](Discord-math-help-9-1.png)
 
 Equation 1:
 $$T_o = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
