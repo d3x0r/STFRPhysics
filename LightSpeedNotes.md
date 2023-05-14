@@ -105,7 +105,7 @@ Equation 1:
 $$T_o = \frac {\sqrt{{D}^{2}+\left({VT+L}\right)^{2}}} C+T$$
 
 
-Replace T_o with S (S works later when there's XYZ,DEF,JKL...)  Move the C into the racidal, move T to the left, square both sides....
+Replace T_o with S (S works later when there's XYZ,DEF,JKL...)  Move the C into the radical, move T to the left, square both sides....
 
 - Equation 2: $( S-T)^2 = {\frac {{D}^{2}}{{C}^2}+\left({\frac V C T+\frac L C}\right)^{2}}$
 
