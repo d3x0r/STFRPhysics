@@ -203,7 +203,7 @@ $\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o$ ; $A = C^2{T_o}^2 - \vec{a}\cdot\vec{
 
 In the case that the velocity is the same as $C$, then a version of (equation 2) replaces $C$ with $\vec V$. Having a more complex denominator prevents solving into a form with a constant 0 in the denominator.
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$ or $S = \frac { || {\vec{X} + \vec{V} T - \vec{V_o} S} || } {||\vec{V}||} + T$; solve for S and for T (ask WA to solve for...).
+$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {(D,E,F)} + T$ or $S = \frac { || {\vec{X} + \vec{V} T - \vec{V_o} S} || } {||\vec{V}||} + T$; solve for S and for T (ask WA to solve for...). [Vector Solution for V=C.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-solution-when-vc)
 
 This is a copy of the full solved expression.
 $$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L S Z + X^2 + Y^2 + Z^2) } {2 (C^2 (-S) + (C D J S)/\sqrt{(D^2 + E^2 + F^2)} + (C E K S)/\sqrt{(D^2 + E^2 + F^2)} + (C F L S)/\sqrt{(D^2 + E^2 + F^2)} - (C D X)/\sqrt{(D^2 + E^2 + F^2)} - (C E Y)/\sqrt{(D^2 + E^2 + F^2)} - (C F Z)/\sqrt{(D^2 + E^2 + F^2)})}$$

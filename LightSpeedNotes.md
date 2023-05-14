@@ -243,33 +243,43 @@ if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 Use V instead of C to normalize the function.
 
 Equation 1:
-$$S = \frac { || {\vec{X} + \vec{V} T - \vec{V_o} S} || } {||\vec{V}||} + T$$
+$$S = \frac { || {(\vec{X}-\vec{X_o}) + \vec{V} T - \vec{V_o} S} || } {||\vec{V}||} + T$$
+Equation 2: These terms are all part of 'in terms of' for the solution.
+$$\vec{a} =\vec{X}-\vec{X_o}-\vec{V_o}S $$
 
-Equation 2: convert normal bars to square root of length
-$$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ ({\vec{X} + \vec{V} T - \vec{V_o} S})^2}   $$
-Equation 3: These terms are all part of 'in terms of' for the solution.
-$$\vec{a} =X-V_oS $$
-Equation 4: Subtitute $\vec{a}$ into equation 2.
-$$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ (\vec{a}\vec{a} + \vec{a}\vec{V}T + \vec{V}\vec{V} T  T )}   $$
+Equation 3: convert normal bars to square root of length; replace with $\vec{a}$.
+$$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ ({\vec{a} + \vec{V} T})^2}   $$
+Equation 4: Expand term in radical.
+$$(S-T)\sqrt{\vec{V}\cdot\vec{V}} = \sqrt{ (\vec{a}\vec{a} + 2\vec{a}\vec{V}T + \vec{V}\vec{V} T  T )}   $$
 Equation 5: square both sides
-$$(S-T)^2 ({\vec{V}\cdot\vec{V}}) = (\vec{a}\vec{a} + \vec{a}\vec{V}T + \vec{V}\vec{V} T  T )  $$
+$$(S-T)^2 ({\vec{V}\cdot\vec{V}}) = (\vec{a}\vec{a} + 2\vec{a}\vec{V}T + \vec{V}\vec{V} T  T )  $$
 
 Equation 6: expand $(S-T)^2$
-$$ -2ST({\vec{V}\cdot\vec{V}})+(SS{\vec{V}\cdot\vec{V}})+(TT{\vec{V}\cdot\vec{V}}) = (\vec{a}\vec{a} + \vec{a}\vec{V}T + \vec{V}\vec{V} T  T )  $$
+
+$$ -2ST({\vec{V}\cdot\vec{V}})+(SS{\vec{V}\cdot\vec{V}})+(TT{\vec{V}\cdot\vec{V}}) = (\vec{a}\vec{a} + 2\vec{a}\vec{V}T + \vec{V}\vec{V} T  T )  $$
 
 Equation 7: group T terms on the left and everthing else to the right
-$$( +({\vec{V}\cdot\vec{V}}-\vec{V}\vec{V} )T^2 +( -\vec{a}\vec{V} -2S({\vec{V}\cdot\vec{V}}))T = \vec{a}\vec{a}  + SS{\vec{V}\cdot\vec{V}}  $$
+$$( +({\vec{V}\cdot\vec{V}}-\vec{V}\vec{V} )T^2 +( -2\vec{a}\vec{V} -2S({\vec{V}\cdot\vec{V}}))T = \vec{a}\vec{a}  - SS{\vec{V}\cdot\vec{V}}  $$
 
 Equation 8: $T^2$ term cancels out, leaving just a coefficient on T to divide on the right side.   Move resulting sign to top.
-$$T = - \frac { \vec{a}\vec{a}  + SS{\vec{V}\cdot\vec{V}}} { \vec{a}\vec{V} +2S({\vec{V}\cdot\vec{V}})}  $$
+$$T = - \frac { \vec{a}\vec{a}  - SS{\vec{V}\cdot\vec{V}}} { 2\vec{a}\vec{V} +2S({\vec{V}\cdot\vec{V}})}  $$
+
+Equation 9: Move signs
+$$T =  \frac { SS{\vec{V}\cdot\vec{V}}-\vec{a}\vec{a} } { 2\vec{a}\vec{V} +2S({\vec{V}\cdot\vec{V}})}  $$
+Equation 9: Define A and B which is denominator (and used in 3D above)
+$$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$$
+$$B = C^2{S} + \vec{V}\cdot\vec{a}$$
 
 V=C, substitute C back in for V.
 
 ### Solution 3
 
-$$\vec{a} =X-V_oS $$
-$$T = - \frac { \vec{a}\vec{a}  + S^2{C^2}} { \vec{a}C +2S(C^2)}  $$
+$$\vec{a} =\vec{X}-\vec{V_o}S $$
+$$T = \frac {A} {2B}  $$
 
-Substitute $\vec{a}$ back in to make sure there's no additional zeros.
+Substitute $\vec{a}$ back in to make sure there's no additional zeros. Also replace $S$ with ${T_o}$.  This does have a problem at $T_o=0$ and position=0. 
 
-$$T = - \frac { (X-V_oS)(X-V_oS))  + S^2{C^2}} { (X-V_oS)C +2S(C^2)}  $$
+$$T = \frac { T_o^2{C^2}-(\vec{X}-\vec{X_o}-\vec{V_o}T_o)\cdot(\vec{X}-\vec{X_o}-\vec{V_o}T_o)) } { 2\left((\vec{X}-\vec{X_o}-\vec{V_o}T_o)C +C^2{T_o}\right)}  $$
+
+This is only valid for T_o > 0 ; T=1/2 T_o
+ at T < -1/2X (before the point it's first seen) all positions are seen at the same time according to their offset along the shp.
