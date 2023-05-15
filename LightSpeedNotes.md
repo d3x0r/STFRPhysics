@@ -329,11 +329,11 @@ Multiply top and bottom of left expression by $\frac{\sqrt{D}}{\sqrt{D}}$; which
 
 Define $\vec{a}$, $A$, $B$ and $D$.
 
-$\vec a = X-(X_o+V_oS)$; 
+$\vec a = X-(X_o+V_oS)$
 
-$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$;
+$A = C^2{S}^2 - \vec{a}\cdot\vec{a}$
 
-$B=(C^2S+\vec{V}\cdot\vec{a})$;
+$B=C^2S+\vec{V}\cdot\vec{a}$
 
 $D = C^2 - \vec{V}\vec{V}$
 
