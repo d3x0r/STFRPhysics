@@ -306,29 +306,29 @@ $$C^2(S-T)^2 =  (  \vec{a}+\vec{V}T )\cdot (\vec{a}+\vec{V}T ) $$
 Expand expressions....
 
 - Equation 3: $$C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT $$
-- Equation 4: define D $$ D = (C^2-\vec{V}\vec{V})$$
+- Equation 4: define D  $D = (C^2-\vec{V}\vec{V})$
+
 move T terms to the left, else to the right; also combined terms and reversed some signs...
+- Equation 5:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
 
-- Equation 5:  $$ (C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$$
-- Define B and A:  $$B=C^2S+\vec{a}\vec{V}$$
-$$A=C^2S^2-\vec{a}\vec{a}$$
+Define A and B
+- Equation 6: $A=C^2S^2-\vec{a}\vec{a}$
+- Equation 7: $B=C^2S+\vec{a}\vec{V}$ 
 
+- Equation 8  Substitute D, B and A  $$ DT^2 -2(B)T   = -A$$
 
-- Equation 6:  Substitute D, B and A  $$ DT^2 -2(B)T   = -A$$
-
-- Equation 5a: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
-   - $$ (\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$$
+- Equation 9: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
+   - $(\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$
 
  move the odd term, Take the square root of both sides,  move the remaining non $T$ term
 
-- Equation 6:$$ \sqrt{D}T  = \sqrt{-A+ \frac {B^2} D}+\frac{B}{\sqrt{D}} $$
+- Equation 10: $\sqrt{D}T  = \sqrt{-A+ \frac {B^2} D}+\frac{B}{\sqrt{D}}$
 
 Move odd term to the right, and take the square root of both sides.
+- Equation 11: $T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$
 
-- Equation 7: $$ T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$$
 multiply top and bottom of left expression by $\sqrt{D}$; which in the radical is $D$.
-
-- Equation 8: $$ T  = \frac{\sqrt{B^2-DA}+B}{D}$$
+- Equation 12: $T  = \frac{\sqrt{B^2-DA}+B}{D}$
 
 ### Solution 4:
 
