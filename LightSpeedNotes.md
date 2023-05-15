@@ -292,43 +292,40 @@ This is only valid for T_o > 0 ; T=1/2 T_o
 
 This uses the same procedure as the previous, but solves with more terms and vectors instead of individual variables.  A solution for T is found, all that remains is simplifying terms at the end.
 
-Equation 1:
+- Equation 1: $T_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$
 
-$$T
-_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
+- Equation 2: $\vec{a} = \vec{X}-\vec{X_o}-\vec{V_o}{T_o}$
 
-- Equation 2:
-$$\vec{a} = \vec{X}-\vec{X_o}-\vec{V_o}{T_o}$$
 Replace T_o with S; convert length expression to sqrt of dot product. move C, square both sides.
-- Equation 2:
-$$C^2(S-T)^2 =  (  \vec{a}+\vec{V}T )\cdot (\vec{a}+\vec{V}T ) $$
+- Equation 3: $C^2(S-T)^2 =  (  \vec{a}+\vec{V}T )\cdot (\vec{a}+\vec{V}T )$
 
-Expand expressions....
+Expand expressions.
+- Equation 4: $C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT$
 
-- Equation 3: $$C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT $$
-- Equation 4: define D  $D = (C^2-\vec{V}\vec{V})$
+Define D.
+- Equation 5:  $D = (C^2-\vec{V}\vec{V})$
 
-move T terms to the left, else to the right; also combined terms and reversed some signs...
-- Equation 5:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
+Move T terms to the left, else to the right; also combined terms and reversed some signs.
+- Equation 6:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
 
-Define A and B
-- Equation 6: $A=C^2S^2-\vec{a}\vec{a}$
-- Equation 7: $B=C^2S+\vec{a}\vec{V}$ 
+Define A and B.
+- Equation 7: $A=C^2S^2-\vec{a}\vec{a}$
+- Equation 8: $B=C^2S+\vec{a}\vec{V}$ 
 
-- Equation 8  Substitute D, B and A  $$ DT^2 -2(B)T   = -A$$
+Substitute D, B and A 
+- Equation 9   $DT^2 -2(B)T = -A$
 
-- Equation 9: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
-   - $(\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$
+Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
+- Equation 10: $(\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$
 
- move the odd term, Take the square root of both sides,  move the remaining non $T$ term
-
-- Equation 10: $\sqrt{D}T  = \sqrt{-A+ \frac {B^2} D}+\frac{B}{\sqrt{D}}$
+Move the odd term, Take the square root of both sides,  move the remaining non $T$ term
+- Equation 11: $\sqrt{D}T  = \sqrt{-A+ \frac {B^2} D}+\frac{B}{\sqrt{D}}$
 
 Move odd term to the right, and take the square root of both sides.
-- Equation 11: $T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$
+- Equation 12: $T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$
 
-multiply top and bottom of left expression by $\sqrt{D}$; which in the radical is $D$.
-- Equation 12: $T  = \frac{\sqrt{B^2-DA}+B}{D}$
+Multiply top and bottom of left expression by $\sqrt{D}$; which in the radical is $D$.
+- Equation 13: $T  = \frac{\sqrt{B^2-DA}+B}{D}$
 
 ### Solution 4:
 
