@@ -185,7 +185,7 @@ $$T
 _o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
 
 ---
-Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution)
+Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution),  [Slightly shorter version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#alternate-3d-math-solution).
 
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
 $$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$

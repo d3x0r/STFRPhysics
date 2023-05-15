@@ -306,9 +306,7 @@ $$C^2(S-T)^2 =  (  \vec{a}+\vec{V}T )\cdot (\vec{a}+\vec{V}T ) $$
 Expand expressions....
 
 - Equation 3: $$C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT $$
-- Equation 4: define D
-$$ D = (C^2-\vec{V}\vec{V})$$
-
+- Equation 4: define D $$ D = (C^2-\vec{V}\vec{V})$$
 move T terms to the left, else to the right; also combined terms and reversed some signs...
 
 - Equation 5:  $$ (C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$$
@@ -316,7 +314,7 @@ move T terms to the left, else to the right; also combined terms and reversed so
 $$A=C^2S^2-\vec{a}\vec{a}$$
 
 
-- Equation 6:  $$ DT^2 -2(B)T   = -A$$
+- Equation 6:  Substitute D, B and A  $$ DT^2 -2(B)T   = -A$$
 
 - Equation 5a: Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
    - $$ (\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$$
