@@ -302,15 +302,13 @@ Replace T_o with S; convert length expression to sqrt of dot product. move C, sq
 Expand expressions.
 - Equation 4: $C^2S^2-2C^2ST+C^2T^2 = \vec{a}\cdot\vec{a}+2\vec{a}\vec{V}T +\vec{V}\vec{V}TT$
 
-Define D.
-- Equation 5:  $D = (C^2-\vec{V}\vec{V})$
-
 Move T terms to the left, else to the right; also combined terms and reversed some signs.
-- Equation 6:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
+- Equation 5:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
 
-Define A and B.
-- Equation 7: $A=C^2S^2-\vec{a}\vec{a}$
-- Equation 8: $B=C^2S+\vec{a}\vec{V}$ 
+Define A and B, D.
+- Equation 6: $A=C^2S^2-\vec{a}\vec{a}$
+- Equation 7: $B=C^2S+\vec{a}\vec{V}$ 
+- Equation 8:  $D = (C^2-\vec{V}\vec{V})$
 
 Substitute D, B and A 
 - Equation 9   $DT^2 -2(B)T = -A$
