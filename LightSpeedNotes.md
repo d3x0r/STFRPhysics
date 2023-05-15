@@ -305,7 +305,7 @@ Expand expressions.
 Move T terms to the left, else to the right; also combined terms and reversed some signs.
 - Equation 5:  $(C^2-\vec{V}\vec{V})T^2 -2(\vec{a}\vec{V}+C^2S)T   = -C^2S^2 + \vec{a}\cdot\vec{a}$
 
-Define A and B, D.
+Define A, B and D.
 - Equation 6: $A=C^2S^2-\vec{a}\vec{a}$
 - Equation 7: $B=C^2S+\vec{a}\vec{V}$ 
 - Equation 8:  $D = (C^2-\vec{V}\vec{V})$
