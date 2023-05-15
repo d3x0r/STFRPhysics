@@ -313,7 +313,7 @@ Define A, B and D.
 Substitute D, B and A 
 - Equation 9   $DT^2 -2(B)T = -A$
 
-Simplified right hand by factoring $\vec{X}$ and using that as $(A\vec{X} +\frac B A)^2$
+Simplified left side by factoring $AT^2 +2B$  as $(\sqrt A T +\frac B {\sqrt A})^2-B^2$
 - Equation 10: $(\sqrt{D}T -\frac{B}{\sqrt{D}})^2  -\frac {B^2} D = -A$
 
 Move the odd term, Take the square root of both sides,  move the remaining non $T$ term
@@ -322,7 +322,7 @@ Move the odd term, Take the square root of both sides,  move the remaining non $
 Move odd term to the right, and take the square root of both sides.
 - Equation 12: $T  = \frac{\sqrt{\frac {B^2} D-A}}{\sqrt{D}}+\frac{B}{{D}}$
 
-Multiply top and bottom of left expression by $\sqrt{D}$; which in the radical is $D$.
+Multiply top and bottom of left expression by $\frac{\sqrt{D}}{\sqrt{D}}$; which in the radical is $D$.
 - Equation 13: $T  = \frac{\sqrt{B^2-DA}+B}{D}$
 
 ### Solution 4:
