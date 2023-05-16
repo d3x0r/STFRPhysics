@@ -14,6 +14,7 @@ let showSelf = false;
 let showObserver = false;
 let showRelativeVelocities = false;
 let includeAberration = true;
+let drawLorentzRelative = false; // relative velocity purple crosses
 let lockVelocity = false;
 let lengthContract = 1;
 let A=0;
@@ -38,7 +39,7 @@ const step = 10;
 
 const frames = [];
 let curFrame = -1;
-const nFrames = 101;
+const nFrames = 201;
 let eventFrame = -1;
 
 //------------------ Storage for information about a frame ---------------------------
@@ -64,6 +65,8 @@ class Frame{
 	P_see_t = 0; // when tail is seen by observer
 
 	T_end = 0; // when we can stop drawing...
+	relativeVelocityTo = {x:0,y:0};
+	relativeVelocity = {x:0,y:0};
 }
 
 for( let n = 0; n < nFrames; n++ ) {
@@ -218,39 +221,41 @@ class D3xTransform {
 			if( showRelativeVelocities ) 
 	for( let n = 0; n < nFrames; n++ ) {
 		const frame = frames[n];
-		if( frame.T_start <= seen[0] ) {
+		if( frame.T_start <= now ) {
+
+
 			if( showRelativeVelocities ) {
-			if( n > 1 )  {
-			const frame0 = frames[n-1];
-			ctx.beginPath();
-			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX -myX), ofs+(xscale_)*(frame.PobsdY-myY ) )
-//			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.PobsdX-frame.PobsrX)-(frame0.PobsdX-frame0.PobsrX))*3 -myX)
-//							, ofs+(xscale_)*(frame.PobsdY + ((frame.PobsdY-frame.PobsrY)-(frame0.PobsdY-frame0.PobsrY))*3 -myY) )
-/*
-			const speed = Math.sqrt( (frame.delX-frame0.delX) * (frame.delX-frame0.delX) + (frame.delY-frame0.delY) * (frame.delY-frame0.delY));
-			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX - (speed * (frame.PobsdX-frame.PobsrX))*5 -myX)
-							, ofs+(xscale_)*(frame.PobsdY - (speed*(frame.PobsdX-frame.PobsrX))*5 -myY) )
-*/
-			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX + ((frame.delX)-(frame0.delX))*10 -myX)
-							, ofs+(xscale_)*(frame.PobsdY + ((frame.delY)-(frame0.delY))*10 -myY) )
-			ctx.strokeStyle = "#fff";
-			ctx.lineWidth = 1;
-			ctx.stroke();
-			ctx.lineWidth = 0.5;
+				if( n > 1 )  {
+					const frame0 = frames[n-1];
+					ctx.beginPath();
+					ctx.moveTo( ofs + (xscale_)* (frame.relativeVelocity.x), ofs+(xscale_)*(frame.relativeVelocity.y) )
+					ctx.lineTo( ofs + (xscale_)* ( (frame.relativeVelocityTo.x))
+								, ofs+(xscale_)*( (frame.relativeVelocityTo.y)) )
+					ctx.strokeStyle = "#fff";
+					ctx.lineWidth = 1;
+					ctx.stroke();
+					ctx.lineWidth = 0.5;
+					}
+				}
+				ctx.beginPath();
 			}
-			}
+		if( frame.T_start <= seen[0] ) {
+
 			ctx.beginPath();
 			//ctx.moveTo( ofs + (xscale_)* (frame.PobsrX+L/3 ), ofs+(xscale_)*(frame.PobsrY-L/3 ) )
 			//ctx.lineTo( ofs + (xscale_)* (frame.PobsrX-L/3 ), ofs+(xscale_)*(frame.PobsrY+L/3 ) )
+			if( drawLorentzRelative ) {
 			ctx.strokeStyle = "#f0f"
 
-			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(delVY*frame.T_start-L/3 ) )
-			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(delVY*frame.T_start+L/3 ) )
-			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(delVY*frame.T_start-L/3 ) )
-			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(delVY*frame.T_start+L/3 ) )
+			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(D+delVY*frame.T_start-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(D+delVY*frame.T_start+L/3 ) )
+			ctx.moveTo( ofs + (xscale_)* (delVX*frame.T_start+L/3 ), ofs+(xscale_)*(D+delVY*frame.T_start-L/3 ) )
+			ctx.lineTo( ofs + (xscale_)* (delVX*frame.T_start-L/3 ), ofs+(xscale_)*(D+delVY*frame.T_start+L/3 ) )
 			ctx.stroke();
 			ctx.beginPath();
+			}
 
+			if(0) {
 			if( frame.T_start <= seen[0] ){
 			if( Math.abs(frame.T_start - seen[0] ) < 0.001 ) 
 				ctx.strokeStyle= "green";
@@ -261,6 +266,7 @@ class D3xTransform {
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
 			ctx.moveTo( ofs + (xscale_)* (frame.PobsdX+L/3 -myX ), ofs+(xscale_)*(frame.PobsdY-L/3-myY ) )
 			ctx.lineTo( ofs + (xscale_)* (frame.PobsdX-L/3 -myX ), ofs+(xscale_)*(frame.PobsdY+L/3-myY ) )
+			}
 			}
 
 			ctx.stroke();
@@ -1248,7 +1254,8 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
 
-	showXTGraph = chkLblXTGraph.checked;
+//	showXTGraph = chkLblXTGraph.checked;
+	showXTGraph_unbiased = chkLblXTGraph.checked;
 	showSelf = chkLblShowSelf.checked;
 	showRelativeVelocities = chkLblShowVelocities.checked;
 	showObserver = chkLblShowObserver.checked;
@@ -1266,17 +1273,38 @@ function update( evt ) {
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 
+	const framedel = (runT/30)/nFrames;
 	for( let n = 0; n < nFrames; n++ ) {
 		const frame = frames[n];
 		const del = n/nFrames;
-		const Treal = 2*((del * runT)-runT/2);
+		const Treal = ((del * runT)-runT/2);
+
 		frame.T_start = Treal;
 		frame.PobsrX = ca_o * myV * Treal;
 		frame.PobsrY = sa_o * myV * Treal;
 		frame.PobsdX = ca * V * Treal;
 		frame.PobsdY = sa * V * Treal-D;
-		frame.delX = Math.abs(frame.PobsdX - frame.PobsrX); // distance, non directed
-		frame.delY = Math.abs(frame.PobsdY - frame.PobsrY); // distance, non directed
+		frame.dX = (frame.PobsdX - frame.PobsrX); // distance, non directed
+		frame.dY = (frame.PobsdY - frame.PobsrY); // distance, non directed
+		frame.distX = Math.abs(frame.PobsdX - frame.PobsrX); // distance, non directed
+		frame.distY = Math.abs(frame.PobsdY - frame.PobsrY); // distance, non directed
+
+		if( n ) {
+			const frame0 = frames[n-1];
+			const distlen = Math.sqrt( frame.distX*frame.distX+frame.distY*frame.distY);
+			const zx = Math.sqrt((frame.distX)*(frame.distX) + (frame.distY)*(frame.distY));
+			const z0 = Math.sqrt((frame0.distX)*(frame0.distX) + (frame0.distY)*(frame0.distY));
+
+			const dx = (frame.distX)-(frame0.distX);
+			const dy = (frame.distY)-(frame0.distY);
+			const dpos = zx-z0;//Math.sqrt(dx*dx+dy*dy);
+			frame.relativeVelocity.x = 0.1+(frame.PobsdX - frame.PobsrX)
+			frame.relativeVelocity.y =  0.1+(frame.PobsdY - frame.PobsrY );
+			frame.relativeVelocityTo.x = frame.relativeVelocity.x + (dpos*frame.dX/distlen)*0.25/framedel;
+			frame.relativeVelocityTo.y = frame.relativeVelocity.y + (dpos*frame.dY/distlen)*0.25/framedel;
+		}
+	
+	
 	}
 
 
