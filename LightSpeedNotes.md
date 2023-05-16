@@ -338,3 +338,45 @@ $B=C^2S+\vec{V}\cdot\vec{a}$
 $D = C^2 - \vec{V}\vec{V}$
 
 $$T   = \frac { \sqrt{B^2 -  DA } +B } {D}$$
+
+---
+So this isn't 'Lorentz Transform' which also has something about telling what time the other guy thinks it is?
+
+$$\beta = v/c$$
+$$\gamma = \frac c {\sqrt{c^2-\vec{v}\vec{v}}} *\frac{\frac 1 c}{\frac 1 c}=\frac {1} {\sqrt{1-\frac {\vec{v}\vec{v}}{c^2}}} 
+$$
+Local time for body (assuming a sync'd clock at T=0)
+$$ T_b = \gamma (T)$$
+The local clock with value $T_b$ is seen at 
+$$T_o = \frac{|| (\vec{x}-\vec{x_o}-\vec{v_o}T_o)+\vec{v}T ||}{C} + T$$
+
+
+
+---
+
+- Equation 1: ${\Delta T} = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o}( {T+\Delta T}))} \rVert } {C}$
+
+- Equation 2: $\vec{a} = \vec{X}-\vec{X_o}+VT - \vec{V_o}T$
+
+
+- Equation 3: $$C^2\Delta T^2 =  {(a-V_o\Delta T)^2}$$
+
+Replace T_o with S; convert length expression to sqrt of dot product. move C, square both sides.
+- Equation 3: $$C^2\Delta T^2 =  aa-2aV_o(\Delta T) + \vec{V_o}\vec{V_o}\Delta T^2$$
+
+Equation 3: $$(C^2-V_o^2)\Delta T^2 +2aV_o(\Delta T)  =  aa$$
+$D=(C^2-\vec{V_o}\vec{V_o})$
+
+Equation 3: $$(\sqrt D \Delta T + \frac{ aV_o} {\sqrt D})^2- \frac{ aaV_oV_o} D  =  aa$$
+
+Equation 3: $$\sqrt D \Delta T + \frac{ aV_o} {\sqrt D} = \sqrt{ aa( 1+\frac{V_oV_o} D) }$$
+Equation 3: $$\sqrt D \Delta T  = \sqrt{ aa( 1+\frac{V_oV_o} D) } - \frac{ aV_o} {\sqrt D}$$
+Equation 3: $$ \Delta T  = \frac 1 {\sqrt{D}} \sqrt{ aa( 1+\frac{V_oV_o} D) } - \frac{ aV_o} { D}$$
+Equation 3: $$ \Delta T  = \frac {\sqrt{ {Daa( 1+\frac{V_oV_o} D)} } - {aV_o}} {{D}} $$
+
+Equation 3: $$ \Delta T  = \frac {\sqrt{ {aa( D+{V_oV_o})} } - {aV_o}} {{D}}$$
+Solution for Delta T - position difference at Time T 
+
+ $\vec{a} = \vec{X}-\vec{X_o}+VT - \vec{V_o}T$
+
+$$ \Delta T  = \frac {\sqrt{ {aa( (C^2-\vec{V_o}\vec{V_o})+{V_oV_o})} } - {aV_o}} {(C^2-\vec{V_o}\vec{V_o})}$$
