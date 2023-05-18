@@ -139,7 +139,7 @@ export class D3xTransform {
 	}
  	static getObservedPlace2(X,T) {
 		const willSee2 = RealTime( T, {x:D3xTransform.V,y:0,z:0}, {x:D3xTransform.gamma *X, y:D3xTransform.D, z:0}, {x:D3xTransform.myV,y:0,z:0}, {x:0, y:0, z:0} ); 
-		return D3xTransform.gamma * willSee2[0] * D3xTransform.V +  D3xTransform.gamma *X 
+		return willSee2[0] * D3xTransform.V +  D3xTransform.gamma *X 
 				- willSee2[0]*D3xTransform.myV;
 	}
 

@@ -28,6 +28,8 @@ const drawOpts = {
  drawInverse : true,
  drawGrid : true,
  drawXTGrid : false,
+	forceSameEvent : true,
+	lengthContract : true,
 }
 const clockRadius = 20;
 const centerX = 500;
@@ -259,18 +261,6 @@ span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
 
-const spanChkContract = document.createElement( "label" );
-spanChkContract.textContent = " Length Contract";
-controls.appendChild( spanChkContract );
-
-const chkLblContract = document.createElement( "input" );
-chkLblContract.setAttribute( "type", "checkbox" );
-chkLblContract.checked = animate;
-spanChkContract.appendChild( chkLblContract );
-chkLblContract.addEventListener( "input", update );
-
-span = document.createElement( "br" );
-controls.appendChild( span );
 
 //----------------------
 const updates = [];
@@ -295,7 +285,9 @@ updates.push( ()=>{
 return chkLblShowDistant;
 }
 
+//const spanChkContract = mkChk( "Length Contract", "asdf" );
 mkChk( "Show Distant Frame", "drawDistantFrame" );
+mkChk( "Lock Offset", "forceSameEvent" );
 mkChk( "Show Offset Observer", "drawOffsetObserver" );
 mkChk( "Show Observer Local", "drawObserverLocal" );
 mkChk( "Show As Seen", "drawAsSeen" );
@@ -320,6 +312,15 @@ for( t = -5; t < 5; t += 0.02 ) {
 
 function update( evt ) {
 	updates.map( upd=>upd() );
+
+	runT = Number(sliderRunT.value)/5;
+	spanRunT.textContent = runT.toFixed(2);
+
+	animate = chkLblNow.checked;
+	if( animate ) {
+	}else
+		now = Number(sliderNow.value)/100*runT/2;
+
 	C = Number(sliderC.value)/100;
 	params.C = C;
 	spanC.textContent = C.toFixed(2);
@@ -333,21 +334,22 @@ function update( evt ) {
 	spanV.textContent = V.toFixed(2);
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(2);
-	O = L*((Number(sliderO.value)/50)-1);
-	O2 = 10*((Number(sliderO.value)/50)-1);
-	spanO.textContent = O.toFixed(2) + " | " + O2.toFixed(2);
+	if( !animate && drawOpts.forceSameEvent ) {
+		O2 = -now*V;
+		O = O2/10 ;
+		sliderO.value = (O+1)*50;
+		spanO.textContent = O.toFixed(2) + " | " + O2.toFixed(2);
+
+	} else {
+		O = L*((Number(sliderO.value)/50)-1);
+		O2 = 10*((Number(sliderO.value)/50)-1);
+		spanO.textContent = O.toFixed(2) + " | " + O2.toFixed(2);
+	}
 
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(2);
 
-	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
-	runT = Number(sliderRunT.value)/5;
-	spanRunT.textContent = runT.toFixed(2);
-
-	animate = chkLblNow.checked;
-	if( animate ) {
-	}else
-		now = Number(sliderNow.value)/100*runT/2;
+	lengthContract = drawOpts.lengthContract?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
 	spanNow.textContent = now.toFixed(2);
 
 
@@ -369,9 +371,18 @@ function update( evt ) {
 let last_draw_time = 0;
 let xscale = 50;
 
-function drawClock( x, y, T ) {
+	ctx.font = "18px monospace" ;
+	ctx.textAlign = "center";
+	ctx.fillStyle = "white";
+
+function drawClock( x, y, T,label ) {
 	x +=  - 250;
 	y +=  + 250;
+	ctx.beginPath();
+	ctx.fillStyle = "white";
+	ctx.fillText( label, centerX + x, centerY - y - (clockRadius+2) );
+
+
 	ctx.beginPath();
 
 		ctx.strokeStyle = "blue";
@@ -433,13 +444,12 @@ function draw(  ) {
 	const timeCenter2 = RealTime( now, {x:V,y:0,z:0}, {x:0,y:0,z:0}  , {x:0,y:0,z:0}, {x:0,y:-D,z:0} )[0] *Math.sqrt(C*C-V*V);
 	const reverseObserve = RealTime( now, {x:0,y:0,z:0}, {x:0,y:-D,z:0}, {x:-V,y:0,z:0}, {x:0,y:0,z:0} )[0];
 
-	const timeFront_frame = (-O2)/C+RealTime( now, {x:0,y:0,z:0}, {x: 10,y:0,z:0}, {x:V,y:0,z:0}, {x: O2,y:-D,z:0} )[0];
-	const timeBack_frame  = (+O2)/C+RealTime( now, {x:0,y:0,z:0}, {x:-10,y:0,z:0}, {x:V,y:0,z:0}, {x: O2,y:-D,z:0} )[0];
+	const timeFront_frame = RealTime( now, {x:0,y:0,z:0}, {x: 10,y:0,z:0}, {x:V,y:0,z:0}, {x: O2,y:-D,z:0} )[0];
+	const timeBack_frame  = RealTime( now, {x:0,y:0,z:0}, {x:-10,y:0,z:0}, {x:V,y:0,z:0}, {x: O2,y:-D,z:0} )[0];
 
-
-	drawClock( 0, 0, now );
-	drawClock( -clockRadius*2.5, 0, timeCenter2 );
-	drawClock( clockRadius*5, 0, reverseObserve );
+	
+	drawClock( 0, 0, now, "Now" );
+	drawClock( -clockRadius*5, 0, timeCenter2, "Saw Now" );
 
 	//if( 
 	if( drawOpts.drawGrid )
@@ -505,9 +515,16 @@ function draw(  ) {
 
 	if( drawOpts.drawObserverLocal )
 	{
-		drawClock( clockRadius*2.5, 0, localNow );
-		drawClock( clockRadius*2.5, clockRadius*5, timeFront );
-		drawClock( clockRadius*2.5, -clockRadius*5, timeBack );
+		drawClock( clockRadius*3, 0, localNow, "L Now" );
+		drawClock( clockRadius*3, clockRadius*6, timeFront, "L Fnt" );
+		drawClock( clockRadius*3, -clockRadius*6, timeBack, "L Bck" );
+
+		ctx.beginPath();
+		ctx.strokeStyle = "#0EE";
+		ctx.moveTo( centerX + xscale*(V*now-L*lGam), centerY - xscale*(localNow));
+		// real position vs local clock.
+		ctx.lineTo( centerX + xscale*(V*now+L*lGam), centerY - xscale*(localNow) );
+		ctx.stroke();
 
 		ctx.beginPath();
 		ctx.strokeStyle = "#707";
@@ -544,6 +561,7 @@ function draw(  ) {
 	}
 
 	if( drawOpts.drawInverse ) {
+		drawClock( clockRadius*7.5, 0, reverseObserve, "Obs Now" );
 			ctx.strokeStyle = "#44E";
 			ctx.beginPath();
 			ctx.moveTo( centerX + xscale*(O2), centerY - (0)*xscale);
@@ -555,8 +573,8 @@ function draw(  ) {
 
 	if( drawOpts.drawAsSeen ) {
 
-		drawClock( 0, clockRadius*5, timeFront2 );
-		drawClock( 0, -clockRadius*5, timeBack2 );
+		drawClock( 0, clockRadius*6, timeFront2, "See Fnt" );
+		drawClock( 0, -clockRadius*6, timeBack2, "See Bck" );
 		ctx.strokeStyle = "#0F0";
 		{
 			ctx.beginPath();
@@ -617,8 +635,8 @@ function draw(  ) {
 
 
 	if( drawOpts.drawDistantFrame ) {
-		drawClock( clockRadius*5, clockRadius*5, timeFront_frame );
-		drawClock( clockRadius*5, -clockRadius*5, timeBack_frame );
+		drawClock( -clockRadius*7.5, clockRadius*6, 10+timeFront_frame, "Frm Fnt" );
+		drawClock( -clockRadius*7.5, -clockRadius*6, 10+timeBack_frame, "Frm Bck" );
 		ctx.strokeStyle = "#070";
 		{
 			ctx.beginPath();
