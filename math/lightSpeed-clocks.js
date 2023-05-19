@@ -1,8 +1,11 @@
 
 //import {lnQuat} from "../3d/src/lnQuatSq.js"
-
+import {newImage} from "./imageLoader.js"
 const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
+const galaxyImage = newImage( "./andromeda-galaxy-hd-png.png" );
+const earthImage = newImage( "./planet_earth_cut_outs.png" );
+const shipImage = newImage( "./Retro+Rocket+Cardboard+Standup.png" );
 //canvas.width = 5000;
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
@@ -637,6 +640,12 @@ function draw(  ) {
 	if( drawOpts.drawDistantFrame ) {
 		drawClock( -clockRadius*7.5, clockRadius*6, 10+timeFront_frame, "Frm Fnt" );
 		drawClock( -clockRadius*7.5, -clockRadius*6, 10+timeBack_frame, "Frm Bck" );
+		ctx.drawImage( earthImage, 920, 500, 80, 80 );
+		ctx.drawImage( galaxyImage, 0, 500, 80, 80 );
+
+		ctx.moveTo( centerX + xscale*(V*now-L*lGam), centerY - xscale*(localNow));
+
+		ctx.drawImage( shipImage, centerX + xscale*(O2+V*now-L*lGam), centerY - xscale*(now) - 50, 100*lGam, 100 );
 		ctx.strokeStyle = "#070";
 		{
 			ctx.beginPath();
