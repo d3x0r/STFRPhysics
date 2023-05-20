@@ -58,3 +58,19 @@ The words in parenthesis are the option that enable the clock.
 - Obs Now: (Draw Inverse) This is the 'Now' clock as seen by the ship.
 
 'Saw Now' (observer seeing ship) and 'Obs Now' are not symmetric values.  'Now' always ticks at the same speed (until I add a second velocity option).  
+
+## The Lines
+![Demo Screenshot](clock-test-screenshot.png)
+Purple lines ending in white/cyan are lines indicating the real position with the local time of the craft, and shows what the observer local to that craft sees for front and back of the craft.
+
+Yellow 3 lines going up in the middle are the head middle and tail of the ship.  They are offset left and right by the offset.  This ship is also relative to the Andromeda-Earth mode.
+
+The Yellow line going up and to the left now is the observer's line.  It is the real position of the observer.
+
+![Second Screenshot.](clock-test-screenshot2.png)
+The purple lines on the edge show the relative position of earth and andromeda.  If the Prime Bias option is moved, then those lines are slanted more as they represent having a velocity for the ship moving towards a zero velocity.
+
+The Green Blue and Red lines that span the screen are the time in the distant frame that an observer in the center (green), at the front (red), and at the back of the ship (blue) see.  Even separated by a small amount is enough to say that one can see the events one before the other.  All of these lines are biased by +10 (nano)seconds; otherwise they would be 10 seconds down off the screen.  The time the distant frame is seen is often far in the past.
+
+The short green line between the 3 yellow lines are the space-time coordinates of a time a ship was there, that is being seen now.
+The short red line along the top 'now' frame is where the ship is seen now.  It is the green line projected into the now.
