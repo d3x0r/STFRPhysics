@@ -1,6 +1,8 @@
 
 export const params = {
-	C:1
+	C: 1,
+	lengthContract : true,
+	lGam : 1.0,
 } 
 
 
@@ -63,13 +65,83 @@ export function RealTime( T_o, V, P, V_o, P_o ) {
 	const Y_ = P.y-P_o.y;
 	const Z_ = P.z-P_o.z;
 	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
-	const lengthContract = true?(V.x<C?Math.sqrt(C*C-VV)/(C*C):Math.sqrt(VV-C*C)/(C*C)):1;
+	const lengthContract = params.lengthContract?(V.x<C?Math.sqrt(C*C-VV)/(C*C):Math.sqrt(VV-C*C)/(C*C)):1;
 
 	const VLen = (VV>0)?Math.sqrt(VV):1;
 	const dot = VLen===0?1:(X_*V.x + Y_*V.y + Z_*V.z)/VLen;
 	const X = X_ - V.x*dot/VLen * (1-lengthContract)
 	const Y = Y_ - V.y*dot/VLen * (1-lengthContract)
 	const Z = Z_ - V.z*dot/VLen * (1-lengthContract)
+
+
+	const S = T_o;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	const jsx = X-J*S;
+	const ksy = Y-K*S;
+	const lsz = Z-L*S;
+
+
+	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
+	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
+	const CV = C*C - VV;
+	if( Math.abs(CV) < 0.000001 ) {
+		// D*D+E*E+F*F = C
+		// solve (S-T)^2 = ( ( (X+D*T-J*S)^2+(Y+E*T - K*S)^2+(Z + F*T - L* S)^2) )/(D*D+E*E+F*F) for T
+		// T = ((J^2 S^2)/(D^2 + F^2 + e^2) - (2 J S X)/(D^2 + F^2 + e^2) + (K^2 S^2)/(D^2 + F^2 + e^2) - (2 K S Y)/(D^2 + F^2 + e^2) + (L^2 S^2)/(D^2 + F^2 + e^2) - (2 L S Z)/(D^2 + F^2 + e^2) + X^2/(D^2 + F^2 + e^2) + Y^2/(D^2 + F^2 + e^2) + Z^2/(D^2 + F^2 + e^2) - S^2)
+		//        /((2 D J S)/(D^2 + F^2 + e^2) + (2 e K S)/(D^2 + F^2 + e^2) + (2 F L S)/(D^2 + F^2 + e^2) - (2 D X)/(D^2 + F^2 + e^2) - (2 e Y)/(D^2 + F^2 + e^2) - (2 F Z)/(D^2 + F^2 + e^2) - 2 S)
+		// T = ((J^2 S^2)/C - (2 J S X)/C + (K^2 S^2)/C - (2 K S Y)/C + (L^2 S^2)/C - (2 L S Z)/C + X^2/C + Y^2/C + Z^2/C - S^2)
+		//        /((2 D J S)/C + (2 e K S)/C + (2 F L S)/C - (2 D X)/C - (2 e Y)/C - (2 F Z)/C - 2 S)
+		// T = ((J^2 S^2) - (2 J S X) + (K^2 S^2) - (2 K S Y) + (L^2 S^2) - (2 L S Z) + X^2 + Y^2 + Z^2 - S^2*C)
+		//        /((2)*( (D J S) + (e K S) + (F L S) - (D X) - (e Y) - (F Z) - S C))
+
+		const T =  ( tmp2 ) / ( 2*( tmp ) )
+		if( T < T_o ) return [T];
+		return -Math.Infinity;
+	}
+	
+	const delT = Math.sqrt(tmp*tmp - CV * tmp2	);
+	const T = (-delT + tmp )/CV;
+	if( T > T_o ) {
+
+		const T2 = (+delT + tmp )/CV;
+		if( T2 < T_o ) return [T2];
+		return [];
+	}
+	const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
+	return (T2<T_o)?[T,T2]:[T];
+}
+
+export function RealTime2( T_o, V, P, Ofs, V_o, P_o ) {
+	const C = params.C;
+	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
+	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
+	//                       - 4 (C^2 - D^2 - E^2 - F^2) 
+	//                          * (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) 
+	//            + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
+
+	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
+	const lengthContract = true?(V.x<C?Math.sqrt(C*C-VV)/(C*C):Math.sqrt(VV-C*C)/(C*C)):1;
+	const VLen = (VV>0)?Math.sqrt(VV):1;
+	const dot = VLen===0?1:(Ofs.x*V.x + Ofs.y*V.y + Ofs.z*V.z)/VLen;
+
+	const oX = Ofs.x - V.x*dot/VLen * (1-lengthContract)
+	const oY = Ofs.y - V.y*dot/VLen * (1-lengthContract)
+	const oZ = Ofs.z - V.z*dot/VLen * (1-lengthContract)
+
+	const X = (P.x+oX)-P_o.x;
+	const Y = (P.y+oY)-P_o.y;
+	const Z = (P.z+oZ)-P_o.z;
+
+
+
 
 
 	const S = T_o;
@@ -134,8 +206,8 @@ export class D3xTransform {
 	}
  	static getObservedPlace(X,T,V,myV) {
  	   letmyV = myV || 0;
-		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D3xTransform.D, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} ); 
-		return willSee[0] * V + X;
+		const willSee = RealTime2( T, {x:V,y:0,z:0}, {x:X, y:D3xTransform.D, z:0}, {x:0, y:0, z:0}, {x:myV,y:0,z:0}, {x:0, y:0, z:0} ); 
+		return willSee[0] * V + X * params.lGam;
 	}
  	static getObservedPlace2(X,T) {
 		const willSee2 = RealTime( T, {x:D3xTransform.V,y:0,z:0}, {x:D3xTransform.gamma *X, y:D3xTransform.D, z:0}, {x:D3xTransform.myV,y:0,z:0}, {x:0, y:0, z:0} ); 
