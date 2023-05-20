@@ -380,3 +380,106 @@ Solution for Delta T - position difference at Time T
  $\vec{a} = \vec{X}-\vec{X_o}+VT - \vec{V_o}T$
 
 $$ \Delta T  = \frac {\sqrt{ {aa( (C^2-\vec{V_o}\vec{V_o})+{V_oV_o})} } - {aV_o}} {(C^2-\vec{V_o}\vec{V_o})}$$
+
+
+
+
+---
+
+# Lorentz Transform - Original Flavor
+
+So this has 2 sets of coordinates.  (x,t) and (x',t') where the primed version is the moving ship.  And it's to translate velocity, such that the moving ship is vertical after the fact.   
+
+This demo relates various 
+http://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-Clocks.html
+
+https://www.youtube.com/watch?v=Rh0pYtQG5wI This is that cool mechanical transform - too bad it's not actually symmetric like this.
+
+https://www.youtube.com/watch?v=HIQ5hnm61LQ Kahn Academy - Introduction to Lorentz Transformation
+
+[Lorentz Transformation](https://www.youtube.com/watch?v=sbNEtMUjiMU&pp=ygUWbG9yZW50eiB0cmFuc2Zvcm1hdGlvbg%3D%3D "Lorentz Transformation") [MIT's Experimental Study Group](https://www.youtube.com/@VloggingESG) This is one I'd like  to address point by point.  They build it using some definitions of variables.
+ - Begins framing this problem
+   - Astronaut in spaceship, with a stationary observer.  The space ship starts moving forward with a light pulse emitted at the same time.
+   - Determine how far the light pulse is from each observer by their own clock.  
+   - stationary observer see the pulse at $d=ct$ displacement equals the speed of light times time
+   - moving observer sees the pulse at $d'=ct'$, this displacement is from the ship, but is also at the speed of light $c$ but in a different time.
+ - Derive the lortentz transform so we can find $t'$ above.
+   - $x'=Ax+Bt$, $t'=Dx+Et$; These are the equations which are proposed to be solved for various circumstances. 
+   - 4 scenarios are provided to come up with the ideal solution.
+      1) boat with velocity relative to a dock.  And setup how each observer describes the boats location. This is from the boat's perspective where they are 0.
+        - $t=t'=0$, $x=x'=0$ 
+        - the dock describes the boat as x=vt
+           - the dock could describe the boat as $x = \sqrt{ (L+vt)^2 }$, and really the requirement for sqrt is for $x =\sqrt{ (y^2+z^2)+(L+vt)^2 }$ (for a positive velocity).
+        - the boat describes themselves as $x'=0$
+           -  the boat could describe themselves as $x'=0+D$ for an offset within the boat.
+        - which then is $0=Avt+Bt, 0=Av+B$, $-Av=B$
+          -  or $D=A\sqrt{(L+vt)^2}+Bt$, solved for B: $\frac {D-A\sqrt{(L+vt)^2}}{t}=B$
+        - $x'=A(x-vt)$
+          - or $x'=Ax+(\frac {L-A\sqrt{(L+vt)^2}}{t})t$, $x'=Ax+D-A\sqrt{(L+vt)^2}$, $x'=D+A(x-\sqrt{(L+vt)^2})$
+        - 
+      2) boat with a velocity relative to dock.  This is from the dock's stationary perspective.
+        - $t=t'=0$, $x=x'=0$ 
+        - the boat describes them as $x'=-vt'$
+           - the boat could describe the dock as $x' = -\sqrt{(D+vt')^2}$
+        - the dock describes themselves as $x=0$
+           -  the dock could describe themselves as $x=0+L$ for an offset on the dock.
+        - which then is $x'=A(0-vt)$, $-vt'=x'$, $-v(D*0+Et)=A(0-vt)$ $$-Evt=-Avt$$ $$E=A$$
+          -  or $x'=D_b+A(x-\sqrt{(L+vt)^2})$, $x'=D_b+A\sqrt{(L+vt)^2}$,  $-v(D*0+Et)=D_b+A\sqrt{(L+vt)^2}$$, $E=\frac {D_b+A(\sqrt{(L+vt)^2})} {vt}$
+        - $x'=A(x-vt)$
+          - or $x'=Ax-L+(A\sqrt{v^2})t$
+        - t' = Dx+At
+	  - $t' = Dx + \frac {D_b+A(\sqrt{(L+vt)^2})} {vt} t$
+      3)  Back to the rocket ship, and that pulse of light
+        - position of the light from the stationary astronaut $x=ct$
+        - position of the light from the rocket $x'=ct'$
+	- already had $x'=A(x-vt)$, $t'=Dx+At$
+       - $ct' = A(ct-vt)$
+       - $c(Dx+At)=At(c-v)$
+       - $c(Dct + At) = At(c-v)$
+       - $Dc^2t+Act = Act-Avt$
+       - $Dc^2t=-Avt$
+       - $D=\frac{-Av}{c^2}$
+       - results as....
+       - $x'=A(x-vt)$
+       - $t'=\frac {Av}{c^2}x+At$
+       - $t'=A(\frac{-vx}{c}+t)$
+
+
+ - Alternate 
+    - $x'=-L+A(x+t\sqrt{v^2})$
+    - $t' = Dx + \frac {D_b+A(\sqrt{(L+vt)^2})} {vt} t$
+    - $ct'=-L+A(ct+t\sqrt{v^2})$
+    - $c(Dx+At)=-L+A(ct+t\sqrt(v^2))$
+    - $c(Dct+At)=-L+A(ct+t\sqrt(v^2))$
+    - $Dc^2t+Act=-L+Act+At\sqrt(v^2))$
+    - $Dc^2t=-L+At\sqrt(v^2))$
+    - $D=\frac{-L+At\sqrt(v^2))} {c^2t}$
+        - results are:
+	- $x'=Ax-L+(A\sqrt{v^2})t$
+	- $t'=\frac{-L+At\sqrt(v^2))} {c^2t} x + \frac {D_b+A(\sqrt{(L+vt)^2})} {vt} t$
+
+4) Rocket ship; pulse goes up instead of to the right.
+  - The astronaut sees the pulse as the same $y=ct$
+  - The rocket sees the pulse ... $(-x')^2 + y'^2 = (ct')^2$
+  - $y=y'$
+  - $x'=A(x-vt)$
+  - $t'=A(-vx/c^2+t)$
+  - $y=ct$;  $(-x')^2 + y'^2$ = (ct)^2; $y=y'$
+  - $(A(x-vt))^2 +y^2 = (ct')^2$
+  - $(A(x-vt))^2 +(ct)^2 = (ct')^2$
+  - $(A(x-vt))^2 +(ct)^2 = (c (A(\frac{-vx}{c}+t) ) )^2$
+  - A^2v^2t^2 +c^2t^2 = A^2 c^2 t^2
+  - ...
+  - $1=A^2 - A^2V^2/C^2$
+  - $A =\frac {1} {\sqrt{1-\frac{v^2}{c^2}}}$ or $c/\sqrt{ cc-vv }$
+   - Alternate
+      - $(L-A(x+t\sqrt{v^2}))^2 +y^2 = (ct')^2$
+
+
+
+6) length contraction is $\frac{(cc-vv)c}{cc \sqrt{cc-vv}}$ 
+$$\vec{a}=(x) $$
+$$A = C^2{T_o}^2 - x*x$$
+$$B = C^2{T_o} + V \cdot x$$
+$$D = C^2-\vec{V}\cdot\vec{V}$$
+if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
