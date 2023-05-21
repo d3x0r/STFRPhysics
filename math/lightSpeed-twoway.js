@@ -314,34 +314,6 @@ mkChk( "Draw Wavelengths", "showFreq" );
 //----------------------
 
 //----------------------
-
-span = document.createElement( "span" );
-span.textContent = "Wave 1";
-controls.appendChild( span );
-
-const spanWave1 = document.createElement( "span" );
-spanWave1.textContent = "";
-controls.appendChild( spanWave1 );
-//----------------------
-
-span = document.createElement( "span" );
-span.textContent = "Wave 2";
-controls.appendChild( span );
-
-const spanWave2 = document.createElement( "span" );
-spanWave2.textContent = "";
-controls.appendChild( spanWave2 );
-//----------------------
-
-span = document.createElement( "span" );
-span.textContent = "Wave 3";
-controls.appendChild( span );
-
-const spanWave3 = document.createElement( "span" );
-spanWave3.textContent = "";
-controls.appendChild( spanWave3 );
-
-//----------------------
 span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
@@ -349,17 +321,6 @@ controls.appendChild( span );
 
 
 update();
-
-const body = [];
-
-/*
-for( t = -5; t < 5; t += 0.02 ) {
-	const b = { t : V*t - 1, c:V*t, h:V*t+1 };
-	const delay = { t: Math.sqrt( ((D*D)/(C*C)) + b.t*b.t), c: Math.sqrt( ((D*D)/(C*C)) + b.c*b.c), h: Math.sqrt( ((D*D)/(C*C)) + b.h*b.h) };
-	const appear = { t: delay.t+t, c:delay.c+t, h:delay.h+t };
-	body.push( { hue:(t%3)*60, pos:b, delay, appear } );
-}
-*/
 
 
 function update( evt ) {
@@ -489,26 +450,26 @@ function draw(  ) {
 	// time from moving tail to moving observer
 	if( now >= frames[4].T_start && now <= frames[4].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[4].from.x)*xscale, 250, C*(now-frames[4].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(750+(0+ frames[4].from.x)*xscale, 250, C*(now-frames[4].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from moving head to moving observer
 	if( now >= frames[5].T_start && now <= frames[5].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[5].from.x)*xscale, 250, C*(now-frames[5].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(750+(0+ frames[5].from.x)*xscale, 250, C*(now-frames[5].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	// time from moving tail to stationary observer
 	if( now >= frames[6].T_start && now <= frames[6].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[6].from.x)*xscale, 250, C*(now-frames[6].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(250+(0+ frames[6].from.x)*xscale, 250, C*(now-frames[6].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from moving head to stationary observer
 	if( now >= frames[7].T_start && now <= frames[7].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[7].from.x)*xscale, 250, C*(now-frames[7].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(250+(0+ frames[7].from.x)*xscale, 250, C*(now-frames[7].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
@@ -516,26 +477,26 @@ function draw(  ) {
 	// time from stationary tail to moving observer
 	if( now >= frames[8].T_start && now <= frames[8].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[8].from.x)*xscale, 250, C*(now-frames[8].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(750+(0+ frames[8].from.x)*xscale, 250, C*(now-frames[8].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from stationary head to moving observer
 	if( now >= frames[9].T_start && now <= frames[9].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[9].from.x)*xscale, 250, C*(now-frames[9].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(750+(0+ frames[9].from.x)*xscale, 250, C*(now-frames[9].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	// time from stationary tail to stationary observer
 	if( now >= frames[10].T_start && now <= frames[10].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[10].from.x)*xscale, 250, C*(now-frames[10].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(250+(0+ frames[10].from.x)*xscale, 250, C*(now-frames[10].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from stationary head to stationary observer
 	if( now >= frames[11].T_start && now <= frames[11].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[11].from.x)*xscale, 250, C*(now-frames[11].T_start)*(xscale), 0, 2 * Math.PI, false);
+		ctx.arc(250+(0+ frames[11].from.x)*xscale, 250, C*(now-frames[11].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
@@ -577,15 +538,97 @@ function draw(  ) {
 		}
 	} )
 
-	ctx.strokeStyle="white";
 	ctx.beginPath();
+	ctx.strokeStyle="white";
 	ctx.moveTo( 250 + (-L)*xscale, 750 - now*xscale );
 	ctx.lineTo( 250 + (L)*xscale, 750 - now*xscale );
 	ctx.stroke();
 	ctx.beginPath();
+	ctx.strokeStyle="yellow";
 	ctx.moveTo( 750 + (-L*lengthContract)*xscale, 750 - lNow*xscale );
 	ctx.lineTo( 750 + (+L*lengthContract)*xscale, 750 - lNow*xscale );
 	ctx.stroke();
+
+	ctx.beginPath();
+	// moving tail to stationary observer (fastest path)
+	ctx.strokeStyle="red";
+	ctx.moveTo( 250 + (frames[6].from.x)*xscale, 750 - frames[6].T_start*xscale );
+	ctx.lineTo( 250 + (frames[6].from.x)*xscale, 750 - (frames[6].T_end)*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+	// moving head to stationary observer (fastest path)
+	ctx.strokeStyle="red";
+	ctx.moveTo( 250 + (frames[7].from.x)*xscale, 750 - frames[7].T_start*xscale );
+	ctx.lineTo( 250 + (frames[7].from.x)*xscale, 750 - (frames[7].T_end)*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+	// Simul events to moving observer
+	ctx.strokeStyle="#ddd";
+	ctx.moveTo( 250 + (frames[7].from.x)*xscale, 750 - (frames[7].T_end)*xscale );
+	ctx.lineTo( 250 + (frames[6].from.x)*xscale, 750 - (frames[6].T_end)*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+
+	ctx.beginPath();
+	// stationary head to moving observer
+	ctx.strokeStyle="green";
+	ctx.moveTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+	// stationary tail to moving observer (fastest path)
+	ctx.strokeStyle="green";
+	ctx.moveTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_end*lengthContract*xscale );
+	ctx.stroke();
+	// simul events stationary observer
+
+	ctx.strokeStyle="#ddd";
+	ctx.moveTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_end*lengthContract*xscale );
+	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
+	ctx.stroke();
+	
+	ctx.strokeStyle="green";
+	ctx.beginPath();
+		// stationary head to stationary observer
+	ctx.moveTo( 250 + (frames[10].from.x)*xscale, 750 - frames[10].T_start*xscale );
+	ctx.lineTo( 250 + (frames[10].from.x)*xscale, 750 - (frames[10].T_end)*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+		// stationary tail to stationary observer
+	ctx.moveTo( 250 + (frames[11].from.x)*xscale, 750 - frames[11].T_start*xscale );
+	ctx.lineTo( 250 + (frames[11].from.x)*xscale, 750 - frames[11].T_end*xscale );
+	ctx.stroke();
+
+
+
+
+	ctx.strokeStyle="red";
+	ctx.beginPath();
+		// moving tail to moving observer
+	ctx.moveTo( 750 + (-L)*xscale, 750 - frames[4].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (-L)*xscale, 750 - (frames[4].T_end_local)*xscale );
+	ctx.stroke();
+	ctx.beginPath();
+		// moving head to moving observer
+	ctx.moveTo( 750 + (L)*xscale, 750 - frames[5].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (L)*xscale, 750 - frames[5].T_end_local*xscale );
+	ctx.stroke();
+
+
+
+	ctx.beginPath();
+	ctx.strokeStyle="yellow";
+	ctx.moveTo( 250 + (V*now-L)*xscale, 750 - now*xscale );
+	ctx.lineTo( 250 + (V*now+L)*xscale, 750 - now*xscale );
+	ctx.stroke();
+	if( now < frames[9].T_start ){
+	ctx.beginPath();
+	ctx.strokeStyle="white";
+	ctx.moveTo( 750 + (-V*now-L)*xscale, 750 - lNow*xscale );
+	ctx.lineTo( 750 + (-V*now+L)*xscale, 750 - lNow*xscale );
+	ctx.stroke();
+	}
 
 
 	if( animate ) 	requestAnimationFrame( draw );
