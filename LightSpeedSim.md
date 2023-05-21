@@ -2,7 +2,7 @@
 
 # Reality of Relativity
 
-I started this project ([step-by-step](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...).  
+I started this project ([step-by-step](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#Step-by-Step)) to observe first what it would look like to see something going faster than the speed of light (faster than the speed of sound, faster than waves in water...). That is not 'what things appear like when travelling faster than the speed of light'. 
 I didn't concern myself so much with practical limitations like clocks would tick backwards at faster than the speed of light (clocks that are seen).  I've later refined portions of this to include light aberration, length contraction, and time dilation (special relativity).
 
 ## Demos
@@ -44,6 +44,7 @@ There are places I use an expression like $CC$ which is the same as $C*C$ or $C^
 
 ## Disclaimer
 
+Lorentz Transform: https://youtu.be/feBT0Anpg4A?t=1315 (Around this area).
 This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
 
 If you're expectation is that this will be exactly the same, it's not.  However, time in the future (after now), and positive relative velocities works out to be the same as Lorentz Transform (also with a small fraction of the speed of siganl propagation).
@@ -818,17 +819,24 @@ $$\frac {(X-L)(V+C)} {C^2-V^2}$$
 
 This is getting closer to the Lorentz Transform than the above... but still to use this time span, it has to be added to the current time `T`...
 
+### The answer was B
+
+So the only 'correct' answer is B.  Given that this requires a two-way communication, let's consider this.  At any time T for an observer going a velocity V, sending a message to andromea and getting a reply vs sending a message to earth and getting a reply, 
+
+So a signal is emitted from the origin, which hits andromeda and earth, and the observer sees the signal from earth first always?
+
 ### Homework Reframed
 
 Another example, with a slightly different metaphor, but the same idea : https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/05%3A__Relativity/5.06%3A_The_Lorentz_Transformation
-example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer (when using Lorentz transform, it's an observer 0 distance, observing the 0 point at 0 time or more).
+example 5.6.3; the phrase 'an observer' doesn't mean any observer, but a specific observer (when using Lorentz transform, it's an observer 0 distance, observing the 0 point at 0 time or more).  (I lost the math applied to the Andromeda-Earth problem above, but it was essentially the same calculation with the same velocities plugged in.)
 
 [This demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) has an observer tied to the train.  Instead of a Distance from the train, you can postion the observer in the train.
 
-
+The following equation results from subtracting two fixed points observed by an observer, and getting the time difference.  This is dependant on how far the observer is from in-between them, and the offset from the center of the observer.
 
 ``` js
-" T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) + " O:"+ (-2*(C*D2+L*V)).toFixed(2);
+  " T:" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2) 
++ " O:" + (-2*(C*D2+L*V)).toFixed(2);
 ```
 Difference in time, that an external observer notes between when the chained observer will first see the light to when they will see the other simultaneous event.
 
