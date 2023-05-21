@@ -90,6 +90,8 @@ So the various 1-way questions that have been presented, the answers make no sen
 ## Maybe a more general approach to the times?
 
 - D=1 (distance between observers), L = 1, (offset of head and tail detectors); the above will work as long as Head and Tail are 1 or more ? 
+
+
 |T | local T pos|| Math |
 |---|---|---|--|
 | 0 | 0 | 0 | events emitted |  |
@@ -112,6 +114,8 @@ So the various 1-way questions that have been presented, the answers make no sen
    - you can deduce the distance increased; and what their current velocity is.
    - If the delay is not increasing/decreasing then they are relatively the same distance;  This is a 2-way measure, and as such is a constant in all frames.  The offset of when it is received to when it is sent along that path is really what we're working to deduce.
    - The time is noted, and the fraction of '1' between the N specified is the clock dilation, compared to the local clock.
+
+
 |local clock| local remote clock | remote clock | remote local clock| action|
 |----|----|----|---|--|
 | 0 | 0 | 0 | 0 |  send set to 0.|
