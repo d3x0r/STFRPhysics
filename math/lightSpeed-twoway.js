@@ -575,6 +575,7 @@ function draw(  ) {
 	ctx.moveTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_start*lengthContract*xscale );
 	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
 	ctx.stroke();
+
 	ctx.beginPath();
 	// stationary tail to moving observer (fastest path)
 	ctx.strokeStyle="green";
@@ -583,13 +584,14 @@ function draw(  ) {
 	ctx.stroke();
 	// simul events stationary observer
 
+	ctx.beginPath();
 	ctx.strokeStyle="#ddd";
 	ctx.moveTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_end*lengthContract*xscale );
 	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
 	ctx.stroke();
 	
-	ctx.strokeStyle="green";
 	ctx.beginPath();
+	ctx.strokeStyle="green";
 		// stationary head to stationary observer
 	ctx.moveTo( 250 + (frames[10].from.x)*xscale, 750 - frames[10].T_start*xscale );
 	ctx.lineTo( 250 + (frames[10].from.x)*xscale, 750 - (frames[10].T_end)*xscale );
@@ -619,15 +621,15 @@ function draw(  ) {
 
 	ctx.beginPath();
 	ctx.strokeStyle="yellow";
-	ctx.moveTo( 250 + (V*now-L)*xscale, 750 - now*xscale );
-	ctx.lineTo( 250 + (V*now+L)*xscale, 750 - now*xscale );
+	ctx.moveTo( 250 + (V*now-L*lengthContract)*xscale, 750 - now*xscale );
+	ctx.lineTo( 250 + (V*now+L*lengthContract)*xscale, 750 - now*xscale );
 	ctx.stroke();
 	if( now < frames[9].T_start ){
-	ctx.beginPath();
-	ctx.strokeStyle="white";
-	ctx.moveTo( 750 + (-V*now-L)*xscale, 750 - lNow*xscale );
-	ctx.lineTo( 750 + (-V*now+L)*xscale, 750 - lNow*xscale );
-	ctx.stroke();
+		ctx.beginPath();
+		ctx.strokeStyle="white";
+		ctx.moveTo( 750 + (-V*now-L)*xscale, 750 - lNow*xscale );
+		ctx.lineTo( 750 + (-V*now+L)*xscale, 750 - lNow*xscale );
+		ctx.stroke();
 	}
 
 
