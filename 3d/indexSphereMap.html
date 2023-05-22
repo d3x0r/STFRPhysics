@@ -169,13 +169,16 @@
 			<col style="width:0">
 			<col style="width:0">
 			<col style="width:0"-->
-		<tr id="time"><td colspan=5>
+		<tr id="time"><td colspan=2>
 		Time Scalar:<input type="range" id="timeScalar" min="0"  max="900"  value="600"> <SPAN id="timeScalarValue">1.0</SPAN> 
 		</td></tr>
 
-		<tr id="twist" style="visibility:visible"><td colspan=5>
+		<tr id="twist" style="visibility:visible"><td colspan=2>
 		Twist Delta:<input type="range" id="twistDelta" min=0  max=1000  value=500> <SPAN id="twistDeltaValue">0.0</SPAN> 
+		</td>                                     <td colspan=5>
+		Grid Steps:<input type="range" id="gridSteps" min=0  max=100  value=50> <SPAN id="gridStepSpan">0.0</SPAN> 
 		</td>
+
 		<td>
 			Octave:<input type="range" id="octave" min="0"  max="10" value="0">
 		</td>
@@ -801,7 +804,7 @@
 			is.onchange = updateMesh;
 			is = document.getElementById( "fineRange" );
 			is.onchange = updateMesh;
-
+			if( gridSteps ) gridSteps.oninput = updateMesh;
 			const is5 = document.getElementById( "fixAxleRotation" );
 			is5.onchange = ()=>{
 				document.getElementById( "keepInertia" ).checked = !is5.checked;

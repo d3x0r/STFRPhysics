@@ -54,6 +54,7 @@ let drawWorldAxles = false;
 let mountOrder = 0;
 let currentOctave = 0;
 let stereoProject = false;
+let gridStepCount = 50;
 
 let lnQx = new lnQuat();
 let lnQx2 = new lnQuat();
@@ -306,7 +307,7 @@ function makeQuat(p,y,r) {
 			}
 		}
 
-		const step = range/32;
+		const step = range/gridStepCount;
 
 		if( !mapPolar )  {
 		
@@ -617,7 +618,7 @@ function makeQuat(p,y,r) {
 
 				//lnQuat.setTwistDelta( twistDelta );
 
-			if( 1 || showRotationCurve === "X" )
+			if( showRotationCurve === "X" )
 			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
 
 				lnQx2.set( {lat:curSliders.lnQX[0] + latPlus,lng:curSliders.lnQY[0]}, false ).yaw(twistDelta);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
@@ -664,7 +665,7 @@ function makeQuat(p,y,r) {
 			}
 if(1) {
 			first = true;
-			if( 1 || showRotationCurve === "Y" )
+			if( showRotationCurve === "Y" )
 			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
 				lnQx2.set( {lat:curSliders.lnQX[0] ,lng:curSliders.lnQY[0]+ latPlus}, false ).yaw(twistDelta);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
 
@@ -710,7 +711,7 @@ if(1) {
 				
 			}
 			first = true;
-			if( 1 || showRotationCurve === "Z" )
+			if(  showRotationCurve === "Z" )
 			for( let latPlus = minofs; latPlus <= maxofs; latPlus += (maxofs-minofs)/20 ){
 				//lnQuat.setTwistDelta( twistDelta + latPlus );
 				lnQx2.set( {lat:curSliders.lnQX[0],lng:curSliders.lnQY[0]}, false ).yaw(twistDelta+latPlus);//.yaw(curSliders.lnQZ[0]*Math.PI-twist);//.update();
@@ -906,9 +907,12 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	let degrees = document.getElementById( "showDegrees")?.checked;
 
 	{
-			let td = Number(document.getElementById( "twistDelta" ).value);
-		
-		 twistDelta =twist= ( (td/500)-1 ) * Math.PI * 4.25;
+		let td = Number(document.getElementById( "twistDelta" ).value);
+		if( gridSteps ){
+			gridStepCount = Number(gridSteps.value) + 1;
+			gridStepSpan.textContent = gridStepCount;
+		}
+		twistDelta =twist= ( (td/500)-1 ) * Math.PI * 4.25;
 		document.getElementById( "twistDeltaValue" ).textContent = (twistDelta/Math.PI).toFixed(4)+ "π";
 
 		lnQuat.setTwistDelta( twistDelta );
