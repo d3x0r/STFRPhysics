@@ -1,6 +1,8 @@
 # Light Speed Experiment Proposal
 
-Using unsynchronized clocks, an apparatus with 2 devices, called emitters, which have stable clocks, that don't drift between themselves so they always emit a pulse of light(or radio > 5Ghz) with a fixed interval.  The pulse should be short, but only needs to be off long enough to register a distinct 'on' event later.  The time between the pulses should be more than the transmission time between pulse generator and detector, given a standard speed of light.
+This is a test for difference in 1 way speed of light, rather than strictly measuring any speed of light.
+
+Using unsynchronized clocks, an apparatus with 2 devices, called emitters, which have stable clocks, with minimal drift between each other so they always emit a pulse of light(or radio > 5Ghz) with a fixed interval.  The pulse should be short, but only needs to be off long enough to register a distinct 'on' event later.  The time between the pulses should be more than the transmission time between pulse generator and detector, given a standard speed of light.
 
 A third device called detector, detects the pulses from the emitters, and records the time from a local clock when the leading edge of the pulse is detected, or when the pulse is first able to be detected.
 
@@ -21,7 +23,7 @@ Gravitational time dilation might affect the clocks of the various devices depen
 
 ## Hypothesis
 
-If the speed of light is different, by a rate of $C+V$ or $C-V$, where $C$ is what's used for the constant speed of light, and $V$ is a velocity.  In the direction of the velocity, those are the speeds that apply, laterally, it's just C.  But, the distance in this worst case direction is contracted by $\gamma=\sqrt{CC-VV}$ and the clock is contracted by the same amount.  The effective time to cross 1 unit is $\frac {\gamma^2} {C+V}$ or $\frac {\gamma^2} {C-V}$ (distance times gamma(1*$\gamma$)(m) divided by speed(m/s) = time(s) times gamma).  The lateral time is $\frac{\frac {1\cdot \gamma}{C}} {\gamma}$ or $1/C$.
+If the speed of light is different, by a rate of $C+V$ or $C-V$, where $C$ is what's used for the constant speed of light, and $V$ is a velocity.  In the direction of the velocity, those are the speeds that apply, laterally, it's just C.  But, the distance in this worst case direction is contracted by $\gamma=\sqrt{CC-VV}$ and the clock is contracted by the same amount.  The effective time to cross 1 unit is $\frac {\gamma^2} {C+V}$ or $\frac {\gamma^2} {C-V}$ (distance times gamma(1*$\gamma$)(m) divided by speed(m/s) = time(s) times gamma).  The lateral time is $\frac{\frac {1\cdot \gamma}{C}} {\gamma}$ or $1/C$ (the lateral distance increases with speed; hence dividing by gamma; while the clock contraction is also still applied so there are fewer pulses emitted to cover the distance, which maintains a constant number of wavelengths).
 
 ### Some relavent speeds
 
@@ -37,6 +39,9 @@ Using an approximation of light travelling 1 foot per nanosecond (one Ghz tick i
 
 10,000ns is 10,000 ft which is about 2 miles; which is a total span of 4 files with 2 emitters and a detector.
 
+## Data Evaluation
+
+Events from a single detector, and the related timestamps are a stream.  The streams are mostly independant.  Starting with a pulse, subtracting the timestamp from itself biases the tick to 0.  Each stream is biased to 0 itself; this syncrhonizes the pulses at a specific point.  This may be a average case, or a worst case or somewhere inbetween.   One stream should be slightly ahead of the 0, and have at a positive offset, this stream is delayed; the other stream should be behind 0, and have a negative offset that is the same as the positive from that point.  This offset will go toward a maximum case and then to an average case.  Given that only alignment in a very specific direction produces THE worst case, random chance will be that there will be little deviation from average and just be +/-0.  Any progressive skew that does not go away is probably from a slightly different gravitational gradient; though slight differences in north latitude will also skew the clock time, from a difference in linear rate while the earth rotates.
 
 ## Alternative deployments
 
