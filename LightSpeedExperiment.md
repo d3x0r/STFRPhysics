@@ -46,3 +46,5 @@ Events from a single detector, and the related timestamps are a stream.  The str
 ## Alternative deployments
 
 A satellite maybe could be built, which would be able to rotate the apparatus with 2 detectors tethered - but then I'd expect 4 miles of rope might be an issue?
+
+LISA - The interferometer satellite array could measure +/-10ms; millisecond resolution is surely notable - although it does have bent arms, so the difference between the arms is fairly minimal.
