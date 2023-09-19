@@ -552,9 +552,9 @@ This is about having a constant length photon clock which has a static orientati
 
 A object of length `L`, rotated by an angle `a`, travelling at velocity `V` (with observer also traveling at velocity `V`), with a speed of propagation of `C`...
 
-https://www.desmos.com/calculator/msliqg3srx
+https://www.desmos.com/calculator/hhqdefjgrn
 
-The forward travel time is $F=\cos a \cdot \frac L {C-V}$; the backward travel time is $B=\cos a \cdot \frac L {C+V}$; the lateral travel time is $S=2*\sqrt {(\sin a \cdot \frac L C )^2 + (V \cdot \sin a \cdot \frac L C )^2}$; the total time is $\sqrt { (F+B)^2 + S^2}$.
+The forward travel time is $F=\cos a \cdot \frac L {C-V}$; the backward travel time is $B=\cos a \cdot \frac L {C+V}$; the lateral travel time is $S=2*\sqrt {(\sin a \cdot \frac L C )^2 + (\frac V C \cdot \sin a \cdot \frac L C )^2}$; the total time is $\sqrt { (F+B)^2 + S^2}$. (V/C is a new expression - it's divided to be a scalar fraction of C to apply... partially because otherwise the units would be wrong )
 
 F+B= $\cos a (\frac {L(C+V)} {(CC-VV)}) + \frac {L(C-V)} {(CC-VV)})$
 
@@ -562,8 +562,7 @@ F+B= $\cos a (\frac {L(C+V+C-V)} {CC-VV})$
 
 F+B= $\cos a (\frac {2LC} {CC-VV})$
 
-S= $2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)}$
-
+S= $2\sin a\frac{L}{C}\sqrt{\left(1+V^{2}/C^2\right)}$
 
 $\frac L C$ is how long it takes to cover the length.  $\sin a$ is the scalar for how much of the graph is a lateral time, $\cos a$ is the scalar for how much of the graph is forward/backward.  The lateral time $\frac L C$ times the velocity is how much additional lateral time happens because the reflecting side moves forward while the wave moves laterally; this increases the overall length that a signal has to travel purely based on speed.  
 
@@ -571,15 +570,22 @@ https://journalofscience.org/index.php/GJSFR/article/view/2522/2383  This paper 
 
 (1) $c(\Phi)=\sqrt {c^2-v^2 \sin^2\Phi } - v \cos \Phi$ and (2) $c_2(\Psi)=\frac {c^2-v^2} {\sqrt {c^2-v^2 \sin^2 \Psi}}$.
 
-These are givens, and there doesn't appear to be a basis for them.
+The above are givens, and there doesn't appear to be a basis for them.
 
-$\sqrt { (\cos a (\frac {2LC} {(C-V)^2}))^2 + (2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)})^2}$
+$T=\sqrt { (\cos a (\frac {2LC} {(C-V)^2}))^2 + (2\sin x\frac{L}{C}\sqrt{1+\frac {V^{2}} {C^2}})^2}$
 
-$T = 2L\ \sqrt{\left(\ \frac{\cos^{2}\left(x\right)CC}{\left(CC-VV\right)^{2}}+\frac{\sin^{2}\left(x\right)\sqrt{1+VV}}{CC}\right)}$
-
-I don't see a way to simplify that any further.
+$T = 2L\sqrt{\frac{\cos^{2}\left(x\right)CC}{\left(CC-VV\right)^{2}}+\frac{\sin^{2}\left(x\right)\sqrt{1+\frac {VV}{CC}}}{CC}}$
 
 
+Back on the paper, the delay observed should be much less... the speed of sound is 0.343 m/ms.  over 2 meters that's 5.8309ms at 100km/h(0.0278m/ms) the car moves forward 0.162 meters; the lateral distance is then (Pythagorean 2 meters and 0.162 meters ) $(\sqrt{2*2+0.162*0.162})$ =  2.00655 meters.  that's only 0.7 centimeters longer than one would expect.  
+
+The slowest time would be $(2/(0.343+0.0278)+2/(0.343-0.0278))$ = 11.73892ms * 0.343 = 4.026m or a measured distance of 2.013m or 1.3cm longer than one would expect.  so between 0 degrees and 90 degrees that at 100km/h the graphs should all be the same. (And they are, it's the predicted values that are wrong).
+
+90 degrees distance traveled is  $2C \sqrt{ L^2/C^2 + V^2L^2/C^4 }$ or $2L \sqrt{ (1+V^2/C^2)}$ ; which registers as $L\sqrt{ (1+V^2/C^2)}$ . 
+
+0 degrees distance traveled is  $C*(L/(C+V)+L/(C-V))$ or ${ C*( L(C+V)+L(C-V) ) / (CC-VV) }$  or $2LC^2 / (CC-VV)$ ; which registers as a length of $LC^2 / (CC-VV)$ .
+
+"The first test rides used a standard supersonic distance rangefinder with cm resolution, a 2m gauge length mounted on the top of the car, and an assistant to check the car’s speed and distance.  This validated the measuring principle"  1cm is all the variance should even measure... The sensor is actually 0.01mm.  Figure 8 is a plot for some arrangement... It matches expected result for 90 degrees.  (7-8 mm).  The figures 2-7  have different horizontal and vertical legends; they are hard to compare against each other.  One indicates 99.97 (and doesn't have a red predicted line), 3 indicate 99.4 and another indicates 99.77.  Also, the first 0 graph and 22 angle should have the highest lags.  with 90 degrees being the least... with a difference of 1.3cm to 0.7mm between 0 degrees and 90 degrees; so the hypothetical lines are just wrong anyway.
 ### Extended velocity rotations
 
 [This Demo(4)](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed4.html) Allows changing the direction of the velocity,
