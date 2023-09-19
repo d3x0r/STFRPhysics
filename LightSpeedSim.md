@@ -546,7 +546,39 @@ This is a detailed summary of how I approached building the simulation.
 
 ## Rotating Photon Clocks
 
-This is about having a constant length photon clock which has a static orientation, but the velocity it's moving changes direction.   This demonstrates worst-case and best-case times for time dilation.  While intersting, this is not what finally led to the calculation for length contraction or time contraction(dilation).
+This is about having a constant length photon clock which has a static orientation, but the velocity it's moving changes direction.   This demonstrates worst-case and best-case times for time dilation.  While interesting, this is not what finally led to the calculation for length contraction or time contraction(dilation).
+
+### Time of observation of rotated object
+
+A object of length `L`, rotated by an angle `a`, travelling at velocity `V` (with observer also traveling at velocity `V`), with a speed of propagation of `C`...
+
+https://www.desmos.com/calculator/msliqg3srx
+
+The forward travel time is $F=\cos a \cdot \frac L {C-V}$; the backward travel time is $B=\cos a \cdot \frac L {C+V}$; the lateral travel time is $S=2*\sqrt {(\sin a \cdot \frac L C )^2 + (V \cdot \sin a \cdot \frac L C )^2}$; the total time is $\sqrt { (F+B)^2 + S^2}$.
+
+F+B=$\cos a (\frac {L(C+V)} {(CC-VV)}) + \frac {L(C-V)} {(CC-VV)})$
+
+F+B=$\cos a (\frac {L(C+V+C-V)} {CC-VV})$
+
+F+B=$\cos a (\frac {2LC} {CC-VV})$
+
+S=$2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)}$
+
+
+$\frac L C$ is how long it takes to cover the length.  $\sin a$ is the scalar for how much of the graph is a lateral time, $\cos a$ is the scalar for how much of the graph is forward/backward.  The lateral time $\frac L C$ times the velocity is how much additional lateral time happens because the reflecting side moves forward while the wave moves laterally; this increases the overall length that a signal has to travel purely based on speed.  
+
+https://journalofscience.org/index.php/GJSFR/article/view/2522/2383  This paper is the topic of this section.  Their basic equation for expected time is wrong (equation 2).  
+
+(1) $c(\Phi)=\sqrt {c^2-v^2 \sin^2\Phi } - v \cos \Phi$ and (2) $c_2(\Psi)=\frac {c^2-v^2} {\sqrt {c^2-v^2 \sin^2 \Psi}}$.
+
+These are givens, and there doesn't appear to be a basis for them.
+
+$\sqrt { (\cos a (\frac {2LC} {(C-V)^2}))^2 + (2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)})^2}$
+
+$T = 2L\ \sqrt{\left(\ \frac{\cos^{2}\left(x\right)CC}{\left(CC-VV\right)^{2}}+\frac{\sin^{2}\left(x\right)\sqrt{1+VV}}{CC}\right)}$
+
+I don't see a way to simplify that any further.
+
 
 ### Extended velocity rotations
 
