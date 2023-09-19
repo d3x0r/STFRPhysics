@@ -556,13 +556,13 @@ https://www.desmos.com/calculator/msliqg3srx
 
 The forward travel time is $F=\cos a \cdot \frac L {C-V}$; the backward travel time is $B=\cos a \cdot \frac L {C+V}$; the lateral travel time is $S=2*\sqrt {(\sin a \cdot \frac L C )^2 + (V \cdot \sin a \cdot \frac L C )^2}$; the total time is $\sqrt { (F+B)^2 + S^2}$.
 
-F+B=$\cos a (\frac {L(C+V)} {(CC-VV)}) + \frac {L(C-V)} {(CC-VV)})$
+F+B= $\cos a (\frac {L(C+V)} {(CC-VV)}) + \frac {L(C-V)} {(CC-VV)})$
 
-F+B=$\cos a (\frac {L(C+V+C-V)} {CC-VV})$
+F+B= $\cos a (\frac {L(C+V+C-V)} {CC-VV})$
 
-F+B=$\cos a (\frac {2LC} {CC-VV})$
+F+B= $\cos a (\frac {2LC} {CC-VV})$
 
-S=$2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)}$
+S= $2\sin x\frac{L}{C}\sqrt{\left(1+V^{2}\right)}$
 
 
 $\frac L C$ is how long it takes to cover the length.  $\sin a$ is the scalar for how much of the graph is a lateral time, $\cos a$ is the scalar for how much of the graph is forward/backward.  The lateral time $\frac L C$ times the velocity is how much additional lateral time happens because the reflecting side moves forward while the wave moves laterally; this increases the overall length that a signal has to travel purely based on speed.  
