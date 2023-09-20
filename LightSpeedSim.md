@@ -570,14 +570,16 @@ https://journalofscience.org/index.php/GJSFR/article/view/2522/2383  This paper 
 
 (1) $c(\Phi)=\sqrt {c^2-v^2 \sin^2\Phi } - v \cos \Phi$ and (2) $c_2(\Psi)=\frac {c^2-v^2} {\sqrt {c^2-v^2 \sin^2 \Psi}}$.
 
-The above are givens, and there doesn't appear to be a basis for them.
+The above are givens, and there doesn't appear to be a basis for them. The following is more what I would expect for equations.
 
 $T=\sqrt { (\cos a (\frac {2LC} {(C-V)^2}))^2 + (2\sin x\frac{L}{C}\sqrt{1+\frac {V^{2}} {C^2}})^2}$
+
+or
 
 $T = 2L\sqrt{\frac{\cos^{2}\left(x\right)CC}{\left(CC-VV\right)^{2}}+\frac{\sin^{2}\left(x\right)\sqrt{1+\frac {VV}{CC}}}{CC}}$
 
 
-Back on the paper, the delay observed should be much less... the speed of sound is 0.343 m/ms.  over 2 meters that's 5.8309ms at 100km/h(0.0278m/ms) the car moves forward 0.162 meters; the lateral distance is then (Pythagorean 2 meters and 0.162 meters ) $(\sqrt{2*2+0.162*0.162})$ =  2.00655 meters.  that's only 0.7 centimeters longer than one would expect.  
+Back on the paper, the delay observed should be much less... the speed of sound is 0.343 m/ms.  over 2 meters that's 5.8309ms at 100km/h(0.0278m/ms) the car moves forward 0.162 meters; the lateral distance is then (Pythagorean 2 meters and 0.162 meters )  $(\sqrt{2*2+0.162*0.162})$ =  2.00655 meters.  that's only 0.7 centimeters longer than one would expect.  
 
 The slowest time would be $(2/(0.343+0.0278)+2/(0.343-0.0278))$ = 11.73892ms * 0.343 = 4.026m or a measured distance of 2.013m or 1.3cm longer than one would expect.  so between 0 degrees and 90 degrees that at 100km/h the graphs should all be the same. (And they are, it's the predicted values that are wrong).
 
