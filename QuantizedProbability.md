@@ -291,7 +291,7 @@ Additional noise
 
 ### CHSH Real Life Comparisons
 
-I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
+I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
 
 With a stack of polarizers, the only events that count are those that correlate (make it through both), 
 vs the total amount that would normally be received in the same amount of time.   If the photon passes the 
@@ -318,15 +318,15 @@ because of losses on the high end.
 ```    	                                                    
     experimental   angle              QM pred.  QM/Exp      LHV pred. LHV adj.    LHV/QM     LHV(Adj)/
     result	                                                                  (exp pred)   Exp. Res.
-    0.457 � 0.009 0.00                0.464     1.015       0.5       0.486        1.07       1.06
-    0.451 � 0.013 11.25  (0.438)      0.448     0.993       0.464     0.451        1.03       1.00
-    0.400 � 0.007 22.5                0.401     1.003       0.4167    0.403       1.04        1.00
-    0.340 � 0.010 33.75               0.333     0.979       0.350     0.336        1.051      0.97
-    0.249 � 0.007 45                  0.251     1.008       0.250     0.250        0.996      1.00
-    0.164 � 0.007 56.25               0.170     1.03        0.150     0.164        0.88       1.00
-    0.100 � 0.003 67.5                0.100     1.0         0.083     0.095        0.83       0.95
-    0.052 � 0.004 78.75               0.055     1.058       0.036     0.048        0.65       0.92
-    0.041 � 0.003 90                  0.039     0.951       0.000     0.035        100        0.85 
+    0.457 ± 0.009 0.00                0.464     1.015       0.5       0.486        1.07       1.06
+    0.451 ± 0.013 11.25  (0.438)      0.448     0.993       0.464     0.451        1.03       1.00
+    0.400 ± 0.007 22.5                0.401     1.003       0.4167    0.403       1.04        1.00
+    0.340 ± 0.010 33.75               0.333     0.979       0.350     0.336        1.051      0.97
+    0.249 ± 0.007 45                  0.251     1.008       0.250     0.250        0.996      1.00
+    0.164 ± 0.007 56.25               0.170     1.03        0.150     0.164        0.88       1.00
+    0.100 ± 0.003 67.5                0.100     1.0         0.083     0.095        0.83       0.95
+    0.052 ± 0.004 78.75               0.055     1.058       0.036     0.048        0.65       0.92
+    0.041 ± 0.003 90                  0.039     0.951       0.000     0.035        100        0.85 
 ```
 
 My prediction does not account for experimental bias of 1 in 35 counts just happen, or a similar percentage of counts lost.
