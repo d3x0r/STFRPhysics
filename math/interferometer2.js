@@ -35,12 +35,12 @@ const keyFrames = [
 	{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 }
 ]
 
-const keyFramesLength = [ 0,0,0,0,0];
+const keyFramesLength = [ 0,0,0,0];
 
 const keyFrames_left = [
 	{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 },{ x: 0, y: 0 }
 ]
-const keyFramesLength_left = [ 0,0,0,0,0];
+const keyFramesLength_left = [ 0,0,0,0];
 const keyFrameTimes_left = [ -2,-1,0,1,2];
 
 const controls = document.getElementById( "controls" );
@@ -162,11 +162,6 @@ function update( evt ) {
 
 	animate = chkLblNow.checked;
         
-	if( animate ) {
-	}else
-		values.Now = Number(sliders.sliderNow.value)/100*runT/2;
-	sliders.spanNow.textContent = values.Now.toFixed(2);
-
 	//const Lgamma = (values.C*values.C - values.Velocity*values.Velocity)/values.C;
 	const angle = Math.PI/2 + aberration( Math.PI/2 );
 
@@ -421,14 +416,12 @@ function draw(  ) {
 	
         
 	if( animate ) {
-		values.Now = ( ( (Date.now() ) %(runT*1000) ) / 1000) - runT/2;
-		sliders.sliderNow.value =100*values.Now*2/runT
+		values.Now = ( ( (Date.now() ) %((runT+values.Velocity*2)*1250) ) / 1250) - runT/2;
+		sliders.sliderNow.value =scalars.Now*values.Now + bias.Now
 		sliders.spanNow.textContent = values.Now.toFixed(2);
-	}
-	const frame = Math.floor( (values.Now+runT/2)*10 );
-
-	if( animate )
 		requestAnimationFrame( draw );
+	}
+
 
 	return;
 
