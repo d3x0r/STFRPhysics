@@ -253,7 +253,17 @@ function update( evt ) {
 
 	const offset = contract( 0, 1 );
 
-	const ab = aberration2( 500, 500, 500, 500 - values.Scale );
+	if(0)
+	for( let x = 0; x < 360; x += 2 ) {
+		const ab = aberration2( 500, 500, 500 + Math.cos( x / 180 * Math.PI * 2 ) * values.Scale, 500  + Math.sin( x / 180 * Math.PI * 2 ) * values.Scale );
+		console.log( "ab is:", ab );
+		ctx.beginPath();
+		ctx.strokeStyle = "green";
+		ctx.moveTo( 500+3, 500 );
+		ctx.lineTo( ab.x+3, ab.y );
+		ctx.stroke();
+	}
+	//const ab = aberration2( 500, 500, 500, 500 - values.Scale );
 	//const ab = aberration2( 500, 500, 500, 500 + values.Scale );
 	//const ab = aberration2( 500, 500, 500+ values.Scale, 500  );
 	
@@ -399,9 +409,12 @@ function update( evt ) {
 
 	//console.log( "Length Left:", keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] + keyFramesLength_left[3] );
 
-	sliders.spanTotal.textContent = "Up: " + keyFramesLength.map(a=>a.toFixed(3)).join("+") + "=" + ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] + keyFramesLength[3] ).toFixed(3);
+	const first3 = ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] ).toFixed(3);
+	const first_left3 = ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] ).toFixed(3);
+
+	sliders.spanTotal.textContent = "Up: " + keyFramesLength.map(a=>a.toFixed(3)).join("+") + "=" + ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] + keyFramesLength[3] ).toFixed(3) + " first 3:" + first3;
 	sliders.spanTotal2.textContent = 
-		"Left: " + keyFramesLength_left.map(a=>a.toFixed(3)).join("+" ) + "=" + ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] + keyFramesLength_left[3] ).toFixed(3) 
+		"Left: " + keyFramesLength_left.map(a=>a.toFixed(3)).join("+" ) + "=" + ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] + keyFramesLength_left[3] ).toFixed(3)  + " first 3:" + first_left3;
 
 	draw();
 
