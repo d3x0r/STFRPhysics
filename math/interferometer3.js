@@ -64,8 +64,8 @@ let lengthContract = 1;
 
 //----------------------
 
-addSpan( "C: ", 1000, 1, 0, 2/1000, "C" );
-sliders.sliderC.style.display = "none";
+addSpan( "C", 1000, 1, 0, 2/1000, "C" );
+//sliders.sliderC.style.display = "none";
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
 addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
@@ -356,7 +356,7 @@ function update( evt ) {
 	//console.log( "T0_1:", keyFrameTimes);
 	keyFrameTimes2[1] = keyFrameTimes[0] + (keyFrameTimes[1] - keyFrameTimes[0]) / gamma;
 
-	let delt = keyFrameTimes[1] - keyFrameTimes[0];
+	let delt = (keyFrameTimes[1] - keyFrameTimes[0])*values.C;
 
 	keyFrames[1].x = keyFrames[0].x + delt*Math.cos(angle_0);
 	keyFrames[1].y = keyFrames[0].y - delt*Math.sin(angle_0);
@@ -365,7 +365,7 @@ function update( evt ) {
 	keyFrameTimes[2] = realTimeToObservedTimeXYZ2( keyFrameTimes[1], values.Velocity, keyFrames[1].x, keyFrames[1].y, 0
 		, values.Velocity, keyFrames[1].x + c1.x, keyFrames[1].y + c1.y, 0, c, s, c, s );
 	keyFrameTimes2[2] = keyFrameTimes[1] + (keyFrameTimes[2] - keyFrameTimes[1]) / gamma;
-	delt = keyFrameTimes[2] - keyFrameTimes[1];
+	delt = (keyFrameTimes[2] - keyFrameTimes[1])*values.C;
 	keyFrames[2].x = keyFrames[1].x + delt * Math.cos(angle_0);
 	keyFrames[2].y = keyFrames[1].y - delt * Math.sin(angle_0);
 	
@@ -374,7 +374,7 @@ function update( evt ) {
 	keyFrameTimes[3] = realTimeToObservedTimeXYZ2( keyFrameTimes[2], values.Velocity, keyFrames[2].x, keyFrames[2].y, 0
 		, values.Velocity, keyFrames[2].x + c2.x, keyFrames[2].y + c2.y, 0, c, s, c, s );
 	keyFrameTimes2[3] = keyFrameTimes[2] + (keyFrameTimes[3] - keyFrameTimes[2]) / gamma;
-	delt = keyFrameTimes[3] - keyFrameTimes[2];
+	delt = (keyFrameTimes[3] - keyFrameTimes[2])*values.C;
 	keyFrames[3].x = keyFrames[2].x + delt * Math.cos( angle_3 );
 	keyFrames[3].y = keyFrames[2].y - delt * Math.sin( angle_3 );
 
@@ -382,7 +382,7 @@ function update( evt ) {
 	keyFrameTimes[4] = realTimeToObservedTimeXYZ2( keyFrameTimes[3], values.Velocity, keyFrames[3].x, keyFrames[3].y, 0
 		, values.Velocity, keyFrames[3].x + c3.x, keyFrames[3].y + c3.y, 0, c, s, c, s );
 	keyFrameTimes2[4] = keyFrameTimes[3] + (keyFrameTimes[4] - keyFrameTimes[3]) / gamma;
-	delt = keyFrameTimes[4] - keyFrameTimes[3];
+	delt = (keyFrameTimes[4] - keyFrameTimes[3])*values.C;
 	keyFrames[4].x = keyFrames[3].x + delt * Math.cos( angle_4 );
 	keyFrames[4].y = keyFrames[3].y - delt * Math.sin( angle_4 );
 
@@ -398,7 +398,7 @@ function update( evt ) {
 	const cl2 = contract( -1, 0 );
 	keyFrameTimes_left[2] = realTimeToObservedTimeXYZ2( keyFrameTimes_left[1], values.Velocity, keyFrames_left[1].x, keyFrames_left[1].y, 0
 		, values.Velocity, keyFrames_left[1].x + cl2.x, keyFrames_left[1].y + cl2.y, 0, c, s, c, s );
-	delt = keyFrameTimes_left[2] - keyFrameTimes_left[1];
+	delt = (keyFrameTimes_left[2] - keyFrameTimes_left[1])*values.C;
 
 	keyFrames_left[2].x = keyFrames_left[1].x + delt * Math.cos(angle_l2);
 	keyFrames_left[2].y = keyFrames_left[1].y - delt * Math.sin(angle_l2);
