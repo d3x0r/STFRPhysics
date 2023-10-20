@@ -64,7 +64,8 @@ let lengthContract = 1;
 
 //----------------------
 
-addSpan( "C", 1000, 1, 0, 2/1000, "C" );
+addSpan( "C: ", 1000, 1, 0, 2/1000, "C" );
+sliders.sliderC.style.display = "none";
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
 addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
