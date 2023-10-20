@@ -273,10 +273,10 @@ function update( evt ) {
 	const offset = contract( 0, 1 );
 
 	for( let x = 0; x < 360; x += 2 ) {
-		const ab = aberration2( 900, 100, 900 + Math.cos( x / 180 * Math.PI * 2 ) * 90, 100  + Math.sin( x / 180 * Math.PI * 2 ) * 90 );
+		const ab = aberration2( 900, 100, 900 + Math.cos( x / 180 * Math.PI  ) * 90, 100  + Math.sin( x / 180 * Math.PI  ) * 90 );
 		//console.log( "ab is:", ab );
 		ctx.beginPath();
-		ctx.strokeStyle = "#008080";
+		ctx.strokeStyle = `hsl(${x+values.Direction*180/Math.PI} 100% 50%)`;
 		ctx.moveTo( 900, 100 );
 		ctx.lineTo( ab.x, ab.y );
 		ctx.stroke();
