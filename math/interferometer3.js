@@ -256,7 +256,7 @@ function update( evt ) {
 	lengthContract = Lgamma;
 
 	values.VoverC = values.Velocity/values.C;
-	sliders.spanNow.textContent = values.Now.toFixed(3) + " LT:" + ((values.Now+2)/gamma -2).toFixed(3);
+	sliders.spanNow.textContent = values.Now.toFixed(3) + " Local Time:" + ((values.Now+2)/gamma -2).toFixed(3);
 	//if( values.Now >= (runT/2 + values.Velocity)) values.Now = (runT/2 + values.Velocity);
 	//values.Now = values.Now;
 
