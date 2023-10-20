@@ -68,7 +68,7 @@ addSpan( "C", 1000, 1, 0, 2/1000, "C" );
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
 addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
-addSpan( "Now", 1550, -1, -runT/2, runT/1000, "Now" );
+addSpan( "Now", 2550, -1, -runT/2, runT/1000, "Now" );
 //addSpan( "Speed", 1000, "speed", 0, 2*Math.PI/1000, "Speed" );
 
 //- - - - - - - - - - - - - - 
@@ -79,8 +79,8 @@ const spanTotalLabel = document.createElement( "span" );
 spanTotalLabel.textContent = "Total Path Lengths:";
 totalBlock.appendChild( spanTotalLabel );
 
-const span3 = document.createElement( "br" );
-totalBlock.appendChild( span3 );
+let span = document.createElement( "br" );
+totalBlock.appendChild( span );
 
 sliders.spanTotal = document.createElement( "span" );
 sliders.spanTotal.textContent = "Left: 0 Up: 0";
@@ -88,7 +88,16 @@ sliders.spanTotal.style.position = "relative";
 sliders.spanTotal.style.left = "6em";
 totalBlock.appendChild( sliders.spanTotal );
 
-const span = document.createElement( "br" );
+span = document.createElement( "br" );
+totalBlock.appendChild( span );
+
+sliders.spanTotalT = document.createElement( "span" );
+sliders.spanTotalT.textContent = "Left: 0 Up: 0";
+sliders.spanTotalT.style.position = "relative";
+sliders.spanTotalT.style.left = "6em";
+totalBlock.appendChild( sliders.spanTotalT );
+
+span = document.createElement( "br" );
 totalBlock.appendChild( span );
 
 sliders.spanTotal2 = document.createElement( "span" );
@@ -97,8 +106,17 @@ sliders.spanTotal2.style.position = "relative";
 sliders.spanTotal2.style.left = "6em";
 totalBlock.appendChild( sliders.spanTotal2 );
 
-const span2 = document.createElement( "br" );
-totalBlock.appendChild( span2 );
+span = document.createElement( "br" );
+totalBlock.appendChild( span );
+
+sliders.spanTotal2T = document.createElement( "span" );
+sliders.spanTotal2T.textContent = "Left: 0 Up: 0";
+sliders.spanTotal2T.style.position = "relative";
+sliders.spanTotal2T.style.left = "6em";
+totalBlock.appendChild( sliders.spanTotal2T );
+
+span = document.createElement( "br" );
+totalBlock.appendChild( span );
 
 
 //- - - - - - - - - - - - - - 
@@ -237,7 +255,7 @@ function update( evt ) {
 	lengthContract = Lgamma;
 
 	values.VoverC = values.Velocity/values.C;
-	sliders.spanNow.textContent = values.Now.toFixed(3) + " RT:" + (values.Now*gamma).toFixed(3);
+	sliders.spanNow.textContent = values.Now.toFixed(3) + " LT:" + ((values.Now+2)/gamma -2).toFixed(3);
 	//if( values.Now >= (runT/2 + values.Velocity)) values.Now = (runT/2 + values.Velocity);
 	//values.Now = values.Now;
 
@@ -253,14 +271,13 @@ function update( evt ) {
 
 	const offset = contract( 0, 1 );
 
-	if(0)
 	for( let x = 0; x < 360; x += 2 ) {
-		const ab = aberration2( 500, 500, 500 + Math.cos( x / 180 * Math.PI * 2 ) * values.Scale, 500  + Math.sin( x / 180 * Math.PI * 2 ) * values.Scale );
-		console.log( "ab is:", ab );
+		const ab = aberration2( 900, 100, 900 + Math.cos( x / 180 * Math.PI * 2 ) * 90, 100  + Math.sin( x / 180 * Math.PI * 2 ) * 90 );
+		//console.log( "ab is:", ab );
 		ctx.beginPath();
-		ctx.strokeStyle = "green";
-		ctx.moveTo( 500+3, 500 );
-		ctx.lineTo( ab.x+3, ab.y );
+		ctx.strokeStyle = "#008080";
+		ctx.moveTo( 900, 100 );
+		ctx.lineTo( ab.x, ab.y );
 		ctx.stroke();
 	}
 	//const ab = aberration2( 500, 500, 500, 500 - values.Scale );
@@ -282,6 +299,12 @@ function update( evt ) {
 	const angle_3 =  aberration2a( 500, 500, 500, 500 + values.Scale  ) - Math.PI/2;
 	const angle_4 =  aberration2a( 500, 500, 500 + values.Scale, 500  );
 	const angle_l2 = aberration2a( 500, 500, 500 - values.Scale, 500  ) + Math.PI;
+
+	//console.log( "A0(1,2) : ", angle_0 / (Math.PI) );
+	//console.log( "Al2 : ", angle_l2 / (Math.PI) );
+	//console.log( "A3 : ", angle_3 / (Math.PI) );
+	//console.log( "A4 : ", angle_4 / (Math.PI) );
+
 	//const angle0a = -aberration2a( 500, 500, 500- values.Scale, 500   );
 	//const angle0a = aberration2a( 500, 500, 500+ values.Scale, 500   );
 	//const angle0a = aberration2a( 500, 500, 500, 500 + values.Scale  ) - Math.PI/2;
@@ -411,10 +434,12 @@ function update( evt ) {
 
 	const first3 = ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] ).toFixed(3);
 	const first_left3 = ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] ).toFixed(3);
-
-	sliders.spanTotal.textContent = "Up: " + keyFramesLength.map(a=>a.toFixed(3)).join("+") + "=" + ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] + keyFramesLength[3] ).toFixed(3) + " first 3:" + first3;
+	const total = ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] + keyFramesLength[3] );
+	sliders.spanTotal.textContent = "Up: " + keyFramesLength.map(a=>a.toFixed(3)).join("+") + "=" + total.toFixed(3) + " first 3:" + first3;
+	sliders.spanTotalT.textContent = "Up(T): " + keyFrameTimes.map(a=>a.toFixed(3)).join(" @ ") + "(" + (total/(keyFrameTimes[4]+2)).toFixed(3) + ")" ;
 	sliders.spanTotal2.textContent = 
 		"Left: " + keyFramesLength_left.map(a=>a.toFixed(3)).join("+" ) + "=" + ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] + keyFramesLength_left[3] ).toFixed(3)  + " first 3:" + first_left3;
+	sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map(a=>a.toFixed(3)).join(" @ ") ;
 
 	draw();
 
