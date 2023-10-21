@@ -259,10 +259,10 @@ function update( evt ) {
 	
 }
 function firstDraw( ang1 ) {
-	    var centerX = 666;
-    var centerY = canvas.height / 2;
-    var radius = 200;
-ctx.clearRect( 0, 0, 1024, 1024);
+	var centerX = 666;
+	var centerY = canvas.height / 2;
+	var radius = 200;
+	ctx.clearRect( 0, 0, 1024, 1024);
 
 	const i = ang1/Math.PI*2;
 	angleText.textContent = (90 * (ang1/Math.PI*2)).toFixed(4) +"°";
@@ -290,7 +290,10 @@ ctx.clearRect( 0, 0, 1024, 1024);
 
 	}
 
-	corrText.textContent = (100*(q-p)/(q)).toFixed(4) +"% "
+	if( r > 0 ) 
+		corrText.textContent = (100*(q-p)/(q)).toFixed(4) +"% "
+	else
+		corrText.textContent = (100*((100-q)-(100-p))/(100-q)).toFixed(4) +"% "
 	
 //	polarizerText.textContent = (;
                /*

@@ -144,6 +144,10 @@ https://www.youtube.com/watch?v=hhhYzfozon0   Ricci Tensor & Scalar (eigenchris)
 
 https://www.youtube.com/watch?v=3LBitCErlBE Geodesic Curves
 
+https://www.youtube.com/watch?v=km7WTO_6K5s Relativity 104e: Special Relativity - Spacetime Interval and Minkowski Metric ( eigenchris)
+
+More Modern (after this phase of the project)
+https://www.youtube.com/watch?v=fvqXshyuvOg Chapter 1-4: Rethinking General Relativity as 5 Dimensions of Physics - A Unifying Theory of Gravity (Chris "The Brain") 
 
 
 ## Other tangential topics

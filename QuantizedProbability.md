@@ -291,7 +291,7 @@ Additional noise
 
 ### CHSH Real Life Comparisons
 
-I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
+I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
 
 With a stack of polarizers, the only events that count are those that correlate (make it through both), 
 vs the total amount that would normally be received in the same amount of time.   If the photon passes the 
@@ -301,11 +301,11 @@ making it through both polarizers `((1-2x)/(((1-2x)<0)?x:(1-x)) +1)/2` for x in 
 
 Below is the experimental results from the link above, and new LHV predictions to relate... is far off?
 
-After re-evaluating the math and going ahead with the relations, [THis Demo Graph](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2_polarizers.html), I applied
+After re-evaluating the math and going ahead with the relations, [THis Demo Graph](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2_polarizers.html), I applied
 the same sort of math to evaluating the results, which meant I had to find the other non-linear curve that matched this percentage.  While I have it above, and it works here
 and even below in the desmos link, this is yet to be decomposed to simpler expressions.
 
-[Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html); this demonstration program explores amont of difference (difference of angle) of 
+[Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2.html); this demonstration program explores amont of difference (difference of angle) of 
 2 polarizers and one side of a Stern-Gerlach or CHSH Independant Objserver Game.  
 
 ![2 polarizer graph](CHSH_2Polarizer.png)
