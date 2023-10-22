@@ -291,7 +291,9 @@ Additional noise
 
 ### CHSH Real Life Comparisons
 
-I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2.html), having just implemented a stack of polarizers test version to match https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
+I have some other tests: [Game Correlation](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html), [Stacked Polarizers](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2.html), 
+having just implemented a stack of polarizers test version to match 
+https://escholarship.org/content/qt2f18n5nk/qt2f18n5nk.pdf?t=p2au19  pages 83-85(ish) are the experimental results.
 
 With a stack of polarizers, the only events that count are those that correlate (make it through both), 
 vs the total amount that would normally be received in the same amount of time.   If the photon passes the 
@@ -332,7 +334,6 @@ because of losses on the high end.
 My prediction does not account for experimental bias of 1 in 35 counts just happen, or a similar percentage of counts lost.
 Non-detection doesn't imply non-correlation, just that something happened that made the possible truth not go through the filter; the polarizers are lossy themselves.
 
-The above comparison shows QM is +/-3% and I'm +25% -8% (the 25% is at low counts, where polarizers are mostly an inverse coorelation).
 
 #### Graphic Representation
 
