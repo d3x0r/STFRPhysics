@@ -545,8 +545,8 @@ function draw(  ) {
 	ctx.stroke();
 	ctx.beginPath();
 	ctx.strokeStyle="yellow";
-	ctx.moveTo( 750 + (-L*lengthContract)*xscale, 750 - lNow*xscale );
-	ctx.lineTo( 750 + (+L*lengthContract)*xscale, 750 - lNow*xscale );
+	ctx.moveTo( 750 + (-L*lengthContract)*xscale, 752 - lNow*xscale );
+	ctx.lineTo( 750 + (+L*lengthContract)*xscale, 752 - lNow*xscale );
 	ctx.stroke();
 
 	ctx.beginPath();
@@ -608,23 +608,24 @@ function draw(  ) {
 	ctx.strokeStyle="red";
 	ctx.beginPath();
 		// moving tail to moving observer
-	ctx.moveTo( 750 + (-L)*xscale, 750 - frames[4].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (-L)*xscale, 750 - (frames[4].T_end_local)*xscale );
+	ctx.moveTo( 750 + (-L)*lengthContract*xscale, 750 - frames[4].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (-L)*lengthContract*xscale, 750 - (frames[4].T_end_local)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 		// moving head to moving observer
-	ctx.moveTo( 750 + (L)*xscale, 750 - frames[5].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (L)*xscale, 750 - frames[5].T_end_local*xscale );
+	ctx.moveTo( 750 + (L)*lengthContract*xscale, 750 - frames[5].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (L)*lengthContract*xscale, 750 - frames[5].T_end_local*xscale );
 	ctx.stroke();
 
 
 
 	ctx.beginPath();
 	ctx.strokeStyle="yellow";
-	ctx.moveTo( 250 + (V*now-L*lengthContract)*xscale, 750 - now*xscale );
-	ctx.lineTo( 250 + (V*now+L*lengthContract)*xscale, 750 - now*xscale );
+	ctx.moveTo( 250 + (V*now-L*lengthContract)*xscale, 752 - now*xscale );
+	ctx.lineTo( 250 + (V*now+L*lengthContract)*xscale, 752 - now*xscale );
 	ctx.stroke();
-	if( now < frames[9].T_start ){
+	//if( now < frames[9].T_start )
+	{
 		ctx.beginPath();
 		ctx.strokeStyle="white";
 		ctx.moveTo( 750 + (-V*now-L)*xscale, 750 - lNow*xscale );
