@@ -250,7 +250,7 @@ controls.appendChild( sliderNow );
 sliderNow.addEventListener( "input", update );
 
 sliderNow.setAttribute( "min",-100 );
-sliderNow.setAttribute( "max",100 );
+sliderNow.setAttribute( "max",300 );
 sliderNow.value = now*runT;
 sliderNow.style.width="250px";
 
@@ -383,7 +383,7 @@ function drawClock( x, y, T,label ) {
 			ctx.fillStyle = "#e00";
 
 		ctx.arc(centerX+x, centerY-y
-				, clockRadius, 0-Math.PI/2, ((0.5+T/runT)%1) * (Math.PI*2)-Math.PI/2, false);
+				, clockRadius, 0-Math.PI/2, ((T)%1) * (Math.PI*2)-Math.PI/2, false);
 		ctx.lineTo( centerX+x, centerY-y );
 		ctx.closePath();
 	ctx.stroke();
@@ -395,7 +395,7 @@ function drawClock( x, y, T,label ) {
 		ctx.fillStyle = "green";
 
 		ctx.arc(centerX + x, centerY+clockRadius*2.5 - y
-				, clockRadius, 0-Math.PI/2, ((8*(0.5+T/runT))%1) * (Math.PI*2)-Math.PI/2, false);
+				, clockRadius, 0-Math.PI/2, ((2*(T))%1) * (Math.PI*2)-Math.PI/2, false);
 		ctx.lineTo( centerX+x, centerY+clockRadius*2.5-y );
 		ctx.closePath();
 	ctx.stroke();
@@ -416,8 +416,13 @@ function draw(  ) {
 		animating = false;
 	}
 
+
 	const lNow = lengthContract*now;
 	ctx.clearRect( 0, 0, 1024, 1024);
+
+	drawClock( 0, -550, now, now.toFixed(2) );
+	drawClock( 500, -550, now*lengthContract, (now*lengthContract).toFixed(2) );
+
 	ctx.strokeStyle = "white";
 	// stationary event to moving tail
 	if( now >= frames[0].T_start && now <= frames[2].T_end ) {
