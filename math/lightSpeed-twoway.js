@@ -156,7 +156,7 @@ let span = document.createElement( "br" );
 controls.appendChild( span );
 
 span = document.createElement( "span" );
-span.textContent = "C";
+span.textContent = "C: ";
 controls.appendChild( span );
 
 const sliderC = document.createElement( "input" );
@@ -165,6 +165,7 @@ controls.appendChild( sliderC );
 sliderC.addEventListener( "input", update );
 
 sliderC.setAttribute( "max",1250 );
+sliderC.style.display = "none";
 sliderC.value = C*100;
 sliderC.style.width="250px";
 
@@ -250,7 +251,7 @@ controls.appendChild( sliderNow );
 sliderNow.addEventListener( "input", update );
 
 sliderNow.setAttribute( "min",-100 );
-sliderNow.setAttribute( "max",300 );
+sliderNow.setAttribute( "max",100 );
 sliderNow.value = now*runT;
 sliderNow.style.width="250px";
 
@@ -326,14 +327,6 @@ update();
 function update( evt ) {
 	updates.map( upd=>upd() );
 
-//	runT = Number(sliderRunT.value)/5;
-//	spanRunT.textContent = runT.toFixed(2)+"ns";
-
-	animate = chkLblNow.checked;
-	if( animate ) {
-	}else
-		now = (Number(sliderNow.value)/100+1)/2*runT+runStart;
-
 	C = Number(sliderC.value)/100;
 	params.C = C;
 	spanC.textContent = C.toFixed(2)+"ft/ns";
@@ -355,6 +348,21 @@ function update( evt ) {
 
 	Frame.initFrames();
 
+	let max = frames[8].T_end;
+	if( frames[9].T_end > max ) 
+		max = frames[9].T_end;
+	if( frames[6].T_end/lengthContract > max ) 
+		max = frames[6].T_end/lengthContract;
+	if( frames[7].T_end/lengthContract > max ) 
+		max = frames[7].T_end/lengthContract;
+		
+	runT = max + 0.5;
+//	spanRunT.textContent = runT.toFixed(2)+"ns";
+
+	animate = chkLblNow.checked;
+	if( animate ) {
+	}else
+		now = (Number(sliderNow.value)/100+1)/2*runT+runStart;
 
 	if( !animating )
 		draw(  );
