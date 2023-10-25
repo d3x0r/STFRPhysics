@@ -623,6 +623,16 @@ function draw(  ) {
 	ctx.lineTo( 500 + values.Scale * keyFrames[1].x, 500 + values.Scale * keyFrames[1].y );
 	ctx.stroke();
 
+	if( values.Now < keyFrameTimes[1] ) {
+		const pos = ( values.Now - keyFrameTimes[0] ) / ( keyFrameTimes[1] - keyFrameTimes[0] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames[0].x * (1-pos) + keyFrames[1].x * (pos) )
+			, 500 + values.Scale * ( keyFrames[0].y * (1-pos) + keyFrames[1].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
 
 	/* split to up */
 	ctx.beginPath();
@@ -630,6 +640,58 @@ function draw(  ) {
 	ctx.moveTo(  500 + values.Scale * keyFrames[1].x, 500 + values.Scale * keyFrames[1].y );
 	ctx.lineTo(  500 + values.Scale * keyFrames[2].x, 500 + values.Scale * keyFrames[2].y );
 	ctx.stroke();
+
+	if( values.Now >= keyFrameTimes[1] && values.Now < keyFrameTimes[2] ) {
+		const pos = ( values.Now - keyFrameTimes[1] ) / ( keyFrameTimes[2] - keyFrameTimes[1] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames[1].x * (1-pos) + keyFrames[2].x * (pos) )
+			, 500 + values.Scale * ( keyFrames[1].y * (1-pos) + keyFrames[2].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
+	if( values.Now >= keyFrameTimes_left[1] && values.Now < keyFrameTimes_left[2] ) {
+		const pos = ( values.Now - keyFrameTimes_left[1] ) / ( keyFrameTimes_left[2] - keyFrameTimes_left[1] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames_left[1].x * (1-pos) + keyFrames_left[2].x * (pos) )
+			, 500 + values.Scale * ( keyFrames_left[1].y * (1-pos) + keyFrames_left[2].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
+	if( values.Now >= keyFrameTimes[2] && values.Now < keyFrameTimes[3] ) {
+		const pos = ( values.Now - keyFrameTimes[2] ) / ( keyFrameTimes[3] - keyFrameTimes[2] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames[2].x * (1-pos) + keyFrames[3].x * (pos) )
+			, 500 + values.Scale * ( keyFrames[2].y * (1-pos) + keyFrames[3].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
+	if( values.Now >= keyFrameTimes_left[2] && values.Now < keyFrameTimes_left[3] ) {
+		const pos = ( values.Now - keyFrameTimes_left[2] ) / ( keyFrameTimes_left[3] - keyFrameTimes_left[2] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames_left[2].x * (1-pos) + keyFrames_left[3].x * (pos) )
+			, 500 + values.Scale * ( keyFrames_left[2].y * (1-pos) + keyFrames_left[3].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
+	if( values.Now >= keyFrameTimes[3] && values.Now < keyFrameTimes[4] ) {
+		const pos = ( values.Now - keyFrameTimes[3] ) / ( keyFrameTimes[4] - keyFrameTimes[3] );
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.arc( 500 + values.Scale * ( keyFrames[3].x * (1-pos) + keyFrames[4].x * (pos) )
+			, 500 + values.Scale * ( keyFrames[3].y * (1-pos) + keyFrames[4].y * (pos) )
+			, 0.05 * values.Scale
+			, 0, Math.PI * 2 ) ;
+		ctx.stroke();		
+	}
+
 
 	/* top back to split */
 	ctx.beginPath();
