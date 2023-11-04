@@ -166,7 +166,6 @@ function firstDraw( a, b, mass ) {
 	const cm_bx = Math.cos( Math.PI/2 * cm_tilt );
 	const cm_by = Math.sin( Math.PI/2 * cm_tilt );
 
-	ctx.strokeStyle = "#333";
 	ctx.beginPath();
 	ctx.strokeStyle = "red";
 	ctx.lineWidth = 1;
@@ -175,13 +174,82 @@ function firstDraw( a, b, mass ) {
 	ctx.stroke();
 
 	
-	ctx.strokeStyle = "#333";
 	ctx.beginPath();
 	ctx.strokeStyle = "black";
 	ctx.lineWidth = 3;
 	ctx.moveTo( beamX-bx*200, beamY-by*200 );
 	ctx.lineTo( beamX+bx*200, beamY+by*200 );
 	ctx.stroke();
+
+	/* fulcrum */
+	ctx.beginPath();
+	ctx.fillStyle = "blue";
+	ctx.lineWidth = 3;
+	if( a > b ) {
+	ctx.fillStyle = "green";
+		ctx.moveTo( beamX+(2*(a)/(a+b)-1)*200, beamY + 2+0*200 );
+		ctx.lineTo( beamX+(2*(a)/(a+b)-1)*200 - 5, beamY + 2+0*200 + 10 );
+		ctx.lineTo( beamX+(2*(a)/(a+b)-1)*200 + 5, beamY + 2+0*200 + 10 );
+	} else {
+	ctx.fillStyle = "red";
+		if( !b ) {
+			ctx.moveTo( beamX+0, beamY + 2+0*200 );
+			ctx.lineTo( beamX+0 - 5, beamY + 2+0*200 + 10 );
+			ctx.lineTo( beamX+0 + 5, beamY + 2+0*200 + 10 );
+		} else {
+			ctx.moveTo( beamX-((2*b)/(a+b)-1)*200, beamY + 2+0*200 );
+			ctx.lineTo( beamX-((2*b)/(a+b)-1)*200 - 5, beamY + 2+0*200 + 10 );
+			ctx.lineTo( beamX-((2*b)/(a+b)-1)*200 + 5, beamY + 2+0*200 + 10 );
+		}
+	}
+	ctx.fill();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "red";
+	ctx.lineWidth = 3;
+	if( a > b ) {
+		ctx.strokeStyle = "blue";
+		ctx.moveTo( beamX-1*200, beamY+3-0*200 );
+		ctx.lineTo( beamX-(2*b/(a+b)-1)*200, beamY+3+0*200 );
+	} else {
+		ctx.moveTo( beamX-1*200, beamY+3-0*200 );
+		ctx.lineTo( beamX-(1-(2*a)/(b+a))*200, beamY+3+0*200 );
+	}
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "green";
+	ctx.lineWidth = 3;
+	if( a > b ) {
+		ctx.moveTo( beamX+((2*a)/(a+b)-1)*200, beamY-0*200 );
+		ctx.lineTo( beamX+1*200, beamY+0*200 );
+	} else {
+		ctx.moveTo( beamX-(1-(2*a)/(a+b))*200, beamY-0*200 );
+		ctx.lineTo( beamX+1*200, beamY+0*200 );
+	}
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "orange";
+	ctx.lineWidth = 3;
+	if( a > b ) {
+	ctx.strokeStyle = "purple";
+		const len = 1-2*(2*b)/(a+b);
+		ctx.moveTo( beamX+(2*(a)/(a+b)-1)*200, beamY-3 );
+		ctx.lineTo( beamX+(len)*200, beamY-3 );
+	} else {
+		if( !b ) {
+			ctx.moveTo( beamX-0, beamY-3 );
+			ctx.lineTo( beamX+1*200, beamY-3 );
+		}else {
+			const len = (2*(2*a)/(b+a)-1);
+			ctx.moveTo( beamX+(1-(2*b)/(a+b))*200, beamY-3 );
+			ctx.lineTo( beamX+(len)*200, beamY-3 );
+		}
+	}
+	ctx.stroke();
+
+
 	//console.log( "ang?", ang );
 	ctx.fillStyle = "#333";
 	ctx.font = "24px monospace"
@@ -242,10 +310,15 @@ function firstDraw( a, b, mass ) {
 	ctx.lineTo( 950, 80 );
 	ctx.stroke();
 	ctx.fillStyle = "black";
-	if( a > b ) 
-		ctx.fillText( "(A-B)/B", 0, 80 );
-	else	
+	if( a > b ) {
+		ctx.fillText( "(B-A)", 180, 60 );
+		ctx.fillText( "B", 200, 100 );
+		ctx.fillText( "(B-A)/B", 0, 80 );
+	} else {
+		ctx.fillText( "(A-B)", 180, 60 );
+		ctx.fillText( "A", 200, 100 );
 		ctx.fillText( "(A-B)/A", 0, 80 );
+	}
 	return;
 
 	
