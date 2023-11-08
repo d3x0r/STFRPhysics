@@ -173,17 +173,38 @@ class D3xTransform {
 					const nx =  next[0] * (V) * ca + X - myX;
 					const ny =  next[0] * (V) * sa + (T+1)-D - myY;
 
+					const len = Math.sqrt( hx*hx+hy*hy);
+					const angle = Math.atan2( hy, -hx );
+					const new_angle = aberration( angle, myV );
+					const dx = Math.cos( new_angle ) * len;
+					const dy = Math.sin( new_angle ) * len;
+
+					const len2 = Math.sqrt( rx*rx+ry*ry);
+					const angle2 = Math.atan2( ry, -rx );
+					const new_angle2 = aberration( angle2, myV );
+					const dx2 = Math.cos( new_angle2 ) * len2;
+					const dy2 = Math.sin( new_angle2 ) * len2;
+
+					const len3 = Math.sqrt( nx*nx+ny*ny);
+					const angle3 = Math.atan2( ny, -nx );
+					const new_angle3 = aberration( angle3, myV );
+					const dx3 = Math.cos( new_angle3 ) * len3;
+					const dy3 = Math.sin( new_angle3 ) * len3;
+
+
 					ctx.beginPath();
 				//console.log( "BLAH:", (Math.floor((X+20)/40*255)).toString(16).padStart( '0', 2 ) );
 					ctx.strokeStyle= "red";
 					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs + (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(rx), ofs + (xscale_)*(ry) );
+					ctx.moveTo( ofs + (xscale_)*(dx), ofs + (xscale_)*(dy) );
+					ctx.lineTo( ofs + (xscale_)*(dx2), ofs + (xscale_)*(dy2) );
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-					ctx.moveTo( ofs +  (xscale_)*(hx), ofs + (xscale_)*(hy) );
-					ctx.lineTo( ofs + (xscale_)*(nx), ofs + (xscale_)*(ny) );
+					ctx.moveTo( ofs +  (xscale_)*(dx), ofs + (xscale_)*(dy) );
+					ctx.lineTo( ofs + (xscale_)*(dx3), ofs + (xscale_)*(dy3) );
 					ctx.stroke();
+
+				if(0) // faster than light warp....
 					if( here.length > 1 )
 					{
 						const hx =  here[1] * (V) * ca + X - myX;
@@ -272,18 +293,36 @@ class D3xTransform {
 		function doSegA( seg ) {
 
 			function _doSeg(tailx,taily, headx, heady) {
-			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx+V*now*ca, taily+V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
-			let head  = observedTimeToRealTimeXYZ2( now, V, headx+V*now*ca, heady+V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 
-			const hdx =  head[0] * (V) * ca +headx ;//- myX;
-			const hdy =  head[0] * (V) * sa +heady ;// - myY;
-			const tx =  tail[0] * (V) * ca +tailx ;//- myX;
-			const ty =  tail[0] * (V) * sa +taily ;//- myY;
+			let tail  = observedTimeToRealTimeXYZ2( now, V, tailx, taily - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
+			let head  = observedTimeToRealTimeXYZ2( now, V, headx, heady - D, 0, myV, 0, 0, 0, ca, sa, ca_o, sa_o );
+
+			const hdx =  head[0] * (V) * ca +headx - myX;
+			const hdy =  head[0] * (V) * sa +heady  - myY-D;
+			const tx =  tail[0] * (V) * ca +tailx - myX;
+			const ty =  tail[0] * (V) * sa +taily - myY-D;
+
+
+			
+					const len = Math.sqrt( hdx*hdx+hdy*hdy);
+					const angle = Math.atan2( hdy, -hdx );
+					const new_angle = aberration( angle, myV );
+					const dx = Math.cos( new_angle ) * len;
+					const dy = Math.sin( new_angle ) * len;
+
+					const len2 = Math.sqrt( tx*tx+ty*ty);
+					const angle2 = Math.atan2( ty, -tx );
+					const new_angle2 = aberration( angle2, myV );
+					const dx2 = Math.cos( new_angle2 ) * len2;
+					const dy2 = Math.sin( new_angle2 ) * len2;
+
+
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
-			ctx.moveTo( ofs + (xscale_)*(hdx), ofs + (xscale_)*(hdy-D) );
-			ctx.lineTo( ofs + (xscale_)*(tx), ofs + (xscale_)*(ty-D) );
+			ctx.moveTo( ofs + (xscale_)*(dx), ofs + (xscale_)*(dy-D) );
+			ctx.lineTo( ofs + (xscale_)*(dx2), ofs + (xscale_)*(dy2-D) );
 			ctx.stroke();
+		if(0)
 			if( head.length > 1 ) {
 				const hdx =  head[1] * (V) * ca +headx - myX;
 				const hdy =  head[1] * (V) * sa +heady  - myY;
@@ -905,6 +944,12 @@ function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa
 
 
 
+function aberration(th,V) {
+	const a = Math.acos( (Math.cos(th)+V/C)/(1+V/C*Math.cos(th)) )
+	if( th < 0 ) return -a;
+	return a;
+}
+
 
 function timeBiasAtPos( V, X, Y, Z ) {
 	//b(x,y)=-sqrt((x If(x<0, ((C+V)/(C-V)), ((C-V)/(C+V))))^(2)+(y ((sqrt(C C+V V))/(C)))^(2)+(Z ((sqrt(C C+V V))/(C)))^(2))
@@ -964,59 +1009,18 @@ function update( evt ) {
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 
-	if( !animate ) {
-		draw(  );
-	} else if( !didAnimate ) draw();
+	if( !didAnimate ) draw();
 
 }
 
 
-	function headTri( t,o,f ) {
-		const y = 0;
-		
-		if(f)ctx.fillStyle = "red";
-		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.moveTo( 500+(t) * xscale + 5, o+y );
-		ctx.lineTo( 500+(t) * xscale - 5, o+y -5 );
-		ctx.lineTo( 500+(t) * xscale - 5, o+y +5 );
-		ctx.fill();
-	}
-
-	function tailTri( t,o,f ) {      
-		const y = 0;
-		
-		if(f)ctx.fillStyle = "blue";
-		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.moveTo( 500+(t) * xscale - 5, o+y );
-		ctx.lineTo( 500+(t) * xscale + 5, o+y - 5 );
-		ctx.lineTo( 500+(t) * xscale + 5, o+y + 5 );
-		ctx.fill();
-	}
-
-	function centerBoxXY( x,y,f ) {      
-		
-		if(f)ctx.fillStyle = "green";
-		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.moveTo( x +5, y );
-		ctx.lineTo( x, y - 5 );
-		ctx.lineTo( x-5, y  );
-		ctx.lineTo( x, y + 5 );
-		ctx.fill();
-	}
-	function centerBox( t,o ) {      
-		//const y = 20;
-		centerBoxXY( 500+(t)*xscale, o );
-	}
 
 
 let last_draw_time = 0;
 const xscale = 100;
 const yscale = 100;
 let didEvent = false;
-const photonStart = 100;
+
 function draw(  ) {
 	
 	if( animate ) {
@@ -1025,18 +1029,19 @@ function draw(  ) {
 		spanNow.textContent = now.toFixed(2);
 	}
 	ctx.clearRect( 0, 0, canvas.width, canvas.height );
-    D3xTransform.drawCoords( now );
+	D3xTransform.drawCoords( now );
 
 
 
 	last_draw_time = now;
 
 	if( animate )
-	requestAnimationFrame( draw );
+		requestAnimationFrame( draw );
 
 	return;
 
 }
 
-		draw();
+update();
+if( animate ) draw();
 
