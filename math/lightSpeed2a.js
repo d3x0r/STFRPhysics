@@ -17,6 +17,7 @@ let runT = 10;
 let E = 0;
 let now = 0;
 let animate = true;
+let aberrate = true;
 const step = 10;
 
 const frames = [];
@@ -214,18 +215,35 @@ const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
-const spanChkNow = document.createElement( "span" );
+//----------------------
+
+const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = " |Animate";
 controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
+spanChkNow.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
+
+
+const spanChkAberrate = document.createElement( "LABEL" );
+spanChkAberrate.textContent = "Light Aberration";
+controls.appendChild( spanChkAberrate );
+
+const chkLblAberrate = document.createElement( "input" );
+chkLblAberrate.setAttribute( "type", "checkbox" );
+chkLblAberrate.checked = animate;
+spanChkAberrate.appendChild( chkLblAberrate );
+chkLblAberrate.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+
 //----------------------
 update();
 
@@ -389,6 +407,11 @@ function observerTimeToRealPos( T, L ) {
 }
 
 
+function aberration(th,V) {
+	const a = Math.acos( (Math.cos(th)+V/C)/(1+V/C*Math.cos(th)) )
+	return a;
+}
+
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
@@ -403,8 +426,9 @@ function update( evt ) {
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
-
+	let wasAnimate = animate;
 	animate = chkLblNow.checked;
+	aberrate = chkLblAberrate.checked;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
@@ -428,11 +452,11 @@ function update( evt ) {
 		const obs_now = (del * runT)-runT/2 - Tofs;
 		const x = obs_now * V;
 
-	const B = ((Treal*V)- L);
-	const hLen = (B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+		const B = ((Treal*V)- L);
+		const hLen = (B*V+Math.sqrt(B*B*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
 
-	const A = ((Treal*V)- -L);
-	const tLen = (A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
+		const A = ((Treal*V)- -L);
+		const tLen = (A*V+Math.sqrt(A*A*C*C+D*D*(C*C-V*V)))/(C*C-V*V);
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
@@ -445,18 +469,11 @@ function update( evt ) {
 		frame.T_see_t = Treal+tLen;
 	}
 
-	         /*
-context.beginPath();
-context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-context.fillStyle = 'green';
-context.fill();
-context.lineWidth = 5;
-context.strokeStyle = '#003300';
-context.stroke()
-*/
+	if( !wasAnimate ) draw();
 
-	//draw(  );
+
 }
+
 let last_draw_time = 0;
 const xscale = 50;
 const yscale = 50;
@@ -480,6 +497,7 @@ function draw(  ) {
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*yscale+photonStart;
 	let f = 0;
+	//console.log( "---------------------" );
 	for( f = 0; f < nFrames; f++ ) {
 		const frame = frames[f];
 		if( frame.T_start > now ) break;
@@ -488,24 +506,65 @@ function draw(  ) {
 		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 
 		if( frame.T_see_t > now && frame.T_see_t < runT/2 ) {
-		ctx.beginPath();
-		ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
-		ctx.lineTo( 500 + xscale*frame.Pt, toY );
-		ctx.stroke();
+			if( !aberrate ) {
+			ctx.beginPath();
+			ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
+			ctx.lineTo( 500 + xscale*frame.Pt, toY );
+			ctx.stroke();
+			} else {
+
+			const dx = xscale*frame.Pt - (-L*xscale);
+			const dy = toY-photonStart;
+			const len = Math.sqrt(dx*dx + dy*dy);
+			
+			const angle = Math.atan2( dy, -dx );
+			const new_angle = aberration( angle, V );
+			const cx = Math.cos( new_angle );
+			const sx = Math.sin( new_angle );
+			
+	//console.log( "Angle:", angle );
+
+			ctx.beginPath();
+			ctx.moveTo( 500 +xscale*frame.Pt + cx*len, toY - sx*len );
+			ctx.lineTo( 500 + xscale*frame.Pt, toY );
+			ctx.stroke();
+			}
 
 			const del = frame.T_see_t - frame.T_start;
 			const passed = now - frame.T_start;
 			const delT = passed/del;
 			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
+
 			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT), true );
 
 		}
 
 		if( frame.T_see_h > now && frame.T_see_h < runT/2 ) {
-		ctx.beginPath();
-		ctx.moveTo( 500 +L*xscale, photonStart );
-		ctx.lineTo( 500 + xscale*frame.Ph, toY );
-		ctx.stroke();
+			if( !aberrate ) {
+			ctx.beginPath();
+			ctx.moveTo( 500 +L*xscale, photonStart );
+			ctx.lineTo( 500 + xscale*frame.Ph, toY );
+			ctx.stroke();
+			} else {
+
+			const dx = xscale*frame.Ph - (+L*xscale);
+			const dy = toY-photonStart;
+			const len = Math.sqrt(dx*dx + dy*dy);
+			
+			const angle = Math.atan2( dy, -dx );
+			const new_angle = aberration( angle, V );
+			//console.log( "angle:", angle, new_angle );
+			const cx = Math.cos( new_angle );
+			const sx = Math.sin( new_angle );
+			//const cx = Math.cos( angle );
+			//const sx = Math.sin( angle );
+			
+			ctx.beginPath();
+			ctx.moveTo( 500 + xscale*frame.Ph + cx*len, toY - sx*len );
+			ctx.lineTo( 500 + xscale*frame.Ph, toY );
+			ctx.stroke();
+			}
+
 
 			const del = frame.T_see_h - frame.T_start;
 			const passed = now - frame.T_start;
@@ -547,17 +606,17 @@ function draw(  ) {
 
 		const willBe = frame.Phc + V*(frame.T_start-now);
 		if( frame.T_start <now && frame.T_see_h>now && frame.T_see_h < runT/2) {
-ctx.beginPath();
-ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-ctx.stroke()
+			ctx.beginPath();
+			ctx.arc(500+L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+			ctx.stroke()
 
 		}
 		if( frame.T_start <now && frame.T_see_t>now&& frame.T_see_t < runT/2) {
-if(1){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
+			if(1){ // draw circles around tail
+				ctx.beginPath();
+				ctx.arc(500-L*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
+				ctx.stroke()
+			}
 		}
 	}
 
@@ -578,23 +637,28 @@ if(1){ // draw circles around tail
 		grd.addColorStop(0.5, `hsl(${(-Tc%3)*120+120},100%,50%` );
 		grd.addColorStop(1, `hsl(${(-Th%3)*120+120},100%,50%` );
 		ctx.fillStyle = grd;
+
+		ctx.beginPath();
+		ctx.moveTo( drawH.Ph
+		ctx.stroke();
+
 		ctx.fillRect( 500+(-L)*xscale, 20, (2*L)*xscale, 10 );
 	}
 
 	// the moving observer.
 	centerBoxXY( (500+V*now*xscale), toY, true );
 
-if( eventFrame >= 0 )
+	if( eventFrame >= 0 )
 	{
 	 	const frame = frames[eventFrame];
 		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
-if(0)
-		if( now < frame.T_see_c ) {
-			centerBoxXY( (500+frame.Pc*xscale), 40, false );
-			if( frame.event ) {
-				eventMark( (frame.Pc), 40, true );
+		if(0)
+			if( now < frame.T_see_c ) {
+				centerBoxXY( (500+frame.Pc*xscale), 40, false );
+				if( frame.event ) {
+					eventMark( (frame.Pc), 40, true );
+				}
 			}
-		}
 		if( now < frame.T_see_h ) {
 			headTri( (frame.Pc+L) , 40 );
 			if( frame.event ) eventMark( (frame.Pc+L) , 40, true );
@@ -605,28 +669,6 @@ if(0)
 		}
 
 	}
-	//if( drawP !== frames[0] ) 
-	{
-
-/*
-	if( drawP )
-		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
-	if( drawP2 )
-		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
-	if( drawH !== frames[0] )
-	if( drawH )
-		headTri( drawH.Pc+L, 30, true );
-	if( drawH2 )
-		headTri( drawH2.Pc+L, 30, true );
-	if( drawT !== frames[0] )
-	if( drawT )
-		tailTri( drawT.Pc-L, 30, true );
-	if( drawT2 )
-		tailTri( drawT2.Pc-L, 30, true );
-
-*/
-	}
-
 
 	last_draw_time = now;
 
@@ -681,62 +723,6 @@ if(0)
 		//const y = 20;
 		centerBoxXY( 500+(t)*xscale, o );
 	}
-/*	
-	const frontT  = observerTimeToRealTime( now,  L );
-	const centerT = observerTimeToRealTime( now,  0 );
-	const backT   = observerTimeToRealTime( now, -L );
-	const front  = observerTimeToRealPos( now,  L );
-	const center = observerTimeToRealPos( now,  0 );
-	const back   = observerTimeToRealPos( now, -L );
-
-	for( let f of front )
-		headTri( f, 6 );
-	for( let b of back )
-		tailTri( b, 6 );
-	for( let c of center )
-		centerBox( c, 6 );
-*/
-if(0) { // old realtive calculation (motionless thing)
-	if( drawP && drawH )
-	if( center.length > 1 && front.length > 1 ) {
-		//console.log( "blah:", center[1], front[1], back[1] );
-		var grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
-		grd.addColorStop(0, `hsl(${drawH.hue},100%,50%` );
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
-	}
-	if( drawP && drawT )
-	if( center.length > 1 && back.length > 1 ) {
-		var grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
-		grd.addColorStop(1, `hsl(${drawP.hue},100%,50%` );
-		grd.addColorStop(0, `hsl(${drawT.hue},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
-	}
-	drawP = drawP2 || drawP;
-	drawH = drawH2 || drawH;
-	drawT = drawT2 || drawT;
-	if( drawP && drawH )
-	if( center.length > 0 && front.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(center[0])*xscale , 0, 500+(front[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawP.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawH.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
-	}
-	if( drawP && drawT )
-	if( center.length > 0 && back.length > 0 ) {
-		var grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(center[0])*xscale, 0);
-		grd.addColorStop(0, `hsl(${((drawT.hue))},100%,50%` );
-		grd.addColorStop(1, `hsl(${((drawP.hue))},100%,50%` );
-		ctx.fillStyle = grd;
-		ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
-	}
-
-	ctx.fillStyle = "black"
-}
-
 
 
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
@@ -745,8 +731,8 @@ if(0) { // old realtive calculation (motionless thing)
 	tailTri(  - L, photonStart-5, true );
 	centerBox( 0, photonStart-5, true );
 
-
-	requestAnimationFrame( draw );
+	if( animate )
+		requestAnimationFrame( draw );
 
 	return;
 
