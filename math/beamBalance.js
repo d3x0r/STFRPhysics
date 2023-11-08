@@ -183,24 +183,16 @@ function firstDraw( a, b, mass ) {
 
 	/* fulcrum */
 	ctx.beginPath();
-	ctx.fillStyle = "blue";
-	ctx.lineWidth = 3;
-	if( a > b ) {
 	ctx.fillStyle = "green";
+	ctx.lineWidth = 3;
+	if( (a+b) === 0 ) {
+		ctx.moveTo( beamX, beamY + 2+0*200 );
+		ctx.lineTo( beamX - 5, beamY + 2+0*200 + 10 );
+		ctx.lineTo( beamX + 5, beamY + 2+0*200 + 10 );
+	} else {
 		ctx.moveTo( beamX+(2*(a)/(a+b)-1)*200, beamY + 2+0*200 );
 		ctx.lineTo( beamX+(2*(a)/(a+b)-1)*200 - 5, beamY + 2+0*200 + 10 );
 		ctx.lineTo( beamX+(2*(a)/(a+b)-1)*200 + 5, beamY + 2+0*200 + 10 );
-	} else {
-	ctx.fillStyle = "red";
-		if( !b ) {
-			ctx.moveTo( beamX+0, beamY + 2+0*200 );
-			ctx.lineTo( beamX+0 - 5, beamY + 2+0*200 + 10 );
-			ctx.lineTo( beamX+0 + 5, beamY + 2+0*200 + 10 );
-		} else {
-			ctx.moveTo( beamX-((2*b)/(a+b)-1)*200, beamY + 2+0*200 );
-			ctx.lineTo( beamX-((2*b)/(a+b)-1)*200 - 5, beamY + 2+0*200 + 10 );
-			ctx.lineTo( beamX-((2*b)/(a+b)-1)*200 + 5, beamY + 2+0*200 + 10 );
-		}
 	}
 	ctx.fill();
 
