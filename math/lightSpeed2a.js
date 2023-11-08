@@ -478,7 +478,7 @@ let last_draw_time = 0;
 const xscale = 50;
 const yscale = 50;
 let didEvent = false;
-const photonStart = 100;
+const photonStart = 400;
 function draw(  ) {
 	
 	const beamX = canvas.width/2;
@@ -498,6 +498,64 @@ function draw(  ) {
 	const toY = D*yscale+photonStart;
 	let f = 0;
 	//console.log( "---------------------" );
+
+	
+	ctx.beginPath();
+	ctx.lineWidth = 10;
+	{
+
+		const Pc = now*V*xscale;
+		const Py = D*xscale;
+		const Ph = L*xscale;
+		const Pt = -L*xscale;
+
+		const dx = Pc-Pt;
+		const dx2 = Pc-Ph;
+		const dy = Py;
+		
+
+		const len = Math.sqrt(dx*dx + dy*dy);
+		const len2 = Math.sqrt(dx2*dx2 + dy*dy);
+		
+		const angle = Math.atan2( dy, -dx );
+		const angle2 = Math.atan2( dy, -dx2 );
+		const new_angle = aberration( angle, V );
+		const new_angle2 = aberration( angle2, V );
+		const cx = Math.cos( new_angle );
+		const sx = Math.sin( new_angle );
+		const cx2 = Math.cos( new_angle2 );
+		const sx2 = Math.sin( new_angle2 );
+		//console.log( "angles:", angle, new_angle, " & ", angle2, new_angle2 );
+		/*
+		const acx = Math.cos( angle );
+		const asx = Math.sin( angle );
+		const acx2 = Math.cos( angle2 );
+		const asx2 = Math.sin( angle2 );
+		ctx.lineWidth = 2;
+		ctx.moveTo( 500 + Pc , photonStart +D*xscale  );
+		ctx.lineTo( 500 + Pc + acx2*len2, photonStart +D*xscale - asx2*len2 );
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo( 500 + Pc , photonStart +D*xscale  );
+		ctx.lineTo( 500 + Pc + acx*len, photonStart +D*xscale - asx*len );
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.lineWidth = 10;
+		*/
+		//ctx.moveTo( 500 + Pc, photonStart+Py );
+		const dpx = (cx2*len2-cx*len)/xscale;
+		const dpy = (sx2*len2-sx*len)/xscale;
+		ctx.fillStyle = "white";
+		ctx.font = "25px Arial";
+		ctx.fillText( "Len:" + Math.sqrt(dpx*dpx+dpy*dpy).toFixed(3) + " Expect:"+(L*2).toFixed(2), 10, photonStart );
+		ctx.moveTo( 500 + /*Pc +*/ cx*len, photonStart +D*xscale - sx*len );
+		ctx.lineTo( 500 + /*Pc +*/ cx2*len2, photonStart +D*xscale - sx2*len2 );
+		
+	}
+	ctx.stroke();
+	ctx.lineWidth = 1.5;
+
+
 	for( f = 0; f < nFrames; f++ ) {
 		const frame = frames[f];
 		if( frame.T_start > now ) break;
@@ -507,10 +565,10 @@ function draw(  ) {
 
 		if( frame.T_see_t > now && frame.T_see_t < runT/2 ) {
 			if( !aberrate ) {
-			ctx.beginPath();
-			ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
-			ctx.lineTo( 500 + xscale*frame.Pt, toY );
-			ctx.stroke();
+				ctx.beginPath();
+				ctx.moveTo( 500 -L*xscale/*+ frame.Pc*xscale*/, photonStart );
+				ctx.lineTo( 500 + xscale*frame.Pt, toY );
+				ctx.stroke();
 			} else {
 
 			const dx = xscale*frame.Pt - (-L*xscale);
@@ -638,9 +696,9 @@ function draw(  ) {
 		grd.addColorStop(1, `hsl(${(-Th%3)*120+120},100%,50%` );
 		ctx.fillStyle = grd;
 
-		ctx.beginPath();
-		ctx.moveTo( drawH.Ph
-		ctx.stroke();
+		//ctx.beginPath();
+		//ctx.moveTo( drawH.Ph
+		//ctx.stroke();
 
 		ctx.fillRect( 500+(-L)*xscale, 20, (2*L)*xscale, 10 );
 	}
