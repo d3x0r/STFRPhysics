@@ -55,7 +55,7 @@ canvas {
 #readme-text.offset-right-canvas {
 	position:relative;
 	left:0;
-	top:15em;
+	top:65vh;
 }
 
 #controls span .right {
