@@ -189,14 +189,14 @@ const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
-const spanChkNow = document.createElement( "span" );
+const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = " |Animate";
 controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
+spanChkNow.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
 span = document.createElement( "br" );
@@ -329,6 +329,7 @@ function observerTimeToRealTime( T, L ) {
 
 function observerTimeToRealPos( T, L ) {
 	// things have to be able to propagate forwardly.
+	L = L*lengthContract;
 	if( C <= 0 ) return [0,0];
 
 	if( C==V ) {
@@ -488,20 +489,31 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 	//if( drawP !== frames[0] ) 
 	{
 
-	if( drawP )
-		centerBoxXY( 500 + drawP.Pc*xscale, 30 );
-	if( drawP2 )
+	if( drawP !== frames[0] )
+		if( drawP )
+			centerBoxXY( 500 + drawP.Pc*xscale, 30 );
+	if( drawP2 ) {
+		ctx.fillStyle =  `hsl(${drawP2.hue},100%,50%`
+		ctx.strokeStyle =  `hsl(${drawP2.hue},100%,50%`
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30 );
+	}
 	if( drawH !== frames[0] )
-	if( drawH )
-		headTri( drawH.Pc+L*lengthContract, 30 );
-	if( drawH2 )
+		if( drawH ) {
+			headTri( drawH.Pc+L*lengthContract, 30 );
+		}
+	if( drawH2 ){
+		ctx.fillStyle =  `hsl(${drawH2.hue},100%,50%`
+		ctx.strokeStyle =  `hsl(${drawH2.hue},100%,50%`
 		headTri( drawH2.Pc+L*lengthContract, 30 );
+	}
 	if( drawT !== frames[0] )
-	if( drawT )
-		tailTri( drawT.Pc-L*lengthContract, 30 );
-	if( drawT2 )
+		if( drawT )
+			tailTri( drawT.Pc-L*lengthContract, 30 );
+	if( drawT2 ){
+		ctx.fillStyle =  `hsl(${drawT2.hue},100%,50%`
+		ctx.strokeStyle =  `hsl(${drawT2.hue},100%,50%`
 		tailTri( drawT2.Pc-L*lengthContract, 30 );
+	}
 
 	}
 
@@ -551,30 +563,42 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-  	const frontT  = observerTimeToRealTime( now,  L*lengthContract );
+  	const frontT  = observerTimeToRealTime( now,  L );
 	const centerT = observerTimeToRealTime( now,  0 );
-	const backT   = observerTimeToRealTime( now, -L*lengthContract );
-	const front  = observerTimeToRealPos( now,  L*lengthContract );
+	const backT   = observerTimeToRealTime( now, -L );
+	const front  = observerTimeToRealPos( now,  L );
 	const center = observerTimeToRealPos( now,  0 );
-	const back   = observerTimeToRealPos( now, -L*lengthContract );
-	for( let f of front )
+	const back   = observerTimeToRealPos( now, -L );
+	for( let fr=0; fr<front.length;fr++ ) {
+		const f = front[fr];
+		ctx.fillStyle =  `hsl(${(frontT[fr]%3)*120-240},100%,50%`
+		ctx.strokeStyle =  `hsl(${(frontT[fr]%3)*120-240},100%,50%`
 		headTri( f, 6 );
-	for( let b of back )
+	}
+	for( let bk=0;bk<back.length;bk++ ) {
+		const b = back[bk];
+		ctx.fillStyle =  `hsl(${(backT[bk]%3)*120-240},100%,50%`
+		ctx.strokeStyle =  `hsl(${(backT[bk]%3)*120-240},100%,50%`
 		tailTri( b, 6 );
-	for( let c of center )
+	}
+	for( let cn=0; cn < center.length; cn++ ) {
+		const c = center[cn];
+		ctx.fillStyle =  `hsl(${(centerT[cn]%3)*120-240},100%,50%`
+		ctx.strokeStyle =  `hsl(${(centerT[cn]%3)*120-240},100%,50%`
 		centerBox( c, 6 );
+	}
 try {
   	if( back.length && center.length ) {
 			let grd = ctx.createLinearGradient(500+(back[0])*xscale, 0, 500+(back[0])*xscale+( center[0] - (back[0]))*xscale, 0);
-			grd.addColorStop(0, `hsl(${120+120*(back[0]%3)},100%,50%` );
-			grd.addColorStop(1, `hsl(${120+120*(center[0]%3)},100%,50%` );
+			grd.addColorStop(0, `hsl(${120*(backT[0]%3)-240},100%,50%` );
+			grd.addColorStop(1, `hsl(${120*(centerT[0]%3)-240},100%,50%` );
 			ctx.fillStyle = grd;
 			ctx.fillRect( 500+(back[0])*xscale, 8, ( center[0] - (back[0]))*xscale, 10 );
 	
   		if( back.length > 1 && center.length > 1 ) {
 				grd = ctx.createLinearGradient(500+(back[1])*xscale, 0, 500+(back[1])*xscale+( center[1] - (back[1]))*xscale, 0);
-				grd.addColorStop(0, `hsl(${120+120*(back[1]%3)},100%,50%` );
-				grd.addColorStop(1, `hsl(${120+120*(center[1]%3)},100%,50%` );
+				grd.addColorStop(0, `hsl(${120+120*(backT[1]%3)},100%,50%` );
+				grd.addColorStop(1, `hsl(${120+120*(centerT[1]%3)},100%,50%` );
 				ctx.fillStyle = grd;
 	   		ctx.fillRect( 500+(back[1])*xscale, 8, ( center[1] - (back[1]))*xscale, 10 );
 	  	}
@@ -582,15 +606,15 @@ try {
 	
 	if( center.length && front.length ) {
 			let grd = ctx.createLinearGradient(500+(center[0])*xscale +((front[0]) - center[0])*xscale, 0, 500+(center[0])*xscale, 0);
-			grd.addColorStop(0, `hsl(${120+120*(front[0]%3)},100%,50%` );
-			grd.addColorStop(1, `hsl(${120+120*(center[0]%3)},100%,50%` );
+			grd.addColorStop(0, `hsl(${120+120*(frontT[0]%3)},100%,50%` );
+			grd.addColorStop(1, `hsl(${120+120*(centerT[0]%3)},100%,50%` );
 			ctx.fillStyle = grd;
 			ctx.fillRect( 500+(center[0])*xscale, 8, ((front[0]) - center[0])*xscale, 10 );
 	
   		if( center.length> 1 && front.length > 1 ) {
 				grd = ctx.createLinearGradient(500+(center[1])*xscale +((front[1]) - center[1])*xscale, 0, 500+(center[1])*xscale, 0);
-	   		grd.addColorStop(0, `hsl(${120+120*(front[1]%3)},100%,50%` );
-	  			grd.addColorStop(1, `hsl(${120+120*(center[1]%3)},100%,50%` );
+				grd.addColorStop(0, `hsl(${120+120*(frontT[1]%3)},100%,50%` );
+	  			grd.addColorStop(1, `hsl(${120+120*(centerT[1]%3)},100%,50%` );
 				ctx.fillStyle = grd;
 				ctx.fillRect( 500+(center[1])*xscale, 8, ((front[1]) - center[1])*xscale, 10 );
 		}
