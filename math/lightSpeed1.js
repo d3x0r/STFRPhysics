@@ -406,7 +406,7 @@ function update( evt ) {
 	//draw(  );
 }
 let last_draw_time = 0;
-let xscale = 50;
+let xscale = 100;
 function draw(  ) {
 	
 	const beamX = canvas.width/2;
