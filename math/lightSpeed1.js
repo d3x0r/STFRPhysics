@@ -551,12 +551,12 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 		centerBoxXY( 500+(t)*xscale, o );
 	}
 	
-  	const frontT  = observerTimeToRealTime( now,  L );
+  	const frontT  = observerTimeToRealTime( now,  L*lengthContract );
 	const centerT = observerTimeToRealTime( now,  0 );
-	const backT   = observerTimeToRealTime( now, -L );
-	const front  = observerTimeToRealPos( now,  L );
+	const backT   = observerTimeToRealTime( now, -L*lengthContract );
+	const front  = observerTimeToRealPos( now,  L*lengthContract );
 	const center = observerTimeToRealPos( now,  0 );
-	const back   = observerTimeToRealPos( now, -L );
+	const back   = observerTimeToRealPos( now, -L*lengthContract );
 	for( let f of front )
 		headTri( f, 6 );
 	for( let b of back )
