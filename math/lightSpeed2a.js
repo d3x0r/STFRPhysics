@@ -287,82 +287,6 @@ function realTimeToObserverTime( T, L ) {
 	{return Math.abs(TV)/C+T;}
 }
 
-// rt2ot( T, 0)
-//   obsT = T(V/C+1)
-// rt2ot( T+e, 0 );
-//   (T+e)(V/C+1)
-
-// T = real time
-// P = Phase  // offset the spin phase against real time
-// Lx,Ly,Lz = body Local x,y,z to go from
-// Ax,Ay,Az = body local spin axis to apply rotation of Lx,Ly,Lz
-
-function realTimeToObserverTimeSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az ) {
-
-	let R = 0; // Rotation rate, implicit from velocity.
-	if( V <= C ) {
-		// compute in arc-length === physical length = 1
-		R = Math.sqrt( C^2 - V^2 )/ 2*Math.PI;
-	} else {
-		// compute in arc-length === physical length = 1
-		R = -Math.sqrt( V^2 - C^2 )/ 2*Math.PI;
-	}
-	const ang = S*(T+P)*R 
-	const s = Math.sin( ang );
-	const c = Math.cos( ang );
-	const dot =  (1-c)*(( Ax * Lx ) + (Ay*Ly)+(Az*Lz));
-	const L = { x:Lx*c + s*(Ay * Lz - Az * Ly) + Ax * dot
-	          , y:Ly*c + s*(Az * Lx - Ax * Lz) + Ay * dot
-	          , z:Lz*c + s*(Ax * Ly - Ay * Lx) + Az * dot };
-
-	const pos = (V*T) + L.x;
-	return Math.sqrt( L.z*L.z + (D+L.y)*(D+L.y) + pos*pos )/C+T;
-}
-
-/*
-$$ x=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((V*T) + A)^2 )}/C+T;$$
-
-$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
-
-
-/*
-function realTimeToObserverTimeSpin( T, Lx, Ly, Lz, Ax, Ay, Az ) {
-
-
-if(0) {
-		// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
-		const c = Math.cos(q.θ);
-		const s = Math.sin(q.θ);
-
-		const qx = q.nx, qy = q.ny, qz = q.nz;
-		const vx = v.x , vy = v.y , vz = v.z;
-		// (1-cos theta) * dot
-		// 1-cos theta * cos(angle between vectors)
-		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
-		return new vectorType(
-			  vx*c + s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
-}
-}
-*/
-
-function observerTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
-
-	//Lx
-	if( C === V ) {
-		const num = Lx*Lx-C*C*TT*T + D*D + 2*D*Ly + Ly*Ly + Lz*Lz;
-		const den = C*(2*Lx+2*C*T);
-		return [ num/den, num/den ];
-	} else {
-		const num = Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const num2 = -Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const den = 2*(C*C-V*V);
-		return [ num/den, num2/den ];
-	}
-}
-
 
 function observerTimeToRealTime( T, L ) {
 	// things have to be able to propagate forwardly.
@@ -500,8 +424,6 @@ function draw(  ) {
 	//console.log( "---------------------" );
 
 	
-	ctx.beginPath();
-	ctx.lineWidth = 10;
 	{
 
 		const Pc = now*V*xscale;
@@ -545,14 +467,29 @@ function draw(  ) {
 		//ctx.moveTo( 500 + Pc, photonStart+Py );
 		const dpx = (cx2*len2-cx*len)/xscale;
 		const dpy = (sx2*len2-sx*len)/xscale;
+		
 		ctx.fillStyle = "white";
 		ctx.font = "25px Arial";
-		ctx.fillText( "Len:" + Math.sqrt(dpx*dpx+dpy*dpy).toFixed(3) + " Expect:"+(L*2).toFixed(2), 10, photonStart );
-		ctx.moveTo( 500 + /*Pc +*/ cx*len, photonStart +D*xscale - sx*len );
-		ctx.lineTo( 500 + /*Pc +*/ cx2*len2, photonStart +D*xscale - sx2*len2 );
+		ctx.fillText( "Len:" + (new_angle-new_angle2).toFixed(3) , 10, photonStart-20 );		
+
+
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		ctx.moveTo( 500 + Pc /*Pc +*/ , photonStart + D*xscale  );
+		ctx.lineTo( 500 + Pc+/*Pc +*/   cx*len, photonStart+ D*xscale -sx*len );
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo( 500 +Pc /*Pc +*/ , photonStart + D*xscale  );
+		ctx.lineTo( 500 +Pc+ /*Pc +*/   cx2*len2, photonStart + D*xscale-sx2*len2  );
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineWidth = 10;
+		ctx.moveTo( 500 + Pc+/*Pc +*/ cx*len, photonStart +D*xscale - sx*len );
+		ctx.lineTo( 500 + Pc+/*Pc +*/ cx2*len2, photonStart +D*xscale - sx2*len2 );
+		ctx.stroke();
 		
 	}
-	ctx.stroke();
 	ctx.lineWidth = 1.5;
 
 

@@ -366,7 +366,7 @@ function update( evt ) {
 	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
-
+	const was_animate = animate;
 	animate = chkLblNow.checked;
 	if( animate ) {
 	}else
@@ -403,8 +403,8 @@ function update( evt ) {
 
 	}
 
-
-	//draw(  );
+	if( !was_animate )
+		draw(  );
 }
 let last_draw_time = 0;
 let xscale = 100;
@@ -569,6 +569,13 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 	const front  = observerTimeToRealPos( now,  L );
 	const center = observerTimeToRealPos( now,  0 );
 	const back   = observerTimeToRealPos( now, -L );
+
+		const new_angle = Math.atan2( front[0], D );
+		const new_angle2 = Math.atan2( back[0], D );
+		ctx.fillStyle = "white";
+		ctx.font = "25px Arial";
+		ctx.fillText( "Len:" + (new_angle-new_angle2).toFixed(3) , 10, 500 );
+
 	for( let fr=0; fr<front.length;fr++ ) {
 		const f = front[fr];
 		ctx.fillStyle =  `hsl(${(frontT[fr]%3)*120-240},100%,50%`
@@ -631,7 +638,8 @@ try {
    	centerBox( now*V, 20 );
 
 
-	requestAnimationFrame( draw );
+	if( animate )
+		requestAnimationFrame( draw );
 
 	return;
 
