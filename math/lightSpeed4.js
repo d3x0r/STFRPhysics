@@ -563,6 +563,11 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 	}
 }
 
+function aberration(th,V) {
+	const a = Math.acos( (Math.cos(th)+V/C)/(1+V/C*Math.cos(th)) )
+	if( th < 0 || th > Math.PI) return -a;
+	return a;
+}
 
 
 function update( evt ) {
@@ -601,7 +606,7 @@ function update( evt ) {
 		now = (Number(sliderNow.value)/100*runT/2);
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
-	if( eventFrame>=0 ) {
+	if( eventFrame >= 0 ) {
 		frames[eventFrame].event = false;
 		eventFrame = -1;
 	}
@@ -768,10 +773,40 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 		const t = (n/20)*L;
 		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
 		const time = now-RealTime( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
-
-
+		
+		const apparentx = ((t)-ca*V*(time));
+		const apparenty = (sa*V*(time));
+		const apparentAngle = A- Math.atan2( -apparenty, apparentx  );
+		let newAngle = aberration( apparentAngle, V ) - A;
+		if( newAngle > Math.PI ) newAngle -= 2 *Math.PI;
+		if( newAngle < -Math.PI ) newAngle += 2 * Math.PI;
+		const abc = Math.cos( newAngle );
+		const abs = -Math.sin( newAngle );
+		const len = Math.sqrt( apparentx * apparentx + apparenty * apparenty );
+	if(0) {
+		ctx.beginPath();
+		ctx.fillStyle = "white";
+		ctx.font = "22px Arial";
+		ctx.fillText( "Len:" + (newAngle).toFixed(5) , 700, 500 + n * 20 );		
+	}
+	if(0) {
+		ctx.moveTo( 500 + ( frame.Pc.x + Math.cos( apparentAngle) * len ) * xscale
+				, 505 + ( frame.Pc.y + Math.sin(apparentAngle) * len ) * xscale );
+		ctx.lineTo( 500 + frame.Pc.x * xscale
+				, 505 + frame.Pc.y * xscale );
+		ctx.stroke();
+	}
+	if(0) {
+		ctx.moveTo( 500 + ( frame.Pc.x + abc * len ) * xscale, 505 + ( frame.Pc.y + abs * len ) * xscale );
+		ctx.lineTo( 500 + frame.Pc.x * xscale, 505 + frame.Pc.y * xscale );
+		ctx.stroke();
+	}
+		const aberrantx = frame.Pc.x + abc * len;
+		const aberranty = frame.Pc.y + abs * len;
+		
 		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
-		centerBox( (frame.Pc.x+t)-ca*V*(time), 500+(frame.Pc.y+sa*V*(time))*xscale, false );
+		centerBoxXY( 500+( frame.Pc.x + apparentx ) *xscale, 500+( frame.Pc.y + apparenty )*xscale, false );
+		centerBoxXY( 500+aberrantx*xscale, 500+aberranty*xscale, false );
 	}
 
 }
