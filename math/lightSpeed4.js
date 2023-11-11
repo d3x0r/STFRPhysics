@@ -815,7 +815,7 @@ t' = L/C s
 		}
 */
 
-if( Math.abs(frame.T_start- now) < 0.01) {
+if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	const ca = Math.cos(A);
 	const sa = -Math.sin(A);
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
@@ -859,13 +859,13 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 				, 505 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
-	if(1) {
+	if(0) {
 		ctx.moveTo( 500 + ( frame.Po.x + abc * len ) * xscale, 505 + ( frame.Po.y + abs * len ) * xscale );
 		ctx.lineTo( 500 + frame.Po.x * xscale, 505 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
 		
-		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
+		ctx.fillStyle =  `hsl(${((time+now)%3)*120+120},100%,50%`
 		ctx.strokeStyle =  `green`
 		centerBoxXY( 500+( frame.Po.x + apparentx ) *xscale, 500+( frame.Po.y + apparenty )*xscale, false );
 		ctx.strokeStyle =  `white`
