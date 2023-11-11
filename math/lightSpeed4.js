@@ -272,14 +272,14 @@ const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
 
-const spanChkNow = document.createElement( "span" );
+const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = " |Animate";
 controls.appendChild( spanChkNow );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
-controls.appendChild( chkLblNow );
+spanChkNow.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
 
 span = document.createElement( "br" );
@@ -569,6 +569,63 @@ function aberration(th,V) {
 	return a;
 }
 
+function aberration2( Xox, Xoy, Xx, Xy ) {
+	const forward = { x : Math.cos(A) * V, y: -Math.sin(A) * V };
+
+	let delx = Xx-Xox;
+	let dely = Xy-Xoy;
+	let rx = Xx;
+	let ry = Xy;
+
+	let len2 = delx*delx + dely*dely;
+	let Vdot = delx * forward.x + dely*forward.y;
+	const Vcrsz = dely * forward.x - delx * forward.y;
+	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+	if( V > 0.00001 ) {
+		let len = Math.sqrt( len2 );
+		let Vlen = V;
+		let norm = len*Vlen;
+		let CosVDot = Vdot/norm;
+		let baseAng = Math.acos( CosVDot );
+		const delAng = Math.acos( ( CosVDot + Vlen/C)/(1 + Vlen/C * CosVDot))-baseAng;
+		if( Math.abs( delAng) > 0.00001 ) {
+			const c = Math.cos(delAng );
+			const s= Math.sin( delAng);
+			let vx = delx, vy=dely;
+			let qz = Math.sign( Vcrs );
+			rx = Xox + vx*c + s*(-qz * vy) + 0;
+			ry = Xoy + vy*c + s*(qz * vx) + 0;						
+		}
+	}
+	return { x:rx, y:ry };
+}
+
+function aberration2a( Xox, Xoy, Xx, Xy ) {
+	const forward = { x : ca * V, y: sa * V };
+
+	let delx = Xx-Xox;
+	let dely = Xy-Xoy;
+
+	let len2 = delx*delx + dely*dely;
+	let Vdot = delx * forward.x + dely*forward.y;
+	const Vcrsz = dely * forward.x - delx * forward.y;
+	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+	if( V > 0.00001 ) {
+		let len = Math.sqrt( len2 );
+		let Vlen = V;
+		let norm = len*Vlen;
+		let CosVDot = Vdot/norm;
+		let baseAng = Math.acos( CosVDot );
+		//console.log( "baseAng:", baseAng )
+		let qz = Math.sign( Vcrs );
+		const delAng = -qz*(Math.acos( ( CosVDot + Vlen/C)/(1 + Vlen/C * CosVDot))-baseAng);
+		return delAng;
+	}
+	return 0;
+}
+
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
@@ -760,29 +817,35 @@ t' = L/C s
 
 if( Math.abs(frame.T_start- now) < 0.01) {
 	const ca = Math.cos(A);
-	const sa = Math.sin(A);
+	const sa = -Math.sin(A);
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
-	ctx.fillRect( 500+(ca*V*now-L)*xscale, 500-(sa*V*now)*xscale-5, (2*L)*xscale, 10 );
-	headTri( frame.Ph.x-ca*V*(frame.T_see_h-now), 500+(frame.Ph.y+sa*V*(frame.T_see_h-now))*xscale, true );
-	tailTri(  frame.Pt.x-ca*V*(frame.T_see_t-now), 500+(frame.Pt.y+sa*V*(frame.T_see_t-now))*xscale,  true );
+	ctx.fillRect( 500+(ca*V*now-L)*xscale, 500+(sa*V*now)*xscale-5, (2*L)*xscale, 10 );
+	headTri( frame.Ph.x-ca*V*(frame.T_see_h-now), 500+(frame.Ph.y-sa*V*(frame.T_see_h-now))*xscale, true );
+	tailTri(  frame.Pt.x-ca*V*(frame.T_see_t-now), 500+(frame.Pt.y-sa*V*(frame.T_see_t-now))*xscale,  true );
 
-	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y+sa*V*(frame.T_see_c-now))*xscale, true );
-	centerBox( frame.Po.x, 500+frame.Po.y*xscale, true );
+	//headTri( frame.Ph.x, 500+(frame.Ph.y)*xscale, true );
+	//tailTri(  frame.Pt.x, 500+(frame.Pt.y)*xscale,  true );
+
+	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y-sa*V*(frame.T_see_c-now))*xscale, true );
+	centerBoxXY( 500 + frame.Po.x*xscale, 500+frame.Po.y*xscale, true );
 
 	for( let n = -20; n <= 20; n++ ) {
 		const t = (n/20)*L;
 		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
-		const time = now-RealTime( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
+		const time = RealTime( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } )-now;
 		
-		const apparentx = ((t)-ca*V*(time));
-		const apparenty = (sa*V*(time));
-		const apparentAngle = A- Math.atan2( -apparenty, apparentx  );
-		let newAngle = aberration( apparentAngle, V ) - A;
-		if( newAngle > Math.PI ) newAngle -= 2 *Math.PI;
-		if( newAngle < -Math.PI ) newAngle += 2 * Math.PI;
+		const apparentx = ((t)+ca*V*(time))-D2;
+		const apparenty = (sa*V*(time))-D;
+		const apparentAngle = A+Math.atan2( apparenty, apparentx  );
+		let newPos = aberration2(  frame.Po.x, frame.Po.y, frame.Pc.x+apparentx, frame.Pc.y+apparenty ) ;
+		let newAngle = A-aberration( apparentAngle, V ) ;
+//		if( newAngle > Math.PI ) newAngle -= 2 *Math.PI;
+//		if( newAngle < -Math.PI ) newAngle += 2 * Math.PI;
 		const abc = Math.cos( newAngle );
 		const abs = -Math.sin( newAngle );
 		const len = Math.sqrt( apparentx * apparentx + apparenty * apparenty );
+		const aberrantx = abc * len;
+		const aberranty = abs * len;
 	if(0) {
 		ctx.beginPath();
 		ctx.fillStyle = "white";
@@ -790,23 +853,24 @@ if( Math.abs(frame.T_start- now) < 0.01) {
 		ctx.fillText( "Len:" + (newAngle).toFixed(5) , 700, 500 + n * 20 );		
 	}
 	if(0) {
-		ctx.moveTo( 500 + ( frame.Pc.x + Math.cos( apparentAngle) * len ) * xscale
-				, 505 + ( frame.Pc.y + Math.sin(apparentAngle) * len ) * xscale );
-		ctx.lineTo( 500 + frame.Pc.x * xscale
-				, 505 + frame.Pc.y * xscale );
+		ctx.moveTo( 500 + ( frame.Po.x + Math.cos( apparentAngle) * len ) * xscale
+				, 505 + ( frame.Po.y + Math.sin(apparentAngle) * len ) * xscale );
+		ctx.lineTo( 500 + frame.Po.x * xscale
+				, 505 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
-	if(0) {
-		ctx.moveTo( 500 + ( frame.Pc.x + abc * len ) * xscale, 505 + ( frame.Pc.y + abs * len ) * xscale );
-		ctx.lineTo( 500 + frame.Pc.x * xscale, 505 + frame.Pc.y * xscale );
+	if(1) {
+		ctx.moveTo( 500 + ( frame.Po.x + abc * len ) * xscale, 505 + ( frame.Po.y + abs * len ) * xscale );
+		ctx.lineTo( 500 + frame.Po.x * xscale, 505 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
-		const aberrantx = frame.Pc.x + abc * len;
-		const aberranty = frame.Pc.y + abs * len;
 		
 		ctx.fillStyle =  `hsl(${(time%3)*-120+120},100%,50%`
-		centerBoxXY( 500+( frame.Pc.x + apparentx ) *xscale, 500+( frame.Pc.y + apparenty )*xscale, false );
-		centerBoxXY( 500+aberrantx*xscale, 500+aberranty*xscale, false );
+		ctx.strokeStyle =  `green`
+		centerBoxXY( 500+( frame.Po.x + apparentx ) *xscale, 500+( frame.Po.y + apparenty )*xscale, false );
+		ctx.strokeStyle =  `white`
+		centerBoxXY( 500+(frame.Po.x + aberrantx)*xscale, 500+(frame.Po.y + aberranty )*xscale, false );
+		//centerBoxXY( 500+newPos.x*xscale, 500+newPos.y*xscale, false );
 	}
 
 }
@@ -839,24 +903,11 @@ if(1){ // draw circles around tail
 	ctx.stroke()
 }
 		}
-if(0)
-		if( frame.T_see_t <now && frame.T_end >now) {
-			const del = frame.T_see_t - frame.T_start;
-			const passed = now - frame.T_start;
-			const delT = passed/del;
-			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
-			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
-if(1){ // draw circles around tail
-	ctx.beginPath();
-	ctx.arc(500-(L+V*(now-frame.T_start))*xscale, photonStart, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
-	ctx.stroke()
-}
-		}
 	}
 
-	centerBoxXY( (500+D2*xscale), toY, true );
+	//centerBoxXY( (500+D2*xscale), toY, true );
 
-if( eventFrame >= 0 )
+	if( eventFrame >= 0 )
 	{
 	 	const frame = frames[eventFrame];
 		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
@@ -880,23 +931,6 @@ if(0)
 	//if( drawP !== frames[0] ) 
 	{
 
-/*
-	if( drawP )
-		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
-	if( drawP2 )
-		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
-	if( drawH !== frames[0] )
-	if( drawH )
-		headTri( drawH.Pc+L, 30, true );
-	if( drawH2 )
-		headTri( drawH2.Pc+L, 30, true );
-	if( drawT !== frames[0] )
-	if( drawT )
-		tailTri( drawT.Pc-L, 30, true );
-	if( drawT2 )
-		tailTri( drawT2.Pc-L, 30, true );
-
-*/
 	}
 
 
@@ -948,6 +982,8 @@ if(0)
 		ctx.lineTo( x-5, y  );
 		ctx.lineTo( x, y + 5 );
 		ctx.fill();
+		ctx.closePath();
+		ctx.stroke();
 	}
 	function centerBox( t,o,f ) {      
 		//const y = 20;
