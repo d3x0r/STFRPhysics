@@ -17,6 +17,7 @@ let S=1.0; // time scalar (s/s)
 let A=0; // length of body (m)  (L/C = time of body (s))
 let sa = 0;// Math.sin(A);
 let ca = 0;//Math.cos(A);
+let lengthContract = 1;
 
 
 let runT = 4;
@@ -281,6 +282,19 @@ chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
 spanChkNow.appendChild( chkLblNow );
 chkLblNow.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+
+const spanChkContract = document.createElement( "label" );
+spanChkContract.textContent = "Length Contract";
+controls.appendChild( spanChkContract );
+
+const chkLblContract = document.createElement( "input" );
+chkLblContract.setAttribute( "type", "checkbox" );
+chkLblContract.checked = animate;
+spanChkContract.appendChild( chkLblContract );
+chkLblContract.addEventListener( "input", update );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -570,7 +584,7 @@ function aberration(th,V) {
 }
 
 function aberration2( Xox, Xoy, Xx, Xy ) {
-	const forward = { x : Math.cos(A) * V, y: -Math.sin(A) * V };
+	const forward = { x : -ca * V, y: -sa * V };
 
 	let delx = Xx-Xox;
 	let dely = Xy-Xoy;
@@ -626,6 +640,29 @@ function aberration2a( Xox, Xoy, Xx, Xy ) {
 	return 0;
 }
 
+	function contract( x, y ) {
+		/*
+			direction1 is a unit vector in direction of velocity.
+			rotmat is the rotation matrix (rotate direction1 to view direction ( no translation for 2D top down)	
+		vec3 realVel = (rotmat * (direction1) );
+			// realVel = direction1
+		vec3 posDir = realVel * dot(startPos,realVel);
+        	startPos = ( startPos - posDir) + posDir*g1;
+		*/
+		if( chkLblContract.checked ) {
+		let posVelDot = ( x*ca + y * sa );
+		let posDirx = ca * posVelDot;
+		let posDiry = sa * posVelDot;
+
+		if( V > 0.0) {
+			x = ( x - posDirx) + posDirx*lengthContract;
+			y = ( y - posDiry) + posDiry*lengthContract;
+		}
+		}
+		return { x, y };
+	}
+
+
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
@@ -635,9 +672,14 @@ function update( evt ) {
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
 
+	lengthContract = Math.sqrt( C*C-V*V)/C;
+
 	A = Number(sliderA.value)/100*Math.PI;
 	sa = -Math.sin(A);
 	ca = Math.cos(A);
+	L = contract( L, 0 ).x;// * (ca * lengthContract) + L*(sa);
+        spanL.textContent = L.toFixed(3);
+
 
 	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
 
@@ -645,7 +687,13 @@ function update( evt ) {
 	spanD.textContent = D.toFixed(3) ;
 
 	D2 = (Number(sliderD2.value)/500-1)*L;
-	spanD2.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
+	spanD2.textContent = D2.toFixed(3);
+
+	const posContract = contract( D2, D );
+	D = posContract.y;
+	spanD.textContent = D.toFixed(3) ;
+	//D2 = posContract.x;
+	//spanD2.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 
 	E = Number(sliderE.value)/10 - Math.sqrt( D*D + L*L )/C * V;
 	spanE.textContent = E.toFixed(1);
@@ -661,7 +709,7 @@ function update( evt ) {
 	if( animate ) {
 	}else
 		now = (Number(sliderNow.value)/100*runT/2);
-	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
+	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now*Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame >= 0 ) {
 		frames[eventFrame].event = false;
@@ -818,6 +866,28 @@ t' = L/C s
 if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	const ca = Math.cos(A);
 	const sa = -Math.sin(A);
+
+
+		ctx.beginPath();
+		ctx.strokeStyle = "white";
+			ctx.moveTo( 500 , 500  );
+			ctx.lineTo( 500 + ca * 4 * xscale
+					, 500 + sa*4 * xscale );
+			ctx.stroke();
+
+	for( let x = 0; x < 360; x += 2 ) {
+		const ab = aberration2( 900, 100, 900 + Math.cos( x / 180 * Math.PI  ) * 90, 100  + Math.sin( x / 180 * Math.PI  ) * 90 );
+		//console.log( "ab is:", ab );
+		ctx.beginPath();
+		if( Math.abs( ((A*180/Math.PI)+x)%360 ) <= 2 )
+			ctx.strokeStyle = "white";   else
+			ctx.strokeStyle = `hsl(${x+A*180/Math.PI} 100% 50%)`;
+		ctx.moveTo( 900, 100 );
+		ctx.lineTo( ab.x, ab.y );
+		ctx.stroke();
+	}
+
+
 	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%`
 	ctx.fillRect( 500+(ca*V*now-L)*xscale, 500+(sa*V*now)*xscale-5, (2*L)*xscale, 10 );
 	headTri( frame.Ph.x-ca*V*(frame.T_see_h-now), 500+(frame.Ph.y-sa*V*(frame.T_see_h-now))*xscale, true );
@@ -825,7 +895,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 
 	//headTri( frame.Ph.x, 500+(frame.Ph.y)*xscale, true );
 	//tailTri(  frame.Pt.x, 500+(frame.Pt.y)*xscale,  true );
-
+	
 	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y-sa*V*(frame.T_see_c-now))*xscale, true );
 	centerBoxXY( 500 + frame.Po.x*xscale, 500+frame.Po.y*xscale, true );
 
@@ -837,15 +907,30 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		const apparentx = ((t)+ca*V*(time))-D2;
 		const apparenty = (sa*V*(time))-D;
 		const apparentAngle = A+Math.atan2( apparenty, apparentx  );
-		let newPos = aberration2(  frame.Po.x, frame.Po.y, frame.Pc.x+apparentx, frame.Pc.y+apparenty ) ;
+		let newPos = aberration2(  apparentx, apparenty, 0, 0 ) ;
 		let newAngle = A-aberration( apparentAngle, V ) ;
 //		if( newAngle > Math.PI ) newAngle -= 2 *Math.PI;
 //		if( newAngle < -Math.PI ) newAngle += 2 * Math.PI;
 		const abc = Math.cos( newAngle );
 		const abs = -Math.sin( newAngle );
 		const len = Math.sqrt( apparentx * apparentx + apparenty * apparenty );
+	if(0)
+		{
+			let newAngle2 = aberration2a(  frame.Po.x, frame.Po.y, frame.Pc.x+apparentx, frame.Pc.y+apparenty ) ;
+			const ca2 = Math.cos( newAngle2 );
+			const sa2 = -Math.sin( newAngle2 ) ;
+
+			ctx.beginPath();
+			ctx.strokeStyle = "white";
+			ctx.moveTo( 500 + ( frame.Po.x + ca2 * len ) * xscale
+					, 505 + ( frame.Po.y + sa2 * len ) * xscale );
+			ctx.lineTo( 500 + frame.Po.x * xscale
+					, 505 + frame.Po.y * xscale );
+			ctx.stroke();
+		}
 		const aberrantx = abc * len;
 		const aberranty = abs * len;
+		
 	if(0) {
 		ctx.beginPath();
 		ctx.fillStyle = "white";
@@ -860,8 +945,14 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		ctx.stroke();
 	}
 	if(0) {
-		ctx.moveTo( 500 + ( frame.Po.x + abc * len ) * xscale, 505 + ( frame.Po.y + abs * len ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale, 505 + frame.Po.y * xscale );
+			ctx.beginPath();
+			ctx.strokeStyle = "blue";
+			ctx.arc( 500+frame.Po.x*xscale, 500+frame.Po.y*xscale, len*xscale, 0, Math.PI*2 );
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = "white";
+		ctx.moveTo( 500 + ( frame.Po.x + abc * len *2 ) * xscale, 500 + ( frame.Po.y + abs * len *2 ) * xscale );
+		ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
 		
@@ -870,6 +961,10 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		centerBoxXY( 500+( frame.Po.x + apparentx ) *xscale, 500+( frame.Po.y + apparenty )*xscale, false );
 		ctx.strokeStyle =  `white`
 		centerBoxXY( 500+(frame.Po.x + aberrantx)*xscale, 500+(frame.Po.y + aberranty )*xscale, false );
+
+		//ctx.strokeStyle =  `red`
+		//centerBoxXY( 500+( newPos.x)*xscale, 500+( newPos.y )*xscale, false );
+
 		//centerBoxXY( 500+newPos.x*xscale, 500+newPos.y*xscale, false );
 	}
 
@@ -1047,8 +1142,8 @@ if(0) { // old realtive calculation (motionless thing)
 
 
 
-if( animate )
-	requestAnimationFrame( draw );
+	if( animate )
+		requestAnimationFrame( draw );
 
 	return;
 
