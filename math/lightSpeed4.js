@@ -20,7 +20,7 @@ let Z = 0;
 let sa = 0;// Math.sin(A);
 let ca = 0;//Math.cos(A);
 let lengthContract = 1;
-
+let debugAb = false;
 
 let runT = 4;
 let E = 0;
@@ -322,6 +322,17 @@ chkLblContract.setAttribute( "type", "checkbox" );
 chkLblContract.checked = animate;
 spanChkContract.appendChild( chkLblContract );
 chkLblContract.addEventListener( "input", update );
+
+const spanChkDebug = document.createElement( "label" );
+spanChkDebug.textContent = "Debug Aberration";
+controls.appendChild( spanChkDebug );
+
+const chkLblDebug = document.createElement( "input" );
+chkLblDebug.setAttribute( "type", "checkbox" );
+chkLblDebug.checked = false;
+spanChkDebug.appendChild( chkLblDebug );
+chkLblDebug.addEventListener( "input", update );
+
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -747,6 +758,8 @@ function update( evt ) {
 	L = Number(sliderL.value)/10;
 	spanL.textContent = L.toFixed(1);
 
+	debugAb = chkLblDebug.checked;
+
 	lengthContract = Math.sqrt( C*C-V*V)/C;
 
 	A = Number(sliderA.value)/100*Math.PI;
@@ -1071,7 +1084,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 				, 505 + frame.Po.y * xscale );
 		ctx.stroke();
 	}
-	if(1) {
+	if(debugAb) {
 			ctx.beginPath();
 			if( t < 0 )
 				ctx.strokeStyle = "cyan";
