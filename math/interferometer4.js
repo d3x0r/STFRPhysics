@@ -72,7 +72,9 @@ addSpan( "C", 1000, 1, 0, 2/1000, "C" );
 //sliders.sliderC.style.display = "none";
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
-addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
+addSpan( "Direction", 2000, 0, -Math.PI*2, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
+addSpan( "Angle", 2000, 0, -Math.PI*2, (Math.PI*2)/1000, "Angle", (val)=>(val/Math.PI).toFixed(3)+"pi" );
+
 addSpan( "Now", 2550, -1, -runT/2, runT/1000, "Now" );
 addSpan( "Frequency", 1000, 7, 0.1, 14/1000, "Frequency" );
 //addSpan( "Speed", 1000, "speed", 0, 2*Math.PI/1000, "Speed" );
@@ -188,6 +190,39 @@ function aberration( angle ) {
 	const speed = values.Velocity;
 	const a = Math.acos( (Math.cos(angle)+speed/values.C)/(1+speed/values.C*Math.cos(angle)) );
 	return a;
+}
+
+// returns the aberrated angle for a transmission direction (angle) with frame moving in (direction)
+// Velocity and C are taken from global common variables.
+function aberration_aa( angle, direction, V, C ) {
+	let da = angle - direction;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos( (Math.cos(da)+V/C)/(1+V/C*Math.cos(da)) ) + direction;
+	return a;
+}
+
+
+// returns the angle that the transmission would have to be from to get sent to the target angle (b)
+// (d) is the direction the frame is moving in general at speed (V)
+// (C) is the speed of light constant
+// reverse calculation courtesy of Wolfram Alpha
+//    https://www.wolframalpha.com/input?i=b+%3D+arccos%28+%28cos%28a-d%29%2BV%2FC%29%2F%281%2BV%2FC*cos%28a-d%29%29+%29+%2B+d+solve+for+a
+function aberration_bb( b, d, V, C ) { 
+	const da = b - d;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos((V - C* Math.cos(b - d))/(V *Math.cos(b - d) - C)) + d ;
+	return a;
+}
+
+// returns the frequency shift seen for a transmission in some direction (angle) 
+// from a frame moving in (direction) at velocity (V) and the speed of light (C).
+function freqShift( angle, direction, V, C ) {
+	// V/C 
+	const ab = aberration_aa( angle, direction, V, C );
+	const f = 1/Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) );
+	return f;
 }
 
 function aberration2( Xox, Xoy, Xx, Xy ) {
@@ -518,6 +553,63 @@ function draw(  ) {
 
 	//drawFrequency( values.Frequency * lengthContract, 500 - Math.cos(values.Direction)*300, 400 - Math.sin(values.Direction)*300, 500+Math.cos(values.Direction)*300, 400 + Math.sin(values.Direction)*300, -2, values.Now, 2 );
 
+	{
+		ctx.beginPath();
+		ctx.strokeStyle = "green" ;
+		ctx.moveTo( 200, 800 );
+		const dx = 100 * Math.cos( values.Angle );
+		const dy = -100 * Math.sin( values.Angle );
+		ctx.lineTo( 200 + dx, 800 + dy );
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.strokeStyle = "blue" ;
+		ctx.moveTo( 200, 800 );
+		const drx = 100 * Math.cos( values.Direction );
+		const dry = -100 * Math.sin( values.Direction );
+		ctx.lineTo( 200 + drx, 800 + dry );
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.strokeStyle = "red" ;
+		ctx.moveTo( 200, 800 );
+		const ab2 = aberration_bb( values.Angle, values.Direction, values.Velocity, values.C );
+
+		const dab2x = 100 * Math.cos( ab2 );
+		const dab2y = -100 * Math.sin( ab2 );
+		ctx.lineTo( 200 + dab2x, 800 + dab2y );
+		ctx.stroke();
+
+
+		/*
+		ctx.beginPath();
+		ctx.strokeStyle = "#0FF" ;
+		ctx.arc( 250 + values.C * 50 * Math.cos( values.Angle ), 750 - values.C * 50 * Math.sin( values.Angle ), 10, 0, Math.PI*2 );
+		ctx.stroke();
+
+
+		ctx.beginPath();
+		ctx.strokeStyle = "green" ;
+		ctx.arc( 250 + values.Velocity*50 * Math.cos( values.Direction ), 750 - values.Velocity*50 * Math.sin( values.Direction ), 10, 0, Math.PI*2 );
+		ctx.stroke();
+		*/
+		const fs = freqShift( aberration_bb( values.Angle, values.Direction, values.Velocity, values.C )
+		                    , values.Direction, values.Velocity, values.C );
+		//const ab = aberration_aa( values.Angle, values.Direction, values.Velocity, values.Direction );
+		ctx.fillStyle = "white";
+		ctx.font = "22px Arial";
+
+		ctx.fillText( "Frequency Shift:"+ fs.toFixed(3), 100, 900  );
+		for( let w = 0; w < 10; w++ ) {
+			ctx.beginPath();
+			ctx.strokeStyle = "yellow" ;
+			ctx.arc( 200 + w*1/(values.Frequency*fs)*values.Scale * Math.cos( values.Angle ), 800 - w*1/(values.Frequency*fs)*values.Scale * Math.sin( values.Angle ), 5, 0, Math.PI*2 );
+			ctx.stroke();
+			
+		}
+
+	}
+
 	// dilation gamma
 	const gamma = values.C/Math.sqrt( values.C*values.C - values.Velocity*values.Velocity );
 	const dx = Math.cos( values.Direction );
@@ -691,7 +783,7 @@ function draw(  ) {
 	ctx.moveTo( 500 + values.Scale * keyFrames[0].x, 500 + values.Scale * keyFrames[0].y );
 	ctx.lineTo( 500 + values.Scale * keyFrames[1].x, 500 + values.Scale * keyFrames[1].y );
 	ctx.stroke();
-	drawFrequency( values.Frequency * lengthContract, 500 + values.Scale * keyFrames[0].x, 500 + values.Scale * keyFrames[0].y 
+	drawFrequency( values.Frequency / lengthContract, 500 + values.Scale * keyFrames[0].x, 500 + values.Scale * keyFrames[0].y 
 			, 500 + values.Scale * keyFrames[1].x, 500 + values.Scale * keyFrames[1].y, -2, values.Now, keyFrameTimes[1] );
 
 	if( values.Now < keyFrameTimes[1] ) {
@@ -833,7 +925,8 @@ function draw(  ) {
 		
 		}
 		
-		sliders.sliderNow.value =scalars.Now*values.Now + bias.Now
+		//sliders.sliderNow.value = scalars.Now*values.Now + bias.Now;
+		sliders.sliderNow.value =(values.Now - bias.Now)/scalars.Now;
 		sliders.spanNow.textContent = values.Now.toFixed(2);
 		requestAnimationFrame( draw );
 	}
