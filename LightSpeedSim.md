@@ -885,3 +885,106 @@ $$\frac{ -2(CD+LV)}{CC-VV}$$
 Difference in time, noted by the observer on the train between the signals.
 
 $$-2*(CD+LV)$$
+
+
+## Aberration and Frequency Shift
+
+Light aberration occurs both on transmission and reception.  Since these are usually opposite each other, especially in the case of an interferometer, 
+then the receiving aberration cancels transmission aberration and ends up looking like a right-angle effect.  Light aberration is almost like 
+intertia transferred into the light transmission.  Light aberration adjusts the angle of the light to be advanced in angle.  This leads to a headlight
+effect, where most light received at the speed of light comes from the forward angle (or appears to at least).
+
+Frequency Shift of light is intimitely tied to the aberration angle. 
+
+This is the code version of the math.  Aberration_aa and Aberration_bb are inverse functions of each other; `aberration_aa` takes an angle that 
+light is received from or transmitted in (angle), and the direction of the observer (if received) or direction of the observed (if transmitted), and the
+appropriate velocity(V) for the body.
+
+``` js
+
+// returns the aberrated angle for a transmission direction (angle) with frame moving in (direction)
+// Velocity and C are taken from global common variables.
+function aberration_aa( angle, direction, V, C ) {
+	let da = angle - direction;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos( (Math.cos(da)+V/C)/(1+V/C*Math.cos(da)) ) + direction;
+	return a;
+}
+
+
+// returns the angle that the transmission would have to be from to get sent to the target angle (b)
+// (d) is the direction the frame is moving in general at speed (V)
+// (C) is the speed of light constant
+// reverse calculation courtesy of Wolfram Alpha
+//    https://www.wolframalpha.com/input?i=b+%3D+arccos%28+%28cos%28a-d%29%2BV%2FC%29%2F%281%2BV%2FC*cos%28a-d%29%29+%29+%2B+d+solve+for+a
+function aberration_bb( b, d, V, C ) { 
+	if( V >= C ) V = C-0.000001;
+	const da = b - d;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos((V - C* Math.cos(b - d))/(V *Math.cos(b - d) - C)) + d ;
+	return a;
+}
+
+// returns the frequency shift seen for a transmission in some direction (angle) 
+// from a frame moving in (direction) at velocity (V) and the speed of light (C).
+// 1/(frequency*frequency_shift) is the scaled wavelength.
+// (frequency * frequency_shift) is the resulting frequency.
+function freqShift( angle, direction, V, C ) {
+	// V/C 
+	if( V >= C ) V = C-0.000001;
+	const ab = aberration_aa( angle, direction, V, C );
+	const f = 1/Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) );
+	return f;
+}
+
+```
+
+### Latex expressions for the math above
+
+In the following math, A is the (angle), D is the (direction), V is the (velocity) and C is the speed of light.
+
+$${\delta A} = A-D$$
+
+$$N=\left \{ \begin{array}{11}  \left| \lfloor \frac {\delta A} {\pi}  \rfloor \right| & \mbox{if }\  1\ \mbox{then }{-1} &, \mbox{if } 0\ \mbox{then }1\end{array}\right . $$
+
+$$a= N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
+
+$$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos( a-D ) } } $$
+
+-or- 
+
+$$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos\left( N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) \right) } } $$
+
+
+### Approach of the Equations
+
+After implementing frequency tracking in https://d3x0r.github.io/STFRPhysics/math/indexInterferometer4.html, I had an example calculation that
+could be evaluated.
+
+Each photon is emitted at `V*D` or Velocity times Direction.  Each photon moves along `C*A`.  Therefore the length of `C*A-V*D` is the span between
+photon instances - assuming they are packed to be 1 per wavelength.  The `A` and `D` are just angles, however, so they were converted into a vector of
+`( cos(A), sin(A) )` and `( cos(D), sin(D) )`, which are then subtracted ` ( Vcos(D)-Ccos(A), Vsin(D)-Csin(A) )` and the length is the square root of the 
+dot product of that vector itself... `( Vcos(A)-Ccos(D) ) * ( Vcos(A)-Ccos(D) ) + ( Vsin(A)-Ccos(D) ) * ( Vsin(A)-Ccos(D) )` or 
+`sqrt(VVcos^2(A) - 2VCcos(A)cos(D) + CCcos^2(D) + VVsin^2(A) - 2VCsin(A)cos(D) + CCcos^2(D))` and grouping the `sin^2` and `cos^2` terms since the sum of those is 1...
+`sqrt(VV + CC - 2VC( cos(A)cos(D) + sin(A)sin(D) ))` and then the trig identify for the remaining `cos*cos + sin*sin` is `cos(A-D)`, and 
+the final expression is `VV + CC - 2VC * cos( A-D )`. This wasn't quite right, since really V should be `V/C` and C is `C/C` or 1, so the 
+real final equation is `sqrt(1 + VV/CC - 2V/C * cos(A-D))`.  Which is what the above math is.  This depends on the actual angle that the photon travels,
+so `A` should include aberration before processing, while the `D` direction of the frame has no modifications.
+
+This might be simplified to remove the `D` factor if that is known to be 0, and the relative angle `A` is used against the direction unspecified.
+
+
+### Some Comparisons
+
+https://en.wikipedia.org/wiki/Relativistic_Doppler_effect
+
+I don't see a reason that gamma (`c/sqrt(cc-vv)`) should be a factor here.  Removing that factor makes relativistic equations closer to mine at high
+angular differences, but keeping the factor makes them closer at very small angular differences.  Regardless the differences are 0.01% different at 
+0.001c (the approximate speed of the sun in the universe). Generally the equations Einstein came up with and the derivation above are actually 
+quite close, but not equivalent (much like light propagation vs Lorentz Transform, which ends up rolling up aberration and light propagation with
+contraction; and the contraction may selectively apply to the universe as a whole from a moving body perspective, and must).
+
+
+
