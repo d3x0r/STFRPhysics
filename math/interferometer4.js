@@ -457,7 +457,7 @@ function update( evt ) {
 
 		{
 			let photon = l.photons;
-		console.log( "----------------" );
+			//console.log( "----------------" );
 			while( photon ) {
 				photon.update();
 				photon = photon.next;
@@ -485,7 +485,7 @@ function update( evt ) {
 }
 
 
-function drawFrequency( freq, x, y, xto, yto, from, until, to ) {
+function drawFrequency( freq, x, y, xto, yto, from, until, to, invert ) {
 	let T;
 	if( from > until ) return;
 	const delx = xto-x;
@@ -496,9 +496,10 @@ function drawFrequency( freq, x, y, xto, yto, from, until, to ) {
 	let tany = -(delx)/len;
 	const step = 0.005;
 	for( T = 0; T < (to-from); T += step ) {
-		const s = 20*Math.sin( freq * (until-from-T) * Math.PI*2 );
-		const s2 = 20*Math.sin( freq * (until-from-(T+step)) * Math.PI*2 );
-		if( T >= (until-from) ) {
+		
+		const s = (invert?-1:1)*20*Math.sin( freq * (until-from-T) * Math.PI*2 );
+		const s2 = (invert?-1:1)*20*Math.sin( freq * (until-from-(T+step)) * Math.PI*2 );
+		if( T >= (until-from) || T < (until-from-1/freq ) ) {
 			ctx.moveTo( (x*(1-T/delt)) + xto*(T/delt), (y*(1-T/delt)) + yto*(T/delt) );
 			ctx.lineTo( (x*(1-(T+step)/delt)) + xto*((T+step)/delt), (y*(1-(T+step)/delt)) + yto*((T+step)/delt) );
 		} else {
@@ -773,7 +774,7 @@ function draw(  ) {
 	ctx.stroke();
 	drawFrequency( values.Frequency * lengthContract, 500 + values.Scale * keyFrames[2].x, 500 + values.Scale * keyFrames[2].y 
 			, 500 + values.Scale * keyFrames[3].x, 500 + values.Scale * keyFrames[3].y
-			, keyFrameTimes[2], values.Now, keyFrameTimes[3] );
+			, keyFrameTimes[2], values.Now, keyFrameTimes[3], true );
 
 
 	/* splitter to right (from top)*/
@@ -784,7 +785,7 @@ function draw(  ) {
 	ctx.stroke();
 	drawFrequency( values.Frequency * (values.C/(values.C-values.Velocity)), 500 + values.Scale * keyFrames[3].x, 500 + values.Scale * keyFrames[3].y 
 			, 500 + values.Scale * keyFrames[4].x, 500 + values.Scale * keyFrames[4].y
-			, keyFrameTimes[3], values.Now, keyFrameTimes[4] );
+			, keyFrameTimes[3], values.Now, keyFrameTimes[4], true );
 	}
 
 	ctx.beginPath();
@@ -811,7 +812,7 @@ function draw(  ) {
 
 	drawFrequency( values.Frequency * (values.C/(values.C-values.Velocity)), 500 + values.Scale * keyFrames_left[2].x, 500 + values.Scale * keyFrames_left[2].y 
 			, 500 + values.Scale * keyFrames_left[3].x, 500 + values.Scale * keyFrames_left[3].y
-			, keyFrameTimes_left[2], values.Now, keyFrameTimes_left[3] );
+			, keyFrameTimes_left[2], values.Now, keyFrameTimes_left[3], true );
 
 	/* split to right (from left) */
 	ctx.beginPath();
@@ -994,7 +995,7 @@ class Photon {
 	update() {
 		if( this.t > values.Now ) return;
 		let del = ( values.Now - this.t) -2;
-		console.log( "del:", del );
+		//console.log( "del:", del );
 		let seg = -1;
 		this.can_draw = true; 
 		if( this.left ) {
@@ -1003,7 +1004,7 @@ class Photon {
 			else if( del > keyFrameTimes_left[2] ) seg = 2;
 			else if( del > keyFrameTimes_left[1] ) seg = 1;
 			else seg = 0;
-			console.log( "UPdating:", seg, del );
+			//console.log( "UPdating:", seg, del );
 			const segDx = keyFrames_left[seg+1].x - keyFrames_left[seg].x;
 			const segDy = keyFrames_left[seg+1].y - keyFrames_left[seg].y;
 			let ofs = 0;
@@ -1039,7 +1040,7 @@ class Photon {
 			this.seg = seg;
 			this.x = (this.t-keyFrameTimes[seg]+ofs) * values.Velocity * Math.cos( values.Direction ) + keyFrames[seg].x + values.C * delT * segNDx;
 			this.y = -(this.t-keyFrameTimes[seg]+ofs) * values.Velocity * Math.sin( values.Direction ) + keyFrames[seg].y + values.C * delT * segNDy;
-			console.log( "Set point : ", this.t, this.x, this.y, delT );
+			//console.log( "Set point : ", this.t, this.x, this.y, delT );
 		}
 	}
 	draw() {
