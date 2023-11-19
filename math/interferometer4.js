@@ -8,8 +8,11 @@ const ctx = canvas.getContext( '2d' );
 
 let last_draw_time = 0;
 let animate = false;
+let ab_test = false;
+let galaxy = false;
+let clockwise = false;
 const runT = 4;
-
+const G = 3;
 const names = [];
 
 const values = {
@@ -131,13 +134,49 @@ totalBlock.appendChild( span );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
-chkLblNow.checked = true;
+chkLblNow.checked = false;
 chkLblNow.addEventListener( "input", update );
 
 const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = "Animate";
 spanChkNow.appendChild( chkLblNow );
 controls.appendChild( spanChkNow );
+
+//- - - - - - - - - - - - - - 
+
+const chkLblAbTest = document.createElement( "input" );
+chkLblAbTest.setAttribute( "type", "checkbox" );
+chkLblAbTest.checked = false;
+chkLblAbTest.addEventListener( "input", update );
+
+const spanChkAbTest = document.createElement( "label" );
+spanChkAbTest.textContent = "Aberration Test";
+spanChkAbTest.appendChild( chkLblAbTest );
+controls.appendChild( spanChkAbTest );
+
+//- - - - - - - - - - - - - - 
+
+const chkLblGalaxy = document.createElement( "input" );
+chkLblGalaxy.setAttribute( "type", "checkbox" );
+chkLblGalaxy.checked = true;
+chkLblGalaxy.addEventListener( "input", update );
+
+const spanChkGalaxy = document.createElement( "label" );
+spanChkGalaxy.textContent = "Galaxy";
+spanChkGalaxy.appendChild( chkLblGalaxy );
+controls.appendChild( spanChkGalaxy );
+
+//- - - - - - - - - - - - - - 
+
+const chkLblClockwise = document.createElement( "input" );
+chkLblClockwise.setAttribute( "type", "checkbox" );
+chkLblClockwise.checked = true;
+chkLblClockwise.addEventListener( "input", update );
+
+const spanChkClockwise = document.createElement( "label" );
+spanChkClockwise.textContent = "Clockwise";
+spanChkClockwise.appendChild( chkLblClockwise );
+controls.appendChild( spanChkClockwise );
 
 //----------------------
 
@@ -209,6 +248,7 @@ function aberration_aa( angle, direction, V, C ) {
 // reverse calculation courtesy of Wolfram Alpha
 //    https://www.wolframalpha.com/input?i=b+%3D+arccos%28+%28cos%28a-d%29%2BV%2FC%29%2F%281%2BV%2FC*cos%28a-d%29%29+%29+%2B+d+solve+for+a
 function aberration_bb( b, d, V, C ) { 
+	if( V >= C ) V = C-0.000001;
 	const da = b - d;
 	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
 	let neg = mod?-1:1;
@@ -220,6 +260,7 @@ function aberration_bb( b, d, V, C ) {
 // from a frame moving in (direction) at velocity (V) and the speed of light (C).
 function freqShift( angle, direction, V, C ) {
 	// V/C 
+	if( V >= C ) V = C-0.000001;
 	const ab = aberration_aa( angle, direction, V, C );
 	const f = 1/Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) );
 	return f;
@@ -309,6 +350,9 @@ function update( evt ) {
 	//values.Now = values.Now;
 	const was_animate = animate;
 	animate = chkLblNow.checked;
+	ab_test = chkLblAbTest.checked;
+	galaxy = chkLblGalaxy.checked;
+	clockwise = chkLblClockwise.checked;
         
 	if( !animate ) 
 		ctx.clearRect( 0, 0, 1000, 1000 );
@@ -552,7 +596,7 @@ function draw(  ) {
 	if( animate ) 	ctx.clearRect( 0, 0, 1000, 1000 );
 
 	//drawFrequency( values.Frequency * lengthContract, 500 - Math.cos(values.Direction)*300, 400 - Math.sin(values.Direction)*300, 500+Math.cos(values.Direction)*300, 400 + Math.sin(values.Direction)*300, -2, values.Now, 2 );
-
+	if( ab_test)
 	{
 		ctx.beginPath();
 		ctx.strokeStyle = "green" ;
@@ -600,11 +644,70 @@ function draw(  ) {
 		ctx.font = "22px Arial";
 
 		ctx.fillText( "Frequency Shift:"+ fs.toFixed(3), 100, 900  );
+		console.log( "----------------------" );
 		for( let w = 0; w < 10; w++ ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "yellow" ;
 			ctx.arc( 200 + w*1/(values.Frequency*fs)*values.Scale * Math.cos( values.Angle ), 800 - w*1/(values.Frequency*fs)*values.Scale * Math.sin( values.Angle ), 5, 0, Math.PI*2 );
 			ctx.stroke();
+			if( galaxy )
+			{
+				/*
+				for( let r = 0; r < 360; r += 10 ) {
+					const ang = r / 180 * Math.PI;
+					const ang2 = r / 180 * Math.PI + ( clockwise?-Math.PI/2 : Math.PI/2);
+					const deab = aberration_bb( values.Angle, ang2, values.Velocity*G/( (w/9+1)*(w/9+1) ), values.C );
+					const V = values.Velocity*G/( (w/9+1)*(w/9+1) );
+				ctx.beginPath();
+					ctx.strokeStyle = "#FFF"
+					ctx.moveTo( 200 + 20 * w * Math.cos( ang ), 800 - 20 * w * Math.sin( ang ) );
+					ctx.lineTo( 200 + 20 * w * Math.cos( ang ) + 30*V*Math.cos( ang2), 800 - 20 * w * Math.sin( ang ) - 30*V*Math.sin( ang2) );
+					ctx.stroke();
+
+				ctx.beginPath();
+					ctx.strokeStyle = "#FF0"
+					ctx.moveTo( 200 + 20 * w * Math.cos( ang ), 800 - 20 * w * Math.sin( ang ) );
+					ctx.lineTo( 200 + 20 * w * Math.cos( ang ) + 30*V*Math.cos( deab), 800 - 20 * w * Math.sin( ang ) - 30*V*Math.sin( deab) );	
+					ctx.stroke();
+				ctx.beginPath();
+					ctx.strokeStyle = "#0FF"
+					ctx.moveTo( 200 + 20 * w * Math.cos( ang ), 800 - 20 * w * Math.sin( ang ) );
+					ctx.lineTo( 200 + 20 * w * Math.cos( ang ) + 30*V*Math.cos( values.Angle), 800 - 20 * w * Math.sin( ang ) - 30*V*Math.sin( values.Angle) );
+					ctx.stroke();
+				}
+				*/
+				ctx.strokeStyle = "#f0f";
+				let px, py;
+				for( let r = 0; r <= 360; r += 10 ) {
+					const ang0 = values.Angle + r / 180 * Math.PI;
+					const ang = values.Angle + r / 180 * Math.PI + ( clockwise?-Math.PI/2 : Math.PI/2);
+					const deab = aberration_bb( values.Angle, ang, values.Velocity*G/( (w/9+1)*(w/9+1) ), values.C );
+					const fs = freqShift( deab, ang, values.Velocity*G/( (w/9+1)*(w/9+1) ), values.C );
+				ctx.beginPath();
+		ctx.strokeStyle = `hsl(${120+(fs-1)*10*180/Math.PI} 100% 50%)`;
+					//console.log( "Angles and fs:", w, r, ang.toFixed(3), deab.toFixed(3), fs.toFixed(3), (values.Scale*w/(values.Frequency*fs)).toFixed(3) );
+	/*
+					if( !r ) ctx.moveTo( 200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang0 )
+						, 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang0 ) );
+					else ctx.lineTo( 200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang0 )
+						, 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang0 ) );
+		*/
+					if( !r ) {px = 200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang0 )
+						py = 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang0 );
+					} else {
+						const nx =  200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang0 );
+						const ny = 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang0 );
+						ctx.moveTo( px, py);
+						ctx.lineTo(nx, ny );
+						px = nx;
+						py = ny;
+					}
+				ctx.stroke();
+				}
+				//ctx.closePath ();
+				//ctx.stroke();
+			}
+			else	
 			{
 				ctx.beginPath();
 				ctx.strokeStyle = "#f0f";
@@ -620,7 +723,6 @@ function draw(  ) {
 				ctx.closePath ();
 				ctx.stroke();
 			}
-			
 		}
 
 	}
