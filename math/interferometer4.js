@@ -605,6 +605,21 @@ function draw(  ) {
 			ctx.strokeStyle = "yellow" ;
 			ctx.arc( 200 + w*1/(values.Frequency*fs)*values.Scale * Math.cos( values.Angle ), 800 - w*1/(values.Frequency*fs)*values.Scale * Math.sin( values.Angle ), 5, 0, Math.PI*2 );
 			ctx.stroke();
+			{
+				ctx.beginPath();
+				ctx.strokeStyle = "#f0f";
+				for( let r = 0; r < 360; r += 5 ) {
+					const ang = r / 180 * Math.PI;
+					const deab = aberration_bb( ang, values.Direction, values.Velocity, values.C );
+					const fs = freqShift( deab, values.Direction, values.Velocity, values.C );
+					if( !r ) ctx.moveTo( 200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang )
+						, 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang ) );
+					else ctx.lineTo( 200 + w * 1/(values.Frequency*fs)*values.Scale * Math.cos( ang )
+						, 800 - w * 1/(values.Frequency*fs)*values.Scale * Math.sin( ang ) );
+				}
+				ctx.closePath ();
+				ctx.stroke();
+			}
 			
 		}
 
