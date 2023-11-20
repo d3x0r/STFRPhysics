@@ -943,7 +943,7 @@ function freqShift( angle, direction, V, C ) {
 
 ### Latex expressions for the math above
 
-https://mathb.in/76959
+https://mathb.in/76960
 
 In the following math, A is the (angle), D is the (direction), V is the (velocity) and C is the speed of light.
 
@@ -958,6 +958,51 @@ $$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos( a-D ) } } $$
 -or- 
 
 $$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos\left( N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) \right) } } $$
+
+
+---
+
+mathb.in content
+
+This is for 2D, with a fixed location of 0 degrees of an angle.  A = Angle to observer, D = Angle body is travelling, V is the velocity a body travels and C is the speed of light.  dA is the difference in angle (delta angle), N is a negative/positive multiplier, to recover a wider range of arccos results.  a is the abberation of A, b is the angle that would be aberrated to be A.
+f is the resulting frequency scalar; 1/f is the resulting wavelength scalar.
+
+$${dA} = A-D$$
+
+$$N= \left \{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
+
+$$a= N*\cos^{-1}\left( \frac { \cos(dA) +\frac V C } { 1 + \frac V C \cos( dA ) } \right) + D$$
+
+$$b= N*\cos^{-1}\left( \frac { V - C\cos(dA)  } {  V \cos( dA ) - C  } \right) + D$$
+
+$$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos( dA ) } } $$
+
+or
+
+$$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos\left( N*\cos^{-1}\left( \frac { \cos(dA) +\frac V C } { 1 + \frac V C \cos( dA ) } \right) \right) } } $$
+
+---
+
+To extend to 3D, the following setup can get the same basic terms.  $ || V||$ 
+
+$X$ is the position observed, $X_o$ is the position of the observer.
+$A$ is the vector to the observer.
+
+$$A = X-X_o$$
+
+$V$ is the velocity vector the observable, $V_o$ is the velocity vector of the observer.  $D$ is the relative velocity direction. $V$ above should be replaced with $||V||$, which is the length of the velocity vector.
+
+$$D= V-V_o$$
+
+$dA$ is the relative angle between the observed direction and the velocities.
+
+$$dA = sin^{-1} \left(\frac { A \times D }  { |A||D| } \right) $$
+
+or 
+
+$$dA = cos^{-1} \left(\frac { A \cdot D }  { |A||D| } \right) $$
+
+---
 
 
 ### Approach of the Equations
