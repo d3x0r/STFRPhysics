@@ -10,6 +10,7 @@ let last_draw_time = 0;
 let animate = false;
 let ab_test = false;
 let galaxy = false;
+let timeDilate = false;
 let clockwise = false;
 const runT = 4;
 const G = 3;
@@ -168,6 +169,18 @@ controls.appendChild( spanChkGalaxy );
 
 //- - - - - - - - - - - - - - 
 
+const chkLblDilate = document.createElement( "input" );
+chkLblDilate.setAttribute( "type", "checkbox" );
+chkLblDilate.checked = true;
+chkLblDilate.addEventListener( "input", update );
+
+const spanChkDilate = document.createElement( "label" );
+spanChkDilate.textContent = "Dilate";
+spanChkDilate.appendChild( chkLblDilate );
+controls.appendChild( spanChkDilate );
+
+//- - - - - - - - - - - - - - 
+
 const chkLblClockwise = document.createElement( "input" );
 chkLblClockwise.setAttribute( "type", "checkbox" );
 chkLblClockwise.checked = true;
@@ -262,7 +275,7 @@ function freqShift( angle, direction, V, C ) {
 	// V/C 
 	if( V >= C ) V = C-0.000001;
 	const ab = aberration_aa( angle, direction, V, C );
-	const f = 1/Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) );
+	const f = 1/( ( timeDilate?1/Math.sqrt( 1-V*V/(C*C) ):1 ) * Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
 	return f;
 }
 
@@ -352,6 +365,7 @@ function update( evt ) {
 	animate = chkLblNow.checked;
 	ab_test = chkLblAbTest.checked;
 	galaxy = chkLblGalaxy.checked;
+	timeDilate = chkLblDilate.checked;
 	clockwise = chkLblClockwise.checked;
         
 	if( !animate ) 
