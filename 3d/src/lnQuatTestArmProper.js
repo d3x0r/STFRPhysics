@@ -84,8 +84,8 @@ function makeQuat(p,y,r) {
 	case 5:
 	return mkQuat().yaw(y).roll(r).pitch(p);
 	case 6:{
-		const l2 = Math.sqrt(p*p+y*y);
-		const l3 = Math.sqrt(p*p+y*y+r*r);
+		//const l2 = Math.sqrt(p*p+y*y);
+		//const l3 = Math.sqrt(p*p+y*y+r*r);
 		//return mkQuat(0,p,y/l2,r/l3);
 		return mkQuat(0,p,y,r);
 	}

@@ -1002,6 +1002,11 @@ $dA$ is the relative angle between the observed direction and the velocities.
 
 $$dA = ({ A \times D } < 0 ?-1:1 ) \cos^{-1} \left(\frac { A \cdot D }  { |A||D| } \right) $$
 
+
+$$\frac{1}{\sqrt{\left(1-\frac{V^2}{C^2}\right)}}\left(1-V\cos\left(\theta\right)\right)$$
+
+$$\frac{1}{\sqrt{\left(1-\frac{V^2}{C^2}\right)}} \sqrt{1+\frac{V^2}{C^2}-\frac{2V}{C}\ \cos\theta}\ $$
+
 ---
 
 
@@ -1027,18 +1032,13 @@ This might be simplified to remove the `D` factor if that is known to be 0, and 
 
 https://en.wikipedia.org/wiki/Relativistic_Doppler_effect
 
-I don't see a reason that gamma (`c/sqrt(cc-vv)`) should be a factor here.  Removing that factor makes relativistic equations closer to mine at high
-angular differences, but keeping the factor makes them closer at very small angular differences.  Regardless the differences are 0.01% different at 
-0.001c (the approximate speed of the sun in the universe). Generally the equations Einstein came up with and the derivation above are actually 
-quite close, but not equivalent (much like light propagation vs Lorentz Transform, which ends up rolling up aberration and light propagation with
-contraction; and the contraction may selectively apply to the universe as a whole from a moving body perspective, and must).
+https://www.desmos.com/calculator/viiglq2ntm
 
-Well, maybe because time dilation applies, and the frequency would nessecarily have to be longer towards the speed of light... which the interferometer
-experiment above doesn't account for either; applying gamma to the above function, however, makes the frequency shift a straight line, and is probably
-not a correct answer. Both gamma and inverse gamma make my equation a flat line; which is certainly incorrect.  I lie somewhere between the realtivistic 
-equation `(\gamma (1-\beta cos(phi) ) )` and that equation without the gamma factor.
+Time dilation gamma (`c/sqrt(cc-vv)`) should be a factor here... since the electrons themselves are modified by time dilation factors, the generation 
+of photons emitted should also be frequency shifted by time.
 
 The relativistic equations on the wikipedia page are also incorrect when C is not equal to 1.
 
 The wave emitted is from the physical non-length contracted arrangement of electrons in an atom, and the length contracted direction is not relavent(? 
 what about lateral emissions).
+
