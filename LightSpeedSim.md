@@ -900,6 +900,9 @@ This is the code version of the math.  Aberration_aa and Aberration_bb are inver
 light is received from or transmitted in (angle), and the direction of the observer (if received) or direction of the observed (if transmitted), and the
 appropriate velocity(V) for the body.
 
+Frequency Shift calculation multiplied by itself with `angle+PI` results in a constant value.  
+`freqShift( x, y, V, C ) * freqShift(x+PI,y,V,C)= 1/(1-VV/CC)`
+
 ``` js
 
 // returns the aberrated angle for a transmission direction (angle) with frame moving in (direction)
@@ -943,7 +946,8 @@ function freqShift( angle, direction, V, C ) {
 
 ### Latex expressions for the math above
 
-https://mathb.in/76960
+https://mathb.in/76964
+https://mathb.in/76965  (some added notes)
 
 In the following math, A is the (angle), D is the (direction), V is the (velocity) and C is the speed of light.
 
@@ -996,11 +1000,7 @@ $$D= V-V_o$$
 
 $dA$ is the relative angle between the observed direction and the velocities.
 
-$$dA = sin^{-1} \left(\frac { A \times D }  { |A||D| } \right) $$
-
-or 
-
-$$dA = cos^{-1} \left(\frac { A \cdot D }  { |A||D| } \right) $$
+$$dA = ({ A \times D } < 0 ?-1:1 ) \cos^{-1} \left(\frac { A \cdot D }  { |A||D| } \right) $$
 
 ---
 
