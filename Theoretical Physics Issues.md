@@ -18,7 +18,7 @@ QM's prediction of cos(theta) has slope 0, and is near 0 for a long time before 
 
 ![Bell Comparison](bell-comparison-calc.png)
 
-The blue line is `cos(theta)` and the green line ratio of `a` to `b` from `a+b=2`; Red is the error between the curves.  There's actually quite a wide error bar.  at `pi/3` is exactly 50% just like the quantum result; and as the predicted value in Bell's paper.  
+The blue line is `cos(theta)` and the green line ratio of `a` to `b` from `a+b=2`; Red is the error between the curves.  There's actually quite a wide error bar.  at `pi/3` is exactly 50% just like the quantum result; and as the predicted value in [Bell's paper](https://cds.cern.ch/record/111654/files/vol1p195-200_001.pdf).  
 
 ### 2.1) CHSH Inequality
 CHSH is another inequality proposition, but this can actually be implemented as in this [Demo](https://d3x0r.github.io/STFRPhysics/math/CHSH_Game.html).  More information [here](https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md#chsh-experiment).  Easily beatable, by defining a more generous correlation function for the LHV than ( [John Clauser](https://en.wikipedia.org/wiki/John_Clauser), [Michael Horne](https://en.wikipedia.org/wiki/Michael_Horne_(physicist)), [Abner Shimony](https://en.wikipedia.org/wiki/Abner_Shimony), and [Richard Holt](https://en.wikipedia.org/wiki/Richard_Holt_(physicist)) (whence the name “CHSH”)) defined.
