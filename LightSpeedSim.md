@@ -943,11 +943,13 @@ function freqShift( angle, direction, V, C ) {
 
 ### Latex expressions for the math above
 
+https://mathb.in/76959
+
 In the following math, A is the (angle), D is the (direction), V is the (velocity) and C is the speed of light.
 
 $${\delta A} = A-D$$
 
-$$N=\left \{ \begin{array}{11}  \left| \lfloor \frac {\delta A} {\pi}  \rfloor \right| & \mbox{if }\  1\ \mbox{then }{-1} &, \mbox{if } 0\ \mbox{then }1\end{array}\right . $$
+$$N= \left \{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
 
 $$a= N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
 
@@ -986,5 +988,12 @@ angular differences, but keeping the factor makes them closer at very small angu
 quite close, but not equivalent (much like light propagation vs Lorentz Transform, which ends up rolling up aberration and light propagation with
 contraction; and the contraction may selectively apply to the universe as a whole from a moving body perspective, and must).
 
+Well, maybe because time dilation applies, and the frequency would nessecarily have to be longer towards the speed of light... which the interferometer
+experiment above doesn't account for either; applying gamma to the above function, however, makes the frequency shift a straight line, and is probably
+not a correct answer. Both gamma and inverse gamma make my equation a flat line; which is certainly incorrect.  I lie somewhere between the realtivistic 
+equation `(\gamma (1-\beta cos(phi) ) )` and that equation without the gamma factor.
 
+The relativistic equations on the wikipedia page are also incorrect when C is not equal to 1.
 
+The wave emitted is from the physical non-length contracted arrangement of electrons in an atom, and the length contracted direction is not relavent(? 
+what about lateral emissions).
