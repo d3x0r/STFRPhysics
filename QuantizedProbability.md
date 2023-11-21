@@ -190,7 +190,7 @@ There is always near zero correlation between LHV Predicted results and LHV Simu
 The probability for a single detector and single particle is a sphere centered on the origin from -1 to 1, where < 0 indicates inversed result will be received; that is if expecting a up, should expect a down.
 
 The probability of 2 detectors and the same local variable is the ratio of overlaped arcs where the dot product is > 0 for two circles; this ends up being just the ratio of the arcs covered by the angles.  `1-x/(2-x)` is the ratio of correlation; 
-where both detections will be aligned vs detections that were expected aligned and were inverted.  The inverse of this is `1-1-x/(2-x)` or `x/(2-x)`. [Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality.html)
+where both detections will be aligned vs detections that were expected aligned and were inverted.  The inverse of this is `1-1-x/(2-x)` or `x/(2-x)`. [Live Demo](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality.html)
 
 
 ## Bell's Experiment
@@ -273,7 +273,7 @@ String is assumed to be a repeating segment forever, order does not matter.
 ```
 
 
-I also made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/math/indexBellInquality2.html) 
+I also made this [interactive circle chart](https://d3x0r.github.io/STFRPhysics/math/indexBellInequality2.html) 
 there's a slider toward the bottom to control the angle of overlap.
 The blue wedge compared to the green+blue wedge is what's being measured.
 
