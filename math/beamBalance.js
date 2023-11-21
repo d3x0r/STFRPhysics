@@ -158,8 +158,8 @@ function firstDraw( a, b, mass ) {
 	const tilt = balance( a, b, mass );
 	const cm_tilt = a==b?0:-Math.cos(Math.PI*a/(a+b));
 	
-	tiltText.textContent = (tilt*90).toFixed(3)+"°";
-	cm_tiltText.textContent = (cm_tilt*90).toFixed(3)+"°" + "  (" + ((cm_tilt-tilt)*90).toFixed(3) + "° delta)";
+	tiltText.textContent = (tilt*90).toFixed(3)+"°"  + " or " + (tilt*100).toFixed(3) + "%";
+	cm_tiltText.textContent = (cm_tilt*90).toFixed(3)+"°"  + " or " + (Math.cos(Math.PI*a/(a+b))*100).toFixed(3) + "%" + "  (" + ((cm_tilt-tilt)*90).toFixed(3) + "° delta)";
 
 	const bx = Math.cos( Math.PI/2 * tilt );
 	const by = Math.sin( Math.PI/2 * tilt );
