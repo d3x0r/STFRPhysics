@@ -114,7 +114,7 @@ controls.appendChild( tiltText );
 
 
 span = document.createElement( "span" );
-span.textContent = "Classical Mechanics: ";
+span.textContent = "Quantum Mechanics: ";
 controls.appendChild( span );
 
 
