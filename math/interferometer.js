@@ -113,15 +113,15 @@ function update( evt ) {
 		sliderRead( name );
 	}
 	values.VoverC = values.Velocity/values.C;
-/*
+	const wasAnimate = animate;
 	animate = chkLblNow.checked;
         
-	if( animate ) {
-	}else
-		now = Number(sliderNow.value)/100*runT/2;
-	spanNow.textContent = now.toFixed(2);
-*/
+	if( !animate ) {
+		//values.Now = Number(values.Now)/100*runT/2;
+		sliders.spanNow.textContent = values.Now.toFixed(2);
+	}
 
+	if( !wasAnimate ) draw();
 
 
 }
@@ -250,14 +250,14 @@ function draw(  ) {
 	ctx.stroke();
         
 	if( animate ) {
-		now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
-		sliderNow.value =100*values.Now*2/runT
-		spanNow.textContent = values.Now.toFixed(2);
+		values.Now = ( ( (Date.now() ) %(runT*1000) ) / 1000) - runT/2;
+		sliders.sliderNow.value =(values.Now - bias.Now)/scalars.Now;
+		sliders.spanNow.textContent = values.Now.toFixed(2);
 	}
 	const frame = Math.floor( (values.Now+runT/2)*10 );
 
-
-	requestAnimationFrame( draw );
+	if( animate ) 
+		requestAnimationFrame( draw );
 
 	return;
 
