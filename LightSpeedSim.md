@@ -11,7 +11,9 @@ I didn't concern myself so much with practical limitations like clocks would tic
 passed at its head, center and tail.  The emissions then go towards an observer; until they pass the observer, the apparent position is 
 indicated on the reference line; once observed, the line and related photon circle disappear.  
 This has been updated to test a function to reverse calculate, and show a computed observed position(dicussed under 'The Math').  Length contraction has
-also been applied, which is somewhat broken for the default settings of V=2 and C=1.
+also been applied, which is somewhat broken for the default settings of V=2 and C=1. This more limited [Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html), limits
+(V)elocity to 0-1 * C (Length contraction at C makes the body be 0 size, which would imply there's really no way to go faster than C without 
+moving the space around you at C, and being outside of the behavior that travelling through space implies.
 
 ![Screenshot](https://github.com/d3x0r/STFRPhysics/raw/master/math/lightSpeed1.jpg)
 
@@ -41,33 +43,61 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 - [3D Perspective test](https://d3x0r.github.io/Voxelarium.js/index2-dual-view.html)This is a modified [Voxelarium](https://github.com/d3x0r/Voxelarium.js)voxel world with relatistic corrections applied.  When the speed of the observer and the speed of the observed is the same, the world is very square in perspective.  This shows a orthographic camera (on the left) which shows the real transformations applied to the surface and a perspective camera(on the right) which shows the world from the observers viewpoint; and completes the transformation to be square. ([More info...](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedSim.md#3d-voxel-world-with-perspective-camera))
 - [3D Shape test](https://d3x0r.github.io/IsoSurface-MultiTexture/index-blackvoxel-lorentz.html)Used the [marching tetrahedra](https://github.com/d3x0r/IsoSurface-MultiTexture) framework to show a shape with an observer in the center, being able to apply an offset to that observer, but use the orbit camera (with a perspective matrix) to show what the observer sees, but not from the observer's perspective.  
 - [Relative Clock test](http://d3x0r.github.io/STFRPhysics/math/indexLightSpeed-Clocks.html).  This shows how various times are seen by various observers.  It also includes a demonstration of [this exam question](#lorentz-problem).  Also has some wavelength calculations - to demonstrate identitcal wave count in 2-way perceptions.  [Usage manual](lightspeedclocks.md) (instructions on use and explanation of various indicators.)
+- [Interferometer](http://d3x0r.github.io/STFRPhysics/math/indexInterferometer.html). (Simple dev version 1) This demonstrates an interferometer moving in a direction at various speeds; length contraction and light aberration apply.
+- [Interferometer 2](http://d3x0r.github.io/STFRPhysics/math/indexInterferometer2.html). This demonstrates an interferometer; adds some path-length computations.
+- [Interferometer 3](http://d3x0r.github.io/STFRPhysics/math/indexInterferometer3.html). This demonstrates an interferometer moving in various directions at various speeds.
+- [Interferometer 4](http://d3x0r.github.io/STFRPhysics/math/indexInterferometer4.html). This demonstrates an interferometer with a stream of photons - adds frequency/doppler shift calculations.
 
 ## Conventions
 
 There are places I use an expression like $CC$ which is the same as $C*C$ or $C^2$.  Variables used in the math expressions are a single letter, unless they have a subscript.  One reason might be that it's fewer characters, but more often it's harder to see superscript in inline equations.
+$C$ is always the speed of light and typically capital letters are used for variables, sometimes lower case letters are used for partial expressions.
 
 ## Disclaimer
 
-Lorentz Transform: https://youtu.be/feBT0Anpg4A?t=1315 (Around this area).
-This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
+An example Lorentz Transform: https://youtu.be/feBT0Anpg4A?t=1315 (Around 21:55).
 
-If you're expectation is that this will be exactly the same, it's not.  However, time in the future (after now), and positive relative velocities works out to be the same as Lorentz Transform (also with a small fraction of the speed of siganl propagation).
+This is a non-Lorentz Transform(augmented? extended?), and at times I will attempt to regress/address 
+the Lorentz Transform(LT), this is a more general solution, and there is an intersection with the domain of LT.
+
+If you're expectation is that this will be exactly the same, it's not.  This is about a true one-way speed of light
+propagating through a stationary aether of sorts; and not a two-way constant speed of light. The Lorentz transform seems 
+to combine length contraction, light aberration, light propagation delay, and a perspective projection all into one equation;
+but ends up only being mostly right.
 
 ## Differences in Terminology
 
 The end result requires different terms to describe than were previously established with the Lortenz Transform and General or Special Relativity.
 
  - Time contraction : This is the reciprocal of 'Time dilation', and refers to how much a moving clock slows down; how much less time ticks per real-tick.  Given that observers are able to observe their own velocity, they can also adjust their clock appropriately knowing that this happens.
- - Length Expansion : there is an asymmetry in the observed shape of a moving body.  Before passing an observer the length of the body appears to be extended/expanded.  The length of the body is effectively lengthened; for example, if the back of a ship is 1 light second behind an observer on the ship, then at a high velocity, the back of the ship would appear (from LT only) N light-seconds long, and the light will take N seconds to get to you(on a non-contracted clock), and be the speed of light.  N will be a value greater than 1.  The length expansion is often further dilated by Light Aberration, which makes a very distant back of thte ship still seem to be where it always was in perspective.
+ - Length Expansion : there is an asymmetry in the observed shape of a moving body.  Before passing an observer the length of the body appears to be extended/expanded.  The length of the body is effectively lengthened; for example, if the back of a ship is 1 light second behind an observer on the ship, then at a high velocity, the back of the ship would appear (from LT only) N light-seconds long, and the light will take N seconds to get to you(on a non-contracted clock), and be the speed of light.  N will be a value greater than 1.  The length expansion is often further dilated by Light Aberration, 
+   which makes a very distant back of thte ship still seem to be where it always was in perspective.
 
 ## The Math
 
 
-This model is generally built using light's frame as the reference frame; in one sense, it's the frame of absolute motion, so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in time T has a probability of being at some equidistance from a stationary point; and the location of that point is relative to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; that and gravitational displacements of space can cause the space to not be where it should otherwise be; [more on this here](math/TheNotBang.md)).  The network of all light events that have been emitted, with their specific time and location, is really the framework from which all observations are calculated; since the only constant is that light travels at a certain speed from a point to any observer.
+This model is generally built using light's frame as the reference frame; in one sense, it's the frame of absolute motion, 
+so it isn't a rest frame; but, when a light event is emitted it can be modeled as a point source, which at any point in 
+time T has a probability of being at some equidistance from a stationary point; and the location of that point is relative 
+to the space-medium transporting the light, but essentially exists in a rest frame(that is to address that distant galaxies
+ 'moving away from us at the speed of light' are themselves in a space that isn't moving away from their photon emissions; 
+that and gravitational displacements of space can cause the space to not be where it should otherwise be; 
+[more on this here](math/TheNotBang.md)).  The network of all light events that have been emitted, with their specific 
+time and location, is really the framework from which all observations are calculated; since the only constant is that light 
+travels at a certain speed from a point to any observer.  The inevitable travel of light is what makes it a 'frame of absolute
+motion'..
 
-The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
+The math starts with an equation that has minimal degrees of freedom; later, a more general approach that moves two spaces 
+relative to each other is given later.  It is essentially 1D, but has a perpendicular component that doesn't fully define 
+a 2D plane, so is sort of 1.5D.  The perpendicular distance from a line is a dimension outside of the body with a velocity.
 
-In the demos, observable body has 3 parts, the tail, the center and thead head; the tail follows the head, and the head is in the direction of the velocity.  Each part emits a signal at the position it is, and that signal's time to the observer is recorded.  At each frame, the time is compared to when the signal should be seen by the observer, and the frame with a time nearest to the current time is used to show where the body was seen. The expected time is used to span the computed line from a part on the body with a marker.  All frames were precomputed beforehand.   After observing what the calculation was, the inverse calculation was obtained.  This calculation can be used to figure out where the body part that emitted a signal was located when it was finally seen.
+In the demos, observable body has 3 parts, the tail, the center and thead head; the tail follows the head, and the head 
+is in the direction of the velocity.  Each part emits a signal at the position it is, and that signal's time to the observer 
+is recorded.  At each frame, the time is compared to when the signal should be seen by the observer, and the frame with a 
+time nearest to the current time is used to show where the body was seen. The expected time is used to span the computed 
+line from a part on the body with a marker.  All frames were precomputed beforehand.   After observing what the calculation 
+was, the inverse calculation was obtained.  This calculation can be used to figure out where the body part that emitted a 
+signal was located when it was finally seen.
 
 At some time $T$, a body to observe is at a position $VT$; the extents of the body of a given length are at $(VT+L)$ for the head and $(VT-L)$ for the tail. A relatively stationary observer exists, at some $D$ distance from the body (this is the closest distance to the line defined by $VT$; the distance is perpendicular to the velocity)
 ; then $D_o = \sqrt{D^2+(VT+L)^2}$ is the distance a photon has to travel
