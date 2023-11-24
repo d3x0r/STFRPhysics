@@ -163,9 +163,7 @@ $\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the time a
 
 $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
-(equation 2) the above long expression expressed as vectors
-$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
-solved for T; raw result copied from WA.
+solved for T; raw result copied from Wolfram Alpha.
 $$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
 
 The simplest refactor removes a 2 from numerator and denominator... 
@@ -181,13 +179,16 @@ For a more general 3D case, with Y aligned with direction of D to path; Z aligne
 Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
 
 ---
-Another refactor of equation 2
+(equation 2) the above long expression expressed as vectors
 
-$$T
-_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
+$$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
+
+or 
+
+$$T_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVert } {C} + T$$
 
 ---
-Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution),  [Slightly shorter version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#alternate-3d-math-solution).
+Vector expression solved for T... define partial expressions $\vec a$, $A$, $B$, $D$, to find $T$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution),  [Slightly shorter version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#alternate-3d-math-solution).
 
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
 
