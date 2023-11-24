@@ -161,7 +161,7 @@ $$Position(T_o,L) = \alpha L+VT$$
 
 $\vec V=(D,E,F)$ and $\vec{V_o}=(J,K,L)$ are velocity vectors; $T$ is the time an event was emitted, and $T_o$ is the observed time, $S$ is the delta time between $T$ and $T_o$.  $(X,Y,Z)$ or $\vec X$ is the difference between the position being seen, and the position it is being seen from; basically 'I'm looking at this point that is $(X,Y,Z)$ from me.'  $\vec X+ \vec V T$ is the position that an event is emitted, at time $T$. $(J,K,L){T_o}$ or $\vec {V_o}T_o$ is the distance the observer moves while the signal is in flight plus the time the observer moved before the event was emitted $T_o=\Delta {T_o} + T$ ; it should be removed from the position the event is observed from.  $(\vec X + \vec V T)-  (\vec 0+ \vec {V_o} {T_o})$ divided by the speed of light $C$, is the time it takes to see something.  ($S=T_o$ because subscript variables don't work well on Wolfram Alpha(WA))
 
-$S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
+(equation 1) $S = \frac { || {(X, Y, Z) + (D, E, F) T - (J, K, L) (S)} || } {C} + T$; solve for S and for T (ask WA to solve for...).
 
 solved for T; raw result copied from Wolfram Alpha.
 $$T = \frac {\sqrt{(-2 C^2 S - 2 D J S - 2 D X - 2 E K S - 2 E Y - 2 F L S - 2 F Z + 4 J^2 S + 4 J X + 4 K^2 S + 4 K Y + 4 L^2 S + 4 L Z)^2 - 4 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2) (C^2 S^2 - J^2 S^2 - 2 J S X - K^2 S^2 - 2 K S Y - L^2 S^2 - 2 L S Z - X^2 - Y^2 - Z^2)} + 2 C^2 S + 2 D J S + 2 D X + 2 E K S + 2 E Y + 2 F L S + 2 F Z - 4 J^2 S - 4 J X - 4 K^2 S - 4 K Y - 4 L^2 S - 4 L Z} {2 (C^2 - D^2 + 4 D J - E^2 + 4 E K - F^2 + 4 F L - 4 J^2 - 4 K^2 - 4 L^2)}$$
@@ -179,7 +179,7 @@ For a more general 3D case, with Y aligned with direction of D to path; Z aligne
 Implemented as a 3D graph here for X/Y plane, shows T seen as Z.  https://geogebra.org/3d/ckphajff
 
 ---
-(equation 2) the above long expression expressed as vectors
+(equation 2) the above long expression(equation 1) expressed as vectors
 
 $$S = \frac { \lVert {\vec{X}-\vec{X_o} + \vec{V} T - \vec{V_o} S} \rVert } {C} + T$$
 

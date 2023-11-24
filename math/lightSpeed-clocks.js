@@ -514,7 +514,7 @@ function drawClock( x, y, T,label ) {
 	ctx.beginPath();
 
 		ctx.strokeStyle = "blue";
-		if( T < -runT/2 )
+		if( T < 0 )
 			ctx.fillStyle = "#707";
 		else if( T > runT/2 )
 			ctx.fillStyle = "#770";
