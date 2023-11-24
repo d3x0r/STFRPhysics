@@ -408,7 +408,7 @@ If the scalars $t(x)$ and $s(x)$ for $f_x$ and $f_{xt}$ are combined, the result
 $$\frac {2C} {\sqrt{CC-xx}} \cdot \frac {CC-xx} {2CC} = \frac {\sqrt{CC-xx}} C$$
 
 However, the following might be used for the expressions.
-$$  D {\frac {\sqrt{CC-VV}} C}( |\cos(a)|, |\sin(a)|)$$
+$$D {\frac {\sqrt{CC-VV}} C}( |\cos(a)|, |\sin(a)|)$$
 
 Vector A ($\vec{A}$), is a temporary expression which is the normalized velocity vector which is a unit vector in the direction of the velocity, with the position projected on that vector; it has the length of $\vec{X}$ and the $\cos(\theta)$ where $\theta$ is the angle between the point and the velocity direction.  (This angle may be useful in the application of light aberration)
 
