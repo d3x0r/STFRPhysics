@@ -209,7 +209,7 @@ controls.appendChild( spanChkContract );
 
 const chkLblContract = document.createElement( "input" );
 chkLblContract.setAttribute( "type", "checkbox" );
-chkLblContract.checked = animate;
+chkLblContract.checked = false;
 spanChkContract.appendChild( chkLblContract );
 chkLblContract.addEventListener( "input", update );
 

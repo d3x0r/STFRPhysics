@@ -7,7 +7,11 @@ I didn't concern myself so much with practical limitations like clocks would tic
 
 ## Demos
 
-[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits Red at its head, Green at its center and Blue at its tail.  The emissions then go towards an observer; until they pass the observer, the apparent position is indicated on the reference line; once observed, the line and related photon circle disappear.  This has been updated to test a function to reverse calculate, and show a computed observed position(dicussed under 'The Math').
+[Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) This started with a brute force method of calculating apparent relative position of objects moving at some speed>0. The body emits a cycling color based on the time 
+passed at its head, center and tail.  The emissions then go towards an observer; until they pass the observer, the apparent position is 
+indicated on the reference line; once observed, the line and related photon circle disappear.  
+This has been updated to test a function to reverse calculate, and show a computed observed position(dicussed under 'The Math').  Length contraction has
+also been applied, which is somewhat broken for the default settings of V=2 and C=1.
 
 ![Screenshot](https://github.com/d3x0r/STFRPhysics/raw/master/math/lightSpeed1.jpg)
 
