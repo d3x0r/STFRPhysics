@@ -190,8 +190,11 @@ _o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \rVe
 Solved for T (ask Wolfram Alpha to solve for T; although it doesn't work in vectors, and this is really just a refactor of the above Wolfram alpha result into vectors): $\vec a$, $A$, $B$, $D$ are partial expressions, to find $T=$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution),  [Slightly shorter version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#alternate-3d-math-solution).
 
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
+
 $$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
+
 $$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
+
 $$D = C^2-\vec{V}\cdot\vec{V}$$
 
 if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
@@ -1041,4 +1044,33 @@ The relativistic equations on the wikipedia page are also incorrect when C is no
 
 The wave emitted is from the physical non-length contracted arrangement of electrons in an atom, and the length contracted direction is not relavent(? 
 what about lateral emissions).
+
+## Gamma
+
+It is possible to assume that gamma (`1/sqrt(1-V^2/C^2)`) is derrived from just the time dilation experienced by a photon clock.  Where a photon is
+travelling at `C` up and down, while the clock moves at `V` and normalizing to 1 tick for the moving clock is the length of the 
+hypotenuse of the triangle sqrt( C^2 + V^2 ).  This gives you time divided by the hypotenuse length times 1 (to scale to 1 tick), which is gamma.
+
+The other way that this comes about is by normalizing the forward/backward time of a 1 way system which is a standard distance of 1(meter?) divided
+by the velocity `(1/(C+V) + 1/(C-V))/2`, which gives time.  This is multiplying the first term by `(C-V)/(C-V)` which is `C-V/C^2-V^2`, and the right term
+by `(C+V)/(C+V)`, which is `(C+V)/C^2-V^2)` and the two terms can be added to be `(C-V)+(C+V)/(2(C^2-V^2))`, and simplifying the top of the fraction,
+and cancelling out the 2 is `C/(C^2-V^2)`.
+The time to travel the lateral(perpendicular) 1 meter distance is `1/sqrt(C^2-V^2)`, and dividing the lateral time by itself, 
+and scaling back to the forward-backward time `C/(C^2-V^2) * 1/(1/sqrt(C^2-V^2))` which becomes `C/sqrt(C^2-V^2)`, this can be simplified by writing it as
+`sqrt(C^2)/sqrt(C^2-V^2)`, and dividing the top and bottom by `sqrt(C^2)` becomes `1/sqrt( 1-V^2/C^2)`; which is also the gamma factor.
+
+In the previous setup - there is unobvious usage of units; that is a value of `C^2` should have units meter-meters per second-second; but the multplication
+by `(C-V)/(C-V)` or `(C+V)/(C+V)` have no units (that is they cancel each other out meter per second divided by meters per second is unitless).  
+The top `C` term is unitless - resulting from the addition of these two unitless values.  There is 
+a `1m` and meters is in there, but it becomes `Cm` (C meters), and meters/(meters per second) is seconds as a resulting unit type.
+
+Length contraction is `sqrt( C^2-V^2 )/C` or `sqrt( 1- V^2/C^2)` if the forward-backward time is normalized to the lateral time instead; which is 
+also 1/gamma; which makes light travel in the forward/backward direction the same time as travelling lateral, which cannot(does not) change. (maybe
+the previous section should have been about length contraction calculation rather than resulting in gamma, which takes the best case and makes it
+the worst case.
+
+Time dilation can be looked at in two ways; one, the clock that is moving moves slower, and is a length-contraction or 1/gamma factor, or two, 
+that the univseral clock ticks faster, which is multiplied by gamma.  Gamma in my mind is the least effective factor, and should be 1/gamma by
+natural definition, contracting time and length the same way; since to get from real time to moving time a contraction is nessecary, and to get from
+real length to moving length the contraction is also nessecary.
 
