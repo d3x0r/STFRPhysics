@@ -223,6 +223,7 @@ $$T_o = \frac { \lVert ({\vec{X} + \vec{V} T ) -( \vec{X_o}+ \vec{V_o} {T_o})} \
 
 ---
 Vector expression solved for T... define partial expressions $\vec a$, $A$, $B$, $D$, to find $T$. [Long hand 3D solution here.](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#3d-math-solution),  [Slightly shorter version](https://github.com/d3x0r/STFRPhysics/blob/master/LightSpeedNotes.md#alternate-3d-math-solution).
+$\vec a$ is basically the difference in original position; or the origin of the event at $T_o-T$.  
 
 $$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
 
@@ -991,9 +992,9 @@ In the following math, A is the (angle), D is the (direction), V is the (velocit
 
 $${\delta A} = A-D$$
 
-$$N= \left \{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
+$$N = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
 
-$$a= N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
+$$a = N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
 
 $$f = \frac {1} { \sqrt{ 1+ \frac {V^2} {C^2} - \frac {2V}{C} \cos( a-D ) } } $$
 
@@ -1011,7 +1012,7 @@ f is the resulting frequency scalar; 1/f is the resulting wavelength scalar.
 
 $${dA} = A-D$$
 
-$$N= \left \{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
+$$N = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
 
 $$a= N*\cos^{-1}\left( \frac { \cos(dA) +\frac V C } { 1 + \frac V C \cos( dA ) } \right) + D$$
 
