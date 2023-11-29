@@ -992,7 +992,7 @@ In the following math, A is the (angle), D is the (direction), V is the (velocit
 
 $${\delta A} = A-D$$
 
-$$N = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
+$${N} = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
 
 $$a = N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
 
@@ -1012,7 +1012,7 @@ f is the resulting frequency scalar; 1/f is the resulting wavelength scalar.
 
 $${dA} = A-D$$
 
-$$N = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
+$${N} = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . $$
 
 $$a= N*\cos^{-1}\left( \frac { \cos(dA) +\frac V C } { 1 + \frac V C \cos( dA ) } \right) + D$$
 
