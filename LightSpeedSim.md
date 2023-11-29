@@ -992,7 +992,7 @@ In the following math, A is the (angle), D is the (direction), V is the (velocit
 
 $${\delta A} = A-D$$
 
-``` math {N} = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . ```
+$$` math {N} = \left\{ \begin{array}{ll}  \left| \lfloor \frac {dA} {\pi}  \rfloor \right| \bmod 2 & -1\  \mbox{if }\  1\  \\&  1\ \mbox{if }0 \end{array} \right . `$$
 
 $$a = N*\cos^{-1}\left( \frac { \cos(\delta A) +\frac V C } { 1 + \frac V C \cos( \delta A ) } \right) + D$$
 
