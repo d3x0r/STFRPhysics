@@ -170,7 +170,11 @@ export function NaturalCamera( object, domElement ) {
 
 	function onKeyUp( event ) {
 
-if( !scope.userRotate ) return;
+	if( !scope.userRotate ) {
+		if( keyEvent )
+			keyEvent( event, false );
+		return;
+	}
         switch ( event.keyCode ) {
 		default:
 			if( keyEvent )

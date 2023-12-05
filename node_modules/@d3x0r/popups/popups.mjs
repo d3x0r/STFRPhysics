@@ -2666,7 +2666,7 @@ function fillFromURL(popup, url, opts) {
 		popup.divContentParent_ = popup.divContent_;
 		popup.divContent_ = shadow;
 	}
-	const base = new URL( url );
+	const base = new URL( url, location.href );
 	const pathIndex = base.pathname.lastIndexOf( "/" );
 	base.pathname = base.pathname.substring( 0, pathIndex );
 	const here = new URL( location );

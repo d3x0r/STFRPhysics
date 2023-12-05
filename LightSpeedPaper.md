@@ -69,21 +69,21 @@ $$T_o = T + \frac {|| (\vec{X_e}+T\vec{V_e}) - (\vec{X_o}+T_o\vec{V_o}) ||} {C}$
 solved for T
 
 (define partial expression $\vec{P}$ to make the solution somewhat shorter)
-$$\vec{P} = \vec{X_e}-(\vec{X_o}+T_o\vec{V_o})$$
-$$T   = \frac { \sqrt{(C^2{T_o}+\vec{V_e}\cdot\vec{P})^2 -  (C^2-\vec{V_e}\vec{V_e})(C^2{T_o}^2 - \vec{P}\cdot\vec{P}) } +C^2S+\vec{V_e}\cdot\vec{P} } {C^2- \vec{V_e}\vec{V_e}}$$
+$$\vec{P} = \vec{X_E}-(\vec{X_O}+T_O\vec{V_O})$$
+$$T = \frac { \sqrt{(C^2{T_O}+\vec{V_E}\cdot\vec{P})^2 -  (C^2-\vec{V_E}\vec{V_E})(C^2{T_O}^2 - \vec{P}\cdot\vec{P}) } +C^2T_O+\vec{V_E}\cdot\vec{P} } {C^2- \vec{V_E}\vec{V_E}}$$
 
 ---
 Solved for T using partial expressions...
 
 $\vec P = X-(X_o+V_oS)$
-$A = C^2{S}^2 - \vec{P}\cdot\vec{P}$
-$B=(C^2S+\vec{V}\cdot\vec{P})$
+$A = C^2{T_O}^2 - \vec{P}\cdot\vec{P}$
+$B=C^2T_O+\vec{V} \cdot \vec{P}$
 $D = C^2 - \vec{V}\vec{V}$
 $$T   = \frac { \sqrt{B^2 -  DA } +B } {D}$$
 
 ? delta solution?
 
-$$\Delta T  = \frac {\sqrt{ {\vec{P}\vec{P}( D+{\vec{V_o}\vec{V_o}})} } - {\vec{P}\vec{V_o}}} {{D}}$$
+$$ T_{\Delta} = \frac{\sqrt{ {\vec{P} \vec{P}( D+{\vec{V_O} \vec{V_O}})} } - {\vec{P} \vec{V_O}}}{D}$$
 
 The above equations are the propagation delay between any two points on two moving bodies each with their own independent velocities.
 
@@ -97,8 +97,8 @@ $$T_o = T + \frac {|| (\vec{X_e}+T\vec{V_e}) - (\vec{X_o}+T_o\vec{V_o}) ||} {||\
 
 Which gives the equation
 
-$$\begin{align}&\vec{P} =\vec{X}-\vec{V_o}{T_o} \\&B=C^2{T_o}+\vec{V}\cdot\vec{P}\end{align}$$
-$$T = \frac {A} {2B}  $$
+$$\begin{align}&\vec{P} =\vec{X}-\vec{V_o}{T_o} \\&B=C^2{T_o}+\vec{V} \cdot \vec{P}\end{align}$$
+$$T = \frac{A}{2B}$$
 ## Light Aberration
 
 "The discovery of the aberration of light in 1725 by James Bradle"(ref 1).
@@ -154,7 +154,7 @@ $$\vec{V_{dn}} = \frac {\vec{V_d}} {||\vec{V_d}||}$$
 
 Compute angle of aberration:
 
-$$\theta = cos^{-1}\left( \frac {V_{dn} + \frac {||V_O||} {C}} {1+\frac{||V_O||V_{dn}}{C}} \right)$$
+$$\theta = cos^{-1}\left( \frac{V_{dn} + \frac{||V_O||} {C}} {1+\frac{||V_O||V_{dn}}{C}} \right)$$
         
         
 Do rotation plus base point of observer:
@@ -233,7 +233,7 @@ Example Graph:
 
 ![[Pasted image 20231202233428.png]]
 
-## Relative Time Dilation
+## Relative Time 1Dilation
 
 It's said that only the relative difference matters between two bodies.  Consider a scenario where 8 craft pass by Earth at exactly the same time, and their clocks are all exactly synchronized.  Each craft is 0.1c faster than the previous.  
 

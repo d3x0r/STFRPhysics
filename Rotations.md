@@ -20,7 +20,7 @@ from https://en.wikipedia.org/wiki/Euler%27s_rotation_theorem
 
 ## Rotating a Rotation(A RRF B)
 
-The Rodrigues Rotation Forumla may be used with axis-angle representation to compose multiple rotations, 
+The Rodrigues Rotation Formula may be used with axis-angle representation to compose multiple rotations, 
 and result with axis and angle.
 
 https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Rodrigues_vector
