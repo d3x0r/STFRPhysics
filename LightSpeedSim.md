@@ -32,7 +32,7 @@ Colors are standardized so T=0 is green, and T=-1 is red, T=1 is blue; the overa
 
 ### List of Demos
 
-- [First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer
+- [First Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed.html) : fast moving body, stationary observer
 - [First Demo - Speed Limited](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed1.html) : fast moving body, stationary observer; velocity is always a fraction of C.
 - [Second Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed2a.html) : fast moving observer, stationary body
 - [Third Demo](https://d3x0r.github.io/STFRPhysics/math/indexLightSpeed3.html) : fast moving body, with a stationary observer on the body (offset can chance)
