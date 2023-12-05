@@ -45,7 +45,7 @@ const drawOpts = {
 const clockRadius = 20;
 const centerX = 500;
 const centerY = 500;
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 200;
 
@@ -66,7 +66,7 @@ class Frame{
 			const del = n/nFrames;
 			const now = (del * runT)-runT/2;
 
-			const f = frames[n];
+			const f = eventFrames[n];
 
 			f.Pc = now*V 
 			f.Ph = f.Pc+L*lengthContract;
@@ -84,7 +84,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 

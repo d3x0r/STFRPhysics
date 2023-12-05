@@ -30,7 +30,7 @@ let now = 0;
 let animate = true;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 1;
 let eventFrame = -1;
@@ -58,7 +58,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 

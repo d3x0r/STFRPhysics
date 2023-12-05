@@ -20,7 +20,7 @@ let animate = true;
 let aberrate = true;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 101;
 let eventFrame = -1;
@@ -40,7 +40,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -362,7 +362,7 @@ function update( evt ) {
 	spanNow.textContent = now.toFixed(2);
 
 	if( eventFrame>=0 ) {
-		frames[eventFrame].event = false;
+		eventFrames[eventFrame].event = false;
 		eventFrame = -1;
 	}
 
@@ -371,7 +371,7 @@ function update( evt ) {
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const Treal = (del * runT)-runT/2;
-		const frame = frames[n];
+		const frame = eventFrames[n];
 		// offset observer's time to be in place later.
 		const obs_now = (del * runT)-runT/2 - Tofs;
 		const x = obs_now * V;
@@ -494,7 +494,7 @@ function draw(  ) {
 
 
 	for( f = 0; f < nFrames; f++ ) {
-		const frame = frames[f];
+		const frame = eventFrames[f];
 		if( frame.T_start > now ) break;
 //		if(( frame.T_see_h < now ) && ( frame.T_see_t < now ) )continue;
 
@@ -616,7 +616,7 @@ function draw(  ) {
 	}
 
 	{
-		const frame = frames[f];  // frame of now...
+		const frame = eventFrames[f];  // frame of now...
 		//if( frame.t_see_h < now && frame.t_see_t < now ) 
 		//(frame.Pc*frame.Pc)-(L*L)
 		// how long ago do I see Tail?
@@ -645,7 +645,7 @@ function draw(  ) {
 
 	if( eventFrame >= 0 )
 	{
-	 	const frame = frames[eventFrame];
+	 	const frame = eventFrames[eventFrame];
 		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
 		if(0)
 			if( now < frame.T_see_c ) {

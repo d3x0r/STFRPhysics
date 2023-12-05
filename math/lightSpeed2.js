@@ -18,7 +18,7 @@ let E = 0;
 let now = 0;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 51;
 let eventFrame = -1;
@@ -38,7 +38,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -400,7 +400,7 @@ function update( evt ) {
 	spanNow.textContent = now.toFixed(2);
 
 	if( eventFrame>=0 ) {
-		frames[eventFrame].event = false;
+		eventFrames[eventFrame].event = false;
 		eventFrame = -1;
 	}
 
@@ -409,7 +409,7 @@ function update( evt ) {
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const Treal = (del * runT)-runT/2;
-		const frame = frames[n];
+		const frame = eventFrames[n];
 		// offset observer's time to be in place later.
 		const obs_now = (del * runT)-runT/2 - Tofs;
 		const x = obs_now * V;
@@ -463,7 +463,7 @@ function draw(  ) {
 if(0)
 	if( curFrame < 0 || curFrame != frame ) {
 		curFrame = frame; 
-		const f = frames[curFrame];
+		const f = eventFrames[curFrame];
 		f.Pc = now*V 
 		f.Ph = f.Pc+L;
 		f.Pt = f.Pc-L;
@@ -488,7 +488,7 @@ if(0)
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*100+photonStart;
 	for( let f = 0; f < curFrame; f++ ) {
-		const frame = frames[f];
+		const frame = eventFrames[f];
 		if( frame.T_start < now ) {
 		ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 		ctx.beginPath();
@@ -549,7 +549,7 @@ if(0)
 
 if( eventFrame >= 0 )
 	{
-	 	const frame = frames[eventFrame];
+	 	const frame = eventFrames[eventFrame];
 		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
 if(0)
 		if( now < frame.T_see_c ) {
@@ -568,7 +568,7 @@ if(0)
 		}
 
 	}
-	//if( drawP !== frames[0] ) 
+	//if( drawP !== eventFrames[0] ) 
 	{
 
 /*
@@ -576,12 +576,12 @@ if(0)
 		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
 	if( drawP2 )
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
-	if( drawH !== frames[0] )
+	if( drawH !== eventFrames[0] )
 	if( drawH )
 		headTri( drawH.Pc+L, 30, true );
 	if( drawH2 )
 		headTri( drawH2.Pc+L, 30, true );
-	if( drawT !== frames[0] )
+	if( drawT !== eventFrames[0] )
 	if( drawT )
 		tailTri( drawT.Pc-L, 30, true );
 	if( drawT2 )

@@ -1,5 +1,5 @@
 
-# Math of Spherical Surface Displacment
+# Math of Spherical Surface Displacement
 
 This ends up considering that gravity is a increasing gradient towards the source; the strength of gravity is stronger; rather than the convention that the kinetic energy component is large far away.  The relation between these is f(x)=1/x.
 
@@ -9,16 +9,16 @@ Lines are straight lines to light.
 
 I started testing the compression idea using geogebra.
 
-- [Geogebra 3D graph](https://www.geogebra.org/3d/mb5wpnu6) - I started testing the math here, but subtracting |x| and |y| independantly from the hyperbolic displacements make more of a bell curve instead of an arc; especially very close to 0.
+- [Geogebra 3D graph](https://www.geogebra.org/3d/mb5wpnu6) - I started testing the math here, but subtracting |x| and |y| independently from the hyperbolic displacements make more of a bell curve instead of an arc; especially very close to 0.
 
 Some toys test displacing straight lines by an extrinsic curvature.
 
-- [Single Source](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature for a single poing displacement.
+- [Single Source](https://d3x0r.github.io/STFRPhysics/math/mathSphereDecay) - This shows curvature for a single point displacement.
 - [4 Sources](https://d3x0r.github.io/STFRPhysics/math/gravityFields.html) - This is 4 point displacements; the points  do not move and do not scale with the displacement they generate.
 - [3D 4 sources](https://d3x0r.github.io/STFRPhysics/3d/index-gravity-field.html) - 3D stack of multiple planes; with the 'zLevel' set near 0, the planes of 'geodesic light paths' include the plane of the displacements.
-- [Inner Rotation Curve Explorer](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap3.html) - This explores what the frames are for the proposed filler curve; turns out to be geodesic rototions of a frame from one pole through the other and back to the start with the originating orientation.
+- [Inner Rotation Curve Explorer](https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap3.html) - This explores what the frames are for the proposed filler curve; turns out to be geodesic rotations of a frame from one pole through the other and back to the start with the originating orientation.
 
-The `Displacment A` slider controls the inner displacment of 0.  The point that used to be at 0 is no longer at 0, but is instead
+The `Displacment A` slider controls the inner displacement of 0.  The point that used to be at 0 is no longer at 0, but is instead
 shoved away from the 0 by some amount.  Straight lines are proportionally scaled such that there position relative to the 0 is still the same.... as the radius increases, the surface area of the spheres increase more than the radius, 
 which allows a larger radius to contain any inner radius plus some amount of its original amount, which results in a net decay of displacement over distance from the source. 
 
@@ -147,7 +147,7 @@ depending on the direction it was a radial offset (only it's a sum of different 
    So I have this vector - it's in some directionon the manifold; but it's in some direction tangent to the manifold, and to compare that vector with another
    I have- the transform in the manifold space has to be found.
    
-   geodesic - paralel transport of vector along its own direction is parallel to itself.
+   geodesic - parallel transport of vector along its own direction is parallel to itself.
    
    --------------------
    Primary perpendiculars https://www.geogebra.org/3d/ehvemap2

@@ -20,7 +20,7 @@ let now = 0;
 let animate = true;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 201;
 let eventFrame = -1;
@@ -40,7 +40,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -423,7 +423,7 @@ function update( evt ) {
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame>=0 ) {
-		frames[eventFrame].event = false;
+		eventFrames[eventFrame].event = false;
 		eventFrame = -1;
 	}
 
@@ -441,7 +441,7 @@ function update( evt ) {
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const Treal = (del * runT)-runT/2;
-		const frame = frames[n];
+		const frame = eventFrames[n];
 
 
 		const nowE = (del * runT)-runT/2;
@@ -486,12 +486,12 @@ function draw(  ) {
 	ctx.clearRect( 0, 0, 1024, 1024);
 	ctx.strokeStyle = "blue";
 
-	curFrame = nFrames;  // draw all frames
+	curFrame = nFrames;  // draw all eventFrames
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
 	const toY = D*yscale+photonStart;
 	for( let f = 0; f < curFrame; f++ ) {
-		const frame = frames[f];
+		const frame = eventFrames[f];
 		if( frame.T_start < now ) {
 
 
@@ -591,7 +591,7 @@ if(1){ // draw circles around tail
 
 if( eventFrame >= 0 )
 	{
-	 	const frame = frames[eventFrame];
+	 	const frame = eventFrames[eventFrame];
 		ctx.fillStyle =  `hsl(${frame.hue},100%,50%`
 if(0)
 		if( now < frame.T_see_c ) {
@@ -610,7 +610,7 @@ if(0)
 		}
 
 	}
-	//if( drawP !== frames[0] ) 
+	//if( drawP !== eventFrames[0] ) 
 	{
 
 /*
@@ -618,12 +618,12 @@ if(0)
 		centerBoxXY( 500 + drawP.Pc*xscale, 30, true );
 	if( drawP2 )
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30, true );
-	if( drawH !== frames[0] )
+	if( drawH !== eventFrames[0] )
 	if( drawH )
 		headTri( drawH.Pc+L, 30, true );
 	if( drawH2 )
 		headTri( drawH2.Pc+L, 30, true );
-	if( drawT !== frames[0] )
+	if( drawT !== eventFrames[0] )
 	if( drawT )
 		tailTri( drawT.Pc-L, 30, true );
 	if( drawT2 )

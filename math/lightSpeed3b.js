@@ -37,7 +37,7 @@ let now = 0;
 let animate = true;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 201;
 let eventFrame = -1;
@@ -70,7 +70,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -220,13 +220,13 @@ class D3xTransform {
 
 			if( showRelativeVelocities ) 
 	for( let n = 0; n < nFrames; n++ ) {
-		const frame = frames[n];
+		const frame = eventFrames[n];
 		if( frame.T_start <= now ) {
 
 
 			if( showRelativeVelocities ) {
 				if( n > 1 )  {
-					const frame0 = frames[n-1];
+					const frame0 = eventFrames[n-1];
 					ctx.beginPath();
 					ctx.moveTo( ofs + (xscale_)* (frame.relativeVelocity.x), ofs+(xscale_)*(frame.relativeVelocity.y) )
 					ctx.lineTo( ofs + (xscale_)* ( (frame.relativeVelocityTo.x))
@@ -1275,7 +1275,7 @@ function update( evt ) {
 
 	const framedel = (runT/30)/nFrames;
 	for( let n = 0; n < nFrames; n++ ) {
-		const frame = frames[n];
+		const frame = eventFrames[n];
 		const del = n/nFrames;
 		const Treal = ((del * runT)-runT/2);
 
@@ -1290,7 +1290,7 @@ function update( evt ) {
 		frame.distY = Math.abs(frame.PobsdY - frame.PobsrY); // distance, non directed
 
 		if( n ) {
-			const frame0 = frames[n-1];
+			const frame0 = eventFrames[n-1];
 			const distlen = Math.sqrt( frame.distX*frame.distX+frame.distY*frame.distY);
 			const zx = Math.sqrt((frame.distX)*(frame.distX) + (frame.distY)*(frame.distY));
 			const z0 = Math.sqrt((frame0.distX)*(frame0.distX) + (frame0.distY)*(frame0.distY));

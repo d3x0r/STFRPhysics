@@ -84,7 +84,7 @@ controls.appendChild(span);
 //----------------------
 
 span = document.createElement("span");
-span.textContent = "Bias velocity between frames";
+span.textContent = "Bias velocity between eventFrames";
 controls.appendChild(span);
 
 const sliderB = document.createElement("input");
@@ -107,7 +107,7 @@ controls.appendChild(span);
 //----------------------
 if(false) {
 span = document.createElement("span");
-span.textContent = "Offset mid velocity between frames";
+span.textContent = "Offset mid velocity between eventFrames";
 controls.appendChild(span);
 
 const sliderO = document.createElement("input");
@@ -717,9 +717,9 @@ function draw() {
 	const frame = Math.floor((now + runT / 2) * 10);
 	if (curFrame < 0 || curFrame != frame) {
 		curFrame = frame;
-		const f = frames[curFrame];
+		const f = eventFrames[curFrame];
 		if (!f) {
-			f = frames[curFrame] = new Frame();
+			f = eventFrames[curFrame] = new Frame();
 		}
 		if (f) {
 			// position center, head, tail
@@ -742,7 +742,7 @@ function draw() {
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null, drawT2 = null, drawH2 = null;
 	for (let f = 0; f < curFrame; f++) {
-		const frame = frames[f];
+		const frame = eventFrames[f];
 		ctx.beginPath();
 		ctx.moveTo(500 + frame.Pc * xscale, 40);
 		const toY = D * 100 + 40;
@@ -782,19 +782,19 @@ function draw() {
 		}
 	}
 
-	//if( drawP !== frames[0] ) 
+	//if( drawP !== eventFrames[0] ) 
 	{
 
 		if (drawP)
 			centerBoxXY(500 + drawP.Pc * xscale, 30);
 		if (drawP2)
 			centerBoxXY(500 + drawP2.Pc * xscale, 30);
-		if (drawH !== frames[0])
+		if (drawH !== eventFrames[0])
 			if (drawH)
 				headTri(drawH.Pc + L, 30);
 		if (drawH2)
 			headTri(drawH2.Pc + L, 30);
-		if (drawT !== frames[0])
+		if (drawT !== eventFrames[0])
 			if (drawT)
 				tailTri(drawT.Pc - L, 30);
 		if (drawT2)

@@ -5,6 +5,27 @@ export const params = {
 	lGam : 1.0,
 } 
 
+class Vector{
+	x=0;y=0;z=0;
+	constructor( x,y,z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	dot(a) {
+		return this.x*a.x + this.y*a.y + this.z * a.z;
+	}
+	times(n) {
+		return new Vector(this.x * n, this.y * n, this.z * n);
+	}
+	add(v) {
+		return new Vector(this.x + v.x, this.y + v.y, this.z + v.z );
+	}
+	sub(v) {
+		return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
+	}
+}
+
 
 export function ObservedTime( T, V, P, V_o, P_o ) {
 	const C = params.C;
@@ -227,6 +248,162 @@ export class D3xTransform {
 
 	}
 
+	// returns absolute time an event was generated.
+	static getEmitTime( T_o, X_o, V_o, X, V ) {
+/*
+$$\vec{a}=(\vec{X}-\vec{X_o})-\vec{V_o}T_o $$
+$$A = C^2{T_o}^2 - \vec{a}\cdot\vec{a}$$
+$$B = C^2{T_o} + \vec{V}\cdot\vec{a}$$
+$$D = C^2-\vec{V}\cdot\vec{V}$$
+if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+*/
+		const a = X.sub( X_o ).sub( V_o.times( T_o ) );
+		const A = params.C * params.C * T_o * T_o - a.dot( a );
+		const B = params.C * params.C * T_o - V.dot( a );
+		const D = params.C * params.C - V.dot( V );
+
+		return ( Math.abs( D ) < 0.00000001 )? A/(2*B) : ( sqrt( V*V-D*A ) + B) / D;
+	}
+
+	// returns absolute time an event was generated.
+	static getEmitPos( T_o, X_o, V_o, X, V ) {
+		return D3xTransform.aberrate_coord( X_o, V_o, X.add( V.times( D3xTransform.getEmitTime( T_o, X_o, V_o, X, V ) ) ) );
+	}
+
+	static aberrate_coord( X_o, V, X ) {
+		const Vlen2 = V.dot( V );
+		const forward = V;
+	        
+		const del = X.sub( X_o );
+		const r = new Vector();
+		
+		let len2 = del.dot( del );
+		let Vdot = del.dot( V );
+		const Vcrsz = del.y * V.x - del.x * V.y;
+		const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+		//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+		if( Vlen2 > 0.00001 ) {
+			let len = Math.sqrt( len2 );
+			let Vlen = Math.sqrt( Vlen2 );
+			let norm = len*Vlen;
+			let CosVDot = Vdot/norm;
+			let baseAng = Math.acos( CosVDot );
+			const delAng = Math.acos( ( CosVDot + Vlen/params.C)/(1 + Vlen/params.C * CosVDot))-baseAng;
+			if( Math.abs( delAng) > 0.00001 ) {
+				const c = Math.cos(delAng );
+				const s= Math.sin( delAng);
+				let vx = del.x, vy=del.y;
+				let qz = Math.sign( Vcrs );
+				r.x = X_o.x + vx*c + s*(-qz * vy) + 0;
+				r.y = X_o.y + vy*c + s*(qz * vx) + 0;						
+			}
+		}
+		return r;
+	}
+
+
 	static drawCoords( atNow ) {
 	}
+}
+
+
+
+export function aberration( angle ) {
+	const speed = values.Velocity;
+	const a = Math.acos( (Math.cos(angle)+speed/values.C)/(1+speed/values.C*Math.cos(angle)) );
+	return a;
+}
+
+// returns the aberrated angle for a transmission direction (angle) with frame moving in (direction)
+// Velocity and C are taken from global common variables.
+export function aberration_angle_from_angles( angle, direction, V, C ) {
+	let da = angle - direction;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos( (Math.cos(da)+V/C)/(1+V/C*Math.cos(da)) ) + direction;
+	return a;
+}
+
+
+// returns the angle that the transmission would have to be from to get sent to the target angle (b)
+// (d) is the direction the frame is moving in general at speed (V)
+// (C) is the speed of light constant
+// reverse calculation courtesy of Wolfram Alpha
+//    https://www.wolframalpha.com/input?i=b+%3D+arccos%28+%28cos%28a-d%29%2BV%2FC%29%2F%281%2BV%2FC*cos%28a-d%29%29+%29+%2B+d+solve+for+a
+export function aberration_inverse_angle( b, d, V, C ) { 
+	if( V >= C ) V = C-0.000001;
+	const da = b - d;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) & 1;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos((V - C* Math.cos(b - d))/(V *Math.cos(b - d) - C)) + d ;
+	return a;
+}
+
+// returns the frequency shift seen for a transmission in some direction (angle) 
+// from a frame moving in (direction) at velocity (V) and the speed of light (C).
+export function freqShift( angle, direction, V, C ) {
+	// V/C 
+	if( V >= C ) V = C-0.000001;
+	const ab = aberration_aa( angle, direction, V, C );
+	const f = 1/( ( timeDilate?1/Math.sqrt( 1-V*V/(C*C) ):1 ) * Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
+	return f;
+}
+
+// results in Xx,Xy transformed to new coordinate, (rotates around Xox, Xoy)
+export function aberration_coord( Xox, Xoy, Xx, Xy, V ) {
+	const forward = { x : Math.cos(values.Direction) * values.Velocity, y: -Math.sin(values.Direction) * values.Velocity };
+
+	let delx = Xx-Xox;
+	let dely = Xy-Xoy;
+	let rx = Xx;
+	let ry = Xy;
+
+	let len2 = delx*delx + dely*dely;
+	let Vdot = delx * forward.x + dely*forward.y;
+	const Vcrsz = dely * forward.x - delx * forward.y;
+	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+	if( values.Velocity > 0.00001 ) {
+		let len = Math.sqrt( len2 );
+		let Vlen = values.Velocity;
+		let norm = len*Vlen;
+		let CosVDot = Vdot/norm;
+		let baseAng = Math.acos( CosVDot );
+		const delAng = Math.acos( ( CosVDot + Vlen/values.C)/(1 + Vlen/values.C * CosVDot))-baseAng;
+		if( Math.abs( delAng) > 0.00001 ) {
+			const c = Math.cos(delAng );
+			const s= Math.sin( delAng);
+			let vx = delx, vy=dely;
+			let qz = Math.sign( Vcrs );
+			rx = Xox + vx*c + s*(-qz * vy) + 0;
+			ry = Xoy + vy*c + s*(qz * vx) + 0;						
+		}
+	}
+	return { x:rx, y:ry };
+}
+
+// results in relative angle
+function aberration_angle( Xox, Xoy, Xx, Xy, V ) {
+	const forward = { x : Math.cos(values.Direction) * values.Velocity, y: -Math.sin(values.Direction) * values.Velocity };
+
+	let delx = Xx-Xox;
+	let dely = Xy-Xoy;
+
+	let len2 = delx*delx + dely*dely;
+	let Vdot = delx * forward.x + dely*forward.y;
+	const Vcrsz = dely * forward.x - delx * forward.y;
+	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+	if( values.Velocity > 0.00001 ) {
+		let len = Math.sqrt( len2 );
+		let Vlen = values.Velocity;
+		let norm = len*Vlen;
+		let CosVDot = Vdot/norm;
+		let baseAng = Math.acos( CosVDot );
+		//console.log( "baseAng:", baseAng )
+		let qz = Math.sign( Vcrs );
+		const delAng = -qz*(Math.acos( ( CosVDot + Vlen/values.C)/(1 + Vlen/values.C * CosVDot))-baseAng);
+		return delAng;
+	}
+	return 0;
 }

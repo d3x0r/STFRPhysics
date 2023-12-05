@@ -18,7 +18,7 @@ let runT = 10;
 let now = 0;
 let animate = true;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 200;
 
@@ -36,7 +36,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -389,7 +389,7 @@ function update( evt ) {
 		const del = n/nFrames;
 		const now = (del * runT)-runT/2;
 
-		const f = frames[n];
+		const f = eventFrames[n];
 		f.Pc = now*V 
 		f.Ph = f.Pc+L*lengthContract;
 		f.Pt = f.Pc-L*lengthContract;
@@ -424,8 +424,8 @@ function draw(  ) {
 	
 	let drawP = null, drawT = null, drawH = null;
 	let drawP2 = null,drawT2 = null,drawH2 = null;
-	for( let f = 0; f < frames.length; f++ ) {
-		const frame = frames[f];
+	for( let f = 0; f < eventFrames.length; f++ ) {
+		const frame = eventFrames[f];
 
 		if( frame.T_start <= now ) {
 
@@ -478,19 +478,19 @@ if(1 && (now-frame.T_start>0)){ // draw circles around tail
 
 	}
 
-	//if( drawP !== frames[0] ) 
+	//if( drawP !== eventFrames[0] ) 
 	{
 
 	if( drawP )
 		centerBoxXY( 500 + drawP.Pc*xscale, 30 );
 	if( drawP2 )
 		centerBoxXY( 500 + drawP2.Pc*xscale, 30 );
-	if( drawH !== frames[0] )
+	if( drawH !== eventFrames[0] )
 	if( drawH )
 		headTri( drawH.Pc+L*lengthContract, 30 );
 	if( drawH2 )
 		headTri( drawH2.Pc+L*lengthContract, 30 );
-	if( drawT !== frames[0] )
+	if( drawT !== eventFrames[0] )
 	if( drawT )
 		tailTri( drawT.Pc-L*lengthContract, 30 );
 	if( drawT2 )

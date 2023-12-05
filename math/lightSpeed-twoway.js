@@ -45,7 +45,7 @@ const drawOpts = {
 const clockRadius = 20;
 const centerX = 500;
 const centerY = 500;
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 200;
 
@@ -57,25 +57,25 @@ class Frame{
 
 	static initFrames() {
 		const lGam = Math.sqrt( C*C-V*V);
-		const f0 = frames[0];
+		const f0 = eventFrames[0];
 		f0.T_start = 0;
 		// stationary frame seen by moving frame tail
 		f0.T_end = ObservedTime( 0, {x:0, y:0, z:0}, {x:0,y:0,z:0}, {x:V,y:0,z:0}, {x:-L*lGam,y:0,z:0})
 		f0.from.x = 0;
 		f0.T_end_local = lGam*f0.T_end;
-		const f1 = frames[1];
+		const f1 = eventFrames[1];
 		f1.T_start = 0;
 		// stationary frame seen by moving frame head
 		f1.T_end = ObservedTime( 0, {x:0, y:0, z:0}, {x:0,y:0,z:0}, {x:V,y:0,z:0}, {x:L*lGam,y:0,z:0})
 		f1.from.x = 0;
 		f1.T_end_local = lGam*f1.T_end;
-		const f2 = frames[2];
+		const f2 = eventFrames[2];
 		f2.T_start = 0;
 		// stationary frame seen by stationary frame tail
 		f2.T_end = ObservedTime( 0, {x:0, y:0, z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0}, {x:-L,y:0,z:0})
 		f2.from.x = 0;
 		f2.T_end_local = f2.T_end;
-		const f3 = frames[3];
+		const f3 = eventFrames[3];
 		f3.T_start = 0;
 		// stationary frame seen by stationary frame head
 		f3.T_end = ObservedTime( 0, {x:0, y:0, z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0}, {x:L,y:0,z:0})
@@ -83,26 +83,26 @@ class Frame{
 		f3.T_end_local = f3.T_end;
 
 
-		const f4 = frames[4];
+		const f4 = eventFrames[4];
 		f4.T_start = f0.T_end;
 		// time from moving tail to moving observer
 		f4.T_end = ObservedTime( f0.T_end, {x:V, y:0, z:0}, {x:-L*lGam,y:0,z:0}, {x:V,y:0,z:0}, {x:0,y:0,z:0})
 		f4.from.x = -L*lGam + f0.T_end*V;
 		f4.T_end_local = lGam * f4.T_end;
-		const f5 = frames[5];
+		const f5 = eventFrames[5];
 		f5.T_start = f1.T_end;
 		// time from moving head to moving observer
 		f5.T_end = ObservedTime( f1.T_end, {x:V, y:0, z:0}, {x:L*lGam,y:0,z:0}, {x:V,y:0,z:0}, {x:0,y:0,z:0})
 		f5.from.x = L*lGam + f1.T_end*V;
 		f5.T_end_local = lGam * f5.T_end;
 
-		const f6 = frames[6];
+		const f6 = eventFrames[6];
 		f6.T_start = f0.T_end;
 		// time from moving tail to stationary observer
 		f6.T_end = ObservedTime( f0.T_end, {x:V, y:0, z:0}, {x:-L*lGam,y:0,z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0})
 		f6.from.x = -L*lGam + f0.T_end*V;
 		f6.T_end_local = f6.T_end;
-		const f7 = frames[7];
+		const f7 = eventFrames[7];
 		f7.T_start = f1.T_end;
 		// time from moving head to stationary observer
 		f7.T_end = ObservedTime( f1.T_end, {x:V, y:0, z:0}, {x:L*lGam,y:0,z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0})
@@ -110,26 +110,26 @@ class Frame{
 		f7.T_end_local = f7.T_end;
 
 
-		const fs4 = frames[8];
+		const fs4 = eventFrames[8];
 		fs4.T_start = f2.T_end;
 		// time from stationary tail to moving observer
 		fs4.T_end = ObservedTime( f2.T_end, {x:0, y:0, z:0}, {x:-L,y:0,z:0}, {x:V,y:0,z:0}, {x:0,y:0,z:0})
 		fs4.from.x = -L;
 		fs4.T_end_local = lGam * fs4.T_end;
-		const fs5 = frames[9];
+		const fs5 = eventFrames[9];
 		fs5.T_start = f3.T_end;
 		// time from stationary head to moving observer
 		fs5.T_end = ObservedTime( f3.T_end, {x:0, y:0, z:0}, {x:L,y:0,z:0}, {x:V,y:0,z:0}, {x:0,y:0,z:0})
 		fs5.from.x = L;
 		fs5.T_end_local = lGam * fs5.T_end;
 		
-		const fs6 = frames[10];
+		const fs6 = eventFrames[10];
 		fs6.T_start = f2.T_end;
 		// time from stationary tail to stationary observer
 		fs6.T_end = ObservedTime( f2.T_end, {x:0, y:0, z:0}, {x:-L,y:0,z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0})
 		fs6.from.x = -L;
 		fs6.T_end_local = fs6.T_end;
-		const fs7 = frames[11];
+		const fs7 = eventFrames[11];
 		fs7.T_start = f3.T_end;
 		// time from stationary head to stationary observer
 		fs7.T_end = ObservedTime( f3.T_end, {x:0, y:0, z:0}, {x:L,y:0,z:0}, {x:0,y:0,z:0}, {x:0,y:0,z:0})
@@ -138,7 +138,7 @@ class Frame{
 
 
 		for( let i = 0; i < 12; i++ ){
-			console.log( "from:", frames[i].T_start.toFixed(3), "to:", frames[i].T_end.toFixed(3), "L:", frames[i].T_end_local.toFixed(3))
+			console.log( "from:", eventFrames[i].T_start.toFixed(3), "to:", eventFrames[i].T_end.toFixed(3), "L:", eventFrames[i].T_end_local.toFixed(3))
 		}
 
 	}
@@ -146,7 +146,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -348,13 +348,13 @@ function update( evt ) {
 
 	Frame.initFrames();
 
-	let max = frames[8].T_end;
-	if( frames[9].T_end > max ) 
-		max = frames[9].T_end;
-	if( frames[6].T_end/lengthContract > max ) 
-		max = frames[6].T_end/lengthContract;
-	if( frames[7].T_end/lengthContract > max ) 
-		max = frames[7].T_end/lengthContract;
+	let max = eventFrames[8].T_end;
+	if( eventFrames[9].T_end > max ) 
+		max = eventFrames[9].T_end;
+	if( eventFrames[6].T_end/lengthContract > max ) 
+		max = eventFrames[6].T_end/lengthContract;
+	if( eventFrames[7].T_end/lengthContract > max ) 
+		max = eventFrames[7].T_end/lengthContract;
 		
 	runT = max + 0.5;
 //	spanRunT.textContent = runT.toFixed(2)+"ns";
@@ -433,83 +433,83 @@ function draw(  ) {
 
 	ctx.strokeStyle = "white";
 	// stationary event to moving tail
-	if( now >= frames[0].T_start && now <= frames[2].T_end ) {
+	if( now >= eventFrames[0].T_start && now <= eventFrames[2].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+0*xscale, 250, C*(now-frames[1].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(750+0*xscale, 250, C*(now-eventFrames[1].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 	// stationary event to moving head
-	if( now >= frames[1].T_start && now <= frames[1].T_end ) {
+	if( now >= eventFrames[1].T_start && now <= eventFrames[1].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+0*xscale, 250, C*(now-frames[0].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(750+0*xscale, 250, C*(now-eventFrames[0].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 
 
 	// stationary event to stationary tail
-	if( now >= frames[2].T_start && now <= frames[1].T_end ) {
+	if( now >= eventFrames[2].T_start && now <= eventFrames[1].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+0*xscale, 250, C*(now-frames[2].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(250+0*xscale, 250, C*(now-eventFrames[2].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// stationary event to stationary head
-	if( now >= frames[3].T_start && now <= frames[2].T_end ) {
+	if( now >= eventFrames[3].T_start && now <= eventFrames[2].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+0*xscale, 250, C*(now-frames[3].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(250+0*xscale, 250, C*(now-eventFrames[3].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	ctx.strokeStyle = "red";
 	// time from moving tail to moving observer
-	if( now >= frames[4].T_start && now <= frames[4].T_end ) {
+	if( now >= eventFrames[4].T_start && now <= eventFrames[4].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[4].from.x)*xscale, 250, C*(now-frames[4].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(750+(0+ eventFrames[4].from.x)*xscale, 250, C*(now-eventFrames[4].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from moving head to moving observer
-	if( now >= frames[5].T_start && now <= frames[5].T_end ) {
+	if( now >= eventFrames[5].T_start && now <= eventFrames[5].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[5].from.x)*xscale, 250, C*(now-frames[5].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(750+(0+ eventFrames[5].from.x)*xscale, 250, C*(now-eventFrames[5].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	// time from moving tail to stationary observer
-	if( now >= frames[6].T_start && now <= frames[6].T_end ) {
+	if( now >= eventFrames[6].T_start && now <= eventFrames[6].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[6].from.x)*xscale, 250, C*(now-frames[6].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(250+(0+ eventFrames[6].from.x)*xscale, 250, C*(now-eventFrames[6].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from moving head to stationary observer
-	if( now >= frames[7].T_start && now <= frames[7].T_end ) {
+	if( now >= eventFrames[7].T_start && now <= eventFrames[7].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[7].from.x)*xscale, 250, C*(now-frames[7].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(250+(0+ eventFrames[7].from.x)*xscale, 250, C*(now-eventFrames[7].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	ctx.strokeStyle = "green";
 	// time from stationary tail to moving observer
-	if( now >= frames[8].T_start && now <= frames[8].T_end ) {
+	if( now >= eventFrames[8].T_start && now <= eventFrames[8].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[8].from.x)*xscale, 250, C*(now-frames[8].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(750+(0+ eventFrames[8].from.x)*xscale, 250, C*(now-eventFrames[8].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from stationary head to moving observer
-	if( now >= frames[9].T_start && now <= frames[9].T_end ) {
+	if( now >= eventFrames[9].T_start && now <= eventFrames[9].T_end ) {
 		ctx.beginPath();
-		ctx.arc(750+(0+ frames[9].from.x)*xscale, 250, C*(now-frames[9].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(750+(0+ eventFrames[9].from.x)*xscale, 250, C*(now-eventFrames[9].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
 	// time from stationary tail to stationary observer
-	if( now >= frames[10].T_start && now <= frames[10].T_end ) {
+	if( now >= eventFrames[10].T_start && now <= eventFrames[10].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[10].from.x)*xscale, 250, C*(now-frames[10].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
+		ctx.arc(250+(0+ eventFrames[10].from.x)*xscale, 250, C*(now-eventFrames[10].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
 		ctx.stroke()
 	}
 	// time from stationary head to stationary observer
-	if( now >= frames[11].T_start && now <= frames[11].T_end ) {
+	if( now >= eventFrames[11].T_start && now <= eventFrames[11].T_end ) {
 		ctx.beginPath();
-		ctx.arc(250+(0+ frames[11].from.x)*xscale, 250, C*(now-frames[11].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
+		ctx.arc(250+(0+ eventFrames[11].from.x)*xscale, 250, C*(now-eventFrames[11].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
 		ctx.stroke()
 	}
 
@@ -565,54 +565,54 @@ function draw(  ) {
 	ctx.beginPath();
 	// moving tail to stationary observer (fastest path)
 	ctx.strokeStyle="red";
-	ctx.moveTo( 250 + (frames[6].from.x)*xscale, 750 - frames[6].T_start*xscale );
-	ctx.lineTo( 250 + (frames[6].from.x)*xscale, 750 - (frames[6].T_end)*xscale );
+	ctx.moveTo( 250 + (eventFrames[6].from.x)*xscale, 750 - eventFrames[6].T_start*xscale );
+	ctx.lineTo( 250 + (eventFrames[6].from.x)*xscale, 750 - (eventFrames[6].T_end)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 	// moving head to stationary observer (fastest path)
 	ctx.strokeStyle="red";
-	ctx.moveTo( 250 + (frames[7].from.x)*xscale, 750 - frames[7].T_start*xscale );
-	ctx.lineTo( 250 + (frames[7].from.x)*xscale, 750 - (frames[7].T_end)*xscale );
+	ctx.moveTo( 250 + (eventFrames[7].from.x)*xscale, 750 - eventFrames[7].T_start*xscale );
+	ctx.lineTo( 250 + (eventFrames[7].from.x)*xscale, 750 - (eventFrames[7].T_end)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 	// Simul events to moving observer
 	ctx.strokeStyle="#ddd";
-	ctx.moveTo( 250 + (frames[7].from.x)*xscale, 750 - (frames[7].T_end)*xscale );
-	ctx.lineTo( 250 + (frames[6].from.x)*xscale, 750 - (frames[6].T_end)*xscale );
+	ctx.moveTo( 250 + (eventFrames[7].from.x)*xscale, 750 - (eventFrames[7].T_end)*xscale );
+	ctx.lineTo( 250 + (eventFrames[6].from.x)*xscale, 750 - (eventFrames[6].T_end)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 
 	ctx.beginPath();
 	// stationary head to moving observer
 	ctx.strokeStyle="green";
-	ctx.moveTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
+	ctx.moveTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_end*lengthContract*xscale );
 	ctx.stroke();
 
 	ctx.beginPath();
 	// stationary tail to moving observer (fastest path)
 	ctx.strokeStyle="green";
-	ctx.moveTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_end*lengthContract*xscale );
+	ctx.moveTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_end*lengthContract*xscale );
 	ctx.stroke();
 	// simul events stationary observer
 
 	ctx.beginPath();
 	ctx.strokeStyle="#ddd";
-	ctx.moveTo( 750 + (-L-V*frames[8].T_start)*xscale, 750 - frames[8].T_end*lengthContract*xscale );
-	ctx.lineTo( 750 + (L-V*frames[9].T_start)*xscale, 750 - frames[9].T_end*lengthContract*xscale );
+	ctx.moveTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_end*lengthContract*xscale );
+	ctx.lineTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_end*lengthContract*xscale );
 	ctx.stroke();
 	
 	ctx.beginPath();
 	ctx.strokeStyle="green";
 		// stationary head to stationary observer
-	ctx.moveTo( 250 + (frames[10].from.x)*xscale, 750 - frames[10].T_start*xscale );
-	ctx.lineTo( 250 + (frames[10].from.x)*xscale, 750 - (frames[10].T_end)*xscale );
+	ctx.moveTo( 250 + (eventFrames[10].from.x)*xscale, 750 - eventFrames[10].T_start*xscale );
+	ctx.lineTo( 250 + (eventFrames[10].from.x)*xscale, 750 - (eventFrames[10].T_end)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 		// stationary tail to stationary observer
-	ctx.moveTo( 250 + (frames[11].from.x)*xscale, 750 - frames[11].T_start*xscale );
-	ctx.lineTo( 250 + (frames[11].from.x)*xscale, 750 - frames[11].T_end*xscale );
+	ctx.moveTo( 250 + (eventFrames[11].from.x)*xscale, 750 - eventFrames[11].T_start*xscale );
+	ctx.lineTo( 250 + (eventFrames[11].from.x)*xscale, 750 - eventFrames[11].T_end*xscale );
 	ctx.stroke();
 
 
@@ -621,13 +621,13 @@ function draw(  ) {
 	ctx.strokeStyle="red";
 	ctx.beginPath();
 		// moving tail to moving observer
-	ctx.moveTo( 750 + (-L)*lengthContract*xscale, 750 - frames[4].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (-L)*lengthContract*xscale, 750 - (frames[4].T_end_local)*xscale );
+	ctx.moveTo( 750 + (-L)*lengthContract*xscale, 750 - eventFrames[4].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (-L)*lengthContract*xscale, 750 - (eventFrames[4].T_end_local)*xscale );
 	ctx.stroke();
 	ctx.beginPath();
 		// moving head to moving observer
-	ctx.moveTo( 750 + (L)*lengthContract*xscale, 750 - frames[5].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (L)*lengthContract*xscale, 750 - frames[5].T_end_local*xscale );
+	ctx.moveTo( 750 + (L)*lengthContract*xscale, 750 - eventFrames[5].T_start*lengthContract*xscale );
+	ctx.lineTo( 750 + (L)*lengthContract*xscale, 750 - eventFrames[5].T_end_local*xscale );
 	ctx.stroke();
 
 
@@ -637,7 +637,7 @@ function draw(  ) {
 	ctx.moveTo( 250 + (V*now-L*lengthContract)*xscale, 752 - now*xscale );
 	ctx.lineTo( 250 + (V*now+L*lengthContract)*xscale, 752 - now*xscale );
 	ctx.stroke();
-	//if( now < frames[9].T_start )
+	//if( now < eventFrames[9].T_start )
 	{
 		ctx.beginPath();
 		ctx.strokeStyle="white";

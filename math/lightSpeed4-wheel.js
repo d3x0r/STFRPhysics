@@ -27,7 +27,7 @@ let wasNow = 0; // trqacks slider value of now
 let animate = true;
 const step = 10;
 
-const frames = [];
+const eventFrames = [];
 let curFrame = -1;
 const nFrames = 1001;
 let eventFrame = -1;
@@ -146,7 +146,7 @@ class Frame{
 }
 
 for( let n = 0; n < nFrames; n++ ) {
-	frames.push( new Frame() );
+	eventFrames.push( new Frame() );
 }
 
 
@@ -732,7 +732,7 @@ function update( evt ) {
 	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	if( eventFrame>=0 ) {
-		frames[eventFrame].event = false;
+		eventFrames[eventFrame].event = false;
 		eventFrame = -1;
 	}
 
@@ -763,7 +763,7 @@ function update( evt ) {
 	for( let n = 0; n < nFrames; n++ ) {
 		const del = n/nFrames;
 		const Treal = (del * runT)-runT/2;
-		const frame = frames[n];
+		const frame = eventFrames[n];
 		let maxSee = -Infinity;
 		for( let arc of frame.arcs ) {
 			arc.set( L, V, Treal);
@@ -825,14 +825,14 @@ function draw(  ) {
 			}	
 		}
 	}
-	curFrame = nFrames;  // draw all frames
+	curFrame = nFrames;  // draw all eventFrames
 	const toY = D*yscale+photonStart;
 
 	for( let f = 0; f < curFrame; f++ ) {
-		frames[f].resetDraw();
+		eventFrames[f].resetDraw();
 	}
 	for( let f = 0; f < curFrame; f++ ) {
-		const frame = frames[f];
+		const frame = eventFrames[f];
 		if( frame.T_start > now ) continue;
 		if( frame.T_end < now) continue;
 
@@ -846,23 +846,23 @@ function draw(  ) {
 				let del = Math.abs( arc.T_see - now );
 				if( del >= halfFrame ) continue;
 				if(0)
-				while((f+ofs+1<frames.length) &&  (test = Math.abs( frames[f+ofs+1].arcs[a].T_see - now ))< del) {
-					frames[f+ofs].drewArcs[a] = true;
+				while((f+ofs+1<eventFrames.length) &&  (test = Math.abs( eventFrames[f+ofs+1].arcs[a].T_see - now ))< del) {
+					eventFrames[f+ofs].drewArcs[a] = true;
 					ofs++;
 					del = test;
 				}
 				if( ofs ) {
-					frames[f+ofs].drewArcs[a] = true;
-					frames[f+ofs].arcs[a].draw(ctx );
+					eventFrames[f+ofs].drewArcs[a] = true;
+					eventFrames[f+ofs].arcs[a].draw(ctx );
 				} else					
 				{
 					frame.drewArcs[a] = true;
 					arc.draw( ctx );
 				}
 				if(0)							
-				while((f+ofs+1<frames.length) &&  ( Math.abs( frames[f+ofs+1].arcs[a].T_see - now ))<= halfFrame) {
+				while((f+ofs+1<eventFrames.length) &&  ( Math.abs( eventFrames[f+ofs+1].arcs[a].T_see - now ))<= halfFrame) {
 					ofs++;
-					frames[f+ofs].drewArcs[a] = true;
+					eventFrames[f+ofs].drewArcs[a] = true;
 				}
 
 			}
@@ -875,20 +875,20 @@ function draw(  ) {
 					let del = Math.abs( spoke.T_see[n] - now );
 					if( del < halfFrame ) {
 						if(0)
-						while( (f+ofs+1<frames.length) && (test = Math.abs( frames[f+ofs+1].spokes[s].T_see[n] - now ))< del) {
-							frames[f+ofs].drewSpoke[s][n] = true;
+						while( (f+ofs+1<eventFrames.length) && (test = Math.abs( eventFrames[f+ofs+1].spokes[s].T_see[n] - now ))< del) {
+							eventFrames[f+ofs].drewSpoke[s][n] = true;
 							ofs++;
 							del = test;
 						}
-						frames[f+ofs].drewSpoke[s][n] = true;
+						eventFrames[f+ofs].drewSpoke[s][n] = true;
 						if( ofs ) 
-							frames[f+ofs].spokes[s].draw( ctx, n )
+							eventFrames[f+ofs].spokes[s].draw( ctx, n )
 						else
 							spoke.draw( ctx, n)
 						if(0)							
-						while( (f+ofs+1<frames.length) && ( Math.abs( (f+ofs+1<frames.length) && frames[f+ofs+1].spokes[s].T_see[n] - now ))<= halfFrame) {
+						while( (f+ofs+1<eventFrames.length) && ( Math.abs( (f+ofs+1<eventFrames.length) && eventFrames[f+ofs+1].spokes[s].T_see[n] - now ))<= halfFrame) {
 							ofs++;
-							frames[f+ofs].drewSpoke[s][n] = true;
+							eventFrames[f+ofs].drewSpoke[s][n] = true;
 						}
 					}
 				}
