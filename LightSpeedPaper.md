@@ -237,7 +237,7 @@ $v_{x}=\left(\sqrt{\left(VT\right)^2+DD}-\sqrt{DD+\left(V\left(T-0.001\right)\ri
 
 Example Graph:
 
-![[Pasted image 20231202233428.png]]
+![Variable Light Speed Desmos Graph](VariableRelativeSpeedGraph.png)
 
 ## Relative Time 1Dilation
 
