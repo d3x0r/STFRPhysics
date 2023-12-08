@@ -87,7 +87,7 @@ $$ T_{\Delta} = \frac{\sqrt{ {\vec{P} \vec{P}( D+{\vec{V_O} \vec{V_O}})} } - {\v
 
 The above equations are the propagation delay between any two points on two moving bodies each with their own independent velocities.
 
-This is only valid for $V<C$, or $V>C$; if $V>C$, then the negative of the square root should also be considered as a solution; this will show the craft going backwards towards where it came from, as the signals it had emitted when it was there will finally reach the viewer.  If $V=C$, there is a special case formula which can used.  Instead of the first equation
+This is only valid for $V\lt C$, or $V \gt C$; if $V \gt C$, then the negative of the square root should also be considered as a solution; this will show the craft going backwards towards where it came from, as the signals it had emitted when it was there will finally reach the viewer.  If $V = C$, there is a special case formula which can used.  Instead of the first equation
 
 $$T_o = T + \frac {|| (\vec{X_e}+T\vec{V_e}) - (\vec{X_o}+T_o\vec{V_o}) ||} {C}$$
 
@@ -196,6 +196,12 @@ $$\frac {\sqrt{C^2-\vec{V}^2}} C\ {or}\ \sqrt{ 1-\left(\frac {\vec{V}} C\right)^
 Alternatively, it is possible to compute the time it takes for a photon clock mounted laterally to tick... and the result is the same as above.
 
 the time it takes for light to travel along the lateral path of C light-seconds is 
+
+$$\sqrt{ C_L^2+VV}  $$
+$$\frac{C_L}{T}=\sqrt{CC-VV}$$
+$$T = \frac{C_L}{\sqrt{CC-VV}}$$
+
+
 $$ \frac C {\sqrt{C^2-\vec{V}^2}}$$ 
 And, again, the reciprocal, which scales the clock so 1 tick happens per light-tick is
 
