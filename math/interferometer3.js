@@ -437,10 +437,32 @@ function update( evt ) {
 	const first_left3 = ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] ).toFixed(3);
 	const total = ( keyFramesLength[0] + keyFramesLength[1] + keyFramesLength[2] + keyFramesLength[3] );
 	sliders.spanTotal.textContent = "Up: " + keyFramesLength.map(a=>a.toFixed(3)).join("+") + "=" + total.toFixed(3) + " first 3:" + first3;
-	sliders.spanTotalT.textContent = "Up(T): " + keyFrameTimes.map(a=>a.toFixed(3)).join(" @ ") + "(" + (total/(keyFrameTimes[4]+2)).toFixed(3) + ")" ;
+
+	let base = keyFrameTimes_left[0];
+	let vels1 = [];
+	let tot = 0;
+	for( let i = 1; i < 5; i++ ) {
+		vels1.push( keyFramesLength[i-1] / ((keyFrameTimes[i] - keyFrameTimes[i-1]) ) );
+		tot += vels1[vels1.length-1];
+	}                                  
+	//vels1.push(tot);
+	//sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map((a,i)=>(keyFramesLength_left[i]/(Lgamma*a)).toFixed(3)).join(" @ ") ;
+	sliders.spanTotalT.textContent = "Up(T): "+ keyFrameTimes.map((a,i)=>a.toFixed(3)).join(" & ") + " Len/Time:" + vels1.map((a,i)=>a.toFixed(3)).join(" & ") + " = " + tot.toFixed(3) ;
+
+	//sliders.spanTotalT.textContent = "Up(T): " + keyFrameTimes.map(a=>(Lgamma*a).toFixed(3)).join(" @ ") + "(" + (total/(keyFrameTimes[4]+2)).toFixed(3) + ")" ;
 	sliders.spanTotal2.textContent = 
 		"Left: " + keyFramesLength_left.map(a=>a.toFixed(3)).join("+" ) + "=" + ( keyFramesLength_left[0] + keyFramesLength_left[1] + keyFramesLength_left[2] + keyFramesLength_left[3] ).toFixed(3)  + " first 3:" + first_left3;
-	sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map(a=>a.toFixed(3)).join(" @ ") ;
+
+	base = keyFrameTimes_left[0];
+	vels1 = [];
+	tot = 0;
+	for( let i = 1; i < 5; i++ ) {
+		vels1.push( keyFramesLength_left[i-1] / ((keyFrameTimes_left[i] - keyFrameTimes_left[i-1]) ) );
+		tot += vels1[vels1.length-1];
+	}                                  
+	//vels1.push(tot);
+	//sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map((a,i)=>(keyFramesLength_left[i]/(Lgamma*a)).toFixed(3)).join(" @ ") ;
+	sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map((a,i)=>a.toFixed(3)).join(" & ") + " Len/Time:" + vels1.map((a,i)=>a.toFixed(3)).join(" & ") + " = " + tot.toFixed(3) ;
 
 	draw();
 
