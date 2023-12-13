@@ -163,13 +163,20 @@ $$ X_r = \vec{X_O} + \cos(\theta)\vec{\Delta X_d} + \sin(\theta)\left({\vec{V_C}
 
 ## Length Contraction
 
-There is a phenomenon called Length Contraction, where the length of a body moving with a velocity is contracted in the direction of the velocity.
-The worst case travel time of forward-backward gets scaled to the best case lateral travel time; that is the time a photon travels perpendicular to the velocity.
+There is a phenomenon called Length Contraction, where the length of a body moving with a velocity is contracted in the direction of the velocity.  The length of the body is physically contracted.  It is impossible to measure length contraction of a frame, because any ruler in the frame is likewise contracted, and even if LIDAR is used – the propagation time to a target and back in any direction takes the same time. The contraction comes from the fact that propagation of electromagnetic forces happens at the same speed as the propagation of light; therefore, even the electron clouds of atoms are contracted so the electrons orbit the same speed in any direction. The worst case travel time of forward-backward gets scaled to the best case lateral travel time; that is the time a photon travels perpendicular to the velocity, that scalar is then applied to the length in the direction of the velocity vector.
 
 $T_W = (\frac {C_L}{C+||\vec{V}||} + \frac {C_L}{C-||\vec{V}||})\cdot \frac 1 2$
+${T_W} = \frac {1}{2}\left(\frac {(C-||\vec{V}||)C_L}{(C-||\vec{V}||)(C+||\vec{V}||)} + \frac  {(C+||\vec{V}||)C_L}{(C+||\vec{V}||)(C-||\vec{V}||)} \right)$
+$T_W=\frac {1}{2}\left(\frac{2C{C_L}}{C^2-{\vec{V}}^2}\right)$
+$T_W=\frac{C{C_L}}{C^2-{\vec{V}}^2}$
 
+The best case time is:
+![Time-Distance Triangle](LightSpeedTriangle.png)
+$T_B = \frac{C_L}{\sqrt{C^2-\vec{V}\vec{V}}}$
 
-$T_B = \frac {C_L}{C+||\vec{V}||} + \frac {C_L}{C-||\vec{V}||}$
+Normalizing the times:
+$\frac{T_B}{T_W}=\frac{ \frac{C_L}{\sqrt{C^2-\vec{V}\vec{V}}} } { {\frac{C{C_L}}{C^2-\vec{V}\vec{V}}}}=\frac{C_L}{\sqrt{C^2-\vec{V}\vec{V}}}\frac{C^2-\vec{V}\vec{V}} {C {C_L}}$
+$$\frac{T_B}{T_W}=\frac{\sqrt{C^2-\vec{V}\vec{V}}}{C}$$
 
 
 
@@ -181,7 +188,7 @@ $\vec{X'} = \vec{X} -\frac {\vec{V}\cdot \vec{X}} {||\vec{V}||} \frac{ C -  \sqr
 
 ## Time Contraction
 
-It's also a well known phenomenon that time contracts according to the speed of a moving body.  This contraction happens when normalizing the worst case time of forward and backward propagation times with the lateral propagation time.
+Time contracts according to the speed of a moving body. Contraction in the sense that clocks run slower.  This contraction happens when normalizing the time it takes for worst-case time of forward and backward propagation across the contracted length, or by normalizing the lateral propagation time.
 
 Forward, the time light takes to cover the contracted distance of C light-seconds is 
 
