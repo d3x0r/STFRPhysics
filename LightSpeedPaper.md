@@ -302,6 +302,9 @@ The detector should receive from two emitters, which are placed in opposing dire
 
 Arms are formed from the center detector and each emitter; the angle between the arms should be 180 degrees to catch worst case.  If one arm is  90 degrees to the other, then there will aways just be an average on one; and the maximum difference will not be found.
 
+The emitters should be 10,000ft away from the central detector, which makes the total length 20,000ft or about 4 miles.
+
+This is about the limit of what can be seen – the horizon at 2.67ft is 2 miles away; at 5ft is 2.73 miles away, much further than 2 miles would require a tower to mount the emitters to be seen by the detector. ($d \approx \sqrt{2hR}$, R = 20,856,000ft, h is height, d is distance to horizon).
 ### Notes on clocks
 
 Relativistic time dilation effects don't matter once the device is placed, and the clock in the central detector is used to record the time the remote clocks are seen; the clocks in the pulse generators are used to generate stable span between leading edges of the pulse they emit.  The modulation might be something like a moving mirror, or a wheel with a notch; rather than having to warm up a laser diode or some other emission source.
