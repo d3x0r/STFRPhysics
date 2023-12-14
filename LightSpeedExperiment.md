@@ -23,19 +23,19 @@ Gravitational time dilation might affect the clocks of the various devices depen
 
 ## Hypothesis
 
-If the speed of light is different, by a rate of $C+V$ or $C-V$, where $C$ is what's used for the constant speed of light, and $V$ is a velocity.  In the direction of the velocity, those are the speeds that apply, laterally, it's just C.  But, the distance in this worst case direction is contracted by $\gamma=\sqrt{CC-VV}$ and the clock is contracted by the same amount.  The effective time to cross 1 unit is $\frac {\gamma^2} {C+V}$ or $\frac {\gamma^2} {C-V}$ (distance times gamma(1*$\gamma$)(m) divided by speed(m/s) = time(s) times gamma).  The lateral time is $\frac{\frac {1\cdot \gamma}{C}} {\gamma}$ or $1/C$ (the lateral distance increases with speed; hence dividing by gamma; while the clock contraction is also still applied so there are fewer pulses emitted to cover the distance, which maintains a constant number of wavelengths).
+If the speed of light is different, by a rate of $C+V$ or $C-V$, where $C$ is what's used for the constant speed of light, and $V$ is a velocity.  In the direction of the velocity, those are the speeds that apply, laterally, it's just C.  But, the distance in this worst case direction is contracted by $\gamma=\frac{\sqrt{CC-VV}}{C}$ and the clock is contracted by the same amount.  The effective time to cross 1 unit is $\frac {\gamma^2} {C+V}$ or $\frac {\gamma^2} {C-V}$ (distance times gamma(1*$\gamma$)(m) divided by speed(m/s) = time(s) times gamma).  The lateral time is $\frac{\frac {1\cdot \gamma}{C}} {\gamma}$ or $1/C$ (the lateral distance increases with speed; hence dividing by gamma; while the clock contraction is also still applied so there are fewer pulses emitted to cover the distance, which maintains a constant number of wavelengths).
 
-### Some relavent speeds
+### Some relevant speeds
 
 - 370,000m/s : We are moving at 370km/s relative to the CMB in the direction of the constellation of Virgo.  
 - 30,290 m/s : Earth orbits the sun so +/-10%(roughly) deviation
-- 460 m/s : Earth spins this fast, so +/-0.1%(roughly) devation (1/100 orbit speed)
+- 460 m/s : Earth spins this fast, so +/-0.1%(roughly) deviation (1/100 orbit speed)
 
 The most significant part is the motion towards the Virgo constellation as demonstrated by the redshift of the CMB.  
 
 ## Expected Result
 
-Using an approximation of light travelling 1 foot per nanosecond (one Ghz tick is 1ns; so in the clock rate of CPU's, light goes about 1 foot (slightly less)). The worst case advance/delay of the speed 1.2ns per 1000ns, so in 10,000 ns (distance/C) a +/-12ns difference can be measured - one arm will be +12ns and the other -12ns for a total delta of 24ns.  This will reach a maximum when the apparatus is aligned in the direction of motion with the CMBR- and minimum separation at 90 degrees to the velocity.  So this should be placed on the ground such that virgo is seen on the horizon at some point; but this will only happen once per day, when the planet is 180 degrees around (12 hours later) the device will have a negative angle of alignment with the constellation.    Perhaps deploying something at the north or south pole at 9 degrees off the pole would be an option?
+Using an approximation of light travelling 1 foot per nanosecond (one Ghz tick is 1ns; so in the clock rate of CPU's, light goes about 1 foot (slightly less)). The worst case advance/delay of the speed 1.2ns per 1000ns, so in 10,000 ns (distance/C) a +/-12ns difference can be measured - one arm will be +12ns and the other -12ns for a total delta of 24ns.  This will reach a maximum when the apparatus is aligned in the direction of motion with the CMBR- and minimum separation at 90 degrees to the velocity.  So this should be placed on the ground such that Virgo is seen on the horizon at some point; but this will only happen once per day, when the planet is 180 degrees around (12 hours later) the device will have a negative angle of alignment with the constellation.    Perhaps deploying something at the north or south pole at 9 degrees off the pole would be an option?
 
 10,000ns is 10,000 ft which is about 2 miles; which is a total span of 4 files with 2 emitters and a detector.
 

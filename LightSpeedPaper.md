@@ -476,3 +476,18 @@ $$T_d   = \frac { \sqrt{\vec{P}^2 + \vec{P}^2\vec{V_O}^2} - \frac{\vec{P}\vec{V_
 $$T_d  =  \frac {{\sqrt{C^2-\vec{V_O}^2}}\sqrt{\vec{P}^2 + \vec{P}^2\vec{V_O}^2} - \vec{P}\vec{V_O}} {C^2-\vec{V_O}^2}  $$
 
 Cannot simplify $\sqrt{\vec{P}^2}=\vec{P}$ as in: $\sqrt{\vec{P}^2+\vec{P}^2\vec{V_O}^2} = \sqrt{\vec{P}^2}\sqrt{1-\vec{V_O}^2}$, because that would result as a vector instead of a number...
+
+
+# Experimental considerations
+
+Distance to horizon
+
+$d\approx \sqrt{2hR}$
+R=3,950 miles  (20,856,000)
+h = 6ft    d = 15,819  (2.99)
+h = 5    d=14441 (2.73)
+
+d=10580 `(2*5280)^2 / (2*20856000=41712000)`  h = 2.6734 feet
+    2.2miles at 3.23ft
+
+
