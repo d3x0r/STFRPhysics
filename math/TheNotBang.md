@@ -1,7 +1,7 @@
 
 # Working Theory
 
-There is a flat space, which can be used as a basis to show positive curvature.  There is another space, where photons are allowed to go.  The second space can be mapped on the first space, but have additional displacments
+There is a flat space, which can be used as a basis to show positive curvature.  There is another space, where photons are allowed to go.  The second space can be mapped on the first space, but have additional displacements
 from positive curvature generators that move where light can go.  This is an ideal graph, and it should be noted that the physics of real life includes additional interactions that will often prevent following ideal geodesics; except
 in the extreme case that black holes represent.
 
@@ -16,12 +16,12 @@ and when received by a higher speed clock, in a less dense space that is narrowe
 Conversely, emitted from a narrow, tall space, with a fast clock, with the same physical dimensions emits a blue shifted signal, which a slower clock, and wider, shorter space will see as blue shifted (compressed in space, across a shorter 
 counted time).
 
-In the above image, consider the spatial displacemnets (white circles) as the effective gravity of galaxies, and from the center a photon is emitted, which does not interact with anything, but follows its own geodesics.
-The average displacment of space increases as a emitted photon passes past galaxies from the center (relative to 0 in flat space), is greater and greater 
+In the above image, consider the spatial displacements (white circles) as the effective gravity of galaxies, and from the center a photon is emitted, which does not interact with anything, but follows its own geodesics.
+The average displacement of space increases as a emitted photon passes past galaxies from the center (relative to 0 in flat space), is greater and greater 
 
 (Only a certain portion of flat to curved space can really be considered... the further away from some relative origin or some relative point, the greater the effective displacement. This additional shove on the curvature of the space
-may seem cumulative and resembele dark energy; but the displacement does not shove other displacments (rather they are actually attracted to each other because of the gradient of spaces).  It's more that from a relative perspective of 
-emission, vs the displaced space that matters; the spatial displacment measured in the opposite direction will also be a net positive dispalcment from its relative flat space coordinates.)
+may seem cumulative and resemble dark energy; but the displacement does not shove other displacments (rather they are actually attracted to each other because of the gradient of spaces).  It's more that from a relative perspective of 
+emission, vs the displaced space that matters; the spatial displacement measured in the opposite direction will also be a net positive dispalcement from its relative flat space coordinates.)
 
 One might call light photons corpuscular; running in little tubes that generally get stretched more and more; end up covering more effective flat space than they should, thereby making them red shifted.
 
@@ -65,11 +65,11 @@ away from a gravitational source the gradient of space is less compressed and th
 as a frequency is slightly lower when received by a clock further out in the gradient, and again, emitted from outside, the clock is slightly faster than the low clocks, so the top to bottom is blue shifted from a time delay.
 
 Now, also, the tangential component of light will spread with distance in a gravitational source.  The light would have to be described by a line and a cylinder around it, and any line on the cylinder will diverge tangentially from 
-the center when leaving a gravitational source, which causes a red shift; any gravitational displacments of space that happen tangnetial to the light will not have any effect on making the light converge or diverge more; except in the region 
+the center when leaving a gravitational source, which causes a red shift; any gravitational displacements of space that happen tangnetial to the light will not have any effect on making the light converge or diverge more; except in the region 
 that is closest, if a probe was in that spot, it might see a blue shifted signal when between two other massive objects.  But, then as I was following along in the Einstein Field Equations, which are built from the results of various other
 math, the Ricci tensor and scalar are just describing the transformation of space, and time really isn't even a factor.
 
-So... there wasn't a big bang?  Nothing's moving away from each other?  The Hubble Constant is just the general mass of objects - and how much space is displaced by graviational sources?  The graviational sources do not push each other away
+So... there wasn't a big bang?  Nothing's moving away from each other?  The Hubble Constant is just the general mass of objects - and how much space is displaced by gravitational sources?  The gravitational sources do not push each other away
 by displacing the space (they're generally attracted to each other) which does push more space to the outside of themselves.  The least dense space is near a massive object (and technically IN the massive object, since that's where the negative curvature actually happens; 
 I mean if there's a positive side to the curve, there must be a negative; and as demonstrated in images below, the negative curvature is NOT on the outside).
 
