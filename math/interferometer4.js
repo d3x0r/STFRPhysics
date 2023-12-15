@@ -566,7 +566,7 @@ function update( evt ) {
 	}                                  
 	//vels1.push(tot);
 	//sliders.spanTotal2T.textContent = "Left(T): " + keyFrameTimes_left.map((a,i)=>(keyFramesLength_left[i]/(Lgamma*a)).toFixed(3)).join(" @ ") ;
-	sliders.spanTotal2T.textContent = "Left(2way): " + (vels1[1]+vels1[2]).toFixed(3) + " ("+(vels1[1]).toFixed(3)+"+"+(vels1[2]).toFixed(3)+")";
+	sliders.spanTotal2T.textContent = "Left(2way): " + (vels1[1]+vels1[2]).toFixed(3) + " ("+(vels1[1]).toFixed(3)+"+"+(vels1[2]).toFixed(3)+")" + " Local:" +  (Lgamma*(vels1[1]+vels1[2])).toFixed(3);
 			//+ keyFrameTimes_left.map((a,i)=>a.toFixed(3)).join(" & ") + " Len/Time:" + vels1.map((a,i)=>a.toFixed(3)).join(" & ") + " = " + tot.toFixed(3) ;
 
 		{
