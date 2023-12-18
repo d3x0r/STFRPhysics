@@ -75,7 +75,7 @@ let lengthContract = 1;
 addSpan( "C", 1000, 1, 0, 2/1000, "C" );
 //sliders.sliderC.style.display = "none";
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
-addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
+addSpan( "Velocity", 1000, 0.4, 0, 1/1000, "Velocity" );
 addSpan( "Direction", 2000, 0, -Math.PI*2, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
 addSpan( "Angle", 2000, 0, -Math.PI*2, (Math.PI*2)/1000, "Angle", (val)=>(val/Math.PI).toFixed(3)+"pi" );
 
@@ -347,6 +347,12 @@ function update( evt ) {
 	for( let name of names ) {
 		sliderRead( name );
 	}
+	values.Velocity *= values.C;
+	if( values.Velocity === values.C ) {
+		values.Velocity -= 0.00001;
+		sliders.spanVelocity.textContent = values.Velocity;		
+	}
+	
 	if( was_frequency != values.Frequency || was_direction != values.Direction )  {
 		l.photons = null;
 	}
@@ -601,6 +607,7 @@ function update( evt ) {
 
 function drawFrequency( freq, x, y, xto, yto, from, until, to, invert ) {
 	let T;
+	if( to > 10 ) to = 10;
 	if( from > until ) return;
 	const delx = xto-x;
 	const dely = yto-y;
