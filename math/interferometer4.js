@@ -135,7 +135,7 @@ totalBlock.appendChild( span );
 
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
-chkLblNow.checked = false;
+chkLblNow.checked = true;
 chkLblNow.addEventListener( "input", update );
 
 const spanChkNow = document.createElement( "label" );
