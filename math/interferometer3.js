@@ -7,7 +7,7 @@ const ctx = canvas.getContext( '2d' );
 
 
 let last_draw_time = 0;
-let animate = false;
+let animate = true;
 const runT = 4;
 
 const names = [];
