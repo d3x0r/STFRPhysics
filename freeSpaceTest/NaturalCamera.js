@@ -165,6 +165,14 @@ export function NaturalCamera( object, domElement ) {
 				scope.motion.speed.x = -self.moveSpeed;
 				break;
 		}
+		const s = scope.motion.speed;
+		const l = s.x * s.x + s.y*s.y + s.z*s.z;
+		s.θ = Math.sqrt( l );
+		if( s.θ ) {
+			s.nx = s.x/s.θ;
+			s.ny = s.y/s.θ;
+			s.nz = s.z/s.θ;
+		}
 
 	}
 

@@ -13,7 +13,7 @@ import {NaturalCamera} from "./NaturalCamera.js"
 import {SaltyRNG} from "./salty_random_generator.js";
 import * as THREE from "../3d/src/three.js/three.module.js"
 import {Motion} from "../3d/src/three.js/personalFill.mjs"
-import {popups} from "../node_modules/@d3x0r/popups/popups.mjs"
+//import {popups} from "../node_modules/@d3x0r/popups/popups.mjs"
 
 
 
@@ -23,7 +23,7 @@ import {lnQuat} from "../3d/src/lnQuatSq.js"
 import {BrainForm} from "./brainBoard.mjs"
 import {ControlForm} from "./controlForm.mjs"
 import {BrainStem,ref} from "./automaton/brain/brain.mjs"
-
+import {Skybox} from "./skybox.mjs"
 
 //var glow = require( './glow.renderer.js' );
 
@@ -40,6 +40,7 @@ var myBrainBoard = null;
 var myMotion = null;
 var movers2 = [];
 var movers = [];
+let skybox = null;
 var dirs = [];
 var camMat = null;
 var status_line;
@@ -50,7 +51,6 @@ var controlOrbit;
 var controls;
 	var scene;
 	var scene2;
-	var scene3;
 	var camera, renderer;
 	let mode = 0;
 	var light;
@@ -183,6 +183,8 @@ function setControls2() {
 , NUMDOT: 46
 , ENTER:13
 , TILDE:192
+, Z:90
+, X:88
 };
 
 //const Accel1 = 2*Math.PI / 12;
@@ -231,6 +233,12 @@ function handleKeyEvents( event, isDown ) {
 					break;
 				}
 			}
+			break;
+		case keys.X:
+			myMotion.stabilizeVelocity = isDown?0.9:0;
+			break;
+		case keys.Z:
+			myMotion.stabilizeRotation = isDown?0.9:0;
 			break;
 		case keys.TILDE:
 			controls.userRotate = !controls.userRotate;
@@ -393,7 +401,6 @@ function init() {
 
 		scene = new THREE.Scene();
 		scene2 = new THREE.Scene();
-		scene3 = new THREE.Scene();
 
 
 		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
@@ -428,6 +435,7 @@ function init() {
 		controlForm.controls = controls;
 		controlForm.mover = myMover;
 
+                skybox = new Skybox( scene );
 
 
 var     geometry = new THREE.BoxGeometry( 200, 200, 200 );
@@ -903,13 +911,30 @@ function animate() {
 		//		console.log( "TICK")
 		//}
 		motion.inertialmove(m.matrix,delta) 
+
+		const s = motion.speed;
+		const l = s.x * s.x + s.y*s.y + s.z*s.z;
+		s.θ = Math.sqrt( l );
+		if( s.θ ) {
+			s.nx = s.x/s.θ;
+			s.ny = s.y/s.θ;
+			s.nz = s.z/s.θ;
+		}
 		
 		const x1= m.position.x ; 
 		const y= m.position.y ; 
 		const z= m.position.z ; 
-		if( ( x1 < -100 || x1 > 100 ) 
-		  ||( y < -100 || y > 100 ) 
-		  ||( z < -100 || z > 100 ) ) {
+		if( x1 < -200  ) m.position.x += 400;
+		if( x1 > 200  ) m.position.x -= 400;
+		if( y < -200  ) m.position.y += 400;
+		if( y > 200  ) m.position.y -= 400;
+		if( z < -200  ) m.position.z += 400;
+		if( z > 200  ) m.position.z -= 400;
+/*
+
+		if( ( x1 < -200 || x1 > 200 ) 
+		  ||( y < -200 || y > 200 ) 
+		  ||( z < -200 || z > 200 ) ) {
 			m.position.x = 10 * ( RNG.getBits( 11, true ) / 1024 );
 			m.position.y = 10 * ( RNG.getBits( 11, true ) / 1024 );
 			m.position.z = 10 * ( RNG.getBits( 11, true ) / 1024 );
@@ -917,7 +942,7 @@ function animate() {
 			motion.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 			motion.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
 		}
-
+*/
 		/*
 		if( m !== myMover )
 			if( sumDel > 1 ) {
@@ -931,6 +956,8 @@ function animate() {
 
 	});
 
+	if( myMotion )
+	skybox.update( new THREE.Vector3( myMotion.speed.nx, myMotion.speed.ny, myMotion.speed.nz ), myMotion.speed.θ );
 
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
