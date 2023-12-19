@@ -19,10 +19,11 @@ export function NaturalCamera( object, domElement ) {
 
 	// 65 /*A*/, 83 /*S*/, 68 /*D*/
 	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40
-        , A:65, S:83, D:68, W:87, SPACE:32, C:67, E:69, Q:81 };
+        , A:65, S:83, D:68, W:87, SPACE:32, C:67, E:69, Q:81, SHIFT:16 };
 
 	// internals
 	this.moveSpeed = 10 * 12 * 0.0254;
+	this.fastMove = false;
 	const scope = this;
 	
 	// 2d scaled screen point - prior position
@@ -144,25 +145,28 @@ export function NaturalCamera( object, domElement ) {
 			if( keyEvent )
 				keyEvent( event, true );
 			break;
+		case scope.keys.SHIFT:
+			self.fastMove = true;
+			break;
             case scope.keys.SPACE:
             case scope.keys.E:
-                scope.motion.speed.y = self.moveSpeed;
+                scope.motion.speed.y = self.moveSpeed * ( self.fastMove?100:1);
                 break;
             case scope.keys.C:
             case scope.keys.Q:
-                scope.motion.speed.y = -self.moveSpeed;
+                scope.motion.speed.y = -self.moveSpeed * ( self.fastMove?100:1);
 				break;
 			case scope.keys.A:
-				scope.motion.speed.x = self.moveSpeed;
+				scope.motion.speed.x = self.moveSpeed * ( self.fastMove?100:1);
 				break;
 			case scope.keys.W:
-				scope.motion.speed.z = -self.moveSpeed;
+				scope.motion.speed.z = -self.moveSpeed * ( self.fastMove?100:1);
 				break;
 			case scope.keys.S:
-				scope.motion.speed.z = self.moveSpeed;
+				scope.motion.speed.z = self.moveSpeed * ( self.fastMove?100:1);
 				break;
 			case scope.keys.D:
-				scope.motion.speed.x = -self.moveSpeed;
+				scope.motion.speed.x = -self.moveSpeed * ( self.fastMove?100:1);
 				break;
 		}
 		const s = scope.motion.speed;
@@ -187,6 +191,9 @@ export function NaturalCamera( object, domElement ) {
 		default:
 			if( keyEvent )
 				keyEvent( event, false );
+			break;
+		case scope.keys.SHIFT:
+			self.fastMove = false;
 			break;
             case scope.keys.SPACE:
             case scope.keys.E:

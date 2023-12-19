@@ -21,22 +21,27 @@ export class Skybox{
 			const a = vertices[s*3+0] = this.rng() * 500-250;
 			const b = vertices[s*3+1] = this.rng() * 500-250;
 			const c = vertices[s*3+2] = this.rng() * 500-250;
-			if( (a*a+b*b+c*c) < 500*500 ) break;
+			if( (a*a+b*b+c*c) < 250*250 ) break;
 			} while ( true );
 		}
 //		this.update( new THREE.Vector3( 1,0,0), 0.5 );
 		scene.add( this.body );
         }
 
-	update( direction,speed ) {
+	update( bodyOffset, viewOffset,direction,speed ) {
 		const u = this.body_material.uniforms;
 		u.enableAberration.value = true;//chkAberration.checked;
-		u.enableLorentz.value = true;//chkLorentz.checked;
+		u.enableLorentz.value = false;//chkLorentz.checked;
 		u.enableContract.value = false;//true;//chkContract.checked;
 		//this.body_material.side = THREE.DoubleSide;
 		//else
 		//	Voxelarium.geometryShader.side = THREE.FrontSide;
-
+		u.bodyOffset.value.x = bodyOffset.x;
+		u.bodyOffset.value.y = bodyOffset.y;
+		u.bodyOffset.value.z = bodyOffset.z;
+		u.viewOffset.value.x = viewOffset.x;
+		u.viewOffset.value.y = viewOffset.y;
+		u.viewOffset.value.z = viewOffset.z;
 		u.direction1. value.x = 1;
 		u.direction1. value.y = 0;
 		u.direction1. value.z = 0;

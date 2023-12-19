@@ -13,6 +13,8 @@ const defaultParams = {
 		size : {value: 1 },
 		scale : {value: 1.0 },
 		diffuse : { value: new THREE.Color(1,1,1) },	
+	        bodyOffset : { value: new THREE.Vector3(0,0,0) },
+	        viewOffset : { value: new THREE.Vector3(0,0,0) },
 	        direction1 : { value: new THREE.Vector3(0,0,0) },
         	direction2 : { value: new THREE.Vector3(0,0,0) },
 	        speed1 : { value: new THREE.Vector3(0,0,0) },
@@ -30,6 +32,8 @@ const defaultParams = {
     varying float T;
 
     uniform float time;
+    uniform vec3 bodyOffset;
+    uniform vec3 viewOffset;
     uniform vec3 direction1;
     uniform vec3 direction2;
     uniform float speed1;
@@ -46,9 +50,9 @@ const defaultParams = {
             return X+Xo;
         }
         vec3 Xr;// = vec3();
-        float delx = X.x-Xo.x;
-        float dely = X.y-Xo.y;
-        float delz = X.z-Xo.z;
+        float delx = X.x;//-Xo.x;
+        float dely = X.y;//-Xo.y;
+        float delz = X.z;//-Xo.z;
         float len2 = delx*delx+dely*dely+delz*delz;
         float Vlen2 = Vo.x*Vo.x+Vo.y*Vo.y+Vo.z*Vo.z;
         float Vdot = delx * Vo.x + dely * Vo.y + delz * Vo.z;
@@ -130,14 +134,14 @@ const defaultParams = {
             vec3 real_position = startPos+ T*realVel*speed1;
             //vec3 real_position = startPos;
             //gl_Position = projectionMatrix * vec4( real_position, 1.0 );
-            vec3 abb_pos = aberration( real_position, -realVel2, vec3(0) );
+            vec3 abb_pos = aberration( real_position-bodyOffset, -speed2*direction2, vec3(viewOffset) );
             gl_Position = projectionMatrix * vec4( abb_pos, 1.0 );
         } else if( enableAberration > 0 ) {
             mat3 rotmat = mat3( modelViewMatrix );
             vec3 realVel2 = (rotmat *  (speed2*direction2) );
 
-            vec3 abb_pos = aberration( startPos, -realVel2, vec3(0) );
-            gl_Position = projectionMatrix * vec4( abb_pos, 1.0 );
+            vec3 abb_pos = aberration( position-bodyOffset, -speed2*direction2, vec3(viewOffset) );
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( abb_pos, 1.0 );
         } else {
             gl_Position = projectionMatrix * vec4(startPos,1.0)/0.2;
             //#include <project_vertex>

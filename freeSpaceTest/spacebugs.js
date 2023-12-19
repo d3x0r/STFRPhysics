@@ -403,7 +403,7 @@ function init() {
 		scene2 = new THREE.Scene();
 
 
-		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 1000 );
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 5000 );
 
 
 		camera.position.z = -1;
@@ -924,12 +924,12 @@ function animate() {
 		const x1= m.position.x ; 
 		const y= m.position.y ; 
 		const z= m.position.z ; 
-		if( x1 < -200  ) m.position.x += 400;
-		if( x1 > 200  ) m.position.x -= 400;
-		if( y < -200  ) m.position.y += 400;
-		if( y > 200  ) m.position.y -= 400;
-		if( z < -200  ) m.position.z += 400;
-		if( z > 200  ) m.position.z -= 400;
+		if( x1 < -600  ) m.position.x += 1200;
+		if( x1 > 600  ) m.position.x -= 1200;
+		if( y < -600  ) m.position.y += 1200;
+		if( y > 600  ) m.position.y -= 1200;
+		if( z < -600  ) m.position.z += 1200;
+		if( z > 600  ) m.position.z -= 1200;
 /*
 
 		if( ( x1 < -200 || x1 > 200 ) 
@@ -957,7 +957,7 @@ function animate() {
 	});
 
 	if( myMotion )
-	skybox.update( new THREE.Vector3( myMotion.speed.nx, myMotion.speed.ny, myMotion.speed.nz ), myMotion.speed.θ );
+	skybox.update( myMover.position, camera.position, new THREE.Vector3( myMotion.speed.nx, myMotion.speed.ny, myMotion.speed.nz ), myMotion.speed.θ );
 
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))
