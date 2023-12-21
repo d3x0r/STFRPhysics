@@ -62,7 +62,9 @@
 			Minimize: <input type="radio" name="inflationMode" id="minimize" ></p>
 		<p>Outside: <input type="radio" name="filler"  id="fillOutside" > Inside: <input type="radio" name="filler"  id="fillInside" > - Open: <input type="radio" name="filler" id="fillOpen" checked></p>
 -->
-		<p>Latitude:<input type="range" id="lnQX" min=0  max=1000  value=530 > <SPAN id="lnQXval">-0-</SPAN><br>
+		<p>Base Latitude:<input type="range" id="lnBaseQX" min=0  max=1000  value=500 > <SPAN id="lnBaseQXval">-0-</SPAN><br>
+			Base Longitude:<input type="range" id="lnBaseQY" min=0  max=1000 value=500> <SPAN id="lnBaseQYval">-0-</SPAN><br>
+		Latitude:<input type="range" id="lnQX" min=0  max=1000  value=530 > <SPAN id="lnQXval">-0-</SPAN><br>
 			Longitude:<input type="range" id="lnQY" min="0"  max="1000" value="500"> <SPAN id="lnQYval">-0-</SPAN><br>
 			Facing:<input type="range" id="lnQZ" min="0"  max="1000" value="500"><SPAN id="lnQZval">-0-</SPAN><br>
 <div style="display:none">
@@ -350,6 +352,12 @@
 			is = document.getElementById( "lnQA" );
 			if(is)
 			is.oninput = updateMesh;
+
+			is = document.getElementById( "lnBaseQX" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "lnBaseQY" );
+			is.oninput = updateMesh;
+
 			is = document.getElementById( "lnQX" );
 			is.oninput = updateMesh;
 			//is.value = 500;

@@ -88,6 +88,13 @@ lnQuat.SLERP = false;
 lnQuat.invertCrossProduct = false;
 lnQuat.sinNormal = false;
 
+lnQuat.prototype.scale = function(n){
+	this.θ *= n;
+	this.x = this.nx * this.θ;
+	this.y = this.ny * this.θ;
+	this.z = this.nz * this.θ;
+};
+
 lnQuat.setTwistDelta = function(t) {
 	twistDelta = t;
 }
@@ -1948,6 +1955,11 @@ function longslerp(a, b, t, target ) {
     }
 
 export class directedDistance extends lnQuat {
+	scale(n){
+		this.x = this.x * n;
+		this.y = this.y * n;
+		this.z = this.z * n;
+	}
 
 	addScaledVector( v, s ) {
             this.x += v.x*s;

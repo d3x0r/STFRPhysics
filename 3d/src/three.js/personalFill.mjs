@@ -112,6 +112,8 @@ export class Motion {
 	tmpDipole = null;
 	tmpOtherDipole = null;
 	affectors = 0;
+	stabilizeVelocity = 0;
+	stabilizeRotation = 0;
 
 	mass = 1.0;
 
@@ -323,6 +325,13 @@ export class Motion {
 		
 	}
                 move ( m, delta ) {
+
+			if( this.stabilizeVelocity )
+				this.speed.scale( 1-this.stabilizeVelocity * delta );
+			if( this.stabilizeRotation )
+				this.rotation.scale( 1-this.stabilizeRotation * delta );
+
+
 					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
 					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
 					this.tmp_torque.z = this.torque.z + this.bs_torque.z;
@@ -376,6 +385,10 @@ export class Motion {
 				}
 
                 inertialmove ( m, delta ) {
+			if( this.stabilizeVelocity )
+				this.speed.scale( 1-this.stabilizeVelocity * delta );
+			if( this.stabilizeRotation )
+				this.rotation.scale( 1-this.stabilizeRotation * delta );
 					this.tmp_torque.x = this.torque.x + this.bs_torque.x;
 					this.tmp_torque.y = this.torque.y + this.bs_torque.y;
 					this.tmp_torque.z = this.torque.z + this.bs_torque.z;

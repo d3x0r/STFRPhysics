@@ -251,6 +251,9 @@ $$T = \frac { (-C^2 S^2 + J^2 S^2 - 2 J S X + K^2 S^2 - 2 K S Y + L^2 S^2 - 2 L 
 
 This is refactored into vector components.
 $$\vec a=(\vec X - \vec{X_o})- \vec{V_o} {T_o}$$ $$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*( \frac { (\vec {V_o} {T_o} -\vec X) \cdot \vec {V} C  } { ||\vec V|| } -{T_o}C^2)}$$
+
+$$T= \frac {(\vec a \cdot \vec a) -C^2{T_o}^2} {2*({(\vec{V_o} {T_o} -\vec{X}) \cdot \vec {V} }  -{T_o}C^2)}$$
+
 The above solution works when $||\vec V||=C$.  Otherwise the normal form can be used; When greater than C, the negative square root should be considered as a possible answer.   (This are events that haven't reached you yet, but will, and happen after the observed body passes you; the relative speed of these events may exceed the speed of light).
 
 
