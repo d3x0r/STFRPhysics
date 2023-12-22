@@ -583,23 +583,23 @@ travel time; that is the time a photon travels perpendicular to the
 velocity, that scalar is then applied to the length in the direction of
 the velocity vector.
 
-In the following equations, *V⃗* is the velocity of a moving body, to
+In the following equations, $\vec{V}$ is the velocity of a moving body, to
 determine contraction in the specified direction:
 
 $$\begin{array}{r}
-\mathbf{T}_{\mathbf{W}} = \frac{1}{\mathbf{2}}\left( \frac{\mathbf{C}_{\mathbf{L}}}{\mathbf{C} + \left\| \vec{\mathbf{V}} \right\|} + \frac{\mathbf{C}_{\mathbf{L}}}{\mathbf{C} - \left\| \vec{\mathbf{V}} \right\|} \right)\\(2.1)
+{T_{W}} = \frac{1}{{2}}\left( \frac{C_{{L}}}{C + \left\| \vec{{V}} \right\|} + \frac{C_{{L}}}{C - \left\| \vec{{V}} \right\|} \right)\\(2.1)
 \end{array}$$
 
 $$\begin{array}{r}
-\mathbf{T}_{\mathbf{W}} = \frac{1}{\mathbf{2}}\left( \frac{{\left( \mathbf{C} - \left\| \vec{\mathbf{V}} \right\| \right)\mathbf{C}}_{\mathbf{L}}}{\left( \mathbf{C} - \left\| \vec{\mathbf{V}} \right\| \right)\left( \mathbf{C} + \left\| \vec{\mathbf{V}} \right\| \right)} + \frac{\left( \mathbf{C} + \left\| \vec{\mathbf{V}} \right\| \right)\mathbf{C}_{\mathbf{L}}}{\left( \mathbf{C} + \left\| \vec{\mathbf{V}} \right\| \right)\left( \mathbf{C} - \left\| \vec{\mathbf{V}} \right\| \right)} \right)\\(2.2)
+{T}_{{W}} = \frac{1}{{2}}\left( \frac{{\left( C - \left\| \vec{{V}} \right\| \right)C}_{{L}}}{\left( C - \left\| \vec{{V}} \right\| \right)\left( C + \left\| \vec{{V}} \right\| \right)} + \frac{\left( C + \left\| \vec{{V}} \right\| \right)C_{{L}}}{\left( C + \left\| \vec{{V}} \right\| \right)\left( C - \left\| \vec{{V}} \right\| \right)} \right)\\(2.2)
 \end{array}$$
 
 $$\begin{array}{r}
-\mathbf{T}_{\mathbf{W}} = \frac{1}{\mathbf{2}}\left( \frac{2CC_{L}}{\mathbf{C}^{\mathbf{2}} - \vec{\mathbf{V}}\vec{\mathbf{V}}} \right)\\(2.3)
+{T}_{{W}} = \frac{1}{{2}}\left( \frac{2CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}} \right)\\(2.3)
 \end{array}$$
 
 $$\begin{array}{r}
-\mathbf{T}_{\mathbf{W}} = \frac{CC_{L}}{\mathbf{C}^{\mathbf{2}} - \vec{\mathbf{V}}\vec{\mathbf{V}}}\\(2.4)
+{T}_{{W}} = \frac{CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}}\\(2.4)
 \end{array}$$
 
 The best-case time is:
@@ -612,11 +612,11 @@ velocity and *C* for velocity related to velocity. Used to show the
 geometric relation used for calculation *T*<sub>*B*</sub>.
 
 $$\begin{array}{r}
-T_{B} = \frac{C_{L}}{\sqrt{C^{2} - \vec{\mathbf{V}}\vec{\mathbf{V}}}}\\(2.5)
+T_{B} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\\(2.5)
 \end{array}$$
 
 $$\begin{array}{r}
-\frac{T_{B}}{T_{W}} = \frac{\frac{C_{L}}{\sqrt{{C_{L}}^{2} - \vec{\mathbf{V}}\vec{\mathbf{V}}}}}{\frac{CC_{L}}{\mathbf{C}^{\mathbf{2}} - \vec{\mathbf{V}}\vec{\mathbf{V}}}} = \frac{C_{L}}{\sqrt{C^{2} - \vec{\mathbf{V}}\vec{\mathbf{V}}}}\frac{\mathbf{C}^{\mathbf{2}} - \vec{\mathbf{V}}\vec{\mathbf{V}}}{CC_{L}}\\(2.6)
+\frac{T_{B}}{T_{W}} = \frac{\frac{C_{L}}{\sqrt{{C_{L}}^{2} - \vec{{V}}\vec{{V}}}}}{\frac{CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}}} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\frac{C^{{2}} - \vec{{V}}\vec{{V}}}{CC_{L}}\\(2.6)
 \end{array}$$
 
 $$\begin{array}{r}
@@ -2532,7 +2532,7 @@ appropriate velocity. Later in the process the V term that was replaced
 can be restored back to C, but then this covers the singularity of
 dividing by *C*<sup>2</sup> − *V*<sup>2</sup> = 0 when it equals 0.
 
-## Solve for T when $\left\| \vec{\mathbf{V}_{\mathbf{E}}} \right\|$=C…
+## Solve for T when $\left\| \vec{{V}_{{E}}} \right\|$=C…
 
 This only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$.
@@ -2628,7 +2628,7 @@ $$\begin{array}{r}
 T = \frac{A_{O}}{2B_{O}}\\(12)
 \end{array}$$
 
-## Solve for $T_O$ when $\left\| \vec{\mathbf{V}_{\mathbf{O}}} \right\|$=C…
+## Solve for $T_O$ when $\left\| \vec{{V}_{{O}}} \right\|$=C…
 
 This only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$.
