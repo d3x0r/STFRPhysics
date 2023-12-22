@@ -591,15 +591,15 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-{T}_{{W}} = \frac{1}{{2}}\left( \frac{{\left( C - \left\| \vec{{V}} \right\| \right)C}_{{L}}}{\left( C - \left\| \vec{{V}} \right\| \right)\left( C + \left\| \vec{{V}} \right\| \right)} + \frac{\left( C + \left\| \vec{{V}} \right\| \right)C_{{L}}}{\left( C + \left\| \vec{{V}} \right\| \right)\left( C - \left\| \vec{{V}} \right\| \right)} \right)\\(2.2)
+{T_{W}} = \frac{1}{{2}}\left( \frac{{\left( C - \left\| \vec{{V}} \right\| \right)C}_{{L}}}{\left( C - \left\| \vec{{V}} \right\| \right)\left( C + \left\| \vec{{V}} \right\| \right)} + \frac{\left( C + \left\| \vec{{V}} \right\| \right)C_{{L}}}{\left( C + \left\| \vec{{V}} \right\| \right)\left( C - \left\| \vec{{V}} \right\| \right)} \right)\\(2.2)
 \end{array}$$
 
 $$\begin{array}{r}
-{T}_{{W}} = \frac{1}{{2}}\left( \frac{2CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}} \right)\\(2.3)
+{T_{W}} = \frac{1}{{2}}\left( \frac{2CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}} \right)\\(2.3)
 \end{array}$$
 
 $$\begin{array}{r}
-{T}_{{W}} = \frac{CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}}\\(2.4)
+{T_{W}} = \frac{CC_L}{C^{{2}} - \vec{{V}}\vec{{V}}}\\(2.4)
 \end{array}$$
 
 The best-case time is:
