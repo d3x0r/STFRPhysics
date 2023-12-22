@@ -591,7 +591,7 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-{T_{W}} = \frac{1}{{2}}\left( \frac{{\left( C - \left\| \vec{{V}} \right\| \right)C}_{{L}}}{\left( C - \left\| \vec{{V}} \right\| \right)\left( C + \left\| \vec{{V}} \right\| \right)} + \frac{\left( C + \left\| \vec{{V}} \right\| \right)C_{{L}}}{\left( C + \left\| \vec{{V}} \right\| \right)\left( C - \left\| \vec{{V}} \right\| \right)} \right)\\(2.2)
+{T_{W}} = \frac{1}{2}\left( \frac{{\left( C - \left\| \vec{V} \right\| \right)C_L}}{\left( C - \left\| \vec{V} \right\| \right)\left( C + \left\| \vec{V} \right\| \right)} + \frac{\left( C + \left\| \vec{V} \right\| \right)C_L}{\left( C + \left\| \vec{V} \right\| \right)\left( C - \left\| \vec{V} \right\| \right)} \right)\\(2.2)
 \end{array}$$
 
 $$\begin{array}{r}
