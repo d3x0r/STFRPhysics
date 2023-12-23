@@ -264,14 +264,14 @@ Can also replace $T_E$ terms in equation \[1\] with equation
 \[3\]:
 
 $$\begin{array}{r}
-T_{O} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + (T_{O} - T_{\Delta E})\\\(1.6)
+T_{O} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + (T_{O} - T_{\Delta E})\\ (1.6)
 \end{array}$$
 
 Resulting with $T_{\Delta E}$ equation, which is the delta from
 observation to emission:
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\\(1.7)
+T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (1.7)
 \end{array}$$
 
 ## Solution for $T_E$ from $T_O$
