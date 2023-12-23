@@ -1269,7 +1269,7 @@ C\left( T_{O} - T \right) = \sqrt{\left( - T_{O}V \right)^{2}}\\ (98)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}T_{O}T_{O} - {2C^{2}T}_{O}T + {C^{2}T}^{2} = \left( - T_{O}V \right)^{2}\\ (99)
+C^{2}T_{O}T_{O} - 2 C^{2}T_{O}T + {C^{2}T}^{2} = \left( - T_{O}V \right)^{2}\\ (99)
 \end{array}$$
 
 $$\begin{array}{r}
@@ -1420,7 +1420,7 @@ Again, the simplification removing the radical between \[114\] and
 \[115\] is incorrect. The squaring of the terms and the square root is
 effectively an absolute value on the T and V terms.
 
-## **E****=****m***$C$*<sup>**2**</sup>?
+## $E=mc^2$?
 
 The expression for energy and mass only depends on time dilation
 gamma\[[ref 3](\l)\], and the gamma term is the same; there is no
@@ -1848,12 +1848,7 @@ against the local clock.
 
 ## Hypothesis
 
-If the speed of light is different, by a rate of C + V or C − V, where C
-is what's used for the constant speed of light, and V is a velocity. In
-the direction of the velocity, those are the speeds that apply,
-laterally, it's just C. The distance in the worst-case direction is
-contracted by $\gamma = \frac{\sqrt{C^{2}\\ - \\{\\V}^{2}}}{C}$ and the
-clock is contracted by the same amount. The effective local time to
+If the speed of light is different, by a rate of C + V or C − V, where C is what's used for the constant speed of light, and V is a velocity. In the direction of the velocity, those are the speeds that apply, laterally, it's just C. The distance in the worst-case direction is contracted by $\gamma = \frac{\sqrt{C^{2} - {V}^{2}}}{C}$ and the clock is contracted by the same amount. The effective local time to
 cross 1 unit is $\frac{\gamma^{2}}{C + V}$ or $\frac{\gamma^{2}}{C - V}$
 (distance(1) times gamma divided by relative speed = time in seconds
 times gamma). The lateral time is
