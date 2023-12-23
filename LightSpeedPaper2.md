@@ -1348,7 +1348,7 @@ $$\begin{array}{r}
 Which, naively, the square root of the square simplifies (incorrectly):
 
 $$\begin{array}{r}
-T_{O} = \frac{C^{2}T\\ \pm VCT}{C^{2} - V^{2}}\\(106)
+T_{O} = \frac{C^{2}T\\ ± VCT}{C^{2} - V^{2}}\\(106)
 \end{array}$$
 
 Scaled by gamma, this should be equivalent the *t*<sup>′</sup> equation
