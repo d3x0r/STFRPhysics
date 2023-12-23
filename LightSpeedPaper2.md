@@ -37,7 +37,7 @@ itself has no velocity, and is always in the same location, both the
 observer and observed have their own frames. The global frame has an
 origin defined at a location defined as appropriate for the situation
 being evaluated. In this paper all frames share the same origin
-*X⃗* = {0,0,0} and orientation *Q⃗* = {0, 0, 0} at T=0. The global frame
+$\vec{X}=\{0,0,0\}$ and orientation $\vec{Q}=\{0,0,0\}$ at $T=0$. The global frame
 is the frame light propagates in; given the constant clarity we observe
 in galaxies out to the edge of the universe, it can be assumed that the
 space this global frame represents does not have significant currents or
@@ -45,7 +45,7 @@ motions, and represents space. There are minor oscillations in the
 density and curvatures in this space, but it’s not like looking through
 hot air currents.
 
-Light is given a constant propagation speed of *C* in global frame.
+Light is given a constant propagation speed of $C$ in global frame.
 
 Bodies move at some speed and direction or combining speed and direction
 into a single term, at a velocity. This medium is called space. Space
@@ -102,37 +102,25 @@ frequency change in the transverse direction.
 Variables are upper case unless they come from an external reference.
 This makes variables mentioned in the text stand out.
 
--   Equations with numbers that have been stricken are invalid, for
-    example: (999). They are provided for consideration only.
+-  Equations with numbers that have been stricken are invalid, for example: (999). They are provided for consideration only.
+-  Velocity is a vector $\vec{V}$.
+-  Speed refers to the magnitude of the velocity (  ||$\vec{V}$|| ).
+-  Direction refers to the unit vector of velocity ($\frac{\vec{V}}{||\vec{V}||}$).
+-  Position is a vector of the same order as velocity, $\vec{V}$ is an example.
+-  $\vec{X}\times\vec{Y}$ denotes a cross product.
+-  $\vec{X}\cdot\vec{Y}$ denotes a dot product. This may also be written as $\vec{X}\vec{Y}$.
+-  $\vec{X}^2$ is the same as $\vec{X}\cdot\vec{X}$.
+-  $\|\vec{X}\|$ is the same as $\sqrt{{\vec{X}}^{2}}$
+-  $X\cdot Y$ denotes a multiplication of two simple numbers; may also be written as $XY$.
 
--   Velocity is a vector $\vec{V}$.
-
--   Speed refers to the magnitude of the velocity (  ||$\vec{V}$|| ).
-
--   Direction refers to the unit vector of velocity ($\frac{\vec{V}}{||\vec{V}||}$).
-
--   Position is a vector of the same order as velocity, $\vec{V}$ is an
-    example.
-
--   $\vec{X}$ × $\vec{Y}$ denotes a cross product.
-
--   *X⃗* ⋅ *Y⃗* denotes a dot product. This may also be written as *X⃗**Y⃗*.
-
--   *X⃗*<sup>2</sup> is the same as *X⃗* ⋅ *X⃗*.
-
--   ||*X⃗*|| is the same as $\sqrt{{\vec{X}}^{2}}$
-
--   X ⋅ Y denotes a multiplication of two simple numbers; may also be
-    written as XY.
-
-*C* is the constant speed of propagation defined in light-seconds per
+$C$ is the constant speed of propagation defined in light-seconds per
 second as used in this paper. It may also be used as a distance, in
-which case *C*<sub>*L*</sub> light-seconds and has the same value as
-*C*, but with units of length instead of speed. For example, *C* could
+which case $C_L$ light-seconds and has the same value as
+$C$, but with units of length instead of speed. For example, $C$ could
 be in meters per second (300,000,000 approximately), and then
-*C*<sub>*L*</sub> meters would be 300,000,000. The value is always
-actually identical to *C* other than the units:
-$\frac{C}{C_{L}} = \\1s^{- 1}$ or $\frac{C_{L}}{C}\\ = \\1s$.
+$C_L$ meters would be 300,000,000. The value is always
+actually identical to $C$ other than the units:
+$\frac{C}{C_{L}} = 1s^{- 1}$ or $\frac{C_{L}}{C} = 1s$.
 
 The phrase 'emits an event' is 'emits a photon that will be seen'
 describes the creation of a signal that propagates through space. A body
@@ -145,18 +133,13 @@ Rotations are 3D vectors *Q⃗* is an example; they are effectively the log
 of a quaternion. This is used for [light
 aberration](#d-aberration-with-rotation).
 
--   The angular rate is the magnitude of a rotation vector ( ||*Q⃗*|| ).
-
+-   The angular rate is the magnitude of a rotation vector ( $\|\vec{Q}\|$).
 -   The axis of rotation is the unit vector of a rotation(
-    $\frac{\\\vec{Q}}{\\||\vec{Q}||}$).
-
--   An applied rotation will be represented like a function Q(X) that
-    results in X rotated around Q.
-
+    $\frac{\vec{Q}}{||\vec{Q}||}$).
 -   Given a rotation vector *Q⃗*, the angular rate is *θ* = ∥*Q⃗*∥ and
     axis $\vec{A} = \frac{\vec{Q}}{\theta}$ used
     in the following
-    equation:$\vec{X'}\\ = \\cos(\theta)\vec{X}\\ + \\sin(\theta)\\(\vec{A} \times \vec{X}) + (1 - \\cos(\theta)) \cdot (\vec{A} \cdot \vec{X})\vec{A}$
+    equation:$\vec{X'} = \cos(\theta)\vec{X} + \sin(\theta)(\vec{A} \times \vec{X}) + (1 - \cos(\theta)) \cdot (\vec{A} \cdot \vec{X})\vec{A}$
 
 ## The Equivalence Principle
 
@@ -201,12 +184,9 @@ observer that can look out a window, the aberration of stars and
 galaxies will give an idea of direction and speed of motion at
 relativistic speeds.
 
-Quoted from Wikipedia: “The [laws of
-physics](https://en.wikipedia.org/wiki/Laws_of_physics) are [invariant](https://en.wikipedia.org/wiki/Invariant_(physics)) (identical)
-in all [inertial frames of
-reference](https://en.wikipedia.org/wiki/Inertial_frame_of_reference) (that
-is, [frames of
-reference](https://en.wikipedia.org/wiki/Frame_of_reference) with
+Quoted from Wikipedia: “The [laws of physics](https://en.wikipedia.org/wiki/Laws_of_physics) are [invariant](https://en.wikipedia.org/wiki/Invariant_(physics)) (identical)
+in all [inertial frames of reference](https://en.wikipedia.org/wiki/Inertial_frame_of_reference) (that
+is, [frames of reference](https://en.wikipedia.org/wiki/Frame_of_reference) with
 no [acceleration](https://en.wikipedia.org/wiki/Acceleration)).“
 
 This is essentially true, but like General Relativity modified Newton’s
@@ -239,39 +219,19 @@ to a local clock on a moving body, or in a local frame.
 
 # Light Propagation
 
-Light propagation at a constant speed is the core of this system. It
-involves at least two points, one that emits an event at a time, and one
+Light propagation at a constant speed is the core of this system. It involves at least two points, one that emits an event at a time, and one
 that later observes that event.
 
-A point observed on a body that emits an event is represented by
-$\vec{X_{E}} + T_{E}\vec{V_{E}}$ where
-$\vec{X_{E}}$ is the position on the body that emitted a
-signal, $\vec{V_{E}}$ is the velocity of the body,
-$T_E$ is a time in the frame of space (it is an
-un-contracted time).
+A point observed on a body that emits an event is represented by $\vec{X_{E}} + T_{E}\vec{V_{E}}$ where $\vec{X_{E}}$ is the position on the body that emitted a signal, $\vec{V_{E}}$ is the velocity of the body, $T_E$ is a time in the frame of space (it is an un-contracted time).
 
-The point representing an observer is
-$\vec{X_{O}} + T_{O}\vec{V_{O}}$ where
-$\vec{X_{O}}$ is the observer’s position in the observing
-frame, $\vec{V_{O}}$ is the velocity of the observer's
-frame, and $T_O$ is a time in the frame of space which the
-observer sees the event.
+The point representing an observer is $\vec{X_{O}} + T_{O}\vec{V_{O}}$ where $\vec{X_{O}}$ is the observer’s position in the observing frame, $\vec{V_{O}}$ is the velocity of the observer's frame, and $T_O$ is a time in the frame of space which the observer sees the event.
 
-The time of observation may be decomposed into the base time of emission
-plus time delta to observation:
-$T_O$ = $T_E$ + *T*<sub>*Δ**O*</sub>. In
-practice, computing the delta time just adds an additional step of
-adding the delta to the base time.
+The time of observation may be decomposed into the base time of emission plus time delta to observation: $T_O= T_E + T_{\Delta O}$. In practice, computing the delta time just adds an additional step of adding the delta to the base time.
 
-Propagation time is computed by taking the observer’s point and
-subtracting the observed point, to find the shortest directed distance
-from the observer to the emitter; this essentially treats emission as a
-perfect circle from the point of emission until observation. The
-distance calculated is then divided by *C*, which results in the time it
-takes of the observer to see the emitted event.
+Propagation time is computed by taking the observer’s point and subtracting the observed point, to find the shortest directed distance from the observer to the emitter; this essentially treats emission as a perfect circle from the point of emission until observation. The distance calculated is then divided by $C$, which results in the time it takes of the observer to see the emitted event.
 
 The time for the observer to see an emitted event is:
-$window.MathJax = {  tex: {tags: 'ams'}};$
+ 
 
 $$\begin{equation}\begin{array}{r}
 T_{O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + T_{E} 
@@ -304,14 +264,14 @@ Can also replace $T_E$ terms in equation \[1\] with equation
 \[3\]:
 
 $$\begin{array}{r}
-T_{O} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + (T_{O} - T_{\Delta E})\\(1.6)
+T_{O} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + (T_{O} - T_{\Delta E})\\\(1.6)
 \end{array}$$
 
-Resulting with *T*<sub>*Δ**E*</sub> equation, which is the delta from
+Resulting with $T_{\Delta E}$ equation, which is the delta from
 observation to emission:
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(1.7)
+T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\\(1.7)
 \end{array}$$
 
 ## Solution for $T_E$ from $T_O$
@@ -327,7 +287,7 @@ emitted event to the observer. $\vec{P_{O}}$ makes the
 solution somewhat shorter.
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\(1.8)
+\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\\(1.8)
 \end{array}$$
 
 This results with time of emission from a time of observation:
@@ -516,16 +476,16 @@ $$\begin{array}{r}
 
 The above equations are the propagation delay between any two points on
 two moving bodies each with their own independent velocities. The above
-solutions are only valid for *V* &lt; *C*, or *V* &gt; *C*; if
-*V* &gt; *C*, then the negative of the square root should also be
+solutions are only valid for $V$ &lt; $C$, or $V$ &gt; $C$; if
+$V$ &gt; $C$, then the negative of the square root should also be
 considered as a solution; this will show the craft going backwards
 towards where it came from, as the signals it had emitted when it was
-there will finally reach the viewer. If *V* = *C*, the following special
+there will finally reach the viewer. If $V$ = $C$, the following special
 case formula can used.
 
 This solution also only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$; and then only
-when $T_O$ &gt; *T*, the observer can’t see an event before
+when $T_O&gt;T$, the observer can’t see an event before
 it is emitted. If the position an event is emitted is the same as the
 observer, then it can be assumed there is 0 time to observe the event.
 
@@ -607,9 +567,9 @@ The best-case time is:
 <img src="attach/media/image1.png"
 style="width:1.90652in;height:1.67732in"
 alt="Figure 1: Graph relating C_L for distance related to velocity and C for velocity related to velocity. Used to show the geometric relation used for calculation T_B." />  
-Figure 1: Graph relating *C*<sub>*L*</sub> for distance related to
-velocity and *C* for velocity related to velocity. Used to show the
-geometric relation used for calculation *T*<sub>*B*</sub>.
+Figure 1: Graph relating $C_L$ for distance related to
+velocity and $C$ for velocity related to velocity. Used to show the
+geometric relation used for calculation $T_B$.
 
 $$\begin{array}{r}
 T_{B} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\\(2.5)
@@ -665,7 +625,7 @@ $$\begin{array}{r}
 \end{array}$$
 
 Where *θ*<sub>*o*</sub> is the observed angle for a frame moving at
-speed *V*. I extended the math slightly to include the direction part of
+speed $V$. I extended the math slightly to include the direction part of
 the velocity:
 
 $$\begin{array}{r}
@@ -712,7 +672,7 @@ N = \left\{ x = \left| \left\lfloor \frac{dA}{\pi} \right\rfloor \right|mod\\2\\
 \end{aligned} \right.\\\\(3.7)
 \end{array}$$
 
-And the aberrated angle for a body moving at *V* is:
+And the aberrated angle for a body moving at $V$ is:
 
 $$\begin{array}{r}
 a = N\cdot\cos^{- 1}\frac{\cos{dA} + \frac{V}{C}}{1 + \frac{V}{C}\cos{dA}} + D\\(3.8)
@@ -801,13 +761,7 @@ $$\begin{array}{r}
 T_{W} = \frac{1}{2} \bullet \frac{\sqrt{C^{2} - V^{2}}}{C}\left( \frac{C_{L}}{(C + V)} + \frac{C_{L}}{(C - V)} \right)\\(4.1)
 \end{array}$$
 
-Multiplying the fraction for the distance of *C*<sub>*L*</sub> over
-*C* + *V* by *C* − *V* over *C* − *V* and *C*<sub>*L*</sub> over
-*C* − *V* by *C* + *V* over *C* + *V* reduces the expression to the
-following expression. The units will not change since
-$\frac{C + V}{C + V}$ cancels out the units and becomes just a scalar
-$\frac{x}{C^{2} - V^{2}}$ still has units of length over velocity, not
-velocity squared.
+Multiplying the fraction for the distance of $C_L$ over $C+V$ by $C-V$ over $C-V$ and $C_L$ over $C-V$ by $C+V$ over $C+V$ reduces the expression to the following expression. The units will not change since $\frac{C + V}{C + V}$ cancels out the units and becomes just a scalar $\frac{x}{C^{2} - V^{2}}$ still has units of length over velocity, not velocity squared.
 
 $$\begin{array}{r}
 \frac{\sqrt{C^{2} - \vec{V^{2}}}}{2C} \cdot \left( \frac{2C_{L}C}{C^{2} - \vec{V^{2}}} \right)\\(4.2)
@@ -859,11 +813,8 @@ observed is perceived.
 Given:
 
 -   *X⃗* : Position being observed at T=0
-
 -   $\vec{V_{E}}$ : Velocity of body emitting a signal
-
 -   $\vec{X_{O}}$ : Position of observer at T=0
-
 -   $\vec{V_{O}}$ : Velocity of observer
 
 Length contract points:
@@ -921,7 +872,7 @@ X^{'''} = \vec{X^{''}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \ve
 \end{array}$$
 
 Finally:
-*X*<sup>‴</sup> *i**s* *t**h**e* *p**o**s**i**t**i**o**n* *o**f* *t**h**e* *p**o**i**n**t* *b**e**i**n**g* *o**b**s**e**r**v**e**d* *r**e**l**a**t**i**v**e* *t**o* *t**h**e* *o**b**s**e**r**v**e**r*.
+*X*<sup>‴</sup> *i**s* *t**h**e* *p**o**s**i**t**i**o**n* *o**f* *t**h**e* *p**o**i**n**t* *b**e**i**n**g* *o**b**s**e**r*$V$*e**d* *r**e**l**a**t**i*$V$*e* *t**o* *t**h**e* *o**b**s**e**r*$V$*e**r*.
 
 # Doppler Effect or Frequency Shift
 
@@ -1149,9 +1100,9 @@ the one is moving\[[ref 5](#Ref4_lorentz_derivation)\]; this is a pretty
 typical derivation. But then that means the resulting equations have
 only a limited scope of applicability. The offset in the *y* or *z*
 directions also changes when an event is received, and it becomes
-apparent that although the solved set of equations claims to use *c**t*
+apparent that although the solved set of equations claims to use $C$*t*
 as the propagation time of an event, that at some time *t* that the
-signal is *c**t* units from the origin, the solution doesn’t include
+signal is $C$*t* units from the origin, the solution doesn’t include
 that factor, and only really tracks time dilation and length expansion.
 The gamma term as defined increases to infinity as the velocity
 approaches the speed of light.
@@ -1178,7 +1129,7 @@ stationary points, {*x*<sub>1</sub>, *y*<sub>1</sub>, *z*<sub>1</sub>}
 and {*x*<sub>2</sub>, *y*<sub>2</sub>, *z*<sub>2</sub>}. The distance
 between those points takes an amount of time from *t*<sub>1</sub> to
 *t*<sub>2</sub>, times the speed of light \[[ref](#Lorentz_derivations)
-7\]. It does immediately present that *c**t* is somehow a meaningful
+7\]. It does immediately present that $C$*t* is somehow a meaningful
 value itself, rather than the differential length divided by c is equal
 to the delta time between the events; which then c can later be moved
 over to the time side, and squared.
@@ -1469,7 +1420,7 @@ Again, the simplification removing the radical between \[114\] and
 \[115\] is incorrect. The squaring of the terms and the square root is
 effectively an absolute value on the T and V terms.
 
-## **E****=****m****c**<sup>**2**</sup>?
+## **E****=****m***$C$*<sup>**2**</sup>?
 
 The expression for energy and mass only depends on time dilation
 gamma\[[ref 3](\l)\], and the gamma term is the same; there is no
@@ -1744,7 +1695,6 @@ obvious.
     would see more flux from the field in one direction that some other
     direction, which would mean the force was actually changed, rather
     than just resulting in a different momentum).
-
 2.  The one-way velocity of light is not constant, and adding the
     velocity of the two directions is not a constant, but what is
     constant is the amount of time it takes light to cover a certain
@@ -1752,7 +1702,6 @@ obvious.
     is just a variable, not the speed of light constant). A distance
     divided by a time is a velocity, but it’s not the velocity of light
     in either direction.
-
 3.  The experience of travelling at a velocity ends up meaning that for
     a given velocity V, with the time factor scaled by the time
     contraction of $\sqrt{C^{2} - V^{2}}$, means that at 0.707c, that
@@ -1767,12 +1716,10 @@ obvious.
     has been criticized as not making any sense since nothing can go
     faster than the speed of light - but it's not faster than light, it
     just 'feels like' it's going faster than the speed of light.)
-
 4.  The universe doesn't contract when a body is moving through it - a
     stationary object that is bounded by say 2 walls that emit a signal
     that is its local time, will always be seen as 2 light seconds apart
     (other than effects from light aberration).
-
 5.  An observer that is traveling with a body at some speed will always
     see that body in perspective as the same as when it was stationary.
     The length contraction and light aberration causes the various
@@ -1793,7 +1740,6 @@ obvious.
     lag behind; but within reasonable limits, (since we don't build
     space craft that are 300,000km long), there is no notable
     difference.
-
 6.  As mentioned before, light aberration takes place on transmission
     too - this is somewhat like a transfer of inertia to the emitted
     light. If this aberration did not take place, then a laser light
@@ -1814,7 +1760,6 @@ obvious.
     device may take a longer or shorter time, but the time along each
     path the light takes will still be the same, and the light will come
     back in phase with itself and interfere as expected.
-
 7.  The Lorentz Transform is incomplete; and is truly only valid
     considering bodies that are 0 distance from each other, or at best
     an insignificant fraction of a light-second. I tried several times
@@ -1826,7 +1771,6 @@ obvious.
     it’s still seen as longer; while a ship that is moving away from an
     observer is contracted, even more than the length contraction
     applies.
-
 8.  General Relativity – A side project included applying the Einstein
     Field equations to space, and performing the curvature directly,
     without a factor of time; more information in [Appendix
@@ -2118,7 +2062,7 @@ T_{O} = \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{C} + T\\(A.2)
 \end{array}$$
 
 Move *T* to the left side, substitute *P⃗*, and multiply both sides by
-*C*, then square both sides to remove the square root.
+$C$, then square both sides to remove the square root.
 
 $$\begin{array}{r}
 C^{2}\left( T_{O} - T \right)^{2} = \left( \vec{P} + T\vec{V_{E}} \right) \bullet \left( \vec{P} + T\vec{V_{E}} \right)\\(A.3)
@@ -2204,7 +2148,7 @@ $$\begin{array}{r}
 T = \frac{\sqrt{B^{2} - DA} + B}{D}\\(1.9)
 \end{array}$$
 
-# Appendix B ($T_O$ **s****o****l****v****e****)**
+# Appendix B ($T_O$ **s****o****l***$V$***e****)**
 
 Solve propagation equation for $T_O$
 
@@ -2394,7 +2338,7 @@ $$\begin{array}{r}
 \end{array}$$
 
 Move non *T*<sub>*Δ*</sub> expression to the right, divide by
-coefficient of *T*<sub>*Δ**E*</sub>
+coefficient of $T_{\Delta E}$
 
 $$\begin{array}{r}
 T_{\Delta E} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}} + \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\(C.10)
@@ -2432,7 +2376,7 @@ T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\
 
 ## Solve for **T**<sub>**Δ**</sub> from $T_O$
 
-$T_E$ = $T_O$ − *T*<sub>*Δ**E*</sub>
+$T_E$ = $T_O$ − $T_{\Delta E}$
 
 (Follows the same basic steps as above, description of steps omitted)
 
@@ -2490,7 +2434,7 @@ $$\begin{array}{r}
 
 Move non *T*<sub>*Δ**O*</sub> expression to the right, divide by
 coefficient of
-*T*<sub>*Δ**O*</sub>, *r**e**o**d**e**r* *t**e**r**m**s* *u**n**d**e**r* *r**a**d**i**c**a**l*:
+*T*<sub>*Δ**O*</sub>, *r**e**o**d**e**r* *t**e**r**m**s* *u**n**d**e**r* *r**a**d**i*$C$*a**l*:
 
 $$\begin{array}{r}
 T_{\Delta E} = \frac{\sqrt{\frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta}} + \vec{P_{\Delta O}}\vec{P_{\Delta O}}} + \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\(C.25)
@@ -2530,7 +2474,7 @@ T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\
 When V=C, then the equations can be solved by substituting C for the
 appropriate velocity. Later in the process the V term that was replaced
 can be restored back to C, but then this covers the singularity of
-dividing by *C*<sup>2</sup> − *V*<sup>2</sup> = 0 when it equals 0.
+dividing by $C$<sup>2</sup> − $V$<sup>2</sup> = 0 when it equals 0.
 
 ## Solve for T when $\left\| \vec{{V}_{{E}}} \right\|$=C…
 
@@ -2604,7 +2548,7 @@ T = - \frac{\vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}}{2\left( \vec{V_{
 \end{array}$$
 
 Remember $\sqrt{\vec{V_{E}}\vec{V_{E}}} = C$ so
-replace some expressions with *C*<sup>2</sup>, distribute negative sign:
+replace some expressions with $C$<sup>2</sup>, distribute negative sign:
 
 $$\begin{array}{r}
 T = \frac{C^{2}{T_{O}}^{2} - \vec{P}\vec{P}}{2\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}\\(D.10)
@@ -2694,7 +2638,7 @@ T_{O} = - \frac{\vec{P_{O}}\vec{P_{O}} - \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2}}{2\le
 \end{array}$$
 
 Remember $\sqrt{\vec{V_{O}}\vec{V_{O}}} = C$ so
-replace some expressions with *C*<sup>2</sup>, distribute negative sign:
+replace some expressions with $C$<sup>2</sup>, distribute negative sign:
 
 $$\begin{array}{r}
 T_{O} = \frac{C^{2}{T_{E}}^{2} - \vec{P_{O}}\vec{P_{O}}}{2\left( C^{2}T_{E} + \vec{P_{O}}\vec{V_{O}} \right)}\\(D.20)
@@ -2829,7 +2773,7 @@ Before developing math for the one-way constant speed of light through
 space, I had researched General Relativity and Einstein Field Equations.
 I found that it would be possible to curve space directly, rather than
 over time. The equation of
-*S*<sup>2</sup> = *c**T*<sup>2</sup> + *V*<sup>2</sup> is not symmetric
+*S*<sup>2</sup> = $C$*T*<sup>2</sup> + $V$<sup>2</sup> is not symmetric
 in this case; the propagation equations would be something of a
 replacement for this expression. In General Relativity it’s taken that
 everything moves at the speed C through space-time. Moving at the speed
