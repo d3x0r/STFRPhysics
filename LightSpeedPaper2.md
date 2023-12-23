@@ -253,7 +253,7 @@ $$\begin{array}{r}
 T_{E} + T_{\Delta O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}} \right) \right\|}{C} + T_{E}\\
 \end{array}$$
 
-Resulting with *T*<sub>*Δ**O*</sub> equation, which is the delta from
+Resulting with $T_{\Delta O}$ equation, which is the delta from
 emission to observation:
 
 $$\begin{array}{r}
@@ -287,42 +287,42 @@ emitted event to the observer. $\vec{P_{O}}$ makes the
 solution somewhat shorter.
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\\(1.8)
+\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\\ (1.8)
 \end{array}$$
 
 This results with time of emission from a time of observation:
 
 $$\begin{array}{r}
-\boxed{T_{E} = \frac{\sqrt{\left( C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}} \right)^{2} - \left( C^{2} - \vec{V_{E}}\vec{V_{E}} \right)\left( C^{2}{T_{O}}^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + C^{2}T_{O} + \vec{V_{E}}\vec{\vec{P_{O}}}}{C^{2} - \vec{V_{E}}\vec{V_{E}}}}\\(1.9)
+\boxed{T_{E} = \frac{\sqrt{\left( C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}} \right)^{2} - \left( C^{2} - \vec{V_{E}}\vec{V_{E}} \right)\left( C^{2}{T_{O}}^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + C^{2}T_{O} + \vec{V_{E}}\vec{\vec{P_{O}}}}{C^{2} - \vec{V_{E}}\vec{V_{E}}}}\\ (1.9)
 \end{array}$$
 
 Alternative expressions for above solution for T, equation (4) using
 partial expressions...
 
 $$\begin{array}{r}
-A_{E} = C^{2}T_{O}^{2} - \vec{P_{O}}\vec{P_{O}}\\(1.10)
+A_{E} = C^{2}T_{O}^{2} - \vec{P_{O}}\vec{P_{O}}\\ (1.10)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{E} = C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}}\\(1.11)
+B_{E} = C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}}\\ (1.11)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{E} = C^{2} - \vec{V_{E}}\vec{V_{E}}\\(1.12)
+D_{E} = C^{2} - \vec{V_{E}}\vec{V_{E}}\\ (1.12)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{E} = \frac{\sqrt{{B_{E}}^{2} - D_{E}A_{E}} + B_{E}}{D_{E}}\\(1.13)
+T_{E} = \frac{\sqrt{{B_{E}}^{2} - D_{E}A_{E}} + B_{E}}{D_{E}}\\ (1.13)
 \end{array}$$
 
 The position the event was emitted is then:
 
 $$\begin{array}{r}
-\vec{X_{P}} = \vec{X_{E}} + T_{E}\vec{V_{E}}\\(1.14)
+\vec{X_{P}} = \vec{X_{E}} + T_{E}\vec{V_{E}}\\ (1.14)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{X_{P}} = \vec{X_{E}} + \frac{\sqrt{{B_{E}}^{2} - D_{E}A_{E}} + B_{E}}{D_{E}}\vec{V_{E}}\\(1.15)
+\vec{X_{P}} = \vec{X_{E}} + \frac{\sqrt{{B_{E}}^{2} - D_{E}A_{E}} + B_{E}}{D_{E}}\vec{V_{E}}\\ (1.15)
 \end{array}$$
 
 If the observer has a velocity, the resulting point should also have
@@ -341,29 +341,29 @@ B](#appendix-b-mathbft_mathbfomathbf-solve):
 This is roughly the position of the emitted event:
 
 $$\begin{array}{r}
-\vec{P_{E}} = \left( \vec{X_{E}} + \vec{V_{E}}T_{E} \right) - \vec{X_{O}}\\(1.16)
+\vec{P_{E}} = \left( \vec{X_{E}} + \vec{V_{E}}T_{E} \right) - \vec{X_{O}}\\ (1.16)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{E}}\vec{V_{O}} \right)^{2} - \left( C^{2} - {\vec{V_{O}}}^{2} \right)\left( C^{2}T^{2} - \vec{P_{E}}\vec{P_{E}} \right)} + \left( C^{2}T + \vec{P_{E}}\vec{V_{O}} \right)}{C^{2} - \vec{V_{O}}\vec{V_{O}}}}\\(1.17)
+\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{E}}\vec{V_{O}} \right)^{2} - \left( C^{2} - {\vec{V_{O}}}^{2} \right)\left( C^{2}T^{2} - \vec{P_{E}}\vec{P_{E}} \right)} + \left( C^{2}T + \vec{P_{E}}\vec{V_{O}} \right)}{C^{2} - \vec{V_{O}}\vec{V_{O}}}}\\ (1.17)
 \end{array}$$
 
 Simplify with partial expressions:
 
 $$\begin{array}{r}
-A_{O} = C^{2}T^{2} - \vec{P_{E}}\vec{P_{E}}\\(1.18)
+A_{O} = C^{2}T^{2} - \vec{P_{E}}\vec{P_{E}}\\ (1.18)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{O} = C^{2}T + \vec{V_{O}}\vec{P_{E}}\\(1.19)
+B_{O} = C^{2}T + \vec{V_{O}}\vec{P_{E}}\\ (1.19)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\(1.20)
+D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\ (1.20)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{{B_{O}}^{2} - D_{O}A_{O}} + B_{O}}{D_{O}}\\(1.21)
+T_{O} = \frac{\sqrt{{B_{O}}^{2} - D_{O}A_{O}} + B_{O}}{D_{O}}\\ (1.21)
 \end{array}$$
 
 The result is of the same format as equation \[8\], but the calculation
@@ -372,11 +372,11 @@ is observed. $\vec{X_{S}}$ is the position of an observer
 that sees the event.
 
 $$\begin{array}{r}
-\vec{X_{S}} = \vec{X_{O}} + T_{O}\vec{V_{O}}\\(1.22)
+\vec{X_{S}} = \vec{X_{O}} + T_{O}\vec{V_{O}}\\ (1.22)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{X_{S}} = \vec{X_{O}} + \frac{\sqrt{{B_{O}}^{2} + D_{O}A_{O}} + B_{O}}{D_{O}}\vec{V_{O}}\\(1.23)
+\vec{X_{S}} = \vec{X_{O}} + \frac{\sqrt{{B_{O}}^{2} + D_{O}A_{O}} + B_{O}}{D_{O}}\vec{V_{O}}\\ (1.23)
 \end{array}$$
 
 ## Solution for $T_{\Delta O}$ from time of emission
@@ -385,46 +385,46 @@ For completeness, can calculate just the delta time after an event is
 emitted until the event is observed.
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}} \right) \right\|}{C}\\(1.5)
+T_{\Delta O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}} \right) \right\|}{C}\\ (1.5)
 \end{array}$$
 
 Solution for equation \[5\] given a time of emission ([Appendix
 C](#appendix-c-mathbfdeltat-solve)):
 
 $$\begin{array}{r}
-\vec{P_{\mathrm{\Delta}}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} + T_{E}\vec{V_{O}} \right)\\(1.19)
+\vec{P_{\mathrm{\Delta}}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} + T_{E}\vec{V_{O}} \right)\\ (1.19)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\left( D_{E} + \vec{V_{O}}\vec{V_{O}} \right)} - \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{D_{E}}\\(1.20)
+T_{\Delta O} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\left( D_{E} + \vec{V_{O}}\vec{V_{O}} \right)} - \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{D_{E}}\\ (1.20)
 \end{array}$$
 
 Broken into partial expressions:
 
 $$\begin{array}{r}
-A_{\Delta O} = - \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\(1.21)
+A_{\Delta O} = - \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (1.21)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{\Delta O} = \vec{P_{\Delta}}\vec{V_{O}}\\(1.22)
+B_{\Delta O} = \vec{P_{\Delta}}\vec{V_{O}}\\ (1.22)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta O} = C^{2} - {\vec{V_{O}}}^{2}\\(1.23)
+D_{\Delta O} = C^{2} - {\vec{V_{O}}}^{2}\\ (1.23)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\(1.24)
+T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\ (1.24)
 \end{array}$$
 
 The position an event is seen:
 
 $$\begin{array}{r}
-\vec{X_{S}} = \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}}\\(1.25)
+\vec{X_{S}} = \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}}\\ (1.25)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{X_{S}} = \vec{X_{O}} + \left( T_{E} + \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}} \right)\vec{V_{O}}\\(1.26)
+\vec{X_{S}} = \vec{X_{O}} + \left( T_{E} + \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}} \right)\vec{V_{O}}\\ (1.26)
 \end{array}$$
 
 ## Solution for $T_{\Delta E}$ from time of observation
@@ -433,43 +433,43 @@ Calculation for the delta time before an event is observed that an event
 was emitted.
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(1.7)
+T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (1.7)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\(1.28)
+\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\ (1.28)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{\Delta E} = \frac{\sqrt{D_{\Delta O}\vec{P_{\Delta O}}\vec{P_{\Delta O}} + {\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}} + \vec{P_{\Delta O}}\vec{V_{E}}}{D_{\Delta O}}}\\(1.29)
+\boxed{T_{\Delta E} = \frac{\sqrt{D_{\Delta O}\vec{P_{\Delta O}}\vec{P_{\Delta O}} + {\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}} + \vec{P_{\Delta O}}\vec{V_{E}}}{D_{\Delta O}}}\\ (1.29)
 \end{array}$$
 
 Broken into partial expressions:
 
 $$\begin{array}{r}
-A_{\Delta E} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(1.30)
+A_{\Delta E} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (1.30)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{\Delta E} = \vec{P_{\Delta O}}\vec{V_{O}}\\(1.31)
+B_{\Delta E} = \vec{P_{\Delta O}}\vec{V_{O}}\\ (1.31)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta E} = C^{2} - {\vec{V_{E}}}^{2}\\(1.32)
+D_{\Delta E} = C^{2} - {\vec{V_{E}}}^{2}\\ (1.32)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}}\\(1.33)
+T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}}\\ (1.33)
 \end{array}$$
 
 Event seen position, change in emitter position:
 
 $$\begin{array}{r}
-\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}}\\(1.34)
+\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}}\\ (1.34)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}} \right)\vec{V_{E}}\\(1.35)
+\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}} \right)\vec{V_{E}}\\ (1.35)
 \end{array}$$
 
 ## Special Case for V=C
@@ -492,38 +492,38 @@ observer, then it can be assumed there is 0 time to observe the event.
 Instead of the first equation:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(1.1)
+T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (1.1)
 \end{array}$$
 
 Replace C with ||V<sub>e</sub>||, and solve as normal ([Appendix
 D](#appendix-d-vc)):
 
 $$\begin{array}{r}
-T_{O} = T_{E} + \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{E}} \right\|}\\(1.36)
+T_{O} = T_{E} + \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{E}} \right\|}\\ (1.36)
 \end{array}$$
 
 Solved for $T_E$:
 
 $$\begin{array}{r}
-T_{E} = \frac{C^{2}{T_{O}}^{2} - \left( \vec{X_{E}} - \vec{X_{O}} - \vec{V_{O}}T_{O} \right)^{2}}{2\cdot\left( T_{O}C^{2} + \left( \vec{X_{E}} - \vec{X_{O}} - \vec{V_{O}}T_{O} \right) \cdot \vec{V_{E}} \right)}\\(1.37)
+T_{E} = \frac{C^{2}{T_{O}}^{2} - \left( \vec{X_{E}} - \vec{X_{O}} - \vec{V_{O}}T_{O} \right)^{2}}{2\cdot\left( T_{O}C^{2} + \left( \vec{X_{E}} - \vec{X_{O}} - \vec{V_{O}}T_{O} \right) \cdot \vec{V_{E}} \right)}\\ (1.37)
 \end{array}$$
 
 Simplified with partial expression:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\(1.8)
+\vec{P_{O}} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\ (1.8)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{E} = C^{2}T_{O}^{2} - \vec{P_{O}}\vec{P_{O}}\\(1.10)
+A_{E} = C^{2}T_{O}^{2} - \vec{P_{O}}\vec{P_{O}}\\ (1.10)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{E} = C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}}\\(1.11)
+B_{E} = C^{2}T_{O} + \vec{V_{E}}\vec{P_{O}}\\ (1.11)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{E} = \frac{A_{E}}{2B_{E}}\\(1.38)
+T_{E} = \frac{A_{E}}{2B_{E}}\\ (1.38)
 \end{array}$$
 
 # Length Contraction
@@ -547,19 +547,19 @@ In the following equations, $\vec{V}$ is the velocity of a moving body, to
 determine contraction in the specified direction:
 
 $$\begin{array}{r}
-{T_{W}} = \frac{1}{{2}}\left( \frac{C_{{L}}}{C + \left\| \vec{{V}} \right\|} + \frac{C_{{L}}}{C - \left\| \vec{{V}} \right\|} \right)\\(2.1)
+{T_{W}} = \frac{1}{{2}}\left( \frac{C_{{L}}}{C + \left\| \vec{{V}} \right\|} + \frac{C_{{L}}}{C - \left\| \vec{{V}} \right\|} \right)\\ (2.1)
 \end{array}$$
 
 $$\begin{array}{r}
-{T_{W}} = \frac{1}{2}\left( \frac{{\left( C - \left\| \vec{V} \right\| \right)C_L}}{\left( C - \left\| \vec{V} \right\| \right)\left( C + \left\| \vec{V} \right\| \right)} + \frac{\left( C + \left\| \vec{V} \right\| \right)C_L}{\left( C + \left\| \vec{V} \right\| \right)\left( C - \left\| \vec{V} \right\| \right)} \right)\\(2.2)
+{T_{W}} = \frac{1}{2}\left( \frac{{\left( C - \left\| \vec{V} \right\| \right)C_L}}{\left( C - \left\| \vec{V} \right\| \right)\left( C + \left\| \vec{V} \right\| \right)} + \frac{\left( C + \left\| \vec{V} \right\| \right)C_L}{\left( C + \left\| \vec{V} \right\| \right)\left( C - \left\| \vec{V} \right\| \right)} \right)\\ (2.2)
 \end{array}$$
 
 $$\begin{array}{r}
-{T_{W}} = \frac{1}{{2}}\left( \frac{2CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}} \right)\\(2.3)
+{T_{W}} = \frac{1}{{2}}\left( \frac{2CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}} \right)\\ (2.3)
 \end{array}$$
 
 $$\begin{array}{r}
-{T_{W}} = \frac{CC_L}{C^{{2}} - \vec{{V}}\vec{{V}}}\\(2.4)
+{T_{W}} = \frac{CC_L}{C^{{2}} - \vec{{V}}\vec{{V}}}\\ (2.4)
 \end{array}$$
 
 The best-case time is:
@@ -572,15 +572,15 @@ velocity and $C$ for velocity related to velocity. Used to show the
 geometric relation used for calculation $T_B$.
 
 $$\begin{array}{r}
-T_{B} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\\(2.5)
+T_{B} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\\ (2.5)
 \end{array}$$
 
 $$\begin{array}{r}
-\frac{T_{B}}{T_{W}} = \frac{\frac{C_{L}}{\sqrt{{C_{L}}^{2} - \vec{{V}}\vec{{V}}}}}{\frac{CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}}} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\frac{C^{{2}} - \vec{{V}}\vec{{V}}}{CC_{L}}\\(2.6)
+\frac{T_{B}}{T_{W}} = \frac{\frac{C_{L}}{\sqrt{{C_{L}}^{2} - \vec{{V}}\vec{{V}}}}}{\frac{CC_{L}}{C^{{2}} - \vec{{V}}\vec{{V}}}} = \frac{C_{L}}{\sqrt{C^{2} - \vec{{V}}\vec{{V}}}}\frac{C^{{2}} - \vec{{V}}\vec{{V}}}{CC_{L}}\\ (2.6)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{\Gamma = \frac{T_{B}}{T_{W}} = \frac{\sqrt{C^{2} - \vec{V}\vec{V}}}{C}}\\(2.7)
+\boxed{\Gamma = \frac{T_{B}}{T_{W}} = \frac{\sqrt{C^{2} - \vec{V}\vec{V}}}{C}}\\ (2.7)
 \end{array}$$
 
 ## **Vector Expression to Apply Length Contraction**
@@ -590,21 +590,21 @@ vector. This vector is in the same direction as the velocity, scaled by
 the length of X projected on V.
 
 $$\begin{array}{r}
-\vec{A} = \frac{\vec{V}\left( \vec{X} \cdot \vec{V} \right)}{{\vec{V}}^{2}}\\(2.8)
+\vec{A} = \frac{\vec{V}\left( \vec{X} \cdot \vec{V} \right)}{{\vec{V}}^{2}}\\ (2.8)
 \end{array}$$
 
 Subtract the projected position vector, and then add the projection
 length contracted:
 
 $$\begin{array}{r}
-\vec{X^{'}} = \vec{X} - \vec{A} + \vec{A}\frac{\sqrt{CC - VV}}{C}\\(2.9)
+\vec{X^{'}} = \vec{X} - \vec{A} + \vec{A}\frac{\sqrt{CC - VV}}{C}\\ (2.9)
 \end{array}$$
 
 Refactor of the previous equation – subtract the amount of the projected
 vector that has been contracted out.
 
 $$\begin{array}{r}
-\vec{X^{'}} = \vec{X} - \vec{A}\left( 1 - \frac{\sqrt{CC - VV}}{C} \right)\\(2.10)
+\vec{X^{'}} = \vec{X} - \vec{A}\left( 1 - \frac{\sqrt{CC - VV}}{C} \right)\\ (2.10)
 \end{array}$$
 
 # Light Aberration
@@ -621,7 +621,7 @@ from Wikipedia 'Relativistic Aberration' \[[ref
 2](#RelativsiticAberration)\]:
 
 $$\begin{array}{r}
-\cos\theta_{o} = \frac{\cos\theta_{s}\\ - \\\frac{V}{C}}{1 - \\\frac{V}{C}\\\cos\theta_{s}}\\(3.1)
+\cos\theta_{o} = \frac{\cos\theta_{s}\\ - \\\frac{V}{C}}{1 - \\\frac{V}{C}\\\cos\theta_{s}}\\ (3.1)
 \end{array}$$
 
 Where *θ*<sub>*o*</sub> is the observed angle for a frame moving at
@@ -629,17 +629,17 @@ speed $V$. I extended the math slightly to include the direction part of
 the velocity:
 
 $$\begin{array}{r}
-\vec{dX} = \left( \vec{X_{E}} - \vec{X_{O}} \right)\\(3.2)
+\vec{dX} = \left( \vec{X_{E}} - \vec{X_{O}} \right)\\ (3.2)
 \end{array}$$
 
 Equation 20 is the cosine of the angle a body is observed:
 
 $$\begin{array}{r}
-\cos{\theta_{s} =}J = \frac{\vec{dX} \cdot \vec{V_{O}}}{\left| \left| \vec{dX} \right| \right| \cdot \left| \left| \vec{V_{O}} \right| \right|}\\(3.4)
+\cos{\theta_{s} =}J = \frac{\vec{dX} \cdot \vec{V_{O}}}{\left| \left| \vec{dX} \right| \right| \cdot \left| \left| \vec{V_{O}} \right| \right|}\\ (3.4)
 \end{array}$$
 
 $$\begin{array}{r}
-\Delta A = \cos^{- 1}\frac{\\J\\ + \\\\\frac{V_{o}}{C}}{1 + J\frac{V_{o}}{C}} - \cos^{- 1}J\\(3.5)
+\Delta A = \cos^{- 1}\frac{\\J\\ + \\\\\frac{V_{o}}{C}}{1 + J\frac{V_{o}}{C}} - \cos^{- 1}J\\ (3.5)
 \end{array}$$
 
 *Δ**A*, the result of equation 21, is the change in the angle observed.
@@ -662,27 +662,27 @@ is the absolute value of the floor of dA divided by *π*, mod 2, then if
 the result is 0 the value is 1, otherwise the value is -1:
 
 $$\begin{array}{r}
-dA = D - A\\(3.6)
+dA = D - A\\ (3.6)
 \end{array}$$
 
 $$\begin{array}{r}
 N = \left\{ x = \left| \left\lfloor \frac{dA}{\pi} \right\rfloor \right|mod\\2\\\begin{aligned}
 1,\\\\ & x = 0 \\
  - 1,\\\\ & x = 1
-\end{aligned} \right.\\\\(3.7)
+\end{aligned} \right.\\\\ (3.7)
 \end{array}$$
 
 And the aberrated angle for a body moving at $V$ is:
 
 $$\begin{array}{r}
-a = N\cdot\cos^{- 1}\frac{\cos{dA} + \frac{V}{C}}{1 + \frac{V}{C}\cos{dA}} + D\\(3.8)
+a = N\cdot\cos^{- 1}\frac{\cos{dA} + \frac{V}{C}}{1 + \frac{V}{C}\cos{dA}} + D\\ (3.8)
 \end{array}$$
 
 The inverse calculation to determine the angle that resulted in an
 aberrated angle of *d**A* is:
 
 $$\begin{array}{r}
-b = N\cdot\cos^{- 1}\frac{V - C\cos{dA}}{V\cos{dA} - C} + D\\(3.9)
+b = N\cdot\cos^{- 1}\frac{V - C\cos{dA}}{V\cos{dA} - C} + D\\ (3.9)
 \end{array}$$
 
 Light aberration is one clue that a moving body has to determine that
@@ -704,44 +704,44 @@ The cross-product also gives the axis of rotation for the aberration.
 Calculate delta position:
 
 $\begin{array}{r}
-\vec{\Delta X_{d}} = \vec{X} - \vec{X_{O}}\\(3.10)
+\vec{\Delta X_{d}} = \vec{X} - \vec{X_{O}}\\ (3.10)
 \end{array}$
 
 Compute cross product of position and observer's velocity:
 
 $\begin{array}{r}
-\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\(3.11)
+\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\ (3.11)
 \end{array}$
 
 Normalize the cross product (axis of rotation):
 
 $$\begin{array}{r}
-V_{cn} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}\\(3.12)
+V_{cn} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}\\ (3.12)
 \end{array}$$
 
 Calculate dot product of position and normalized observer's velocity:
 
 $$\begin{array}{r}
-\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}\\(3.13)
+\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}\\ (3.13)
 \end{array}$$
 
 Normalize the dot product (cosine of angle between delta position and
 velocity)
 
 $$\begin{array}{r}
-\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}\\(3.14)
+\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}\\ (3.14)
 \end{array}$$
 
 Compute angle of aberration:
 
 $$\begin{array}{r}
-\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\(3.15)
+\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\ (3.15)
 \end{array}$$
 
 Rotation of observed point *X*<sub>*d*</sub> plus position of observer:
 
 $$\begin{array}{r}
-X_{r} = \vec{X_{O}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \vec{V_{C}} \times \vec{\Delta X_{d}} \right) + \left( \left( 1 - \cos\theta \right)\vec{V_{c}} \cdot \vec{\Delta X_{d}} \right)\vec{\Delta V_{cn}}\\(3.16)
+X_{r} = \vec{X_{O}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \vec{V_{C}} \times \vec{\Delta X_{d}} \right) + \left( \left( 1 - \cos\theta \right)\vec{V_{c}} \cdot \vec{\Delta X_{d}} \right)\vec{\Delta V_{cn}}\\ (3.16)
 \end{array}$$
 
 <span id="_Length_Contraction" class="anchor"></span>
@@ -758,26 +758,26 @@ Forward and backward, the time light takes to cover the contracted
 distance of C light-seconds is:
 
 $$\begin{array}{r}
-T_{W} = \frac{1}{2} \bullet \frac{\sqrt{C^{2} - V^{2}}}{C}\left( \frac{C_{L}}{(C + V)} + \frac{C_{L}}{(C - V)} \right)\\(4.1)
+T_{W} = \frac{1}{2} \bullet \frac{\sqrt{C^{2} - V^{2}}}{C}\left( \frac{C_{L}}{(C + V)} + \frac{C_{L}}{(C - V)} \right)\\ (4.1)
 \end{array}$$
 
 Multiplying the fraction for the distance of $C_L$ over $C+V$ by $C-V$ over $C-V$ and $C_L$ over $C-V$ by $C+V$ over $C+V$ reduces the expression to the following expression. The units will not change since $\frac{C + V}{C + V}$ cancels out the units and becomes just a scalar $\frac{x}{C^{2} - V^{2}}$ still has units of length over velocity, not velocity squared.
 
 $$\begin{array}{r}
-\frac{\sqrt{C^{2} - \vec{V^{2}}}}{2C} \cdot \left( \frac{2C_{L}C}{C^{2} - \vec{V^{2}}} \right)\\(4.2)
+\frac{\sqrt{C^{2} - \vec{V^{2}}}}{2C} \cdot \left( \frac{2C_{L}C}{C^{2} - \vec{V^{2}}} \right)\\ (4.2)
 \end{array}$$
 
 Which is then:
 
 $$\begin{array}{r}
-\frac{C}{\sqrt{C^{2} - \vec{V^{2}}}}\\(4.3)
+\frac{C}{\sqrt{C^{2} - \vec{V^{2}}}}\\ (4.3)
 \end{array}$$
 
 And the reciprocal, which scales the clock so 1 tick happens per
 light-tick is
 
 $$\begin{array}{r}
-\boxed{\Gamma = \frac{\sqrt{C^{2} - \vec{V^{2}}}}{C}}\\ or\\\sqrt{1 - \left( \frac{\vec{V}}{C} \right)^{2}}\\(4.4)
+\boxed{\Gamma = \frac{\sqrt{C^{2} - \vec{V^{2}}}}{C}}\\ or\\\sqrt{1 - \left( \frac{\vec{V}}{C} \right)^{2}}\\ (4.4)
 \end{array}$$
 
 Alternatively, it is possible to compute the time it takes for a photon
@@ -786,14 +786,14 @@ the time it takes for light to travel along the lateral path of C
 light-seconds is
 
 $$\begin{array}{r}
-\frac{C}{\sqrt{C^{2} - \vec{V^{2}}}}\\(4.5)
+\frac{C}{\sqrt{C^{2} - \vec{V^{2}}}}\\ (4.5)
 \end{array}$$
 
 And, again, the reciprocal, which scales the clock so 1 tick happens per
 light-tick is:
 
 $$\begin{array}{r}
-\boxed{\Gamma = \frac{\sqrt{C^{2} - \vec{V^{2}}}}{C}}\\ or\\\sqrt{1 - \left( \frac{\vec{V}}{C} \right)^{2}}\\(4.6)
+\boxed{\Gamma = \frac{\sqrt{C^{2} - \vec{V^{2}}}}{C}}\\ or\\\sqrt{1 - \left( \frac{\vec{V}}{C} \right)^{2}}\\ (4.6)
 \end{array}$$
 
 # Full Process to Compute Observation
@@ -820,55 +820,55 @@ Given:
 Length contract points:
 
 $$\begin{array}{r}
-\vec{X^{'}} = \vec{X} - \frac{\vec{V_{E}}\left( \vec{X} \cdot \vec{V_{E}} \right)}{{\vec{V_{E}}}^{2}}\left( 1 - \frac{\sqrt{CC - {V_{E}}^{2}}}{C} \right)\\(5.1)
+\vec{X^{'}} = \vec{X} - \frac{\vec{V_{E}}\left( \vec{X} \cdot \vec{V_{E}} \right)}{{\vec{V_{E}}}^{2}}\left( 1 - \frac{\sqrt{CC - {V_{E}}^{2}}}{C} \right)\\ (5.1)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{{X_{O}}^{'}} = \vec{X_{O}} - \frac{\vec{V_{O}}\left( \vec{X_{O}} \cdot \vec{V_{O}} \right)}{{\vec{V_{O}}}^{2}}\left( 1 - \frac{\sqrt{CC - {V_{O}}^{2}}}{C} \right)\\(5.2)
+\vec{{X_{O}}^{'}} = \vec{X_{O}} - \frac{\vec{V_{O}}\left( \vec{X_{O}} \cdot \vec{V_{O}} \right)}{{\vec{V_{O}}}^{2}}\left( 1 - \frac{\sqrt{CC - {V_{O}}^{2}}}{C} \right)\\ (5.2)
 \end{array}$$
 
 Propagation Delay from contracted point to observer:
 
 $$\begin{array}{r}
-\vec{P} = \vec{X^{'}} - \left( \vec{X_{O}'} + T_{O}\vec{V_{O}} \right)\\(5.3)
+\vec{P} = \vec{X^{'}} - \left( \vec{X_{O}'} + T_{O}\vec{V_{O}} \right)\\ (5.3)
 \end{array}$$
 
 $$\begin{array}{r}
-T = \frac{\sqrt{\left( C^{2}T_{O} + \vec{V_{E}} \cdot \vec{P} \right)^{2} - \left( C^{2} - \vec{V_{E}}\vec{V_{E}} \right)\left( C^{2}T_{O}^{2} - \vec{P} \cdot \vec{P} \right)} + C^{2}T_{O} + \vec{V_{E}} \cdot \vec{P}}{C^{2} - \vec{V_{E}}\vec{V_{E}}}\\(5.4)
+T = \frac{\sqrt{\left( C^{2}T_{O} + \vec{V_{E}} \cdot \vec{P} \right)^{2} - \left( C^{2} - \vec{V_{E}}\vec{V_{E}} \right)\left( C^{2}T_{O}^{2} - \vec{P} \cdot \vec{P} \right)} + C^{2}T_{O} + \vec{V_{E}} \cdot \vec{P}}{C^{2} - \vec{V_{E}}\vec{V_{E}}}\\ (5.4)
 \end{array}$$
 
 Light aberration:
 
 $$\begin{array}{r}
-\vec{X^{''}} = \vec{X_{E}} + \vec{V_{E}}T\\(5.5)
+\vec{X^{''}} = \vec{X_{E}} + \vec{V_{E}}T\\ (5.5)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{\Delta X_{d}}\\ = \vec{X^{'}} + \vec{V_{E}}T - \vec{{X_{O}}^{'}}\\(5.6)
+\vec{\Delta X_{d}}\\ = \vec{X^{'}} + \vec{V_{E}}T - \vec{{X_{O}}^{'}}\\ (5.6)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}\\(5.7)
+\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}\\ (5.7)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}\\(5.8)
+\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}\\ (5.8)
 \end{array}$$
 
 $$\begin{array}{r}
-\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\(5.9)
+\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\ (5.9)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\(5.10)
+\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\ (5.10)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{cn}} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}\\(5.11)
+\vec{V_{cn}} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}\\ (5.11)
 \end{array}$$
 
 $$\begin{array}{r}
-X^{'''} = \vec{X^{''}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \vec{V_{cn}} \times \vec{\Delta X_{d}} \right) + \left( \left( 1 - \cos\theta \right)\vec{V_{cn}} \cdot \vec{\Delta X_{d}} \right)\vec{V_{cn}}\\(5.12)
+X^{'''} = \vec{X^{''}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \vec{V_{cn}} \times \vec{\Delta X_{d}} \right) + \left( \left( 1 - \cos\theta \right)\vec{V_{cn}} \cdot \vec{\Delta X_{d}} \right)\vec{V_{cn}}\\ (5.12)
 \end{array}$$
 
 Finally:
@@ -882,7 +882,7 @@ relative to the velocity direction, and V is just the speed component of
 the velocity.
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\sin(\theta)}}\\(6.1)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\sin(\theta)}}\\ (6.1)
 \end{array}$$
 
 The above factor is a scalar on the frequency, and $\frac{1}{F}$ should
@@ -891,7 +891,7 @@ be used to scale the wavelength.
 The composite frequency shift and light aberration function:
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\\cos\left( N\cdot{\cos^{- 1}\left( \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)} \right)}}\\(6.2)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\\cos\left( N\cdot{\cos^{- 1}\left( \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)} \right)}}\\ (6.2)
 \end{array}$$
 
 ## Derivation of Doppler Shift
@@ -902,18 +902,18 @@ $D$ is the direction the emitter is travelling. (same as in aberration)
 
 Equation \[6.3\] is the distance the signal travels in 1 tick:
 
-$$\begin{array}{r}\vec{A} = \left\{C\cos\left( A_{O} \right),C\sin\left( A_{O} \right)\right\}\\(6.3)\end{array}$$
+$$\begin{array}{r}\vec{A} = \left\{C\cos\left( A_{O} \right),C\sin\left( A_{O} \right)\right\}\\ (6.3)\end{array}$$
 Equation \[6.4\] is the distance the body travels in 1 tick:
 
 $$\begin{array}{r}
-\vec{B} = \left\{ V\cos(D),V\sin(D) \right\}\\(6.4)
+\vec{B} = \left\{ V\cos(D),V\sin(D) \right\}\\ (6.4)
 \end{array}$$
 
 This is the difference between the distance traveled by 1 wave in 1 tick
 minus the distance traveled by the body:
 
 $$\begin{array}{r}
-\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\|\\(6.5)
+\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\|\\ (6.5)
 \end{array}$$
 
 Square both sides, to work to getting length of the vector:
@@ -922,7 +922,7 @@ $$\begin{array}{r}
 {\vec{A - B}}^{2} = \left( \begin{array}{r}
 \left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\
  + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)
-\end{array} \right)\\(6.6)
+\end{array} \right)\\ (6.6)
 \end{array}$$
 
 Combine common terms:
@@ -932,26 +932,26 @@ $$\begin{array}{r}
 C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\
  - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\
  + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)
-\end{array} \right)\\(6.7)
+\end{array} \right)\\ (6.7)
 \end{array}$$
 
 Remove terms that combine to be 1, and simplify complex trig identity:
 
 $$\begin{array}{r}
-{\vec{A - B}}^{2} = C^{2} - 2CV\left( \sin(D - A) \right) + V^{2}\\(6.8)
+{\vec{A - B}}^{2} = C^{2} - 2CV\left( \sin(D - A) \right) + V^{2}\\ (6.8)
 \end{array}$$
 
 Take square root of both sides to result in length, and divide both
 sides by C to convert the distance to a time:
 
 $$\begin{array}{r}
-\frac{\left\| \vec{A - B} \right\|}{C} = \frac{\sqrt{C^{2} - 2CV\left( \sin(D - A) \right) + V^{2}}}{C}\\(6.9)
+\frac{\left\| \vec{A - B} \right\|}{C} = \frac{\sqrt{C^{2} - 2CV\left( \sin(D - A) \right) + V^{2}}}{C}\\ (6.9)
 \end{array}$$
 
 Resulting equation:
 
 $$\begin{array}{r}
-\boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \sin(D - A) \right)}}\\(6.10)
+\boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \sin(D - A) \right)}}\\ (6.10)
 \end{array}$$
 
 # Results
@@ -1007,7 +1007,7 @@ These equations give the position of an object some distance from an
 observer at some time at a given velocity:
 
 $$\begin{array}{r}
-X = VT,Y = D,X^{'} = V(T - 0.001)\\(73,74,75)
+X = VT,Y = D,X^{'} = V(T - 0.001)\\ (73,74,75)
 \end{array}$$
 
 The change position between a ‘now’ and ‘now’ minus one one-thousandth
@@ -1015,13 +1015,13 @@ of a time unit, dividing the change in distance by 1/1000 is the same as
 multiplying by 1000:
 
 $$\begin{array}{r}
-v_{x} = \left( \sqrt{\left( X^{2} + Y^{2} \right) - \left( \left( X^{'} \right)^{2} + Y^{2} \right)} \right) \bullet 1000\\(76)
+v_{x} = \left( \sqrt{\left( X^{2} + Y^{2} \right) - \left( \left( X^{'} \right)^{2} + Y^{2} \right)} \right) \bullet 1000\\ (76)
 \end{array}$$
 
 Expanded:
 
 $$\begin{array}{r}
-v_{x} = \left( \sqrt{(VT)^{2} + DD} - \sqrt{DD + \left( V(T - 0.001) \right)^{2}} \right) \cdot 1000\\(77)
+v_{x} = \left( \sqrt{(VT)^{2} + DD} - \sqrt{DD + \left( V(T - 0.001) \right)^{2}} \right) \cdot 1000\\ (77)
 \end{array}$$
 
 Give this graph:
@@ -1077,21 +1077,21 @@ frame of *G*.
 ### Lorentz Transform Equations
 
 $$\begin{array}{r}
-\gamma = \frac{1}{\sqrt{1 - \frac{v^{2}}{c^{2}}}} = \frac{c}{\sqrt{c^{2} - v^{2}}}\\(78)
+\gamma = \frac{1}{\sqrt{1 - \frac{v^{2}}{c^{2}}}} = \frac{c}{\sqrt{c^{2} - v^{2}}}\\ (78)
 \end{array}$$
 
 $${\begin{array}{r}
-t^{'} = \gamma\left( t - \frac{vx}{c^{2}} \right)\\(79)
+t^{'} = \gamma\left( t - \frac{vx}{c^{2}} \right)\\ (79)
 \end{array}
 }\begin{array}{r}
-x^{'} = \gamma(x - vt)\\(80)
+x^{'} = \gamma(x - vt)\\ (80)
 \end{array}$$
 
 $${\begin{array}{r}
-y^{'} = y\\(81)
+y^{'} = y\\ (81)
 \end{array}
 }\begin{array}{r}
-z^{'} = z\\(82)
+z^{'} = z\\ (82)
 \end{array}$$
 
 The above set of equations are a solution for an event occurring at the
@@ -1135,13 +1135,13 @@ to the delta time between the events; which then c can later be moved
 over to the time side, and squared.
 
 $$\begin{array}{r}
-c^{2}\left( t_{2} - t_{1} \right)^{2} = \left( x_{2} - x_{1} \right)^{2} + \left( y_{2} - y_{1} \right)^{2} + \left( z_{2} - z_{1} \right)^{2}\\(83)
+c^{2}\left( t_{2} - t_{1} \right)^{2} = \left( x_{2} - x_{1} \right)^{2} + \left( y_{2} - y_{1} \right)^{2} + \left( z_{2} - z_{1} \right)^{2}\\ (83)
 \end{array}$$
 
 or
 
 $$\begin{array}{r}
-c^{2}\left( t_{2} - t_{1} \right)^{2} - \left( x_{2} - x_{1} \right)^{2} - \left( y_{2} - y_{1} \right)^{2} - \left( z_{2} - z_{1} \right)^{2} = 0\\(84)
+c^{2}\left( t_{2} - t_{1} \right)^{2} - \left( x_{2} - x_{1} \right)^{2} - \left( y_{2} - y_{1} \right)^{2} - \left( z_{2} - z_{1} \right)^{2} = 0\\ (84)
 \end{array}$$
 
 Equation \[65\] itself I cannot find fault in; other than it is for the
@@ -1151,7 +1151,7 @@ The next point is establishing invariance of interval \[[ref
 7](#Lorentz_derivations)\]:
 
 $$\begin{array}{r}
-ds^{2} = c^{2}dt^{2} - dx^{2} - dy^{2} - dz^{2}\\(85)
+ds^{2} = c^{2}dt^{2} - dx^{2} - dy^{2} - dz^{2}\\ (85)
 \end{array}$$
 
 Then this *d**s* term is used to apply a relative velocity. Although
@@ -1167,7 +1167,7 @@ Additionally, *d**s* being an infinitesimal since
 Starting with equation \[1\]:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(2)
+T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (2)
 \end{array}$$
 
 To match equation \[71\], which specifies that the emission of the event
@@ -1178,19 +1178,19 @@ above equations, *t*<sub>2</sub> − *t*<sub>1</sub>is a negative term,
 but it shouldn’t matter after squaring.
 
 $$\begin{array}{r}
-T_{O} - T = \frac{\left\| \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right\|}{C}\\(86)
+T_{O} - T = \frac{\left\| \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right\|}{C}\\ (86)
 \end{array}$$
 
 Convert magnitude expression to square root of squared difference:
 
 $$\begin{array}{r}
-T_{O} - T = \frac{\sqrt{\left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}}}{C}\\(87)
+T_{O} - T = \frac{\sqrt{\left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}}}{C}\\ (87)
 \end{array}$$
 
 Move C to the left side, and square both sides to remove radical:
 
 $$\begin{array}{r}
-C^{2}\left( T_{O} - T \right)^{2} = \left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}\\(88)
+C^{2}\left( T_{O} - T \right)^{2} = \left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}\\ (88)
 \end{array}$$
 
 At this point we can introduce another variable that makes the equation
@@ -1200,7 +1200,7 @@ defined the terms. Also simplify to a single dimension instead of a
 vector here.
 
 $$\begin{array}{r}
-{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}\\(89)
+{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T\vec{V_{E}} \right) \right)^{2}\\ (89)
 \end{array}$$
 
 But then the velocities are already part of the math, and don’t have to
@@ -1208,19 +1208,19 @@ be applied to the *d**S* term. If there was a single differential (not
 relative) velocity specified, then we could define:
 
 $$\begin{array}{r}
-\vec{V_{E}} = - \vec{V};\vec{V_{O}} = 0\\(90,91)
+\vec{V_{E}} = - \vec{V};\vec{V_{O}} = 0\\ (90,91)
 \end{array}$$
 
 Substitute velocity expressions \[71\] and \[72\] into \[70\]:
 
 $$\begin{array}{r}
-{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \left( \vec{X_{O}} \right) - \left( \vec{X_{E}} - T\vec{V} \right) \right)^{2}\\(92)
+{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \left( \vec{X_{O}} \right) - \left( \vec{X_{E}} - T\vec{V} \right) \right)^{2}\\ (92)
 \end{array}$$
 
 Remove some parenthesis:
 
 $$\begin{array}{r}
-{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \vec{X_{O}} - \vec{X_{E}} - T\vec{V} \right)^{2}\\(93)
+{dS}^{2} = C^{2}\left( T_{O} - T \right)^{2} - \left( \vec{X_{O}} - \vec{X_{E}} - T\vec{V} \right)^{2}\\ (93)
 \end{array}$$
 
 Change $T_O$ to *T* + *T*<sub>*Δ*</sub>, and
@@ -1228,14 +1228,14 @@ $\vec{X_{O}} - \vec{X_{E}}$ to
 $\vec{X_{\mathrm{\Delta}}}$
 
 $$\begin{array}{r}
-{dS}^{2} = C^{2}\left( T + T_{\Delta} - T \right)^{2} - \left( \vec{X_{\mathrm{\Delta}}} - T\vec{V} \right)^{2}\\(94)
+{dS}^{2} = C^{2}\left( T + T_{\Delta} - T \right)^{2} - \left( \vec{X_{\mathrm{\Delta}}} - T\vec{V} \right)^{2}\\ (94)
 \end{array}$$
 
 Simplify expressions, and this resembles equation\[73\], but still has a
 differential velocity that works as a relative velocity in the equation:
 
 $$\begin{array}{r}
-{dS}^{2} = C^{2}{T_{\Delta}}^{2} - \left( \vec{X_{\mathrm{\Delta}}} + T_{\Delta}\vec{V} \right)^{2}\\(95)
+{dS}^{2} = C^{2}{T_{\Delta}}^{2} - \left( \vec{X_{\mathrm{\Delta}}} + T_{\Delta}\vec{V} \right)^{2}\\ (95)
 \end{array}$$
 
 ### Solving Light Propagation at the Origin
@@ -1244,13 +1244,13 @@ Alternatively, a shorter method that approaches the Lorentz Transform,
 but doesn’t quite get there is to start with Equation 2:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(2)
+T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (2)
 \end{array}$$
 
 Define gamma:
 
 $$\begin{array}{r}
-\gamma = \frac{C}{\sqrt{C^{2} - V^{2}}}\\(96)
+\gamma = \frac{C}{\sqrt{C^{2} - V^{2}}}\\ (96)
 \end{array}$$
 
 Simplify so there is 0 distance between the observers, the point being
@@ -1258,83 +1258,83 @@ observed is 0, and a 0 velocity for the emitter, gives the following
 equation:
 
 $$\begin{array}{r}
-C\left( T_{O} - T \right) = \left\| \left( - T_{O}\vec{V_{O}} \right) \right\|\\(97)
+C\left( T_{O} - T \right) = \left\| \left( - T_{O}\vec{V_{O}} \right) \right\|\\ (97)
 \end{array}$$
 
 Converting the magnitude expression to the square root of the vector
 squared:
 
 $$\begin{array}{r}
-C\left( T_{O} - T \right) = \sqrt{\left( - T_{O}V \right)^{2}}\\(98)
+C\left( T_{O} - T \right) = \sqrt{\left( - T_{O}V \right)^{2}}\\ (98)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}T_{O}T_{O} - {2C^{2}T}_{O}T + {C^{2}T}^{2} = \left( - T_{O}V \right)^{2}\\(99)
+C^{2}T_{O}T_{O} - {2C^{2}T}_{O}T + {C^{2}T}^{2} = \left( - T_{O}V \right)^{2}\\ (99)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}T_{O}T_{O} - V^{2}T_{O}T_{O} - {2C^{2}T}_{O}T = - C^{2}T^{2}\\(100)
+C^{2}T_{O}T_{O} - V^{2}T_{O}T_{O} - {2C^{2}T}_{O}T = - C^{2}T^{2}\\ (100)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( C^{2} - V^{2} \right)T_{O}T_{O} - {2C^{2}T}_{O}T = - C^{2}T^{2}\\(101)
+\left( C^{2} - V^{2} \right)T_{O}T_{O} - {2C^{2}T}_{O}T = - C^{2}T^{2}\\ (101)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( \sqrt{\left( C^{2} - V^{2} \right)}T_{O} - \frac{C^{2}T}{\sqrt{\left( C^{2} - V^{2} \right)}} \right)^{2} = \frac{{C^{4}T}^{2}}{\left( C^{2} - V^{2} \right)} - {C^{2}T}^{2}\\(102)
+\left( \sqrt{\left( C^{2} - V^{2} \right)}T_{O} - \frac{C^{2}T}{\sqrt{\left( C^{2} - V^{2} \right)}} \right)^{2} = \frac{{C^{4}T}^{2}}{\left( C^{2} - V^{2} \right)} - {C^{2}T}^{2}\\ (102)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\frac{{C^{4}T}^{2}}{\left( C^{2} - V^{2} \right)} - {C^{2}T}^{2}} + \frac{CT}{\sqrt{\left( C^{2} - V^{2} \right)}}}{\sqrt{\left( C^{2} - V^{2} \right)}}\\(103)
+T_{O} = \frac{\sqrt{\frac{{C^{4}T}^{2}}{\left( C^{2} - V^{2} \right)} - {C^{2}T}^{2}} + \frac{CT}{\sqrt{\left( C^{2} - V^{2} \right)}}}{\sqrt{\left( C^{2} - V^{2} \right)}}\\ (103)
 \end{array}$$
 
 $$\begin{array}{r}
-{T_{O}}^{} = \frac{\sqrt{{C^{4}T}^{2} - {\left( C^{2} - V^{2} \right)C^{2}T}^{2}} + C^{2}T}{C^{2} - V^{2}}\\(104)
+{T_{O}}^{} = \frac{\sqrt{{C^{4}T}^{2} - {\left( C^{2} - V^{2} \right)C^{2}T}^{2}} + C^{2}T}{C^{2} - V^{2}}\\ (104)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{O} = \frac{\sqrt{V^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - V^{2}}}\\(105)
+\boxed{T_{O} = \frac{\sqrt{V^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - V^{2}}}\\ (105)
 \end{array}$$
 
 Which, naively, the square root of the square simplifies (incorrectly):
 
 $$\begin{array}{r}
-T_{O} = \frac{C^{2}T ± VCT}{C^{2} - V^{2}}\\(106)
+T_{O} = \frac{C^{2}T ± VCT}{C^{2} - V^{2}}\\ (106)
 \end{array}$$
 
 Scaled by gamma, this should be equivalent the *t*<sup>′</sup> equation
 of the Lorentz Transformation:
 
 $$\begin{array}{r}
-T_{O} = \gamma CT\left( \frac{C \pm V}{C^{2} - V^{2}} \right)\\(107)
+T_{O} = \gamma CT\left( \frac{C \pm V}{C^{2} - V^{2}} \right)\\ (107)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \gamma CT\left( \frac{1}{C \pm V} \right)\\(108)
+T_{O} = \gamma CT\left( \frac{1}{C \pm V} \right)\\ (108)
 \end{array}$$
 
 $$\begin{array}{r}
-X_{O} = \gamma VCT\left( \frac{1}{C \pm V} \right)\\\\(109)
+X_{O} = \gamma VCT\left( \frac{1}{C \pm V} \right)\\\\ (109)
 \end{array}$$
 
 Should be:
 
 $$\begin{array}{r}
-t' = \gamma\left( t - \frac{vx}{c^{2}} \right)\\(79)
+t' = \gamma\left( t - \frac{vx}{c^{2}} \right)\\ (79)
 \end{array}$$
 
 Or:
 
 $$\begin{array}{r}
-X = \frac{tv}{C}\\(110)
+X = \frac{tv}{C}\\ (110)
 \end{array}$$
 
 $$\begin{array}{r}
-t' = \gamma\left( t - \frac{v}{C}\frac{vt}{C} \right)\\(111)
+t' = \gamma\left( t - \frac{v}{C}\frac{vt}{C} \right)\\ (111)
 \end{array}$$
 
 $$\begin{array}{r}
-x^{'} = \gamma(x - vt)\\(80)
+x^{'} = \gamma(x - vt)\\ (80)
 \end{array}$$
 
 It can be noted, the simplification between \[105\] and \[106\] is not
@@ -1371,11 +1371,11 @@ The green line is the Lorentz time transformed without the gamma term.
 ### Another Approach, working from solved equation for propagation:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\(11)
+\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\ (11)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2} - \left( C^{2} - {\vec{V_{O}}}^{2} \right)\left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{C^{2} - {\vec{V_{O}}}^{2}}}\\(12)
+\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2} - \left( C^{2} - {\vec{V_{O}}}^{2} \right)\left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{C^{2} - {\vec{V_{O}}}^{2}}}\\ (12)
 \end{array}$$
 
 Again, simplify for $\vec{X_{E}} = \vec{0}$,
@@ -1385,35 +1385,35 @@ $\vec{V_{O}} = \vec{V}$:
 $$\vec{P_{O}} = 0$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\left( C^{2}T \right)^{2} - \left( C^{2} - {\vec{V}}^{2} \right)\left( C^{2}T^{2} \right)} + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\(112)
+T_{O} = \frac{\sqrt{\left( C^{2}T \right)^{2} - \left( C^{2} - {\vec{V}}^{2} \right)\left( C^{2}T^{2} \right)} + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\ (112)
 \end{array}$$
 
 Expand terms:
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{C^{4}T^{2} - C^{2}C^{2}T^{2} + {\vec{V}}^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\(113)
+T_{O} = \frac{\sqrt{C^{4}T^{2} - C^{2}C^{2}T^{2} + {\vec{V}}^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\ (113)
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{O} = \frac{\sqrt{{\vec{V}}^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - {\vec{V}}^{2}}}\\(114)
+\boxed{T_{O} = \frac{\sqrt{{\vec{V}}^{2}C^{2}T^{2}} + C^{2}T}{C^{2} - {\vec{V}}^{2}}}\\ (114)
 \end{array}$$
 
 Incorrect simplification here:
 
 $$\begin{array}{r}
-T_{O} = \frac{\left\| \vec{V} \right\| CT + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\(115)
+T_{O} = \frac{\left\| \vec{V} \right\| CT + C^{2}T}{C^{2} - {\vec{V}}^{2}}\\ (115)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\left( \left\| \vec{V} \right\| + C \right)(CT)}{C^{2} - {\vec{V}}^{2}}\\(116)
+T_{O} = \frac{\left( \left\| \vec{V} \right\| + C \right)(CT)}{C^{2} - {\vec{V}}^{2}}\\ (116)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\left( \vec{V} + C \right)(CT)}{\left( C - \left\| \vec{V} \right\| \right)\left( C + \left\| \vec{V} \right\| \right)}\\(117)
+T_{O} = \frac{\left( \vec{V} + C \right)(CT)}{\left( C - \left\| \vec{V} \right\| \right)\left( C + \left\| \vec{V} \right\| \right)}\\ (117)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{(CT)}{\left( C - \left\| \vec{V} \right\| \right)}\\(118)
+T_{O} = \frac{(CT)}{\left( C - \left\| \vec{V} \right\| \right)}\\ (118)
 \end{array}$$
 
 Again, the simplification removing the radical between \[114\] and
@@ -2040,78 +2040,78 @@ The author declares no competing interest.
 Solve equation \[1\] for T...
 
 $$\begin{array}{r}
-T_{O} = \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + T\\(1.1)
+T_{O} = \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C} + T\\ (1.1)
 \end{array}$$
 
 Can also be written as:
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{C} + T\\(A.1)
+T_{O} = \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{C} + T\\ (A.1)
 \end{array}$$
 
 Use partial term \[3\] for base position:
 
 $$\begin{array}{r}
-\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\(3)
+\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\ (3)
 \end{array}$$
 
 Substitute *P⃗*:
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{C} + T\\(A.2)
+T_{O} = \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{C} + T\\ (A.2)
 \end{array}$$
 
 Move *T* to the left side, substitute *P⃗*, and multiply both sides by
 $C$, then square both sides to remove the square root.
 
 $$\begin{array}{r}
-C^{2}\left( T_{O} - T \right)^{2} = \left( \vec{P} + T\vec{V_{E}} \right) \bullet \left( \vec{P} + T\vec{V_{E}} \right)\\(A.3)
+C^{2}\left( T_{O} - T \right)^{2} = \left( \vec{P} + T\vec{V_{E}} \right) \bullet \left( \vec{P} + T\vec{V_{E}} \right)\\ (A.3)
 \end{array}$$
 
 Expand expressions which have T in them, expand right side:
 
 $$\begin{array}{r}
-C^{2}T_{O} - {2C}^{2}T_{O}T + C^{2}T^{2} = {\vec{P}}^{2} + 2\vec{P}T\vec{V_{E}} + T^{2}{T\vec{V_{E}}}^{2}\\(A.4)
+C^{2}T_{O} - {2C}^{2}T_{O}T + C^{2}T^{2} = {\vec{P}}^{2} + 2\vec{P}T\vec{V_{E}} + T^{2}{T\vec{V_{E}}}^{2}\\ (A.4)
 \end{array}$$
 
 Move T terms to the left, else to the right; also combined terms,
 reorder right side terms with a negation:
 
  $$\begin{array}{r}
- C^{2}T^{2} - 2C^{2}T_{O}T - 2T\vec{P}\vec{V_{E}} - T^{2}{\vec{V_{E}}}^{2} = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\(A.5)
+ C^{2}T^{2} - 2C^{2}T_{O}T - 2T\vec{P}\vec{V_{E}} - T^{2}{\vec{V_{E}}}^{2} = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\ (A.5)
  \end{array}$$
 
 Combine coefficients of T <sup>2</sup> and T:
 
  $$\begin{array}{r}
- \left( C^{2} - {\vec{V_{E}}}^{2} \right)T^{2} - 2T\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right) = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\(A.6)
+ \left( C^{2} - {\vec{V_{E}}}^{2} \right)T^{2} - 2T\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right) = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\ (A.6)
  \end{array}$$
 
 Combine expressions with T, factor to a simple square:
 
  $$\begin{array}{r}
- \left( T\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}} \right)^{2} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\(A.7)
+ \left( T\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}} \right)^{2} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} = - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)\\ (A.7)
  \end{array}$$
 
 Move $T_O$ expression to right side, take the square root of
 both sides:
 
  $$\begin{array}{r}
- T\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}} = \sqrt{\frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)}\\(A.8)
+ T\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)} - \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}} = \sqrt{\frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)}\\ (A.8)
  \end{array}$$
 
 Move $T_O$ term to the right, and divide by coefficient of
 *T*, group left expression under radical, and negate sign of group:
 
  $$\begin{array}{r}
- T = \frac{\sqrt{\frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)} + \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}}}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}}\\(A.9)
+ T = \frac{\sqrt{\frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2}}{C^{2} - {\vec{V_{E}}}^{2}} - \left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)} + \frac{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}}}{\sqrt{\left( C^{2} - {\vec{V_{E}}}^{2} \right)}}\\ (A.9)
  \end{array}$$
 
 Multiply right-side top and bottom by
 $\frac{\sqrt{\left( C^{2} - {\vec{V}}^{2} \right)}}{\sqrt{\left( C^{2} - {\vec{V}}^{2} \right)}}$
 
  $$\begin{array}{r}
- T = \frac{\sqrt{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2} - \left( C^{2} - {\vec{V_{E}}}^{2} \right)\left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)} + C^{2}T_{O} + \vec{P}\vec{V_{E}}}{C^{2} - {\vec{V_{E}}}^{2}}\\(A.10)
+ T = \frac{\sqrt{\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)^{2} - \left( C^{2} - {\vec{V_{E}}}^{2} \right)\left( C^{2}{T_{O}}^{2} - {\vec{P}}^{2} \right)} + C^{2}T_{O} + \vec{P}\vec{V_{E}}}{C^{2} - {\vec{V_{E}}}^{2}}\\ (A.10)
  \end{array}$$
 
 Fully expanded form (s):
@@ -2123,29 +2123,29 @@ Fully expanded form (s):
   - \left( C^{2} - {\vec{V_{E}}}^{2} \right)\left( C^{2}{T_{O}}^{2} - \left( \vec{X_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}} \right)^{2} \right)
  \end{array}} \\
   + C^{2}T_{O} + \vec{X_{E}}\vec{V_{E}} - \vec{X_{O}}\vec{V_{E}} - T_{O}\vec{V_{O}}\vec{V_{E}}
- \end{array}}{C^{2} - {\vec{V_{E}}}^{2}}\\(A.11)
+ \end{array}}{C^{2} - {\vec{V_{E}}}^{2}}\\ (A.11)
  \end{array}$$
 
 Simplify with partial expressions:
 
 $$\begin{array}{r}
-\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\(1.3)
+\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right)\\ (1.3)
 \end{array}$$
 
 $$\begin{array}{r}
-A = C^{2}{T_{O}}^{2} - \vec{P}\vec{P}\\(1.6)
+A = C^{2}{T_{O}}^{2} - \vec{P}\vec{P}\\ (1.6)
 \end{array}$$
 
 $$\begin{array}{r}
-B = C^{2}T_{O} + \vec{V_{E}}\vec{P}\\(1.7)
+B = C^{2}T_{O} + \vec{V_{E}}\vec{P}\\ (1.7)
 \end{array}$$
 
 $$\begin{array}{r}
-D = C^{2} - \vec{V_{E}}\vec{V_{E}}\\(1.8)
+D = C^{2} - \vec{V_{E}}\vec{V_{E}}\\ (1.8)
 \end{array}$$
 
 $$\begin{array}{r}
-T = \frac{\sqrt{B^{2} - DA} + B}{D}\\(1.9)
+T = \frac{\sqrt{B^{2} - DA} + B}{D}\\ (1.9)
 \end{array}$$
 
 # Appendix B ($T_O$ **s****o****l***$V$***e****)**
@@ -2153,128 +2153,128 @@ T = \frac{\sqrt{B^{2} - DA} + B}{D}\\(1.9)
 Solve propagation equation for $T_O$
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\left( \left( \vec{X_{E}} + \vec{V_{E}}T \right) - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right) \right)^{2}}}{C} + T\\(1.2)
+T_{O} = \frac{\sqrt{\left( \left( \vec{X_{E}} + \vec{V_{E}}T \right) - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right) \right)^{2}}}{C} + T\\ (1.2)
 \end{array}$$
 
 Define position term $\vec{P_{O}}\\$:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\(1.11)
+\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\ (1.11)
 \end{array}$$
 
 Substitute P into the expression:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\sqrt{\left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}}}{C}\\(B.1)
+T_{O} = T + \frac{\sqrt{\left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}}}{C}\\ (B.1)
 \end{array}$$
 
 Isolate the radical, move T to the left, multiply both sides by C:
 
 $$\begin{array}{r}
-C\left( T_{O} - T \right) = \sqrt{\left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}}\\(B.2)
+C\left( T_{O} - T \right) = \sqrt{\left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}}\\ (B.2)
 \end{array}$$
 
 Square both sides:
 
 $$\begin{array}{r}
-C^{2}\left( T_{O} - T \right)^{2} = \left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}\\(B.3)
+C^{2}\left( T_{O} - T \right)^{2} = \left( \vec{P_{O}} - \vec{V_{O}}T_{O} \right)^{2}\\ (B.3)
 \end{array}$$
 
 Expand squared expressions:
 
 $$\begin{array}{r}
-C^{2}T^{2} - 2C^{2}TT_{O} + C^{2}{T_{O}}^{2} = \vec{P_{O}}\vec{P_{O}} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + {\vec{V_{O}}}^{2}{T_{O}}^{2}\\(B.4)
+C^{2}T^{2} - 2C^{2}TT_{O} + C^{2}{T_{O}}^{2} = \vec{P_{O}}\vec{P_{O}} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + {\vec{V_{O}}}^{2}{T_{O}}^{2}\\ (B.4)
 \end{array}$$
 
 Move terms with $T_O$ to the left, and terms with only *T*
 to the right.
 
 $$\begin{array}{r}
- - 2C^{2}TT_{O} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + C^{2}{T_{O}}^{2} - {\vec{V_{O}}}^{2}{T_{O}}^{2} = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\(B.5)
+ - 2C^{2}TT_{O} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + C^{2}{T_{O}}^{2} - {\vec{V_{O}}}^{2}{T_{O}}^{2} = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\ (B.5)
 \end{array}$$
 
 Reverse right hand terms by negation:
 
 $$\begin{array}{r}
- - 2C^{2}TT_{O} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + C^{2}{T_{O}}^{2} - {\vec{V_{O}}}^{2}{T_{O}}^{2} = - (C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}})\\(B.6)
+ - 2C^{2}TT_{O} - 2\vec{P_{O}}\vec{V_{O}}T_{O} + C^{2}{T_{O}}^{2} - {\vec{V_{O}}}^{2}{T_{O}}^{2} = - (C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}})\\ (B.6)
 \end{array}$$
 
 Combine common factors of $T_O$:
 
 $$\begin{array}{r}
-\left( C^{2} - {\vec{V_{O}}}^{2} \right){T_{O}}^{2} - 2T_{O}\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\(B.7)
+\left( C^{2} - {\vec{V_{O}}}^{2} \right){T_{O}}^{2} - 2T_{O}\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\ (B.7)
 \end{array}$$
 
 Define partial expression to simplify terms later:
 
 $$\begin{array}{r}
-D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\(16)
+D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\ (16)
 \end{array}$$
 
 Substitute $D_O$ partial expression:
 
 $$\begin{array}{r}
-D_{O}{T_{O}}^{2} - 2T_{O}\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\(B.8)
+D_{O}{T_{O}}^{2} - 2T_{O}\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - C^{2}T^{2}\\ (B.8)
 \end{array}$$
 
 Factor left side into a square expression, plus a correction for the
 extra term that shows up:
 
 $$\begin{array}{r}
-\left( \sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} \right)^{2} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} = \\(B.9)
+\left( \sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} \right)^{2} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} = \\ (B.9)
 \end{array}$$
 
 Move expression with $T$ in it to the right side:
 
 $$\begin{array}{r}
-\left( \sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} \right)^{2} = \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)\\(B.10)
+\left( \sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} \right)^{2} = \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)\\ (B.10)
 \end{array}$$
 
 Take square root of both sides:
 
 $$\begin{array}{r}
-\sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} = \sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)}\\(B.11)
+\sqrt{D_{O}}T_{O} - \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}} = \sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)}\\ (B.11)
 \end{array}$$
 
 Move expression with T to the right side:
 
 $$\begin{array}{r}
-\sqrt{D}T_{O} = \sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}}\\(B.12)
+\sqrt{D}T_{O} = \sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}}\\ (B.12)
 \end{array}$$
 
 Divide by Coefficient of $T_O$:
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}}}{\sqrt{D_{O}}}\\(B.13)
+T_{O} = \frac{\sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_{O}} - \left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{\sqrt{D_{O}}}}{\sqrt{D_{O}}}\\ (B.13)
 \end{array}$$
 
 Multiply right-side by $\frac{\sqrt{D_{O}}}{\sqrt{D_{O}}}$,
 substituting *D*<sub>*O*</sub> will give equation (12).
 
 $$\begin{array}{r}
-\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2} - D_{O}\left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{D_{O}}}\\(B.14)
+\boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2} - D_{O}\left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{D_{O}}}\\ (B.14)
 \end{array}$$
 
 Simplify with partial expressions:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\(1.11)
+\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\ (1.11)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{O} = C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}}\\(1.14)
+A_{O} = C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}}\\ (1.14)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{O} = C^{2}T + \vec{V_{O}}\vec{P_{O}}\\(1.15)
+B_{O} = C^{2}T + \vec{V_{O}}\vec{P_{O}}\\ (1.15)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\(1.16)
+D_{O} = C^{2} - \vec{V_{O}}\vec{V_{O}}\\ (1.16)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{\sqrt{{B_{O}}^{2} - D_{O}A_{O}} + B_{O}}{D_{O}}\\(1.17)
+T_{O} = \frac{\sqrt{{B_{O}}^{2} - D_{O}A_{O}} + B_{O}}{D_{O}}\\ (1.17)
 \end{array}$$
 
 # Appendix C (**Δ**T solve)
@@ -2282,96 +2282,96 @@ T_{O} = \frac{\sqrt{{B_{O}}^{2} - D_{O}A_{O}} + B_{O}}{D_{O}}\\(1.17)
 Delta time can be the delta from emitted time or from observed time.
 
 $$\begin{array}{r}
-T_{O} = T_{E} + T_{\Delta O}\\(C.1)
+T_{O} = T_{E} + T_{\Delta O}\\ (C.1)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{E} = T_{O} - T_{\Delta E}\\(C.2)
+T_{E} = T_{O} - T_{\Delta E}\\ (C.2)
 \end{array}$$
 
-## Solve for $T_{\Delta O}$</sub> from $T_E$
+## Solve for $T_{\Delta O}$ from $T_E$
 
 (Follows the same basic steps as above, description of steps omitted)
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}} \right) \right\|}{C}\\(1)
+T_{\Delta O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + \left( T_{E} + T_{\Delta O} \right)\vec{V_{O}} \right) \right\|}{C}\\ (1)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{P_{\Delta O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} + T_{E}\vec{V_{O}} \right)\\(19)
+\vec{P_{\Delta O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} + T_{E}\vec{V_{O}} \right)\\ (19)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{\left( \vec{P_{\mathrm{\Delta}}} - T_{\Delta O}\vec{V_{O}} \right)^{2}}}{C}\\(C.1)
+T_{\Delta O} = \frac{\sqrt{\left( \vec{P_{\mathrm{\Delta}}} - T_{\Delta O}\vec{V_{O}} \right)^{2}}}{C}\\ (C.1)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( CT_{\Delta E} \right)^{2} = \left( \vec{P_{\mathrm{\Delta}}} - T_{\Delta E}\vec{V_{O}} \right)^{2}\\(C.2)
+\left( CT_{\Delta E} \right)^{2} = \left( \vec{P_{\mathrm{\Delta}}} - T_{\Delta E}\vec{V_{O}} \right)^{2}\\ (C.2)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}{T_{\Delta E}}^{2} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} - 2\vec{P_{\mathrm{\Delta}}}T_{\Delta E}\vec{V_{O}} + T_{\Delta E}\vec{V_{O}}T_{\Delta E}\vec{V_{O}}\\(C.3)
+C^{2}{T_{\Delta E}}^{2} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} - 2\vec{P_{\mathrm{\Delta}}}T_{\Delta E}\vec{V_{O}} + T_{\Delta E}\vec{V_{O}}T_{\Delta E}\vec{V_{O}}\\ (C.3)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}{T_{\Delta E}}^{2} - {\vec{V_{O}}}^{2}{T_{\Delta E}}^{2} - 2\vec{P_{\mathrm{\Delta}}}T_{\Delta E}\vec{V_{O}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\(C.4)
+C^{2}{T_{\Delta E}}^{2} - {\vec{V_{O}}}^{2}{T_{\Delta E}}^{2} - 2\vec{P_{\mathrm{\Delta}}}T_{\Delta E}\vec{V_{O}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (C.4)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta} = C^{2} - {\vec{V_{O}}}^{2}\\(C.5)
+D_{\Delta} = C^{2} - {\vec{V_{O}}}^{2}\\ (C.5)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta}{T_{\Delta E}}^{2} - 2T_{\Delta E}\vec{P_{\Delta}}\vec{V_{O}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\(C.6)
+D_{\Delta}{T_{\Delta E}}^{2} - 2T_{\Delta E}\vec{P_{\Delta}}\vec{V_{O}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (C.6)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( \sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{E_{\Delta}}} \right)^{2} - \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\(C.7)
+\left( \sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{E_{\Delta}}} \right)^{2} - \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (C.7)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( \sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}} \right)^{2} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}\\(C.8)
+\left( \sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}} \right)^{2} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}\\ (C.8)
 \end{array}$$
 
 $$\begin{array}{r}
-\sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}} = \sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}}\\(C.9)
+\sqrt{D_{\Delta}}T_{\Delta E} - \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}} = \sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}}\\ (C.9)
 \end{array}$$
 
-Move non *T*<sub>*Δ*</sub> expression to the right, divide by
+Move non $T_{\Delta E}$ expression to the right, divide by
 coefficient of $T_{\Delta E}$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}} + \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\(C.10)
+T_{\Delta E} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}} + \frac{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2}}{D_{\Delta}}} + \frac{\vec{P_{\Delta}}\vec{V_{O}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\ (C.10)
 \end{array}$$
 
 Multiply by $\frac{\sqrt{D_{\Delta}}}{\sqrt{D_{\Delta}}}$, reorder
 terms under radical:
 
 $$\begin{array}{r}
-\boxed{T_{\Delta E} = \frac{\sqrt{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2} + D_{\Delta}\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}} + \vec{P_{\Delta}}\vec{V_{O}}}{D_{\Delta}}}\\(C.11)
+\boxed{T_{\Delta E} = \frac{\sqrt{{\vec{P_{\Delta}}}^{2}{\vec{V_{O}}}^{2} + D_{\Delta}\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}} + \vec{P_{\Delta}}\vec{V_{O}}}{D_{\Delta}}}\\ (C.11)
 \end{array}$$
 
 Simplify with partial expressions, inner term gets negated so *A*
 expression matches sign of other partial breakdowns:
 
 $$\begin{array}{r}
-\vec{P_{\Delta O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\(10)
+\vec{P_{\Delta O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\ (10)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{\Delta O} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(11)
+A_{\Delta O} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (11)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{\Delta O} = \vec{P_{\Delta}}\vec{V_{O}}\\(12)
+B_{\Delta O} = \vec{P_{\Delta}}\vec{V_{O}}\\ (12)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta O} = C^{2} - {\vec{V_{O}}}^{2}\\(C.12)
+D_{\Delta O} = C^{2} - {\vec{V_{O}}}^{2}\\ (C.12)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\(C.13)
+T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\ (C.13)
 \end{array}$$
 
 ## Solve for **T**<sub>**Δ**</sub> from $T_O$
@@ -2381,92 +2381,91 @@ $T_E$ = $T_O$ − $T_{\Delta E}$
 (Follows the same basic steps as above, description of steps omitted)
 
 $$\begin{array}{r}
-T_{O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(2)
+T_{O} = \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (2)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{E} = T_{O} - T_{\Delta E}\\(C.14)
+T_{E} = T_{O} - T_{\Delta E}\\ (C.14)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\(C.15)
+T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (C.15)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\(29)
+\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\ (29)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{\left( \vec{P_{\Delta O}} - T_{\Delta E}\vec{V_{E}} \right)^{2}}}{C}\\(C.16)
+T_{\Delta E} = \frac{\sqrt{\left( \vec{P_{\Delta O}} - T_{\Delta E}\vec{V_{E}} \right)^{2}}}{C}\\ (C.16)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( CT_{\Delta E} \right)^{2} = \left( \vec{P_{\Delta O}} - T_{\Delta E}\vec{V_{E}} \right)^{2}\\(C.17)
+\left( CT_{\Delta E} \right)^{2} = \left( \vec{P_{\Delta O}} - T_{\Delta E}\vec{V_{E}} \right)^{2}\\ (C.17)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}T_{\Delta E} = \vec{P_{\Delta O}}\vec{P_{\Delta O}} - 2\vec{P_{\Delta O}}T_{\Delta O}\vec{V_{E}} + T_{\Delta O}\vec{V_{E}}T_{\Delta E}\vec{V_{E}}\\(C.18)
+C^{2}T_{\Delta E} = \vec{P_{\Delta O}}\vec{P_{\Delta O}} - 2\vec{P_{\Delta O}}T_{\Delta O}\vec{V_{E}} + T_{\Delta O}\vec{V_{E}}T_{\Delta E}\vec{V_{E}}\\ (C.18)
 \end{array}$$
 
 $$\begin{array}{r}
-C^{2}{T_{\Delta E}}^{2} - {\vec{V_{E}}}^{2}{T_{\Delta E}}^{2} - 2\vec{P_{\Delta O}}T_{\Delta E}\vec{V_{E}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(C.19)
+C^{2}{T_{\Delta E}}^{2} - {\vec{V_{E}}}^{2}{T_{\Delta E}}^{2} - 2\vec{P_{\Delta O}}T_{\Delta E}\vec{V_{E}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (C.19)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta O} = C^{2} - {\vec{V_{E}}}^{2}\\(C.20)
+D_{\Delta O} = C^{2} - {\vec{V_{E}}}^{2}\\ (C.20)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta O}{T_{\Delta E}}^{2} - 2T_{\Delta E}\vec{P_{\Delta O}}\vec{V_{E}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(C.21)
+D_{\Delta O}{T_{\Delta E}}^{2} - 2T_{\Delta E}\vec{P_{\Delta O}}\vec{V_{E}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (C.21)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( \sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} \right)^{2} - \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(C.22)
+\left( \sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} \right)^{2} - \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (C.22)
 \end{array}$$
 
 $$\begin{array}{r}
-\left( \sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} \right)^{2} = \vec{P_{\Delta O}}\vec{P_{\Delta O}} + \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}}\\(C.23)
+\left( \sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} \right)^{2} = \vec{P_{\Delta O}}\vec{P_{\Delta O}} + \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}}\\ (C.23)
 \end{array}$$
 
 $$\begin{array}{r}
-\sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} = \sqrt{\vec{P_{\Delta O}}\vec{P_{\Delta O}} + \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}}}\\(C.24)
+\sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}} = \sqrt{\vec{P_{\Delta O}}\vec{P_{\Delta O}} + \frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta O}}}\\ (C.24)
 \end{array}$$
 
-Move non *T*<sub>*Δ**O*</sub> expression to the right, divide by
-coefficient of
-*T*<sub>*Δ**O*</sub>, *r**e**o**d**e**r* *t**e**r**m**s* *u**n**d**e**r* *r**a**d**i*$C$*a**l*:
+Move non $T_{\Delta E}$ expression to the right, divide by
+coefficient of $T_{\Delta E}$, reorder terms under radical:
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{\frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta}} + \vec{P_{\Delta O}}\vec{P_{\Delta O}}} + \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\(C.25)
+T_{\Delta E} = \frac{\sqrt{\frac{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}}{D_{\Delta}} + \vec{P_{\Delta O}}\vec{P_{\Delta O}}} + \frac{\vec{P_{\Delta O}}\vec{V_{E}}}{\sqrt{D_{\Delta}}}}{\sqrt{D_{\Delta}}}\\ (C.25)
 \end{array}$$
 
 Multiply by $\frac{\sqrt{D_{\Delta O}}}{\sqrt{D_{\Delta O}}}$:
 
 $$\begin{array}{r}
-\boxed{T_{\Delta O} = \frac{\sqrt{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}D_{\Delta O} + \vec{P_{\Delta O}}\vec{P_{\Delta O}}} + \vec{P_{\Delta O}}\vec{V_{E}}}{D_{\Delta O}}}\\(C.26)
+\boxed{T_{\Delta E} = \frac{\sqrt{{\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}D_{\Delta O} + \vec{P_{\Delta O}}\vec{P_{\Delta O}}} + \vec{P_{\Delta O}}\vec{V_{E}}}{D_{\Delta O}}}\\ (C.26)
 \end{array}$$
 
 Simplify with partial expressions, inner term gets negated so *A*
 expression matches sign of other partial breakdowns:
 
 $$\begin{array}{r}
-\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\(C.27)
+\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\ (C.27)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{\Delta O} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\(C.28)
+A_{\Delta O} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (C.28)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{\Delta O} = \vec{P_{\Delta O}}\vec{V_{E}}\\(C.29)
+B_{\Delta O} = \vec{P_{\Delta O}}\vec{V_{E}}\\ (C.29)
 \end{array}$$
 
 $$\begin{array}{r}
-D_{\Delta O} = C^{2} - {\vec{V_{E}}}^{2}\\(C.30)
+D_{\Delta O} = C^{2} - {\vec{V_{E}}}^{2}\\ (C.30)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\(C.31)
+T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\ (C.31)
 \end{array}$$
 
 # Appendix D (V=C)
@@ -2474,7 +2473,7 @@ T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\
 When V=C, then the equations can be solved by substituting C for the
 appropriate velocity. Later in the process the V term that was replaced
 can be restored back to C, but then this covers the singularity of
-dividing by $C$<sup>2</sup> − $V$<sup>2</sup> = 0 when it equals 0.
+dividing by $C^2$ − $V$<sup>2</sup> = 0 when it equals 0.
 
 ## Solve for T when $\left\| \vec{{V}_{{E}}} \right\|$=C…
 
@@ -2482,94 +2481,94 @@ This only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$.
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{E}} \right\|}\\(1.1)
+T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{E}} \right\|}\\ (1.1)
 \end{array}$$
 
 Convert magnitudes to square root of vectors squared:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\(D.1)
+T_{O} = T + \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\ (D.1)
 \end{array}$$
 
 Define partial expression P to simplify later operations:
 
 $$\begin{array}{r}
-\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right)\\(3)
+\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right)\\ (3)
 \end{array}$$
 
 Substitute P into expression:
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\(D.2)
+T_{O} = T + \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\ (D.2)
 \end{array}$$
 
 Move T expression to left side, preparing to square both sides:
 
 $$\begin{array}{r}
-T_{O} - T = \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\(D.3)
+T_{O} - T = \frac{\sqrt{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}}{\sqrt{\vec{V_{E}}\vec{V_{E}}}}\\ (D.3)
 \end{array}$$
 
 Square both sides:
 
 $$\begin{array}{r}
-{T_{O}}^{2} - 2T_{O}T + T^{2} = \frac{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}{\vec{V_{E}}\vec{V_{E}}}\\(D.4)
+{T_{O}}^{2} - 2T_{O}T + T^{2} = \frac{\left( \vec{P} + T\vec{V_{E}} \right)^{2}}{\vec{V_{E}}\vec{V_{E}}}\\ (D.4)
 \end{array}$$
 
 Expand squares, move $\vec{V_{E}}\vec{V_{E}}$ to
 the left side:
 
 $$\begin{array}{r}
-\vec{V_{E}}\vec{V_{E}}{T_{O}}^{2} - 2\vec{V_{E}}\vec{V_{E}}T_{O}T + \vec{V_{E}}\vec{V_{E}}T^{2} = \vec{P}\vec{P} + 2T\vec{P}\vec{V_{E}} + T^{2}\vec{V_{E}}\vec{V_{E}}\\(D.5)
+\vec{V_{E}}\vec{V_{E}}{T_{O}}^{2} - 2\vec{V_{E}}\vec{V_{E}}T_{O}T + \vec{V_{E}}\vec{V_{E}}T^{2} = \vec{P}\vec{P} + 2T\vec{P}\vec{V_{E}} + T^{2}\vec{V_{E}}\vec{V_{E}}\\ (D.5)
 \end{array}$$
 
 Move expressions with only $T_O$ to the right:
 
 $$\begin{array}{r}
- - 2\vec{V_{E}}\vec{V_{E}}T_{O}T + \vec{V_{E}}\vec{V_{E}}T^{2} = \vec{P}\vec{P} + 2T\vec{P}\vec{V_{E}} + T^{2}\vec{V_{E}}\vec{V_{E}} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\(D.6)
+ - 2\vec{V_{E}}\vec{V_{E}}T_{O}T + \vec{V_{E}}\vec{V_{E}}T^{2} = \vec{P}\vec{P} + 2T\vec{P}\vec{V_{E}} + T^{2}\vec{V_{E}}\vec{V_{E}} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\ (D.6)
 \end{array}$$
 
 $\vec{V_{E}}\vec{V_{E}}T^{2}$ is removed since
 it’s on both sides, move T term to left:
 
 $$\begin{array}{r}
- - 2\vec{V_{E}}\vec{V_{E}}T_{O}T - 2T\vec{P}\vec{V_{E}} = \vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\(D.7)
+ - 2\vec{V_{E}}\vec{V_{E}}T_{O}T - 2T\vec{P}\vec{V_{E}} = \vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\ (D.7)
 \end{array}$$
 
 Factor out common  − 2*T* term:
 
 $$\begin{array}{r}
- - 2T\left( \vec{V_{E}}\vec{V_{E}}T_{O} + \vec{P}\vec{V_{E}} \right) = \vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\(D.8)
+ - 2T\left( \vec{V_{E}}\vec{V_{E}}T_{O} + \vec{P}\vec{V_{E}} \right) = \vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}\\ (D.8)
 \end{array}$$
 
 Divide both sides by coefficient of T:
 
 $$\begin{array}{r}
-T = - \frac{\vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}}{2\left( \vec{V_{E}}\vec{V_{E}}T_{O} + \vec{P}\vec{V_{E}} \right)}\\(D.9)
+T = - \frac{\vec{P}\vec{P} - \vec{V_{E}}\vec{V_{E}}{T_{O}}^{2}}{2\left( \vec{V_{E}}\vec{V_{E}}T_{O} + \vec{P}\vec{V_{E}} \right)}\\ (D.9)
 \end{array}$$
 
 Remember $\sqrt{\vec{V_{E}}\vec{V_{E}}} = C$ so
-replace some expressions with $C$<sup>2</sup>, distribute negative sign:
+replace some expressions with $C^2$, distribute negative sign:
 
 $$\begin{array}{r}
-T = \frac{C^{2}{T_{O}}^{2} - \vec{P}\vec{P}}{2\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}\\(D.10)
+T = \frac{C^{2}{T_{O}}^{2} - \vec{P}\vec{P}}{2\left( C^{2}T_{O} + \vec{P}\vec{V_{E}} \right)}\\ (D.10)
 \end{array}$$
 
 Simplify with partial expressions:
 
 $$\begin{array}{r}
-\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right)\\(14)
+\vec{P} = \vec{X_{E}} - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right)\\ (14)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{O} = C^{2}{T_{O}}^{2} - \vec{P}\vec{P}\\(15)
+A_{O} = C^{2}{T_{O}}^{2} - \vec{P}\vec{P}\\ (15)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{O} = C^{2}T_{O} + \vec{V_{O}}\vec{P}\\(16)
+B_{O} = C^{2}T_{O} + \vec{V_{O}}\vec{P}\\ (16)
 \end{array}$$
 
 $$\begin{array}{r}
-T = \frac{A_{O}}{2B_{O}}\\(12)
+T = \frac{A_{O}}{2B_{O}}\\ (12)
 \end{array}$$
 
 ## Solve for $T_O$ when $\left\| \vec{{V}_{{O}}} \right\|$=C…
@@ -2578,88 +2577,88 @@ This only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$.
 
 $$\begin{array}{r}
-T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{O}} \right\|}\\(D.11)
+T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{O}} \right\|}\\ (D.11)
 \end{array}$$
 
 Convert magnitudes to square root of vectors squared:
 
 $$\begin{array}{r}
-T_{O} = T_{E} + \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\(D.12)
+T_{O} = T_{E} + \frac{\sqrt{\left( \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\ (D.12)
 \end{array}$$
 
 Define partial expression P to simplify later operations:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \vec{X_{O}}\\(11)
+\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \vec{X_{O}}\\ (11)
 \end{array}$$
 
 Substitute P into expression:
 
 $$\begin{array}{r}
-T_{O} = T_{E} + \frac{\sqrt{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\(D.13)
+T_{O} = T_{E} + \frac{\sqrt{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\ (D.13)
 \end{array}$$
 
 Move T expression to left side, preparing to square both sides:
 
 $$\begin{array}{r}
-T_{O} - T_{E} = \frac{\sqrt{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\(D.14)
+T_{O} - T_{E} = \frac{\sqrt{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}}{\sqrt{\vec{V_{O}}\vec{V_{O}}}}\\ (D.14)
 \end{array}$$
 
 Square both sides:
 
 $$\begin{array}{r}
-{T_{O}}^{2} - 2T_{O}T_{E} + {T_{E}}^{2} = \frac{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}{\vec{V_{O}}\vec{V_{O}}}\\(D.15)
+{T_{O}}^{2} - 2T_{O}T_{E} + {T_{E}}^{2} = \frac{\left( \vec{P_{O}} - T_{O}\vec{V_{O}} \right)^{2}}{\vec{V_{O}}\vec{V_{O}}}\\ (D.15)
 \end{array}$$
 
 Expand squares, move $\vec{V_{O}}\vec{V_{O}}$ to
 the left side:
 
 $$\begin{array}{r}
-\vec{V_{O}}\vec{V_{O}}{T_{O}}^{2} - 2\vec{V_{O}}\vec{V_{O}}T_{O}T_{E} + \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2} = \vec{P_{O}}\vec{P_{O}} - 2T_{O}\vec{P_{O}}\vec{V_{O}} + {T_{O}}^{2}\vec{V_{O}}\vec{V_{O}}\\(D.16)
+\vec{V_{O}}\vec{V_{O}}{T_{O}}^{2} - 2\vec{V_{O}}\vec{V_{O}}T_{O}T_{E} + \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2} = \vec{P_{O}}\vec{P_{O}} - 2T_{O}\vec{P_{O}}\vec{V_{O}} + {T_{O}}^{2}\vec{V_{O}}\vec{V_{O}}\\ (D.16)
 \end{array}$$
 
 $\vec{V_{O}}{T_{O}}^{2}$ is removed since it’s on both
 sides, move T term to left:
 
 $$\begin{array}{r}
- - 2\vec{V_{O}}\vec{V_{O}}T_{O}T_{E} + 2T_{O}\vec{P_{O}}\vec{V_{O}} + \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2} = \vec{P_{O}}\vec{P_{O}}\\(D.17)
+ - 2\vec{V_{O}}\vec{V_{O}}T_{O}T_{E} + 2T_{O}\vec{P_{O}}\vec{V_{O}} + \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2} = \vec{P_{O}}\vec{P_{O}}\\ (D.17)
 \end{array}$$
 
 Factor out common  − 2$T_O$ term:
 
 $$\begin{array}{r}
- - 2T_{O}\left( \vec{V_{O}}\vec{V_{O}}T_{E} + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2}\\(D.18)
+ - 2T_{O}\left( \vec{V_{O}}\vec{V_{O}}T_{E} + \vec{P_{O}}\vec{V_{O}} \right) = \vec{P_{O}}\vec{P_{O}} - \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2}\\ (D.18)
 \end{array}$$
 
 Divide both sides by coefficient of $T_O$:
 
 $$\begin{array}{r}
-T_{O} = - \frac{\vec{P_{O}}\vec{P_{O}} - \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2}}{2\left( \vec{V_{O}}\vec{V_{O}}T_{E} + \vec{P_{O}}\vec{V_{O}} \right)}\\(D.19)
+T_{O} = - \frac{\vec{P_{O}}\vec{P_{O}} - \vec{V_{O}}\vec{V_{O}}{T_{E}}^{2}}{2\left( \vec{V_{O}}\vec{V_{O}}T_{E} + \vec{P_{O}}\vec{V_{O}} \right)}\\ (D.19)
 \end{array}$$
 
 Remember $\sqrt{\vec{V_{O}}\vec{V_{O}}} = C$ so
-replace some expressions with $C$<sup>2</sup>, distribute negative sign:
+replace some expressions with $C^2$, distribute negative sign:
 
 $$\begin{array}{r}
-T_{O} = \frac{C^{2}{T_{E}}^{2} - \vec{P_{O}}\vec{P_{O}}}{2\left( C^{2}T_{E} + \vec{P_{O}}\vec{V_{O}} \right)}\\(D.20)
+T_{O} = \frac{C^{2}{T_{E}}^{2} - \vec{P_{O}}\vec{P_{O}}}{2\left( C^{2}T_{E} + \vec{P_{O}}\vec{V_{O}} \right)}\\ (D.20)
 \end{array}$$
 
 Simplify with partial expressions:
 
 $$\begin{array}{r}
-\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} \right)\\(11)
+\vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} \right)\\ (11)
 \end{array}$$
 
 $$\begin{array}{r}
-A_{E} = C^{2}{T_{E}}^{2} - \vec{P_{O}}\vec{P_{O}}\\(15)
+A_{E} = C^{2}{T_{E}}^{2} - \vec{P_{O}}\vec{P_{O}}\\ (15)
 \end{array}$$
 
 $$\begin{array}{r}
-B_{E} = C^{2}T_{E} + \vec{P_{O}}\vec{V_{O}}\\(16)
+B_{E} = C^{2}T_{E} + \vec{P_{O}}\vec{V_{O}}\\ (16)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{O} = \frac{A_{E}}{2B_{E}}\\(12)
+T_{O} = \frac{A_{E}}{2B_{E}}\\ (12)
 \end{array}$$
 
 # Appendix E (Exam Question)
@@ -3060,16 +3059,9 @@ ladder makes it still be longer than the barn; but even a ladder that
 does fit in the barn, can be seen as extending past the barn, based on
 the observation of the doors, or fitting entirely within the barn.
 
--   An observer in the barn, centered between the doors, only one door
-    is open at a time.
-
--   An observer outside the barn, centered between the doors will see
-    both doors open at some point, and the ladder didn’t fit.
-
--   An observer biased towards the first door that opens sees both doors
-    closed at a time, and the ladder fit in the barn.
-
--   An observer biased towards the second door sees both doors open, and
-    the ladder did not fit in the barn.
+-   An observer in the barn, centered between the doors, only one door    is open at a time.
+-   An observer outside the barn, centered between the doors will see    both doors open at some point, and the ladder didn’t fit.
+-   An observer biased towards the first door that opens sees both doors    closed at a time, and the ladder fit in the barn.
+-   An observer biased towards the second door sees both doors open, and    the ladder did not fit in the barn.
 
 # Appendix I (Changelog)
