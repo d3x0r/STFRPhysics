@@ -1254,8 +1254,8 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
 
-//	showXTGraph = chkLblXTGraph.checked;
-	showXTGraph_unbiased = chkLblXTGraph.checked;
+	showXTGraph = chkLblXTGraph.checked;
+//	showXTGraph_unbiased = chkLblXTGraph.checked;
 	showSelf = chkLblShowSelf.checked;
 	showRelativeVelocities = chkLblShowVelocities.checked;
 	showObserver = chkLblShowObserver.checked;
