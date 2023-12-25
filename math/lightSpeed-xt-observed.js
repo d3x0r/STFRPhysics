@@ -9,17 +9,12 @@ const ctx = canvas.getContext( '2d' );
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 let showXTGraph = false;
+let showXTGraph_obs = false;
 let showXTGraph_unbiased = false;
 let showRelativeVelocities = false;
 let includeAberration = true;
 let drawLorentzRelative = false; // relative velocity purple crosses
 let lengthContract = 1;
-let A=0;
-let ca = Math.cos(A);
-let sa = -Math.sin(A);
-let A_o = 0;
-let ca_o = Math.cos( A_o );
-let sa_o = -Math.sin( A_o );
 
 let L=1; // length of body (m)  (L/C = time of body (s))
 let C=1; // speed of propagation (m/s)
@@ -35,7 +30,7 @@ const step = 10;
 
 const eventFrames = [];
 let curFrame = -1;
-const nFrames = 201;
+const nFrames = 0;
 let eventFrame = -1;
 
 let last_draw_time = 0;
@@ -154,22 +149,22 @@ class D3xTransform {
 	// converts a long time to a short time.
 	
 	static get gamma() { return  (C*C-V*V)/C*C };
- 	static getObservedTime(X,T,myV) {
-		const willSee = RealTime( T, {x:V,y:0,z:0}, {x:X, y:0, z:0}, {x:0,y:0,z:0}, {x:0, y:0, z:0} );
-		return willSee[0];
-	}
- 	static getObservedPlace2(X,T) {
-		const willSee2 = RealTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:0,y:0,z:0}, {x:0, y:0, z:0} ); 
-		return willSee2[0] * V + X;
-	}
-
- 	static getObservedTime2(X,T,myV) {
-		const willSee = RealTime( T, {x:0,y:0,z:0}, {x:0, y:0, z:0}, {x:V,y:0,z:0}, {x:X, y:0, z:0} );
-		return willSee[0]*(V);//-(X<=0?-1:1)*X;
+ 	static getObservedTime(X,T) {
+		const willSee = ObservedTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:0,y:0,z:0}, {x:0, y:0, z:0} );
+		return willSee;
 	}
  	static getObservedPlace(X,T) {
-		const willSee = RealTime( T, {x:0,y:0,z:0}, {x:0, y:D, z:0}, {x:-V,y:0,z:0}, {x:X, y:0, z:0} ); 
-		return willSee[0] * -V +X;
+		const willSee2 = ObservedTime( T, {x:V,y:0,z:0}, {x:X, y:D, z:0}, {x:0,y:0,z:0}, {x:0, y:0, z:0} ); 
+		return willSee2 * V + X;
+	}
+
+ 	static getObservedTime2(X,T) {
+		const willSee = RealTime( T, {x:0,y:0,z:0}, {x:0, y:0, z:0}, {x:V,y:0,z:0}, {x:X, y:D, z:0} );
+		return willSee[0];//-(X<=0?-1:1)*X;
+	}
+ 	static getObservedPlace2(X,T) {
+		const willSee = RealTime( T, {x:0,y:0,z:0}, {x:0, y:0, z:0}, {x:V,y:0,z:0}, {x:X, y:D, z:0} ); 
+		return willSee[0] * V +X;
 	}
 
 	static GetSeenSpace( C, now, pos, V, L, D ) {
@@ -196,23 +191,12 @@ class D3xTransform {
 		ctx.lineTo( ofs + (xscale_)*(10), ofs + (xscale_)*(-10*(V/C) ) );
 		ctx.stroke();
 */
-	const myX = now*V*ca_o;
-	const myY = now*V*sa_o;
-	const posX = now*V*ca;
-	const posY = now*V*sa;
-
-	const delVX = V*ca - V*ca_o ;
-	const delVY = V*sa - V*sa_o ;
-
-					let seen  = RealTime( now, { x: V*ca, y: V*sa, z: 0 }
-									, { x:0, y:-D, z:0 }
-									, { x:ca_o*V, y:sa_o*V, z: 0 }
-									, { x:0, y:0, z:0 } );
 
 //seen
 	ctx.lineWidth = 0.5;
 
-
+// lorentz base graph
+	if(0)
 	if(showXTGraph) {
 		const gamma = lengthContract*(C-V)/C;  // This matches the matrual curve (at C=1)
 		//const gamma = Math.sqrt( C*C-V*V);
@@ -248,31 +232,51 @@ class D3xTransform {
 
 	ctx.strokeWidth= 1.5;
 
-
-		for( let X = -20*lengthContract; X < 20*lengthContract; X+=1*lengthContract ) {
+		for( let X = -20; X < 20; X+=1 ) {
 			for( let T = 10; T > -10; T-=1 ) {
 
 				{
 					ctx.beginPath();
-					ctx.strokeStyle= "blue";
+					if( T == 0 )
+						ctx.strokeStyle= "lightblue";
+					else
+						ctx.strokeStyle= "blue";
 					ctx.moveTo( ofs + (xscale_)*(X), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(X+1), ofs + (xscale_)*(T) );
+					ctx.stroke();
+					ctx.beginPath();
+					if( T == 0 )
+						ctx.strokeStyle= "blue";
+					if( X == 0 )
+						ctx.strokeStyle= "lightblue";
+					else
+						ctx.strokeStyle= "blue";
 					ctx.moveTo( ofs +  (xscale_)*(X), ofs + (xscale_)*(T) );
 					ctx.lineTo( ofs + (xscale_)*(X), ofs + (xscale_)*(T-1) );
 					ctx.stroke();
 				}	
+			}
+		}
+
+		for( let X = -20; X < 20; X+=1 ) {
+			for( let T = 10; T > -10; T-=1 ) {
+
 
 			if( showXTGraph) {
 					ctx.beginPath();
-					const ox  = D3xTransform.getObservedPlace2(X,T);
-					const ot  = D3xTransform.getObservedTime(X,T);//+Math.abs(X);
-					const oxt = D3xTransform.getObservedPlace2(X,T+1);
-					const ott = D3xTransform.getObservedTime(X,T+1);//+Math.abs(X);
+					const ox  = !showXTGraph_obs?D3xTransform.getObservedPlace2(X,T)
+							:D3xTransform.getObservedPlace(X,T);
+					const ot  = !showXTGraph_obs?D3xTransform.getObservedTime2(X,T)
+							:D3xTransform.getObservedTime(X,T);
+					const oxt = !showXTGraph_obs?D3xTransform.getObservedPlace2(X,T+1)
+							:D3xTransform.getObservedPlace(X,T+1);
+					const ott = !showXTGraph_obs?D3xTransform.getObservedTime2(X,T+1)
+							:D3xTransform.getObservedTime(X,T+1);
 
-					const ox_  = ( (lengthContract*X) ); //D3xTransform.getObservedPlace(X,T);
-					const ot_  = (T-(X)*V )*lengthContract; //D3xTransform.getObservedTime2(X,T);//+Math.abs(X);
-					const oxo = ( lengthContract*(X+1));//D3xTransform.getObservedPlace(X+1,T);
-					const oto =  (T-(X+1)*V) *lengthContract;//D3xTransform.getObservedTime2(X+1,T);//+(Math.abs(X)+(X>-1?1:-1));
+					const oxo = !showXTGraph_obs?D3xTransform.getObservedPlace2(X+1,T)
+							:D3xTransform.getObservedPlace(X+1,T);
+					const oto = !showXTGraph_obs?D3xTransform.getObservedTime2(X+1,T)
+							:D3xTransform.getObservedTime(X+1,T);
 					if( T === 0 ){
 						ctx.lineWidth = 5;
 						ctx.strokeStyle= "green";
@@ -281,11 +285,20 @@ class D3xTransform {
 						ctx.lineWidth = 2;
 						ctx.strokeStyle= "yellow";
 					}
-//					ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot+Math.abs(X)) );
-//					ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto + Math.abs(X)+(X>-1?1:-1)) );
-					ctx.moveTo( ofs + (xscale_)*(ox_), ofs + (xscale_)*(ot_) );
-					ctx.lineTo( ofs + (xscale_)*(oxo), ofs + (xscale_)*(oto ) );
+					ctx.moveTo( ofs + (xscale_)*(ox), ofs - (xscale_)*(ot) );
+					ctx.lineTo( ofs + (xscale_)*(oxo), ofs - (xscale_)*(oto ) );
 					ctx.stroke();
+/*
+					ctx.beginPath();
+					ctx.strokeStyle = "white";
+					ctx.arc( ofs+(xscale_)*ox, ofs-(xscale_)*ot, 5, 0, Math.PI*2);
+					ctx.stroke();
+
+					ctx.beginPath();
+					ctx.strokeStyle = "magenta";
+					ctx.arc( ofs+(xscale_)*oxo, ofs-(xscale_)*oto, 5, 0, Math.PI*2);
+					ctx.stroke();
+*/
 
 					if( T === 0 ){
 						ctx.lineWidth = 2;
@@ -295,17 +308,15 @@ class D3xTransform {
 					ctx.moveTo( ofs +  (xscale_)*(ox), ofs - (xscale_)*(ot) );
 					ctx.lineTo( ofs + (xscale_)*(oxt), ofs - (xscale_)*(ott) );
 					ctx.stroke();
-					ctx.moveTo( ofs + (xscale_)*(ox)  - (0.1*xscale_)*(ott-ot)/2, ofs - (xscale_)*(ot) - (0.1*xscale_)*(oxt-ox)/2 );
-					ctx.lineTo( ofs + (xscale_)*(ox) + (0.1*xscale_)*(oxt-ox)/2, ofs - (xscale_)*(ot) + (0.1*xscale_)*(ott-ot)/2 );
-					ctx.stroke();
+
 
 			}
-
+if(0)
 			if( showXTGraph_unbiased) {
 				ctx.beginPath();
-				const ox  = D3xTransform.getObservedPlace2(X,T);
-				const oxo = D3xTransform.getObservedPlace2(X+1,T);
-				const oxt = D3xTransform.getObservedPlace2(X,T+1);
+				const ox  = D3xTransform.getObservedPlace(X,T);
+				const oxo = D3xTransform.getObservedPlace(X+1,T);
+				const oxt = D3xTransform.getObservedPlace(X,T+1);
 				const ot  = D3xTransform.getObservedTime(X,T);
 				const oto = D3xTransform.getObservedTime(X+1,T);
 				const ott = D3xTransform.getObservedTime(X,T+1);
@@ -335,7 +346,7 @@ class D3xTransform {
 				ctx.lineTo( ofs + (xscale_)*(ott.x), ofs - (xscale_)*(ott.y) );
 				ctx.stroke();
 
-		}
+			}
 
 			ctx.lineWidth = 1;
 
@@ -422,41 +433,6 @@ controls.appendChild( span );
 
 span = document.createElement( "span" );
 span.className = "left";
-span.textContent = "Direction";
-controls.appendChild( span );
-
-const sliderA = document.createElement( "input" );
-sliderA.setAttribute( "type", "range" );
-controls.appendChild( sliderA );
-sliderA.addEventListener( "input", update );
-
-sliderA.setAttribute( "max",200 );
-sliderA.value = A*100;
-sliderA.style.width="250px";
-
-const spanA = document.createElement( "span" );
-spanA.textContent = "1";
-controls.appendChild( spanA );
-
-const sliderA_o = document.createElement( "input" );
-sliderA_o.setAttribute( "type", "range" );
-controls.appendChild( sliderA_o );
-sliderA_o.addEventListener( "input", update );
-
-sliderA_o.setAttribute( "max",200 );
-sliderA_o.value = A_o*100;
-sliderA_o.style.width="250px";
-
-const spanA_o = document.createElement( "span" );
-spanA_o.textContent = "1";
-controls.appendChild( spanA_o );
-
-span = document.createElement( "br" );
-controls.appendChild( span );
-//----------------------
-
-span = document.createElement( "span" );
-span.className = "left";
 span.textContent = "Time of sim. event: ";
 //controls.appendChild( span );
 
@@ -477,7 +453,7 @@ spanE.textContent = "1";
 span = document.createElement( "br" );
 //controls.appendChild( span );
 //----------------------
-
+/*
 span = document.createElement( "span" );
 span.className = "left";
 span.textContent = "Run-Time";
@@ -518,9 +494,10 @@ sliderNow.style.width="250px";
 const spanNow = document.createElement( "span" );
 spanNow.textContent = "1";
 controls.appendChild( spanNow );
-
+ */
 //- - - - - - - - - - - - - - 
 
+/*
 const chkLblNow = document.createElement( "input" );
 chkLblNow.setAttribute( "type", "checkbox" );
 chkLblNow.checked = animate;
@@ -530,8 +507,9 @@ const spanChkNow = document.createElement( "label" );
 spanChkNow.textContent = " |Animate";
 spanChkNow.appendChild( chkLblNow );
 controls.appendChild( spanChkNow );
+*/
 //- - - - - - - - - - - - - - 
-
+/*
 const chkLblXTGraph = document.createElement( "input" );
 chkLblXTGraph.setAttribute( "type", "checkbox" );
 chkLblXTGraph.checked = true;
@@ -539,9 +517,22 @@ chkLblXTGraph.checked = true;
 chkLblXTGraph.addEventListener( "input", update );
 
 const spanChkXTGraph = document.createElement( "label" );
-spanChkXTGraph.textContent = " |XT Graph";
+spanChkXTGraph.textContent = " XT Graph";
 spanChkXTGraph.appendChild( chkLblXTGraph );
 controls.appendChild( spanChkXTGraph );
+*/
+//- - - - - - - - - - - - - - 
+
+const chkLblXTOGraph = document.createElement( "input" );
+chkLblXTOGraph.setAttribute( "type", "checkbox" );
+chkLblXTOGraph.checked = true;
+//controls.appendChild( chkLblXTGraph );
+chkLblXTOGraph.addEventListener( "input", update );
+
+const spanChkXTOGraph = document.createElement( "label" );
+spanChkXTOGraph.textContent = " Observed XT Graph";
+spanChkXTOGraph.appendChild( chkLblXTOGraph );
+controls.appendChild( spanChkXTOGraph );
 //----------------------
 
 span = document.createElement( "br" );
@@ -728,24 +719,15 @@ function update( evt ) {
 
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
-	V = Number(sliderV.value)/1000*C;
+	V = (Number(sliderV.value)/500-1)*C;
 
 	lengthContract = Math.sqrt(C*C-V*V)/(C*C);
 
 	spanV.textContent = V.toFixed(3);
 	L = 1;
 
-	A = Number(sliderA.value)/100*Math.PI;
-	sa = -Math.sin(A);
-	ca = Math.cos(A);
-	spanA.textContent = (A/Math.PI).toFixed(3) + "π";
 
 	
-	A_o = Number(sliderA_o.value)/100*Math.PI;
-	sa_o = -Math.sin(A_o);
-	ca_o = Math.cos(A_o);
-	spanA_o.textContent = (A_o/Math.PI).toFixed(3) + "π";
-
 	D2 = (Number(sliderD.value)/50-1)*L;
 	D =10* (Number(sliderD.value)/50-1);
 	spanD.textContent = D.toFixed(3) + " T(world s):" + (-2*(C*D+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
@@ -753,20 +735,21 @@ function update( evt ) {
 	spanE.textContent = E.toFixed(1);
 	S = 1;
 
-	showXTGraph = chkLblXTGraph.checked;
+	showXTGraph = true;//chkLblXTGraph.checked;
+	showXTGraph_obs = chkLblXTOGraph.checked;
 //	showXTGraph_unbiased = chkLblXTGraph.checked;
 	showRelativeVelocities = false;
 	includeAberration = true;
 
 	const didAnimate = animate;
-	animate = chkLblNow.checked;
-	runT = Number(sliderRunT.value)/5;
-	spanRunT.textContent = runT.toFixed(2);
+	animate = false;//chkLblNow.checked;
+	runT = 10;//Number(sliderRunT.value)/5;
+	//spanRunT.textContent = runT.toFixed(2);
 
 	if( animate ) {
 	}else
-		now = (Number(sliderNow.value)/100*runT/2);
-	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
+		now = 0;
+	//spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 
