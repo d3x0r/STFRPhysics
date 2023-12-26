@@ -11,6 +11,8 @@ let animate = false;
 const runT = 4;
 
 const names = [];
+const IoR = 0.000293;
+const stdPressure = 1013.25;
 
 const values = {
 	Now : -1,
@@ -18,6 +20,8 @@ const values = {
 	VoverC : 1,
 	Velocity : 1,
 	Scale : 100,
+	Pressure : 1000,
+	PressureVariance : 30,
 }
 
 const bias = {
@@ -39,7 +43,12 @@ const controls = document.getElementById( "controls" );
 addSpan( "C", 1000, 1, 0, 2/1000, "C" );
 addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0, 0, 2/1000, "Velocity" );
-addSpan( "Velocity max", 1000, 0.001, 0, 2/1000, "VelocityMax" );
+addSpan( "Velocity max", 1000, 0.001, 0, 1/10000, "VelocityMax" );
+addSpan( "Time of Day(start)", 1000, 0, 0, 2*Math.PI/1000, "ToD" );
+addSpan( "Time of Day(align)", 1000, 0, 0, 2*Math.PI/1000, "ToDA" );
+addSpan( "Time of Day(low pressure)", 1000, 2*Math.PI/24 * (24/6), 0, 2*Math.PI/1000, "ToDP" );
+addSpan( "Pressure", 100000, 1000, 0, 1, "Pressure" );
+addSpan( "Pressure Variance", 1000, 30, 0, 4/10, "PressureVariance" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 //addSpan( "Speed", 1000, "speed", 0, 2*Math.PI/1000, "Speed" );
 
@@ -116,7 +125,11 @@ function update( evt ) {
 	values.VoverC = values.Velocity/values.C;
 	const wasAnimate = animate;
 	animate = chkLblNow.checked;
-        
+	
+	sliders.spanToD.textContent = '' + Math.floor( values.ToD / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToD / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
+	sliders.spanToDA.textContent = '' + Math.floor( values.ToDA / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToDA / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
+	sliders.spanToDP.textContent = '' + Math.floor( values.ToDP / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToDP / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
+
 	if( !animate ) {
 		//values.Now = Number(values.Now)/100*runT/2;
 		sliders.spanNow.textContent = values.Now.toFixed(2);
@@ -130,6 +143,7 @@ function draw(  ) {
 
 	const pos = values.Now * values.Velocity * values.Scale;
 	const gamma = 1/Math.sqrt( values.C*values.C - values.Velocity*values.Velocity );
+	const firstT = values.ToD- values.ToDA;//Math.random()*Math.PI*2;
 	ctx.clearRect( 0, 0, 1000, 1000 );
 
 	let commonClock = 0;
@@ -139,7 +153,7 @@ function draw(  ) {
 	const recvDelay = 2_500_000n; // these are fixed offsets...
 
 	// start in a random ToD
-	const firstT = Math.random()*Math.PI*2;
+	//const firstT = Math.random()*Math.PI*2;
 
 	
 
@@ -150,20 +164,28 @@ function draw(  ) {
 		                  , c2:BigInt(i)*1_000_000_000_000n+ sendDelay + recvDelay } );
 	}
 
+	ctx.strokeStyle = "purple";
+	ctx.beginPath();
+	ctx.moveTo( 0, 500 );
 	for( let i = 0; i < clockFrames.length; i++ ) {
 		const frame = clockFrames[i];
 		const T = i / 100 * 2*Math.PI;
 		// this could be smarter - and track any arbitrary direction... since 
 		// The alignment doesn't actually get to return back to 0.
 		const VScale= (values.VelocityMax-values.Velocity)*Math.sin( firstT + T );
+		const PV = (values.PressureVariance)*Math.sin( values.ToD + values.ToDP + T )
+		
+		ctx.lineTo( i * 1000 / clockFrames.length, 500 + 100000 *( IoR * (values.Pressure + PV)/stdPressure - IoR*values.Pressure/stdPressure) );
 		// each frame, clock1 and clock2 happen, and a delay is added based on time of day.
 		// each clock has a (potentially) different delay.
 		// fixed scalar to pico seconds (1000)
 		// the amount of space to ocver ( Scale)
 		// How fast light covers that space( C + Velocity )
-		frame.c1 += BigInt( Math.floor(1000 * values.Scale/(values.C + VScale)) );
-		frame.c2 += BigInt( Math.floor(1000 * values.Scale/(values.C - VScale)) );
+		console.log( "Scalar: ", values.Pressure, 1/( 1+IoR * (values.Pressure + PV)/stdPressure ) );
+		frame.c1 += BigInt( Math.floor(1000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale)) );
+		frame.c2 += BigInt( Math.floor(1000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))- VScale)) );
 	}
+	ctx.stroke();
 	commonClock = clockFrames[1].c1 - clockFrames[0].c1;
 
 	ctx.beginPath();
