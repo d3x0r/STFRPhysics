@@ -164,8 +164,17 @@ function draw(  ) {
 		                  , c2:BigInt(i)*1_000_000_000_000n+ sendDelay + recvDelay } );
 	}
 
-	ctx.strokeStyle = "purple";
 	ctx.beginPath();
+	ctx.strokeStyle = "#333";
+	for( var i = 1; i < 40; i++ ) {
+		ctx.moveTo( 0, i * 25  );
+		ctx.lineTo( 1000, i * 25 );
+	}
+	ctx.stroke();
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = "purple";
 	ctx.moveTo( 0, 500 );
 	for( let i = 0; i < clockFrames.length; i++ ) {
 		const frame = clockFrames[i];
@@ -182,8 +191,8 @@ function draw(  ) {
 		// the amount of space to ocver ( Scale)
 		// How fast light covers that space( C + Velocity )
 		console.log( "Scalar: ", values.Pressure, 1/( 1+IoR * (values.Pressure + PV)/stdPressure ) );
-		frame.c1 += BigInt( Math.floor(1000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale)) );
-		frame.c2 += BigInt( Math.floor(1000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))- VScale)) );
+		frame.c1 += BigInt( Math.floor(5000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale)) );
+		frame.c2 += BigInt( Math.floor(5000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))- VScale)) );
 	}
 	ctx.stroke();
 	commonClock = clockFrames[1].c1 - clockFrames[0].c1;
