@@ -143,7 +143,7 @@ function draw(  ) {
 
 	const pos = values.Now * values.Velocity * values.Scale;
 	const gamma = 1/Math.sqrt( values.C*values.C - values.Velocity*values.Velocity );
-	const firstT = values.ToD- values.ToDA;//Math.random()*Math.PI*2;
+	const firstT = values.ToDA - values.ToD;//Math.random()*Math.PI*2;
 	ctx.clearRect( 0, 0, 1000, 1000 );
 
 	let commonClock = 0;
@@ -173,7 +173,7 @@ function draw(  ) {
 		// this could be smarter - and track any arbitrary direction... since 
 		// The alignment doesn't actually get to return back to 0.
 		const VScale= (values.VelocityMax-values.Velocity)*Math.sin( firstT + T );
-		const PV = (values.PressureVariance)*Math.sin( values.ToD + values.ToDP + T )
+		const PV = (values.PressureVariance)*Math.sin( values.ToDP - values.ToD  + T )
 		
 		ctx.lineTo( i * 1000 / clockFrames.length, 500 + 100000 *( IoR * (values.Pressure + PV)/stdPressure - IoR*values.Pressure/stdPressure) );
 		// each frame, clock1 and clock2 happen, and a delay is added based on time of day.
