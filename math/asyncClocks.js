@@ -22,6 +22,7 @@ const values = {
 	Scale : 100,
 	Pressure : 1000,
 	PressureVariance : 30,
+	Smooth : false,
 }
 
 const bias = {
@@ -40,8 +41,9 @@ const controls = document.getElementById( "controls" );
 
 //----------------------
 
-addSpan( "C", 1000, 1, 0, 2/1000, "C" );
-addSpan( "Light Second Length", 1000, 150, 0, 1, "Scale" );
+addSpan( "C", 1000, 1, 0, 10/1000, "C" );
+addSpan( "Length(ft)", 1000, 10000, 0, 100, "Scale" );
+addSpan( "Time Scalar", 1000, 15, 0, 1, "TScale" );
 addSpan( "Velocity", 1000, 0, 0, 2/1000, "Velocity" );
 addSpan( "Velocity max", 1000, 0.001, 0, 1/10000, "VelocityMax" );
 addSpan( "Time of Day(start)", 1000, 0, 0, 2*Math.PI/1000, "ToD" );
@@ -107,12 +109,6 @@ function sliderRead( suffix ) {
 }
 
 
-function aberration( angle ) {
-	const speed = values.Velocity;
-	const a = Math.acos( (Math.cos(angle)+speed/values.C)/(1+speed/values.C*Math.cos(angle)) );
-	return a;
-}
-
 
 update();
 
@@ -125,7 +121,8 @@ function update( evt ) {
 	values.VoverC = values.Velocity/values.C;
 	const wasAnimate = animate;
 	animate = chkLblNow.checked;
-	
+
+	sliders.spanVelocityMax.textContent = (values.VelocityMax).toFixed(5);	
 	sliders.spanToD.textContent = '' + Math.floor( values.ToD / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToD / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
 	sliders.spanToDA.textContent = '' + Math.floor( values.ToDA / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToDA / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
 	sliders.spanToDP.textContent = '' + Math.floor( values.ToDP / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToDP / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
@@ -149,6 +146,8 @@ function draw(  ) {
 	let commonClock = 0;
 	let commonClock2 = 0;
 	let clockFrames = [];
+	let clock1delta = [];
+	let clock2delta = [];
 	const sendDelay = 1_500_000n;
 	const recvDelay = 2_500_000n; // these are fixed offsets...
 
@@ -157,18 +156,22 @@ function draw(  ) {
 
 	
 
-	for( let i = 0; i < 100; i++ ) {
+	for( let i = 0; i < 200; i++ ) {
 		// assume 1 second pulses in pico-second tick counts.
 		// this could be any constant value.
-		clockFrames.push( { c1:BigInt(i)*1_000_000_000_000n+ sendDelay + recvDelay
-		                  , c2:BigInt(i)*1_000_000_000_000n+ sendDelay + recvDelay } );
+		const sendJitter = recvDelay + BigInt( Math.floor( 5000* Math.random() ) );
+		const recvJitter = sendDelay + BigInt( Math.floor( 5000* Math.random() ) );
+		const sendJitter2 = recvDelay + BigInt( Math.floor( 5000* Math.random() ) );
+		const recvJitter2 = sendDelay + BigInt( Math.floor( 5000* Math.random() ) );
+		clockFrames.push( { c1:BigInt(i)*1_000_000_000_000n+ sendJitter + recvJitter
+		                  , c2:BigInt(i)*1_000_000_000_000n+ sendJitter2 + recvJitter2 } );
 	}
 
 	ctx.beginPath();
 	ctx.strokeStyle = "#333";
-	for( var i = 1; i < 40; i++ ) {
-		ctx.moveTo( 0, i * 25  );
-		ctx.lineTo( 1000, i * 25 );
+	for( var i = -25; i < 25; i++ ) {
+		ctx.moveTo( 0, 500+i * values.TScale  );
+		ctx.lineTo( 1000, 500+i * values.TScale );
 	}
 	ctx.stroke();
 
@@ -190,20 +193,53 @@ function draw(  ) {
 		// fixed scalar to pico seconds (1000)
 		// the amount of space to ocver ( Scale)
 		// How fast light covers that space( C + Velocity )
-		console.log( "Scalar: ", values.Pressure, 1/( 1+IoR * (values.Pressure + PV)/stdPressure ) );
-		frame.c1 += BigInt( Math.floor(5000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale)) );
-		frame.c2 += BigInt( Math.floor(5000 * values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))- VScale)) );
+		//console.log( "Scalar: ", values.Pressure, 1/( 1+IoR * (values.Pressure + PV)/stdPressure ) );
+		frame.c1 += BigInt( Math.floor(1000*values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale)) );
+		frame.c2 += BigInt( Math.floor(1000*values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))- VScale)) );
+		//console.log( "Time: ", frame.c1, values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale) );
 	}
 	ctx.stroke();
-	commonClock = clockFrames[1].c1 - clockFrames[0].c1;
+
+	let Tdelta = 0;
+	commonClock = (clockFrames[1].c1 - clockFrames[0].c1);
+	for( var i = 1; i < clockFrames.length; i++ ) {
+		Tdelta += Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock)/1000;
+		clock1delta.push( Tdelta );
+	}
+	const delta1offset = clock1delta[clock1delta.length-1] / clock1delta.length;
+	for( var i = 0; i < clock1delta.length; i++ ) {
+		clock1delta[i] = clock1delta[i] - delta1offset * i;		
+	}
+	if( values.Smooth )
+	for( let j = 0; j < 10; j++ )
+		for( var i = 1; i < clock1delta.length-1; i++ ) {
+			clock1delta[i] = (clock1delta[i-1]+clock1delta[i]+clock1delta[i+1])/3;		
+		}
+
+	let Tdelta2 = 0;
+	commonClock2 = clockFrames[1].c2 - clockFrames[0].c2;
+	for( var i = 1; i < clockFrames.length; i++ ) {
+		Tdelta2 += Number(clockFrames[i].c2-clockFrames[i-1].c2-commonClock2)/1000;
+		clock2delta.push( Tdelta2 );
+	}
+	const delta2offset = clock2delta[clock2delta.length-1] / clock2delta.length;
+	for( var i = 0; i < clock2delta.length; i++ ) {
+		clock2delta[i] = clock2delta[i] - delta2offset * i;		
+	}
+	if( values.Smooth )
+	for( let j = 0; j < 10; j++ )
+		for( var i = 1; i < clock2delta.length-1; i++ ) {
+			clock2delta[i] = (clock2delta[i-1]+clock2delta[i]+clock2delta[i+1])/3;		
+		}
 
 	ctx.beginPath();
 	ctx.strokeStyle = "red";
 	ctx.lineWidth = 0.5;
 
 	ctx.moveTo( 0, 500 );
-	for( var i = 1; i < 100; i++ ) {
-		ctx.lineTo( i * 1000 / 100, 500 + Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
+	for( var i = 0; i < clock1delta.length; i++ ) {
+		//console.log( "red time:", clockFrames[i].c1-clockFrames[i-1].c1, Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
+		ctx.lineTo( i * 1000 / (clock1delta.length-1), 500 + values.TScale * clock1delta[i] );
 		
 	}
 	ctx.stroke();
@@ -211,9 +247,11 @@ function draw(  ) {
 	ctx.beginPath();
 	ctx.strokeStyle = "green";
 	ctx.moveTo( 0, 500 );
-	commonClock2 = clockFrames[1].c2 - clockFrames[0].c2;
-	for( var i = 1; i < 100; i++ ) {
-		ctx.lineTo( i * 1000 / 100, 500 + Number(clockFrames[i].c2-clockFrames[i-1].c2 - commonClock2 ) );
+//	commonClock2 = clockFrames[1].c2 - clockFrames[0].c2;
+//	let Tdelta2 = 0;
+	for( var i = 0; i < clock2delta.length; i++ ) {
+		//Tdelta2 += Number(clockFrames[i].c2-clockFrames[i-1].c2-commonClock2)/1000;
+		ctx.lineTo( i * 1000 / (clock2delta.length-1), 500 + values.TScale * clock2delta[i] );
 	}
 	ctx.stroke();
 
@@ -221,11 +259,13 @@ function draw(  ) {
 	ctx.beginPath();
 	ctx.strokeStyle = "white";
 	ctx.moveTo( 0, 500 );
-	for( var i = 1; i < 100; i++ ) {
-		const T = i / 100 * 2*Math.PI;
-		ctx.lineTo( i * 1000 / 100, 500 
-		          + Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) 
-		          - Number(clockFrames[i].c2-clockFrames[i-1].c2-commonClock2) );
+	Tdelta = 0;
+	Tdelta2 = 0;
+	for( var i = 0; i < clock1delta.length; i++ ) {
+		ctx.lineTo( i * 1000 / (clock1delta.length-1), 500 
+		          + values.TScale* (clock1delta[i] - clock2delta[i])
+		           );
+		//console.log( "total Del:", values.TScale*Tdelta, values.TScale*Tdelta2  );
 	}
 	ctx.stroke();
 
