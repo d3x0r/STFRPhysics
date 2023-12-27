@@ -66,6 +66,16 @@ spanChkNow.textContent = " |Animate";
 spanChkNow.appendChild( chkLblNow );
 controls.appendChild( spanChkNow );
 
+
+const chkSmooth = document.createElement( "input" );
+chkSmooth.setAttribute( "type", "checkbox" );
+chkSmooth.checked = animate;
+chkSmooth.addEventListener( "input", update );
+
+const spanSmooth = document.createElement( "label" );
+spanSmooth.textContent = " |Smooth";
+spanSmooth.appendChild( chkSmooth );
+controls.appendChild( spanSmooth );
 //----------------------
 
 
@@ -121,6 +131,7 @@ function update( evt ) {
 	values.VoverC = values.Velocity/values.C;
 	const wasAnimate = animate;
 	animate = chkLblNow.checked;
+	values.Smooth = chkSmooth.checked;
 
 	sliders.spanVelocityMax.textContent = (values.VelocityMax).toFixed(5);	
 	sliders.spanToD.textContent = '' + Math.floor( values.ToD / (Math.PI*2) * 24 ) + ":" + (''+Math.floor( (values.ToD / (Math.PI*2) * (24*60)) % 60 )).padStart( 2, '0' )
@@ -148,6 +159,8 @@ function draw(  ) {
 	let clockFrames = [];
 	let clock1delta = [];
 	let clock2delta = [];
+	let clock1deltaSmooth = [];
+	let clock2deltaSmooth = [];
 	const sendDelay = 1_500_000n;
 	const recvDelay = 2_500_000n; // these are fixed offsets...
 
@@ -209,12 +222,15 @@ function draw(  ) {
 	const delta1offset = clock1delta[clock1delta.length-1] / clock1delta.length;
 	for( var i = 0; i < clock1delta.length; i++ ) {
 		clock1delta[i] = clock1delta[i] - delta1offset * i;		
+		clock1deltaSmooth[i] = clock1delta[i];
 	}
-	if( values.Smooth )
-	for( let j = 0; j < 10; j++ )
-		for( var i = 1; i < clock1delta.length-1; i++ ) {
-			clock1delta[i] = (clock1delta[i-1]+clock1delta[i]+clock1delta[i+1])/3;		
-		}
+	if( values.Smooth ) {
+		clock1deltaSmooth[0] = clock1delta[0];
+		for( let j = 0; j < 10; j++ )
+			for( var i = 1; i < clock1delta.length-1; i++ ) {
+				clock1deltaSmooth[i] = (clock1deltaSmooth[i-1]+clock1deltaSmooth[i]+clock1deltaSmooth[i+1])/3;		
+			}
+	}
 
 	let Tdelta2 = 0;
 	commonClock2 = clockFrames[1].c2 - clockFrames[0].c2;
@@ -225,17 +241,18 @@ function draw(  ) {
 	const delta2offset = clock2delta[clock2delta.length-1] / clock2delta.length;
 	for( var i = 0; i < clock2delta.length; i++ ) {
 		clock2delta[i] = clock2delta[i] - delta2offset * i;		
+		clock2deltaSmooth[i] = clock2delta[i];
 	}
-	if( values.Smooth )
+	if( values.Smooth ) {
 	for( let j = 0; j < 10; j++ )
 		for( var i = 1; i < clock2delta.length-1; i++ ) {
-			clock2delta[i] = (clock2delta[i-1]+clock2delta[i]+clock2delta[i+1])/3;		
+			clock2deltaSmooth[i] = (clock2deltaSmooth[i-1]+clock2deltaSmooth[i]+clock2deltaSmooth[i+1])/3;		
 		}
+	}
 
 	ctx.beginPath();
 	ctx.strokeStyle = "red";
 	ctx.lineWidth = 0.5;
-
 	ctx.moveTo( 0, 500 );
 	for( var i = 0; i < clock1delta.length; i++ ) {
 		//console.log( "red time:", clockFrames[i].c1-clockFrames[i-1].c1, Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
@@ -243,6 +260,19 @@ function draw(  ) {
 		
 	}
 	ctx.stroke();
+
+	if( values.Smooth ) {
+	ctx.beginPath();
+	ctx.strokeStyle = "red";
+	ctx.lineWidth = 0.5;
+	ctx.moveTo( 0, 500 );
+	for( var i = 0; i < clock1delta.length; i++ ) {
+		//console.log( "red time:", clockFrames[i].c1-clockFrames[i-1].c1, Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
+		ctx.lineTo( i * 1000 / (clock1delta.length-1), 500 + values.TScale * clock1deltaSmooth[i] );
+		
+	}
+	ctx.stroke();
+	}
 
 	ctx.beginPath();
 	ctx.strokeStyle = "green";
@@ -254,6 +284,16 @@ function draw(  ) {
 		ctx.lineTo( i * 1000 / (clock2delta.length-1), 500 + values.TScale * clock2delta[i] );
 	}
 	ctx.stroke();
+
+	if( values.Smooth ) {
+		ctx.beginPath();
+		ctx.strokeStyle = "green";
+		ctx.moveTo( 0, 500 );
+		for( var i = 0; i < clock2delta.length; i++ ) {
+			ctx.lineTo( i * 1000 / (clock2delta.length-1), 500 + values.TScale * clock2deltaSmooth[i] );
+		}
+		ctx.stroke();
+	}
 
 
 	ctx.beginPath();
@@ -269,6 +309,21 @@ function draw(  ) {
 	}
 	ctx.stroke();
 
+	if( values.Smooth ) {
+		ctx.beginPath();
+		ctx.strokeStyle = "white";
+		ctx.moveTo( 0, 500 );
+		Tdelta = 0;
+		Tdelta2 = 0;
+		for( var i = 0; i < clock1delta.length; i++ ) {
+			ctx.lineTo( i * 1000 / (clock1delta.length-1), 500 
+			          + values.TScale* (clock1deltaSmooth[i] - clock2deltaSmooth[i])
+			           );
+			//console.log( "total Del:", values.TScale*Tdelta, values.TScale*Tdelta2  );
+		}
+		ctx.stroke();
+	}
+	
 
 	if( animate ) 
 		requestAnimationFrame( draw );
