@@ -68,7 +68,7 @@ end
 
 always @(negedge iLatch1) 
 begin
-  if( rstLatchLock1 && latchLock2 ) begin 
+  if( rstLatchLock1 && latchLock1 ) begin 
       rstLatchLock1 = 0;
       latchLock1 = 0;
   end 
