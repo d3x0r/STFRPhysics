@@ -54,9 +54,9 @@ reg rstLatchLock2 = 0;  // pending reset signal, iResetLatch2 was signaled, but 
 //   Host sends 1 to clear register 2 latch
 // or from the other side:
 //   slave sends 00 + 5 byte counter value when register 1 is latched
-//   slave receives 00 and gneerates iResetLatch1
+//   slave receives 00 and generates iResetLatch1
 //   slave sends 01 + 5 byte counter value when register 2 is latched
-//   slave receives 01 and gneerates iResetLatch2
+//   slave receives 01 and generates iResetLatch2
 
 initial forever // Start at time 0 and repeat the begin/end forever
   begin
