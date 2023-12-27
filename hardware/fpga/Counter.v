@@ -47,16 +47,28 @@ reg rstLatchLock2 = 0;  // pending reset signal, iResetLatch2 was signaled, but 
 // if iResetLatch* is signaled and iLatch* is still set, then set rstLatchLock*, then when latchLock* is reset
 // if rstLatchLock* is set, reset latckLock*.
 
-// protocol should resemble something like
+
+// protocol should resemble something like:  (two digit values are hex representations of bytes)
 //   Host receives 00 + 5 byte counter value
-//   Host sends 0 to clear register 1 latch
+//   Host sends 00 to clear register 1 latch
 //   host receives 01 + 5 byte counter value
-//   Host sends 1 to clear register 2 latch
+//   Host sends 01 to clear register 2 latch
+
+// for local test without hardware signal/button 
+//  host sends 02 to generate iLatch1
+//    which should trigger sending 00 + 5 byte counter, which the host would naturally respond with a 00
+//  host sends 03 to generate iLatch2 
+//    which should trigger sending 01 + 5 byte counter, which the host would naturally respond with a 01
+
 // or from the other side:
 //   slave sends 00 + 5 byte counter value when register 1 is latched
 //   slave receives 00 and generates iResetLatch1
 //   slave sends 01 + 5 byte counter value when register 2 is latched
 //   slave receives 01 and generates iResetLatch2
+//   slave receives 02 and generates iLatch1
+//   slave receives 03 and generates iLatch2
+
+
 
 initial forever // Start at time 0 and repeat the begin/end forever
   begin
