@@ -167,8 +167,9 @@ function draw(  ) {
 	// start in a random ToD
 	//const firstT = Math.random()*Math.PI*2;
 
-	
-
+		
+	const s1 = BigInt( 32_000_000_000_000n );
+	const s2 = BigInt( 31_200_000_000_000n );
 	for( let i = 0; i < 200; i++ ) {
 		// assume 1 second pulses in pico-second tick counts.
 		// this could be any constant value.
@@ -176,13 +177,82 @@ function draw(  ) {
 		const recvJitter = sendDelay + BigInt( Math.floor( 5000* Math.random() ) );
 		const sendJitter2 = recvDelay + BigInt( Math.floor( 5000* Math.random() ) );
 		const recvJitter2 = sendDelay + BigInt( Math.floor( 5000* Math.random() ) );
-		clockFrames.push( { c1:BigInt(i)*1_000_000_000_000n+ sendJitter + recvJitter
-		                  , c2:BigInt(i)*1_000_000_000_000n+ sendJitter2 + recvJitter2 } );
+		
+		clockFrames.push( { c1:s1+BigInt(i)*1_000_000_000_000n+ sendJitter + recvJitter
+		                  , c2:s2+BigInt(i)*1_000_000_000_000n+ sendJitter2 + recvJitter2 } );
 	}
+
+	let pFrame = null;
+	let stream1 = [];
+	let firstDel1 = null;
+	let stream2 = [];
+	let firstDel2 = null;
+	for( let frame of clockFrames ) {
+		if( !pFrame ) {
+			pFrame = frame;
+		}
+		// first del = 0.
+		const delFrame1 = {from:pFrame.c1, to:frame.c1
+					, del : frame.c1-pFrame.c1-(firstDel1?firstDel1.del:0n) };
+		stream1.push( delFrame1 );
+		if( !firstDel1 && delFrame1.del )
+			firstDel1 = delFrame1;
+
+		const delFrame2 = {from:pFrame.c2, to:frame.c2
+					, del : (frame.c2-pFrame.c2-(firstDel2?firstDel2.del:0n)) };
+		stream2.push( delFrame2 );
+		if( !firstDel2 && delFrame2.del )
+			firstDel2 = delFrame2;
+
+		pFrame = frame;
+	}
+	firstDel1.del = 0;
+	firstDel2.del = 0;
+
+	function getDel( stream, tick ) {
+		let from = 0;
+		let to = stream.length-1;
+		while( to > from ) {
+			const pos = (to+from)>>1;
+			if( tick < stream[pos].from ) {
+				to = pos-1;
+			} else if( tick > stream[pos].to ) {
+				from = pos+1;
+			} else {
+				const del = Number(tick - stream[pos].from)/Number(stream[pos].to-stream[pos].from);
+				if( del > 0.5 ) {
+					if( pos < (stream.length-1) ) {
+						const v1 = Number(stream[pos].del);
+						const v2 = Number(stream[pos+1].del);
+						return (v1*(del-0.5)+v2*(1.5-del))/1000
+					} 
+					return Number(stream[pos].del)/1000;
+				} else {
+					if( pos > (0) ) {
+						const v1 = Number(stream[pos-1].del);
+						const v2 = Number(stream[pos].del);
+						return (v1*(del)+v2*(1-del))/1000;
+					} 
+					return Number(stream[pos].del)/1000;
+				}
+			} 
+		}
+		return 0;
+	}
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = "#FFF";
+	ctx.moveTo( 0, 500+0  );
+	for( let i = 0; i < 25; i+=Math.abs(values.Now/10) ) {
+		const del = values.TScale*getDel( stream1, s1+BigInt(Math.floor(i * 1000000000000)) )
+		ctx.lineTo( i*1000/25, 500+ del );
+	}
+	ctx.stroke();
 
 	ctx.beginPath();
 	ctx.strokeStyle = "#333";
-	for( var i = -25; i < 25; i++ ) {
+	for( let i = -25; i < 25; i++ ) {
 		ctx.moveTo( 0, 500+i * values.TScale  );
 		ctx.lineTo( 1000, 500+i * values.TScale );
 	}
@@ -261,6 +331,19 @@ function draw(  ) {
 	}
 	ctx.stroke();
 
+	ctx.beginPath();
+	ctx.strokeStyle = "red";
+	ctx.moveTo( 0, 1000 );
+	const range1 = Number(clockFrames[clockFrames.length-1].c1)/clockFrames.length;
+	
+	for( var i = 0; i < clockFrames.length; i++ ) {
+		//console.log( "red time:", clockFrames[i].c1-clockFrames[i-1].c1, Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
+		ctx.lineTo( i * 1000 / (clockFrames.length-1), 1000 - ( Number(clockFrames[i].c1) - range1*i ) / 1000000000 );
+		//ctx.lineTo( i * 1000 / (clockFrames.length-1), 1000 - 1000*Number(clockFrames[i].c1)/range1 );
+		
+	}
+	ctx.stroke();
+
 	if( values.Smooth ) {
 	ctx.beginPath();
 	ctx.strokeStyle = "red";
@@ -282,6 +365,18 @@ function draw(  ) {
 	for( var i = 0; i < clock2delta.length; i++ ) {
 		//Tdelta2 += Number(clockFrames[i].c2-clockFrames[i-1].c2-commonClock2)/1000;
 		ctx.lineTo( i * 1000 / (clock2delta.length-1), 500 + values.TScale * clock2delta[i] );
+	}
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "green";
+	ctx.moveTo( 0, 1000 );
+	const range2 = Number(clockFrames[clockFrames.length-1].c2)/clockFrames.length;
+	
+	for( var i = 0; i < clockFrames.length; i++ ) {
+		//console.log( "red time:", clockFrames[i].c1-clockFrames[i-1].c1, Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock) );
+		ctx.lineTo( i * 1000 / (clockFrames.length-1), 1000 - ( Number(clockFrames[i].c2) - range2*i ) / 1000000000 );
+		
 	}
 	ctx.stroke();
 
