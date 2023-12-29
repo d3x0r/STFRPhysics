@@ -8,7 +8,7 @@ const ctx = canvas.getContext( '2d' );
 
 let last_draw_time = 0;
 let animate = false;
-const runT = 4;
+const runT = 100;
 
 const names = [];
 const IoR = 0.000293;
@@ -51,7 +51,9 @@ addSpan( "Time of Day(align)", 1000, 0, 0, 2*Math.PI/1000, "ToDA" );
 addSpan( "Time of Day(low pressure)", 1000, 2*Math.PI/24 * (24/6), 0, 2*Math.PI/1000, "ToDP" );
 addSpan( "Pressure", 100000, 1000, 0, 1, "Pressure" );
 addSpan( "Pressure Variance", 1000, 30, 0, 4/10, "PressureVariance" );
-addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
+addSpan( "View Res", 1000, 1, 1, 100/1000, "ViewRes" );
+addSpan( "View Span", 1000, 200, 0, 5*runT/1000, "ViewSpan" );
+addSpan( "Now", 1000, 0, -runT/2, runT/1000, "Now" );
 //addSpan( "Speed", 1000, "speed", 0, 2*Math.PI/1000, "Speed" );
 
 //- - - - - - - - - - - - - - 
@@ -178,86 +180,9 @@ function draw(  ) {
 		const sendJitter2 = recvDelay + BigInt( Math.floor( 5000* Math.random() ) );
 		const recvJitter2 = sendDelay + BigInt( Math.floor( 5000* Math.random() ) );
 		
-		clockFrames.push( { c1:s1+BigInt(i)*1_000_000_000_000n+ sendJitter + recvJitter
+		clockFrames.push( { c1:s1+BigInt(i)*1_010_000_000_000n+ sendJitter + recvJitter
 		                  , c2:s2+BigInt(i)*1_000_000_000_000n+ sendJitter2 + recvJitter2 } );
 	}
-
-	let pFrame = null;
-	let stream1 = [];
-	let firstDel1 = null;
-	let stream2 = [];
-	let firstDel2 = null;
-	for( let frame of clockFrames ) {
-		if( !pFrame ) {
-			pFrame = frame;
-		}
-		// first del = 0.
-		const delFrame1 = {from:pFrame.c1, to:frame.c1
-					, del : frame.c1-pFrame.c1-(firstDel1?firstDel1.del:0n) };
-		stream1.push( delFrame1 );
-		if( !firstDel1 && delFrame1.del )
-			firstDel1 = delFrame1;
-
-		const delFrame2 = {from:pFrame.c2, to:frame.c2
-					, del : (frame.c2-pFrame.c2-(firstDel2?firstDel2.del:0n)) };
-		stream2.push( delFrame2 );
-		if( !firstDel2 && delFrame2.del )
-			firstDel2 = delFrame2;
-
-		pFrame = frame;
-	}
-	firstDel1.del = 0;
-	firstDel2.del = 0;
-
-	function getDel( stream, tick ) {
-		let from = 0;
-		let to = stream.length-1;
-		while( to > from ) {
-			const pos = (to+from)>>1;
-			if( tick < stream[pos].from ) {
-				to = pos-1;
-			} else if( tick > stream[pos].to ) {
-				from = pos+1;
-			} else {
-				const del = Number(tick - stream[pos].from)/Number(stream[pos].to-stream[pos].from);
-				if( del > 0.5 ) {
-					if( pos < (stream.length-1) ) {
-						const v1 = Number(stream[pos].del);
-						const v2 = Number(stream[pos+1].del);
-						return (v1*(del-0.5)+v2*(1.5-del))/1000
-					} 
-					return Number(stream[pos].del)/1000;
-				} else {
-					if( pos > (0) ) {
-						const v1 = Number(stream[pos-1].del);
-						const v2 = Number(stream[pos].del);
-						return (v1*(del)+v2*(1-del))/1000;
-					} 
-					return Number(stream[pos].del)/1000;
-				}
-			} 
-		}
-		return 0;
-	}
-
-
-	ctx.beginPath();
-	ctx.strokeStyle = "#FFF";
-	ctx.moveTo( 0, 500+0  );
-	for( let i = 0; i < 25; i+=Math.abs(values.Now/10) ) {
-		const del = values.TScale*getDel( stream1, s1+BigInt(Math.floor(i * 1000000000000)) )
-		ctx.lineTo( i*1000/25, 500+ del );
-	}
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.strokeStyle = "#333";
-	for( let i = -25; i < 25; i++ ) {
-		ctx.moveTo( 0, 500+i * values.TScale  );
-		ctx.lineTo( 1000, 500+i * values.TScale );
-	}
-	ctx.stroke();
-
 
 	ctx.beginPath();
 	ctx.strokeStyle = "purple";
@@ -282,6 +207,117 @@ function draw(  ) {
 		//console.log( "Time: ", frame.c1, values.Scale/((values.C /( 1+IoR * (values.Pressure + PV)/stdPressure ))+ VScale) );
 	}
 	ctx.stroke();
+
+	let pFrame = null;
+	let stream1 = [];
+	let firstDel1 = null;
+	let pFrame1 = null;
+	let stream2 = [];
+	let firstDel2 = null;
+	let pFrame2 = null;
+	for( let frame of clockFrames ) {
+		if( !pFrame ) {
+			pFrame = frame;
+		}
+		// first del = 0.
+		const delFrame1 = {from:pFrame.c1, to:frame.c1
+					, del : (pFrame1?pFrame1.del:0n)+frame.c1-pFrame.c1-(firstDel1?firstDel1.del:0n) };
+		stream1.push( delFrame1 );
+		if( !firstDel1 && delFrame1.del )
+			firstDel1 = delFrame1;
+		else pFrame1 = delFrame1;
+
+		const delFrame2 = {from:pFrame.c2, to:frame.c2
+					, del : (pFrame2?pFrame2.del:0n)+(frame.c2-pFrame.c2-(firstDel2?firstDel2.del:0n)) };
+		stream2.push( delFrame2 );
+		if( !firstDel2 && delFrame2.del )
+			firstDel2 = delFrame2;
+		else pFrame2 = delFrame2;
+
+		pFrame = frame;
+		//console.log( "Dels:", delFrame1.del, delFrame2.del );
+	}
+
+
+	const bias1 = Number(stream1[stream1.length-1].del) / stream1.length;
+	const bias2 = Number(stream2[stream2.length-1].del) / stream2.length;
+	for( let f =0; f < stream1.length; f++ ) stream1[f].del -= BigInt(Math.floor(bias1*f));
+	for( let f =0; f < stream2.length; f++ ) stream2[f].del -= BigInt(Math.floor(bias2*f));
+	firstDel1.del = 0;
+	firstDel2.del = 0;
+
+	function getDel( stream, tick ) {
+		let from = 0;
+		let to = stream.length-1;
+		while( to >= from ) {
+			const pos = (to+from)>>1;
+			if( tick < stream[pos].from ) {
+				to = pos-1;
+			} else if( tick > stream[pos].to ) {
+				from = pos+1;
+			} else {
+				const del = Number(tick - stream[pos].from)/Number(stream[pos].to-stream[pos].from);
+				if( del > 0.5 ) {
+					if( pos < (stream.length-1) ) {
+						const v1 = Number(stream[pos].del);
+						const v2 = Number(stream[pos+1].del);
+			//console.log( "Scale del1:", pos, del, 1-(del-0.5), del, v1, v2 );
+			//ctx.stroke();ctx.beginPath(); ctx.strokeStyle = "red";
+						return (v1*(1-(del-0.5))+v2*(del-0.5))/1000
+					} 
+					return Number(stream[pos].del)/1000;
+				} else {
+					if( pos > (0) ) {
+						const v1 = Number(stream[pos-1].del);
+						const v2 = Number(stream[pos].del);
+			//console.log( "Scale del2:", pos, del, 0.5-del, 0.5+del, v1, v2 );
+			//ctx.stroke();ctx.beginPath(); ctx.strokeStyle = "green";
+						return (v1*(0.5-del)+v2*(0.5+del))/1000;
+					} 
+					return Number(stream[pos].del)/1000;
+				}
+			} 
+		}
+		return 0;
+	}
+
+/*
+	ctx.beginPath();
+	ctx.strokeStyle = "#FFF";
+	ctx.moveTo( 0, 500+0  );
+	let pdel;
+	let del = 0;
+	for( let i = 0; i < values.ViewRes; i++ ) {
+		del = values.TScale*Number( stream1[i].del )/1000;
+		ctx.moveTo( (i-Math.abs(values.Now/10))*1000/values.ViewRes, 500+  pdel );
+		ctx.lineTo( i*1000/values.ViewRes, 500+  del );
+		ctx.arc( i*1000/values.ViewRes, 500+  del, 3, 0, Math.PI*2 );
+	}
+	ctx.stroke();
+*/
+	ctx.beginPath();
+	ctx.strokeStyle = "#FFF";
+	ctx.moveTo( 0, 500+0  );
+	let del = 0;
+	let pdel;
+	for( let i = 0; i < values.ViewSpan; i+=values.ViewRes ) {
+		pdel = del;
+		del = values.TScale*getDel( stream1, s1+BigInt(Math.floor( (i+values.Now*10) * 1_000_000_000_000)) )
+		ctx.moveTo( (i-values.ViewRes)*1000/values.ViewSpan, 500+  pdel );
+		ctx.lineTo( i*1000/values.ViewSpan, 500+  del );
+		//ctx.arc( i*1000/50, 500+  del, 3, 0, Math.PI*2 );
+	}
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "#333";
+	for( let i = -25; i < 25; i++ ) {
+		ctx.moveTo( 0, 500+i * values.TScale  );
+		ctx.lineTo( 1000, 500+i * values.TScale );
+	}
+	ctx.stroke();
+
+
 
 	let Tdelta = 0;
 	commonClock = (clockFrames[1].c1 - clockFrames[0].c1);
