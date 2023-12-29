@@ -303,7 +303,7 @@ function draw(  ) {
 	ctx.stroke();
 */
 	ctx.beginPath();
-	ctx.strokeStyle = "#FFF";
+	ctx.strokeStyle = "#F33";
 	ctx.moveTo( 0, 500+0  );
 	let del = 0;
 	let pdel;
@@ -313,6 +313,35 @@ function draw(  ) {
 		ctx.moveTo( (i-values.ViewRes/10)*1000/values.ViewSpan, 500+  pdel );
 		ctx.lineTo( i*1000/values.ViewSpan, 500+  del );
 		//ctx.arc( i*1000/50, 500+  del, 3, 0, Math.PI*2 );
+	}
+	ctx.stroke();
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = "#3F3";
+	ctx.moveTo( 0, 500+0  );
+	del = 0;
+	
+	for( let i = 0; i < values.ViewSpan; i+=values.ViewRes/10 ) {
+		pdel = del;
+		del = values.TScale*getDel( stream2, s1+BigInt(Math.floor( (i+values.Now*10) * 1_000_000_000_000)) )
+		ctx.moveTo( (i-values.ViewRes/10)*1000/values.ViewSpan, 500+  pdel );
+		ctx.lineTo( i*1000/values.ViewSpan, 500+  del );
+		//ctx.arc( i*1000/50, 500+  del, 3, 0, Math.PI*2 );
+	}
+	ctx.stroke();
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = "#ff3";
+	ctx.moveTo( 0, 500 );
+	for( var i = 0; i < values.ViewSpan; i+=values.ViewRes/10 ) {
+		const del1 = values.TScale*getDel( stream1, s1+BigInt(Math.floor( (i+values.Now*10) * 1_000_000_000_000)) )
+		const del2 = values.TScale*getDel( stream2, s1+BigInt(Math.floor( (i+values.Now*10) * 1_000_000_000_000)) )
+		ctx.lineTo( i * 1000 / (values.ViewSpan), 500 
+		          + (del1-del2)
+		           );
+		//console.log( "total Del:", values.TScale*Tdelta, values.TScale*Tdelta2  );
 	}
 	ctx.stroke();
 
