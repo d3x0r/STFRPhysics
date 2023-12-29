@@ -208,11 +208,16 @@ function draw(  ) {
 	}
 	ctx.stroke();
 
-	let pFrame = null;
+	//---------------------------------------------
+	// new processing loop...
+	//   
+
 	let stream1 = [];
+	let stream2 = [];
+
+	let pFrame = null;
 	let firstDel1 = null;
 	let pFrame1 = null;
-	let stream2 = [];
 	let firstDel2 = null;
 	let pFrame2 = null;
 	for( let frame of clockFrames ) {
@@ -239,10 +244,11 @@ function draw(  ) {
 	}
 
 
-	const bias1 = Number(stream1[stream1.length-1].del) / stream1.length;
-	const bias2 = Number(stream2[stream2.length-1].del) / stream2.length;
-	for( let f =0; f < stream1.length; f++ ) stream1[f].del -= BigInt(Math.floor(bias1*f));
-	for( let f =0; f < stream2.length; f++ ) stream2[f].del -= BigInt(Math.floor(bias2*f));
+	const bias1 = Number(stream1[stream1.length-1].del) / (stream1.length-1);
+	const bias2 = Number(stream2[stream2.length-1].del) / (stream2.length-1);
+	//console.log( "common clock1:", firstDel1.del, stream1[stream1.length-1].del, (stream1.length-1) );
+	for( let f =1; f < stream1.length; f++ ) stream1[f].del -= BigInt(Math.floor(bias1*(f-1)));
+	for( let f =1; f < stream2.length; f++ ) stream2[f].del -= BigInt(Math.floor(bias2*(f-1)));
 	firstDel1.del = 0;
 	firstDel2.del = 0;
 
@@ -280,6 +286,7 @@ function draw(  ) {
 		}
 		return 0;
 	}
+	//------------------------------------------------
 
 /*
 	ctx.beginPath();
@@ -300,10 +307,10 @@ function draw(  ) {
 	ctx.moveTo( 0, 500+0  );
 	let del = 0;
 	let pdel;
-	for( let i = 0; i < values.ViewSpan; i+=values.ViewRes ) {
+	for( let i = 0; i < values.ViewSpan; i+=values.ViewRes/10 ) {
 		pdel = del;
 		del = values.TScale*getDel( stream1, s1+BigInt(Math.floor( (i+values.Now*10) * 1_000_000_000_000)) )
-		ctx.moveTo( (i-values.ViewRes)*1000/values.ViewSpan, 500+  pdel );
+		ctx.moveTo( (i-values.ViewRes/10)*1000/values.ViewSpan, 500+  pdel );
 		ctx.lineTo( i*1000/values.ViewSpan, 500+  del );
 		//ctx.arc( i*1000/50, 500+  del, 3, 0, Math.PI*2 );
 	}
@@ -325,6 +332,7 @@ function draw(  ) {
 		Tdelta += Number(clockFrames[i].c1-clockFrames[i-1].c1-commonClock)/1000;
 		clock1delta.push( Tdelta );
 	}
+	//console.log( "common clock1:", commonClock, clock1delta[clock1delta.length-1], clock1delta.length );
 	const delta1offset = clock1delta[clock1delta.length-1] / clock1delta.length;
 	for( var i = 0; i < clock1delta.length; i++ ) {
 		clock1delta[i] = clock1delta[i] - delta1offset * i;		
