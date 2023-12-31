@@ -25,10 +25,13 @@ input               iLatch1,      // signal event that latches the counter to re
 input               iLatch2,      // signal event that latches the counter to register 2
 input               iResetLatch1, // sent after the value in register 1 is read from (or sent to) the USB
 input               iResetLatch2, // sent after the value in register 2 is read from (or sent to) the USB
-output [pWIDTH-1:0] oCOUNTER,  // register 1 with latched counter value
-output [pWIDTH-1:0] oCOUNTER2, // register 2 with latched counter value
+output [31:0] o1COUNTER,  // register 1 with latched counter value
+output [31:0] o1COUNTERHi,  // register 1 with latched counter value
+output [31:0] o2COUNTER, // register 2 with latched counter value
+output [31:0] o2COUNTERHi, // register 2 with latched counter value
 output  oRdyCOUNTER,           // signals that data has been latched in register 1
-output  oRdyCOUNTER2           // signals that data has been latched in register 2
+output  oRdyCOUNTER2,           // signals that data has been latched in register 2
+output  [31:0] debug
 );
 reg [pWIDTH-1:0] rCOUNTER = 0; // live counter, always increments
 reg [pWIDTH-1:0] rLatch1 = 0;  // latched counter value 1
@@ -70,7 +73,7 @@ reg rstLatchLock2 = 0;  // pending reset signal, iResetLatch2 was signaled, but 
 
 
 
-initial forever // Start at time 0 and repeat the begin/end forever
+always // Start at time 0 and repeat the begin/end forever
   begin
     #1
     if( iCLK ) iCLK = 0;
@@ -81,55 +84,47 @@ initial forever // Start at time 0 and repeat the begin/end forever
     //#1;
   end
 
-always @(posedge iResetLatch1)
+always 
+begin
     if( !iLatch1 ) begin
-        latchLock1 = 0; 
+        if( rstLatchLock1 && latchLock1 ) begin 
+            rstLatchLock1 = 0;
+            latchLock1 = 0;
+        end 
     end else begin
-        rstLatchLock1 = 1;
+        if( !latchLock1 ) begin
+            rLatch1<=rCOUNTER;
+            rstLatchLock1 = 0;
+            latchLock1 = 1;
+        end
+
+        if( iResetLatch1 && latchLock1 )  begin
+            rstLatchLock1 = 1;
+        end
     end
-begin
-
-always @(posedge iLatch1) 
-begin
-    rLatch1=rCOUNTER;
-    rstLatchLock1 = 0;
-    latchLock1 = 1;
+    
 end
 
-always @(negedge iLatch1) 
+always 
 begin
-  if( rstLatchLock1 && latchLock1 ) begin 
-      rstLatchLock1 = 0;
-      latchLock1 = 0;
-  end 
-end
-
-always @(posedge iResetLatch2)
     if( !iLatch2 ) begin
-        latchLock2 = 0; 
+        if( rstLatchLock2 && latchLock2 ) begin 
+            rstLatchLock2 = 0;
+            latchLock2 = 0;
+        end 
     end else begin
-        rstLatchLock2 = 1;
+        if( !latchLock2 ) begin
+            rLatch2<=rCOUNTER;
+            rstLatchLock2 = 0;
+            latchLock2 = 1;
+        end
+
+        if( iResetLatch2 && latchLock2 )  begin
+            rstLatchLock2 = 1;
+        end
     end
 end
 
-always @(posedge iLatch2) 
-begin
-  if( iLatch2 ) begin
-    rLatch2=rCOUNTER;
-    rstLatchLock2 = 0;
-    latchLock2 = 1;
-  end else if ( !iLatch2 && latchLock2 ) begin
-    latchLock2 = 0;
-  end
-end
-
-always @(negedge iLatch2) 
-begin
-  if( rstLatchLock2 && latchLock2 ) begin 
-    rstLatchLock2 = 0;
-    latchLock2 = 0;
-  end 
-end
 
   
 always @(posedge iCLK) 
@@ -139,8 +134,10 @@ begin
 end
 
 assign oRdyCOUNTER = latchLock1;
-assign oCOUNTER=rLatch1;
+assign o1COUNTER=rLatch1[31:0];
+assign o1COUNTERHi=rLatch1[pWIDTH-1:32];
 assign oRdyCOUNTER2 = latchLock2;
-assign oCOUNTER2=rLatch2;
+assign o2COUNTER=rLatch2[31:0];
+assign o2COUNTERHi=rLatch2[pWIDTH-1:32];
 
 endmodule
