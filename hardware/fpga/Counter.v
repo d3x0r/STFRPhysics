@@ -36,7 +36,7 @@ output  [31:0] debug
 reg [pWIDTH-1:0] rCOUNTER = 0; // live counter, always increments
 reg [pWIDTH-1:0] rLatch1 = 0;  // latched counter value 1
 reg [pWIDTH-1:0] rLatch2 = 0;  // latched counter value 2
-reg iCLK = 0;  // the flip-flopped clock gate
+reg iCLK_ff = 0;  // the flip-flopped clock gate
 reg latchLock1 = 0;     // iLatch1 was set, and the value is copied to rLatch1; prevents update to register 1 until reset
 reg latchLock2 = 0;     // iLatch2 was signaled, the value is copied to rLatch2; prevents update to reigster 2 until reset
 reg rstLatchLock1 = 0;  // pending reset signal, iResetLatch1 was signaled, but iLatch1 is still active; 
@@ -76,8 +76,8 @@ reg rstLatchLock2 = 0;  // pending reset signal, iResetLatch2 was signaled, but 
 always // Start at time 0 and repeat the begin/end forever
   begin
     #1
-    if( iCLK ) iCLK = 0;
-    else iCLK=1;
+    if( iCLK_ff ) iCLK_ff = 0;
+    else iCLK_ff=1;
     //iCLK= 0; // Set clk to 0
     //#1; // Wait for 1 time unit
     //iCLK = 1; // Set clk to 1
@@ -129,15 +129,15 @@ end
 
 
   
-always @(posedge iCLK) 
+always @(posedge iCLK_ff) 
 
 begin
   rCOUNTER<= rCOUNTER+1;
 end
 
 assign oRdyCOUNTER = latchLock1;
-assign o1COUNTER=rLatch1[31:0];
-assign o1COUNTERHi=rLatch1[pWIDTH-1:32];
+assign o1COUNTER=rCOUNTER[31:0];
+assign o1COUNTERHi=rCOUNTER[pWIDTH-1:32];
 assign oRdyCOUNTER2 = latchLock2;
 assign o2COUNTER=rLatch2[31:0];
 assign o2COUNTERHi=rLatch2[pWIDTH-1:32];
