@@ -86,6 +86,7 @@ always // Start at time 0 and repeat the begin/end forever
 
 always 
 begin
+    #1
     if( !iLatch1 ) begin
         if( rstLatchLock1 && latchLock1 ) begin 
             rstLatchLock1 = 0;
@@ -107,6 +108,7 @@ end
 
 always 
 begin
+    #1
     if( !iLatch2 ) begin
         if( rstLatchLock2 && latchLock2 ) begin 
             rstLatchLock2 = 0;
