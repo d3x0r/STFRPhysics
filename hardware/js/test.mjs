@@ -21,7 +21,13 @@ function send() {
 //setTimeout( latchTest, 5000 );
 //setTimeout( latchTest, 10000 );
 
-setInterval( latch1, 1000 );
+setTimeout( ()=>{
+	setInterval( latch1, 1000 );
+}, 3000 );
+
+setTimeout( ()=>{
+	setInterval( latch2, 1000 );
+}, 2500 );
 
 function reset1() {
 	sendbuf[0] |= 0b0001;
@@ -75,48 +81,69 @@ function latchTest() {
 
 }
 
-let firstTick = Date.now()/1000;
+let firstTick = 0;//Date.now()/1000;
+let priorTick = [0,0];
+
+let tickMsg = new Uint8Array( 13 );
+let tickOfs = 0;
 
 function log(msg) {
 	let start = 0;
-	console.log( "raw msg:", msg );
+	//console.log( "raw msg:", msg );
 	for( let n = 0; n < msg.length; n++ ) {
-		if( msg[n] === 0 ) {
-			if( start < n )
-				out( msg.slice( start, n ) );
-			out( msg.slice( n, n+9 ) );
-			start = n+9;
-			n += 8;
+		if( tickOfs ) {
+			tickMsg[tickOfs++] = msg[n];
+			if( tickOfs === 13 ){
+				//console.log( "Msg:", tickMsg );
+				out( tickMsg );
+				tickOfs = 0;
+			}
+			start = n+1;
+			continue;
 		}
-		if( msg[n] === 1 ) {
+		else if( msg[n] === 0 ) {
+			if( firstTick === 0 ) firstTick = Date.now()/1000
 			if( start < n )
 				out( msg.slice( start, n ) );
-			out( msg.slice( n, n+9 ) );
-			start = n+9;
-			n += 8;
+			tickMsg[0] = msg[n];
+			tickOfs++;
+		}
+		else if( msg[n] === 1 ) {
+			if( firstTick === 0 ) firstTick = Date.now()/1000
+			if( start < n )
+				out( msg.slice( start, n ) );
+			tickMsg[0] = msg[n];
+			tickOfs++;
 		}
 	}
 	if( start < msg.length ) {
 		//console.log( "last buffer?", start, msg.length );
 		out( msg.slice( start, msg.length ) );
 	}
+
 	function out(msg) {
 		//console.log( "Raw slice:", msg );
 		if( msg[0] == 0 ) {
-			const slice = msg.slice( 1, 9 );
+			const slice = msg.slice( 1, 13 );
 			//console.log( "message slice:", slice );
 			const u32 = new Uint32Array( slice.buffer );
-			const tick = u32[0] * 0x100000000 + u32[1];
+			const tick = u32[1] * 0x100000000 + u32[0];
 			const nowTick = Date.now()/1000;
-			console.log( "clock 0:", u32, tick );
+			if( priorTick[0] === 0 )
+				priorTick[0] = tick;
+			console.log( "clock 0:", u32, u32[2].toString(2).padStart(32, '0'), tick, tick-priorTick[0], nowTick-firstTick, (((nowTick-firstTick)/(tick-priorTick[0]))*1000000000).toFixed(3) );
+			
 			reset1();
 		}
 		else if( msg[0] == 1 ) {
-			const slice = msg.slice( 1, 9 );
+			const slice = msg.slice( 1, 13 );
 			//console.log( "message slice:", slice );
 			const u32 = new Uint32Array( slice.buffer );
-			const tick = u32[0] * 0x100000000 + u32[1];
-			console.log( "clock 1:", u32, tick );
+			const tick = u32[1] * 0x100000000 + u32[0];
+			const nowTick = Date.now()/1000;
+			if( priorTick[1] === 0 )
+				priorTick[1] = tick;
+			console.log( "clock 1:", u32, u32[2].toString(2).padStart(32, '0'), tick, tick-priorTick[1], nowTick-firstTick, (((nowTick-firstTick)/(tick-priorTick[1]))*1000000000).toFixed(3) );
 			reset2();
 		}
 		else console.log( String.fromCharCode.apply(null, msg) );
