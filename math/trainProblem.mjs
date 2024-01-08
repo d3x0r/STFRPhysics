@@ -2,21 +2,23 @@
 import {ObservedTime,RealTime} from "./relativistic.util.mjs"
 
 const gamma = Math.sqrt( 1-0.5*0.5);
+const C = 1;
 const V = 0.5;
+
 const L = 1;
 
 function a() {
 
 
 // first observer post by train forward, stationary
-const T_1 = ObservedTime( 0, {x:0.5,y:0,z:0}, {x:0,y:0,z:0}
+const T_1 = ObservedTime( 0, {x:V,y:0,z:0}, {x:0,y:0,z:0}
 			, {x:0, y:0, z:0}, {x:L, y:0, z:0} );
 console.log( "fp A T1:",T_1);
 
 // second obsrever is guy in train moving, seeing moved post
-const T_2 = ObservedTime( 0, {x:0, y:0, z:0}, { x:L-T_1*0.5, y:0, z:0 }
+const T_2 = ObservedTime( T_1, {x:0, y:0, z:0}, { x:L, y:0, z:0 }
 			, {x:0.5, y:0, z:0 }, { x: 0, y:0, z:0} );
-console.log( "fp A T2:",T_2, T_1+T_2);
+console.log( "fp A T2:",T_2-T_1, T_2);
 
 }
 
@@ -182,26 +184,26 @@ c();
 // first observer is length contracted mirror on train
 const Ta_1 = ObservedTime( 0, {x:0.5,y:0,z:0}, {x:0,y:0,z:0}
 			, {x:0.5, y:0, z:0}, {x:L*gamma, y:0, z:0} );
-console.log( "g fm A T1:",Ta_1);
+console.log( "g ft A T1:",Ta_1);
 
 
 // first observer is length contracted mirror on train
 const Tb_1 = ObservedTime( 0, {x:0.5,y:0,z:0}, {x:0,y:0,z:0}
 			, {x:0.5, y:0, z:0}, {x:-L*gamma, y:0, z:0} );
-console.log( "g bm A T1:",Tb_1);
+console.log( "g bt A T1:",Tb_1);
 
 // second observer is stationary by train from moved front mirror
 const Ta_2 = ObservedTime( 0, {x:0, y:0, z:0}, { x:L*gamma+Ta_1*0.5, y:0, z:0 }
 			, {x:0, y:0, z:0 }, { x: 0, y:0, z:0} );
 
-console.log( "g fm B T2:",Ta_2, Ta_2+Ta_1);
+console.log( "g ft B T2:",Ta_2, Ta_2+Ta_1);
 
 
 // second observer is stationary by train, from moved back mirror
 const Tb_2 = ObservedTime( 0, {x:0, y:0, z:0}, { x:-L*gamma+Tb_1*0.5, y:0, z:0 }
 			, {x:0, y:0, z:0 }, { x: 0, y:0, z:0} );
 
-console.log( "g bm B T2:",Tb_2, Tb_2 + Tb_1);
+console.log( "g bt B T2:",Tb_2, Tb_2 + Tb_1);
 
 
 function c2() {
@@ -239,14 +241,82 @@ c3();
 
 
 // second observer is moving in train from moved front mirror
-const TAa_2 = ObservedTime( 0, {x:0, y:0, z:0}, { x:L-Ta_1*0.5, y:0, z:0 }
-			, {x:0, y:0, z:0 }, { x: 0, y:0, z:0} );
+const TAa_2 = ObservedTime( 0, {x:0.5, y:0, z:0}, { x:0, y:0, z:0 }
+			, {x:0.5, y:0, z:0 }, { x: -L*gamma, y:0, z:0} );
 
-console.log( "zzg fm A T2:",TAa_2, TAa_2+Ta_1);
+console.log( "g bt B T1:",TAa_2, TAa_2*0.5);
 
 // second observer is moving observer
-const TAb_2 = ObservedTime( 0, {x:0.5, y:0, z:0}, { x:-L*gamma, y:0, z:0 }
-			, {x:0.5, y:0, z:0 }, { x: 0, y:0, z:0} );
+const TAb_2 = ObservedTime( 0, {x:0.5, y:0, z:0}, { x:0, y:0, z:0 }
+			, {x:0.5, y:0, z:0 }, { x: L*gamma, y:0, z:0} );
 
-console.log( "zzg bm A T2:",TAb_2, TAb_2 + Tb_1);
+console.log( "g ft B T1:",TAb_2, TAb_2*0.5);
 
+
+// second observer is moving in train from moved front mirror
+const TAa_2a = ObservedTime( 0, {x:0.5, y:0, z:0}, { x:0, y:0, z:0 }
+			, {x:0.5, y:0, z:0 }, { x: -L*gamma, y:0, z:0} );
+
+console.log( " bt B T1:",TAa_2a*gamma);
+
+// second observer is moving observer
+const TAb_2a = ObservedTime( 0, {x:0.5, y:0, z:0}, { x:0, y:0, z:0 }
+			, {x:0.5, y:0, z:0 }, { x: L*gamma, y:0, z:0} );
+
+console.log( " ft B T1:",TAb_2a*gamma);
+
+
+
+// a emits b reflects
+function getTAB(ta, av, a, bv, b ) {
+
+	// this is going to track two events... the computes A->B
+	const ta_ab = ObservedTime( ta, av, a, bv, b );
+
+	// compute the event from B to A
+	const ta_ab_ba = ObservedTime( ta_ab, bv, b, av, a );
+
+
+	// B->A (for which there is no reason for an event to happen at TA - meta event)
+	const ta_ba = ObservedTime( ta, bv, b, av, a );
+
+	const ta_ba_ab = ObservedTime( ta_ba, av, a, bv, b );
+	return {ta_ab, ta_ba, ta_ab_ba, ta_ba_ab, del_aba: ta_ab_ba-ta_ab, del_bab: ta_ba_ab-ta_ba };
+}
+
+const rt = getTAB( 0, {x:0,y:0,z:0}, {x:0,y:0,z:0}, {x:0.5,y:0,z:0}, {x:L*gamma, y:0, z:0});
+console.log( rt );
+
+const rt2 = getTAB( 0, {x:0.5,y:0,z:0}, {x:0,y:0,z:0}, {x:0.5,y:0,z:0}, {x:-L*gamma, y:0, z:0});
+rt2.ta_ab *= gamma;
+rt2.ta_ba *= gamma;
+console.log( rt2 );
+
+const rt3 = getTAB( 0, {x:0.0,y:0,z:0}, {x:0,y:0,z:0}, {x:0.5,y:0,z:0}, {x:L, y:0, z:0});
+console.log( rt3 );
+
+for( let i = 0; i < 1; i+= 0.25 ) {
+for( let v = i+0.0; v < i+0.010; v+= 0.001 ) {
+	const gamma = Math.sqrt( C*C-v*v);
+	const Lg = L * gamma;
+	
+	const t1 = ObservedTime( 0, {x:v,y:0,z:0}, {x:0,y:0,z:0}, {x:v,y:0,z:0}, {x:Lg, y:0, z:0});
+	const p1 = L + t1 * v;
+	const t2 = ObservedTime( t1, {x:v,y:0,z:0}, {x:Lg,y:0,z:0}, {x:v,y:0,z:0}, {x:0, y:0, z:0});
+	const p2 = p1 - (t2) * v;
+	console.log( "Time:", "V:",v.toFixed(4)
+					, "G:", gamma.toFixed(3), "1/G:", (1/v*(1-gamma)).toFixed(3)
+					, "T1:",(t1*gamma).toFixed(3)
+					, "T2:", ((t2-t1)*gamma).toFixed(3)
+					, "Tt:", ((t2)*gamma).toFixed(3)
+					, "D1:", p1.toFixed(3)
+					, "D2:", p2.toFixed(3)
+					, "DT:", (p1+p2).toFixed(3)
+					, "C1:", (p1/(t1*gamma)).toFixed(3)
+					, "C2:", (p2/((t2-t1)*gamma)).toFixed(3)
+					, "Ct:", ((p1+p2)/(t2*gamma))
+					//, "zz:", (299_792_458) * ((p1+p2)/(t2*gamma))
+					);
+//	const l1 = p1 + Lg;
+}
+}
