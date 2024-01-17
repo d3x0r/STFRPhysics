@@ -26,7 +26,7 @@ angleText.style.fontSize = "200%";
 
 
 const polarizerLeader = document.createElement( "span" );
-polarizerLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Polarizer correlation:";
+polarizerLeader.innerHTML = " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stern-Gerlach correlation:";
 controls.appendChild( polarizerLeader );
 const polarizerText = document.createElement( "span" );
 polarizerText.textContent = "50%";
