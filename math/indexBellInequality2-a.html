@@ -40,12 +40,19 @@
 
 	<p> 
 <pre><code> 
+a + b = 2;
+a = 2 - b;
+(b-a)/a and (b-a)/b.
+a = x;
+b = 2-x;
+(b-a) = 2-x-x = 2-2x;
+
 x = degrees/90;
 
-if( 1-2*x > 0 )  // 0 to 45 degrees is > 0  45 to 90 degrees is < 0
-	percent = (100/4 * (1+(1-2*x)/(1-x)))  // divisor slowly decreases to 0.5
+if( x > 2-x )  // 0 to 45 degrees is > 0  45 to 90 degrees is < 0
+	percent = (100 * ( 1 - x/(2-x)))  // divisor slowly decreases to 0.5
 else
-	percent = (100/4 * (1-x)/x)   // divisor slowly increases after 0.5
+	percent = (100 * ( (2-x)/x - 1))   // divisor slowly increases after 0.5
 </code></pre>
 	<div id="controls"></div>
 	<div style="position:absolute;top:0">
