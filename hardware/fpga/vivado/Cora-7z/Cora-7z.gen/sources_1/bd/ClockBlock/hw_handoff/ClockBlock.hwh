@@ -1,0 +1,902 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri Jan 12 21:54:37 2024" VIVADOVERSION="2023.2">
+
+  <SYSTEMINFO ARCH="zynq" BOARD="digilentinc.com:cora-z7-07s:part0:1.1" DEVICE="7z007s" NAME="ClockBlock" PACKAGE="clg400" SPEEDGRADE="-1"/>
+
+  <EXTERNALPORTS>
+    <PORT DIR="I" LEFT="7" NAME="S00_AXI_araddr" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_araddr">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_araddr"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="2" NAME="S00_AXI_arprot" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arprot">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_arprot"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="S00_AXI_arready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arready">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_arready"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="S00_AXI_arvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arvalid">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_arvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="7" NAME="S00_AXI_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awaddr">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_awaddr"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="2" NAME="S00_AXI_awprot" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awprot">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_awprot"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="S00_AXI_awready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awready">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_awready"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="S00_AXI_awvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awvalid">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_awvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="S00_AXI_bready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bready">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_bready"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="1" NAME="S00_AXI_bresp" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bresp">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_bresp"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="S00_AXI_bvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bvalid">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_bvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="31" NAME="S00_AXI_rdata" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rdata">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_rdata"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="S00_AXI_rready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rready">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_rready"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="1" NAME="S00_AXI_rresp" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rresp">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_rresp"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="S00_AXI_rvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rvalid">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_rvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="31" NAME="S00_AXI_wdata" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wdata">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_wdata"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="S00_AXI_wready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wready">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_wready"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="3" NAME="S00_AXI_wstrb" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wstrb">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_wstrb"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="S00_AXI_wvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wvalid">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_wvalid"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="globalClock" SIGIS="undef" SIGNAME="External_Ports_globalClock">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="COUNTER_0" PORT="globalClock"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="s00_axi_aclk" SIGIS="clk" SIGNAME="External_Ports_s00_axi_aclk">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_aclk"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="s00_axi_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="External_Ports_s00_axi_aresetn">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="s00_axi_aresetn"/>
+        <CONNECTION INSTANCE="COUNTER_0" PORT="iReset"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" LEFT="3" NAME="shield_11_8" RIGHT="0" SIGIS="undef" SIGNAME="InputMerge_1_outBus">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="InputMerge_1" PORT="outBus"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" LEFT="1" NAME="shield_13_12" RIGHT="0" SIGIS="undef" SIGNAME="External_Ports_shield_13_12">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="OutputSplitter_1" PORT="inBus"/>
+      </CONNECTIONS>
+    </PORT>
+  </EXTERNALPORTS>
+
+  <EXTERNALINTERFACES>
+    <BUSINTERFACE BUSNAME="External_Interface_S00_AXI" DATAWIDTH="32" NAME="S00_AXI" TYPE="SLAVE">
+      <PARAMETER NAME="ADDR_WIDTH" VALUE="31"/>
+      <PARAMETER NAME="ARUSER_WIDTH" VALUE="0"/>
+      <PARAMETER NAME="AWUSER_WIDTH" VALUE="0"/>
+      <PARAMETER NAME="BUSER_WIDTH" VALUE="0"/>
+      <PARAMETER NAME="CLK_DOMAIN" VALUE="design_1_processing_system7_0_0_FCLK_CLK0"/>
+      <PARAMETER NAME="DATA_WIDTH" VALUE="32"/>
+      <PARAMETER NAME="FREQ_HZ"/>
+      <PARAMETER NAME="HAS_BRESP" VALUE="1"/>
+      <PARAMETER NAME="HAS_BURST" VALUE="0"/>
+      <PARAMETER NAME="HAS_CACHE" VALUE="0"/>
+      <PARAMETER NAME="HAS_LOCK" VALUE="0"/>
+      <PARAMETER NAME="HAS_PROT" VALUE="1"/>
+      <PARAMETER NAME="HAS_QOS" VALUE="0"/>
+      <PARAMETER NAME="HAS_REGION" VALUE="0"/>
+      <PARAMETER NAME="HAS_RRESP" VALUE="1"/>
+      <PARAMETER NAME="HAS_WSTRB" VALUE="1"/>
+      <PARAMETER NAME="ID_WIDTH" VALUE="0"/>
+      <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
+      <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="1"/>
+      <PARAMETER NAME="NUM_READ_OUTSTANDING" VALUE="1"/>
+      <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
+      <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="1"/>
+      <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
+      <PARAMETER NAME="PHASE" VALUE="0.0"/>
+      <PARAMETER NAME="PROTOCOL" VALUE="AXI4LITE"/>
+      <PARAMETER NAME="READ_WRITE_MODE" VALUE="READ_WRITE"/>
+      <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
+      <PARAMETER NAME="RUSER_WIDTH" VALUE="0"/>
+      <PARAMETER NAME="SUPPORTS_NARROW_BURST" VALUE="0"/>
+      <PARAMETER NAME="WUSER_BITS_PER_BYTE" VALUE="0"/>
+      <PARAMETER NAME="WUSER_WIDTH" VALUE="0"/>
+      <PORTMAPS>
+        <PORTMAP LOGICAL="ARADDR" PHYSICAL="S00_AXI_araddr"/>
+        <PORTMAP LOGICAL="ARPROT" PHYSICAL="S00_AXI_arprot"/>
+        <PORTMAP LOGICAL="ARREADY" PHYSICAL="S00_AXI_arready"/>
+        <PORTMAP LOGICAL="ARVALID" PHYSICAL="S00_AXI_arvalid"/>
+        <PORTMAP LOGICAL="AWADDR" PHYSICAL="S00_AXI_awaddr"/>
+        <PORTMAP LOGICAL="AWPROT" PHYSICAL="S00_AXI_awprot"/>
+        <PORTMAP LOGICAL="AWREADY" PHYSICAL="S00_AXI_awready"/>
+        <PORTMAP LOGICAL="AWVALID" PHYSICAL="S00_AXI_awvalid"/>
+        <PORTMAP LOGICAL="BREADY" PHYSICAL="S00_AXI_bready"/>
+        <PORTMAP LOGICAL="BRESP" PHYSICAL="S00_AXI_bresp"/>
+        <PORTMAP LOGICAL="BVALID" PHYSICAL="S00_AXI_bvalid"/>
+        <PORTMAP LOGICAL="RDATA" PHYSICAL="S00_AXI_rdata"/>
+        <PORTMAP LOGICAL="RREADY" PHYSICAL="S00_AXI_rready"/>
+        <PORTMAP LOGICAL="RRESP" PHYSICAL="S00_AXI_rresp"/>
+        <PORTMAP LOGICAL="RVALID" PHYSICAL="S00_AXI_rvalid"/>
+        <PORTMAP LOGICAL="WDATA" PHYSICAL="S00_AXI_wdata"/>
+        <PORTMAP LOGICAL="WREADY" PHYSICAL="S00_AXI_wready"/>
+        <PORTMAP LOGICAL="WSTRB" PHYSICAL="S00_AXI_wstrb"/>
+        <PORTMAP LOGICAL="WVALID" PHYSICAL="S00_AXI_wvalid"/>
+      </PORTMAPS>
+      <MEMORYMAP>
+        <MEMRANGE ADDRESSBLOCK="S00_AXI_reg" BASENAME="C_S00_AXI_BASEADDR" BASEVALUE="0x43C00000" HIGHNAME="C_S00_AXI_HIGHADDR" HIGHVALUE="0x43C0FFFF" INSTANCE="CLOCK_INTERFACE" IS_DATA="TRUE" IS_INSTRUCTION="TRUE" MASTERBUSINTERFACE="S00_AXI" MEMTYPE="REGISTER" SLAVEBUSINTERFACE="S00_AXI"/>
+      </MEMORYMAP>
+      <PERIPHERALS>
+        <PERIPHERAL INSTANCE="CLOCK_INTERFACE"/>
+      </PERIPHERALS>
+    </BUSINTERFACE>
+  </EXTERNALINTERFACES>
+
+  <MODULES>
+    <MODULE COREREVISION="8" FULLNAME="/CLOCK_INTERFACE" HWVERSION="1.0" INSTANCE="CLOCK_INTERFACE" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="AXIHeader16" VLNV="d3x0r:user:AXIHeader16:1.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="C_S00_AXI_ADDR_WIDTH" VALUE="8"/>
+        <PARAMETER NAME="C_S00_AXI_DATA_WIDTH" VALUE="32"/>
+        <PARAMETER NAME="INPUTS" VALUE="9"/>
+        <PARAMETER NAME="OUTPUTS" VALUE="1"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_CLOCK_INTERFACE_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+        <PARAMETER NAME="C_S00_AXI_BASEADDR" VALUE="0x43C00000"/>
+        <PARAMETER NAME="C_S00_AXI_HIGHADDR" VALUE="0x43C0FFFF"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="31" NAME="iDATA00" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o1COUNTER"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA01" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTERHi">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o1COUNTERHi"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA02" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTERPhase">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o1COUNTERPhase"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA03" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o2COUNTER"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA04" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTERHi">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o2COUNTERHi"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA05" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTERPhase">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="o2COUNTERPhase"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA06" RIGHT="0" SIGIS="undef" SIGNAME="InputMerge_0_outBus">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="InputMerge_0" PORT="outBus"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="iDATA07" RIGHT="0" SIGIS="undef"/>
+        <PORT DIR="I" LEFT="31" NAME="iDATA08" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_debug">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="debug"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="oDATA00" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_oDATA00">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_0" PORT="inBus"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_aclk" SIGIS="clk" SIGNAME="External_Ports_s00_axi_aclk">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="s00_axi_aclk"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="7" NAME="s00_axi_araddr" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_araddr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_araddr"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_aresetn" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="External_Ports_s00_axi_aresetn">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="s00_axi_aresetn"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="2" NAME="s00_axi_arprot" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arprot">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_arprot"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="s00_axi_arready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_arready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_arvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_arvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_arvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="7" NAME="s00_axi_awaddr" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awaddr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_awaddr"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="2" NAME="s00_axi_awprot" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awprot">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_awprot"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="s00_axi_awready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_awready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_awvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_awvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_awvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_bready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_bready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="1" NAME="s00_axi_bresp" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bresp">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_bresp"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="s00_axi_bvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_bvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_bvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="s00_axi_rdata" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rdata">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_rdata"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_rready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_rready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="1" NAME="s00_axi_rresp" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rresp">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_rresp"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="s00_axi_rvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_rvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_rvalid"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="31" NAME="s00_axi_wdata" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wdata">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_wdata"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="s00_axi_wready" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wready">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_wready"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="3" NAME="s00_axi_wstrb" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wstrb">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_wstrb"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="s00_axi_wvalid" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_s00_axi_wvalid">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="ClockBlock_imp" PORT="S00_AXI_wvalid"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES>
+        <BUSINTERFACE BUSNAME="External_Interface_S00_AXI" DATAWIDTH="32" NAME="S00_AXI" TYPE="SLAVE" VLNV="xilinx.com:interface:aximm:1.0">
+          <PARAMETER NAME="ADDR_WIDTH" VALUE="8"/>
+          <PARAMETER NAME="ARUSER_WIDTH" VALUE="0"/>
+          <PARAMETER NAME="AWUSER_WIDTH" VALUE="0"/>
+          <PARAMETER NAME="BUSER_WIDTH" VALUE="0"/>
+          <PARAMETER NAME="CLK_DOMAIN" VALUE="design_1_processing_system7_0_0_FCLK_CLK0"/>
+          <PARAMETER NAME="DATA_WIDTH" VALUE="32"/>
+          <PARAMETER NAME="FREQ_HZ"/>
+          <PARAMETER NAME="HAS_BRESP" VALUE="1"/>
+          <PARAMETER NAME="HAS_BURST" VALUE="0"/>
+          <PARAMETER NAME="HAS_CACHE" VALUE="0"/>
+          <PARAMETER NAME="HAS_LOCK" VALUE="0"/>
+          <PARAMETER NAME="HAS_PROT" VALUE="1"/>
+          <PARAMETER NAME="HAS_QOS" VALUE="0"/>
+          <PARAMETER NAME="HAS_REGION" VALUE="0"/>
+          <PARAMETER NAME="HAS_RRESP" VALUE="1"/>
+          <PARAMETER NAME="HAS_WSTRB" VALUE="1"/>
+          <PARAMETER NAME="ID_WIDTH" VALUE="0"/>
+          <PARAMETER NAME="INSERT_VIP" VALUE="0"/>
+          <PARAMETER NAME="MAX_BURST_LENGTH" VALUE="1"/>
+          <PARAMETER NAME="NUM_READ_OUTSTANDING" VALUE="1"/>
+          <PARAMETER NAME="NUM_READ_THREADS" VALUE="1"/>
+          <PARAMETER NAME="NUM_WRITE_OUTSTANDING" VALUE="1"/>
+          <PARAMETER NAME="NUM_WRITE_THREADS" VALUE="1"/>
+          <PARAMETER NAME="PHASE" VALUE="0.0"/>
+          <PARAMETER NAME="PROTOCOL" VALUE="AXI4LITE"/>
+          <PARAMETER NAME="READ_WRITE_MODE" VALUE="READ_WRITE"/>
+          <PARAMETER NAME="RUSER_BITS_PER_BYTE" VALUE="0"/>
+          <PARAMETER NAME="RUSER_WIDTH" VALUE="0"/>
+          <PARAMETER NAME="SUPPORTS_NARROW_BURST" VALUE="0"/>
+          <PARAMETER NAME="WIZ_DATA_WIDTH" VALUE="32"/>
+          <PARAMETER NAME="WIZ_NUM_REG" VALUE="32"/>
+          <PARAMETER NAME="WUSER_BITS_PER_BYTE" VALUE="0"/>
+          <PARAMETER NAME="WUSER_WIDTH" VALUE="0"/>
+          <PORTMAPS>
+            <PORTMAP LOGICAL="ARADDR" PHYSICAL="s00_axi_araddr"/>
+            <PORTMAP LOGICAL="ARPROT" PHYSICAL="s00_axi_arprot"/>
+            <PORTMAP LOGICAL="ARREADY" PHYSICAL="s00_axi_arready"/>
+            <PORTMAP LOGICAL="ARVALID" PHYSICAL="s00_axi_arvalid"/>
+            <PORTMAP LOGICAL="AWADDR" PHYSICAL="s00_axi_awaddr"/>
+            <PORTMAP LOGICAL="AWPROT" PHYSICAL="s00_axi_awprot"/>
+            <PORTMAP LOGICAL="AWREADY" PHYSICAL="s00_axi_awready"/>
+            <PORTMAP LOGICAL="AWVALID" PHYSICAL="s00_axi_awvalid"/>
+            <PORTMAP LOGICAL="BREADY" PHYSICAL="s00_axi_bready"/>
+            <PORTMAP LOGICAL="BRESP" PHYSICAL="s00_axi_bresp"/>
+            <PORTMAP LOGICAL="BVALID" PHYSICAL="s00_axi_bvalid"/>
+            <PORTMAP LOGICAL="RDATA" PHYSICAL="s00_axi_rdata"/>
+            <PORTMAP LOGICAL="RREADY" PHYSICAL="s00_axi_rready"/>
+            <PORTMAP LOGICAL="RRESP" PHYSICAL="s00_axi_rresp"/>
+            <PORTMAP LOGICAL="RVALID" PHYSICAL="s00_axi_rvalid"/>
+            <PORTMAP LOGICAL="WDATA" PHYSICAL="s00_axi_wdata"/>
+            <PORTMAP LOGICAL="WREADY" PHYSICAL="s00_axi_wready"/>
+            <PORTMAP LOGICAL="WSTRB" PHYSICAL="s00_axi_wstrb"/>
+            <PORTMAP LOGICAL="WVALID" PHYSICAL="s00_axi_wvalid"/>
+          </PORTMAPS>
+        </BUSINTERFACE>
+      </BUSINTERFACES>
+    </MODULE>
+    <MODULE COREREVISION="1" FULLNAME="/COUNTER_0" HWVERSION="1.0" INSTANCE="COUNTER_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="COUNTER" VLNV="xilinx.com:module_ref:COUNTER:1.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="pWIDTH" VALUE="64"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_COUNTER_0_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="O" LEFT="31" NAME="debug" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_debug">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA08"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="globalClock" SIGIS="undef" SIGNAME="External_Ports_globalClock">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="globalClock"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="iLatch1" SIGIS="undef" SIGNAME="util_vector_logic_0_Res">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_0" PORT="Res"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="iLatch2" SIGIS="undef" SIGNAME="util_vector_logic_1_Res">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_1" PORT="Res"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="iReset" POLARITY="ACTIVE_LOW" SIGIS="undef" SIGNAME="External_Ports_s00_axi_aresetn">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="s00_axi_aresetn"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="iResetLatch1" SIGIS="undef" SIGNAME="OutputSplitter_0_o2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_0" PORT="o2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="iResetLatch2" SIGIS="undef" SIGNAME="OutputSplitter_0_o3">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_0" PORT="o3"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o1COUNTER" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA00"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o1COUNTERHi" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTERHi">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA01"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o1COUNTERPhase" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o1COUNTERPhase">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA02"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o2COUNTER" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA03"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o2COUNTERHi" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTERHi">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA04"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="o2COUNTERPhase" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_o2COUNTERPhase">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA05"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="oLatchTest1" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="InputMerge_0" PORT="i2"/>
+            <CONNECTION INSTANCE="InputMerge_1" PORT="i2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="oLatchTest2" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="InputMerge_0" PORT="i3"/>
+            <CONNECTION INSTANCE="InputMerge_1" PORT="i3"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="oRdyCOUNTER" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="InputMerge_0" PORT="i0"/>
+            <CONNECTION INSTANCE="InputMerge_1" PORT="i0"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="oRdyCOUNTER2" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="InputMerge_0" PORT="i1"/>
+            <CONNECTION INSTANCE="InputMerge_1" PORT="i1"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="14" FULLNAME="/InputMerge_0" HWVERSION="1.0" INSTANCE="InputMerge_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="InputMerge" VLNV="d3x0r:user:InputMerge:1.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="inWidth0" VALUE="1"/>
+        <PARAMETER NAME="inWidth1" VALUE="1"/>
+        <PARAMETER NAME="inWidth2" VALUE="1"/>
+        <PARAMETER NAME="inWidth3" VALUE="1"/>
+        <PARAMETER NAME="inWidth4" VALUE="0"/>
+        <PARAMETER NAME="inWidth5" VALUE="0"/>
+        <PARAMETER NAME="inWidth6" VALUE="0"/>
+        <PARAMETER NAME="inWidth7" VALUE="0"/>
+        <PARAMETER NAME="inWidth8" VALUE="0"/>
+        <PARAMETER NAME="inWidth9" VALUE="0"/>
+        <PARAMETER NAME="inWidth10" VALUE="0"/>
+        <PARAMETER NAME="inWidth11" VALUE="0"/>
+        <PARAMETER NAME="inWidth12" VALUE="0"/>
+        <PARAMETER NAME="inWidth13" VALUE="0"/>
+        <PARAMETER NAME="inWidth14" VALUE="0"/>
+        <PARAMETER NAME="inWidth15" VALUE="0"/>
+        <PARAMETER NAME="inWidth16" VALUE="0"/>
+        <PARAMETER NAME="inWidth17" VALUE="0"/>
+        <PARAMETER NAME="inWidth18" VALUE="0"/>
+        <PARAMETER NAME="inWidth19" VALUE="0"/>
+        <PARAMETER NAME="inWidth20" VALUE="0"/>
+        <PARAMETER NAME="inWidth21" VALUE="0"/>
+        <PARAMETER NAME="inWidth22" VALUE="0"/>
+        <PARAMETER NAME="inWidth23" VALUE="0"/>
+        <PARAMETER NAME="inWidth24" VALUE="0"/>
+        <PARAMETER NAME="inWidth25" VALUE="0"/>
+        <PARAMETER NAME="inWidth26" VALUE="0"/>
+        <PARAMETER NAME="inWidth27" VALUE="0"/>
+        <PARAMETER NAME="inWidth28" VALUE="0"/>
+        <PARAMETER NAME="inWidth29" VALUE="0"/>
+        <PARAMETER NAME="inWidth30" VALUE="0"/>
+        <PARAMETER NAME="inWidth31" VALUE="0"/>
+        <PARAMETER NAME="outWidth" VALUE="32"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_InputMerge_0_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="0" NAME="i0" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oRdyCOUNTER"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i1" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oRdyCOUNTER2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i2" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oLatchTest1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i3" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oLatchTest2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="31" NAME="outBus" RIGHT="0" SIGIS="undef" SIGNAME="InputMerge_0_outBus">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="iDATA06"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="14" FULLNAME="/InputMerge_1" HWVERSION="1.0" INSTANCE="InputMerge_1" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="InputMerge" VLNV="d3x0r:user:InputMerge:1.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="inWidth0" VALUE="1"/>
+        <PARAMETER NAME="inWidth1" VALUE="1"/>
+        <PARAMETER NAME="inWidth2" VALUE="1"/>
+        <PARAMETER NAME="inWidth3" VALUE="1"/>
+        <PARAMETER NAME="inWidth4" VALUE="0"/>
+        <PARAMETER NAME="inWidth5" VALUE="0"/>
+        <PARAMETER NAME="inWidth6" VALUE="0"/>
+        <PARAMETER NAME="inWidth7" VALUE="0"/>
+        <PARAMETER NAME="inWidth8" VALUE="0"/>
+        <PARAMETER NAME="inWidth9" VALUE="0"/>
+        <PARAMETER NAME="inWidth10" VALUE="0"/>
+        <PARAMETER NAME="inWidth11" VALUE="0"/>
+        <PARAMETER NAME="inWidth12" VALUE="0"/>
+        <PARAMETER NAME="inWidth13" VALUE="0"/>
+        <PARAMETER NAME="inWidth14" VALUE="0"/>
+        <PARAMETER NAME="inWidth15" VALUE="0"/>
+        <PARAMETER NAME="inWidth16" VALUE="0"/>
+        <PARAMETER NAME="inWidth17" VALUE="0"/>
+        <PARAMETER NAME="inWidth18" VALUE="0"/>
+        <PARAMETER NAME="inWidth19" VALUE="0"/>
+        <PARAMETER NAME="inWidth20" VALUE="0"/>
+        <PARAMETER NAME="inWidth21" VALUE="0"/>
+        <PARAMETER NAME="inWidth22" VALUE="0"/>
+        <PARAMETER NAME="inWidth23" VALUE="0"/>
+        <PARAMETER NAME="inWidth24" VALUE="0"/>
+        <PARAMETER NAME="inWidth25" VALUE="0"/>
+        <PARAMETER NAME="inWidth26" VALUE="0"/>
+        <PARAMETER NAME="inWidth27" VALUE="0"/>
+        <PARAMETER NAME="inWidth28" VALUE="0"/>
+        <PARAMETER NAME="inWidth29" VALUE="0"/>
+        <PARAMETER NAME="inWidth30" VALUE="0"/>
+        <PARAMETER NAME="inWidth31" VALUE="0"/>
+        <PARAMETER NAME="outWidth" VALUE="4"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_InputMerge_1_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="0" NAME="i0" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oRdyCOUNTER"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i1" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oRdyCOUNTER2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oRdyCOUNTER2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i2" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oLatchTest1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="i3" RIGHT="0" SIGIS="undef" SIGNAME="COUNTER_0_oLatchTest2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="oLatchTest2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="3" NAME="outBus" RIGHT="0" SIGIS="undef" SIGNAME="InputMerge_1_outBus">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="shield_11_8"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="9" FULLNAME="/OutputSplitter_0" HWVERSION="1.0.1" INSTANCE="OutputSplitter_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="OutputSplitter" VLNV="d3x0r:user:OutputSplitter:1.0.1">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="enable00" VALUE="true"/>
+        <PARAMETER NAME="enable01" VALUE="true"/>
+        <PARAMETER NAME="enable02" VALUE="true"/>
+        <PARAMETER NAME="enable03" VALUE="true"/>
+        <PARAMETER NAME="enable04" VALUE="false"/>
+        <PARAMETER NAME="enable05" VALUE="false"/>
+        <PARAMETER NAME="enable06" VALUE="false"/>
+        <PARAMETER NAME="enable07" VALUE="false"/>
+        <PARAMETER NAME="enable08" VALUE="false"/>
+        <PARAMETER NAME="enable09" VALUE="false"/>
+        <PARAMETER NAME="enable10" VALUE="false"/>
+        <PARAMETER NAME="enable11" VALUE="false"/>
+        <PARAMETER NAME="enable12" VALUE="false"/>
+        <PARAMETER NAME="enable13" VALUE="false"/>
+        <PARAMETER NAME="enable14" VALUE="false"/>
+        <PARAMETER NAME="enable15" VALUE="false"/>
+        <PARAMETER NAME="enable16" VALUE="false"/>
+        <PARAMETER NAME="enable17" VALUE="false"/>
+        <PARAMETER NAME="enable18" VALUE="false"/>
+        <PARAMETER NAME="enable19" VALUE="false"/>
+        <PARAMETER NAME="enable20" VALUE="false"/>
+        <PARAMETER NAME="enable21" VALUE="false"/>
+        <PARAMETER NAME="enable22" VALUE="false"/>
+        <PARAMETER NAME="enable23" VALUE="false"/>
+        <PARAMETER NAME="enable24" VALUE="false"/>
+        <PARAMETER NAME="enable25" VALUE="false"/>
+        <PARAMETER NAME="enable26" VALUE="false"/>
+        <PARAMETER NAME="enable27" VALUE="false"/>
+        <PARAMETER NAME="enable28" VALUE="false"/>
+        <PARAMETER NAME="enable29" VALUE="false"/>
+        <PARAMETER NAME="enable30" VALUE="false"/>
+        <PARAMETER NAME="enable31" VALUE="false"/>
+        <PARAMETER NAME="inWidth" VALUE="32"/>
+        <PARAMETER NAME="outWidth0" VALUE="1"/>
+        <PARAMETER NAME="outWidth1" VALUE="1"/>
+        <PARAMETER NAME="outWidth2" VALUE="1"/>
+        <PARAMETER NAME="outWidth3" VALUE="1"/>
+        <PARAMETER NAME="outWidth4" VALUE="1"/>
+        <PARAMETER NAME="outWidth5" VALUE="1"/>
+        <PARAMETER NAME="outWidth6" VALUE="1"/>
+        <PARAMETER NAME="outWidth7" VALUE="1"/>
+        <PARAMETER NAME="outWidth8" VALUE="1"/>
+        <PARAMETER NAME="outWidth9" VALUE="1"/>
+        <PARAMETER NAME="outWidth10" VALUE="1"/>
+        <PARAMETER NAME="outWidth11" VALUE="1"/>
+        <PARAMETER NAME="outWidth12" VALUE="1"/>
+        <PARAMETER NAME="outWidth13" VALUE="1"/>
+        <PARAMETER NAME="outWidth14" VALUE="1"/>
+        <PARAMETER NAME="outWidth15" VALUE="1"/>
+        <PARAMETER NAME="outWidth16" VALUE="1"/>
+        <PARAMETER NAME="outWidth17" VALUE="1"/>
+        <PARAMETER NAME="outWidth18" VALUE="1"/>
+        <PARAMETER NAME="outWidth19" VALUE="1"/>
+        <PARAMETER NAME="outWidth20" VALUE="1"/>
+        <PARAMETER NAME="outWidth21" VALUE="1"/>
+        <PARAMETER NAME="outWidth22" VALUE="1"/>
+        <PARAMETER NAME="outWidth23" VALUE="1"/>
+        <PARAMETER NAME="outWidth24" VALUE="1"/>
+        <PARAMETER NAME="outWidth25" VALUE="1"/>
+        <PARAMETER NAME="outWidth26" VALUE="1"/>
+        <PARAMETER NAME="outWidth27" VALUE="1"/>
+        <PARAMETER NAME="outWidth28" VALUE="1"/>
+        <PARAMETER NAME="outWidth29" VALUE="1"/>
+        <PARAMETER NAME="outWidth30" VALUE="1"/>
+        <PARAMETER NAME="outWidth31" VALUE="1"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_OutputSplitter_0_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="31" NAME="inBus" RIGHT="0" SIGIS="undef" SIGNAME="CLOCK_INTERFACE_oDATA00">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="CLOCK_INTERFACE" PORT="oDATA00"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o0" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o0">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_0" PORT="Op1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o1" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_1" PORT="Op1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o2" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o2">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="iResetLatch1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o3" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o3">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="iResetLatch2"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="9" FULLNAME="/OutputSplitter_1" HWVERSION="1.0.1" INSTANCE="OutputSplitter_1" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="OutputSplitter" VLNV="d3x0r:user:OutputSplitter:1.0.1">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="enable00" VALUE="true"/>
+        <PARAMETER NAME="enable01" VALUE="true"/>
+        <PARAMETER NAME="enable02" VALUE="true"/>
+        <PARAMETER NAME="enable03" VALUE="true"/>
+        <PARAMETER NAME="enable04" VALUE="true"/>
+        <PARAMETER NAME="enable05" VALUE="true"/>
+        <PARAMETER NAME="enable06" VALUE="true"/>
+        <PARAMETER NAME="enable07" VALUE="true"/>
+        <PARAMETER NAME="enable08" VALUE="true"/>
+        <PARAMETER NAME="enable09" VALUE="true"/>
+        <PARAMETER NAME="enable10" VALUE="true"/>
+        <PARAMETER NAME="enable11" VALUE="true"/>
+        <PARAMETER NAME="enable12" VALUE="true"/>
+        <PARAMETER NAME="enable13" VALUE="true"/>
+        <PARAMETER NAME="enable14" VALUE="true"/>
+        <PARAMETER NAME="enable15" VALUE="true"/>
+        <PARAMETER NAME="enable16" VALUE="true"/>
+        <PARAMETER NAME="enable17" VALUE="true"/>
+        <PARAMETER NAME="enable18" VALUE="true"/>
+        <PARAMETER NAME="enable19" VALUE="true"/>
+        <PARAMETER NAME="enable20" VALUE="true"/>
+        <PARAMETER NAME="enable21" VALUE="true"/>
+        <PARAMETER NAME="enable22" VALUE="true"/>
+        <PARAMETER NAME="enable23" VALUE="true"/>
+        <PARAMETER NAME="enable24" VALUE="true"/>
+        <PARAMETER NAME="enable25" VALUE="true"/>
+        <PARAMETER NAME="enable26" VALUE="true"/>
+        <PARAMETER NAME="enable27" VALUE="true"/>
+        <PARAMETER NAME="enable28" VALUE="true"/>
+        <PARAMETER NAME="enable29" VALUE="true"/>
+        <PARAMETER NAME="enable30" VALUE="true"/>
+        <PARAMETER NAME="enable31" VALUE="true"/>
+        <PARAMETER NAME="inWidth" VALUE="2"/>
+        <PARAMETER NAME="outWidth0" VALUE="1"/>
+        <PARAMETER NAME="outWidth1" VALUE="1"/>
+        <PARAMETER NAME="outWidth2" VALUE="1"/>
+        <PARAMETER NAME="outWidth3" VALUE="1"/>
+        <PARAMETER NAME="outWidth4" VALUE="1"/>
+        <PARAMETER NAME="outWidth5" VALUE="1"/>
+        <PARAMETER NAME="outWidth6" VALUE="1"/>
+        <PARAMETER NAME="outWidth7" VALUE="1"/>
+        <PARAMETER NAME="outWidth8" VALUE="1"/>
+        <PARAMETER NAME="outWidth9" VALUE="1"/>
+        <PARAMETER NAME="outWidth10" VALUE="1"/>
+        <PARAMETER NAME="outWidth11" VALUE="1"/>
+        <PARAMETER NAME="outWidth12" VALUE="1"/>
+        <PARAMETER NAME="outWidth13" VALUE="1"/>
+        <PARAMETER NAME="outWidth14" VALUE="1"/>
+        <PARAMETER NAME="outWidth15" VALUE="1"/>
+        <PARAMETER NAME="outWidth16" VALUE="1"/>
+        <PARAMETER NAME="outWidth17" VALUE="1"/>
+        <PARAMETER NAME="outWidth18" VALUE="1"/>
+        <PARAMETER NAME="outWidth19" VALUE="1"/>
+        <PARAMETER NAME="outWidth20" VALUE="1"/>
+        <PARAMETER NAME="outWidth21" VALUE="1"/>
+        <PARAMETER NAME="outWidth22" VALUE="1"/>
+        <PARAMETER NAME="outWidth23" VALUE="1"/>
+        <PARAMETER NAME="outWidth24" VALUE="1"/>
+        <PARAMETER NAME="outWidth25" VALUE="1"/>
+        <PARAMETER NAME="outWidth26" VALUE="1"/>
+        <PARAMETER NAME="outWidth27" VALUE="1"/>
+        <PARAMETER NAME="outWidth28" VALUE="1"/>
+        <PARAMETER NAME="outWidth29" VALUE="1"/>
+        <PARAMETER NAME="outWidth30" VALUE="1"/>
+        <PARAMETER NAME="outWidth31" VALUE="1"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_OutputSplitter_1_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="1" NAME="inBus" RIGHT="0" SIGIS="undef" SIGNAME="External_Ports_shield_13_12">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="shield_13_12"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o0" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_1_o0">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_0" PORT="Op2"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="o1" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_1_o1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="util_vector_logic_1" PORT="Op2"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="3" FULLNAME="/util_vector_logic_0" HWVERSION="2.0" INSTANCE="util_vector_logic_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="util_vector_logic" VLNV="xilinx.com:ip:util_vector_logic:2.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="C_OPERATION" VALUE="or"/>
+        <PARAMETER NAME="C_SIZE" VALUE="1"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_util_vector_logic_0_0"/>
+        <PARAMETER NAME="LOGO_FILE" VALUE="data/sym_orgate.png"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="0" NAME="Op1" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o0">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_0" PORT="o0"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="Op2" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_1_o0">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_1" PORT="o0"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="Res" RIGHT="0" SIGIS="undef" SIGNAME="util_vector_logic_0_Res">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="iLatch1"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+    <MODULE COREREVISION="3" FULLNAME="/util_vector_logic_1" HWVERSION="2.0" INSTANCE="util_vector_logic_1" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="util_vector_logic" VLNV="xilinx.com:ip:util_vector_logic:2.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="C_OPERATION" VALUE="or"/>
+        <PARAMETER NAME="C_SIZE" VALUE="1"/>
+        <PARAMETER NAME="Component_Name" VALUE="ClockBlock_util_vector_logic_1_0"/>
+        <PARAMETER NAME="LOGO_FILE" VALUE="data/sym_orgate.png"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" LEFT="0" NAME="Op1" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_0_o1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_0" PORT="o1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" LEFT="0" NAME="Op2" RIGHT="0" SIGIS="undef" SIGNAME="OutputSplitter_1_o1">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="OutputSplitter_1" PORT="o1"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" LEFT="0" NAME="Res" RIGHT="0" SIGIS="undef" SIGNAME="util_vector_logic_1_Res">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="COUNTER_0" PORT="iLatch2"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+  </MODULES>
+
+</EDKSYSTEM>
