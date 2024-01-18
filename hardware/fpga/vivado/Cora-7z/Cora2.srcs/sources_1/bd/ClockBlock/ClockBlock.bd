@@ -1,0 +1,923 @@
+{
+  "design": {
+    "design_info": {
+      "boundary_crc": "0x1517F06B861D970",
+      "device": "xc7z007sclg400-1",
+      "gen_directory": "../../../../Cora2.gen/sources_1/bd/ClockBlock",
+      "name": "ClockBlock",
+      "rev_ctrl_bd_flag": "RevCtrlBdOff",
+      "synth_flow_mode": "Hierarchical",
+      "tool_version": "2023.2",
+      "validated": "true"
+    },
+    "design_tree": {
+      "CLOCK_INTERFACE": "",
+      "COUNTER_0": "",
+      "InputMerge_0": "",
+      "InputMerge_1": "",
+      "OutputSplitter_0": "",
+      "OutputSplitter_1": "",
+      "util_vector_logic_0": "",
+      "util_vector_logic_1": ""
+    },
+    "interface_ports": {
+      "S00_AXI": {
+        "mode": "Slave",
+        "vlnv_bus_definition": "xilinx.com:interface:aximm:1.0",
+        "vlnv": "xilinx.com:interface:aximm_rtl:1.0",
+        "parameters": {
+          "ADDR_WIDTH": {
+            "value": "31"
+          },
+          "ARUSER_WIDTH": {
+            "value": "0"
+          },
+          "AWUSER_WIDTH": {
+            "value": "0"
+          },
+          "BUSER_WIDTH": {
+            "value": "0"
+          },
+          "CLK_DOMAIN": {
+            "value": "design_1_processing_system7_0_0_FCLK_CLK0",
+            "value_src": "default_prop"
+          },
+          "DATA_WIDTH": {
+            "value": "32"
+          },
+          "HAS_BRESP": {
+            "value": "1"
+          },
+          "HAS_BURST": {
+            "value": "0"
+          },
+          "HAS_CACHE": {
+            "value": "0"
+          },
+          "HAS_LOCK": {
+            "value": "0"
+          },
+          "HAS_PROT": {
+            "value": "1"
+          },
+          "HAS_QOS": {
+            "value": "0"
+          },
+          "HAS_REGION": {
+            "value": "0"
+          },
+          "HAS_RRESP": {
+            "value": "1"
+          },
+          "HAS_WSTRB": {
+            "value": "1"
+          },
+          "ID_WIDTH": {
+            "value": "0"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "MAX_BURST_LENGTH": {
+            "value": "1"
+          },
+          "NUM_READ_OUTSTANDING": {
+            "value": "1"
+          },
+          "NUM_READ_THREADS": {
+            "value": "1"
+          },
+          "NUM_WRITE_OUTSTANDING": {
+            "value": "1"
+          },
+          "NUM_WRITE_THREADS": {
+            "value": "1"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
+          },
+          "PROTOCOL": {
+            "value": "AXI4LITE"
+          },
+          "READ_WRITE_MODE": {
+            "value": "READ_WRITE"
+          },
+          "RUSER_BITS_PER_BYTE": {
+            "value": "0"
+          },
+          "RUSER_WIDTH": {
+            "value": "0"
+          },
+          "SUPPORTS_NARROW_BURST": {
+            "value": "0"
+          },
+          "WUSER_BITS_PER_BYTE": {
+            "value": "0"
+          },
+          "WUSER_WIDTH": {
+            "value": "0"
+          }
+        },
+        "address_space_ref": "S00_AXI",
+        "base_address": {
+          "minimum": "0x00000000",
+          "maximum": "0x7FFFFFFF",
+          "width": "31"
+        },
+        "port_maps": {
+          "AWADDR": {
+            "physical_name": "S00_AXI_awaddr",
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "AWPROT": {
+            "physical_name": "S00_AXI_awprot",
+            "direction": "I",
+            "left": "2",
+            "right": "0"
+          },
+          "AWVALID": {
+            "physical_name": "S00_AXI_awvalid",
+            "direction": "I"
+          },
+          "AWREADY": {
+            "physical_name": "S00_AXI_awready",
+            "direction": "O"
+          },
+          "WDATA": {
+            "physical_name": "S00_AXI_wdata",
+            "direction": "I",
+            "left": "31",
+            "right": "0"
+          },
+          "WSTRB": {
+            "physical_name": "S00_AXI_wstrb",
+            "direction": "I",
+            "left": "3",
+            "right": "0"
+          },
+          "WVALID": {
+            "physical_name": "S00_AXI_wvalid",
+            "direction": "I"
+          },
+          "WREADY": {
+            "physical_name": "S00_AXI_wready",
+            "direction": "O"
+          },
+          "BRESP": {
+            "physical_name": "S00_AXI_bresp",
+            "direction": "O",
+            "left": "1",
+            "right": "0"
+          },
+          "BVALID": {
+            "physical_name": "S00_AXI_bvalid",
+            "direction": "O"
+          },
+          "BREADY": {
+            "physical_name": "S00_AXI_bready",
+            "direction": "I"
+          },
+          "ARADDR": {
+            "physical_name": "S00_AXI_araddr",
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "ARPROT": {
+            "physical_name": "S00_AXI_arprot",
+            "direction": "I",
+            "left": "2",
+            "right": "0"
+          },
+          "ARVALID": {
+            "physical_name": "S00_AXI_arvalid",
+            "direction": "I"
+          },
+          "ARREADY": {
+            "physical_name": "S00_AXI_arready",
+            "direction": "O"
+          },
+          "RDATA": {
+            "physical_name": "S00_AXI_rdata",
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "RRESP": {
+            "physical_name": "S00_AXI_rresp",
+            "direction": "O",
+            "left": "1",
+            "right": "0"
+          },
+          "RVALID": {
+            "physical_name": "S00_AXI_rvalid",
+            "direction": "O"
+          },
+          "RREADY": {
+            "physical_name": "S00_AXI_rready",
+            "direction": "I"
+          }
+        }
+      }
+    },
+    "ports": {
+      "globalClock": {
+        "direction": "I"
+      },
+      "s00_axi_aclk": {
+        "type": "clk",
+        "direction": "I",
+        "parameters": {
+          "ASSOCIATED_BUSIF": {
+            "value": "S00_AXI"
+          },
+          "ASSOCIATED_RESET": {
+            "value": "s00_axi_aresetn"
+          },
+          "CLK_DOMAIN": {
+            "value": "design_1_processing_system7_0_0_FCLK_CLK0",
+            "value_src": "default_prop"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "-1"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
+          }
+        }
+      },
+      "s00_axi_aresetn": {
+        "type": "rst",
+        "direction": "I",
+        "parameters": {
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "POLARITY": {
+            "value": "ACTIVE_LOW",
+            "value_src": "default"
+          }
+        }
+      },
+      "shield_11_8": {
+        "direction": "O",
+        "left": "3",
+        "right": "0"
+      },
+      "shield_13_12": {
+        "direction": "I",
+        "left": "1",
+        "right": "0"
+      }
+    },
+    "components": {
+      "CLOCK_INTERFACE": {
+        "vlnv": "d3x0r:user:AXIHeader16:1.0",
+        "ip_revision": "8",
+        "xci_name": "ClockBlock_CLOCK_INTERFACE_0",
+        "xci_path": "ip\\ClockBlock_CLOCK_INTERFACE_0\\ClockBlock_CLOCK_INTERFACE_0.xci",
+        "inst_hier_path": "CLOCK_INTERFACE",
+        "parameters": {
+          "INPUTS": {
+            "value": "9"
+          },
+          "OUTPUTS": {
+            "value": "1"
+          }
+        }
+      },
+      "COUNTER_0": {
+        "vlnv": "xilinx.com:module_ref:COUNTER:1.0",
+        "ip_revision": "1",
+        "xci_name": "ClockBlock_COUNTER_0_0",
+        "xci_path": "ip\\ClockBlock_COUNTER_0_0\\ClockBlock_COUNTER_0_0.xci",
+        "inst_hier_path": "COUNTER_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "COUNTER",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "globalClock": {
+            "direction": "I"
+          },
+          "iReset": {
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "default_prop"
+              }
+            }
+          },
+          "iLatch1": {
+            "direction": "I",
+            "parameters": {
+              "PortType": {
+                "value": "undef",
+                "value_src": "ip_prop"
+              },
+              "PortType.PROP_SRC": {
+                "value": "false",
+                "value_src": "ip_prop"
+              }
+            }
+          },
+          "iLatch2": {
+            "direction": "I",
+            "parameters": {
+              "PortType": {
+                "value": "undef",
+                "value_src": "ip_prop"
+              },
+              "PortType.PROP_SRC": {
+                "value": "false",
+                "value_src": "ip_prop"
+              }
+            }
+          },
+          "iResetLatch1": {
+            "direction": "I"
+          },
+          "iResetLatch2": {
+            "direction": "I"
+          },
+          "o1COUNTER": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "o1COUNTERHi": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "o1COUNTERPhase": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "o2COUNTER": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "o2COUNTERHi": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "o2COUNTERPhase": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          },
+          "oRdyCOUNTER": {
+            "direction": "O"
+          },
+          "oRdyCOUNTER2": {
+            "direction": "O"
+          },
+          "oLatchTest1": {
+            "direction": "O"
+          },
+          "oLatchTest2": {
+            "direction": "O"
+          },
+          "debug": {
+            "direction": "O",
+            "left": "31",
+            "right": "0"
+          }
+        }
+      },
+      "InputMerge_0": {
+        "vlnv": "d3x0r:user:InputMerge:1.0",
+        "ip_revision": "14",
+        "xci_name": "ClockBlock_InputMerge_0_0",
+        "xci_path": "ip\\ClockBlock_InputMerge_0_0\\ClockBlock_InputMerge_0_0.xci",
+        "inst_hier_path": "InputMerge_0",
+        "parameters": {
+          "inWidth4": {
+            "value": "0"
+          },
+          "inWidth5": {
+            "value": "0"
+          },
+          "inWidth6": {
+            "value": "0"
+          },
+          "inWidth7": {
+            "value": "0"
+          },
+          "inWidth8": {
+            "value": "0"
+          },
+          "inWidth9": {
+            "value": "0"
+          },
+          "inWidth10": {
+            "value": "0"
+          },
+          "inWidth11": {
+            "value": "0"
+          },
+          "inWidth12": {
+            "value": "0"
+          },
+          "inWidth13": {
+            "value": "0"
+          },
+          "inWidth14": {
+            "value": "0"
+          },
+          "inWidth15": {
+            "value": "0"
+          },
+          "inWidth16": {
+            "value": "0"
+          },
+          "inWidth17": {
+            "value": "0"
+          },
+          "inWidth18": {
+            "value": "0"
+          },
+          "inWidth19": {
+            "value": "0"
+          },
+          "inWidth20": {
+            "value": "0"
+          },
+          "inWidth21": {
+            "value": "0"
+          },
+          "inWidth22": {
+            "value": "0"
+          },
+          "inWidth23": {
+            "value": "0"
+          },
+          "inWidth24": {
+            "value": "0"
+          },
+          "inWidth25": {
+            "value": "0"
+          },
+          "inWidth26": {
+            "value": "0"
+          },
+          "inWidth27": {
+            "value": "0"
+          },
+          "inWidth28": {
+            "value": "0"
+          },
+          "inWidth29": {
+            "value": "0"
+          },
+          "inWidth30": {
+            "value": "0"
+          },
+          "inWidth31": {
+            "value": "0"
+          }
+        }
+      },
+      "InputMerge_1": {
+        "vlnv": "d3x0r:user:InputMerge:1.0",
+        "ip_revision": "14",
+        "xci_name": "ClockBlock_InputMerge_1_0",
+        "xci_path": "ip\\ClockBlock_InputMerge_1_0\\ClockBlock_InputMerge_1_0.xci",
+        "inst_hier_path": "InputMerge_1",
+        "parameters": {
+          "inWidth4": {
+            "value": "0"
+          },
+          "inWidth5": {
+            "value": "0"
+          },
+          "inWidth6": {
+            "value": "0"
+          },
+          "inWidth7": {
+            "value": "0"
+          },
+          "inWidth8": {
+            "value": "0"
+          },
+          "inWidth9": {
+            "value": "0"
+          },
+          "inWidth10": {
+            "value": "0"
+          },
+          "inWidth11": {
+            "value": "0"
+          },
+          "inWidth12": {
+            "value": "0"
+          },
+          "inWidth13": {
+            "value": "0"
+          },
+          "inWidth14": {
+            "value": "0"
+          },
+          "inWidth15": {
+            "value": "0"
+          },
+          "inWidth16": {
+            "value": "0"
+          },
+          "inWidth17": {
+            "value": "0"
+          },
+          "inWidth18": {
+            "value": "0"
+          },
+          "inWidth19": {
+            "value": "0"
+          },
+          "inWidth20": {
+            "value": "0"
+          },
+          "inWidth21": {
+            "value": "0"
+          },
+          "inWidth22": {
+            "value": "0"
+          },
+          "inWidth23": {
+            "value": "0"
+          },
+          "inWidth24": {
+            "value": "0"
+          },
+          "inWidth25": {
+            "value": "0"
+          },
+          "inWidth26": {
+            "value": "0"
+          },
+          "inWidth27": {
+            "value": "0"
+          },
+          "inWidth28": {
+            "value": "0"
+          },
+          "inWidth29": {
+            "value": "0"
+          },
+          "inWidth30": {
+            "value": "0"
+          },
+          "inWidth31": {
+            "value": "0"
+          },
+          "outWidth": {
+            "value": "4"
+          }
+        }
+      },
+      "OutputSplitter_0": {
+        "vlnv": "d3x0r:user:OutputSplitter:1.0.1",
+        "ip_revision": "9",
+        "xci_name": "ClockBlock_OutputSplitter_0_0",
+        "xci_path": "ip\\ClockBlock_OutputSplitter_0_0\\ClockBlock_OutputSplitter_0_0.xci",
+        "inst_hier_path": "OutputSplitter_0",
+        "parameters": {
+          "enable04": {
+            "value": "false"
+          },
+          "enable05": {
+            "value": "false"
+          },
+          "enable06": {
+            "value": "false"
+          },
+          "enable07": {
+            "value": "false"
+          },
+          "enable08": {
+            "value": "false"
+          },
+          "enable09": {
+            "value": "false"
+          },
+          "enable10": {
+            "value": "false"
+          },
+          "enable11": {
+            "value": "false"
+          },
+          "enable12": {
+            "value": "false"
+          },
+          "enable13": {
+            "value": "false"
+          },
+          "enable14": {
+            "value": "false"
+          },
+          "enable15": {
+            "value": "false"
+          },
+          "enable16": {
+            "value": "false"
+          },
+          "enable17": {
+            "value": "false"
+          },
+          "enable18": {
+            "value": "false"
+          },
+          "enable19": {
+            "value": "false"
+          },
+          "enable20": {
+            "value": "false"
+          },
+          "enable21": {
+            "value": "false"
+          },
+          "enable22": {
+            "value": "false"
+          },
+          "enable23": {
+            "value": "false"
+          },
+          "enable24": {
+            "value": "false"
+          },
+          "enable25": {
+            "value": "false"
+          },
+          "enable26": {
+            "value": "false"
+          },
+          "enable27": {
+            "value": "false"
+          },
+          "enable28": {
+            "value": "false"
+          },
+          "enable29": {
+            "value": "false"
+          },
+          "enable30": {
+            "value": "false"
+          },
+          "enable31": {
+            "value": "false"
+          },
+          "inWidth": {
+            "value": "32"
+          }
+        }
+      },
+      "OutputSplitter_1": {
+        "vlnv": "d3x0r:user:OutputSplitter:1.0.1",
+        "ip_revision": "9",
+        "xci_name": "ClockBlock_OutputSplitter_1_0",
+        "xci_path": "ip\\ClockBlock_OutputSplitter_1_0\\ClockBlock_OutputSplitter_1_0.xci",
+        "inst_hier_path": "OutputSplitter_1",
+        "parameters": {
+          "inWidth": {
+            "value": "2"
+          }
+        }
+      },
+      "util_vector_logic_0": {
+        "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
+        "ip_revision": "3",
+        "xci_name": "ClockBlock_util_vector_logic_0_0",
+        "xci_path": "ip\\ClockBlock_util_vector_logic_0_0\\ClockBlock_util_vector_logic_0_0.xci",
+        "inst_hier_path": "util_vector_logic_0",
+        "parameters": {
+          "C_OPERATION": {
+            "value": "or"
+          },
+          "C_SIZE": {
+            "value": "1"
+          }
+        }
+      },
+      "util_vector_logic_1": {
+        "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
+        "ip_revision": "3",
+        "xci_name": "ClockBlock_util_vector_logic_1_0",
+        "xci_path": "ip\\ClockBlock_util_vector_logic_1_0\\ClockBlock_util_vector_logic_1_0.xci",
+        "inst_hier_path": "util_vector_logic_1",
+        "parameters": {
+          "C_OPERATION": {
+            "value": "or"
+          },
+          "C_SIZE": {
+            "value": "1"
+          }
+        }
+      }
+    },
+    "interface_nets": {
+      "Conn1": {
+        "interface_ports": [
+          "CLOCK_INTERFACE/S00_AXI",
+          "S00_AXI"
+        ]
+      }
+    },
+    "nets": {
+      "AXIHeader16_0_oDATA00": {
+        "ports": [
+          "CLOCK_INTERFACE/oDATA00",
+          "OutputSplitter_0/inBus"
+        ]
+      },
+      "COUNTER_0_debug": {
+        "ports": [
+          "COUNTER_0/debug",
+          "CLOCK_INTERFACE/iDATA08"
+        ]
+      },
+      "COUNTER_0_o1COUNTER": {
+        "ports": [
+          "COUNTER_0/o1COUNTER",
+          "CLOCK_INTERFACE/iDATA00"
+        ]
+      },
+      "COUNTER_0_o1COUNTERHi": {
+        "ports": [
+          "COUNTER_0/o1COUNTERHi",
+          "CLOCK_INTERFACE/iDATA01"
+        ]
+      },
+      "COUNTER_0_o1COUNTERPhase": {
+        "ports": [
+          "COUNTER_0/o1COUNTERPhase",
+          "CLOCK_INTERFACE/iDATA02"
+        ]
+      },
+      "COUNTER_0_o2COUNTER": {
+        "ports": [
+          "COUNTER_0/o2COUNTER",
+          "CLOCK_INTERFACE/iDATA03"
+        ]
+      },
+      "COUNTER_0_o2COUNTERHi": {
+        "ports": [
+          "COUNTER_0/o2COUNTERHi",
+          "CLOCK_INTERFACE/iDATA04"
+        ]
+      },
+      "COUNTER_0_o2COUNTERPhase": {
+        "ports": [
+          "COUNTER_0/o2COUNTERPhase",
+          "CLOCK_INTERFACE/iDATA05"
+        ]
+      },
+      "COUNTER_0_oLatchTest1": {
+        "ports": [
+          "COUNTER_0/oLatchTest1",
+          "InputMerge_0/i2",
+          "InputMerge_1/i2"
+        ]
+      },
+      "COUNTER_0_oLatchTest2": {
+        "ports": [
+          "COUNTER_0/oLatchTest2",
+          "InputMerge_0/i3",
+          "InputMerge_1/i3"
+        ]
+      },
+      "COUNTER_0_oRdyCOUNTER": {
+        "ports": [
+          "COUNTER_0/oRdyCOUNTER",
+          "InputMerge_0/i0",
+          "InputMerge_1/i0"
+        ]
+      },
+      "COUNTER_0_oRdyCOUNTER2": {
+        "ports": [
+          "COUNTER_0/oRdyCOUNTER2",
+          "InputMerge_0/i1",
+          "InputMerge_1/i1"
+        ]
+      },
+      "InputMerge_0_outBus": {
+        "ports": [
+          "InputMerge_0/outBus",
+          "CLOCK_INTERFACE/iDATA06"
+        ]
+      },
+      "InputMerge_1_outBus": {
+        "ports": [
+          "InputMerge_1/outBus",
+          "shield_11_8"
+        ]
+      },
+      "OutputSplitter_0_o0": {
+        "ports": [
+          "OutputSplitter_0/o0",
+          "util_vector_logic_0/Op1"
+        ]
+      },
+      "OutputSplitter_0_o1": {
+        "ports": [
+          "OutputSplitter_0/o1",
+          "util_vector_logic_1/Op1"
+        ]
+      },
+      "OutputSplitter_0_o2": {
+        "ports": [
+          "OutputSplitter_0/o2",
+          "COUNTER_0/iResetLatch1"
+        ]
+      },
+      "OutputSplitter_0_o3": {
+        "ports": [
+          "OutputSplitter_0/o3",
+          "COUNTER_0/iResetLatch2"
+        ]
+      },
+      "OutputSplitter_1_o0": {
+        "ports": [
+          "OutputSplitter_1/o0",
+          "util_vector_logic_0/Op2"
+        ]
+      },
+      "OutputSplitter_1_o1": {
+        "ports": [
+          "OutputSplitter_1/o1",
+          "util_vector_logic_1/Op2"
+        ]
+      },
+      "globalClock_1": {
+        "ports": [
+          "globalClock",
+          "COUNTER_0/globalClock"
+        ]
+      },
+      "s00_axi_aclk_1": {
+        "ports": [
+          "s00_axi_aclk",
+          "CLOCK_INTERFACE/s00_axi_aclk"
+        ]
+      },
+      "s00_axi_aresetn_1": {
+        "ports": [
+          "s00_axi_aresetn",
+          "CLOCK_INTERFACE/s00_axi_aresetn",
+          "COUNTER_0/iReset"
+        ]
+      },
+      "shield_13_12_1": {
+        "ports": [
+          "shield_13_12",
+          "OutputSplitter_1/inBus"
+        ]
+      },
+      "util_vector_logic_0_Res": {
+        "ports": [
+          "util_vector_logic_0/Res",
+          "COUNTER_0/iLatch1"
+        ]
+      },
+      "util_vector_logic_1_Res": {
+        "ports": [
+          "util_vector_logic_1/Res",
+          "COUNTER_0/iLatch2"
+        ]
+      }
+    },
+    "addressing": {
+      "/": {
+        "address_spaces": {
+          "S00_AXI": {
+            "range": "2G",
+            "width": "31",
+            "segments": {
+              "SEG_CLOCK_INTERFACE_S00_AXI_reg": {
+                "address_block": "/CLOCK_INTERFACE/S00_AXI/S00_AXI_reg",
+                "offset": "0x43C00000",
+                "range": "64K",
+                "offset_base_param": "C_S00_AXI_BASEADDR",
+                "offset_high_param": "C_S00_AXI_HIGHADDR"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
