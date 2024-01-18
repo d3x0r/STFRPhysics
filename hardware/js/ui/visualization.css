@@ -1,0 +1,85 @@
+body {
+    font-size: 125%;
+    background: #333;
+    color: #FFF;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+a {
+    color: #ccc;
+}
+header {
+    width: 100%;
+    display: flex;
+    background-color: #000;
+    height: 6vh;
+    color: turquoise;
+}
+main {
+    margin: 0 2vw;
+}
+canvas {
+    background-color: #113;
+}
+#avatar {
+    height: 6vh;
+}
+#userName {
+    font-size: 5vh;
+    margin-left: 1vw;
+    vertical-align: center;
+}
+#controls {
+    display: block !important;
+	position:absolute;
+	z-index:1;
+}
+
+.offset-canvas{
+	position:relative;
+	top:15em;
+}
+.offset-right-canvas{
+	position:absolute;
+	left:15em;
+	top:10vh;
+	z-index:0;
+}
+
+#readme-text.offset-canvas{
+	position:relative;
+	top:15em;
+}
+
+#readme-text.offset-right-canvas {
+	position:relative;
+	left:0;
+	top:65vh;
+}
+
+#controls span .right {
+    width: 10vw;
+    display: inline-block;
+    margin-bottom: 0.8vh;
+}
+
+#controls  span .left{
+    width: 10vw;
+    display: inline-block;
+    margin-bottom: 1vh;
+}
+
+.left { 
+    margin-bottom: 1vh;
+    display: inline-block;
+	width:10vw;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+#controls {
+    margin-right: 3vw;
+}
