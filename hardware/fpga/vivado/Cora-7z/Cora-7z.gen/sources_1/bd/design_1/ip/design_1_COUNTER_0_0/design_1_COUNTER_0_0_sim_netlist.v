@@ -2,7 +2,7 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-// Date        : Wed Jan 17 22:36:30 2024
+// Date        : Thu Jan 18 00:55:44 2024
 // Host        : tundra running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.v
@@ -53,7 +53,6 @@ module design_1_COUNTER_0_0
   output [31:0]debug;
 
   wire \<const0> ;
-  wire [7:6]\^debug ;
   wire globalClock;
   wire iLatch1;
   wire iLatch2;
@@ -90,15 +89,16 @@ module design_1_COUNTER_0_0
   assign debug[12] = \<const0> ;
   assign debug[11] = \<const0> ;
   assign debug[10] = \<const0> ;
-  assign debug[9] = oRdyCOUNTER2;
-  assign debug[8] = oRdyCOUNTER;
-  assign debug[7:6] = \^debug [7:6];
-  assign debug[5] = iResetLatch2;
-  assign debug[4] = iResetLatch1;
-  assign debug[3] = oRdyCOUNTER2;
-  assign debug[2] = oRdyCOUNTER;
-  assign debug[1] = iLatch2;
-  assign debug[0] = iLatch1;
+  assign debug[9] = \<const0> ;
+  assign debug[8] = \<const0> ;
+  assign debug[7] = \<const0> ;
+  assign debug[6] = \<const0> ;
+  assign debug[5] = \<const0> ;
+  assign debug[4] = \<const0> ;
+  assign debug[3] = \<const0> ;
+  assign debug[2] = \<const0> ;
+  assign debug[1] = \<const0> ;
+  assign debug[0] = \<const0> ;
   assign o1COUNTERPhase[31] = \<const0> ;
   assign o1COUNTERPhase[30] = \<const0> ;
   assign o1COUNTERPhase[29] = \<const0> ;
@@ -119,19 +119,22 @@ module design_1_COUNTER_0_0
        (.G(\<const0> ));
   design_1_COUNTER_0_0_COUNTER inst
        (.Q({o1COUNTERHi,o1COUNTER}),
-        .debug({oRdyCOUNTER2,oRdyCOUNTER,\^debug }),
-        .\debug[7] ({iResetLatch2,iResetLatch1}),
         .globalClock(globalClock),
         .iLatch1(iLatch1),
         .iLatch2(iLatch2),
+        .iResetLatch1(iResetLatch1),
+        .iResetLatch2(iResetLatch2),
         .o1COUNTERPhase(\^o1COUNTERPhase ),
         .o2COUNTERPhase(\^o2COUNTERPhase ),
+        .oRdyCOUNTER(oRdyCOUNTER),
+        .oRdyCOUNTER2(oRdyCOUNTER2),
         .\rLatch2_reg[63]_0 ({o2COUNTERHi,o2COUNTER}));
 endmodule
 
 (* ORIG_REF_NAME = "COUNTER" *) 
 module design_1_COUNTER_0_0_COUNTER
-   (debug,
+   (oRdyCOUNTER,
+    oRdyCOUNTER2,
     Q,
     o1COUNTERPhase,
     \rLatch2_reg[63]_0 ,
@@ -139,8 +142,10 @@ module design_1_COUNTER_0_0_COUNTER
     globalClock,
     iLatch1,
     iLatch2,
-    \debug[7] );
-  output [3:0]debug;
+    iResetLatch1,
+    iResetLatch2);
+  output oRdyCOUNTER;
+  output oRdyCOUNTER2;
   output [63:0]Q;
   output [25:0]o1COUNTERPhase;
   output [63:0]\rLatch2_reg[63]_0 ;
@@ -148,15 +153,18 @@ module design_1_COUNTER_0_0_COUNTER
   input globalClock;
   input iLatch1;
   input iLatch2;
-  input [1:0]\debug[7] ;
+  input iResetLatch1;
+  input iResetLatch2;
 
   wire [63:0]Q;
-  wire [1:0]\^debug ;
-  wire [1:0]\debug[7] ;
   wire iLatch1;
   wire iLatch2;
+  wire iResetLatch1;
+  wire iResetLatch2;
   (* ALLOW_COMBINATORIAL_LOOPS *) (* async_reg = "true" *) wire latchLock1;
+  wire latchLock1_reg0_i_1_n_0;
   (* ALLOW_COMBINATORIAL_LOOPS *) (* async_reg = "true" *) wire latchLock2;
+  wire latchLock2_reg0_i_1_n_0;
   wire [25:0]o1COUNTERPhase;
   wire [25:0]o2COUNTERPhase;
   wire \rCOUNTER[0]_i_2_n_0 ;
@@ -289,44 +297,42 @@ module design_1_COUNTER_0_0_COUNTER
   wire \rCOUNTER_reg[8]_i_1_n_6 ;
   wire \rCOUNTER_reg[8]_i_1_n_7 ;
   wire [63:0]\rLatch2_reg[63]_0 ;
-  (* DONT_TOUCH *) wire [25:0]wPhase;
-  (* DONT_TOUCH *) wire [24:0]wPhase_n;
+  (* DONT_TOUCH *) (* RTL_KEEP = "true" *) wire [25:0]wPhase;
   wire [3:3]\NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED ;
 
-  assign debug[3] = latchLock2;
-  assign debug[2] = latchLock1;
-  assign debug[1:0] = \^debug [1:0];
+  assign oRdyCOUNTER = latchLock1;
+  assign oRdyCOUNTER2 = latchLock2;
   assign wPhase[0] = globalClock;
-  LUT3 #(
-    .INIT(8'hA8)) 
-    \debug[6]_INST_0 
-       (.I0(iLatch1),
-        .I1(\debug[7] [0]),
-        .I2(\^debug [0]),
-        .O(\^debug [0]));
-  LUT3 #(
-    .INIT(8'hA8)) 
-    \debug[7]_INST_0 
-       (.I0(iLatch2),
-        .I1(\debug[7] [1]),
-        .I2(\^debug [1]),
-        .O(\^debug [1]));
   LUT4 #(
     .INIT(16'hCCCE)) 
     latchLock1_reg0
        (.I0(latchLock1),
         .I1(iLatch1),
-        .I2(\^debug [0]),
-        .I3(\debug[7] [0]),
+        .I2(latchLock1_reg0_i_1_n_0),
+        .I3(iResetLatch1),
         .O(latchLock1));
+  LUT3 #(
+    .INIT(8'hA8)) 
+    latchLock1_reg0_i_1
+       (.I0(iLatch1),
+        .I1(iResetLatch1),
+        .I2(latchLock1_reg0_i_1_n_0),
+        .O(latchLock1_reg0_i_1_n_0));
   LUT4 #(
     .INIT(16'hCCCE)) 
     latchLock2_reg0
        (.I0(latchLock2),
         .I1(iLatch2),
-        .I2(\^debug [1]),
-        .I3(\debug[7] [1]),
+        .I2(latchLock2_reg0_i_1_n_0),
+        .I3(iResetLatch2),
         .O(latchLock2));
+  LUT3 #(
+    .INIT(8'hA8)) 
+    latchLock2_reg0_i_1
+       (.I0(iLatch2),
+        .I1(iResetLatch2),
+        .I2(latchLock2_reg0_i_1_n_0),
+        .O(latchLock2_reg0_i_1_n_0));
   LUT1 #(
     .INIT(2'h1)) 
     \rCOUNTER[0]_i_2 
@@ -2415,253 +2421,128 @@ module design_1_COUNTER_0_0_COUNTER
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_1
-       (.I0(wPhase_n[24]),
+       (.I0(wPhase[24]),
         .O(wPhase[25]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_10
-       (.I0(wPhase_n[15]),
+       (.I0(wPhase[15]),
         .O(wPhase[16]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_11
-       (.I0(wPhase_n[14]),
+       (.I0(wPhase[14]),
         .O(wPhase[15]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_12
-       (.I0(wPhase_n[13]),
+       (.I0(wPhase[13]),
         .O(wPhase[14]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_13
-       (.I0(wPhase_n[12]),
+       (.I0(wPhase[12]),
         .O(wPhase[13]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_14
-       (.I0(wPhase_n[11]),
+       (.I0(wPhase[11]),
         .O(wPhase[12]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_15
-       (.I0(wPhase_n[10]),
+       (.I0(wPhase[10]),
         .O(wPhase[11]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_16
-       (.I0(wPhase_n[9]),
+       (.I0(wPhase[9]),
         .O(wPhase[10]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_17
-       (.I0(wPhase_n[8]),
+       (.I0(wPhase[8]),
         .O(wPhase[9]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_18
-       (.I0(wPhase_n[7]),
+       (.I0(wPhase[7]),
         .O(wPhase[8]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_19
-       (.I0(wPhase_n[6]),
+       (.I0(wPhase[6]),
         .O(wPhase[7]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_2
-       (.I0(wPhase_n[23]),
+       (.I0(wPhase[23]),
         .O(wPhase[24]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_20
-       (.I0(wPhase_n[5]),
+       (.I0(wPhase[5]),
         .O(wPhase[6]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_21
-       (.I0(wPhase_n[4]),
+       (.I0(wPhase[4]),
         .O(wPhase[5]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_22
-       (.I0(wPhase_n[3]),
+       (.I0(wPhase[3]),
         .O(wPhase[4]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_23
-       (.I0(wPhase_n[2]),
+       (.I0(wPhase[2]),
         .O(wPhase[3]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_24
-       (.I0(wPhase_n[1]),
+       (.I0(wPhase[1]),
         .O(wPhase[2]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_25
-       (.I0(wPhase_n[0]),
+       (.I0(wPhase[0]),
         .O(wPhase[1]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_3
-       (.I0(wPhase_n[22]),
+       (.I0(wPhase[22]),
         .O(wPhase[23]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_4
-       (.I0(wPhase_n[21]),
+       (.I0(wPhase[21]),
         .O(wPhase[22]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_5
-       (.I0(wPhase_n[20]),
+       (.I0(wPhase[20]),
         .O(wPhase[21]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_6
-       (.I0(wPhase_n[19]),
+       (.I0(wPhase[19]),
         .O(wPhase[20]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_7
-       (.I0(wPhase_n[18]),
+       (.I0(wPhase[18]),
         .O(wPhase[19]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_8
-       (.I0(wPhase_n[17]),
+       (.I0(wPhase[17]),
         .O(wPhase[18]));
   LUT1 #(
     .INIT(2'h1)) 
     wPhase_inferred_i_9
-       (.I0(wPhase_n[16]),
-        .O(wPhase[17]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_1
-       (.I0(wPhase[24]),
-        .O(wPhase_n[24]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_10
-       (.I0(wPhase[15]),
-        .O(wPhase_n[15]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_11
-       (.I0(wPhase[14]),
-        .O(wPhase_n[14]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_12
-       (.I0(wPhase[13]),
-        .O(wPhase_n[13]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_13
-       (.I0(wPhase[12]),
-        .O(wPhase_n[12]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_14
-       (.I0(wPhase[11]),
-        .O(wPhase_n[11]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_15
-       (.I0(wPhase[10]),
-        .O(wPhase_n[10]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_16
-       (.I0(wPhase[9]),
-        .O(wPhase_n[9]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_17
-       (.I0(wPhase[8]),
-        .O(wPhase_n[8]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_18
-       (.I0(wPhase[7]),
-        .O(wPhase_n[7]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_19
-       (.I0(wPhase[6]),
-        .O(wPhase_n[6]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_2
-       (.I0(wPhase[23]),
-        .O(wPhase_n[23]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_20
-       (.I0(wPhase[5]),
-        .O(wPhase_n[5]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_21
-       (.I0(wPhase[4]),
-        .O(wPhase_n[4]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_22
-       (.I0(wPhase[3]),
-        .O(wPhase_n[3]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_23
-       (.I0(wPhase[2]),
-        .O(wPhase_n[2]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_24
-       (.I0(wPhase[1]),
-        .O(wPhase_n[1]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_25
-       (.I0(wPhase[0]),
-        .O(wPhase_n[0]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_3
-       (.I0(wPhase[22]),
-        .O(wPhase_n[22]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_4
-       (.I0(wPhase[21]),
-        .O(wPhase_n[21]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_5
-       (.I0(wPhase[20]),
-        .O(wPhase_n[20]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_6
-       (.I0(wPhase[19]),
-        .O(wPhase_n[19]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_7
-       (.I0(wPhase[18]),
-        .O(wPhase_n[18]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_8
-       (.I0(wPhase[17]),
-        .O(wPhase_n[17]));
-  LUT1 #(
-    .INIT(2'h1)) 
-    wPhase_n_inferred_i_9
        (.I0(wPhase[16]),
-        .O(wPhase_n[16]));
+        .O(wPhase[17]));
 endmodule
 `ifndef GLBL
 `define GLBL

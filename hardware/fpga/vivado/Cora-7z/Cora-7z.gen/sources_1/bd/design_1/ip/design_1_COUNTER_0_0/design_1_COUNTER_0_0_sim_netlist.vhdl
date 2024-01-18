@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
--- Date        : Wed Jan 17 22:36:30 2024
+-- Date        : Thu Jan 18 00:55:44 2024
 -- Host        : tundra running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.vhdl
@@ -17,7 +17,8 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity design_1_COUNTER_0_0_COUNTER is
   port (
-    debug : out STD_LOGIC_VECTOR ( 3 downto 0 );
+    oRdyCOUNTER : out STD_LOGIC;
+    oRdyCOUNTER2 : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 63 downto 0 );
     o1COUNTERPhase : out STD_LOGIC_VECTOR ( 25 downto 0 );
     \rLatch2_reg[63]_0\ : out STD_LOGIC_VECTOR ( 63 downto 0 );
@@ -25,22 +26,24 @@ entity design_1_COUNTER_0_0_COUNTER is
     globalClock : in STD_LOGIC;
     iLatch1 : in STD_LOGIC;
     iLatch2 : in STD_LOGIC;
-    \debug[7]\ : in STD_LOGIC_VECTOR ( 1 downto 0 )
+    iResetLatch1 : in STD_LOGIC;
+    iResetLatch2 : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
   attribute ORIG_REF_NAME of design_1_COUNTER_0_0_COUNTER : entity is "COUNTER";
 end design_1_COUNTER_0_0_COUNTER;
 
 architecture STRUCTURE of design_1_COUNTER_0_0_COUNTER is
-  signal \^debug\ : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal latchLock1 : STD_LOGIC;
   attribute ALLOW_COMBINATORIAL_LOOPS : boolean;
   attribute ALLOW_COMBINATORIAL_LOOPS of latchLock1 : signal is std.standard.true;
   attribute async_reg : string;
   attribute async_reg of latchLock1 : signal is "true";
+  signal latchLock1_reg0_i_1_n_0 : STD_LOGIC;
   signal latchLock2 : STD_LOGIC;
   attribute ALLOW_COMBINATORIAL_LOOPS of latchLock2 : signal is std.standard.true;
   attribute async_reg of latchLock2 : signal is "true";
+  signal latchLock2_reg0_i_1_n_0 : STD_LOGIC;
   signal \rCOUNTER[0]_i_2_n_0\ : STD_LOGIC;
   signal rCOUNTER_reg : STD_LOGIC_VECTOR ( 63 downto 0 );
   signal \rCOUNTER_reg[0]_i_1_n_0\ : STD_LOGIC;
@@ -173,8 +176,8 @@ architecture STRUCTURE of design_1_COUNTER_0_0_COUNTER is
   signal wPhase : STD_LOGIC_VECTOR ( 25 downto 0 );
   attribute DONT_TOUCH : boolean;
   attribute DONT_TOUCH of wPhase : signal is std.standard.true;
-  signal wPhase_n : STD_LOGIC_VECTOR ( 24 downto 0 );
-  attribute DONT_TOUCH of wPhase_n : signal is std.standard.true;
+  attribute RTL_KEEP : string;
+  attribute RTL_KEEP of wPhase : signal is "true";
   signal \NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 to 3 );
   attribute ADDER_THRESHOLD : integer;
   attribute ADDER_THRESHOLD of \rCOUNTER_reg[0]_i_1\ : label is 11;
@@ -194,30 +197,9 @@ architecture STRUCTURE of design_1_COUNTER_0_0_COUNTER is
   attribute ADDER_THRESHOLD of \rCOUNTER_reg[60]_i_1\ : label is 11;
   attribute ADDER_THRESHOLD of \rCOUNTER_reg[8]_i_1\ : label is 11;
 begin
-  debug(3) <= latchLock2;
-  debug(2) <= latchLock1;
-  debug(1 downto 0) <= \^debug\(1 downto 0);
+  oRdyCOUNTER <= latchLock1;
+  oRdyCOUNTER2 <= latchLock2;
   wPhase(0) <= globalClock;
-\debug[6]_INST_0\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"A8"
-    )
-        port map (
-      I0 => iLatch1,
-      I1 => \debug[7]\(0),
-      I2 => \^debug\(0),
-      O => \^debug\(0)
-    );
-\debug[7]_INST_0\: unisim.vcomponents.LUT3
-    generic map(
-      INIT => X"A8"
-    )
-        port map (
-      I0 => iLatch2,
-      I1 => \debug[7]\(1),
-      I2 => \^debug\(1),
-      O => \^debug\(1)
-    );
 latchLock1_reg0: unisim.vcomponents.LUT4
     generic map(
       INIT => X"CCCE"
@@ -225,9 +207,19 @@ latchLock1_reg0: unisim.vcomponents.LUT4
         port map (
       I0 => latchLock1,
       I1 => iLatch1,
-      I2 => \^debug\(0),
-      I3 => \debug[7]\(0),
+      I2 => latchLock1_reg0_i_1_n_0,
+      I3 => iResetLatch1,
       O => latchLock1
+    );
+latchLock1_reg0_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"A8"
+    )
+        port map (
+      I0 => iLatch1,
+      I1 => iResetLatch1,
+      I2 => latchLock1_reg0_i_1_n_0,
+      O => latchLock1_reg0_i_1_n_0
     );
 latchLock2_reg0: unisim.vcomponents.LUT4
     generic map(
@@ -236,9 +228,19 @@ latchLock2_reg0: unisim.vcomponents.LUT4
         port map (
       I0 => latchLock2,
       I1 => iLatch2,
-      I2 => \^debug\(1),
-      I3 => \debug[7]\(1),
+      I2 => latchLock2_reg0_i_1_n_0,
+      I3 => iResetLatch2,
       O => latchLock2
+    );
+latchLock2_reg0_i_1: unisim.vcomponents.LUT3
+    generic map(
+      INIT => X"A8"
+    )
+        port map (
+      I0 => iLatch2,
+      I1 => iResetLatch2,
+      I2 => latchLock2_reg0_i_1_n_0,
+      O => latchLock2_reg0_i_1_n_0
     );
 \rCOUNTER[0]_i_2\: unisim.vcomponents.LUT1
     generic map(
@@ -3178,7 +3180,7 @@ wPhase_inferred_i_1: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(24),
+      I0 => wPhase(24),
       O => wPhase(25)
     );
 wPhase_inferred_i_10: unisim.vcomponents.LUT1
@@ -3186,7 +3188,7 @@ wPhase_inferred_i_10: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(15),
+      I0 => wPhase(15),
       O => wPhase(16)
     );
 wPhase_inferred_i_11: unisim.vcomponents.LUT1
@@ -3194,7 +3196,7 @@ wPhase_inferred_i_11: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(14),
+      I0 => wPhase(14),
       O => wPhase(15)
     );
 wPhase_inferred_i_12: unisim.vcomponents.LUT1
@@ -3202,7 +3204,7 @@ wPhase_inferred_i_12: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(13),
+      I0 => wPhase(13),
       O => wPhase(14)
     );
 wPhase_inferred_i_13: unisim.vcomponents.LUT1
@@ -3210,7 +3212,7 @@ wPhase_inferred_i_13: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(12),
+      I0 => wPhase(12),
       O => wPhase(13)
     );
 wPhase_inferred_i_14: unisim.vcomponents.LUT1
@@ -3218,7 +3220,7 @@ wPhase_inferred_i_14: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(11),
+      I0 => wPhase(11),
       O => wPhase(12)
     );
 wPhase_inferred_i_15: unisim.vcomponents.LUT1
@@ -3226,7 +3228,7 @@ wPhase_inferred_i_15: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(10),
+      I0 => wPhase(10),
       O => wPhase(11)
     );
 wPhase_inferred_i_16: unisim.vcomponents.LUT1
@@ -3234,7 +3236,7 @@ wPhase_inferred_i_16: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(9),
+      I0 => wPhase(9),
       O => wPhase(10)
     );
 wPhase_inferred_i_17: unisim.vcomponents.LUT1
@@ -3242,7 +3244,7 @@ wPhase_inferred_i_17: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(8),
+      I0 => wPhase(8),
       O => wPhase(9)
     );
 wPhase_inferred_i_18: unisim.vcomponents.LUT1
@@ -3250,7 +3252,7 @@ wPhase_inferred_i_18: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(7),
+      I0 => wPhase(7),
       O => wPhase(8)
     );
 wPhase_inferred_i_19: unisim.vcomponents.LUT1
@@ -3258,7 +3260,7 @@ wPhase_inferred_i_19: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(6),
+      I0 => wPhase(6),
       O => wPhase(7)
     );
 wPhase_inferred_i_2: unisim.vcomponents.LUT1
@@ -3266,7 +3268,7 @@ wPhase_inferred_i_2: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(23),
+      I0 => wPhase(23),
       O => wPhase(24)
     );
 wPhase_inferred_i_20: unisim.vcomponents.LUT1
@@ -3274,7 +3276,7 @@ wPhase_inferred_i_20: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(5),
+      I0 => wPhase(5),
       O => wPhase(6)
     );
 wPhase_inferred_i_21: unisim.vcomponents.LUT1
@@ -3282,7 +3284,7 @@ wPhase_inferred_i_21: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(4),
+      I0 => wPhase(4),
       O => wPhase(5)
     );
 wPhase_inferred_i_22: unisim.vcomponents.LUT1
@@ -3290,7 +3292,7 @@ wPhase_inferred_i_22: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(3),
+      I0 => wPhase(3),
       O => wPhase(4)
     );
 wPhase_inferred_i_23: unisim.vcomponents.LUT1
@@ -3298,7 +3300,7 @@ wPhase_inferred_i_23: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(2),
+      I0 => wPhase(2),
       O => wPhase(3)
     );
 wPhase_inferred_i_24: unisim.vcomponents.LUT1
@@ -3306,7 +3308,7 @@ wPhase_inferred_i_24: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(1),
+      I0 => wPhase(1),
       O => wPhase(2)
     );
 wPhase_inferred_i_25: unisim.vcomponents.LUT1
@@ -3314,7 +3316,7 @@ wPhase_inferred_i_25: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(0),
+      I0 => wPhase(0),
       O => wPhase(1)
     );
 wPhase_inferred_i_3: unisim.vcomponents.LUT1
@@ -3322,7 +3324,7 @@ wPhase_inferred_i_3: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(22),
+      I0 => wPhase(22),
       O => wPhase(23)
     );
 wPhase_inferred_i_4: unisim.vcomponents.LUT1
@@ -3330,7 +3332,7 @@ wPhase_inferred_i_4: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(21),
+      I0 => wPhase(21),
       O => wPhase(22)
     );
 wPhase_inferred_i_5: unisim.vcomponents.LUT1
@@ -3338,7 +3340,7 @@ wPhase_inferred_i_5: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(20),
+      I0 => wPhase(20),
       O => wPhase(21)
     );
 wPhase_inferred_i_6: unisim.vcomponents.LUT1
@@ -3346,7 +3348,7 @@ wPhase_inferred_i_6: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(19),
+      I0 => wPhase(19),
       O => wPhase(20)
     );
 wPhase_inferred_i_7: unisim.vcomponents.LUT1
@@ -3354,7 +3356,7 @@ wPhase_inferred_i_7: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(18),
+      I0 => wPhase(18),
       O => wPhase(19)
     );
 wPhase_inferred_i_8: unisim.vcomponents.LUT1
@@ -3362,7 +3364,7 @@ wPhase_inferred_i_8: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(17),
+      I0 => wPhase(17),
       O => wPhase(18)
     );
 wPhase_inferred_i_9: unisim.vcomponents.LUT1
@@ -3370,208 +3372,8 @@ wPhase_inferred_i_9: unisim.vcomponents.LUT1
       INIT => X"1"
     )
         port map (
-      I0 => wPhase_n(16),
-      O => wPhase(17)
-    );
-wPhase_n_inferred_i_1: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(24),
-      O => wPhase_n(24)
-    );
-wPhase_n_inferred_i_10: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(15),
-      O => wPhase_n(15)
-    );
-wPhase_n_inferred_i_11: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(14),
-      O => wPhase_n(14)
-    );
-wPhase_n_inferred_i_12: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(13),
-      O => wPhase_n(13)
-    );
-wPhase_n_inferred_i_13: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(12),
-      O => wPhase_n(12)
-    );
-wPhase_n_inferred_i_14: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(11),
-      O => wPhase_n(11)
-    );
-wPhase_n_inferred_i_15: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(10),
-      O => wPhase_n(10)
-    );
-wPhase_n_inferred_i_16: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(9),
-      O => wPhase_n(9)
-    );
-wPhase_n_inferred_i_17: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(8),
-      O => wPhase_n(8)
-    );
-wPhase_n_inferred_i_18: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(7),
-      O => wPhase_n(7)
-    );
-wPhase_n_inferred_i_19: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(6),
-      O => wPhase_n(6)
-    );
-wPhase_n_inferred_i_2: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(23),
-      O => wPhase_n(23)
-    );
-wPhase_n_inferred_i_20: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(5),
-      O => wPhase_n(5)
-    );
-wPhase_n_inferred_i_21: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(4),
-      O => wPhase_n(4)
-    );
-wPhase_n_inferred_i_22: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(3),
-      O => wPhase_n(3)
-    );
-wPhase_n_inferred_i_23: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(2),
-      O => wPhase_n(2)
-    );
-wPhase_n_inferred_i_24: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(1),
-      O => wPhase_n(1)
-    );
-wPhase_n_inferred_i_25: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(0),
-      O => wPhase_n(0)
-    );
-wPhase_n_inferred_i_3: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(22),
-      O => wPhase_n(22)
-    );
-wPhase_n_inferred_i_4: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(21),
-      O => wPhase_n(21)
-    );
-wPhase_n_inferred_i_5: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(20),
-      O => wPhase_n(20)
-    );
-wPhase_n_inferred_i_6: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(19),
-      O => wPhase_n(19)
-    );
-wPhase_n_inferred_i_7: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(18),
-      O => wPhase_n(18)
-    );
-wPhase_n_inferred_i_8: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => wPhase(17),
-      O => wPhase_n(17)
-    );
-wPhase_n_inferred_i_9: unisim.vcomponents.LUT1
-    generic map(
-      INIT => X"1"
-    )
-        port map (
       I0 => wPhase(16),
-      O => wPhase_n(16)
+      O => wPhase(17)
     );
 end STRUCTURE;
 library IEEE;
@@ -3612,23 +3414,12 @@ end design_1_COUNTER_0_0;
 
 architecture STRUCTURE of design_1_COUNTER_0_0 is
   signal \<const0>\ : STD_LOGIC;
-  signal \^debug\ : STD_LOGIC_VECTOR ( 7 downto 6 );
-  signal \^ilatch1\ : STD_LOGIC;
-  signal \^ilatch2\ : STD_LOGIC;
-  signal \^iresetlatch1\ : STD_LOGIC;
-  signal \^iresetlatch2\ : STD_LOGIC;
   signal \^o1counterphase\ : STD_LOGIC_VECTOR ( 25 downto 0 );
   signal \^o2counterphase\ : STD_LOGIC_VECTOR ( 25 downto 0 );
-  signal \^ordycounter\ : STD_LOGIC;
-  signal \^ordycounter2\ : STD_LOGIC;
   attribute ALLOW_COMBINATORIAL_LOOPS : string;
   attribute ALLOW_COMBINATORIAL_LOOPS of iLatch1 : signal is "true";
   attribute ALLOW_COMBINATORIAL_LOOPS of iLatch2 : signal is "true";
 begin
-  \^ilatch1\ <= iLatch1;
-  \^ilatch2\ <= iLatch2;
-  \^iresetlatch1\ <= iResetLatch1;
-  \^iresetlatch2\ <= iResetLatch2;
   debug(31) <= \<const0>\;
   debug(30) <= \<const0>\;
   debug(29) <= \<const0>\;
@@ -3651,15 +3442,16 @@ begin
   debug(12) <= \<const0>\;
   debug(11) <= \<const0>\;
   debug(10) <= \<const0>\;
-  debug(9) <= \^ordycounter2\;
-  debug(8) <= \^ordycounter\;
-  debug(7 downto 6) <= \^debug\(7 downto 6);
-  debug(5) <= \^iresetlatch2\;
-  debug(4) <= \^iresetlatch1\;
-  debug(3) <= \^ordycounter2\;
-  debug(2) <= \^ordycounter\;
-  debug(1) <= \^ilatch2\;
-  debug(0) <= \^ilatch1\;
+  debug(9) <= \<const0>\;
+  debug(8) <= \<const0>\;
+  debug(7) <= \<const0>\;
+  debug(6) <= \<const0>\;
+  debug(5) <= \<const0>\;
+  debug(4) <= \<const0>\;
+  debug(3) <= \<const0>\;
+  debug(2) <= \<const0>\;
+  debug(1) <= \<const0>\;
+  debug(0) <= \<const0>\;
   o1COUNTERPhase(31) <= \<const0>\;
   o1COUNTERPhase(30) <= \<const0>\;
   o1COUNTERPhase(29) <= \<const0>\;
@@ -3676,8 +3468,6 @@ begin
   o2COUNTERPhase(25 downto 0) <= \^o2counterphase\(25 downto 0);
   oLatchTest1 <= \<const0>\;
   oLatchTest2 <= \<const0>\;
-  oRdyCOUNTER <= \^ordycounter\;
-  oRdyCOUNTER2 <= \^ordycounter2\;
 GND: unisim.vcomponents.GND
      port map (
       G => \<const0>\
@@ -3686,16 +3476,15 @@ inst: entity work.design_1_COUNTER_0_0_COUNTER
      port map (
       Q(63 downto 32) => o1COUNTERHi(31 downto 0),
       Q(31 downto 0) => o1COUNTER(31 downto 0),
-      debug(3) => \^ordycounter2\,
-      debug(2) => \^ordycounter\,
-      debug(1 downto 0) => \^debug\(7 downto 6),
-      \debug[7]\(1) => \^iresetlatch2\,
-      \debug[7]\(0) => \^iresetlatch1\,
       globalClock => globalClock,
-      iLatch1 => \^ilatch1\,
-      iLatch2 => \^ilatch2\,
+      iLatch1 => iLatch1,
+      iLatch2 => iLatch2,
+      iResetLatch1 => iResetLatch1,
+      iResetLatch2 => iResetLatch2,
       o1COUNTERPhase(25 downto 0) => \^o1counterphase\(25 downto 0),
       o2COUNTERPhase(25 downto 0) => \^o2counterphase\(25 downto 0),
+      oRdyCOUNTER => oRdyCOUNTER,
+      oRdyCOUNTER2 => oRdyCOUNTER2,
       \rLatch2_reg[63]_0\(63 downto 32) => o2COUNTERHi(31 downto 0),
       \rLatch2_reg[63]_0\(31 downto 0) => o2COUNTER(31 downto 0)
     );

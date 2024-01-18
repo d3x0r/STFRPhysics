@@ -47,15 +47,16 @@ reg [PHASE_SIZE-1:0] rPhaseLatch1 = 0;  // latched counter value 1
 reg [pWIDTH-1:0] rLatch2 = 0;  // latched counter value 2
 reg [PHASE_SIZE-1:0] rPhaseLatch2 = 0;  // latched counter value 2
 
-wire [PHASE_SIZE-1:0] iCLK_ff ;//26'b1;  // the flip-flopped clock gate
-reg [PHASE_SIZE-1:0] iCLK_ff_p;  // the flip-flopped clock gate
-reg [PHASE_SIZE-1:0] iCLK_ff_n;  // the flip-flopped clock gate
+//wire [PHASE_SIZE-1:0] iCLK_ff ;//26'b1;  // the flip-flopped clock gate
+//reg [PHASE_SIZE-1:0] iCLK_ff_p;  // the flip-flopped clock gate
+//reg [PHASE_SIZE-1:0] iCLK_ff_n;  // the flip-flopped clock gate
+
 //reg [6:0] rSynthClock;
 
 //(* dont_touch="TRUE" *) reg [25:0] rPhase;  // the flip-flopped clock gate
 //(* dont_touch="TRUE" *) reg [25:0] rPhase_n;  // the flip-flopped clock gate
-(* dont_touch="TRUE" *) wire [PHASE_SIZE-1:0] wPhase;  // the flip-flopped clock gate
-(* dont_touch="TRUE" *) wire [PHASE_SIZE-2:0] wPhase_n;  // the flip-flopped clock gate
+(* dont_touch="TRUE", KEEP="TRUE" *) wire [PHASE_SIZE-1:0] wPhase;  // the flip-flopped clock gate
+//(* dont_touch="TRUE", KEEP="TRUE" *) wire [PHASE_SIZE-2:0] wPhase_n;  // the flip-flopped clock gate
 
 (* ALLOW_COMBINATORIAL_LOOPS="true", ASYNC_REG = "TRUE" *) reg latchLock1 = 0;     // iLatch1 was set, and the value is copied to rLatch1; prevents update to register 1 until reset
 (* ALLOW_COMBINATORIAL_LOOPS="true", ASYNC_REG = "TRUE" *) reg latchLock2 = 0;     // iLatch2 was signaled, the value is copied to rLatch2; prevents update to reigster 2 until reset
@@ -70,7 +71,7 @@ reg [PHASE_SIZE-1:0] iCLK_ff_n;  // the flip-flopped clock gate
 // if iResetLatch* is signaled and iLatch* is still set, then set rstLatchLock*, then when latchLock* is reset
 // if rstLatchLock* is set, reset latckLock*.
 
-
+/*
 assign	 debug[0] = iLatch1;
 assign	 debug[1] = iLatch2;
 assign	 debug[2] = latchLock1;
@@ -88,6 +89,7 @@ assign   debug[15:10] = 0;
 assign   debug[31:16] = 0;
 //assign	 debug[22:16] = 0;//rSynthClock[6:0];
 //assign   debug[31:23] = 0;
+*/
 
 //assign debug = 0;
 
@@ -111,22 +113,22 @@ always @(posedge iReset) begin
 end
 */
 
-
+/*
 genvar ph;
 assign wPhase[0] = globalClock;
 for( ph=0; ph < PHASE_SIZE-1; ph=ph+1 ) begin
     assign wPhase_n[ph] = !wPhase  [ph];
     assign wPhase  [ph+1] = !wPhase_n[ph];
 end
+*/
 
 
-/*
 genvar ph;
 assign wPhase[0] = globalClock;
 for( ph=0; ph < PHASE_SIZE-1; ph=ph+1 ) begin
-    assign wPhase  [ph+1] = wPhase  [ph];
+    assign wPhase  [ph+1] = !wPhase[ph];
 end
-*/
+
 
 
 /*

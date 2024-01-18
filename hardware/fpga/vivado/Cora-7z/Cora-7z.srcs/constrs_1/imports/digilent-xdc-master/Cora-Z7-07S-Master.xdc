@@ -7,8 +7,12 @@
 #set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUNTER_0/latchLock13]
 #set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUNTER_0/latchLock21]
 #set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUNTER_0/latchLock23]
-set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUNTER_0/inst/debug[0]]
-set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUNTER_0/inst/debug[1]]
+
+#set_property ALLOW_COMBINATORIAL_LOOPS true [get_nets {design_1_i/ClockBlock/COUNTER_0/inst/debug[0]}]
+#set_property ALLOW_COMBINATORIAL_LOOPS true [get_nets {design_1_i/ClockBlock/COUNTER_0/inst/debug[1]}]
+
+set_property ALLOW_COMBINATORIAL_LOOPS true [get_nets {design_1_i/ClockBlock/COUNTER_0/inst/latchLock1_reg0_i_1_n_0}]
+set_property ALLOW_COMBINATORIAL_LOOPS true [get_nets {design_1_i/ClockBlock/COUNTER_0/inst/latchLock2_reg0_i_1_n_0}]
 
 #set_property IOSTANDARD LVCMOS33 [get_ports ck_io[0]]
 #set_property IOSTANDARD LVCMOS33 [get_ports ck_io[1]]
@@ -26,8 +30,8 @@ set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets design_1_i/ClockBlock/COUN
 #set_property -dict { PACKAGE_PIN M15   IOSTANDARD LVCMOS33 } [get_ports { led1_r }]; #IO_L23N_T3_35 Sch=led1_r
 
 ## Buttons
-set_property -dict { PACKAGE_PIN D20   IOSTANDARD LVCMOS33 } [get_ports { btns_2bits_tri_i[0] }]; #IO_L4N_T0_35 Sch=btn[0]
-set_property -dict { PACKAGE_PIN D19   IOSTANDARD LVCMOS33 } [get_ports { btns_2bits_tri_i[1] }]; #IO_L4P_T0_35 Sch=btn[1]
+set_property -dict {PACKAGE_PIN D20 IOSTANDARD LVCMOS33} [get_ports {btns_2bits_tri_i[0]}]
+set_property -dict {PACKAGE_PIN D19 IOSTANDARD LVCMOS33} [get_ports {btns_2bits_tri_i[1]}]
 
 ## Pmod Header JA
 #set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { ja[0] }]; #IO_L17P_T2_34 Sch=ja_p[1]
@@ -49,7 +53,7 @@ set_property -dict { PACKAGE_PIN D19   IOSTANDARD LVCMOS33 } [get_ports { btns_2
 #set_property -dict { PACKAGE_PIN V12   IOSTANDARD LVCMOS33 } [get_ports { jb[6] }]; #IO_L4P_T0_34 Sch=jb_p[4]
 #set_property -dict { PACKAGE_PIN W13   IOSTANDARD LVCMOS33 } [get_ports { jb[7] }]; #IO_L4N_T0_34 Sch=jb_n[4]
 
-## Crypto SDA 
+## Crypto SDA
 #set_property -dict { PACKAGE_PIN J15   IOSTANDARD LVCMOS33 } [get_ports { crypto_sda }];
 
 ## Dedicated Analog Inputs
@@ -107,12 +111,12 @@ set_property -dict { PACKAGE_PIN D19   IOSTANDARD LVCMOS33 } [get_ports { btns_2
 #set_property -dict { PACKAGE_PIN V18   IOSTANDARD LVCMOS33 } [get_ports { ck_io5 }]; #IO_L21N_T3_DQS_34 Sch=ck_io[5]
 #set_property -dict { PACKAGE_PIN R17   IOSTANDARD LVCMOS33 } [get_ports { ck_io6 }]; #IO_L19N_T3_VREF_34 Sch=ck_io[6]
 #set_property -dict { PACKAGE_PIN R14   IOSTANDARD LVCMOS33 } [get_ports { ck_io7 }]; #IO_L6N_T0_VREF_34 Sch=ck_io[7]
-set_property -dict { PACKAGE_PIN N18   IOSTANDARD LVCMOS33 } [get_ports { shield_11_8[0] }]; #IO_L13P_T2_MRCC_34 Sch=ck_io[8]
-set_property -dict { PACKAGE_PIN M18   IOSTANDARD LVCMOS33 } [get_ports { shield_11_8[1] }]; #IO_L8N_T1_AD10N_35 Sch=ck_io[9]
-set_property -dict { PACKAGE_PIN U15   IOSTANDARD LVCMOS33 } [get_ports { shield_11_8[2] }]; #IO_L11N_T1_SRCC_34 Sch=ck_io[10]
-set_property -dict { PACKAGE_PIN K18   IOSTANDARD LVCMOS33 } [get_ports { shield_11_8[3] }]; #IO_L12N_T1_MRCC_35 Sch=ck_io[11]
-set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { shield_13_12[0] }]; #IO_L14P_T2_AD4P_SRCC_35 Sch=ck_io[12]
-set_property -dict { PACKAGE_PIN G15   IOSTANDARD LVCMOS33 } [get_ports { shield_13_12[1] }]; #IO_L19N_T3_VREF_35 Sch=ck_io[13]
+set_property -dict {PACKAGE_PIN N18 IOSTANDARD LVCMOS33} [get_ports {shield_11_8[0]}]
+set_property -dict {PACKAGE_PIN M18 IOSTANDARD LVCMOS33} [get_ports {shield_11_8[1]}]
+set_property -dict {PACKAGE_PIN U15 IOSTANDARD LVCMOS33} [get_ports {shield_11_8[2]}]
+set_property -dict {PACKAGE_PIN K18 IOSTANDARD LVCMOS33} [get_ports {shield_11_8[3]}]
+set_property -dict {PACKAGE_PIN J18 IOSTANDARD LVCMOS33} [get_ports {shield_13_12[0]}]
+set_property -dict {PACKAGE_PIN G15 IOSTANDARD LVCMOS33} [get_ports {shield_13_12[1]}]
 
 ## ChipKit Inner Digital Headers
 #set_property -dict { PACKAGE_PIN R16   IOSTANDARD LVCMOS33 } [get_ports { ck_io26 }]; #IO_L19P_T3_34 Sch=ck_io[26]
@@ -158,3 +162,29 @@ set_property -dict { PACKAGE_PIN G15   IOSTANDARD LVCMOS33 } [get_ports { shield
 #set_property -dict { PACKAGE_PIN V20   IOSTANDARD LVCMOS33 } [get_ports { user_dio[10] }]; #IO_L16P_T2_34 Sch=user_dio[10]
 #set_property -dict { PACKAGE_PIN W20   IOSTANDARD LVCMOS33 } [get_ports { user_dio[11] }]; #IO_L16N_T2_34 Sch=user_dio[11]
 #set_property -dict { PACKAGE_PIN K19   IOSTANDARD LVCMOS33 } [get_ports { user_dio[12] }]; #IO_L10P_T1_AD11P_35 Sch=user_dio[12]
+
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_25]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_24]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_23]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_22]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_21]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_20]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_19]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_18]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_17]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_16]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_15]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_14]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_13]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_12]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_11]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_10]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_9]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_8]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_7]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_6]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_5]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_4]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_3]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_2]
+set_property INIT 2'h2 [get_cells design_1_i/ClockBlock/COUNTER_0/inst/wPhase_inferred_i_1]
