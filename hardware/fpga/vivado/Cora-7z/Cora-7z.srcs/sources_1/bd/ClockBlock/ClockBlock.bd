@@ -3,7 +3,7 @@
     "design_info": {
       "boundary_crc": "0x1517F06B861D970",
       "device": "xc7z007sclg400-1",
-      "gen_directory": "../../../../Cora2.gen/sources_1/bd/ClockBlock",
+      "gen_directory": "../../../../Cora-7z.gen/sources_1/bd/ClockBlock",
       "name": "ClockBlock",
       "rev_ctrl_bd_flag": "RevCtrlBdOff",
       "synth_flow_mode": "Hierarchical",

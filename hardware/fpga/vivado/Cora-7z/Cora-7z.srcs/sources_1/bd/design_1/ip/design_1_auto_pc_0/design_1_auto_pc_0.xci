@@ -5,7 +5,7 @@
     "cell_name": "CPU_Block/ps7_0_axi_periph/s00_couplers/auto_pc",
     "component_reference": "xilinx.com:ip:axi_protocol_converter:2.1",
     "ip_revision": "29",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0",
     "parameters": {
       "component_parameters": {
         "SI_PROTOCOL": [ { "value": "AXI3", "value_src": "user", "value_permission": "bd_and_user", "resolve_type": "user", "usage": "all" } ],
@@ -57,9 +57,9 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "29" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "rtl" } ],
-        "SHAREDDIR": [ { "value": "../../ipshared" } ],
+        "SHAREDDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],
         "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
       }

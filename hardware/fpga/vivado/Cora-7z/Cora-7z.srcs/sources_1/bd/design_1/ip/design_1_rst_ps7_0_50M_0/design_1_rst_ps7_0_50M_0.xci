@@ -5,7 +5,7 @@
     "cell_name": "CPU_Block/rst_ps7_0_50M",
     "component_reference": "xilinx.com:ip:proc_sys_reset:5.0",
     "ip_revision": "14",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_0",
     "parameters": {
       "component_parameters": {
         "C_NUM_PERP_ARESETN": [ { "value": "1", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -48,7 +48,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "14" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

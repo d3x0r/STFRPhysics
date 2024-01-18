@@ -5,7 +5,7 @@
     "cell_name": "AXI_GPIO_BUTTONS",
     "component_reference": "xilinx.com:ip:axi_gpio:2.0",
     "ip_revision": "31",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_axi_gpio_1_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_axi_gpio_1_0",
     "parameters": {
       "component_parameters": {
         "C_TRI_DEFAULT": [ { "value": "0xFFFFFFFF", "resolve_type": "user", "format": "bitString", "enabled": false, "usage": "all" } ],
@@ -59,7 +59,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "31" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_axi_gpio_1_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_axi_gpio_1_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

@@ -5,7 +5,7 @@
     "cell_name": "COUNTER_0",
     "component_reference": "xilinx.com:module_ref:COUNTER:1.0",
     "ip_revision": "1",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0",
     "parameters": {
       "component_parameters": {
         "pWIDTH": [ { "value": "64", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -31,7 +31,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "1" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

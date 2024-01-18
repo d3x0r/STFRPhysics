@@ -5,7 +5,7 @@
     "cell_name": "ClockBlock/CLOCK_INTERFACE",
     "component_reference": "d3x0r:user:AXIHeader16:1.0",
     "ip_revision": "9",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_AXIHeader16_0_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_AXIHeader16_0_0",
     "parameters": {
       "component_parameters": {
         "C_S00_AXI_DATA_WIDTH": [ { "value": "32", "resolve_type": "user", "format": "long", "enabled": false, "usage": "all" } ],
@@ -39,7 +39,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "9" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_AXIHeader16_0_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_AXIHeader16_0_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

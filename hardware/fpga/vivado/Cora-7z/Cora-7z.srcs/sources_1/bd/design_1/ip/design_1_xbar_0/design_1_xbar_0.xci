@@ -5,7 +5,7 @@
     "cell_name": "CPU_Block/ps7_0_axi_periph/xbar",
     "component_reference": "xilinx.com:ip:axi_crossbar:2.1",
     "ip_revision": "30",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_xbar_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_xbar_0",
     "parameters": {
       "component_parameters": {
         "ADDR_RANGES": [ { "value": "1", "value_src": "propagated", "value_permission": "bd_and_user", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -1257,7 +1257,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "30" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_xbar_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_xbar_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "rtl" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

@@ -5,7 +5,7 @@
     "cell_name": "ClockBlock/OutputSplitter_1",
     "component_reference": "d3x0r:user:OutputSplitter:1.0.1",
     "ip_revision": "9",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_OutputSplitter_1_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_OutputSplitter_1_0",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "design_1_OutputSplitter_1_0", "resolve_type": "user", "usage": "all" } ],
@@ -159,7 +159,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "9" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/design_1/ip/design_1_OutputSplitter_1_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_OutputSplitter_1_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

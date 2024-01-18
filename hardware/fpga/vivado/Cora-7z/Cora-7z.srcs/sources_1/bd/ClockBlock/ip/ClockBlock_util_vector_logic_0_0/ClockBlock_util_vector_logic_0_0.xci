@@ -5,7 +5,7 @@
     "cell_name": "util_vector_logic_0",
     "component_reference": "xilinx.com:ip:util_vector_logic:2.0",
     "ip_revision": "3",
-    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_util_vector_logic_0_0",
+    "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/ClockBlock/ip/ClockBlock_util_vector_logic_0_0",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "ClockBlock_util_vector_logic_0_0", "resolve_type": "user", "usage": "all" } ],
@@ -34,7 +34,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "3" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_util_vector_logic_0_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/ClockBlock/ip/ClockBlock_util_vector_logic_0_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],
