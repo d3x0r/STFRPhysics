@@ -97,8 +97,6 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sources_1/imports/example_simple/clock-module.v">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/sources_1/imports/example_simple/clock-module.v"/>
-          <Attr Name="ImportTime" Val="1705106387"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -163,8 +161,6 @@
       <Filter Type="Constrs"/>
       <File Path="$PSRCDIR/constrs_1/imports/digilent-xdc-master/Cora-Z7-07S-Master.xdc">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/constrs_1/imports/digilent-xdc-master/Cora-Z7-07S-Master.xdc"/>
-          <Attr Name="ImportTime" Val="1704763670"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
@@ -276,8 +272,6 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sim_2/imports/clock_tdl/SimulationParams.v">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/sim_2/imports/clock_tdl/SimulationParams.v"/>
-          <Attr Name="ImportTime" Val="1705097816"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
