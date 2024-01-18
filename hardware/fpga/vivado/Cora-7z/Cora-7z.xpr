@@ -48,9 +48,9 @@
     <Option Name="ActiveSimSet" Val="sim_2"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
-    <Option Name="IPRepoPath" Val="$PPRDIR/../myip/AXI_Header"/>
-    <Option Name="IPRepoPath" Val="$PPRDIR/../myip/inputmerge_v1_0_project"/>
-    <Option Name="IPRepoPath" Val="$PPRDIR/../myip/outputsplitter_v1_0_project"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/myip/AXI_Header"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/myip/inputmerge_v1_0_project"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/myip/outputsplitter_v1_0_project"/>
     <Option Name="IPOutputRepo" Val="$PCACHEDIR/ip"/>
     <Option Name="IPDefaultOutputPath" Val="$PGENDIR/sources_1"/>
     <Option Name="IPCachePermission" Val="read"/>
@@ -97,6 +97,8 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sources_1/imports/example_simple/clock-module.v">
         <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/sources_1/imports/example_simple/clock-module.v"/>
+          <Attr Name="ImportTime" Val="1705106387"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -104,7 +106,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/bd/design_1/design_1.bd">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -149,11 +150,16 @@
           <Proxy FileSetName="design_1_xbar_0"/>
         </CompFileExtendedInfo>
       </File>
+      <File Path="$PGENDIR/sources_1/bd/design_1/hdl/design_1_wrapper.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="COUNTER"/>
-        <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopRTLFile" Val="$PSRCDIR/sources_1/imports/example_simple/clock-module.v"/>
+        <Option Name="TopModule" Val="design_1_wrapper"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
     </FileSet>
@@ -161,6 +167,8 @@
       <Filter Type="Constrs"/>
       <File Path="$PSRCDIR/constrs_1/imports/digilent-xdc-master/Cora-Z7-07S-Master.xdc">
         <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/constrs_1/imports/digilent-xdc-master/Cora-Z7-07S-Master.xdc"/>
+          <Attr Name="ImportTime" Val="1704763670"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
@@ -174,9 +182,8 @@
       <Filter Type="Srcs"/>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="COUNTER"/>
+        <Option Name="TopModule" Val="design_1_wrapper"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopRTLFile" Val="$PSRCDIR/sources_1/imports/example_simple/clock-module.v"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="TransportPathDelay" Val="0"/>
         <Option Name="TransportIntDelay" Val="0"/>
@@ -272,6 +279,8 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sim_2/imports/clock_tdl/SimulationParams.v">
         <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../../../../FPGA/vivado/highSpeedClock/Cora1/Cora1.srcs/sim_2/imports/clock_tdl/SimulationParams.v"/>
+          <Attr Name="ImportTime" Val="1705097816"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -362,11 +371,12 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="design_1_axi_gpio_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_axi_gpio_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_axi_gpio_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_axi_gpio_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_axi_gpio_0_0_synth_1">
+    <Run Id="design_1_axi_gpio_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_axi_gpio_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_axi_gpio_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/design_1_axi_gpio_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_axi_gpio_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_axi_gpio_0_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2023"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
@@ -389,20 +399,22 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="design_1_InputMerge_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_InputMerge_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_InputMerge_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_0_0_synth_1">
+    <Run Id="design_1_InputMerge_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_InputMerge_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_InputMerge_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/design_1_InputMerge_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_0_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2023"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="design_1_InputMerge_1_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_InputMerge_1_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_InputMerge_1_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_1_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_1_0_synth_1">
+    <Run Id="design_1_InputMerge_1_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_InputMerge_1_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_InputMerge_1_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/design_1_InputMerge_1_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_1_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_InputMerge_1_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2023"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
@@ -434,20 +446,22 @@
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="design_1_AXIHeader16_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_AXIHeader16_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_AXIHeader16_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_AXIHeader16_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_AXIHeader16_0_0_synth_1">
+    <Run Id="design_1_AXIHeader16_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_AXIHeader16_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_AXIHeader16_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/design_1_AXIHeader16_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_AXIHeader16_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_AXIHeader16_0_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2023"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="design_1_COUNTER_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_COUNTER_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_COUNTER_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_COUNTER_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_COUNTER_0_0_synth_1">
+    <Run Id="design_1_COUNTER_0_0_synth_1" Type="Ft3:Synth" SrcSet="design_1_COUNTER_0_0" Part="xc7z007sclg400-1" ConstrsSet="design_1_COUNTER_0_0" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/design_1_COUNTER_0_0_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/design_1_COUNTER_0_0_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/design_1_COUNTER_0_0_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2023"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
