@@ -1,0 +1,63 @@
+{
+  "schema": "xilinx.com:schema:json_instance:1.0",
+  "ip_inst": {
+    "xci_name": "ClockBlock_COUNTER_0_0",
+    "cell_name": "COUNTER_0",
+    "component_reference": "xilinx.com:module_ref:COUNTER:1.0",
+    "ip_revision": "1",
+    "gen_directory": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0",
+    "parameters": {
+      "component_parameters": {
+        "pWIDTH": [ { "value": "64", "resolve_type": "user", "format": "long", "usage": "all" } ],
+        "Component_Name": [ { "value": "ClockBlock_COUNTER_0_0", "resolve_type": "user", "usage": "all" } ]
+      },
+      "model_parameters": {
+        "pWIDTH": [ { "value": "64", "resolve_type": "generated", "format": "long", "usage": "all" } ]
+      },
+      "project_parameters": {
+        "ARCHITECTURE": [ { "value": "zynq" } ],
+        "BASE_BOARD_PART": [ { "value": "digilentinc.com:cora-z7-07s:part0:1.1" } ],
+        "BOARD_CONNECTIONS": [ { "value": "" } ],
+        "DEVICE": [ { "value": "xc7z007s" } ],
+        "PACKAGE": [ { "value": "clg400" } ],
+        "PREFHDL": [ { "value": "VERILOG" } ],
+        "SILICON_REVISION": [ { "value": "" } ],
+        "SIMULATOR_LANGUAGE": [ { "value": "MIXED" } ],
+        "SPEEDGRADE": [ { "value": "-1" } ],
+        "STATIC_POWER": [ { "value": "" } ],
+        "TEMPERATURE_GRADE": [ { "value": "" } ]
+      },
+      "runtime_parameters": {
+        "IPCONTEXT": [ { "value": "IP_Integrator" } ],
+        "IPREVISION": [ { "value": "1" } ],
+        "MANAGED": [ { "value": "TRUE" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../Cora2.gen/sources_1/bd/ClockBlock/ip/ClockBlock_COUNTER_0_0" } ],
+        "SELECTEDSIMMODEL": [ { "value": "" } ],
+        "SHAREDDIR": [ { "value": "../../ipshared" } ],
+        "SWVERSION": [ { "value": "2023.2" } ],
+        "SYNTHESISFLOW": [ { "value": "OOC_HIERARCHICAL" } ]
+      }
+    },
+    "boundary": {
+      "ports": {
+        "globalClock": [ { "direction": "in" } ],
+        "iReset": [ { "direction": "in" } ],
+        "iLatch1": [ { "direction": "in" } ],
+        "iLatch2": [ { "direction": "in" } ],
+        "iResetLatch1": [ { "direction": "in" } ],
+        "iResetLatch2": [ { "direction": "in" } ],
+        "o1COUNTER": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "o1COUNTERHi": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "o1COUNTERPhase": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "o2COUNTER": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "o2COUNTERHi": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "o2COUNTERPhase": [ { "direction": "out", "size_left": "31", "size_right": "0" } ],
+        "oRdyCOUNTER": [ { "direction": "out" } ],
+        "oRdyCOUNTER2": [ { "direction": "out" } ],
+        "oLatchTest1": [ { "direction": "out" } ],
+        "oLatchTest2": [ { "direction": "out" } ],
+        "debug": [ { "direction": "out", "size_left": "31", "size_right": "0" } ]
+      }
+    }
+  }
+}
