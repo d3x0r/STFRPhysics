@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-// Date        : Wed Jan 17 19:30:52 2024
+// Date        : Wed Jan 17 22:36:30 2024
 // Host        : tundra running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
-//               m:/FPGA/vivado/highSpeedClock/Cora2/Cora2.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.v
+//               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.v
 // Design      : design_1_COUNTER_0_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -53,7 +53,7 @@ module design_1_COUNTER_0_0
   output [31:0]debug;
 
   wire \<const0> ;
-  wire [31:6]\^debug ;
+  wire [7:6]\^debug ;
   wire globalClock;
   wire iLatch1;
   wire iLatch2;
@@ -68,7 +68,22 @@ module design_1_COUNTER_0_0
   wire oRdyCOUNTER;
   wire oRdyCOUNTER2;
 
-  assign debug[31:16] = \^debug [31:16];
+  assign debug[31] = \<const0> ;
+  assign debug[30] = \<const0> ;
+  assign debug[29] = \<const0> ;
+  assign debug[28] = \<const0> ;
+  assign debug[27] = \<const0> ;
+  assign debug[26] = \<const0> ;
+  assign debug[25] = \<const0> ;
+  assign debug[24] = \<const0> ;
+  assign debug[23] = \<const0> ;
+  assign debug[22] = \<const0> ;
+  assign debug[21] = \<const0> ;
+  assign debug[20] = \<const0> ;
+  assign debug[19] = \<const0> ;
+  assign debug[18] = \<const0> ;
+  assign debug[17] = \<const0> ;
+  assign debug[16] = \<const0> ;
   assign debug[15] = \<const0> ;
   assign debug[14] = \<const0> ;
   assign debug[13] = \<const0> ;
@@ -104,7 +119,7 @@ module design_1_COUNTER_0_0
        (.G(\<const0> ));
   design_1_COUNTER_0_0_COUNTER inst
        (.Q({o1COUNTERHi,o1COUNTER}),
-        .debug({\^debug [31:16],oRdyCOUNTER2,oRdyCOUNTER,\^debug [7:6]}),
+        .debug({oRdyCOUNTER2,oRdyCOUNTER,\^debug }),
         .\debug[7] ({iResetLatch2,iResetLatch1}),
         .globalClock(globalClock),
         .iLatch1(iLatch1),
@@ -125,7 +140,7 @@ module design_1_COUNTER_0_0_COUNTER
     iLatch1,
     iLatch2,
     \debug[7] );
-  output [19:0]debug;
+  output [3:0]debug;
   output [63:0]Q;
   output [25:0]o1COUNTERPhase;
   output [63:0]\rLatch2_reg[63]_0 ;
@@ -278,7 +293,6 @@ module design_1_COUNTER_0_0_COUNTER
   (* DONT_TOUCH *) wire [24:0]wPhase_n;
   wire [3:3]\NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED ;
 
-  assign debug[19:4] = wPhase[15:0];
   assign debug[3] = latchLock2;
   assign debug[2] = latchLock1;
   assign debug[1:0] = \^debug [1:0];

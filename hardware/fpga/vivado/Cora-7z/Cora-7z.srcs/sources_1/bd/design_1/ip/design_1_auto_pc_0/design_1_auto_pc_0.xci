@@ -59,7 +59,7 @@
         "MANAGED": [ { "value": "TRUE" } ],
         "OUTPUTDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "rtl" } ],
-        "SHAREDDIR": [ { "value": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ipshared" } ],
+        "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],
         "SYNTHESISFLOW": [ { "value": "OUT_OF_CONTEXT" } ]
       }

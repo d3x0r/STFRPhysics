@@ -2,10 +2,10 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
--- Date        : Wed Jan 17 19:30:52 2024
+-- Date        : Wed Jan 17 22:36:30 2024
 -- Host        : tundra running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               m:/FPGA/vivado/highSpeedClock/Cora2/Cora2.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.vhdl
+--               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.vhdl
 -- Design      : design_1_COUNTER_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -17,7 +17,7 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity design_1_COUNTER_0_0_COUNTER is
   port (
-    debug : out STD_LOGIC_VECTOR ( 19 downto 0 );
+    debug : out STD_LOGIC_VECTOR ( 3 downto 0 );
     Q : out STD_LOGIC_VECTOR ( 63 downto 0 );
     o1COUNTERPhase : out STD_LOGIC_VECTOR ( 25 downto 0 );
     \rLatch2_reg[63]_0\ : out STD_LOGIC_VECTOR ( 63 downto 0 );
@@ -194,7 +194,6 @@ architecture STRUCTURE of design_1_COUNTER_0_0_COUNTER is
   attribute ADDER_THRESHOLD of \rCOUNTER_reg[60]_i_1\ : label is 11;
   attribute ADDER_THRESHOLD of \rCOUNTER_reg[8]_i_1\ : label is 11;
 begin
-  debug(19 downto 4) <= wPhase(15 downto 0);
   debug(3) <= latchLock2;
   debug(2) <= latchLock1;
   debug(1 downto 0) <= \^debug\(1 downto 0);
@@ -3613,7 +3612,7 @@ end design_1_COUNTER_0_0;
 
 architecture STRUCTURE of design_1_COUNTER_0_0 is
   signal \<const0>\ : STD_LOGIC;
-  signal \^debug\ : STD_LOGIC_VECTOR ( 31 downto 6 );
+  signal \^debug\ : STD_LOGIC_VECTOR ( 7 downto 6 );
   signal \^ilatch1\ : STD_LOGIC;
   signal \^ilatch2\ : STD_LOGIC;
   signal \^iresetlatch1\ : STD_LOGIC;
@@ -3630,7 +3629,22 @@ begin
   \^ilatch2\ <= iLatch2;
   \^iresetlatch1\ <= iResetLatch1;
   \^iresetlatch2\ <= iResetLatch2;
-  debug(31 downto 16) <= \^debug\(31 downto 16);
+  debug(31) <= \<const0>\;
+  debug(30) <= \<const0>\;
+  debug(29) <= \<const0>\;
+  debug(28) <= \<const0>\;
+  debug(27) <= \<const0>\;
+  debug(26) <= \<const0>\;
+  debug(25) <= \<const0>\;
+  debug(24) <= \<const0>\;
+  debug(23) <= \<const0>\;
+  debug(22) <= \<const0>\;
+  debug(21) <= \<const0>\;
+  debug(20) <= \<const0>\;
+  debug(19) <= \<const0>\;
+  debug(18) <= \<const0>\;
+  debug(17) <= \<const0>\;
+  debug(16) <= \<const0>\;
   debug(15) <= \<const0>\;
   debug(14) <= \<const0>\;
   debug(13) <= \<const0>\;
@@ -3672,7 +3686,6 @@ inst: entity work.design_1_COUNTER_0_0_COUNTER
      port map (
       Q(63 downto 32) => o1COUNTERHi(31 downto 0),
       Q(31 downto 0) => o1COUNTER(31 downto 0),
-      debug(19 downto 4) => \^debug\(31 downto 16),
       debug(3) => \^ordycounter2\,
       debug(2) => \^ordycounter\,
       debug(1 downto 0) => \^debug\(7 downto 6),

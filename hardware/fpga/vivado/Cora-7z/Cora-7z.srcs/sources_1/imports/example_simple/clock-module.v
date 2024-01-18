@@ -82,10 +82,10 @@ assign	 debug[7] = rstLatchLock2;
 assign	 debug[8] = oRdyCOUNTER;
 assign	 debug[9] = oRdyCOUNTER2;
 assign   debug[15:10] = 0;
-assign   debug[31:16] = wPhase;
+//assign   debug[31:16] = wPhase;
 //assign   debug[31:16] = wPhase;
 //assign   debug[31:16] = rPhase;
-//assign   debug[31:16] = 0;
+assign   debug[31:16] = 0;
 //assign	 debug[22:16] = 0;//rSynthClock[6:0];
 //assign   debug[31:23] = 0;
 
@@ -254,6 +254,7 @@ always @(posedge rPhase[14] ) #1 	rPhase[15] = !(rPhase[15]);
 (* dont_touch="true" *) assign wPhase[15] = wPhase[14];
 */
 
+/*
 always @(posedge globalClock ) #1 	iCLK_ff_p[0] = !(iCLK_ff_n[0]);
 always @(negedge globalClock) #1 	iCLK_ff_n[0] = (iCLK_ff_p[0]);
 assign   iCLK_ff[0] = iCLK_ff_p[0] ^ iCLK_ff_n[0];
@@ -322,6 +323,7 @@ assign    iCLK_ff[12] = iCLK_ff_p[12] ^ iCLK_ff_n[12];
 always @(posedge iCLK_ff[12] )   #1 iCLK_ff_p[13] = !(iCLK_ff_n[13]);
 always @(negedge iCLK_ff[12])   #1 iCLK_ff_n[13] = (iCLK_ff_p[13]);
 assign    iCLK_ff[13] = iCLK_ff_p[13] ^ iCLK_ff_n[13];
+*/
 
 /*
 always @(posedge iCLK_ff[13] )   #1 iCLK_ff_p[14] = !(iCLK_ff_n[14]);
