@@ -384,8 +384,11 @@ clock_inst : COUNTER
     
 counter_process : process( oRdyCounter, oRdyCounter2 )
 begin
+    -- once ready goes away, it's safe to remove resets...
     if( oRdyCOUNTER = '0' ) then oResetLatch1 <= '0'; end if;
     if( oRdyCOUNTER2 = '0' ) then oResetLatch2 <= '0'; end if;
+    -- once we start sending, should be able to trigger reset
+    -- this will probably be done sending by the time the latch signal goes away...
     if( cnt1Send = '1' ) then oResetLatch1 <= '1'; end if;
     if( cnt2Send = '1' ) then oResetLatch2 <= '1'; end if;
     if( cnt1Send = '0' ) then
