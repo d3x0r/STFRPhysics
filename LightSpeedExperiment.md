@@ -43,6 +43,26 @@ Using an approximation of light travelling 1 foot per nanosecond (one Ghz tick i
 
 Events from a single detector, and the related timestamps are a stream.  The streams are mostly independant.  Starting with a pulse, subtracting the timestamp from itself biases the tick to 0.  Each stream is biased to 0 itself; this syncrhonizes the pulses at a specific point.  This may be a average case, or a worst case or somewhere inbetween.   One stream should be slightly ahead of the 0, and have at a positive offset, this stream is delayed; the other stream should be behind 0, and have a negative offset that is the same as the positive from that point.  This offset will go toward a maximum case and then to an average case.  Given that only alignment in a very specific direction produces THE worst case, random chance will be that there will be little deviation from average and just be +/-0.  Any progressive skew that does not go away is probably from a slightly different gravitational gradient; though slight differences in north latitude will also skew the clock time, from a difference in linear rate while the earth rotates.
 
+![Light speed clock deltas](LightSpeedDeltas.png)
+
+- $A$    : constant delay between beginning a transmission.
+-  $D_1$   : delay between starting a transmission and signal starts transmitting.
+-   $D_2$  : delay between receiving circuit registers signal and timestamp is recorded.
+-  $T_0$   : Fixed tick rate of signal emitters
+-  $T_1$   : Total time between tick and timestamp.
+-  $T_2$   : Time-of-flight between laser and detector.  Hypothesis predicts this will vary depending on direction of devices.
+-  $T_F$  : First timestamp.
+-  $\Delta_1,\Delta_2,\Delta_3,...$   : Example deltas between recorded timestamps.
+
+In the above figure ?, the first line demonstrates a consistent clock period and constant time of propagation; the black marks (or the left of two marks together) are the clock pulses that trigger a transmission.  When transmission is triggered, a small delay happens represented by $D_1$, which is time for the laser to turn on.  Then the time-of-flight of light happens represented by $T_2$ as the time between $D_1$ and $D_2$.  Then the laser will hit the detector, and a small delay happens represented by , and finally the time of observation by the detector is marked at $T_1$.
+
+The delay in turning it on, and the delay for the electronics to register the signal should be constant.  The time-of-flight is predicted to change over time in small increments.  When the time-of-flight is shorter, then an offset will show up as a shorter time between subsequent pulses.  While the time-of-flight remains constant, there will be no offset between the pulses.  When the time-of-flight increases, then a longer time between two pulses will appear, but while the time-of-flight remains the same, there is no difference between subsequent pulses.
+
+The second line in the graph shows an example of transmission timestamp delays.  The first tick is the same width as the first line.  The second tick is slightly longer, and that delta is marked as +1.  The next tick is again to be longer marked with a +1, until the time settles out and the delta between red marks remains at 1 second.  Then after a few ticks, the time-of-flight decreases, which offsets the red mark from the black mark, and gets indicated with -1 steps. 
+
+The third line shows the sum of the delta times, which shows the total delta over time.
+
+The receiver only needs to record the times it receives a pulse and compare the differential time between each pulse.  The very first timestamp($T_F$) marked is subtracted from all other timestamps, to bias the entire graph to 0; this step isn’t absolutely required.  The first differential time($\Delta_0$) is then subtracted from all other differential timestamps, which then shortens the delta to just how much difference there is between each red mark to the next red mark minus the off time between each mark, and the offset of the on time and reception triggering time.  Then all differentials are added together to get a total sum of differentials, and the total is divided by the number of samples minus one, and for each differential n from 1 to $N$, $(n*total/(N-1))$ is subtracted from each differential to remove any drift or cumulative error.  The first delta might be longer or shorter than expected, which will cause an overall shift to all deltas.  The test is meant to be done over 24 hours, so the speed of the first and last samples should be basically the same.  The last step to flatten the graph puts the start and end at 0.
 ## Alternative deployments
 
 A satellite maybe could be built, which would be able to rotate the apparatus with 2 detectors tethered - but then I'd expect 4 miles of rope might be an issue?
