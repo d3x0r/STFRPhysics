@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 module COUNTER #(
-pWIDTH=64,
+pWIDTH=52,
 PHASE_SIZE = 26
 ) (
 input    globalClock,
@@ -57,6 +57,17 @@ reg [25:0] rPhaseLatch2 = 0;  // latched counter value 2
 			// wait until iLatch1 is not in a signaled state
 (* ALLOW_COMBINATORIAL_LOOPS="true" *) reg rstLatchLock2 = 0;  // pending reset signal, iResetLatch2 was signaled, but iLatch2 is still active; 
 			// wait until iLatch2 is not in a signaled state
+
+(* ALLOW_COMBINATORIAL_LOOPS="true" *) wire [3:0] state;
+assign state[3] = iLatch1;
+assign state[2] = latchLock1;
+assign state[1] = iResetLatch1;
+assign state[0] = rstLatchLock1;
+(* ALLOW_COMBINATORIAL_LOOPS="true" *) wire [3:0] state2;
+assign state2[3] = iLatch2;
+assign state2[2] = latchLock2;
+assign state2[1] = iResetLatch2;
+assign state2[0] = rstLatchLock2;
 
 // if iResetLatch1 or iResetlatch2 is signaled, and iLatch1 or iLatch2 respectively is not set, then
 // latchLock1 or latchLock2 is immediately cleared.
@@ -98,22 +109,42 @@ assign	oLatchTest2 = ( (rCOUNTER[27:16] & 'hFfc) == 'hE00 ) ;//&& !( (rCOUNTER[1
 
 
 
-always @(posedge globalClock)
-begin
-      #1
-		rCOUNTER <= rCOUNTER+1;
-		
-end
+always @(posedge globalClock) #1 rCOUNTER <= rCOUNTER+1;
+
 
 always begin	 
 	#1
-    latchLock1 <= ( iLatch1 || latchLock1 ) && !( !iLatch1 && ( rstLatchLock1 ||iResetLatch1 ) );
-	rstLatchLock1 <= ( iLatch1 && (iResetLatch1 || rstLatchLock1) ) ;
-	
-    latchLock2 <= ( iLatch2 || latchLock2 ) && !( !iLatch2 && ( rstLatchLock2 ||iResetLatch2 ) );
-	rstLatchLock2 <= ( iLatch2 && ( iResetLatch2 || rstLatchLock2 ) ) ;
+	case( state )
+        4'b0000, 4'b0001, 4'b0010,4'b0011, 4'b0101, 4'b0110, 4'b0111    :begin 
+           latchLock1 <= 0;
+           rstLatchLock1 <= 0;
+        end
+        4'b0100, 4'b1000, 4'b1100  :begin 
+           latchLock1 <= 1;
+           rstLatchLock1 <= 0;
+        end
+        4'b1001, 4'b1010, 4'b1011, 4'b1101, 4'b1110, 4'b1111      :begin 
+           latchLock1 <= 1;
+           rstLatchLock1 <= 1;
+        end
+    endcase		   
 
+	case( state2 )
+        4'b0000, 4'b0001, 4'b0010,4'b0011, 4'b0101, 4'b0110, 4'b0111    :begin 
+           latchLock2 <= 0;
+           rstLatchLock2 <= 0;
+        end
+        4'b0100, 4'b1000, 4'b1100  :begin 
+           latchLock2 <= 1;
+           rstLatchLock2 <= 0;
+        end
+        4'b1001, 4'b1010, 4'b1011, 4'b1101, 4'b1110, 4'b1111      :begin 
+           latchLock2 <= 1;
+           rstLatchLock2 <= 1;
+        end
+    endcase		   
 end
+
 
 always @(posedge iLatch1 ) begin
          rLatch1<=rCOUNTER;
@@ -128,7 +159,7 @@ end
 
 assign oRdyCOUNTER = latchLock1;
 assign o1COUNTER=rLatch1[31:0];
-assign o1COUNTERHi=rLatch1[63:32];
+assign o1COUNTERHi=rLatch1[pWIDTH-1:32];
 assign o1COUNTERPhase[25:0]=rPhaseLatch1;
 assign o1COUNTERPhase[31:26]=6'b000000;
 
@@ -139,7 +170,7 @@ assign o1COUNTERPhase[31:26]=6'b000000;
 
 assign oRdyCOUNTER2 = latchLock2;
 assign o2COUNTER=rLatch2[31:0];
-assign o2COUNTERHi=rLatch2[63:32];
+assign o2COUNTERHi=rLatch2[pWIDTH-1:32];
 assign o2COUNTERPhase[25:0]=rPhaseLatch2;
 assign o2COUNTERPhase[31:26]=6'b000000;
 

@@ -7,6 +7,10 @@
 set_property -dict {PACKAGE_PIN L17 IOSTANDARD LVCMOS33} [get_ports CLK]
 create_clock -period 83.330 -name sys_clk_pin -waveform {0.000 41.660} -add [get_ports CLK]
 
+set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets clock_inst/latchLock1_inferred_i_2_n_0]
+set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets clock_inst/latchLock2_inferred_i_2_n_0]
+
+
 
 # LEDs
 set_property -dict {PACKAGE_PIN A17 IOSTANDARD LVCMOS33} [get_ports {LED[0]}]
@@ -54,8 +58,8 @@ set_property -dict {PACKAGE_PIN B18 IOSTANDARD LVCMOS33} [get_ports {BTN[1]}]
 #set_property -dict { PACKAGE_PIN A14   IOSTANDARD LVCMOS33 } [get_ports { pio[09] }]; #IO_L6P_T0_16 Sch=pio[09]
 set_property -dict {PACKAGE_PIN J3 IOSTANDARD LVCMOS33} [get_ports oLatchTest1]
 set_property -dict {PACKAGE_PIN J1 IOSTANDARD LVCMOS33} [get_ports oLatchTest2]
-#set_property -dict { PACKAGE_PIN K2    IOSTANDARD LVCMOS33 } [get_ports { pio[12] }]; #IO_L5P_T0_AD13P_35 Sch=pio[12]
-#set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33 } [get_ports { pio[13] }]; #IO_L6N_T0_VREF_35 Sch=pio[13]
+set_property -dict { PACKAGE_PIN K2    IOSTANDARD LVCMOS33 } [get_ports  iLatch1]; #IO_L5P_T0_AD13P_35 Sch=pio[12]
+set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33 } [get_ports  iLatch2]; #IO_L6N_T0_VREF_35 Sch=pio[13]
 #set_property -dict { PACKAGE_PIN L2    IOSTANDARD LVCMOS33 } [get_ports { pio[14] }]; #IO_L5N_T0_AD13N_35 Sch=pio[14]
 #set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33 } [get_ports { pio[17] }]; #IO_L9N_T1_DQS_AD7N_35 Sch=pio[17]
 #set_property -dict { PACKAGE_PIN N3    IOSTANDARD LVCMOS33 } [get_ports { pio[18] }]; #IO_L12P_T1_MRCC_35 Sch=pio[18]
@@ -139,6 +143,10 @@ set_property -dict {PACKAGE_PIN J18 IOSTANDARD LVCMOS33} [get_ports UART_TXD]
 #set_property -dict { PACKAGE_PIN N19   IOSTANDARD LVCMOS33 } [get_ports { RamCEn     }]; #IO_L9N_T1_DQS_D13_14 Sch=sram-ce
 
 
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets iLatch1_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets iLatch2_IBUF]
+                                 #clock_inst/wPhase_inferred_i_25
 set_property INIT 2'h2 [get_cells clock_inst/wPhase_inferred_i_25]
 set_property INIT 2'h2 [get_cells clock_inst/wPhase_inferred_i_24]
 set_property INIT 2'h2 [get_cells clock_inst/wPhase_inferred_i_23]

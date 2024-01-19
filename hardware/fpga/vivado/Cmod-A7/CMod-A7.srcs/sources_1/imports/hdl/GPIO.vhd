@@ -60,7 +60,11 @@ entity GPIO_demo is
            RGB0_Green    : out  STD_LOGIC;
            RGB0_Blue    : out  STD_LOGIC;
            oLatchTest1 : out std_logic;
-           oLatchTest2 : out std_logic
+           oLatchTest2 : out std_logic;
+           iLatch1 : in std_logic;
+           iLatch2 : in std_logic --;
+           --iResetLatch1 : in std_logic;
+           --iResetLatch2 : in std_logic
            
 			  );
 end GPIO_demo;
@@ -82,6 +86,10 @@ end component;
 component COUNTER
 Port(
     globalClock: in std_logic;
+    iLatch1 : in std_logic;      -- signal event that latches the counter to register 1
+    iLatch2 : in std_logic;      -- signal event that latches the counter to register 2
+    iResetLatch1 : in std_logic; -- sent after the value in register 1 is read from (or sent to) the USB
+    iResetLatch2 : in std_logic; -- sent after the value in register 2 is read from (or sent to) the USB
     o1COUNTER : out STD_LOGIC_VECTOR( 31 downto 0 );
     o1COUNTERHi : out STD_LOGIC_VECTOR( 31 downto 0 );
     o1COUNTERPhase : out STD_LOGIC_VECTOR( 31 downto 0 );
@@ -240,6 +248,9 @@ end record MSG_BUF;
 signal DataBuf1 : MSG_BUF := ( cmd=>X"00", low=>X"00000000", high=>X"00000000", phase=>X"00000000" );
 signal DataBuf2 : MSG_BUF := ( cmd=>X"01", low=>X"00000000", high=>X"00000000", phase=>X"00000000" );
 
+signal oResetLatch1 : std_logic;
+signal oResetLatch2 : std_logic;
+ 
 --This is used to determine when the 7-segment display should be
 --incremented
 signal tmrCntr : std_logic_vector(26 downto 0) := (others => '0');
@@ -355,6 +366,8 @@ btnDetect <= '1' when ((btnReg(0)='0' and btnDeBnc(0)='1') or
 clock_inst : COUNTER
     port map( 
            globalClock,
+           iLatch1 => iLatch1,
+           iLatch2 => iLatch2,
            o1COUNTER => DataBuf1.low,
            o1COUNTERHi => DataBuf1.high,
            o1COUNTERPhase => DataBuf1.phase,
@@ -362,13 +375,19 @@ clock_inst : COUNTER
            o2COUNTERHi => DataBuf2.high,
            o2COUNTERPhase => DataBuf2.phase,
            oRdyCounter => oRdyCounter, 
-           oRdyCounter2 => oRdyCounter2, 
+           oRdyCounter2 => oRdyCounter2,
+           iResetLatch1 => oResetLatch1,
+           iResetLatch2 => oResetLatch2,
            oLatchTest1 => oLatchTest1,
            oLatchTest2 => oLatchTest2
     );
     
 counter_process : process( oRdyCounter, oRdyCounter2 )
 begin
+    if( oRdyCOUNTER = '0' ) then oResetLatch1 <= '0'; end if;
+    if( oRdyCOUNTER2 = '0' ) then oResetLatch2 <= '0'; end if;
+    if( cnt1Send = '1' ) then oResetLatch1 <= '1'; end if;
+    if( cnt2Send = '1' ) then oResetLatch2 <= '1'; end if;
     if( cnt1Send = '0' ) then
         cnt1Detect <= oRdyCounter;
     end if;
@@ -402,7 +421,7 @@ next_uartState_process : process (CLK100)
 begin
 	if (rising_edge(CLK100)) then
 			
-			case uartState is 
+	   case uartState is 
 			when RST_REG =>
         if (reset_cntr = RESET_CNTR_MAX) then
           uartState <= LD_INIT_STR;
@@ -422,6 +441,13 @@ begin
 					end if;
 				end if;
 			when WAIT_BTN =>
+			     if( cnt1Send = '1' ) then
+			         cnt1Send <= '0';
+			     end if;
+			     if( cnt2Send = '1' ) then
+			         cnt2Send <= '0';
+			     end if;
+			     
 				if (btnDetect = '1') then
 					uartState <= LD_BTN_STR;
 				elsif (cnt1Detect = '1' ) then
