@@ -12,7 +12,7 @@ const controls = document.getElementById( "controls" );
 controls.appendChild( slider );
 slider.addEventListener( "input", update );
 
-slider.setAttribute( "max",1000 );
+slider.setAttribute( "max",2000 );
 slider.value = 500;
 slider.style.width="250px";
 
