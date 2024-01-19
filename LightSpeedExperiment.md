@@ -63,8 +63,36 @@ The second line in the graph shows an example of transmission timestamp delays.�
 The third line shows the sum of the delta times, which shows the total delta over time.
 
 The receiver only needs to record the times it receives a pulse and compare the differential time between each pulse.  The very first timestamp($T_F$) marked is subtracted from all other timestamps, to bias the entire graph to 0; this step isn’t absolutely required.  The first differential time($\Delta_0$) is then subtracted from all other differential timestamps, which then shortens the delta to just how much difference there is between each red mark to the next red mark minus the off time between each mark, and the offset of the on time and reception triggering time.  Then all differentials are added together to get a total sum of differentials, and the total is divided by the number of samples minus one, and for each differential n from 1 to $N$, $(n*total/(N-1))$ is subtracted from each differential to remove any drift or cumulative error.  The first delta might be longer or shorter than expected, which will cause an overall shift to all deltas.  The test is meant to be done over 24 hours, so the speed of the first and last samples should be basically the same.  The last step to flatten the graph puts the start and end at 0.
+
+![Simulated data](LightSpeedSimulatedData.png)
+Figure 16: This is an example graph of simulated data ([https://d3x0r.github.io/STFRPhysics/math/indexAsyncClocks.html](https://d3x0r.github.io/STFRPhysics/math/indexAsyncClocks.html)).  Both very noisy data and a smoothed function.  The horizontal grid represents nanoseconds of separation.  The send and receive time offsets are given 5 nano seconds of jitter instead of assuming they are constant.  The resulting signal is still quite legible.
+
+Red is one simulated sensor; green is the other simulated sensor and white is the total difference between the sensors (red minus green in this case).
+
+The algorithm for analyzing the data is to take the first time delta as a base clock step ( ).  Each step is then computed from .  This is saved in a separate array that accumulates the deltaTime for each step.  The last store total deltaTime is divided by the samples, and then scaled as a linear adjustment between the first and last sample and subtracted from the accumulated time.  This is assuming a complete run of data spans 1 day, and the measured differences in the speed of light at the start and at the end should be identical and are computed as 0.
+
+The resulting accumulated delta can be smoothed by stepping from 1 to the number of samples -1 and calculating .  The above graph applied the smoothing 10 times to get the smoothed curve.
+
+A smoothing of the times of the events vs the time-of-day clock recorded with the data, so comparisons can be made at the same moment.  The simulated data test filled in an array, and only compared each array entry to the other same index in the array; while the actual times recorded in each are skewed.  A simple linear interpolation is probably sufficient.
 ## Alternative deployments
 
 A satellite maybe could be built, which would be able to rotate the apparatus with 2 detectors tethered - but then I'd expect 4 miles of rope might be an issue?
 
 LISA - The interferometer satellite array could measure +/-10ms; millisecond resolution is surely notable - although it does have bent arms, so the difference between the arms is fairly minimal.
+
+GPS satellites are synchronous clocks that emit pulses and are clocked over a distance for the speed of light.  GPS satellites orbit at an altitude of 20,200km or 12,550 miles (66,264,000 feet).  It was argued that if there was an anisotropic speed of light, then they would be off by a significant amount of time when received; they would be off by potentially approximately 81 microseconds. 
+$$\frac{Altitude}{C\pm V}$$
+
+Gravity also propagates at the speed of light.  This means that in the direction of travel of the solar system relative to the CMBR (370km/s or 0.00123 light-seconds per second) that effectively the orbit of the satellites in the direction of the velocity is 24.9km (15.5 miles or 81,624ft) further from the earth, as the gravity field has not yet extended as far, compensating for the shorter reception time as the earth moves into the emitted signal.  Conversely, the gravity field on the trailing side is extended, and makes the orbit closer, compensating for the earth moving away from the emitted signal.  This is only extreme in a specific alignment.
+
+It’s not that the space of that whole system is contracted; space does not contract with velocity, only the matter in the space.
+
+This then goes to what about the laser ranging satellites.  They rely on a two-way communication, and if there was such an elevation difference, that would show up in their measurements, and the model they build would be offset.  Satellite programs that map the elevation of Earth have low orbit, and the difference would only be a couple hundred meters, which is larger than the difference of their perigee-apogee.
+
+·        ICESat-2 orbits @ 479-482km.
+
+·        Cryosat-2 @ 718-732km
+
+·        ADM-Aeolus @ 320km
+
+·        [TanDEM-X](https://en.wikipedia.org/wiki/TanDEM-X "TanDEM-X") & TerraSAR-X @  514-516km
