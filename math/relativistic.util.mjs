@@ -25,11 +25,77 @@ class Vector{
 		return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
 	}
 }
-
+     /*
 
 export function ObservedTime( T, V, P, V_o, P_o ) {
 	const C = params.C;
 	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+	const dVx = V.x - V_o.x;
+	const dVy = V.y - V_o.y;
+	const dVz = V.z - V_o.z;
+	const Pex = P.x - P_o.x - dVx*T;
+	const Pey = P.y - P_o.y - dVy*T;
+	const Pez = P.z - P_o.z - dVz*T;
+
+
+	const ddV = dVx*dVx + dVy*dVy + dVz*dVz;
+	const G = C*C - (ddV*ddV);
+	const A = Pex*Pex + Pey*Pey + Pez*Pez - C*C*T*T;
+	const B = C*C*T - (Pex*dVx + Pey*dVy + Pez*dVz)
+
+	return ( Math.sqrt( B*B + G*A ) + B ) / G;
+
+
+	const xd = P.x-P_o.x;
+	const yd = P.y-P_o.y;
+	const zd = P.z-P_o.z;
+	const VV = V.x*V.x+V.y*V.y+V.z*V.z;
+
+	if( VV === C*C ) {
+		//solve (S-T)^2 = ((D/C T - J /sqrt(J*J+K*K+L*L) S + X/C)^2 + (E/C T - K /sqrt(J*J+K*K+L*L)S + Y/C)^2 + (F/C T - L/sqrt(J*J+K*K+L*L) S + Z/C)^2)  for S
+		//S = (sqrt(J^2 + K^2 + L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2))/(2 C (C T sqrt(J^2 + K^2 + L^2) - D J T - E K T - F L T - J X - K Y - L Z))		
+	}
+
+	{
+	const X = xd;
+	const Y = yd;
+	const Z = zd;
+
+	const D = V.x;
+	const E = V.y;
+	const F = V.z;
+
+	const J = V_o.x;
+	const K = V_o.y;
+	const L = V_o.z;
+
+	const tmp = (-C*C * T + D * J * T 
+							+ E * K * T 
+							+ F * L * T 
+							+ J * X + K * Y + L * Z);
+	const CV =  C*C - V_o.x*V_o.x - V_o.y*V_o.y - V_o.z*V_o.z;
+	const S = (Math.sqrt(tmp*tmp
+						 - CV
+							*(C*C * T*T
+							- D*D * T*T 
+							- 2 * D * T * X 
+							- E*E * T*T 
+							- 2 * E * T * Y 
+							- F*F * T*T 
+							- 2 * F * T * Z 
+							- xd*xd - yd*yd - zd*zd)
+						) 
+				+ C*C * T - D * J * T - E * K * T - F * L * T - J * X - K * Y - L * Z
+				) / CV;
+	return S;
+	}
+}
+*/
+
+export function ObservedTime( T, V, P, V_o, P_o ) {
+	const C = params.C;
+	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
+
 	const xd = P.x-P_o.x;
 	const yd = P.y-P_o.y;
 	const zd = P.z-P_o.z;
@@ -77,6 +143,24 @@ export function ObservedTime( T, V, P, V_o, P_o ) {
 
 export function RealTime( T_o, V, P, V_o, P_o ) {
 	const C = params.C;
+
+	// these are reversed from Observed Time.
+	const dVx = V_o.x - V.x;
+	const dVy = V_o.y - V.y;
+	const dVz = V_o.z - V.z;
+	const Pex = P.x - P_o.x - dVx*T_o;
+	const Pey = P.y - P_o.y - dVy*T_o;
+	const Pez = P.z - P_o.z - dVz*T_o;
+
+
+	const ddV = dVx*dVx + dVy*dVy + dVz*dVz;
+	const G = C*C - (ddV*ddV);
+	const A = Pex*Pex + Pey*Pey + Pez*Pez - C*C*T_o*T_o;
+	const B = C*C*T_o - (Pex*dVx + Pey*dVy + Pez*dVz)
+
+	return ( Math.sqrt( B*B + G*A ) + B ) / G;
+	
+
 	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
 	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
 	//                       - 4 (C^2 - D^2 - E^2 - F^2) 

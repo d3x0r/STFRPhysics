@@ -5,7 +5,7 @@ import {MyProtocol,protocol} from "./protocol.js"
 
 MyProtocol.on( "open", function (a, b){
 	console.log( "Connection:", this, a, b );
-	protocol.send( { op:"getData" } );
+//	protocol.send( { op:"getData" } );
 } );
 
 protocol.on( "data", ( msg ) =>{
@@ -24,10 +24,11 @@ protocol.on( "data", ( msg ) =>{
 		if( n < msg.dataPoints2.length ) {
 			B = msg.dataPoints2[n];
 		}
-		if( A || B ) clockFrames.push( {c1:A?A.tick:0n, c2:B?B.tick:0n } );
+		if( A || B ) clockFrames.push( {d:(A?A.tick:0n) - (B?B.tick:0n), c1:A?A.tick:0n, c2:B?B.tick:0n } );
 		else break;
 		n++;
 	}
+//	console.log( "Frames:", clockFrames );
 	if( clockFrames.length ) {
 		s1 = clockFrames[0].c1;
 		s2 = clockFrames[0].c2;
@@ -252,7 +253,7 @@ function update( evt ) {
 		const basedel = Number(clockFrames[i].c1-clockFrames[i-1].c1);
 		const del = (basedel - Number(commonClock))/1000;
 		Tdelta += del;
-		commonClock = basedel;
+		//commonClock = basedel;
 		clock1delta.push( Tdelta );
 	}
 	//console.log( "common clock1:", commonClock, clock1delta[clock1delta.length-1], clock1delta.length );
@@ -275,7 +276,7 @@ function update( evt ) {
 		const basedel = Number(clockFrames[i].c2-clockFrames[i-1].c2);
 		const del = (basedel - Number(commonClock2))/1000;
 		Tdelta2 += del;
-		commonClock2 = basedel;
+		//commonClock2 = basedel;
 		//console.log( "del:", del, Tdelta2 );
 		clock2delta.push( Tdelta2 );
 	}
@@ -290,6 +291,7 @@ function update( evt ) {
 				clock2deltaSmooth[i] = (clock2deltaSmooth[i-1]+clock2deltaSmooth[i]+clock2deltaSmooth[i+1])/3;		
 			}
 	}
+console.log( "Delta:", Tdelta, Tdelta2 );
 
 
 	if( !wasAnimate ) draw();

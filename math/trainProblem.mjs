@@ -304,6 +304,23 @@ for( let v = i+0.0; v < i+0.010; v+= 0.001 ) {
 	const p1 = L + t1 * v;
 	const t2 = ObservedTime( t1, {x:v,y:0,z:0}, {x:Lg,y:0,z:0}, {x:v,y:0,z:0}, {x:0, y:0, z:0});
 	const p2 = p1 - (t2) * v;
+
+	const T = gamma* gamma*L/((C-v));
+	const P = L + gamma*L*v/((C-v));
+	const T2 = gamma*L/(C+v);
+	const P2 =  L - gamma*L*v/((C+v))
+
+	const T12 = gamma*gamma*L*2*C/(C*C-v*v);
+	const P12 = 2*L*(1 + gamma*v*v/(C*C-v*v));
+//***********
+	const C12 = C + C*gamma*v*v/(C*C-v*v);
+//************
+
+
+
+//	const P2 = ;
+	console.log( "P0:", T, P, "T2:", T2,P2, "Tt:", T12, P12, P12/T12, C12 );
+
 	console.log( "Time:", "V:",v.toFixed(4)
 					, "G:", gamma.toFixed(3), "1/G:", (1/v*(1-gamma)).toFixed(3)
 					, "T1:",(t1*gamma).toFixed(3)

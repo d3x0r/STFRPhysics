@@ -176,7 +176,6 @@ function pushData( channel, buf ) {
 	const newPoint = new Point( buf ) ;
 	if( !prior ) {
 	} else {
-		const newPoint = new Point( buf );
 		let low = newPoint.tick - prior.tick;
 		newPoint.del = low;
 		if( first ) newPoint.ddel = newPoint.del - first.del;
@@ -186,12 +185,12 @@ function pushData( channel, buf ) {
 	if( channel ) {
 		dataPoints2.push( newPoint );
 		if( dataPoints2.length > 10000 ) {
-			dataPoints2.slice( 0, 5000 );
+			dataPoints2.splice( dataPoints2.length-5000, 5000 );
 		}
 	} else {
 		dataPoints1.push( newPoint );
 		if( dataPoints1.length > 10000 ) {
-			dataPoints1.slice( 0, 5000 );
+			dataPoints1.splice( dataPoints1.length-5000, 5000 );
 		}
 	}
 
