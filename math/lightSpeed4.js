@@ -701,6 +701,63 @@ function aberration2( Xox, Xoy, Xoz, Xx, Xy, Xz ) {
 	return { x:rx, y:ry, ba:baseAng, da:delAng };
 }
 
+
+/*
+    vec3 aberration( vec3 X, vec3 Vo, vec3 Xo ){
+
+        if( enableAberration == 0 || Vo.x == 1.0 ) {
+            return X+Xo;
+        }
+        vec3 Xr;// = vec3();
+        float delx = X.x-Xo.x;
+        float dely = X.y-Xo.y;
+        float delz = X.z-Xo.z;
+        float len2 = delx*delx+dely*dely+delz*delz;
+        float Vlen2 = Vo.x*Vo.x+Vo.y*Vo.y+Vo.z*Vo.z;
+        float Vdot = delx * Vo.x + dely * Vo.y + delz * Vo.z;
+        vec3 Vcrs = vec3(  delz*Vo.y-dely*Vo.z, delx*Vo.z-delz*Vo.x, dely*Vo.x-delx*Vo.y );
+        if( len2 < 0.0000001 || Vlen2 < 0.000001) {
+            // not far enough away to change...
+            Xr =  Xo+X;
+        } else {
+            float len = sqrt(len2);
+            float Vlen = sqrt(Vlen2);
+            float norm = Vlen*len;
+             //const vAng = acos( Vo.x/Vlen ) * (Vo.y<0?1:-1);
+             //console.log( "velocity angle:", vAng, "from", Vlen );
+            float CosVDot = Vdot/(norm);
+            float baseAng = acos( CosVDot );
+            float delAng = acos( ( CosVDot + Vlen/C ) 
+                    / ( 1.0 + Vlen/C * CosVDot ) )-baseAng;
+    
+            if( abs(delAng) < 0.00000001 ) {
+                Xr=Xo+X;
+                return Xr;
+            }
+            float c = cos(delAng);
+            float s = sin(delAng);
+            float n = sqrt( Vcrs.x*Vcrs.x+Vcrs.y*Vcrs.y+Vcrs.z*Vcrs.z);
+            if( n < 0.000000001 )
+            {
+                Xr=Xo+X;
+                return Xr;
+            }
+            float qx = Vcrs.x/n;
+            float qy = Vcrs.y/n;
+            float qz = Vcrs.z/n;
+    
+            float vx = delx , vy = dely , vz = delz;
+    
+            float dot =  (1.0-c)*((qx * vx ) + (qy*vy)+(qz*vz));
+            Xr.x = Xo.x + vx*c + s*(qy * vz - qz * vy) + qx * dot;
+            Xr.y = Xo.y + vy*c + s*(qz * vx - qx * vz) + qy * dot;
+            Xr.z = Xo.z + vz*c + s*(qx * vy - qy * vx) + qz * dot;
+            
+        }
+        return Xr;
+    }
+*/
+
 function aberration2a( Xox, Xoy, Xoz, Xx, Xy, Xz ) {
 	const forward = { x : ca * V, y: sa * V, z: 0 };
 
@@ -782,7 +839,7 @@ function update( evt ) {
 	spanZ.textContent = Z.toFixed(3);
 
 	const posContract = contract( D2, D );
-	D = posContract.y;
+	//D = posContract.y;
 	spanD.textContent = D.toFixed(3) ;
 	//D2 = posContract.x;
 	//spanD2.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
@@ -807,9 +864,6 @@ function update( evt ) {
 		eventFrames[eventFrame].event = false;
 		eventFrame = -1;
 	}
-
-	const hLen = (L-D2)/(C+V) ;
-	const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
 
 	// hLen = DD + VVTT + LL 
 	//  
@@ -837,14 +891,14 @@ function update( evt ) {
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
-		frame.Po = {x:ca*V*Treal + D2,y:sa*V*Treal+D};
+		frame.Po = {x:ca*V*Treal + posContract.x,y:sa*V*Treal+posContract.y};
 		frame.Pc = {x:ca*V*Treal + 0,y:sa*V*Treal};
 		frame.Ph = {x:ca*V*Treal + L,y:sa*V*Treal};
 		frame.Pt = {x:ca*V*Treal + -L,y:sa*V*Treal};
 
-		const ot = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x:-L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:Z } );
-		const oc = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: 0, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:Z } );
-		const oh = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:Z } );
+		const ot = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x:-L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:posContract.x, y:posContract.y, z:Z } );
+		const oc = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: 0, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:posContract.x, y:posContract.y, z:Z } );
+		const oh = ObservedTime( Treal, {x:ca*V,y:sa*V, z:0}, {x: L, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:posContract.x, y:posContract.y, z:Z } );
 
 		frame.T_start = Treal;
 		frame.T_end = (ot>oc)?(oh>ot)?oh:ot :(oc>oh)?oc:oh;
@@ -1009,13 +1063,18 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y-sa*V*(frame.T_see_c-now))*xscale, true );
 	centerBoxXY( 500 + frame.Po.x*xscale, 500+frame.Po.y*xscale, true );
 
+		const pcont = contract( D2, D );
+	const curx = ca*V*now+ pcont.x;
+	const cury =  sa*V*now+pcont.y;
 	for( let n = -20; n <= 20; n++ ) {
 		const t = (n/20)*L;
+		const cont = contract( t, 0 );
 		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
-		const time = EmitTime( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:Z } );
-		const apparentx = ((t)+ca*V*(time));
+		const time = EmitTime( now, {x:ca*V,y:sa*V, z:0}, {x:cont.x, y:0, z:0 }
+									, {x:ca*V, y:sa*V, z:0}, {x:pcont.x, y:pcont.y, z:Z } );
+		const apparentx = ((cont.x)+ca*V*(time));
 		const apparenty = (sa*V*(time));
-		const len = Math.sqrt( (apparentx-frame.Po.x) * (apparentx-frame.Po.x) + (apparenty-frame.Po.y) * (apparenty-frame.Po.y) );
+		const len = Math.sqrt( (apparentx-curx) * (apparentx-curx) + (apparenty-cury) * (apparenty-cury) );
 
 		ctx.fillStyle =  `hsl(${((time)%3)*120+120},100%,50%`
 		ctx.strokeStyle =  `green`
@@ -1024,73 +1083,18 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		//const apparentx = epos.x;
 		//const apparenty = epos.y;
 		
-		let newPos = aberration2(  frame.Po.x, frame.Po.y, Z, apparentx, apparenty, 0 ) ;
-
-		const apparentAngle = A+Math.atan2( apparenty, apparentx  );
-		//let newAngle = A-aberration( apparentAngle, V ) ;
-		let newAngle = aberration2a( apparentx, apparenty, Z, 0, 0, 0 ) -A;
-//		if( newAngle > Math.PI ) newAngle -= 2 *Math.PI;
-//		if( newAngle < -Math.PI ) newAngle += 2 * Math.PI;
-		const abc = Math.cos( newAngle );
-		const abs = Math.sin( newAngle );
-		//const aberrantx = abc * len;
-		//const aberranty = abs * len;
+		let newPos = aberration2( ca*V*now+ pcont.x, sa*V*now+pcont.y, Z, apparentx, apparenty, 0 ) ;
 
 		const aberrantx = newPos.x;
 		const aberranty = newPos.y;
-		if(0)
-		{
-			let newAngle2 = aberration2a(  frame.Po.x, frame.Po.y, frame.Pc.x+apparentx, frame.Pc.y+apparenty ) ;
-			const ca2 = Math.cos( newAngle2 );
-			const sa2 = Math.sin( newAngle2 ) ;
-
-			ctx.beginPath();
-			ctx.strokeStyle = "white";
-			ctx.moveTo( 500 + ( frame.Po.x + ca2 * len ) * xscale
-					, 505 + ( frame.Po.y + sa2 * len ) * xscale );
-			ctx.lineTo( 500 + frame.Po.x * xscale
-					, 505 + frame.Po.y * xscale );
-			ctx.stroke();
-		}
 		
-	if(0) {
-		ctx.beginPath();
-		ctx.fillStyle = "white";
-		ctx.font = "22px Arial";
-		ctx.fillText( "Len:" + (newAngle).toFixed(5) , 700, 500 + n * 20 );		
-	}
-	if(0) {
-		ctx.beginPath();
-			ctx.strokeStyle = "red";
-		ctx.moveTo( 500 + ( frame.Po.x + Math.cos( A+newPos.ba) * len ) * xscale
-				, 505 + ( frame.Po.y + Math.sin(A+newPos.ba) * len ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale
-				, 505 + frame.Po.y * xscale );
-		ctx.stroke();
-	}
-	if(0) {
-		ctx.beginPath();
-			ctx.strokeStyle = "blue";
-		ctx.moveTo( 500 + ( frame.Po.x + Math.cos( A+newPos.ba + newPos.da) * len ) * xscale
-				, 505 + ( frame.Po.y + Math.sin(A+newPos.ba + newPos.da) * len ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale
-				, 505 + frame.Po.y * xscale );
-		ctx.stroke();
-	}
-	if(0) {
-		ctx.moveTo( 500 + ( frame.Po.x + Math.cos( apparentAngle) * len ) * xscale
-				, 505 + ( frame.Po.y + Math.sin(apparentAngle) * len ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale
-				, 505 + frame.Po.y * xscale );
-		ctx.stroke();
-	}
 	if(debugAb) {
 			ctx.beginPath();
-			if( t < 0 )
+			if( cont.x < 0 )
 				ctx.strokeStyle = "cyan";
 			else
 				ctx.strokeStyle = "blue";
-			ctx.arc( 500+frame.Po.x*xscale, 500+frame.Po.y*xscale, len*xscale, 0, Math.PI*2 );
+			ctx.arc( 500+curx*xscale, 500+cury*xscale, len*xscale, 0, Math.PI*2 );
 			ctx.stroke();
 			ctx.beginPath();
 			ctx.strokeStyle = "white";
@@ -1099,10 +1103,10 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		//ctx.stroke();
 
 		ctx.moveTo( 500 + ( newPos.x ) * xscale, 500 + ( newPos.y ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
+		ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
 		ctx.stroke();
 		ctx.moveTo( 500 + ( (newPos.x -frame.Po.x) * 2 + frame.Po.x ) * xscale, 500 + ( (newPos.y -frame.Po.y) * 2 + frame.Po.y ) * xscale );
-		ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
+		ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
 		ctx.stroke();
 	}
 		
