@@ -491,3 +491,19 @@ function aberration_angle( Xox, Xoy, Xx, Xy, V ) {
 	}
 	return 0;
 }
+
+
+/**
+*  returns the fraction of C which 'feels like' x.
+*/
+export function feelLikeV( x ) {
+	return (x*C)/Math.sqrt( C*C*C*C+x*x)
+}
+
+/**
+*  also feels Like Gamma... as in this is gamma( feelLikeV(x) )
+*   returns how slow the clock is at this 'feels like' speed.
+*/
+export function feelLikeClock( x ) {
+	return Math.sqrt(  C*C*C*C / (C*C*C*C+x*x) );
+}
