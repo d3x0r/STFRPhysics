@@ -2,7 +2,7 @@
   "schema": "xilinx.com:schema:json_instance:1.0",
   "ip_inst": {
     "xci_name": "design_1_COUNTER_0_0",
-    "cell_name": "COUNTER_0",
+    "cell_name": "ClockBlock/COUNTER_0",
     "component_reference": "xilinx.com:module_ref:COUNTER:1.0",
     "ip_revision": "1",
     "gen_directory": "../../../../../../Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0",

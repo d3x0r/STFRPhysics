@@ -24,8 +24,8 @@ PHASE_SIZE=26
 ) (
 input    globalClock,
 input    iReset,
-(* ALLOW_COMBINATORIAL_LOOPS="true" *) input               iLatch1,      // signal event that latches the counter to register 1
-(* ALLOW_COMBINATORIAL_LOOPS="true" *) input               iLatch2,      // signal event that latches the counter to register 2
+(* gated_clock = "yes", ALLOW_COMBINATORIAL_LOOPS="true" *) input               iLatch1,      // signal event that latches the counter to register 1
+(* gated_clock = "yes", ALLOW_COMBINATORIAL_LOOPS="true" *) input               iLatch2,      // signal event that latches the counter to register 2
 input               iResetLatch1, // sent after the value in register 1 is read from (or sent to) the USB
 input               iResetLatch2, // sent after the value in register 2 is read from (or sent to) the USB
 output [31:0]       o1COUNTER,    // register 1 with latched counter value
@@ -40,7 +40,8 @@ output  oLatchTest1,           // test clock signal - internal signal exposed to
 output  oLatchTest2,           // test clock signal - internal signal exposed to generate periodic latch 2
 output [31:0]        debug
 );
-reg [63:0] rCOUNTER = 0; // live counter, always increments
+(* dont_touch="TRUE", KEEP="TRUE" *) reg [63:0] rCOUNTER = 0; // live counter, always increments
+(* dont_touch="TRUE", KEEP="TRUE" *) reg [63:0] rCOUNTER_n = 0; // live counter, always increments
 
 reg [pWIDTH-1:0] rLatch1 = 0;  // latched counter value 1
 reg [PHASE_SIZE-1:0] rPhaseLatch1 = 0;  // latched counter value 1
@@ -235,7 +236,7 @@ always @(posedge rPhase[11] ) #1 	rPhase[12] = !(rPhase[12]);
 always @(posedge rPhase[12] ) #1 	rPhase[13] = !(rPhase[13]);
 always @(posedge rPhase[13] ) #1 	rPhase[14] = !(rPhase[14]);
 always @(posedge rPhase[14] ) #1 	rPhase[15] = !(rPhase[15]);
-
+*/
 
 /*
 (* dont_touch="TRUE" *) assign wPhase[0] = globalClock;
@@ -390,8 +391,8 @@ assign    iCLK_ff[25] = iCLK_ff_p[25] ^ iCLK_ff_n[25];
 
 
 // about 1 second off, 1 millisecond on.
-//assign	oLatchTest1 = ( (rCOUNTER[26:16] & 'h7fc) == 'h700 ) ;//&& !( (rCOUNTER[19:8] & 'hfff) );
-//assign	oLatchTest2 = ( (rCOUNTER[26:16] & 'h7fc) == 'h700 ) ;//&& !( (rCOUNTER[19:8] & 'hfff) );
+assign	oLatchTest1 = ( (rCOUNTER[26:16] & 'h7fc) == 'h700 ) ;//&& !( (rCOUNTER[19:8] & 'hfff) );
+assign	oLatchTest2 = ( (rCOUNTER[26:16] & 'h7fc) == 'h700 ) ;//&& !( (rCOUNTER[19:8] & 'hfff) );
 
 //assign	oLatchTest1 = ( (rCOUNTER[26:4] & 'h7fffff) == 'h700000 ) && !( (rCOUNTER[19:8] & 'hfff) );
 //assign oLatchTest2 = 0;
@@ -404,6 +405,48 @@ begin
 		rCOUNTER <= rCOUNTER+1;
 		
 end
+
+/*
+always @(posedge globalClock) #1 rCOUNTER[0] = !rCOUNTER[0];
+(* ALLOW_COMBINATORIAL_LOOPS="true" *) wire [(pWIDTH*3)-1:0] state0;
+genvar i;
+for( i = 0; i < pWIDTH; i=i+1 ) begin
+    assign state0[i*3+2] = rCOUNTER[i];
+    assign state0[i*3+1] = rCOUNTER_n[i];
+    assign state0[i*3+0] = rCOUNTER[i+1];
+    always begin #1 
+        case(state0[(i+1)*3-1:i*3])
+        3'b000, 3'b011: begin
+            rCOUNTER_n[i] = 0;
+            rCOUNTER[i+1] = 0;
+        end
+        
+        3'b001, 3'b010: begin
+            rCOUNTER_n[i] = 0;
+            rCOUNTER[i+1] = 1;
+        end
+        3'b100, 3'b110: begin
+            rCOUNTER_n[i] = 1;
+            rCOUNTER[i+1] = 0;
+        end
+        3'b101, 3'b111: begin
+            rCOUNTER_n[i] = 1;
+            rCOUNTER[i+1] = 1;
+        end
+        endcase
+    end
+end    
+*/
+
+/*
+always @(posedge globalClock) begin     
+      rCOUNTER[0] = !rCOUNTER[0];
+end
+genvar i;
+for( i = 0; i < pWIDTH-1; i=i+1 ) begin
+    always @(negedge rCOUNTER[i])#1 rCOUNTER[i+1] = !rCOUNTER[i+1];
+end
+*/
 
 always begin	 
 	#1

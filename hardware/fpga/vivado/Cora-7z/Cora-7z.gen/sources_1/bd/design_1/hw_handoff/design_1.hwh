@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Thu Jan 18 00:55:15 2024" VIVADOVERSION="2023.2">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Jan 28 06:51:18 2024" VIVADOVERSION="2023.2">
 
   <SYSTEMINFO ARCH="zynq" BOARD="digilentinc.com:cora-z7-07s:part0:1.1" DEVICE="7z007s" NAME="design_1" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -112,6 +112,16 @@
     <PORT DIR="I" LEFT="1" NAME="btns_2bits_tri_i" RIGHT="0" SIGIS="undef" SIGNAME="AXI_GPIO_BUTTONS_gpio_io_i">
       <CONNECTIONS>
         <CONNECTION INSTANCE="AXI_GPIO_BUTTONS" PORT="gpio_io_i"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT CLKFREQUENCY="100000000" DIR="I" NAME="iCLK" SIGIS="clk" SIGNAME="External_Ports_iCLK">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="ClockBlock_COUNTER_0" PORT="globalClock"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT CLKFREQUENCY="250000000" DIR="O" NAME="oCLK" SIGIS="clk" SIGNAME="CPU_Block_processing_system7_0_FCLK_CLK1">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="CPU_Block_processing_system7_0" PORT="FCLK_CLK1"/>
       </CONNECTIONS>
     </PORT>
     <PORT DIR="O" LEFT="5" NAME="rgb_leds_tri_o" RIGHT="0" SIGIS="undef" SIGNAME="AXI_GPIO_LEDS_gpio_io_o">
@@ -1946,7 +1956,7 @@
         </PORT>
         <PORT CLKFREQUENCY="250000000" DIR="O" NAME="FCLK_CLK1" SIGIS="clk" SIGNAME="CPU_Block_processing_system7_0_FCLK_CLK1">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_COUNTER_0" PORT="globalClock"/>
+            <CONNECTION INSTANCE="External_Ports" PORT="oCLK"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" NAME="FCLK_RESET0_N" POLARITY="ACTIVE_LOW" SIGIS="rst" SIGNAME="CPU_Block_processing_system7_0_FCLK_RESET0_N">
@@ -3596,19 +3606,19 @@
             <CONNECTION INSTANCE="ClockBlock_CLOCK_INTERFACE" PORT="iDATA08"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="globalClock" SIGIS="undef" SIGNAME="CPU_Block_processing_system7_0_FCLK_CLK1">
+        <PORT DIR="I" NAME="globalClock" SIGIS="undef" SIGNAME="External_Ports_iCLK">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="CPU_Block_processing_system7_0" PORT="FCLK_CLK1"/>
+            <CONNECTION INSTANCE="External_Ports" PORT="iCLK"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="iLatch1" SIGIS="undef" SIGNAME="ClockBlock_util_vector_logic_0_Res">
+        <PORT DIR="I" NAME="iLatch1" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o0">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_0" PORT="Res"/>
+            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_1" PORT="o0"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="iLatch2" SIGIS="undef" SIGNAME="ClockBlock_util_vector_logic_1_Res">
+        <PORT DIR="I" NAME="iLatch2" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o1">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_1" PORT="Res"/>
+            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_1" PORT="o1"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" NAME="iReset" POLARITY="ACTIVE_LOW" SIGIS="undef" SIGNAME="CPU_Block_rst_ps7_0_50M_peripheral_aresetn">
@@ -3814,8 +3824,8 @@
       <PARAMETERS>
         <PARAMETER NAME="enable00" VALUE="true"/>
         <PARAMETER NAME="enable01" VALUE="true"/>
-        <PARAMETER NAME="enable02" VALUE="true"/>
-        <PARAMETER NAME="enable03" VALUE="true"/>
+        <PARAMETER NAME="enable02" VALUE="false"/>
+        <PARAMETER NAME="enable03" VALUE="false"/>
         <PARAMETER NAME="enable04" VALUE="false"/>
         <PARAMETER NAME="enable05" VALUE="false"/>
         <PARAMETER NAME="enable06" VALUE="false"/>
@@ -3894,16 +3904,6 @@
         <PORT DIR="O" LEFT="0" NAME="o1" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_0_o1">
           <CONNECTIONS>
             <CONNECTION INSTANCE="ClockBlock_COUNTER_0" PORT="iResetLatch2"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="o2" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_0_o2">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_0" PORT="Op1"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="o3" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_0_o3">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_1" PORT="Op1"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>
@@ -3988,66 +3988,10 @@
         </PORT>
         <PORT DIR="O" LEFT="0" NAME="o0" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o0">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_0" PORT="Op2"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="o1" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o1">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_util_vector_logic_1" PORT="Op2"/>
-          </CONNECTIONS>
-        </PORT>
-      </PORTS>
-      <BUSINTERFACES/>
-    </MODULE>
-    <MODULE COREREVISION="3" FULLNAME="/ClockBlock/util_vector_logic_0" HWVERSION="2.0" INSTANCE="ClockBlock_util_vector_logic_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="util_vector_logic" VLNV="xilinx.com:ip:util_vector_logic:2.0">
-      <DOCUMENTS/>
-      <PARAMETERS>
-        <PARAMETER NAME="C_OPERATION" VALUE="or"/>
-        <PARAMETER NAME="C_SIZE" VALUE="1"/>
-        <PARAMETER NAME="Component_Name" VALUE="design_1_util_vector_logic_0_0"/>
-        <PARAMETER NAME="LOGO_FILE" VALUE="data/sym_orgate.png"/>
-        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
-      </PARAMETERS>
-      <PORTS>
-        <PORT DIR="I" LEFT="0" NAME="Op1" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_0_o2">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_0" PORT="o2"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="I" LEFT="0" NAME="Op2" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o0">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_1" PORT="o0"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="Res" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_util_vector_logic_0_Res">
-          <CONNECTIONS>
             <CONNECTION INSTANCE="ClockBlock_COUNTER_0" PORT="iLatch1"/>
           </CONNECTIONS>
         </PORT>
-      </PORTS>
-      <BUSINTERFACES/>
-    </MODULE>
-    <MODULE COREREVISION="3" FULLNAME="/ClockBlock/util_vector_logic_1" HWVERSION="2.0" INSTANCE="ClockBlock_util_vector_logic_1" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="util_vector_logic" VLNV="xilinx.com:ip:util_vector_logic:2.0">
-      <DOCUMENTS/>
-      <PARAMETERS>
-        <PARAMETER NAME="C_OPERATION" VALUE="or"/>
-        <PARAMETER NAME="C_SIZE" VALUE="1"/>
-        <PARAMETER NAME="Component_Name" VALUE="design_1_util_vector_logic_1_0"/>
-        <PARAMETER NAME="LOGO_FILE" VALUE="data/sym_orgate.png"/>
-        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
-      </PARAMETERS>
-      <PORTS>
-        <PORT DIR="I" LEFT="0" NAME="Op1" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_0_o3">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_0" PORT="o3"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="I" LEFT="0" NAME="Op2" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o1">
-          <CONNECTIONS>
-            <CONNECTION INSTANCE="ClockBlock_OutputSplitter_1" PORT="o1"/>
-          </CONNECTIONS>
-        </PORT>
-        <PORT DIR="O" LEFT="0" NAME="Res" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_util_vector_logic_1_Res">
+        <PORT DIR="O" LEFT="0" NAME="o1" RIGHT="0" SIGIS="undef" SIGNAME="ClockBlock_OutputSplitter_1_o1">
           <CONNECTIONS>
             <CONNECTION INSTANCE="ClockBlock_COUNTER_0" PORT="iLatch2"/>
           </CONNECTIONS>

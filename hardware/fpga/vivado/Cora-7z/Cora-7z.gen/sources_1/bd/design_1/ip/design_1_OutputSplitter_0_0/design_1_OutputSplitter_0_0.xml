@@ -21,7 +21,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:52d2e7fd</spirit:value>
+            <spirit:value>9:fea30084</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -40,7 +40,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:932240ef</spirit:value>
+            <spirit:value>9:86817999</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -54,11 +54,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Sat Jan 13 03:57:44 UTC 2024</spirit:value>
+            <spirit:value>Mon Jan 22 02:41:36 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:932240ef</spirit:value>
+            <spirit:value>9:86817999</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -69,7 +69,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:932240ef</spirit:value>
+            <spirit:value>9:86817999</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -85,11 +85,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Sat Jan 13 03:57:03 UTC 2024</spirit:value>
+            <spirit:value>Mon Jan 22 02:41:06 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:52d2e7fd</spirit:value>
+            <spirit:value>9:fea30084</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -105,11 +105,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Sat Jan 13 03:57:03 UTC 2024</spirit:value>
+            <spirit:value>Mon Jan 22 02:41:06 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:932240ef</spirit:value>
+            <spirit:value>9:86817999</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -208,7 +208,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.i3" xilinx:dependency="$enable02 and $outWidth2>0 and $outWidth0+$outWidth1+$outWidth2&lt;=$inWidth">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.i3" xilinx:dependency="$enable02 and $outWidth2>0 and $outWidth0+$outWidth1+$outWidth2&lt;=$inWidth">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -235,7 +235,7 @@
         <spirit:vendorExtensions>
           <xilinx:portInfo>
             <xilinx:enablement>
-              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.i4" xilinx:dependency="$enable03 and $outWidth3>0 and $outWidth0+$outWidth1+$outWidth2+$outWidth3&lt;=$inWidth">true</xilinx:isEnabled>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.i4" xilinx:dependency="$enable03 and $outWidth3>0 and $outWidth0+$outWidth1+$outWidth2+$outWidth3&lt;=$inWidth">false</xilinx:isEnabled>
             </xilinx:enablement>
           </xilinx:portInfo>
         </spirit:vendorExtensions>
@@ -1176,12 +1176,12 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>enable02</spirit:name>
         <spirit:displayName>Enable02</spirit:displayName>
-        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.enable02">true</spirit:value>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.enable02">false</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>enable03</spirit:name>
         <spirit:displayName>Enable03</spirit:displayName>
-        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.enable03">true</spirit:value>
+        <spirit:value spirit:format="bool" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.enable03">false</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>enable04</spirit:name>
@@ -1577,12 +1577,12 @@
     <spirit:parameter>
       <spirit:name>enable02</spirit:name>
       <spirit:displayName>Enable02</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.enable02">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.enable02">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>enable03</spirit:name>
       <spirit:displayName>Enable03</spirit:displayName>
-      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.enable03">true</spirit:value>
+      <spirit:value spirit:format="bool" spirit:resolve="user" spirit:id="PARAM_VALUE.enable03">false</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>enable04</spirit:name>
@@ -1731,6 +1731,8 @@
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>9</xilinx:coreRevision>
       <xilinx:configElementInfos>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.enable02" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.enable03" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.enable04" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.enable05" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.enable06" xilinx:valueSource="user"/>

@@ -57,16 +57,12 @@
 module design_1_OutputSplitter_0_0 (
   inBus,
   o0,
-  o1,
-  o2,
-  o3
+  o1
 );
 
 input wire [31 : 0] inBus;
 output wire [0 : 0] o0;
 output wire [0 : 0] o1;
-output wire [0 : 0] o2;
-output wire [0 : 0] o3;
 
   OutputSplitter #(
     .inWidth(32),
@@ -104,8 +100,8 @@ output wire [0 : 0] o3;
     .outWidth31(1),
     .enable00(1'B1),
     .enable01(1'B1),
-    .enable02(1'B1),
-    .enable03(1'B1),
+    .enable02(1'B0),
+    .enable03(1'B0),
     .enable04(1'B0),
     .enable05(1'B0),
     .enable06(1'B0),
@@ -138,8 +134,8 @@ output wire [0 : 0] o3;
     .inBus(inBus),
     .o0(o0),
     .o1(o1),
-    .o2(o2),
-    .o3(o3),
+    .o2(),
+    .o3(),
     .o4(),
     .o5(),
     .o6(),

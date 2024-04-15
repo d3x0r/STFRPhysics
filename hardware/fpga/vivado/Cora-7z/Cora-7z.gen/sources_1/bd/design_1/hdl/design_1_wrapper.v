@@ -2,7 +2,7 @@
 //Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-//Date        : Thu Jan 18 00:55:15 2024
+//Date        : Sun Jan 28 06:51:17 2024
 //Host        : tundra running 64-bit major release  (build 9200)
 //Command     : generate_target design_1_wrapper.bd
 //Design      : design_1_wrapper
@@ -33,6 +33,8 @@ module design_1_wrapper
     FIXED_IO_ps_porb,
     FIXED_IO_ps_srstb,
     btns_2bits_tri_i,
+    iCLK,
+    oCLK,
     rgb_leds_tri_o,
     shield_11_8,
     shield_13_12);
@@ -58,6 +60,8 @@ module design_1_wrapper
   inout FIXED_IO_ps_porb;
   inout FIXED_IO_ps_srstb;
   input [1:0]btns_2bits_tri_i;
+  input iCLK;
+  output oCLK;
   output [5:0]rgb_leds_tri_o;
   output [3:0]shield_11_8;
   input [1:0]shield_13_12;
@@ -84,6 +88,8 @@ module design_1_wrapper
   wire FIXED_IO_ps_porb;
   wire FIXED_IO_ps_srstb;
   wire [1:0]btns_2bits_tri_i;
+  wire iCLK;
+  wire oCLK;
   wire [5:0]rgb_leds_tri_o;
   wire [3:0]shield_11_8;
   wire [1:0]shield_13_12;
@@ -111,6 +117,8 @@ module design_1_wrapper
         .FIXED_IO_ps_porb(FIXED_IO_ps_porb),
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
         .btns_2bits_tri_i(btns_2bits_tri_i),
+        .iCLK(iCLK),
+        .oCLK(oCLK),
         .rgb_leds_tri_o(rgb_leds_tri_o),
         .shield_11_8(shield_11_8),
         .shield_13_12(shield_13_12));

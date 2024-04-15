@@ -2,7 +2,7 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-// Date        : Thu Jan 18 00:55:44 2024
+// Date        : Mon Jan 22 01:58:43 2024
 // Host        : tundra running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
 //               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.v
@@ -36,8 +36,8 @@ module design_1_COUNTER_0_0
     debug);
   input globalClock;
   input iReset;
-  (* ALLOW_COMBINATORIAL_LOOPS = "true" *) input iLatch1;
-  (* ALLOW_COMBINATORIAL_LOOPS = "true" *) input iLatch2;
+  (* ALLOW_COMBINATORIAL_LOOPS = "true" *) (* GATED_CLOCK *) input iLatch1;
+  (* ALLOW_COMBINATORIAL_LOOPS = "true" *) (* GATED_CLOCK *) input iLatch2;
   input iResetLatch1;
   input iResetLatch2;
   output [31:0]o1COUNTER;
@@ -64,6 +64,7 @@ module design_1_COUNTER_0_0
   wire [31:0]o2COUNTER;
   wire [31:0]o2COUNTERHi;
   wire [25:0]\^o2COUNTERPhase ;
+  wire oLatchTest2;
   wire oRdyCOUNTER;
   wire oRdyCOUNTER2;
 
@@ -113,8 +114,7 @@ module design_1_COUNTER_0_0
   assign o2COUNTERPhase[27] = \<const0> ;
   assign o2COUNTERPhase[26] = \<const0> ;
   assign o2COUNTERPhase[25:0] = \^o2COUNTERPhase [25:0];
-  assign oLatchTest1 = \<const0> ;
-  assign oLatchTest2 = \<const0> ;
+  assign oLatchTest1 = oLatchTest2;
   GND GND
        (.G(\<const0> ));
   design_1_COUNTER_0_0_COUNTER inst
@@ -126,6 +126,7 @@ module design_1_COUNTER_0_0
         .iResetLatch2(iResetLatch2),
         .o1COUNTERPhase(\^o1COUNTERPhase ),
         .o2COUNTERPhase(\^o2COUNTERPhase ),
+        .oLatchTest2(oLatchTest2),
         .oRdyCOUNTER(oRdyCOUNTER),
         .oRdyCOUNTER2(oRdyCOUNTER2),
         .\rLatch2_reg[63]_0 ({o2COUNTERHi,o2COUNTER}));
@@ -139,8 +140,9 @@ module design_1_COUNTER_0_0_COUNTER
     o1COUNTERPhase,
     \rLatch2_reg[63]_0 ,
     o2COUNTERPhase,
-    globalClock,
+    oLatchTest2,
     iLatch1,
+    globalClock,
     iLatch2,
     iResetLatch1,
     iResetLatch2);
@@ -150,15 +152,16 @@ module design_1_COUNTER_0_0_COUNTER
   output [25:0]o1COUNTERPhase;
   output [63:0]\rLatch2_reg[63]_0 ;
   output [25:0]o2COUNTERPhase;
-  input globalClock;
+  output oLatchTest2;
   input iLatch1;
+  input globalClock;
   input iLatch2;
   input iResetLatch1;
   input iResetLatch2;
 
   wire [63:0]Q;
-  wire iLatch1;
-  wire iLatch2;
+  (* ALLOW_COMBINATORIAL_LOOPS *) (* GATED_CLOCK *) wire iLatch1;
+  (* ALLOW_COMBINATORIAL_LOOPS *) (* GATED_CLOCK *) wire iLatch2;
   wire iResetLatch1;
   wire iResetLatch2;
   (* ALLOW_COMBINATORIAL_LOOPS *) (* async_reg = "true" *) wire latchLock1;
@@ -167,138 +170,76 @@ module design_1_COUNTER_0_0_COUNTER
   wire latchLock2_reg0_i_1_n_0;
   wire [25:0]o1COUNTERPhase;
   wire [25:0]o2COUNTERPhase;
-  wire \rCOUNTER[0]_i_2_n_0 ;
-  wire [63:0]rCOUNTER_reg;
-  wire \rCOUNTER_reg[0]_i_1_n_0 ;
-  wire \rCOUNTER_reg[0]_i_1_n_1 ;
-  wire \rCOUNTER_reg[0]_i_1_n_2 ;
-  wire \rCOUNTER_reg[0]_i_1_n_3 ;
-  wire \rCOUNTER_reg[0]_i_1_n_4 ;
-  wire \rCOUNTER_reg[0]_i_1_n_5 ;
-  wire \rCOUNTER_reg[0]_i_1_n_6 ;
-  wire \rCOUNTER_reg[0]_i_1_n_7 ;
-  wire \rCOUNTER_reg[12]_i_1_n_0 ;
-  wire \rCOUNTER_reg[12]_i_1_n_1 ;
-  wire \rCOUNTER_reg[12]_i_1_n_2 ;
-  wire \rCOUNTER_reg[12]_i_1_n_3 ;
-  wire \rCOUNTER_reg[12]_i_1_n_4 ;
-  wire \rCOUNTER_reg[12]_i_1_n_5 ;
-  wire \rCOUNTER_reg[12]_i_1_n_6 ;
-  wire \rCOUNTER_reg[12]_i_1_n_7 ;
-  wire \rCOUNTER_reg[16]_i_1_n_0 ;
-  wire \rCOUNTER_reg[16]_i_1_n_1 ;
-  wire \rCOUNTER_reg[16]_i_1_n_2 ;
-  wire \rCOUNTER_reg[16]_i_1_n_3 ;
-  wire \rCOUNTER_reg[16]_i_1_n_4 ;
-  wire \rCOUNTER_reg[16]_i_1_n_5 ;
-  wire \rCOUNTER_reg[16]_i_1_n_6 ;
-  wire \rCOUNTER_reg[16]_i_1_n_7 ;
-  wire \rCOUNTER_reg[20]_i_1_n_0 ;
-  wire \rCOUNTER_reg[20]_i_1_n_1 ;
-  wire \rCOUNTER_reg[20]_i_1_n_2 ;
-  wire \rCOUNTER_reg[20]_i_1_n_3 ;
-  wire \rCOUNTER_reg[20]_i_1_n_4 ;
-  wire \rCOUNTER_reg[20]_i_1_n_5 ;
-  wire \rCOUNTER_reg[20]_i_1_n_6 ;
-  wire \rCOUNTER_reg[20]_i_1_n_7 ;
-  wire \rCOUNTER_reg[24]_i_1_n_0 ;
-  wire \rCOUNTER_reg[24]_i_1_n_1 ;
-  wire \rCOUNTER_reg[24]_i_1_n_2 ;
-  wire \rCOUNTER_reg[24]_i_1_n_3 ;
-  wire \rCOUNTER_reg[24]_i_1_n_4 ;
-  wire \rCOUNTER_reg[24]_i_1_n_5 ;
-  wire \rCOUNTER_reg[24]_i_1_n_6 ;
-  wire \rCOUNTER_reg[24]_i_1_n_7 ;
-  wire \rCOUNTER_reg[28]_i_1_n_0 ;
-  wire \rCOUNTER_reg[28]_i_1_n_1 ;
-  wire \rCOUNTER_reg[28]_i_1_n_2 ;
-  wire \rCOUNTER_reg[28]_i_1_n_3 ;
-  wire \rCOUNTER_reg[28]_i_1_n_4 ;
-  wire \rCOUNTER_reg[28]_i_1_n_5 ;
-  wire \rCOUNTER_reg[28]_i_1_n_6 ;
-  wire \rCOUNTER_reg[28]_i_1_n_7 ;
-  wire \rCOUNTER_reg[32]_i_1_n_0 ;
-  wire \rCOUNTER_reg[32]_i_1_n_1 ;
-  wire \rCOUNTER_reg[32]_i_1_n_2 ;
-  wire \rCOUNTER_reg[32]_i_1_n_3 ;
-  wire \rCOUNTER_reg[32]_i_1_n_4 ;
-  wire \rCOUNTER_reg[32]_i_1_n_5 ;
-  wire \rCOUNTER_reg[32]_i_1_n_6 ;
-  wire \rCOUNTER_reg[32]_i_1_n_7 ;
-  wire \rCOUNTER_reg[36]_i_1_n_0 ;
-  wire \rCOUNTER_reg[36]_i_1_n_1 ;
-  wire \rCOUNTER_reg[36]_i_1_n_2 ;
-  wire \rCOUNTER_reg[36]_i_1_n_3 ;
-  wire \rCOUNTER_reg[36]_i_1_n_4 ;
-  wire \rCOUNTER_reg[36]_i_1_n_5 ;
-  wire \rCOUNTER_reg[36]_i_1_n_6 ;
-  wire \rCOUNTER_reg[36]_i_1_n_7 ;
-  wire \rCOUNTER_reg[40]_i_1_n_0 ;
-  wire \rCOUNTER_reg[40]_i_1_n_1 ;
-  wire \rCOUNTER_reg[40]_i_1_n_2 ;
-  wire \rCOUNTER_reg[40]_i_1_n_3 ;
-  wire \rCOUNTER_reg[40]_i_1_n_4 ;
-  wire \rCOUNTER_reg[40]_i_1_n_5 ;
-  wire \rCOUNTER_reg[40]_i_1_n_6 ;
-  wire \rCOUNTER_reg[40]_i_1_n_7 ;
-  wire \rCOUNTER_reg[44]_i_1_n_0 ;
-  wire \rCOUNTER_reg[44]_i_1_n_1 ;
-  wire \rCOUNTER_reg[44]_i_1_n_2 ;
-  wire \rCOUNTER_reg[44]_i_1_n_3 ;
-  wire \rCOUNTER_reg[44]_i_1_n_4 ;
-  wire \rCOUNTER_reg[44]_i_1_n_5 ;
-  wire \rCOUNTER_reg[44]_i_1_n_6 ;
-  wire \rCOUNTER_reg[44]_i_1_n_7 ;
-  wire \rCOUNTER_reg[48]_i_1_n_0 ;
-  wire \rCOUNTER_reg[48]_i_1_n_1 ;
-  wire \rCOUNTER_reg[48]_i_1_n_2 ;
-  wire \rCOUNTER_reg[48]_i_1_n_3 ;
-  wire \rCOUNTER_reg[48]_i_1_n_4 ;
-  wire \rCOUNTER_reg[48]_i_1_n_5 ;
-  wire \rCOUNTER_reg[48]_i_1_n_6 ;
-  wire \rCOUNTER_reg[48]_i_1_n_7 ;
-  wire \rCOUNTER_reg[4]_i_1_n_0 ;
-  wire \rCOUNTER_reg[4]_i_1_n_1 ;
-  wire \rCOUNTER_reg[4]_i_1_n_2 ;
-  wire \rCOUNTER_reg[4]_i_1_n_3 ;
-  wire \rCOUNTER_reg[4]_i_1_n_4 ;
-  wire \rCOUNTER_reg[4]_i_1_n_5 ;
-  wire \rCOUNTER_reg[4]_i_1_n_6 ;
-  wire \rCOUNTER_reg[4]_i_1_n_7 ;
-  wire \rCOUNTER_reg[52]_i_1_n_0 ;
-  wire \rCOUNTER_reg[52]_i_1_n_1 ;
-  wire \rCOUNTER_reg[52]_i_1_n_2 ;
-  wire \rCOUNTER_reg[52]_i_1_n_3 ;
-  wire \rCOUNTER_reg[52]_i_1_n_4 ;
-  wire \rCOUNTER_reg[52]_i_1_n_5 ;
-  wire \rCOUNTER_reg[52]_i_1_n_6 ;
-  wire \rCOUNTER_reg[52]_i_1_n_7 ;
-  wire \rCOUNTER_reg[56]_i_1_n_0 ;
-  wire \rCOUNTER_reg[56]_i_1_n_1 ;
-  wire \rCOUNTER_reg[56]_i_1_n_2 ;
-  wire \rCOUNTER_reg[56]_i_1_n_3 ;
-  wire \rCOUNTER_reg[56]_i_1_n_4 ;
-  wire \rCOUNTER_reg[56]_i_1_n_5 ;
-  wire \rCOUNTER_reg[56]_i_1_n_6 ;
-  wire \rCOUNTER_reg[56]_i_1_n_7 ;
-  wire \rCOUNTER_reg[60]_i_1_n_1 ;
-  wire \rCOUNTER_reg[60]_i_1_n_2 ;
-  wire \rCOUNTER_reg[60]_i_1_n_3 ;
-  wire \rCOUNTER_reg[60]_i_1_n_4 ;
-  wire \rCOUNTER_reg[60]_i_1_n_5 ;
-  wire \rCOUNTER_reg[60]_i_1_n_6 ;
-  wire \rCOUNTER_reg[60]_i_1_n_7 ;
-  wire \rCOUNTER_reg[8]_i_1_n_0 ;
-  wire \rCOUNTER_reg[8]_i_1_n_1 ;
-  wire \rCOUNTER_reg[8]_i_1_n_2 ;
-  wire \rCOUNTER_reg[8]_i_1_n_3 ;
-  wire \rCOUNTER_reg[8]_i_1_n_4 ;
-  wire \rCOUNTER_reg[8]_i_1_n_5 ;
-  wire \rCOUNTER_reg[8]_i_1_n_6 ;
-  wire \rCOUNTER_reg[8]_i_1_n_7 ;
+  wire oLatchTest2;
+  wire oLatchTest2_INST_0_i_1_n_0;
+  wire [63:0]p_0_in;
+  (* DONT_TOUCH *) (* RTL_KEEP = "true" *) wire [63:0]rCOUNTER;
+  wire rCOUNTER_reg0_carry__0_n_0;
+  wire rCOUNTER_reg0_carry__0_n_1;
+  wire rCOUNTER_reg0_carry__0_n_2;
+  wire rCOUNTER_reg0_carry__0_n_3;
+  wire rCOUNTER_reg0_carry__10_n_0;
+  wire rCOUNTER_reg0_carry__10_n_1;
+  wire rCOUNTER_reg0_carry__10_n_2;
+  wire rCOUNTER_reg0_carry__10_n_3;
+  wire rCOUNTER_reg0_carry__11_n_0;
+  wire rCOUNTER_reg0_carry__11_n_1;
+  wire rCOUNTER_reg0_carry__11_n_2;
+  wire rCOUNTER_reg0_carry__11_n_3;
+  wire rCOUNTER_reg0_carry__12_n_0;
+  wire rCOUNTER_reg0_carry__12_n_1;
+  wire rCOUNTER_reg0_carry__12_n_2;
+  wire rCOUNTER_reg0_carry__12_n_3;
+  wire rCOUNTER_reg0_carry__13_n_0;
+  wire rCOUNTER_reg0_carry__13_n_1;
+  wire rCOUNTER_reg0_carry__13_n_2;
+  wire rCOUNTER_reg0_carry__13_n_3;
+  wire rCOUNTER_reg0_carry__14_n_2;
+  wire rCOUNTER_reg0_carry__14_n_3;
+  wire rCOUNTER_reg0_carry__1_n_0;
+  wire rCOUNTER_reg0_carry__1_n_1;
+  wire rCOUNTER_reg0_carry__1_n_2;
+  wire rCOUNTER_reg0_carry__1_n_3;
+  wire rCOUNTER_reg0_carry__2_n_0;
+  wire rCOUNTER_reg0_carry__2_n_1;
+  wire rCOUNTER_reg0_carry__2_n_2;
+  wire rCOUNTER_reg0_carry__2_n_3;
+  wire rCOUNTER_reg0_carry__3_n_0;
+  wire rCOUNTER_reg0_carry__3_n_1;
+  wire rCOUNTER_reg0_carry__3_n_2;
+  wire rCOUNTER_reg0_carry__3_n_3;
+  wire rCOUNTER_reg0_carry__4_n_0;
+  wire rCOUNTER_reg0_carry__4_n_1;
+  wire rCOUNTER_reg0_carry__4_n_2;
+  wire rCOUNTER_reg0_carry__4_n_3;
+  wire rCOUNTER_reg0_carry__5_n_0;
+  wire rCOUNTER_reg0_carry__5_n_1;
+  wire rCOUNTER_reg0_carry__5_n_2;
+  wire rCOUNTER_reg0_carry__5_n_3;
+  wire rCOUNTER_reg0_carry__6_n_0;
+  wire rCOUNTER_reg0_carry__6_n_1;
+  wire rCOUNTER_reg0_carry__6_n_2;
+  wire rCOUNTER_reg0_carry__6_n_3;
+  wire rCOUNTER_reg0_carry__7_n_0;
+  wire rCOUNTER_reg0_carry__7_n_1;
+  wire rCOUNTER_reg0_carry__7_n_2;
+  wire rCOUNTER_reg0_carry__7_n_3;
+  wire rCOUNTER_reg0_carry__8_n_0;
+  wire rCOUNTER_reg0_carry__8_n_1;
+  wire rCOUNTER_reg0_carry__8_n_2;
+  wire rCOUNTER_reg0_carry__8_n_3;
+  wire rCOUNTER_reg0_carry__9_n_0;
+  wire rCOUNTER_reg0_carry__9_n_1;
+  wire rCOUNTER_reg0_carry__9_n_2;
+  wire rCOUNTER_reg0_carry__9_n_3;
+  wire rCOUNTER_reg0_carry_n_0;
+  wire rCOUNTER_reg0_carry_n_1;
+  wire rCOUNTER_reg0_carry_n_2;
+  wire rCOUNTER_reg0_carry_n_3;
   wire [63:0]\rLatch2_reg[63]_0 ;
   (* DONT_TOUCH *) (* RTL_KEEP = "true" *) wire [25:0]wPhase;
-  wire [3:3]\NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED ;
+  wire [3:2]NLW_rCOUNTER_reg0_carry__14_CO_UNCONNECTED;
+  wire [3:3]NLW_rCOUNTER_reg0_carry__14_O_UNCONNECTED;
 
   assign oRdyCOUNTER = latchLock1;
   assign oRdyCOUNTER2 = latchLock2;
@@ -333,657 +274,803 @@ module design_1_COUNTER_0_0_COUNTER
         .I1(iResetLatch2),
         .I2(latchLock2_reg0_i_1_n_0),
         .O(latchLock2_reg0_i_1_n_0));
+  LUT5 #(
+    .INIT(32'h00000001)) 
+    oLatchTest2_INST_0
+       (.I0(rCOUNTER[20]),
+        .I1(rCOUNTER[21]),
+        .I2(rCOUNTER[22]),
+        .I3(rCOUNTER[23]),
+        .I4(oLatchTest2_INST_0_i_1_n_0),
+        .O(oLatchTest2));
+  LUT5 #(
+    .INIT(32'hFFFFFF7F)) 
+    oLatchTest2_INST_0_i_1
+       (.I0(rCOUNTER[24]),
+        .I1(rCOUNTER[26]),
+        .I2(rCOUNTER[25]),
+        .I3(rCOUNTER[19]),
+        .I4(rCOUNTER[18]),
+        .O(oLatchTest2_INST_0_i_1_n_0));
   LUT1 #(
     .INIT(2'h1)) 
-    \rCOUNTER[0]_i_2 
-       (.I0(rCOUNTER_reg[0]),
-        .O(\rCOUNTER[0]_i_2_n_0 ));
+    \rCOUNTER[0]_i_1 
+       (.I0(rCOUNTER[0]),
+        .O(p_0_in[0]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry
+       (.CI(1'b0),
+        .CO({rCOUNTER_reg0_carry_n_0,rCOUNTER_reg0_carry_n_1,rCOUNTER_reg0_carry_n_2,rCOUNTER_reg0_carry_n_3}),
+        .CYINIT(rCOUNTER[0]),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[4:1]),
+        .S(rCOUNTER[4:1]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__0
+       (.CI(rCOUNTER_reg0_carry_n_0),
+        .CO({rCOUNTER_reg0_carry__0_n_0,rCOUNTER_reg0_carry__0_n_1,rCOUNTER_reg0_carry__0_n_2,rCOUNTER_reg0_carry__0_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[8:5]),
+        .S(rCOUNTER[8:5]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__1
+       (.CI(rCOUNTER_reg0_carry__0_n_0),
+        .CO({rCOUNTER_reg0_carry__1_n_0,rCOUNTER_reg0_carry__1_n_1,rCOUNTER_reg0_carry__1_n_2,rCOUNTER_reg0_carry__1_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[12:9]),
+        .S(rCOUNTER[12:9]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__10
+       (.CI(rCOUNTER_reg0_carry__9_n_0),
+        .CO({rCOUNTER_reg0_carry__10_n_0,rCOUNTER_reg0_carry__10_n_1,rCOUNTER_reg0_carry__10_n_2,rCOUNTER_reg0_carry__10_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[48:45]),
+        .S(rCOUNTER[48:45]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__11
+       (.CI(rCOUNTER_reg0_carry__10_n_0),
+        .CO({rCOUNTER_reg0_carry__11_n_0,rCOUNTER_reg0_carry__11_n_1,rCOUNTER_reg0_carry__11_n_2,rCOUNTER_reg0_carry__11_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[52:49]),
+        .S(rCOUNTER[52:49]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__12
+       (.CI(rCOUNTER_reg0_carry__11_n_0),
+        .CO({rCOUNTER_reg0_carry__12_n_0,rCOUNTER_reg0_carry__12_n_1,rCOUNTER_reg0_carry__12_n_2,rCOUNTER_reg0_carry__12_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[56:53]),
+        .S(rCOUNTER[56:53]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__13
+       (.CI(rCOUNTER_reg0_carry__12_n_0),
+        .CO({rCOUNTER_reg0_carry__13_n_0,rCOUNTER_reg0_carry__13_n_1,rCOUNTER_reg0_carry__13_n_2,rCOUNTER_reg0_carry__13_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[60:57]),
+        .S(rCOUNTER[60:57]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__14
+       (.CI(rCOUNTER_reg0_carry__13_n_0),
+        .CO({NLW_rCOUNTER_reg0_carry__14_CO_UNCONNECTED[3:2],rCOUNTER_reg0_carry__14_n_2,rCOUNTER_reg0_carry__14_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O({NLW_rCOUNTER_reg0_carry__14_O_UNCONNECTED[3],p_0_in[63:61]}),
+        .S({1'b0,rCOUNTER[63:61]}));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__2
+       (.CI(rCOUNTER_reg0_carry__1_n_0),
+        .CO({rCOUNTER_reg0_carry__2_n_0,rCOUNTER_reg0_carry__2_n_1,rCOUNTER_reg0_carry__2_n_2,rCOUNTER_reg0_carry__2_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[16:13]),
+        .S(rCOUNTER[16:13]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__3
+       (.CI(rCOUNTER_reg0_carry__2_n_0),
+        .CO({rCOUNTER_reg0_carry__3_n_0,rCOUNTER_reg0_carry__3_n_1,rCOUNTER_reg0_carry__3_n_2,rCOUNTER_reg0_carry__3_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[20:17]),
+        .S(rCOUNTER[20:17]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__4
+       (.CI(rCOUNTER_reg0_carry__3_n_0),
+        .CO({rCOUNTER_reg0_carry__4_n_0,rCOUNTER_reg0_carry__4_n_1,rCOUNTER_reg0_carry__4_n_2,rCOUNTER_reg0_carry__4_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[24:21]),
+        .S(rCOUNTER[24:21]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__5
+       (.CI(rCOUNTER_reg0_carry__4_n_0),
+        .CO({rCOUNTER_reg0_carry__5_n_0,rCOUNTER_reg0_carry__5_n_1,rCOUNTER_reg0_carry__5_n_2,rCOUNTER_reg0_carry__5_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[28:25]),
+        .S(rCOUNTER[28:25]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__6
+       (.CI(rCOUNTER_reg0_carry__5_n_0),
+        .CO({rCOUNTER_reg0_carry__6_n_0,rCOUNTER_reg0_carry__6_n_1,rCOUNTER_reg0_carry__6_n_2,rCOUNTER_reg0_carry__6_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[32:29]),
+        .S(rCOUNTER[32:29]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__7
+       (.CI(rCOUNTER_reg0_carry__6_n_0),
+        .CO({rCOUNTER_reg0_carry__7_n_0,rCOUNTER_reg0_carry__7_n_1,rCOUNTER_reg0_carry__7_n_2,rCOUNTER_reg0_carry__7_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[36:33]),
+        .S(rCOUNTER[36:33]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__8
+       (.CI(rCOUNTER_reg0_carry__7_n_0),
+        .CO({rCOUNTER_reg0_carry__8_n_0,rCOUNTER_reg0_carry__8_n_1,rCOUNTER_reg0_carry__8_n_2,rCOUNTER_reg0_carry__8_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[40:37]),
+        .S(rCOUNTER[40:37]));
+  (* ADDER_THRESHOLD = "35" *) 
+  CARRY4 rCOUNTER_reg0_carry__9
+       (.CI(rCOUNTER_reg0_carry__8_n_0),
+        .CO({rCOUNTER_reg0_carry__9_n_0,rCOUNTER_reg0_carry__9_n_1,rCOUNTER_reg0_carry__9_n_2,rCOUNTER_reg0_carry__9_n_3}),
+        .CYINIT(1'b0),
+        .DI({1'b0,1'b0,1'b0,1'b0}),
+        .O(p_0_in[44:41]),
+        .S(rCOUNTER[44:41]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[0] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[0]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[0]),
+        .D(p_0_in[0]),
+        .Q(rCOUNTER[0]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[0]_i_1 
-       (.CI(1'b0),
-        .CO({\rCOUNTER_reg[0]_i_1_n_0 ,\rCOUNTER_reg[0]_i_1_n_1 ,\rCOUNTER_reg[0]_i_1_n_2 ,\rCOUNTER_reg[0]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b1}),
-        .O({\rCOUNTER_reg[0]_i_1_n_4 ,\rCOUNTER_reg[0]_i_1_n_5 ,\rCOUNTER_reg[0]_i_1_n_6 ,\rCOUNTER_reg[0]_i_1_n_7 }),
-        .S({rCOUNTER_reg[3:1],\rCOUNTER[0]_i_2_n_0 }));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[10] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[8]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[10]),
+        .D(p_0_in[10]),
+        .Q(rCOUNTER[10]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[11] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[8]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[11]),
+        .D(p_0_in[11]),
+        .Q(rCOUNTER[11]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[12] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[12]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[12]),
+        .D(p_0_in[12]),
+        .Q(rCOUNTER[12]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[12]_i_1 
-       (.CI(\rCOUNTER_reg[8]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[12]_i_1_n_0 ,\rCOUNTER_reg[12]_i_1_n_1 ,\rCOUNTER_reg[12]_i_1_n_2 ,\rCOUNTER_reg[12]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[12]_i_1_n_4 ,\rCOUNTER_reg[12]_i_1_n_5 ,\rCOUNTER_reg[12]_i_1_n_6 ,\rCOUNTER_reg[12]_i_1_n_7 }),
-        .S(rCOUNTER_reg[15:12]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[13] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[12]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[13]),
+        .D(p_0_in[13]),
+        .Q(rCOUNTER[13]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[14] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[12]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[14]),
+        .D(p_0_in[14]),
+        .Q(rCOUNTER[14]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[15] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[12]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[15]),
+        .D(p_0_in[15]),
+        .Q(rCOUNTER[15]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[16] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[16]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[16]),
+        .D(p_0_in[16]),
+        .Q(rCOUNTER[16]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[16]_i_1 
-       (.CI(\rCOUNTER_reg[12]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[16]_i_1_n_0 ,\rCOUNTER_reg[16]_i_1_n_1 ,\rCOUNTER_reg[16]_i_1_n_2 ,\rCOUNTER_reg[16]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[16]_i_1_n_4 ,\rCOUNTER_reg[16]_i_1_n_5 ,\rCOUNTER_reg[16]_i_1_n_6 ,\rCOUNTER_reg[16]_i_1_n_7 }),
-        .S(rCOUNTER_reg[19:16]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[17] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[16]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[17]),
+        .D(p_0_in[17]),
+        .Q(rCOUNTER[17]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[18] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[16]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[18]),
+        .D(p_0_in[18]),
+        .Q(rCOUNTER[18]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[19] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[16]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[19]),
+        .D(p_0_in[19]),
+        .Q(rCOUNTER[19]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[1] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[0]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[1]),
+        .D(p_0_in[1]),
+        .Q(rCOUNTER[1]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[20] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[20]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[20]),
+        .D(p_0_in[20]),
+        .Q(rCOUNTER[20]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[20]_i_1 
-       (.CI(\rCOUNTER_reg[16]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[20]_i_1_n_0 ,\rCOUNTER_reg[20]_i_1_n_1 ,\rCOUNTER_reg[20]_i_1_n_2 ,\rCOUNTER_reg[20]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[20]_i_1_n_4 ,\rCOUNTER_reg[20]_i_1_n_5 ,\rCOUNTER_reg[20]_i_1_n_6 ,\rCOUNTER_reg[20]_i_1_n_7 }),
-        .S(rCOUNTER_reg[23:20]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[21] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[20]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[21]),
+        .D(p_0_in[21]),
+        .Q(rCOUNTER[21]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[22] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[20]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[22]),
+        .D(p_0_in[22]),
+        .Q(rCOUNTER[22]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[23] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[20]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[23]),
+        .D(p_0_in[23]),
+        .Q(rCOUNTER[23]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[24] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[24]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[24]),
+        .D(p_0_in[24]),
+        .Q(rCOUNTER[24]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[24]_i_1 
-       (.CI(\rCOUNTER_reg[20]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[24]_i_1_n_0 ,\rCOUNTER_reg[24]_i_1_n_1 ,\rCOUNTER_reg[24]_i_1_n_2 ,\rCOUNTER_reg[24]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[24]_i_1_n_4 ,\rCOUNTER_reg[24]_i_1_n_5 ,\rCOUNTER_reg[24]_i_1_n_6 ,\rCOUNTER_reg[24]_i_1_n_7 }),
-        .S(rCOUNTER_reg[27:24]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[25] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[24]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[25]),
+        .D(p_0_in[25]),
+        .Q(rCOUNTER[25]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[26] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[24]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[26]),
+        .D(p_0_in[26]),
+        .Q(rCOUNTER[26]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[27] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[24]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[27]),
+        .D(p_0_in[27]),
+        .Q(rCOUNTER[27]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[28] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[28]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[28]),
+        .D(p_0_in[28]),
+        .Q(rCOUNTER[28]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[28]_i_1 
-       (.CI(\rCOUNTER_reg[24]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[28]_i_1_n_0 ,\rCOUNTER_reg[28]_i_1_n_1 ,\rCOUNTER_reg[28]_i_1_n_2 ,\rCOUNTER_reg[28]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[28]_i_1_n_4 ,\rCOUNTER_reg[28]_i_1_n_5 ,\rCOUNTER_reg[28]_i_1_n_6 ,\rCOUNTER_reg[28]_i_1_n_7 }),
-        .S(rCOUNTER_reg[31:28]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[29] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[28]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[29]),
+        .D(p_0_in[29]),
+        .Q(rCOUNTER[29]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[2] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[0]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[2]),
+        .D(p_0_in[2]),
+        .Q(rCOUNTER[2]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[30] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[28]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[30]),
+        .D(p_0_in[30]),
+        .Q(rCOUNTER[30]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[31] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[28]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[31]),
+        .D(p_0_in[31]),
+        .Q(rCOUNTER[31]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[32] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[32]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[32]),
+        .D(p_0_in[32]),
+        .Q(rCOUNTER[32]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[32]_i_1 
-       (.CI(\rCOUNTER_reg[28]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[32]_i_1_n_0 ,\rCOUNTER_reg[32]_i_1_n_1 ,\rCOUNTER_reg[32]_i_1_n_2 ,\rCOUNTER_reg[32]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[32]_i_1_n_4 ,\rCOUNTER_reg[32]_i_1_n_5 ,\rCOUNTER_reg[32]_i_1_n_6 ,\rCOUNTER_reg[32]_i_1_n_7 }),
-        .S(rCOUNTER_reg[35:32]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[33] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[32]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[33]),
+        .D(p_0_in[33]),
+        .Q(rCOUNTER[33]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[34] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[32]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[34]),
+        .D(p_0_in[34]),
+        .Q(rCOUNTER[34]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[35] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[32]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[35]),
+        .D(p_0_in[35]),
+        .Q(rCOUNTER[35]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[36] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[36]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[36]),
+        .D(p_0_in[36]),
+        .Q(rCOUNTER[36]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[36]_i_1 
-       (.CI(\rCOUNTER_reg[32]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[36]_i_1_n_0 ,\rCOUNTER_reg[36]_i_1_n_1 ,\rCOUNTER_reg[36]_i_1_n_2 ,\rCOUNTER_reg[36]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[36]_i_1_n_4 ,\rCOUNTER_reg[36]_i_1_n_5 ,\rCOUNTER_reg[36]_i_1_n_6 ,\rCOUNTER_reg[36]_i_1_n_7 }),
-        .S(rCOUNTER_reg[39:36]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[37] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[36]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[37]),
+        .D(p_0_in[37]),
+        .Q(rCOUNTER[37]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[38] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[36]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[38]),
+        .D(p_0_in[38]),
+        .Q(rCOUNTER[38]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[39] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[36]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[39]),
+        .D(p_0_in[39]),
+        .Q(rCOUNTER[39]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[3] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[0]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[3]),
+        .D(p_0_in[3]),
+        .Q(rCOUNTER[3]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[40] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[40]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[40]),
+        .D(p_0_in[40]),
+        .Q(rCOUNTER[40]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[40]_i_1 
-       (.CI(\rCOUNTER_reg[36]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[40]_i_1_n_0 ,\rCOUNTER_reg[40]_i_1_n_1 ,\rCOUNTER_reg[40]_i_1_n_2 ,\rCOUNTER_reg[40]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[40]_i_1_n_4 ,\rCOUNTER_reg[40]_i_1_n_5 ,\rCOUNTER_reg[40]_i_1_n_6 ,\rCOUNTER_reg[40]_i_1_n_7 }),
-        .S(rCOUNTER_reg[43:40]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[41] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[40]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[41]),
+        .D(p_0_in[41]),
+        .Q(rCOUNTER[41]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[42] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[40]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[42]),
+        .D(p_0_in[42]),
+        .Q(rCOUNTER[42]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[43] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[40]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[43]),
+        .D(p_0_in[43]),
+        .Q(rCOUNTER[43]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[44] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[44]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[44]),
+        .D(p_0_in[44]),
+        .Q(rCOUNTER[44]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[44]_i_1 
-       (.CI(\rCOUNTER_reg[40]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[44]_i_1_n_0 ,\rCOUNTER_reg[44]_i_1_n_1 ,\rCOUNTER_reg[44]_i_1_n_2 ,\rCOUNTER_reg[44]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[44]_i_1_n_4 ,\rCOUNTER_reg[44]_i_1_n_5 ,\rCOUNTER_reg[44]_i_1_n_6 ,\rCOUNTER_reg[44]_i_1_n_7 }),
-        .S(rCOUNTER_reg[47:44]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[45] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[44]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[45]),
+        .D(p_0_in[45]),
+        .Q(rCOUNTER[45]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[46] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[44]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[46]),
+        .D(p_0_in[46]),
+        .Q(rCOUNTER[46]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[47] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[44]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[47]),
+        .D(p_0_in[47]),
+        .Q(rCOUNTER[47]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[48] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[48]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[48]),
+        .D(p_0_in[48]),
+        .Q(rCOUNTER[48]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[48]_i_1 
-       (.CI(\rCOUNTER_reg[44]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[48]_i_1_n_0 ,\rCOUNTER_reg[48]_i_1_n_1 ,\rCOUNTER_reg[48]_i_1_n_2 ,\rCOUNTER_reg[48]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[48]_i_1_n_4 ,\rCOUNTER_reg[48]_i_1_n_5 ,\rCOUNTER_reg[48]_i_1_n_6 ,\rCOUNTER_reg[48]_i_1_n_7 }),
-        .S(rCOUNTER_reg[51:48]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[49] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[48]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[49]),
+        .D(p_0_in[49]),
+        .Q(rCOUNTER[49]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[4] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[4]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[4]),
+        .D(p_0_in[4]),
+        .Q(rCOUNTER[4]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[4]_i_1 
-       (.CI(\rCOUNTER_reg[0]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[4]_i_1_n_0 ,\rCOUNTER_reg[4]_i_1_n_1 ,\rCOUNTER_reg[4]_i_1_n_2 ,\rCOUNTER_reg[4]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[4]_i_1_n_4 ,\rCOUNTER_reg[4]_i_1_n_5 ,\rCOUNTER_reg[4]_i_1_n_6 ,\rCOUNTER_reg[4]_i_1_n_7 }),
-        .S(rCOUNTER_reg[7:4]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[50] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[48]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[50]),
+        .D(p_0_in[50]),
+        .Q(rCOUNTER[50]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[51] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[48]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[51]),
+        .D(p_0_in[51]),
+        .Q(rCOUNTER[51]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[52] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[52]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[52]),
+        .D(p_0_in[52]),
+        .Q(rCOUNTER[52]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[52]_i_1 
-       (.CI(\rCOUNTER_reg[48]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[52]_i_1_n_0 ,\rCOUNTER_reg[52]_i_1_n_1 ,\rCOUNTER_reg[52]_i_1_n_2 ,\rCOUNTER_reg[52]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[52]_i_1_n_4 ,\rCOUNTER_reg[52]_i_1_n_5 ,\rCOUNTER_reg[52]_i_1_n_6 ,\rCOUNTER_reg[52]_i_1_n_7 }),
-        .S(rCOUNTER_reg[55:52]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[53] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[52]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[53]),
+        .D(p_0_in[53]),
+        .Q(rCOUNTER[53]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[54] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[52]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[54]),
+        .D(p_0_in[54]),
+        .Q(rCOUNTER[54]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[55] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[52]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[55]),
+        .D(p_0_in[55]),
+        .Q(rCOUNTER[55]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[56] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[56]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[56]),
+        .D(p_0_in[56]),
+        .Q(rCOUNTER[56]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[56]_i_1 
-       (.CI(\rCOUNTER_reg[52]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[56]_i_1_n_0 ,\rCOUNTER_reg[56]_i_1_n_1 ,\rCOUNTER_reg[56]_i_1_n_2 ,\rCOUNTER_reg[56]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[56]_i_1_n_4 ,\rCOUNTER_reg[56]_i_1_n_5 ,\rCOUNTER_reg[56]_i_1_n_6 ,\rCOUNTER_reg[56]_i_1_n_7 }),
-        .S(rCOUNTER_reg[59:56]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[57] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[56]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[57]),
+        .D(p_0_in[57]),
+        .Q(rCOUNTER[57]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[58] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[56]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[58]),
+        .D(p_0_in[58]),
+        .Q(rCOUNTER[58]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[59] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[56]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[59]),
+        .D(p_0_in[59]),
+        .Q(rCOUNTER[59]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[5] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[4]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[5]),
+        .D(p_0_in[5]),
+        .Q(rCOUNTER[5]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[60] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[60]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[60]),
+        .D(p_0_in[60]),
+        .Q(rCOUNTER[60]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[60]_i_1 
-       (.CI(\rCOUNTER_reg[56]_i_1_n_0 ),
-        .CO({\NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED [3],\rCOUNTER_reg[60]_i_1_n_1 ,\rCOUNTER_reg[60]_i_1_n_2 ,\rCOUNTER_reg[60]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[60]_i_1_n_4 ,\rCOUNTER_reg[60]_i_1_n_5 ,\rCOUNTER_reg[60]_i_1_n_6 ,\rCOUNTER_reg[60]_i_1_n_7 }),
-        .S(rCOUNTER_reg[63:60]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[61] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[60]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[61]),
+        .D(p_0_in[61]),
+        .Q(rCOUNTER[61]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[62] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[60]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[62]),
+        .D(p_0_in[62]),
+        .Q(rCOUNTER[62]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[63] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[60]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[63]),
+        .D(p_0_in[63]),
+        .Q(rCOUNTER[63]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[6] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[4]_i_1_n_5 ),
-        .Q(rCOUNTER_reg[6]),
+        .D(p_0_in[6]),
+        .Q(rCOUNTER[6]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[7] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[4]_i_1_n_4 ),
-        .Q(rCOUNTER_reg[7]),
+        .D(p_0_in[7]),
+        .Q(rCOUNTER[7]),
         .R(1'b0));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[8] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[8]_i_1_n_7 ),
-        .Q(rCOUNTER_reg[8]),
+        .D(p_0_in[8]),
+        .Q(rCOUNTER[8]),
         .R(1'b0));
-  (* ADDER_THRESHOLD = "11" *) 
-  CARRY4 \rCOUNTER_reg[8]_i_1 
-       (.CI(\rCOUNTER_reg[4]_i_1_n_0 ),
-        .CO({\rCOUNTER_reg[8]_i_1_n_0 ,\rCOUNTER_reg[8]_i_1_n_1 ,\rCOUNTER_reg[8]_i_1_n_2 ,\rCOUNTER_reg[8]_i_1_n_3 }),
-        .CYINIT(1'b0),
-        .DI({1'b0,1'b0,1'b0,1'b0}),
-        .O({\rCOUNTER_reg[8]_i_1_n_4 ,\rCOUNTER_reg[8]_i_1_n_5 ,\rCOUNTER_reg[8]_i_1_n_6 ,\rCOUNTER_reg[8]_i_1_n_7 }),
-        .S(rCOUNTER_reg[11:8]));
+  (* DONT_TOUCH *) 
+  (* KEEP = "yes" *) 
   FDRE #(
     .INIT(1'b0)) 
     \rCOUNTER_reg[9] 
        (.C(wPhase[0]),
         .CE(1'b1),
-        .D(\rCOUNTER_reg[8]_i_1_n_6 ),
-        .Q(rCOUNTER_reg[9]),
+        .D(p_0_in[9]),
+        .Q(rCOUNTER[9]),
         .R(1'b0));
   FDRE #(
     .INIT(1'b0)) 
     \rLatch1_reg[0] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[0]),
+        .D(rCOUNTER[0]),
         .Q(Q[0]),
         .R(1'b0));
   FDRE #(
@@ -991,7 +1078,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[10] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[10]),
+        .D(rCOUNTER[10]),
         .Q(Q[10]),
         .R(1'b0));
   FDRE #(
@@ -999,7 +1086,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[11] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[11]),
+        .D(rCOUNTER[11]),
         .Q(Q[11]),
         .R(1'b0));
   FDRE #(
@@ -1007,7 +1094,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[12] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[12]),
+        .D(rCOUNTER[12]),
         .Q(Q[12]),
         .R(1'b0));
   FDRE #(
@@ -1015,7 +1102,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[13] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[13]),
+        .D(rCOUNTER[13]),
         .Q(Q[13]),
         .R(1'b0));
   FDRE #(
@@ -1023,7 +1110,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[14] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[14]),
+        .D(rCOUNTER[14]),
         .Q(Q[14]),
         .R(1'b0));
   FDRE #(
@@ -1031,7 +1118,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[15] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[15]),
+        .D(rCOUNTER[15]),
         .Q(Q[15]),
         .R(1'b0));
   FDRE #(
@@ -1039,7 +1126,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[16] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[16]),
+        .D(rCOUNTER[16]),
         .Q(Q[16]),
         .R(1'b0));
   FDRE #(
@@ -1047,7 +1134,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[17] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[17]),
+        .D(rCOUNTER[17]),
         .Q(Q[17]),
         .R(1'b0));
   FDRE #(
@@ -1055,7 +1142,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[18] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[18]),
+        .D(rCOUNTER[18]),
         .Q(Q[18]),
         .R(1'b0));
   FDRE #(
@@ -1063,7 +1150,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[19] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[19]),
+        .D(rCOUNTER[19]),
         .Q(Q[19]),
         .R(1'b0));
   FDRE #(
@@ -1071,7 +1158,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[1] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[1]),
+        .D(rCOUNTER[1]),
         .Q(Q[1]),
         .R(1'b0));
   FDRE #(
@@ -1079,7 +1166,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[20] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[20]),
+        .D(rCOUNTER[20]),
         .Q(Q[20]),
         .R(1'b0));
   FDRE #(
@@ -1087,7 +1174,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[21] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[21]),
+        .D(rCOUNTER[21]),
         .Q(Q[21]),
         .R(1'b0));
   FDRE #(
@@ -1095,7 +1182,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[22] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[22]),
+        .D(rCOUNTER[22]),
         .Q(Q[22]),
         .R(1'b0));
   FDRE #(
@@ -1103,7 +1190,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[23] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[23]),
+        .D(rCOUNTER[23]),
         .Q(Q[23]),
         .R(1'b0));
   FDRE #(
@@ -1111,7 +1198,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[24] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[24]),
+        .D(rCOUNTER[24]),
         .Q(Q[24]),
         .R(1'b0));
   FDRE #(
@@ -1119,7 +1206,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[25] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[25]),
+        .D(rCOUNTER[25]),
         .Q(Q[25]),
         .R(1'b0));
   FDRE #(
@@ -1127,7 +1214,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[26] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[26]),
+        .D(rCOUNTER[26]),
         .Q(Q[26]),
         .R(1'b0));
   FDRE #(
@@ -1135,7 +1222,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[27] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[27]),
+        .D(rCOUNTER[27]),
         .Q(Q[27]),
         .R(1'b0));
   FDRE #(
@@ -1143,7 +1230,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[28] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[28]),
+        .D(rCOUNTER[28]),
         .Q(Q[28]),
         .R(1'b0));
   FDRE #(
@@ -1151,7 +1238,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[29] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[29]),
+        .D(rCOUNTER[29]),
         .Q(Q[29]),
         .R(1'b0));
   FDRE #(
@@ -1159,7 +1246,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[2] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[2]),
+        .D(rCOUNTER[2]),
         .Q(Q[2]),
         .R(1'b0));
   FDRE #(
@@ -1167,7 +1254,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[30] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[30]),
+        .D(rCOUNTER[30]),
         .Q(Q[30]),
         .R(1'b0));
   FDRE #(
@@ -1175,7 +1262,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[31] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[31]),
+        .D(rCOUNTER[31]),
         .Q(Q[31]),
         .R(1'b0));
   FDRE #(
@@ -1183,7 +1270,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[32] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[32]),
+        .D(rCOUNTER[32]),
         .Q(Q[32]),
         .R(1'b0));
   FDRE #(
@@ -1191,7 +1278,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[33] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[33]),
+        .D(rCOUNTER[33]),
         .Q(Q[33]),
         .R(1'b0));
   FDRE #(
@@ -1199,7 +1286,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[34] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[34]),
+        .D(rCOUNTER[34]),
         .Q(Q[34]),
         .R(1'b0));
   FDRE #(
@@ -1207,7 +1294,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[35] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[35]),
+        .D(rCOUNTER[35]),
         .Q(Q[35]),
         .R(1'b0));
   FDRE #(
@@ -1215,7 +1302,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[36] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[36]),
+        .D(rCOUNTER[36]),
         .Q(Q[36]),
         .R(1'b0));
   FDRE #(
@@ -1223,7 +1310,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[37] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[37]),
+        .D(rCOUNTER[37]),
         .Q(Q[37]),
         .R(1'b0));
   FDRE #(
@@ -1231,7 +1318,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[38] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[38]),
+        .D(rCOUNTER[38]),
         .Q(Q[38]),
         .R(1'b0));
   FDRE #(
@@ -1239,7 +1326,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[39] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[39]),
+        .D(rCOUNTER[39]),
         .Q(Q[39]),
         .R(1'b0));
   FDRE #(
@@ -1247,7 +1334,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[3] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[3]),
+        .D(rCOUNTER[3]),
         .Q(Q[3]),
         .R(1'b0));
   FDRE #(
@@ -1255,7 +1342,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[40] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[40]),
+        .D(rCOUNTER[40]),
         .Q(Q[40]),
         .R(1'b0));
   FDRE #(
@@ -1263,7 +1350,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[41] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[41]),
+        .D(rCOUNTER[41]),
         .Q(Q[41]),
         .R(1'b0));
   FDRE #(
@@ -1271,7 +1358,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[42] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[42]),
+        .D(rCOUNTER[42]),
         .Q(Q[42]),
         .R(1'b0));
   FDRE #(
@@ -1279,7 +1366,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[43] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[43]),
+        .D(rCOUNTER[43]),
         .Q(Q[43]),
         .R(1'b0));
   FDRE #(
@@ -1287,7 +1374,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[44] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[44]),
+        .D(rCOUNTER[44]),
         .Q(Q[44]),
         .R(1'b0));
   FDRE #(
@@ -1295,7 +1382,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[45] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[45]),
+        .D(rCOUNTER[45]),
         .Q(Q[45]),
         .R(1'b0));
   FDRE #(
@@ -1303,7 +1390,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[46] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[46]),
+        .D(rCOUNTER[46]),
         .Q(Q[46]),
         .R(1'b0));
   FDRE #(
@@ -1311,7 +1398,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[47] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[47]),
+        .D(rCOUNTER[47]),
         .Q(Q[47]),
         .R(1'b0));
   FDRE #(
@@ -1319,7 +1406,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[48] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[48]),
+        .D(rCOUNTER[48]),
         .Q(Q[48]),
         .R(1'b0));
   FDRE #(
@@ -1327,7 +1414,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[49] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[49]),
+        .D(rCOUNTER[49]),
         .Q(Q[49]),
         .R(1'b0));
   FDRE #(
@@ -1335,7 +1422,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[4] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[4]),
+        .D(rCOUNTER[4]),
         .Q(Q[4]),
         .R(1'b0));
   FDRE #(
@@ -1343,7 +1430,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[50] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[50]),
+        .D(rCOUNTER[50]),
         .Q(Q[50]),
         .R(1'b0));
   FDRE #(
@@ -1351,7 +1438,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[51] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[51]),
+        .D(rCOUNTER[51]),
         .Q(Q[51]),
         .R(1'b0));
   FDRE #(
@@ -1359,7 +1446,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[52] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[52]),
+        .D(rCOUNTER[52]),
         .Q(Q[52]),
         .R(1'b0));
   FDRE #(
@@ -1367,7 +1454,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[53] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[53]),
+        .D(rCOUNTER[53]),
         .Q(Q[53]),
         .R(1'b0));
   FDRE #(
@@ -1375,7 +1462,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[54] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[54]),
+        .D(rCOUNTER[54]),
         .Q(Q[54]),
         .R(1'b0));
   FDRE #(
@@ -1383,7 +1470,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[55] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[55]),
+        .D(rCOUNTER[55]),
         .Q(Q[55]),
         .R(1'b0));
   FDRE #(
@@ -1391,7 +1478,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[56] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[56]),
+        .D(rCOUNTER[56]),
         .Q(Q[56]),
         .R(1'b0));
   FDRE #(
@@ -1399,7 +1486,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[57] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[57]),
+        .D(rCOUNTER[57]),
         .Q(Q[57]),
         .R(1'b0));
   FDRE #(
@@ -1407,7 +1494,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[58] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[58]),
+        .D(rCOUNTER[58]),
         .Q(Q[58]),
         .R(1'b0));
   FDRE #(
@@ -1415,7 +1502,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[59] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[59]),
+        .D(rCOUNTER[59]),
         .Q(Q[59]),
         .R(1'b0));
   FDRE #(
@@ -1423,7 +1510,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[5] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[5]),
+        .D(rCOUNTER[5]),
         .Q(Q[5]),
         .R(1'b0));
   FDRE #(
@@ -1431,7 +1518,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[60] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[60]),
+        .D(rCOUNTER[60]),
         .Q(Q[60]),
         .R(1'b0));
   FDRE #(
@@ -1439,7 +1526,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[61] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[61]),
+        .D(rCOUNTER[61]),
         .Q(Q[61]),
         .R(1'b0));
   FDRE #(
@@ -1447,7 +1534,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[62] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[62]),
+        .D(rCOUNTER[62]),
         .Q(Q[62]),
         .R(1'b0));
   FDRE #(
@@ -1455,7 +1542,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[63] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[63]),
+        .D(rCOUNTER[63]),
         .Q(Q[63]),
         .R(1'b0));
   FDRE #(
@@ -1463,7 +1550,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[6] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[6]),
+        .D(rCOUNTER[6]),
         .Q(Q[6]),
         .R(1'b0));
   FDRE #(
@@ -1471,7 +1558,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[7] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[7]),
+        .D(rCOUNTER[7]),
         .Q(Q[7]),
         .R(1'b0));
   FDRE #(
@@ -1479,7 +1566,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[8] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[8]),
+        .D(rCOUNTER[8]),
         .Q(Q[8]),
         .R(1'b0));
   FDRE #(
@@ -1487,7 +1574,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch1_reg[9] 
        (.C(iLatch1),
         .CE(1'b1),
-        .D(rCOUNTER_reg[9]),
+        .D(rCOUNTER[9]),
         .Q(Q[9]),
         .R(1'b0));
   FDRE #(
@@ -1495,7 +1582,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[0] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[0]),
+        .D(rCOUNTER[0]),
         .Q(\rLatch2_reg[63]_0 [0]),
         .R(1'b0));
   FDRE #(
@@ -1503,7 +1590,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[10] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[10]),
+        .D(rCOUNTER[10]),
         .Q(\rLatch2_reg[63]_0 [10]),
         .R(1'b0));
   FDRE #(
@@ -1511,7 +1598,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[11] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[11]),
+        .D(rCOUNTER[11]),
         .Q(\rLatch2_reg[63]_0 [11]),
         .R(1'b0));
   FDRE #(
@@ -1519,7 +1606,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[12] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[12]),
+        .D(rCOUNTER[12]),
         .Q(\rLatch2_reg[63]_0 [12]),
         .R(1'b0));
   FDRE #(
@@ -1527,7 +1614,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[13] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[13]),
+        .D(rCOUNTER[13]),
         .Q(\rLatch2_reg[63]_0 [13]),
         .R(1'b0));
   FDRE #(
@@ -1535,7 +1622,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[14] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[14]),
+        .D(rCOUNTER[14]),
         .Q(\rLatch2_reg[63]_0 [14]),
         .R(1'b0));
   FDRE #(
@@ -1543,7 +1630,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[15] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[15]),
+        .D(rCOUNTER[15]),
         .Q(\rLatch2_reg[63]_0 [15]),
         .R(1'b0));
   FDRE #(
@@ -1551,7 +1638,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[16] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[16]),
+        .D(rCOUNTER[16]),
         .Q(\rLatch2_reg[63]_0 [16]),
         .R(1'b0));
   FDRE #(
@@ -1559,7 +1646,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[17] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[17]),
+        .D(rCOUNTER[17]),
         .Q(\rLatch2_reg[63]_0 [17]),
         .R(1'b0));
   FDRE #(
@@ -1567,7 +1654,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[18] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[18]),
+        .D(rCOUNTER[18]),
         .Q(\rLatch2_reg[63]_0 [18]),
         .R(1'b0));
   FDRE #(
@@ -1575,7 +1662,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[19] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[19]),
+        .D(rCOUNTER[19]),
         .Q(\rLatch2_reg[63]_0 [19]),
         .R(1'b0));
   FDRE #(
@@ -1583,7 +1670,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[1] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[1]),
+        .D(rCOUNTER[1]),
         .Q(\rLatch2_reg[63]_0 [1]),
         .R(1'b0));
   FDRE #(
@@ -1591,7 +1678,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[20] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[20]),
+        .D(rCOUNTER[20]),
         .Q(\rLatch2_reg[63]_0 [20]),
         .R(1'b0));
   FDRE #(
@@ -1599,7 +1686,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[21] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[21]),
+        .D(rCOUNTER[21]),
         .Q(\rLatch2_reg[63]_0 [21]),
         .R(1'b0));
   FDRE #(
@@ -1607,7 +1694,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[22] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[22]),
+        .D(rCOUNTER[22]),
         .Q(\rLatch2_reg[63]_0 [22]),
         .R(1'b0));
   FDRE #(
@@ -1615,7 +1702,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[23] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[23]),
+        .D(rCOUNTER[23]),
         .Q(\rLatch2_reg[63]_0 [23]),
         .R(1'b0));
   FDRE #(
@@ -1623,7 +1710,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[24] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[24]),
+        .D(rCOUNTER[24]),
         .Q(\rLatch2_reg[63]_0 [24]),
         .R(1'b0));
   FDRE #(
@@ -1631,7 +1718,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[25] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[25]),
+        .D(rCOUNTER[25]),
         .Q(\rLatch2_reg[63]_0 [25]),
         .R(1'b0));
   FDRE #(
@@ -1639,7 +1726,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[26] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[26]),
+        .D(rCOUNTER[26]),
         .Q(\rLatch2_reg[63]_0 [26]),
         .R(1'b0));
   FDRE #(
@@ -1647,7 +1734,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[27] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[27]),
+        .D(rCOUNTER[27]),
         .Q(\rLatch2_reg[63]_0 [27]),
         .R(1'b0));
   FDRE #(
@@ -1655,7 +1742,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[28] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[28]),
+        .D(rCOUNTER[28]),
         .Q(\rLatch2_reg[63]_0 [28]),
         .R(1'b0));
   FDRE #(
@@ -1663,7 +1750,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[29] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[29]),
+        .D(rCOUNTER[29]),
         .Q(\rLatch2_reg[63]_0 [29]),
         .R(1'b0));
   FDRE #(
@@ -1671,7 +1758,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[2] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[2]),
+        .D(rCOUNTER[2]),
         .Q(\rLatch2_reg[63]_0 [2]),
         .R(1'b0));
   FDRE #(
@@ -1679,7 +1766,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[30] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[30]),
+        .D(rCOUNTER[30]),
         .Q(\rLatch2_reg[63]_0 [30]),
         .R(1'b0));
   FDRE #(
@@ -1687,7 +1774,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[31] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[31]),
+        .D(rCOUNTER[31]),
         .Q(\rLatch2_reg[63]_0 [31]),
         .R(1'b0));
   FDRE #(
@@ -1695,7 +1782,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[32] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[32]),
+        .D(rCOUNTER[32]),
         .Q(\rLatch2_reg[63]_0 [32]),
         .R(1'b0));
   FDRE #(
@@ -1703,7 +1790,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[33] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[33]),
+        .D(rCOUNTER[33]),
         .Q(\rLatch2_reg[63]_0 [33]),
         .R(1'b0));
   FDRE #(
@@ -1711,7 +1798,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[34] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[34]),
+        .D(rCOUNTER[34]),
         .Q(\rLatch2_reg[63]_0 [34]),
         .R(1'b0));
   FDRE #(
@@ -1719,7 +1806,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[35] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[35]),
+        .D(rCOUNTER[35]),
         .Q(\rLatch2_reg[63]_0 [35]),
         .R(1'b0));
   FDRE #(
@@ -1727,7 +1814,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[36] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[36]),
+        .D(rCOUNTER[36]),
         .Q(\rLatch2_reg[63]_0 [36]),
         .R(1'b0));
   FDRE #(
@@ -1735,7 +1822,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[37] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[37]),
+        .D(rCOUNTER[37]),
         .Q(\rLatch2_reg[63]_0 [37]),
         .R(1'b0));
   FDRE #(
@@ -1743,7 +1830,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[38] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[38]),
+        .D(rCOUNTER[38]),
         .Q(\rLatch2_reg[63]_0 [38]),
         .R(1'b0));
   FDRE #(
@@ -1751,7 +1838,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[39] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[39]),
+        .D(rCOUNTER[39]),
         .Q(\rLatch2_reg[63]_0 [39]),
         .R(1'b0));
   FDRE #(
@@ -1759,7 +1846,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[3] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[3]),
+        .D(rCOUNTER[3]),
         .Q(\rLatch2_reg[63]_0 [3]),
         .R(1'b0));
   FDRE #(
@@ -1767,7 +1854,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[40] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[40]),
+        .D(rCOUNTER[40]),
         .Q(\rLatch2_reg[63]_0 [40]),
         .R(1'b0));
   FDRE #(
@@ -1775,7 +1862,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[41] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[41]),
+        .D(rCOUNTER[41]),
         .Q(\rLatch2_reg[63]_0 [41]),
         .R(1'b0));
   FDRE #(
@@ -1783,7 +1870,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[42] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[42]),
+        .D(rCOUNTER[42]),
         .Q(\rLatch2_reg[63]_0 [42]),
         .R(1'b0));
   FDRE #(
@@ -1791,7 +1878,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[43] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[43]),
+        .D(rCOUNTER[43]),
         .Q(\rLatch2_reg[63]_0 [43]),
         .R(1'b0));
   FDRE #(
@@ -1799,7 +1886,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[44] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[44]),
+        .D(rCOUNTER[44]),
         .Q(\rLatch2_reg[63]_0 [44]),
         .R(1'b0));
   FDRE #(
@@ -1807,7 +1894,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[45] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[45]),
+        .D(rCOUNTER[45]),
         .Q(\rLatch2_reg[63]_0 [45]),
         .R(1'b0));
   FDRE #(
@@ -1815,7 +1902,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[46] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[46]),
+        .D(rCOUNTER[46]),
         .Q(\rLatch2_reg[63]_0 [46]),
         .R(1'b0));
   FDRE #(
@@ -1823,7 +1910,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[47] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[47]),
+        .D(rCOUNTER[47]),
         .Q(\rLatch2_reg[63]_0 [47]),
         .R(1'b0));
   FDRE #(
@@ -1831,7 +1918,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[48] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[48]),
+        .D(rCOUNTER[48]),
         .Q(\rLatch2_reg[63]_0 [48]),
         .R(1'b0));
   FDRE #(
@@ -1839,7 +1926,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[49] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[49]),
+        .D(rCOUNTER[49]),
         .Q(\rLatch2_reg[63]_0 [49]),
         .R(1'b0));
   FDRE #(
@@ -1847,7 +1934,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[4] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[4]),
+        .D(rCOUNTER[4]),
         .Q(\rLatch2_reg[63]_0 [4]),
         .R(1'b0));
   FDRE #(
@@ -1855,7 +1942,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[50] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[50]),
+        .D(rCOUNTER[50]),
         .Q(\rLatch2_reg[63]_0 [50]),
         .R(1'b0));
   FDRE #(
@@ -1863,7 +1950,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[51] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[51]),
+        .D(rCOUNTER[51]),
         .Q(\rLatch2_reg[63]_0 [51]),
         .R(1'b0));
   FDRE #(
@@ -1871,7 +1958,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[52] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[52]),
+        .D(rCOUNTER[52]),
         .Q(\rLatch2_reg[63]_0 [52]),
         .R(1'b0));
   FDRE #(
@@ -1879,7 +1966,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[53] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[53]),
+        .D(rCOUNTER[53]),
         .Q(\rLatch2_reg[63]_0 [53]),
         .R(1'b0));
   FDRE #(
@@ -1887,7 +1974,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[54] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[54]),
+        .D(rCOUNTER[54]),
         .Q(\rLatch2_reg[63]_0 [54]),
         .R(1'b0));
   FDRE #(
@@ -1895,7 +1982,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[55] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[55]),
+        .D(rCOUNTER[55]),
         .Q(\rLatch2_reg[63]_0 [55]),
         .R(1'b0));
   FDRE #(
@@ -1903,7 +1990,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[56] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[56]),
+        .D(rCOUNTER[56]),
         .Q(\rLatch2_reg[63]_0 [56]),
         .R(1'b0));
   FDRE #(
@@ -1911,7 +1998,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[57] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[57]),
+        .D(rCOUNTER[57]),
         .Q(\rLatch2_reg[63]_0 [57]),
         .R(1'b0));
   FDRE #(
@@ -1919,7 +2006,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[58] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[58]),
+        .D(rCOUNTER[58]),
         .Q(\rLatch2_reg[63]_0 [58]),
         .R(1'b0));
   FDRE #(
@@ -1927,7 +2014,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[59] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[59]),
+        .D(rCOUNTER[59]),
         .Q(\rLatch2_reg[63]_0 [59]),
         .R(1'b0));
   FDRE #(
@@ -1935,7 +2022,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[5] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[5]),
+        .D(rCOUNTER[5]),
         .Q(\rLatch2_reg[63]_0 [5]),
         .R(1'b0));
   FDRE #(
@@ -1943,7 +2030,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[60] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[60]),
+        .D(rCOUNTER[60]),
         .Q(\rLatch2_reg[63]_0 [60]),
         .R(1'b0));
   FDRE #(
@@ -1951,7 +2038,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[61] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[61]),
+        .D(rCOUNTER[61]),
         .Q(\rLatch2_reg[63]_0 [61]),
         .R(1'b0));
   FDRE #(
@@ -1959,7 +2046,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[62] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[62]),
+        .D(rCOUNTER[62]),
         .Q(\rLatch2_reg[63]_0 [62]),
         .R(1'b0));
   FDRE #(
@@ -1967,7 +2054,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[63] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[63]),
+        .D(rCOUNTER[63]),
         .Q(\rLatch2_reg[63]_0 [63]),
         .R(1'b0));
   FDRE #(
@@ -1975,7 +2062,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[6] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[6]),
+        .D(rCOUNTER[6]),
         .Q(\rLatch2_reg[63]_0 [6]),
         .R(1'b0));
   FDRE #(
@@ -1983,7 +2070,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[7] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[7]),
+        .D(rCOUNTER[7]),
         .Q(\rLatch2_reg[63]_0 [7]),
         .R(1'b0));
   FDRE #(
@@ -1991,7 +2078,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[8] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[8]),
+        .D(rCOUNTER[8]),
         .Q(\rLatch2_reg[63]_0 [8]),
         .R(1'b0));
   FDRE #(
@@ -1999,7 +2086,7 @@ module design_1_COUNTER_0_0_COUNTER
     \rLatch2_reg[9] 
        (.C(iLatch2),
         .CE(1'b1),
-        .D(rCOUNTER_reg[9]),
+        .D(rCOUNTER[9]),
         .Q(\rLatch2_reg[63]_0 [9]),
         .R(1'b0));
   FDRE #(

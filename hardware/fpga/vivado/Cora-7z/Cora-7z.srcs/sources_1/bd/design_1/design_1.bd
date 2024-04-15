@@ -1,7 +1,7 @@
 {
   "design": {
     "design_info": {
-      "boundary_crc": "0xCE643D29DC61FAE3",
+      "boundary_crc": "0xE6FBABFBE254E4A0",
       "device": "xc7z007sclg400-1",
       "gen_directory": "../../../../Cora-7z.gen/sources_1/bd/design_1",
       "name": "design_1",
@@ -16,8 +16,6 @@
       "ClockBlock": {
         "CLOCK_INTERFACE": "",
         "OutputSplitter_1": "",
-        "util_vector_logic_0": "",
-        "util_vector_logic_1": "",
         "InputMerge_0": "",
         "COUNTER_0": "",
         "InputMerge_1": "",
@@ -251,6 +249,57 @@
             "value_src": "default"
           }
         }
+      },
+      "iCLK": {
+        "type": "clk",
+        "direction": "I",
+        "parameters": {
+          "CLK_DOMAIN": {
+            "value": "design_1_iCLK",
+            "value_src": "default"
+          },
+          "FREQ_HZ": {
+            "value": "100000000"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
+          }
+        }
+      },
+      "oCLK": {
+        "type": "clk",
+        "direction": "O",
+        "parameters": {
+          "CLK_DOMAIN": {
+            "value": "design_1_processing_system7_0_0_FCLK_CLK1",
+            "value_src": "default_prop"
+          },
+          "FREQ_HZ": {
+            "value": "250000000",
+            "value_src": "user_prop"
+          },
+          "FREQ_TOLERANCE_HZ": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "INSERT_VIP": {
+            "value": "0",
+            "value_src": "default"
+          },
+          "PHASE": {
+            "value": "0.0",
+            "value_src": "default"
+          }
+        }
       }
     },
     "components": {
@@ -343,36 +392,6 @@
             "parameters": {
               "inWidth": {
                 "value": "2"
-              }
-            }
-          },
-          "util_vector_logic_0": {
-            "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
-            "ip_revision": "3",
-            "xci_name": "design_1_util_vector_logic_0_0",
-            "xci_path": "ip\\design_1_util_vector_logic_0_0\\design_1_util_vector_logic_0_0.xci",
-            "inst_hier_path": "ClockBlock/util_vector_logic_0",
-            "parameters": {
-              "C_OPERATION": {
-                "value": "or"
-              },
-              "C_SIZE": {
-                "value": "1"
-              }
-            }
-          },
-          "util_vector_logic_1": {
-            "vlnv": "xilinx.com:ip:util_vector_logic:2.0",
-            "ip_revision": "3",
-            "xci_name": "design_1_util_vector_logic_1_0",
-            "xci_path": "ip\\design_1_util_vector_logic_1_0\\design_1_util_vector_logic_1_0.xci",
-            "inst_hier_path": "ClockBlock/util_vector_logic_1",
-            "parameters": {
-              "C_OPERATION": {
-                "value": "or"
-              },
-              "C_SIZE": {
-                "value": "1"
               }
             }
           },
@@ -485,7 +504,7 @@
                 "direction": "I",
                 "parameters": {
                   "FREQ_HZ": {
-                    "value": "250000000",
+                    "value": "100000000",
                     "value_src": "user_prop"
                   },
                   "PHASE": {
@@ -493,7 +512,7 @@
                     "value_src": "default_prop"
                   },
                   "CLK_DOMAIN": {
-                    "value": "design_1_processing_system7_0_0_FCLK_CLK1",
+                    "value": "design_1_iCLK",
                     "value_src": "default_prop"
                   }
                 }
@@ -508,30 +527,10 @@
                 }
               },
               "iLatch1": {
-                "direction": "I",
-                "parameters": {
-                  "PortType": {
-                    "value": "undef",
-                    "value_src": "ip_prop"
-                  },
-                  "PortType.PROP_SRC": {
-                    "value": "false",
-                    "value_src": "ip_prop"
-                  }
-                }
+                "direction": "I"
               },
               "iLatch2": {
-                "direction": "I",
-                "parameters": {
-                  "PortType": {
-                    "value": "undef",
-                    "value_src": "ip_prop"
-                  },
-                  "PortType.PROP_SRC": {
-                    "value": "false",
-                    "value_src": "ip_prop"
-                  }
-                }
+                "direction": "I"
               },
               "iResetLatch1": {
                 "direction": "I"
@@ -691,6 +690,12 @@
             "xci_path": "ip\\design_1_OutputSplitter_0_0\\design_1_OutputSplitter_0_0.xci",
             "inst_hier_path": "ClockBlock/OutputSplitter_0",
             "parameters": {
+              "enable02": {
+                "value": "false"
+              },
+              "enable03": {
+                "value": "false"
+              },
               "enable04": {
                 "value": "false"
               },
@@ -888,28 +893,16 @@
               "COUNTER_0/iResetLatch2"
             ]
           },
-          "OutputSplitter_0_o2": {
-            "ports": [
-              "OutputSplitter_0/o2",
-              "util_vector_logic_0/Op1"
-            ]
-          },
-          "OutputSplitter_0_o3": {
-            "ports": [
-              "OutputSplitter_0/o3",
-              "util_vector_logic_1/Op1"
-            ]
-          },
           "OutputSplitter_1_o0": {
             "ports": [
               "OutputSplitter_1/o0",
-              "util_vector_logic_0/Op2"
+              "COUNTER_0/iLatch1"
             ]
           },
           "OutputSplitter_1_o1": {
             "ports": [
               "OutputSplitter_1/o1",
-              "util_vector_logic_1/Op2"
+              "COUNTER_0/iLatch2"
             ]
           },
           "globalClock_1": {
@@ -935,18 +928,6 @@
             "ports": [
               "shield_13_12",
               "OutputSplitter_1/inBus"
-            ]
-          },
-          "util_vector_logic_0_Res": {
-            "ports": [
-              "util_vector_logic_0/Res",
-              "COUNTER_0/iLatch1"
-            ]
-          },
-          "util_vector_logic_1_Res": {
-            "ports": [
-              "util_vector_logic_1/Res",
-              "COUNTER_0/iLatch2"
             ]
           }
         }
@@ -3466,10 +3447,22 @@
       }
     },
     "nets": {
+      "CPU_Block_FCLK_CLK1": {
+        "ports": [
+          "CPU_Block/FCLK_CLK1",
+          "oCLK"
+        ]
+      },
       "InputMerge_1_outBus": {
         "ports": [
           "ClockBlock/shield_11_8",
           "shield_11_8"
+        ]
+      },
+      "iCLK_1": {
+        "ports": [
+          "iCLK",
+          "ClockBlock/globalClock"
         ]
       },
       "processing_system7_0_FCLK_CLK0": {
@@ -3478,12 +3471,6 @@
           "AXI_GPIO_LEDS/s_axi_aclk",
           "AXI_GPIO_BUTTONS/s_axi_aclk",
           "ClockBlock/s00_axi_aclk"
-        ]
-      },
-      "processing_system7_0_FCLK_CLK1": {
-        "ports": [
-          "CPU_Block/FCLK_CLK1",
-          "ClockBlock/globalClock"
         ]
       },
       "rst_ps7_0_50M_peripheral_aresetn": {

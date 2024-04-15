@@ -2,7 +2,7 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
--- Date        : Thu Jan 18 00:55:44 2024
+-- Date        : Mon Jan 22 01:58:43 2024
 -- Host        : tundra running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
 --               m:/javascript/carWars/dual-quat/STFRPhysics/hardware/fpga/vivado/Cora-7z/Cora-7z.gen/sources_1/bd/design_1/ip/design_1_COUNTER_0_0/design_1_COUNTER_0_0_sim_netlist.vhdl
@@ -23,8 +23,9 @@ entity design_1_COUNTER_0_0_COUNTER is
     o1COUNTERPhase : out STD_LOGIC_VECTOR ( 25 downto 0 );
     \rLatch2_reg[63]_0\ : out STD_LOGIC_VECTOR ( 63 downto 0 );
     o2COUNTERPhase : out STD_LOGIC_VECTOR ( 25 downto 0 );
-    globalClock : in STD_LOGIC;
+    oLatchTest2 : out STD_LOGIC;
     iLatch1 : in STD_LOGIC;
+    globalClock : in STD_LOGIC;
     iLatch2 : in STD_LOGIC;
     iResetLatch1 : in STD_LOGIC;
     iResetLatch2 : in STD_LOGIC
@@ -44,158 +45,226 @@ architecture STRUCTURE of design_1_COUNTER_0_0_COUNTER is
   attribute ALLOW_COMBINATORIAL_LOOPS of latchLock2 : signal is std.standard.true;
   attribute async_reg of latchLock2 : signal is "true";
   signal latchLock2_reg0_i_1_n_0 : STD_LOGIC;
-  signal \rCOUNTER[0]_i_2_n_0\ : STD_LOGIC;
-  signal rCOUNTER_reg : STD_LOGIC_VECTOR ( 63 downto 0 );
-  signal \rCOUNTER_reg[0]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[0]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[12]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[16]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[20]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[24]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[28]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[32]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[36]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[40]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[44]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[48]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[4]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[52]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[56]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[60]_i_1_n_7\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_0\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_1\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_2\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_3\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_4\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_5\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_6\ : STD_LOGIC;
-  signal \rCOUNTER_reg[8]_i_1_n_7\ : STD_LOGIC;
-  signal wPhase : STD_LOGIC_VECTOR ( 25 downto 0 );
+  signal oLatchTest2_INST_0_i_1_n_0 : STD_LOGIC;
+  signal p_0_in : STD_LOGIC_VECTOR ( 63 downto 0 );
+  signal rCOUNTER : STD_LOGIC_VECTOR ( 63 downto 0 );
   attribute DONT_TOUCH : boolean;
-  attribute DONT_TOUCH of wPhase : signal is std.standard.true;
+  attribute DONT_TOUCH of rCOUNTER : signal is std.standard.true;
   attribute RTL_KEEP : string;
+  attribute RTL_KEEP of rCOUNTER : signal is "true";
+  signal \rCOUNTER_reg0_carry__0_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__0_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__0_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__0_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__10_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__10_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__10_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__10_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__11_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__11_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__11_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__11_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__12_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__12_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__12_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__12_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__13_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__13_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__13_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__13_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__14_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__14_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__1_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__1_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__1_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__1_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__2_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__2_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__2_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__2_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__3_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__3_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__3_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__3_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__4_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__4_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__4_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__4_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__5_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__5_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__5_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__5_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__6_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__6_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__6_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__6_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__7_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__7_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__7_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__7_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__8_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__8_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__8_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__8_n_3\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__9_n_0\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__9_n_1\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__9_n_2\ : STD_LOGIC;
+  signal \rCOUNTER_reg0_carry__9_n_3\ : STD_LOGIC;
+  signal rCOUNTER_reg0_carry_n_0 : STD_LOGIC;
+  signal rCOUNTER_reg0_carry_n_1 : STD_LOGIC;
+  signal rCOUNTER_reg0_carry_n_2 : STD_LOGIC;
+  signal rCOUNTER_reg0_carry_n_3 : STD_LOGIC;
+  signal wPhase : STD_LOGIC_VECTOR ( 25 downto 0 );
+  attribute DONT_TOUCH of wPhase : signal is std.standard.true;
   attribute RTL_KEEP of wPhase : signal is "true";
-  signal \NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 to 3 );
+  signal \NLW_rCOUNTER_reg0_carry__14_CO_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 downto 2 );
+  signal \NLW_rCOUNTER_reg0_carry__14_O_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 to 3 );
   attribute ADDER_THRESHOLD : integer;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[0]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[12]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[16]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[20]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[24]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[28]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[32]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[36]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[40]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[44]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[48]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[4]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[52]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[56]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[60]_i_1\ : label is 11;
-  attribute ADDER_THRESHOLD of \rCOUNTER_reg[8]_i_1\ : label is 11;
+  attribute ADDER_THRESHOLD of rCOUNTER_reg0_carry : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__0\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__1\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__10\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__11\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__12\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__13\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__14\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__2\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__3\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__4\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__5\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__6\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__7\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__8\ : label is 35;
+  attribute ADDER_THRESHOLD of \rCOUNTER_reg0_carry__9\ : label is 35;
+  attribute DONT_TOUCH of \rCOUNTER_reg[0]\ : label is std.standard.true;
+  attribute KEEP : string;
+  attribute KEEP of \rCOUNTER_reg[0]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[10]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[10]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[11]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[11]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[12]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[12]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[13]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[13]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[14]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[14]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[15]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[15]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[16]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[16]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[17]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[17]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[18]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[18]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[19]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[19]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[1]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[1]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[20]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[20]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[21]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[21]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[22]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[22]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[23]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[23]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[24]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[24]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[25]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[25]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[26]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[26]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[27]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[27]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[28]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[28]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[29]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[29]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[2]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[2]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[30]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[30]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[31]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[31]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[32]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[32]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[33]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[33]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[34]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[34]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[35]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[35]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[36]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[36]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[37]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[37]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[38]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[38]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[39]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[39]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[3]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[3]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[40]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[40]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[41]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[41]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[42]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[42]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[43]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[43]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[44]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[44]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[45]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[45]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[46]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[46]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[47]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[47]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[48]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[48]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[49]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[49]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[4]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[4]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[50]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[50]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[51]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[51]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[52]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[52]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[53]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[53]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[54]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[54]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[55]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[55]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[56]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[56]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[57]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[57]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[58]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[58]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[59]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[59]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[5]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[5]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[60]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[60]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[61]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[61]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[62]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[62]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[63]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[63]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[6]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[6]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[7]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[7]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[8]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[8]\ : label is "yes";
+  attribute DONT_TOUCH of \rCOUNTER_reg[9]\ : label is std.standard.true;
+  attribute KEEP of \rCOUNTER_reg[9]\ : label is "yes";
 begin
   oRdyCOUNTER <= latchLock1;
   oRdyCOUNTER2 <= latchLock2;
@@ -242,13 +311,230 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
       I2 => latchLock2_reg0_i_1_n_0,
       O => latchLock2_reg0_i_1_n_0
     );
-\rCOUNTER[0]_i_2\: unisim.vcomponents.LUT1
+oLatchTest2_INST_0: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"00000001"
+    )
+        port map (
+      I0 => rCOUNTER(20),
+      I1 => rCOUNTER(21),
+      I2 => rCOUNTER(22),
+      I3 => rCOUNTER(23),
+      I4 => oLatchTest2_INST_0_i_1_n_0,
+      O => oLatchTest2
+    );
+oLatchTest2_INST_0_i_1: unisim.vcomponents.LUT5
+    generic map(
+      INIT => X"FFFFFF7F"
+    )
+        port map (
+      I0 => rCOUNTER(24),
+      I1 => rCOUNTER(26),
+      I2 => rCOUNTER(25),
+      I3 => rCOUNTER(19),
+      I4 => rCOUNTER(18),
+      O => oLatchTest2_INST_0_i_1_n_0
+    );
+\rCOUNTER[0]_i_1\: unisim.vcomponents.LUT1
     generic map(
       INIT => X"1"
     )
         port map (
-      I0 => rCOUNTER_reg(0),
-      O => \rCOUNTER[0]_i_2_n_0\
+      I0 => rCOUNTER(0),
+      O => p_0_in(0)
+    );
+rCOUNTER_reg0_carry: unisim.vcomponents.CARRY4
+     port map (
+      CI => '0',
+      CO(3) => rCOUNTER_reg0_carry_n_0,
+      CO(2) => rCOUNTER_reg0_carry_n_1,
+      CO(1) => rCOUNTER_reg0_carry_n_2,
+      CO(0) => rCOUNTER_reg0_carry_n_3,
+      CYINIT => rCOUNTER(0),
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(4 downto 1),
+      S(3 downto 0) => rCOUNTER(4 downto 1)
+    );
+\rCOUNTER_reg0_carry__0\: unisim.vcomponents.CARRY4
+     port map (
+      CI => rCOUNTER_reg0_carry_n_0,
+      CO(3) => \rCOUNTER_reg0_carry__0_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__0_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__0_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__0_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(8 downto 5),
+      S(3 downto 0) => rCOUNTER(8 downto 5)
+    );
+\rCOUNTER_reg0_carry__1\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__0_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__1_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__1_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__1_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__1_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(12 downto 9),
+      S(3 downto 0) => rCOUNTER(12 downto 9)
+    );
+\rCOUNTER_reg0_carry__10\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__9_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__10_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__10_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__10_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__10_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(48 downto 45),
+      S(3 downto 0) => rCOUNTER(48 downto 45)
+    );
+\rCOUNTER_reg0_carry__11\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__10_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__11_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__11_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__11_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__11_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(52 downto 49),
+      S(3 downto 0) => rCOUNTER(52 downto 49)
+    );
+\rCOUNTER_reg0_carry__12\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__11_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__12_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__12_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__12_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__12_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(56 downto 53),
+      S(3 downto 0) => rCOUNTER(56 downto 53)
+    );
+\rCOUNTER_reg0_carry__13\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__12_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__13_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__13_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__13_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__13_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(60 downto 57),
+      S(3 downto 0) => rCOUNTER(60 downto 57)
+    );
+\rCOUNTER_reg0_carry__14\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__13_n_0\,
+      CO(3 downto 2) => \NLW_rCOUNTER_reg0_carry__14_CO_UNCONNECTED\(3 downto 2),
+      CO(1) => \rCOUNTER_reg0_carry__14_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__14_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3) => \NLW_rCOUNTER_reg0_carry__14_O_UNCONNECTED\(3),
+      O(2 downto 0) => p_0_in(63 downto 61),
+      S(3) => '0',
+      S(2 downto 0) => rCOUNTER(63 downto 61)
+    );
+\rCOUNTER_reg0_carry__2\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__1_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__2_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__2_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__2_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__2_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(16 downto 13),
+      S(3 downto 0) => rCOUNTER(16 downto 13)
+    );
+\rCOUNTER_reg0_carry__3\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__2_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__3_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__3_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__3_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__3_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(20 downto 17),
+      S(3 downto 0) => rCOUNTER(20 downto 17)
+    );
+\rCOUNTER_reg0_carry__4\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__3_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__4_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__4_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__4_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__4_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(24 downto 21),
+      S(3 downto 0) => rCOUNTER(24 downto 21)
+    );
+\rCOUNTER_reg0_carry__5\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__4_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__5_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__5_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__5_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__5_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(28 downto 25),
+      S(3 downto 0) => rCOUNTER(28 downto 25)
+    );
+\rCOUNTER_reg0_carry__6\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__5_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__6_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__6_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__6_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__6_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(32 downto 29),
+      S(3 downto 0) => rCOUNTER(32 downto 29)
+    );
+\rCOUNTER_reg0_carry__7\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__6_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__7_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__7_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__7_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__7_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(36 downto 33),
+      S(3 downto 0) => rCOUNTER(36 downto 33)
+    );
+\rCOUNTER_reg0_carry__8\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__7_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__8_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__8_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__8_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__8_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(40 downto 37),
+      S(3 downto 0) => rCOUNTER(40 downto 37)
+    );
+\rCOUNTER_reg0_carry__9\: unisim.vcomponents.CARRY4
+     port map (
+      CI => \rCOUNTER_reg0_carry__8_n_0\,
+      CO(3) => \rCOUNTER_reg0_carry__9_n_0\,
+      CO(2) => \rCOUNTER_reg0_carry__9_n_1\,
+      CO(1) => \rCOUNTER_reg0_carry__9_n_2\,
+      CO(0) => \rCOUNTER_reg0_carry__9_n_3\,
+      CYINIT => '0',
+      DI(3 downto 0) => B"0000",
+      O(3 downto 0) => p_0_in(44 downto 41),
+      S(3 downto 0) => rCOUNTER(44 downto 41)
     );
 \rCOUNTER_reg[0]\: unisim.vcomponents.FDRE
     generic map(
@@ -257,25 +543,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[0]_i_1_n_7\,
-      Q => rCOUNTER_reg(0),
+      D => p_0_in(0),
+      Q => rCOUNTER(0),
       R => '0'
-    );
-\rCOUNTER_reg[0]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => '0',
-      CO(3) => \rCOUNTER_reg[0]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[0]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[0]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[0]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0001",
-      O(3) => \rCOUNTER_reg[0]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[0]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[0]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[0]_i_1_n_7\,
-      S(3 downto 1) => rCOUNTER_reg(3 downto 1),
-      S(0) => \rCOUNTER[0]_i_2_n_0\
     );
 \rCOUNTER_reg[10]\: unisim.vcomponents.FDRE
     generic map(
@@ -284,8 +554,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[8]_i_1_n_5\,
-      Q => rCOUNTER_reg(10),
+      D => p_0_in(10),
+      Q => rCOUNTER(10),
       R => '0'
     );
 \rCOUNTER_reg[11]\: unisim.vcomponents.FDRE
@@ -295,8 +565,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[8]_i_1_n_4\,
-      Q => rCOUNTER_reg(11),
+      D => p_0_in(11),
+      Q => rCOUNTER(11),
       R => '0'
     );
 \rCOUNTER_reg[12]\: unisim.vcomponents.FDRE
@@ -306,24 +576,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[12]_i_1_n_7\,
-      Q => rCOUNTER_reg(12),
+      D => p_0_in(12),
+      Q => rCOUNTER(12),
       R => '0'
-    );
-\rCOUNTER_reg[12]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[8]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[12]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[12]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[12]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[12]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[12]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[12]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[12]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[12]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(15 downto 12)
     );
 \rCOUNTER_reg[13]\: unisim.vcomponents.FDRE
     generic map(
@@ -332,8 +587,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[12]_i_1_n_6\,
-      Q => rCOUNTER_reg(13),
+      D => p_0_in(13),
+      Q => rCOUNTER(13),
       R => '0'
     );
 \rCOUNTER_reg[14]\: unisim.vcomponents.FDRE
@@ -343,8 +598,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[12]_i_1_n_5\,
-      Q => rCOUNTER_reg(14),
+      D => p_0_in(14),
+      Q => rCOUNTER(14),
       R => '0'
     );
 \rCOUNTER_reg[15]\: unisim.vcomponents.FDRE
@@ -354,8 +609,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[12]_i_1_n_4\,
-      Q => rCOUNTER_reg(15),
+      D => p_0_in(15),
+      Q => rCOUNTER(15),
       R => '0'
     );
 \rCOUNTER_reg[16]\: unisim.vcomponents.FDRE
@@ -365,24 +620,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[16]_i_1_n_7\,
-      Q => rCOUNTER_reg(16),
+      D => p_0_in(16),
+      Q => rCOUNTER(16),
       R => '0'
-    );
-\rCOUNTER_reg[16]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[12]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[16]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[16]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[16]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[16]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[16]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[16]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[16]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[16]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(19 downto 16)
     );
 \rCOUNTER_reg[17]\: unisim.vcomponents.FDRE
     generic map(
@@ -391,8 +631,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[16]_i_1_n_6\,
-      Q => rCOUNTER_reg(17),
+      D => p_0_in(17),
+      Q => rCOUNTER(17),
       R => '0'
     );
 \rCOUNTER_reg[18]\: unisim.vcomponents.FDRE
@@ -402,8 +642,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[16]_i_1_n_5\,
-      Q => rCOUNTER_reg(18),
+      D => p_0_in(18),
+      Q => rCOUNTER(18),
       R => '0'
     );
 \rCOUNTER_reg[19]\: unisim.vcomponents.FDRE
@@ -413,8 +653,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[16]_i_1_n_4\,
-      Q => rCOUNTER_reg(19),
+      D => p_0_in(19),
+      Q => rCOUNTER(19),
       R => '0'
     );
 \rCOUNTER_reg[1]\: unisim.vcomponents.FDRE
@@ -424,8 +664,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[0]_i_1_n_6\,
-      Q => rCOUNTER_reg(1),
+      D => p_0_in(1),
+      Q => rCOUNTER(1),
       R => '0'
     );
 \rCOUNTER_reg[20]\: unisim.vcomponents.FDRE
@@ -435,24 +675,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[20]_i_1_n_7\,
-      Q => rCOUNTER_reg(20),
+      D => p_0_in(20),
+      Q => rCOUNTER(20),
       R => '0'
-    );
-\rCOUNTER_reg[20]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[16]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[20]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[20]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[20]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[20]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[20]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[20]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[20]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[20]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(23 downto 20)
     );
 \rCOUNTER_reg[21]\: unisim.vcomponents.FDRE
     generic map(
@@ -461,8 +686,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[20]_i_1_n_6\,
-      Q => rCOUNTER_reg(21),
+      D => p_0_in(21),
+      Q => rCOUNTER(21),
       R => '0'
     );
 \rCOUNTER_reg[22]\: unisim.vcomponents.FDRE
@@ -472,8 +697,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[20]_i_1_n_5\,
-      Q => rCOUNTER_reg(22),
+      D => p_0_in(22),
+      Q => rCOUNTER(22),
       R => '0'
     );
 \rCOUNTER_reg[23]\: unisim.vcomponents.FDRE
@@ -483,8 +708,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[20]_i_1_n_4\,
-      Q => rCOUNTER_reg(23),
+      D => p_0_in(23),
+      Q => rCOUNTER(23),
       R => '0'
     );
 \rCOUNTER_reg[24]\: unisim.vcomponents.FDRE
@@ -494,24 +719,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[24]_i_1_n_7\,
-      Q => rCOUNTER_reg(24),
+      D => p_0_in(24),
+      Q => rCOUNTER(24),
       R => '0'
-    );
-\rCOUNTER_reg[24]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[20]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[24]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[24]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[24]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[24]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[24]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[24]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[24]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[24]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(27 downto 24)
     );
 \rCOUNTER_reg[25]\: unisim.vcomponents.FDRE
     generic map(
@@ -520,8 +730,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[24]_i_1_n_6\,
-      Q => rCOUNTER_reg(25),
+      D => p_0_in(25),
+      Q => rCOUNTER(25),
       R => '0'
     );
 \rCOUNTER_reg[26]\: unisim.vcomponents.FDRE
@@ -531,8 +741,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[24]_i_1_n_5\,
-      Q => rCOUNTER_reg(26),
+      D => p_0_in(26),
+      Q => rCOUNTER(26),
       R => '0'
     );
 \rCOUNTER_reg[27]\: unisim.vcomponents.FDRE
@@ -542,8 +752,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[24]_i_1_n_4\,
-      Q => rCOUNTER_reg(27),
+      D => p_0_in(27),
+      Q => rCOUNTER(27),
       R => '0'
     );
 \rCOUNTER_reg[28]\: unisim.vcomponents.FDRE
@@ -553,24 +763,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[28]_i_1_n_7\,
-      Q => rCOUNTER_reg(28),
+      D => p_0_in(28),
+      Q => rCOUNTER(28),
       R => '0'
-    );
-\rCOUNTER_reg[28]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[24]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[28]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[28]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[28]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[28]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[28]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[28]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[28]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[28]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(31 downto 28)
     );
 \rCOUNTER_reg[29]\: unisim.vcomponents.FDRE
     generic map(
@@ -579,8 +774,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[28]_i_1_n_6\,
-      Q => rCOUNTER_reg(29),
+      D => p_0_in(29),
+      Q => rCOUNTER(29),
       R => '0'
     );
 \rCOUNTER_reg[2]\: unisim.vcomponents.FDRE
@@ -590,8 +785,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[0]_i_1_n_5\,
-      Q => rCOUNTER_reg(2),
+      D => p_0_in(2),
+      Q => rCOUNTER(2),
       R => '0'
     );
 \rCOUNTER_reg[30]\: unisim.vcomponents.FDRE
@@ -601,8 +796,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[28]_i_1_n_5\,
-      Q => rCOUNTER_reg(30),
+      D => p_0_in(30),
+      Q => rCOUNTER(30),
       R => '0'
     );
 \rCOUNTER_reg[31]\: unisim.vcomponents.FDRE
@@ -612,8 +807,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[28]_i_1_n_4\,
-      Q => rCOUNTER_reg(31),
+      D => p_0_in(31),
+      Q => rCOUNTER(31),
       R => '0'
     );
 \rCOUNTER_reg[32]\: unisim.vcomponents.FDRE
@@ -623,24 +818,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[32]_i_1_n_7\,
-      Q => rCOUNTER_reg(32),
+      D => p_0_in(32),
+      Q => rCOUNTER(32),
       R => '0'
-    );
-\rCOUNTER_reg[32]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[28]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[32]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[32]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[32]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[32]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[32]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[32]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[32]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[32]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(35 downto 32)
     );
 \rCOUNTER_reg[33]\: unisim.vcomponents.FDRE
     generic map(
@@ -649,8 +829,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[32]_i_1_n_6\,
-      Q => rCOUNTER_reg(33),
+      D => p_0_in(33),
+      Q => rCOUNTER(33),
       R => '0'
     );
 \rCOUNTER_reg[34]\: unisim.vcomponents.FDRE
@@ -660,8 +840,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[32]_i_1_n_5\,
-      Q => rCOUNTER_reg(34),
+      D => p_0_in(34),
+      Q => rCOUNTER(34),
       R => '0'
     );
 \rCOUNTER_reg[35]\: unisim.vcomponents.FDRE
@@ -671,8 +851,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[32]_i_1_n_4\,
-      Q => rCOUNTER_reg(35),
+      D => p_0_in(35),
+      Q => rCOUNTER(35),
       R => '0'
     );
 \rCOUNTER_reg[36]\: unisim.vcomponents.FDRE
@@ -682,24 +862,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[36]_i_1_n_7\,
-      Q => rCOUNTER_reg(36),
+      D => p_0_in(36),
+      Q => rCOUNTER(36),
       R => '0'
-    );
-\rCOUNTER_reg[36]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[32]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[36]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[36]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[36]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[36]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[36]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[36]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[36]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[36]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(39 downto 36)
     );
 \rCOUNTER_reg[37]\: unisim.vcomponents.FDRE
     generic map(
@@ -708,8 +873,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[36]_i_1_n_6\,
-      Q => rCOUNTER_reg(37),
+      D => p_0_in(37),
+      Q => rCOUNTER(37),
       R => '0'
     );
 \rCOUNTER_reg[38]\: unisim.vcomponents.FDRE
@@ -719,8 +884,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[36]_i_1_n_5\,
-      Q => rCOUNTER_reg(38),
+      D => p_0_in(38),
+      Q => rCOUNTER(38),
       R => '0'
     );
 \rCOUNTER_reg[39]\: unisim.vcomponents.FDRE
@@ -730,8 +895,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[36]_i_1_n_4\,
-      Q => rCOUNTER_reg(39),
+      D => p_0_in(39),
+      Q => rCOUNTER(39),
       R => '0'
     );
 \rCOUNTER_reg[3]\: unisim.vcomponents.FDRE
@@ -741,8 +906,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[0]_i_1_n_4\,
-      Q => rCOUNTER_reg(3),
+      D => p_0_in(3),
+      Q => rCOUNTER(3),
       R => '0'
     );
 \rCOUNTER_reg[40]\: unisim.vcomponents.FDRE
@@ -752,24 +917,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[40]_i_1_n_7\,
-      Q => rCOUNTER_reg(40),
+      D => p_0_in(40),
+      Q => rCOUNTER(40),
       R => '0'
-    );
-\rCOUNTER_reg[40]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[36]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[40]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[40]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[40]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[40]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[40]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[40]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[40]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[40]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(43 downto 40)
     );
 \rCOUNTER_reg[41]\: unisim.vcomponents.FDRE
     generic map(
@@ -778,8 +928,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[40]_i_1_n_6\,
-      Q => rCOUNTER_reg(41),
+      D => p_0_in(41),
+      Q => rCOUNTER(41),
       R => '0'
     );
 \rCOUNTER_reg[42]\: unisim.vcomponents.FDRE
@@ -789,8 +939,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[40]_i_1_n_5\,
-      Q => rCOUNTER_reg(42),
+      D => p_0_in(42),
+      Q => rCOUNTER(42),
       R => '0'
     );
 \rCOUNTER_reg[43]\: unisim.vcomponents.FDRE
@@ -800,8 +950,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[40]_i_1_n_4\,
-      Q => rCOUNTER_reg(43),
+      D => p_0_in(43),
+      Q => rCOUNTER(43),
       R => '0'
     );
 \rCOUNTER_reg[44]\: unisim.vcomponents.FDRE
@@ -811,24 +961,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[44]_i_1_n_7\,
-      Q => rCOUNTER_reg(44),
+      D => p_0_in(44),
+      Q => rCOUNTER(44),
       R => '0'
-    );
-\rCOUNTER_reg[44]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[40]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[44]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[44]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[44]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[44]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[44]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[44]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[44]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[44]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(47 downto 44)
     );
 \rCOUNTER_reg[45]\: unisim.vcomponents.FDRE
     generic map(
@@ -837,8 +972,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[44]_i_1_n_6\,
-      Q => rCOUNTER_reg(45),
+      D => p_0_in(45),
+      Q => rCOUNTER(45),
       R => '0'
     );
 \rCOUNTER_reg[46]\: unisim.vcomponents.FDRE
@@ -848,8 +983,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[44]_i_1_n_5\,
-      Q => rCOUNTER_reg(46),
+      D => p_0_in(46),
+      Q => rCOUNTER(46),
       R => '0'
     );
 \rCOUNTER_reg[47]\: unisim.vcomponents.FDRE
@@ -859,8 +994,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[44]_i_1_n_4\,
-      Q => rCOUNTER_reg(47),
+      D => p_0_in(47),
+      Q => rCOUNTER(47),
       R => '0'
     );
 \rCOUNTER_reg[48]\: unisim.vcomponents.FDRE
@@ -870,24 +1005,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[48]_i_1_n_7\,
-      Q => rCOUNTER_reg(48),
+      D => p_0_in(48),
+      Q => rCOUNTER(48),
       R => '0'
-    );
-\rCOUNTER_reg[48]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[44]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[48]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[48]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[48]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[48]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[48]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[48]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[48]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[48]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(51 downto 48)
     );
 \rCOUNTER_reg[49]\: unisim.vcomponents.FDRE
     generic map(
@@ -896,8 +1016,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[48]_i_1_n_6\,
-      Q => rCOUNTER_reg(49),
+      D => p_0_in(49),
+      Q => rCOUNTER(49),
       R => '0'
     );
 \rCOUNTER_reg[4]\: unisim.vcomponents.FDRE
@@ -907,24 +1027,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[4]_i_1_n_7\,
-      Q => rCOUNTER_reg(4),
+      D => p_0_in(4),
+      Q => rCOUNTER(4),
       R => '0'
-    );
-\rCOUNTER_reg[4]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[0]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[4]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[4]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[4]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[4]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[4]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[4]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[4]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[4]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(7 downto 4)
     );
 \rCOUNTER_reg[50]\: unisim.vcomponents.FDRE
     generic map(
@@ -933,8 +1038,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[48]_i_1_n_5\,
-      Q => rCOUNTER_reg(50),
+      D => p_0_in(50),
+      Q => rCOUNTER(50),
       R => '0'
     );
 \rCOUNTER_reg[51]\: unisim.vcomponents.FDRE
@@ -944,8 +1049,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[48]_i_1_n_4\,
-      Q => rCOUNTER_reg(51),
+      D => p_0_in(51),
+      Q => rCOUNTER(51),
       R => '0'
     );
 \rCOUNTER_reg[52]\: unisim.vcomponents.FDRE
@@ -955,24 +1060,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[52]_i_1_n_7\,
-      Q => rCOUNTER_reg(52),
+      D => p_0_in(52),
+      Q => rCOUNTER(52),
       R => '0'
-    );
-\rCOUNTER_reg[52]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[48]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[52]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[52]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[52]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[52]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[52]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[52]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[52]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[52]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(55 downto 52)
     );
 \rCOUNTER_reg[53]\: unisim.vcomponents.FDRE
     generic map(
@@ -981,8 +1071,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[52]_i_1_n_6\,
-      Q => rCOUNTER_reg(53),
+      D => p_0_in(53),
+      Q => rCOUNTER(53),
       R => '0'
     );
 \rCOUNTER_reg[54]\: unisim.vcomponents.FDRE
@@ -992,8 +1082,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[52]_i_1_n_5\,
-      Q => rCOUNTER_reg(54),
+      D => p_0_in(54),
+      Q => rCOUNTER(54),
       R => '0'
     );
 \rCOUNTER_reg[55]\: unisim.vcomponents.FDRE
@@ -1003,8 +1093,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[52]_i_1_n_4\,
-      Q => rCOUNTER_reg(55),
+      D => p_0_in(55),
+      Q => rCOUNTER(55),
       R => '0'
     );
 \rCOUNTER_reg[56]\: unisim.vcomponents.FDRE
@@ -1014,24 +1104,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[56]_i_1_n_7\,
-      Q => rCOUNTER_reg(56),
+      D => p_0_in(56),
+      Q => rCOUNTER(56),
       R => '0'
-    );
-\rCOUNTER_reg[56]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[52]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[56]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[56]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[56]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[56]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[56]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[56]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[56]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[56]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(59 downto 56)
     );
 \rCOUNTER_reg[57]\: unisim.vcomponents.FDRE
     generic map(
@@ -1040,8 +1115,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[56]_i_1_n_6\,
-      Q => rCOUNTER_reg(57),
+      D => p_0_in(57),
+      Q => rCOUNTER(57),
       R => '0'
     );
 \rCOUNTER_reg[58]\: unisim.vcomponents.FDRE
@@ -1051,8 +1126,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[56]_i_1_n_5\,
-      Q => rCOUNTER_reg(58),
+      D => p_0_in(58),
+      Q => rCOUNTER(58),
       R => '0'
     );
 \rCOUNTER_reg[59]\: unisim.vcomponents.FDRE
@@ -1062,8 +1137,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[56]_i_1_n_4\,
-      Q => rCOUNTER_reg(59),
+      D => p_0_in(59),
+      Q => rCOUNTER(59),
       R => '0'
     );
 \rCOUNTER_reg[5]\: unisim.vcomponents.FDRE
@@ -1073,8 +1148,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[4]_i_1_n_6\,
-      Q => rCOUNTER_reg(5),
+      D => p_0_in(5),
+      Q => rCOUNTER(5),
       R => '0'
     );
 \rCOUNTER_reg[60]\: unisim.vcomponents.FDRE
@@ -1084,24 +1159,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[60]_i_1_n_7\,
-      Q => rCOUNTER_reg(60),
+      D => p_0_in(60),
+      Q => rCOUNTER(60),
       R => '0'
-    );
-\rCOUNTER_reg[60]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[56]_i_1_n_0\,
-      CO(3) => \NLW_rCOUNTER_reg[60]_i_1_CO_UNCONNECTED\(3),
-      CO(2) => \rCOUNTER_reg[60]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[60]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[60]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[60]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[60]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[60]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[60]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(63 downto 60)
     );
 \rCOUNTER_reg[61]\: unisim.vcomponents.FDRE
     generic map(
@@ -1110,8 +1170,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[60]_i_1_n_6\,
-      Q => rCOUNTER_reg(61),
+      D => p_0_in(61),
+      Q => rCOUNTER(61),
       R => '0'
     );
 \rCOUNTER_reg[62]\: unisim.vcomponents.FDRE
@@ -1121,8 +1181,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[60]_i_1_n_5\,
-      Q => rCOUNTER_reg(62),
+      D => p_0_in(62),
+      Q => rCOUNTER(62),
       R => '0'
     );
 \rCOUNTER_reg[63]\: unisim.vcomponents.FDRE
@@ -1132,8 +1192,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[60]_i_1_n_4\,
-      Q => rCOUNTER_reg(63),
+      D => p_0_in(63),
+      Q => rCOUNTER(63),
       R => '0'
     );
 \rCOUNTER_reg[6]\: unisim.vcomponents.FDRE
@@ -1143,8 +1203,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[4]_i_1_n_5\,
-      Q => rCOUNTER_reg(6),
+      D => p_0_in(6),
+      Q => rCOUNTER(6),
       R => '0'
     );
 \rCOUNTER_reg[7]\: unisim.vcomponents.FDRE
@@ -1154,8 +1214,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[4]_i_1_n_4\,
-      Q => rCOUNTER_reg(7),
+      D => p_0_in(7),
+      Q => rCOUNTER(7),
       R => '0'
     );
 \rCOUNTER_reg[8]\: unisim.vcomponents.FDRE
@@ -1165,24 +1225,9 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[8]_i_1_n_7\,
-      Q => rCOUNTER_reg(8),
+      D => p_0_in(8),
+      Q => rCOUNTER(8),
       R => '0'
-    );
-\rCOUNTER_reg[8]_i_1\: unisim.vcomponents.CARRY4
-     port map (
-      CI => \rCOUNTER_reg[4]_i_1_n_0\,
-      CO(3) => \rCOUNTER_reg[8]_i_1_n_0\,
-      CO(2) => \rCOUNTER_reg[8]_i_1_n_1\,
-      CO(1) => \rCOUNTER_reg[8]_i_1_n_2\,
-      CO(0) => \rCOUNTER_reg[8]_i_1_n_3\,
-      CYINIT => '0',
-      DI(3 downto 0) => B"0000",
-      O(3) => \rCOUNTER_reg[8]_i_1_n_4\,
-      O(2) => \rCOUNTER_reg[8]_i_1_n_5\,
-      O(1) => \rCOUNTER_reg[8]_i_1_n_6\,
-      O(0) => \rCOUNTER_reg[8]_i_1_n_7\,
-      S(3 downto 0) => rCOUNTER_reg(11 downto 8)
     );
 \rCOUNTER_reg[9]\: unisim.vcomponents.FDRE
     generic map(
@@ -1191,8 +1236,8 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => wPhase(0),
       CE => '1',
-      D => \rCOUNTER_reg[8]_i_1_n_6\,
-      Q => rCOUNTER_reg(9),
+      D => p_0_in(9),
+      Q => rCOUNTER(9),
       R => '0'
     );
 \rLatch1_reg[0]\: unisim.vcomponents.FDRE
@@ -1202,7 +1247,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(0),
+      D => rCOUNTER(0),
       Q => Q(0),
       R => '0'
     );
@@ -1213,7 +1258,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(10),
+      D => rCOUNTER(10),
       Q => Q(10),
       R => '0'
     );
@@ -1224,7 +1269,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(11),
+      D => rCOUNTER(11),
       Q => Q(11),
       R => '0'
     );
@@ -1235,7 +1280,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(12),
+      D => rCOUNTER(12),
       Q => Q(12),
       R => '0'
     );
@@ -1246,7 +1291,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(13),
+      D => rCOUNTER(13),
       Q => Q(13),
       R => '0'
     );
@@ -1257,7 +1302,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(14),
+      D => rCOUNTER(14),
       Q => Q(14),
       R => '0'
     );
@@ -1268,7 +1313,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(15),
+      D => rCOUNTER(15),
       Q => Q(15),
       R => '0'
     );
@@ -1279,7 +1324,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(16),
+      D => rCOUNTER(16),
       Q => Q(16),
       R => '0'
     );
@@ -1290,7 +1335,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(17),
+      D => rCOUNTER(17),
       Q => Q(17),
       R => '0'
     );
@@ -1301,7 +1346,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(18),
+      D => rCOUNTER(18),
       Q => Q(18),
       R => '0'
     );
@@ -1312,7 +1357,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(19),
+      D => rCOUNTER(19),
       Q => Q(19),
       R => '0'
     );
@@ -1323,7 +1368,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(1),
+      D => rCOUNTER(1),
       Q => Q(1),
       R => '0'
     );
@@ -1334,7 +1379,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(20),
+      D => rCOUNTER(20),
       Q => Q(20),
       R => '0'
     );
@@ -1345,7 +1390,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(21),
+      D => rCOUNTER(21),
       Q => Q(21),
       R => '0'
     );
@@ -1356,7 +1401,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(22),
+      D => rCOUNTER(22),
       Q => Q(22),
       R => '0'
     );
@@ -1367,7 +1412,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(23),
+      D => rCOUNTER(23),
       Q => Q(23),
       R => '0'
     );
@@ -1378,7 +1423,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(24),
+      D => rCOUNTER(24),
       Q => Q(24),
       R => '0'
     );
@@ -1389,7 +1434,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(25),
+      D => rCOUNTER(25),
       Q => Q(25),
       R => '0'
     );
@@ -1400,7 +1445,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(26),
+      D => rCOUNTER(26),
       Q => Q(26),
       R => '0'
     );
@@ -1411,7 +1456,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(27),
+      D => rCOUNTER(27),
       Q => Q(27),
       R => '0'
     );
@@ -1422,7 +1467,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(28),
+      D => rCOUNTER(28),
       Q => Q(28),
       R => '0'
     );
@@ -1433,7 +1478,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(29),
+      D => rCOUNTER(29),
       Q => Q(29),
       R => '0'
     );
@@ -1444,7 +1489,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(2),
+      D => rCOUNTER(2),
       Q => Q(2),
       R => '0'
     );
@@ -1455,7 +1500,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(30),
+      D => rCOUNTER(30),
       Q => Q(30),
       R => '0'
     );
@@ -1466,7 +1511,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(31),
+      D => rCOUNTER(31),
       Q => Q(31),
       R => '0'
     );
@@ -1477,7 +1522,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(32),
+      D => rCOUNTER(32),
       Q => Q(32),
       R => '0'
     );
@@ -1488,7 +1533,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(33),
+      D => rCOUNTER(33),
       Q => Q(33),
       R => '0'
     );
@@ -1499,7 +1544,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(34),
+      D => rCOUNTER(34),
       Q => Q(34),
       R => '0'
     );
@@ -1510,7 +1555,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(35),
+      D => rCOUNTER(35),
       Q => Q(35),
       R => '0'
     );
@@ -1521,7 +1566,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(36),
+      D => rCOUNTER(36),
       Q => Q(36),
       R => '0'
     );
@@ -1532,7 +1577,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(37),
+      D => rCOUNTER(37),
       Q => Q(37),
       R => '0'
     );
@@ -1543,7 +1588,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(38),
+      D => rCOUNTER(38),
       Q => Q(38),
       R => '0'
     );
@@ -1554,7 +1599,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(39),
+      D => rCOUNTER(39),
       Q => Q(39),
       R => '0'
     );
@@ -1565,7 +1610,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(3),
+      D => rCOUNTER(3),
       Q => Q(3),
       R => '0'
     );
@@ -1576,7 +1621,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(40),
+      D => rCOUNTER(40),
       Q => Q(40),
       R => '0'
     );
@@ -1587,7 +1632,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(41),
+      D => rCOUNTER(41),
       Q => Q(41),
       R => '0'
     );
@@ -1598,7 +1643,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(42),
+      D => rCOUNTER(42),
       Q => Q(42),
       R => '0'
     );
@@ -1609,7 +1654,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(43),
+      D => rCOUNTER(43),
       Q => Q(43),
       R => '0'
     );
@@ -1620,7 +1665,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(44),
+      D => rCOUNTER(44),
       Q => Q(44),
       R => '0'
     );
@@ -1631,7 +1676,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(45),
+      D => rCOUNTER(45),
       Q => Q(45),
       R => '0'
     );
@@ -1642,7 +1687,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(46),
+      D => rCOUNTER(46),
       Q => Q(46),
       R => '0'
     );
@@ -1653,7 +1698,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(47),
+      D => rCOUNTER(47),
       Q => Q(47),
       R => '0'
     );
@@ -1664,7 +1709,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(48),
+      D => rCOUNTER(48),
       Q => Q(48),
       R => '0'
     );
@@ -1675,7 +1720,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(49),
+      D => rCOUNTER(49),
       Q => Q(49),
       R => '0'
     );
@@ -1686,7 +1731,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(4),
+      D => rCOUNTER(4),
       Q => Q(4),
       R => '0'
     );
@@ -1697,7 +1742,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(50),
+      D => rCOUNTER(50),
       Q => Q(50),
       R => '0'
     );
@@ -1708,7 +1753,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(51),
+      D => rCOUNTER(51),
       Q => Q(51),
       R => '0'
     );
@@ -1719,7 +1764,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(52),
+      D => rCOUNTER(52),
       Q => Q(52),
       R => '0'
     );
@@ -1730,7 +1775,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(53),
+      D => rCOUNTER(53),
       Q => Q(53),
       R => '0'
     );
@@ -1741,7 +1786,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(54),
+      D => rCOUNTER(54),
       Q => Q(54),
       R => '0'
     );
@@ -1752,7 +1797,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(55),
+      D => rCOUNTER(55),
       Q => Q(55),
       R => '0'
     );
@@ -1763,7 +1808,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(56),
+      D => rCOUNTER(56),
       Q => Q(56),
       R => '0'
     );
@@ -1774,7 +1819,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(57),
+      D => rCOUNTER(57),
       Q => Q(57),
       R => '0'
     );
@@ -1785,7 +1830,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(58),
+      D => rCOUNTER(58),
       Q => Q(58),
       R => '0'
     );
@@ -1796,7 +1841,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(59),
+      D => rCOUNTER(59),
       Q => Q(59),
       R => '0'
     );
@@ -1807,7 +1852,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(5),
+      D => rCOUNTER(5),
       Q => Q(5),
       R => '0'
     );
@@ -1818,7 +1863,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(60),
+      D => rCOUNTER(60),
       Q => Q(60),
       R => '0'
     );
@@ -1829,7 +1874,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(61),
+      D => rCOUNTER(61),
       Q => Q(61),
       R => '0'
     );
@@ -1840,7 +1885,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(62),
+      D => rCOUNTER(62),
       Q => Q(62),
       R => '0'
     );
@@ -1851,7 +1896,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(63),
+      D => rCOUNTER(63),
       Q => Q(63),
       R => '0'
     );
@@ -1862,7 +1907,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(6),
+      D => rCOUNTER(6),
       Q => Q(6),
       R => '0'
     );
@@ -1873,7 +1918,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(7),
+      D => rCOUNTER(7),
       Q => Q(7),
       R => '0'
     );
@@ -1884,7 +1929,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(8),
+      D => rCOUNTER(8),
       Q => Q(8),
       R => '0'
     );
@@ -1895,7 +1940,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch1,
       CE => '1',
-      D => rCOUNTER_reg(9),
+      D => rCOUNTER(9),
       Q => Q(9),
       R => '0'
     );
@@ -1906,7 +1951,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(0),
+      D => rCOUNTER(0),
       Q => \rLatch2_reg[63]_0\(0),
       R => '0'
     );
@@ -1917,7 +1962,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(10),
+      D => rCOUNTER(10),
       Q => \rLatch2_reg[63]_0\(10),
       R => '0'
     );
@@ -1928,7 +1973,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(11),
+      D => rCOUNTER(11),
       Q => \rLatch2_reg[63]_0\(11),
       R => '0'
     );
@@ -1939,7 +1984,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(12),
+      D => rCOUNTER(12),
       Q => \rLatch2_reg[63]_0\(12),
       R => '0'
     );
@@ -1950,7 +1995,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(13),
+      D => rCOUNTER(13),
       Q => \rLatch2_reg[63]_0\(13),
       R => '0'
     );
@@ -1961,7 +2006,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(14),
+      D => rCOUNTER(14),
       Q => \rLatch2_reg[63]_0\(14),
       R => '0'
     );
@@ -1972,7 +2017,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(15),
+      D => rCOUNTER(15),
       Q => \rLatch2_reg[63]_0\(15),
       R => '0'
     );
@@ -1983,7 +2028,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(16),
+      D => rCOUNTER(16),
       Q => \rLatch2_reg[63]_0\(16),
       R => '0'
     );
@@ -1994,7 +2039,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(17),
+      D => rCOUNTER(17),
       Q => \rLatch2_reg[63]_0\(17),
       R => '0'
     );
@@ -2005,7 +2050,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(18),
+      D => rCOUNTER(18),
       Q => \rLatch2_reg[63]_0\(18),
       R => '0'
     );
@@ -2016,7 +2061,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(19),
+      D => rCOUNTER(19),
       Q => \rLatch2_reg[63]_0\(19),
       R => '0'
     );
@@ -2027,7 +2072,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(1),
+      D => rCOUNTER(1),
       Q => \rLatch2_reg[63]_0\(1),
       R => '0'
     );
@@ -2038,7 +2083,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(20),
+      D => rCOUNTER(20),
       Q => \rLatch2_reg[63]_0\(20),
       R => '0'
     );
@@ -2049,7 +2094,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(21),
+      D => rCOUNTER(21),
       Q => \rLatch2_reg[63]_0\(21),
       R => '0'
     );
@@ -2060,7 +2105,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(22),
+      D => rCOUNTER(22),
       Q => \rLatch2_reg[63]_0\(22),
       R => '0'
     );
@@ -2071,7 +2116,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(23),
+      D => rCOUNTER(23),
       Q => \rLatch2_reg[63]_0\(23),
       R => '0'
     );
@@ -2082,7 +2127,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(24),
+      D => rCOUNTER(24),
       Q => \rLatch2_reg[63]_0\(24),
       R => '0'
     );
@@ -2093,7 +2138,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(25),
+      D => rCOUNTER(25),
       Q => \rLatch2_reg[63]_0\(25),
       R => '0'
     );
@@ -2104,7 +2149,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(26),
+      D => rCOUNTER(26),
       Q => \rLatch2_reg[63]_0\(26),
       R => '0'
     );
@@ -2115,7 +2160,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(27),
+      D => rCOUNTER(27),
       Q => \rLatch2_reg[63]_0\(27),
       R => '0'
     );
@@ -2126,7 +2171,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(28),
+      D => rCOUNTER(28),
       Q => \rLatch2_reg[63]_0\(28),
       R => '0'
     );
@@ -2137,7 +2182,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(29),
+      D => rCOUNTER(29),
       Q => \rLatch2_reg[63]_0\(29),
       R => '0'
     );
@@ -2148,7 +2193,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(2),
+      D => rCOUNTER(2),
       Q => \rLatch2_reg[63]_0\(2),
       R => '0'
     );
@@ -2159,7 +2204,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(30),
+      D => rCOUNTER(30),
       Q => \rLatch2_reg[63]_0\(30),
       R => '0'
     );
@@ -2170,7 +2215,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(31),
+      D => rCOUNTER(31),
       Q => \rLatch2_reg[63]_0\(31),
       R => '0'
     );
@@ -2181,7 +2226,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(32),
+      D => rCOUNTER(32),
       Q => \rLatch2_reg[63]_0\(32),
       R => '0'
     );
@@ -2192,7 +2237,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(33),
+      D => rCOUNTER(33),
       Q => \rLatch2_reg[63]_0\(33),
       R => '0'
     );
@@ -2203,7 +2248,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(34),
+      D => rCOUNTER(34),
       Q => \rLatch2_reg[63]_0\(34),
       R => '0'
     );
@@ -2214,7 +2259,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(35),
+      D => rCOUNTER(35),
       Q => \rLatch2_reg[63]_0\(35),
       R => '0'
     );
@@ -2225,7 +2270,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(36),
+      D => rCOUNTER(36),
       Q => \rLatch2_reg[63]_0\(36),
       R => '0'
     );
@@ -2236,7 +2281,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(37),
+      D => rCOUNTER(37),
       Q => \rLatch2_reg[63]_0\(37),
       R => '0'
     );
@@ -2247,7 +2292,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(38),
+      D => rCOUNTER(38),
       Q => \rLatch2_reg[63]_0\(38),
       R => '0'
     );
@@ -2258,7 +2303,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(39),
+      D => rCOUNTER(39),
       Q => \rLatch2_reg[63]_0\(39),
       R => '0'
     );
@@ -2269,7 +2314,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(3),
+      D => rCOUNTER(3),
       Q => \rLatch2_reg[63]_0\(3),
       R => '0'
     );
@@ -2280,7 +2325,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(40),
+      D => rCOUNTER(40),
       Q => \rLatch2_reg[63]_0\(40),
       R => '0'
     );
@@ -2291,7 +2336,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(41),
+      D => rCOUNTER(41),
       Q => \rLatch2_reg[63]_0\(41),
       R => '0'
     );
@@ -2302,7 +2347,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(42),
+      D => rCOUNTER(42),
       Q => \rLatch2_reg[63]_0\(42),
       R => '0'
     );
@@ -2313,7 +2358,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(43),
+      D => rCOUNTER(43),
       Q => \rLatch2_reg[63]_0\(43),
       R => '0'
     );
@@ -2324,7 +2369,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(44),
+      D => rCOUNTER(44),
       Q => \rLatch2_reg[63]_0\(44),
       R => '0'
     );
@@ -2335,7 +2380,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(45),
+      D => rCOUNTER(45),
       Q => \rLatch2_reg[63]_0\(45),
       R => '0'
     );
@@ -2346,7 +2391,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(46),
+      D => rCOUNTER(46),
       Q => \rLatch2_reg[63]_0\(46),
       R => '0'
     );
@@ -2357,7 +2402,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(47),
+      D => rCOUNTER(47),
       Q => \rLatch2_reg[63]_0\(47),
       R => '0'
     );
@@ -2368,7 +2413,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(48),
+      D => rCOUNTER(48),
       Q => \rLatch2_reg[63]_0\(48),
       R => '0'
     );
@@ -2379,7 +2424,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(49),
+      D => rCOUNTER(49),
       Q => \rLatch2_reg[63]_0\(49),
       R => '0'
     );
@@ -2390,7 +2435,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(4),
+      D => rCOUNTER(4),
       Q => \rLatch2_reg[63]_0\(4),
       R => '0'
     );
@@ -2401,7 +2446,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(50),
+      D => rCOUNTER(50),
       Q => \rLatch2_reg[63]_0\(50),
       R => '0'
     );
@@ -2412,7 +2457,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(51),
+      D => rCOUNTER(51),
       Q => \rLatch2_reg[63]_0\(51),
       R => '0'
     );
@@ -2423,7 +2468,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(52),
+      D => rCOUNTER(52),
       Q => \rLatch2_reg[63]_0\(52),
       R => '0'
     );
@@ -2434,7 +2479,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(53),
+      D => rCOUNTER(53),
       Q => \rLatch2_reg[63]_0\(53),
       R => '0'
     );
@@ -2445,7 +2490,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(54),
+      D => rCOUNTER(54),
       Q => \rLatch2_reg[63]_0\(54),
       R => '0'
     );
@@ -2456,7 +2501,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(55),
+      D => rCOUNTER(55),
       Q => \rLatch2_reg[63]_0\(55),
       R => '0'
     );
@@ -2467,7 +2512,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(56),
+      D => rCOUNTER(56),
       Q => \rLatch2_reg[63]_0\(56),
       R => '0'
     );
@@ -2478,7 +2523,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(57),
+      D => rCOUNTER(57),
       Q => \rLatch2_reg[63]_0\(57),
       R => '0'
     );
@@ -2489,7 +2534,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(58),
+      D => rCOUNTER(58),
       Q => \rLatch2_reg[63]_0\(58),
       R => '0'
     );
@@ -2500,7 +2545,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(59),
+      D => rCOUNTER(59),
       Q => \rLatch2_reg[63]_0\(59),
       R => '0'
     );
@@ -2511,7 +2556,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(5),
+      D => rCOUNTER(5),
       Q => \rLatch2_reg[63]_0\(5),
       R => '0'
     );
@@ -2522,7 +2567,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(60),
+      D => rCOUNTER(60),
       Q => \rLatch2_reg[63]_0\(60),
       R => '0'
     );
@@ -2533,7 +2578,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(61),
+      D => rCOUNTER(61),
       Q => \rLatch2_reg[63]_0\(61),
       R => '0'
     );
@@ -2544,7 +2589,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(62),
+      D => rCOUNTER(62),
       Q => \rLatch2_reg[63]_0\(62),
       R => '0'
     );
@@ -2555,7 +2600,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(63),
+      D => rCOUNTER(63),
       Q => \rLatch2_reg[63]_0\(63),
       R => '0'
     );
@@ -2566,7 +2611,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(6),
+      D => rCOUNTER(6),
       Q => \rLatch2_reg[63]_0\(6),
       R => '0'
     );
@@ -2577,7 +2622,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(7),
+      D => rCOUNTER(7),
       Q => \rLatch2_reg[63]_0\(7),
       R => '0'
     );
@@ -2588,7 +2633,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(8),
+      D => rCOUNTER(8),
       Q => \rLatch2_reg[63]_0\(8),
       R => '0'
     );
@@ -2599,7 +2644,7 @@ latchLock2_reg0_i_1: unisim.vcomponents.LUT3
         port map (
       C => iLatch2,
       CE => '1',
-      D => rCOUNTER_reg(9),
+      D => rCOUNTER(9),
       Q => \rLatch2_reg[63]_0\(9),
       R => '0'
     );
@@ -3416,9 +3461,13 @@ architecture STRUCTURE of design_1_COUNTER_0_0 is
   signal \<const0>\ : STD_LOGIC;
   signal \^o1counterphase\ : STD_LOGIC_VECTOR ( 25 downto 0 );
   signal \^o2counterphase\ : STD_LOGIC_VECTOR ( 25 downto 0 );
+  signal \^olatchtest2\ : STD_LOGIC;
   attribute ALLOW_COMBINATORIAL_LOOPS : string;
   attribute ALLOW_COMBINATORIAL_LOOPS of iLatch1 : signal is "true";
+  attribute GATED_CLOCK : boolean;
+  attribute GATED_CLOCK of iLatch1 : signal is std.standard.true;
   attribute ALLOW_COMBINATORIAL_LOOPS of iLatch2 : signal is "true";
+  attribute GATED_CLOCK of iLatch2 : signal is std.standard.true;
 begin
   debug(31) <= \<const0>\;
   debug(30) <= \<const0>\;
@@ -3466,8 +3515,8 @@ begin
   o2COUNTERPhase(27) <= \<const0>\;
   o2COUNTERPhase(26) <= \<const0>\;
   o2COUNTERPhase(25 downto 0) <= \^o2counterphase\(25 downto 0);
-  oLatchTest1 <= \<const0>\;
-  oLatchTest2 <= \<const0>\;
+  oLatchTest1 <= \^olatchtest2\;
+  oLatchTest2 <= \^olatchtest2\;
 GND: unisim.vcomponents.GND
      port map (
       G => \<const0>\
@@ -3483,6 +3532,7 @@ inst: entity work.design_1_COUNTER_0_0_COUNTER
       iResetLatch2 => iResetLatch2,
       o1COUNTERPhase(25 downto 0) => \^o1counterphase\(25 downto 0),
       o2COUNTERPhase(25 downto 0) => \^o2counterphase\(25 downto 0),
+      oLatchTest2 => \^olatchtest2\,
       oRdyCOUNTER => oRdyCOUNTER,
       oRdyCOUNTER2 => oRdyCOUNTER2,
       \rLatch2_reg[63]_0\(63 downto 32) => o2COUNTERHi(31 downto 0),

@@ -2,7 +2,7 @@
 //Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-//Date        : Thu Jan 18 00:55:15 2024
+//Date        : Sun Jan 28 06:51:17 2024
 //Host        : tundra running 64-bit major release  (build 9200)
 //Command     : generate_target design_1.bd
 //Design      : design_1
@@ -610,16 +610,12 @@ module ClockBlock_imp_1RMRHFB
   wire [3:0]InputMerge_1_outBus;
   wire [0:0]OutputSplitter_0_o0;
   wire [0:0]OutputSplitter_0_o1;
-  wire [0:0]OutputSplitter_0_o2;
-  wire [0:0]OutputSplitter_0_o3;
   wire [0:0]OutputSplitter_1_o0;
   wire [0:0]OutputSplitter_1_o1;
   wire globalClock_1;
   wire s00_axi_aclk_1;
   wire s00_axi_aresetn_1;
   wire [1:0]shield_13_12_1;
-  wire [0:0]util_vector_logic_0_Res;
-  wire [0:0]util_vector_logic_1_Res;
 
   assign Conn1_ARADDR = S00_AXI_araddr[31:0];
   assign Conn1_ARPROT = S00_AXI_arprot[2:0];
@@ -680,8 +676,8 @@ module ClockBlock_imp_1RMRHFB
   design_1_COUNTER_0_0 COUNTER_0
        (.debug(COUNTER_0_debug),
         .globalClock(globalClock_1),
-        .iLatch1(util_vector_logic_0_Res),
-        .iLatch2(util_vector_logic_1_Res),
+        .iLatch1(OutputSplitter_1_o0),
+        .iLatch2(OutputSplitter_1_o1),
         .iReset(s00_axi_aresetn_1),
         .iResetLatch1(OutputSplitter_0_o0),
         .iResetLatch2(OutputSplitter_0_o1),
@@ -710,24 +706,14 @@ module ClockBlock_imp_1RMRHFB
   design_1_OutputSplitter_0_0 OutputSplitter_0
        (.inBus(AXIHeader16_0_oDATA00),
         .o0(OutputSplitter_0_o0),
-        .o1(OutputSplitter_0_o1),
-        .o2(OutputSplitter_0_o2),
-        .o3(OutputSplitter_0_o3));
+        .o1(OutputSplitter_0_o1));
   design_1_OutputSplitter_1_0 OutputSplitter_1
        (.inBus(shield_13_12_1),
         .o0(OutputSplitter_1_o0),
         .o1(OutputSplitter_1_o1));
-  design_1_util_vector_logic_0_0 util_vector_logic_0
-       (.Op1(OutputSplitter_0_o2),
-        .Op2(OutputSplitter_1_o0),
-        .Res(util_vector_logic_0_Res));
-  design_1_util_vector_logic_1_0 util_vector_logic_1
-       (.Op1(OutputSplitter_0_o3),
-        .Op2(OutputSplitter_1_o1),
-        .Res(util_vector_logic_1_Res));
 endmodule
 
-(* CORE_GENERATION_INFO = "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=22,numReposBlks=14,numNonXlnxBlks=5,numHierBlks=8,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=4,da_ps7_cnt=1,synth_mode=Hierarchical}" *) (* HW_HANDOFF = "design_1.hwdef" *) 
+(* CORE_GENERATION_INFO = "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=20,numReposBlks=12,numNonXlnxBlks=5,numHierBlks=8,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=4,da_ps7_cnt=1,synth_mode=Hierarchical}" *) (* HW_HANDOFF = "design_1.hwdef" *) 
 module design_1
    (DDR_addr,
     DDR_ba,
@@ -751,6 +737,8 @@ module design_1
     FIXED_IO_ps_porb,
     FIXED_IO_ps_srstb,
     btns_2bits_tri_i,
+    iCLK,
+    oCLK,
     rgb_leds_tri_o,
     shield_11_8,
     shield_13_12);
@@ -776,11 +764,14 @@ module design_1
   (* X_INTERFACE_INFO = "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB" *) inout FIXED_IO_ps_porb;
   (* X_INTERFACE_INFO = "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_SRSTB" *) inout FIXED_IO_ps_srstb;
   (* X_INTERFACE_INFO = "xilinx.com:interface:gpio:1.0 btns_2bits TRI_I" *) input [1:0]btns_2bits_tri_i;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLK.ICLK CLK" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME CLK.ICLK, CLK_DOMAIN design_1_iCLK, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0" *) input iCLK;
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLK.OCLK CLK" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME CLK.OCLK, CLK_DOMAIN design_1_processing_system7_0_0_FCLK_CLK1, FREQ_HZ 250000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0" *) output oCLK;
   (* X_INTERFACE_INFO = "xilinx.com:interface:gpio:1.0 rgb_leds TRI_O" *) output [5:0]rgb_leds_tri_o;
   output [3:0]shield_11_8;
   (* X_INTERFACE_INFO = "xilinx.com:signal:data:1.0 DATA.SHIELD_13_12 DATA" *) (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME DATA.SHIELD_13_12, LAYERED_METADATA undef" *) input [1:0]shield_13_12;
 
   wire [1:0]AXI_GPIO_BUTTONS_GPIO_TRI_I;
+  wire CPU_Block_FCLK_CLK1;
   wire [31:0]CPU_Block_M00_AXI_ARADDR;
   wire CPU_Block_M00_AXI_ARREADY;
   wire [0:0]CPU_Block_M00_AXI_ARVALID;
@@ -817,6 +808,7 @@ module design_1
   wire [0:0]CPU_Block_M01_AXI_WVALID;
   wire [3:0]InputMerge_1_outBus;
   wire [5:0]axi_gpio_0_GPIO_TRI_O;
+  wire iCLK_1;
   wire [14:0]processing_system7_0_DDR_ADDR;
   wire [2:0]processing_system7_0_DDR_BA;
   wire processing_system7_0_DDR_CAS_N;
@@ -833,7 +825,6 @@ module design_1
   wire processing_system7_0_DDR_RESET_N;
   wire processing_system7_0_DDR_WE_N;
   wire processing_system7_0_FCLK_CLK0;
-  wire processing_system7_0_FCLK_CLK1;
   wire processing_system7_0_FIXED_IO_DDR_VRN;
   wire processing_system7_0_FIXED_IO_DDR_VRP;
   wire [53:0]processing_system7_0_FIXED_IO_MIO;
@@ -863,6 +854,8 @@ module design_1
   wire [1:0]shield_13_12_1;
 
   assign AXI_GPIO_BUTTONS_GPIO_TRI_I = btns_2bits_tri_i[1:0];
+  assign iCLK_1 = iCLK;
+  assign oCLK = CPU_Block_FCLK_CLK1;
   assign rgb_leds_tri_o[5:0] = axi_gpio_0_GPIO_TRI_O;
   assign shield_11_8[3:0] = InputMerge_1_outBus;
   assign shield_13_12_1 = shield_13_12[1:0];
@@ -925,7 +918,7 @@ module design_1
         .DDR_reset_n(DDR_reset_n),
         .DDR_we_n(DDR_we_n),
         .FCLK_CLK0(processing_system7_0_FCLK_CLK0),
-        .FCLK_CLK1(processing_system7_0_FCLK_CLK1),
+        .FCLK_CLK1(CPU_Block_FCLK_CLK1),
         .FIXED_IO_ddr_vrn(FIXED_IO_ddr_vrn),
         .FIXED_IO_ddr_vrp(FIXED_IO_ddr_vrp),
         .FIXED_IO_mio(FIXED_IO_mio[53:0]),
@@ -1006,7 +999,7 @@ module design_1
         .S00_AXI_wready(ps7_0_axi_periph_M02_AXI_WREADY),
         .S00_AXI_wstrb(ps7_0_axi_periph_M02_AXI_WSTRB),
         .S00_AXI_wvalid(ps7_0_axi_periph_M02_AXI_WVALID),
-        .globalClock(processing_system7_0_FCLK_CLK1),
+        .globalClock(iCLK_1),
         .s00_axi_aclk(processing_system7_0_FCLK_CLK0),
         .s00_axi_aresetn(rst_ps7_0_50M_peripheral_aresetn),
         .shield_11_8(InputMerge_1_outBus),
