@@ -68,26 +68,34 @@ $$T_{\Delta} = \frac {X_O-X_E+V_ET_E} {C-V_O}$$
 
 Then in theory the above is the solution for $T_{\Delta}$, or how much time elapses before event at $X_E$ is observed at $X_O$, with each having their own velocity vectors.
 
-$$ {T_{\Delta}}^2C^2={P^2+2V_OT_{\Delta}+{V_O}^2{T_{\Delta}}^2}$$
+$$ {T_{\Delta}}^2C^2={P^2+2PV_OT_{\Delta}+{V_O}^2{T_{\Delta}}^2}$$
 
-$$ {T_{\Delta}}^2(C^2 -{V_O}^2) - 2V_OT_{\Delta}={P^2}$$
+$$ {T_{\Delta}}^2(C^2 -{V_O}^2) - 2PV_OT_{\Delta}={P^2}$$
 
 $D=C^2-{V_O}^2$
 
-$$ ({T_{\Delta}}\sqrt{D} - \frac{V_O}{\sqrt{D}})^2 - \frac{{V_O}^2}{D}={P^2}$$
+$$ ({T_{\Delta}}\sqrt{D} - \frac{PV_O}{\sqrt{D}})^2 - \frac{P^2{V_O}^2}{D}={P^2}$$
 
-$$ {T_{\Delta}}\sqrt{D} =\sqrt{{P^2} + \frac{{V_O}^2}{D} } + \frac{V_O}{\sqrt{D}} $$
+$$ {T_{\Delta}}\sqrt{D} =\sqrt{{P^2} + \frac{P^2{V_O}^2}{D} } + \frac{PV_O}{\sqrt{D}} $$
 
-$$ {T_{\Delta}} =\frac {1}{\sqrt{D}} \cdot \left(\sqrt{\frac{DP^2}{D} + \frac{{V_O}^2}{D} } + \frac{V_O}{\sqrt{D}}\right) $$
+$$ {T_{\Delta}} =\frac {1}{\sqrt{D}} \cdot \left(\sqrt{\frac{DP^2}{D} + \frac{{P^2V_O}^2}{D} } + \frac{PV_O}{\sqrt{D}}\right) $$
 
 
-$$ {T_{\Delta}} =\sqrt{ \frac{P^2D+{V_O}^2}{D^2} } + \frac{V_O}{{D}} $$
+$$ {T_{\Delta}} =\sqrt{ \frac{P^2D+{P^2V_O}^2}{D^2} } + \frac{PV_O}{{D}} $$
 
-$$ {T_{\Delta}} =\frac {\sqrt{ {P^2D+{V_O}^2} } + {V_O}}{{D}} $$
+$$ {T_{\Delta}} =\frac {\sqrt{ {P^2\left(D+{V_O}^2\right)} } + {PV_O}}{{D}} $$
+
+$$ {T_{\Delta}} =\frac{\sqrt{ {P^2\left( C^2 -{V_O}^2 + {V_O}^2\right)}  } + PV_O }{{C^2 -{V_O}^2}} $$
 
 or
 
-$$ {T_{\Delta}} =\frac{\sqrt{ {P^2(C^2 -{V_O}^2) + {V_O}^2}  } +V_O }{{C^2 -{V_O}^2}} $$
+Can't simplify the square-root, because P is a vector and C is a constant; unless 1D
+$$ {T_{\Delta}} =\frac{\sqrt{ {P^2 C^2 }  } + PV_O }{{C^2 -{V_O}^2}} $$
+
+$$ {T_{\Delta}} =\frac{  P( C + V_O) }{{C^2 -{V_O}^2}} $$
+
+$$ {T_{\Delta}} =\frac{  P }{{C -{V_O}}} $$
+
 
 vs
 
@@ -223,6 +231,11 @@ $$ \left(T_{\Delta}\sqrt{D } - \frac{\vec{V_O}\vec{P_O}}{\sqrt{D}}\right)^2 -\fr
 
 move non-tdelta to the right, take square root, divide both sides by sqrt(d) to isolate T_Delta result.
 $$ T_{\Delta}=\frac{\sqrt{\vec{P_O}\vec{P_O} +\frac{\vec{V_O}\vec{V_O}\vec{P_O}\vec{P_O}}{D} }}{\sqrt{D}} + \frac{\vec{V_O}\vec{P_O}}{D}$$
+
+$$ T_{\Delta}=\frac{\sqrt{\frac{\vec{P_O}\vec{P_O}( D+\vec{V_O}\vec{V_O})}{D} }}{\sqrt{D}} + \frac{\vec{V_O}\vec{P_O}}{D}$$
+
+$$ T_{\Delta}=\frac{\sqrt{{\vec{P_O}\vec{P_O}(CC)} }+\vec{V_O}\vec{P_O} }{D}$$
+
 
 Bring back the position term with initial time in it.
 
@@ -665,7 +678,6 @@ $$T_{\Delta}  = \frac{\sqrt { LL + \frac{LLVV}{D}} }{\sqrt D} +\frac{LV}{D}$$
 $$T_{\Delta}  = \frac{\sqrt { LL(1+\frac{VV}{D}) } }{\sqrt D} +\frac{LV}{D}$$
 
 
-
 $$
  \frac{\sqrt { L(2+L(1+\frac{VV}{D})) } }{\sqrt D} +\frac{LV}{D}
 +  \frac{\sqrt { -L(2-L(1+\frac{VV}{D})) } }{\sqrt D} -\frac{LV}{D}
@@ -729,3 +741,37 @@ $$
 $$
  \frac{2LC}{ CC-VV}
  $$
+
+## Simple Form
+
+$$t=\sqrt{(a+bt)^2}$$
+
+$$t^2=aa+2abt +bbtt$$
+
+$$t^2-bbtt-2abt=aa$$
+
+
+$$\left(t\sqrt{1-bb}-\frac{ab}{\sqrt{1-bb}}\right)^2-\frac{aabb}{1-bb}=aa$$
+
+$$t\sqrt{1-bb}-\frac{ab}{\sqrt{1-bb}}=\sqrt{aa + \frac{aabb}{1-bb}}$$
+
+$$t\sqrt{1-bb}=\sqrt{aa + \frac{aabb}{1-bb} }+ \frac{ab}{\sqrt{1-bb}}$$
+
+$$t=\sqrt{\frac{aa(1-bb) + aabb}{(1-bb)^2} }+ \frac{ab}{{1-bb}}$$
+
+$$t=\frac{ \sqrt{aa((1-bb) + bb)} +{ab}}{{1-bb}}$$
+
+$$t=\frac{ \sqrt{aa} +{ab}}{{1-bb}}$$
+
+$$t=\frac{ {a}(1 +{b})}{{1-bb}}$$
+
+$$t=\frac{ {a}}{{1-b}}$$
+
+b(x,y)=((abs(x))/(C-y))
+b_{2}(x,y)=((abs(x))/(C+y))
+
+(approaching emitter event)
+$l(x,y)=If(b(x,y)<b_{2}(x,y), b(x,y), b_{2}(x,y))$
+
+(leaving emitter event)
+k(x,y)=If(b(x,y)>b_{2}(x,y), b(x,y), b_{2}(x,y))
