@@ -5,7 +5,49 @@ For ease and simplification, frames that are in other frames move exactly with t
 
 Frames are not restricted to any coordinate system or metric.  They might be described using rulers and protractors, or something more basic like three dimensional position and rotation vectors at some time.  This gives at least 7 coordinates to describe a frame.
 
+## Some initial givens...
 
+A point observed on a body that emits an event is represented by $\vec{X_{E}} + T_{E}\vec{V_{E}}$ where $\vec{X_{E}}$ is the position on the body that emitted a signal (emitter), $\vec{V_{E}}$ is the velocity of the body(This relates to a changing position of the body, and where it was when it emitted a signal), $T_E$ is a time in the frame of space of the emitter (it is an un-contracted time).
+
+The point representing an observer is $\vec{X_{O}} + T_{O}\vec{V_{O}}$ where $\vec{X_{O}}$ is the observer’s position in the observing frame, $\vec{V_{O}}$ is the velocity of the observer's frame, and $T_O$ is a time in the frame of space which the observer sees the event.
+
+The time of observation may be decomposed into the base time of emission plus time delta to observation: $T_O= T_E + T_{\Delta O}$. In practice, computing the delta time just adds an additional step of adding the base time; but the math for just delta solve is easier.
+
+$$
+T_{O} = \frac{\left\| \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) - \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) \right\|}{C} + T_{E} 
+$$
+
+or
+
+$$
+T_{\Delta O} = \frac{\left\| \left( \vec{X_{O}} + \left(T_{E}+T_{\Delta O}\right)\vec{V_{O}} - \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) \right) \right\|}{C} 
+$$
+
+Although - which side Emitter or Observer is subtracted from the other, the overall magnitude of the vector will be the same.
+
+${P}$ has been the symbol used for the base position.  
+
+$\vec{P}=\vec{X_O}+T_E \vec{V_O} - \vec{X_E} - T_E \vec{V_E}$
+
+$\vec{P}$ is all of the terms in the magnitude expression that do not include $T_{\Delta O}$.   Its the difference in positions, plus the initial velocity for the emitter at the time a signal was emitted.
+
+$$
+T_{\Delta O} = \frac{\left\| \vec{P} + T_{\Delta O}\vec{V_{O}} \right\|}{C} 
+$$
+
+Which simplifies to a position plus a change in position for the velocity times the delta time.  
+
+Solves to become:
+
+$$
+ {T_{\Delta O}} =\frac{\sqrt{ {{\vec{P}}^2(C^2 -{V_O}^2) + {V_O}^2}  } +V_O }{{C^2 -{V_O}^2}} 
+$$
+
+A term $D$ can be defined which is $\left(C^2-{\vec{V_O}}^2\right)$...
+
+$$
+ {T_{\Delta O}} =\frac{\sqrt{ {{D\vec{P}}^2 + {V_O}^2}  } +V_O }{D} 
+$$
 ## 1D Bad Math Solve
 
 In one dimension, $|X|=X$ or $|X|=\{X<0:-X,X\}$; not $|X|=\sqrt{X^2}$, which is what it would be if X is a vector and not a simple scalar.  The square root of the square also performs an absolute value, since the time of observation is always after the time of emission, the negative solution is usually disregarded;  If the observed body is travelling faster than the speed of light, the the negative square root solution should also be considered, since there is the possibility of seeing the craft is more than 1 and no more than 2 places at once.  The observation of their craft is a shadow of the craft and you can never interact with it, the craft will have already left the space you see the craft in... in order to interact one would have to lead the target, and project where they should be.
