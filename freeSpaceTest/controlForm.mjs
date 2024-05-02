@@ -31,6 +31,10 @@ export class ControlForm extends Popup {
 		this.yControl = popups.makeTextField( this, this, "y", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
 		this.zControl = popups.makeTextField( this, this, "x", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
 
+		this.sxControl = popups.makeTextField( this, this, "Vz", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.syControl = popups.makeTextField( this, this, "Vy", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.szControl = popups.makeTextField( this, this, "Vx", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
+
 		this.yawControl = popups.makeTextField( this, this, "yaw", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
 		this.pitchControl = popups.makeTextField( this, this, "pitch", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
 		this.rollControl = popups.makeTextField( this, this, "roll", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
@@ -83,9 +87,13 @@ export class ControlForm extends Popup {
 		this.x = this.#mover.position.x;
 		this.y = this.#mover.position.y;
 		this.z = this.#mover.position.z;
-		this.xControl.value = this.x ;
-		this.yControl.value = this.y;
-		this.zControl.value = this.z;
+		this.xControl.value = this.x .toFixed(3);
+		this.yControl.value = this.y.toFixed(3);
+		this.zControl.value = this.z.toFixed(3);
+
+		this.sxControl.value = this.#mover.speed.x.toFixed(3) ;
+		this.syControl.value = this.#mover.speed.y.toFixed(3);
+		this.szControl.value = this.#mover.speed.z.toFixed(3);
 
 		this.rollm = o.z*180/Math.PI;
 		this.pitchm = o.x*180/Math.PI;

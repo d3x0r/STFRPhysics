@@ -403,7 +403,7 @@ function init() {
 		scene2 = new THREE.Scene();
 
 
-		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 5000 );
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.01, 40000 );
 
 
 		camera.position.z = -1;
@@ -627,9 +627,9 @@ class SmartBody {
 		ntr_face.addInput( "Pos Y", new ref( this.x.position, "y" ), 1.0 );
 		ntr_face.addInput( "Pos Z", new ref( this.x.position, "z" ), 1.0 );
 
-		ntr_face.addInput( "Speed X", new ref( this.m.rotation, "x" ), 1.0 );
-		ntr_face.addInput( "Speed Y", new ref( this.m.rotation, "y" ), 1.0 );
-		ntr_face.addInput( "Speed Z", new ref( this.m.rotation, "z" ), 1.0 );
+		ntr_face.addInput( "Speed X", new ref( this.m.speed, "x" ), 1.0 );
+		ntr_face.addInput( "Speed Y", new ref( this.m.speed, "y" ), 1.0 );
+		ntr_face.addInput( "Speed Z", new ref( this.m.speed, "z" ), 1.0 );
 
 		ntr_face.addOutput( "Thrust X", new ref( this.m.bs_acceleration, "x" ), 1.0 );
 		ntr_face.addOutput( "Thrust Y", new ref( this.m.bs_acceleration, "y" ), 1.0 );
