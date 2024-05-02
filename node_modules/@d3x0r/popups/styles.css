@@ -367,7 +367,7 @@ span {
 	font-size:200%;
 }
 
-.popup{
+[class^="popup-menu"] {
 	visibility:hidden;
 	/*right:0;*/
         top:48px;
@@ -382,19 +382,19 @@ span {
 	border-style:solid;
 }
 /* Change the background color on mouse-over */
-.popup a:hover {
+a[class^="popup-item"]:hover {
   background-color: #ddd;
   color: black;
   text-decoration:underline;
 }
 
-.popup a {
+a[class^="popup-item"]  {
   background-color: #555;
   color: white;
 }
 
 /* Style the active/current link*/
-.popup a.active {
+a[class^="popup-item"]:active {
   background-color: dodgerblue;
   color: white;
 }
