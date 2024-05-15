@@ -1,0 +1,12 @@
+*.cache
+*.sim
+*.hw
+*.tmp
+*.runs
+NA
+.xil
+*.jou
+*.log
+vivado*.str
+node_modules
+*~
