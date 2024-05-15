@@ -833,6 +833,20 @@ function ObservedTime( T, V, P, V_o, P_o, c ) {
 }
 
 function RealTime( T_o, V, P, V_o, P_o ) {
+
+	const p_x = (P_o.x - P.x) + V_o.x*T_o;
+	const p_y = (P_o.y - P.y) + V_o.y*T_o;
+	const p_z = (P_o.z - P.z) + V_o.z*T_o;
+
+	const D = C*C-(V.x*V.x+V.y*V.y+V.z*V.z); // C, V_E
+	const px = p_x-T_o*V.x;
+	const py = p_y-T_o*V.y;
+	const pz = p_z-T_o*V.z;
+
+	return [ ( C*Math.sqrt( px*px+py*py+pz*pz ) + C*C* T_o - ( p_x * V.x  +  p_y*V.y  +  p_z*V.z ) )/D ];
+
+
+
 	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
 	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
 	//                       - 4 (C^2 - D^2 - E^2 - F^2) 
@@ -845,7 +859,7 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 
 	const S = T_o;
 
-	const D = V.x;
+	//const D = V.x;
 	const E = V.y;
 	const F = V.z;
 
@@ -890,55 +904,19 @@ function RealTime( T_o, V, P, V_o, P_o ) {
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
 //		if( V !== C )
-	return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
+	//return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
 
-	const xd = X-X_o;
-	const yd = Y-Y_o;
-	const zd = Z-Z_o;
+	const p_x = (X_o - X) + V_o*T_o*ca_o;
+	const p_y = (Y_o - Y) + V_o*T_o*sa_o;
+	const p_z = (Z_o - Z) + 0;
 
-	if( V === C ) {
-		// solve (B-T)^2 = (((Z/C)^2+( (Y/C) + sin(A)*T -sin(E)*B)^2+((X/C)+cos(A)*T-cos(E)*B)^2))   for T
-		//
-		//T = (-2 B C X cos(E) - 2 B C Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C cos(A - E) - X cos(A) - Y sin(A) - B C))
-		//T = (B^2 C^2 J^2 - B^2 C^2 - 2 B C J X cos(E) - 2 B C J Y sin(E) + X^2 + Y^2 + Z^2)/(2 C (B C J cos(A - E) - X cos(A) - Y sin(A) - B C))
-		// only A=0
+	const D = C*C-V*V; // C, V_E
+	const px = p_x-T_o*V*ca;
+	const py = p_y-T_o*V*sa;
+	const pz = p_z-T_o*V*0;
 
-		// this is close... but somehow large numbers are also small?
-			const T = (T_o*T_o * C*C * V_o*V_o 
-						- T_o*T_o * C*C 
-						- 2 * (T_o) * C * V_o * (xd) * ca_o
-						- 2 * (T_o) * C * V_o * yd * sa_o
-						+ xd*xd + yd*yd + zd*zd
-					) /(2 * C * (T_o * C * V_o * ( ca*ca_o + sa*sa_o ) 
-						- (xd) * ca 
-						- (yd) * sa 
-						- T_o * C))
-			if( T < T_o )
-				return T;
-			return -Math.Infinity;
-	}
+	return [( C*Math.sqrt( px*px+py*py+pz*pz ) + C*C* T_o - (  p_x * V*ca  +  p_y*V*sa  +  p_z*V*0 ) )/D];
 
-	{
-		//solve B = (sqrt((Z)^2+( (Y) + sin(A)*V*T -sin(E)*J*B)^2+((X)+cos(A)*V*T-cos(E)*J*B)^2))/C+T   for T
-		//T = (sqrt((2 B J V sin(A) sin(E) + 2 B J V cos(A) cos(E) - 2 V X cos(A) - 2 V Y sin(A) - 2 B C^2)^2 - 4 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2) (B^2 C^2 - B^2 J^2 sin^2(E) - B^2 J^2 cos^2(E) + 2 B J X cos(E) + 2 B J Y sin(E) - X^2 - Y^2 - Z^2)) - 2 B J V sin(A) sin(E) - 2 B J V cos(A) cos(E) + 2 V X cos(A) + 2 V Y sin(A) + 2 B C^2)/(2 (-V^2 sin^2(A) - V^2 cos^2(A) + C^2))
-		const tmp = (T_o * V_o * V * sa * sa_o
-					+ T_o * V_o * V * ca * ca_o
-					- V * xd * ca
-					- V * yd * sa 
-					- T_o * C*C);
-		const T = (-Math.sqrt(tmp*tmp 
-					- (C*C-V*V ) 
-					*(T_o*T_o * C*C 
-						- T_o*T_o * V_o*V_o
-						+ 2 * T_o * V_o * xd * ca_o
-						+ 2 * T_o * V_o * yd * sa_o - xd*xd - yd*yd - zd*zd)) 
-				- T_o * V_o * V * sa * sa_o
-				- T_o * V_o * V * ca * ca_o
-				+ V * xd * ca
-				+ V * yd * sa
-				+ T_o * C*C)/(C*C-V*V);
-		return T;
-	}	
 
 }
 

@@ -209,10 +209,93 @@ $$T_E=T_O-T_{\Delta E}$$
 
 $$T_{\Delta} = \frac {\left|(\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right|} {C}$$
 ---
-$$\vec{P_O} = \vec{X_O}+\vec{V_O}T_E-(\vec{X_E}+\vec{V_E}T_E)$$
+$$\vec{P_E} = \vec{X_O}-(\vec{X_E}+\vec{V_E}T_E)$$
+
+$$T_{E} = T_O - \frac {\left|\vec{P_E}+\vec{V_O}T_O\right|} {C}$$
+
+$$\vec{P_O} = \vec{X_O}+\vec{V_O}T_O-\vec{X_E}$$
+
+$$T_{O} = T_E + \frac {\left|\vec{P_O}+\vec{V_E}T_E\right|} {C}$$
+
+$$T_{O} = T_E + \frac {\sqrt{\left(\vec{P_O}+\vec{V_E}T_E\right)^2}} {C}$$
+
+$$C(T_{O}-T_E) =   {\sqrt{\left(\vec{P_O}+\vec{V_E}T_E\right)^2}} $$
+$$CC(T_{O}^2-2T_{O}T_{E}+T_E^2) =   {{\vec{P_O}\vec{P_O}+2\vec{P_O}\vec{V_E}T_E + \vec{V_E}T_E\vec{V_E}T_E}} $$
+
+$$ T_E^2(CC-\vec{V_E}\vec{V_E}) -2T_{E}(CCT_{O} -\vec{P_O}\vec{V_E}) =    {{\vec{P_O}\vec{P_O} }} -CCT_{O}^2 $$
+
+$$ \begin{array}{}
+\left(T_E\sqrt{(CC-\vec{V_E}\vec{V_E})} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{(CC-\vec{V_E}\vec{V_E})}}\right)^2\\-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{CC-\vec{V_E}\vec{V_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+\end{array}
+$$
+
+$D_E = CC-\vec{V_E}\vec{V_E}$
 
 
+$$ \begin{array}{}
+\left(T_E\sqrt{{D_E}} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\right)^2\\-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+\end{array}
+$$
+
+
+$$ \begin{array}{}
+T_E\sqrt{{D_E}} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\\ = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
+\end{array}
+$$
+
+
+$$ \begin{array}{}
+T_E\sqrt{{D_E}} \\ = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
+\\ + \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}
+\end{array}
+$$
+
+$$ \begin{array}{}
+T_E  = \frac { \sqrt  {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}
+\\ + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
+\end{array}
+$$
+
+
+
+$$ \begin{array}{ll}
+    ( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2)({CC- \vec{V_E}\vec{V_E}}) \\
+	  +CCT_OCCT_O-2CCT_O\vec{P_O}\vec{V_E} + \vec{P_O}\vec{V_E}\vec{P_O}\vec{V_E}
+
+\end{array}
+$$
+
+
+$$ \begin{array}{ll}
+    ( {{\vec{P_O}\vec{P_O} }}CC - {{\vec{P_O}\vec{P_O} }}\vec{V_E}\vec{V_E}  -CCT_{O}^2CC+ CCT_{O}^2\vec{V_E}\vec{V_E}) \\
+	  +CCT_OCCT_O-2CCT_O\vec{P_O}\vec{V_E} + \vec{P_O}\vec{V_E}\vec{P_O}\vec{V_E}
+
+\end{array}
+$$
+
+
+$$ \begin{array}{ll}
+     CC ( {{\vec{P_O}\vec{P_O} }}   + T_{O}^2\vec{V_E}\vec{V_E} -2T_O\vec{P_O}\vec{V_E})
+
+\end{array}
+$$
+
+
+$$  CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 $$
+
+
+$$ \begin{array}{}
+T_E  = \frac { \sqrt  { CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 }
+\\ + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
+\end{array}
+$$
+
+
+
+---
 $$ T_{\Delta}=\frac{\left|\vec{P_O}+V_OT_{\Delta}\right|}{C}$$
+
+$$ T_{\Delta}=\frac{\sqrt{{\vec{P_O}\vec{P_O}(CC)} }+\vec{V_O}\vec{P_O} }{CC-\vec{V_O}\vec{V_O}}$$
 
 Expand length expression and square both sides.
 
@@ -306,136 +389,6 @@ T_E += B
 $$T_B=\frac{\sqrt{(C^2T_O+\vec{P_E}\vec{V_O})^2 - (C^2-\vec{V_O}^2)(C^2{T_O}^2-\vec{P_E}\vec{P_E})}+C^2T_O+\vec{P_E}\vec{V_O}}{CC-\vec{V_O}\vec{V_O}}$$
 $$T_C=\frac{\sqrt{(C^2T_B+\vec{P_E}\vec{V_O})^2 - (C^2-\vec{V_O}^2)(C^2{T_B}^2-\vec{P_E}\vec{P_E})}+C^2T_B+\vec{P_E}\vec{V_O}}{CC-\vec{V_O}\vec{V_O}}$$
 ---
-Delta solution - first delta
-$$\vec{P_{\mathrm{\Delta}}} = \vec{X_{A}} + \vec{V_{A}}T_{O} - \left( \vec{X_{B}} + T_{O}\vec{V_{B}} \right)$$
-$$
-A_{\Delta O} = - \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}
-$$
-
-$$
-B_{\Delta O} = \vec{P_{\Delta}}\vec{V_{B}}
-$$
-
-$$
-D_{\Delta O} = C^{2} - {\vec{V_{B}}}^{2}
-$$
-
-$$
-T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}
-$$
-
-
----
-second delta
-$$\vec{P_{\mathrm{\Delta}2}} = \vec{X_{B}} + \vec{V_{B}}(T_{O}+T_{\Delta O}) - \left( \vec{X_{A}} + (T_{O}+T_{\Delta O})\vec{V_{A}} \right)$$
-$$
-A_{\Delta 2} = - \vec{P_{\mathrm{\Delta 2}}}\vec{P_{\mathrm{\Delta 2}}}
-$$
-
-$$
-B_{\Delta 2} = \vec{P_{\Delta 2}}\vec{V_{A}}
-$$
-
-$$
-D_{\Delta 2} = C^{2} - {\vec{V_{A}}}^{2}
-$$
-
-$$
-T_{\Delta 2} = \frac{\sqrt{{B_{\Delta 2}}^{2} - D_{\Delta 2}A_{\Delta 2}} + B_{\Delta 2}}{D_{\Delta 2}}
-$$
-
-
----
-
-	$$ T_{\Delta O} + T_{\Delta 2} $$
-
-$$
- \frac{\sqrt{{B_{\Delta 2}}^{2} - D_{\Delta 2}A_{\Delta 2}} + B_{\Delta 2}}{C^{2} - {\vec{V_{A}}}^{2}} + \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{ C^{2} - {\vec{V_{B}}}^{2}}
-$$
-
-
-
-
-
-$$
- \frac{\sqrt{{B_{\Delta 2}}^{2} - D_{\Delta 2}A_{\Delta 2}} + B_{\Delta 2}}{C^{2} - {\vec{V_{A}}}^{2}} + \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{ C^{2} - {\vec{V_{B}}}^{2}}
-$$
-
-$\vec{V_A}$ and $\vec{V_B}$ are related in the lorentz transform  Va = -Vb.
-
-
-$$
- \frac{\sqrt{{B_{\Delta 2}}^{2} - D_{\Delta 2}A_{\Delta 2}} + B_{\Delta 2}}{C^{2} - {\vec{V_{A}}}^{2}}
-  + \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{ C^{2} - \left({\vec{-V_{A}}}\right)^{2}}
-$$
-
-$$\vec{P_{\mathrm{\Delta}}} = \vec{X_{A}} + \vec{V_{A}}T_{O} - \left( \vec{X_{B}} - T_{O}\vec{V_{A}} \right)$$
-
-$$\vec{P_{\mathrm{\Delta}}} = \vec{X_{A}} - \vec{X_{B}} + 2\vec{V_{A}}T_{O}  $$
-
-
-$$
-A_{\Delta O} = - \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}
-$$
-
-$$
-B_{\Delta O} = -\vec{P_{\Delta}}\vec{V_{A}}
-$$
-
-$$
-D_{\Delta O} = C^{2} - \left({-\vec{V_{A}}}\right)^{2}
-$$
-
-$$\vec{P_{\mathrm{\Delta}2}} = \vec{X_{B}} - \vec{V_{A}}(T_{O}+T_{\Delta O}) - \left( \vec{X_{A}} + (T_{O}+T_{\Delta O})\vec{V_{A}} \right)$$
-
-$$\vec{P_{\mathrm{\Delta}2}} = \vec{X_{B}} - \vec{X_{A}} - 2\vec{V_{A}}(T_{O}+T_{\Delta O}) $$
-
-$$
-A_{\Delta 2} = - \vec{P_{\mathrm{\Delta 2}}}\vec{P_{\mathrm{\Delta 2}}}
-$$
-
-$$
-B_{\Delta 2} = \vec{P_{\Delta 2}}\vec{V_{A}}
-$$
-
-$$
-D_{\Delta 2} = C^{2} - {\vec{V_{A}}}^{2}
-$$
-
-
-
-$$
-\begin{array}{l}
- \frac {\sqrt{\left(\vec{P_{\Delta 2}}\vec{V_{A}}\right)^{2} - D_{\Delta 2}A_{\Delta 2}} + \left(\vec{P_{\Delta 2}}\vec{V_{A}}\right) \\
-  + \sqrt{\left(-\vec{P_{\Delta}}\vec{V_{A}}\right)^{2} - D_{\Delta O}A_{\Delta O}} + \left(-\vec{P_{\Delta}}\vec{V_{A}}\right) }  { C^{2} - \left({\vec{\pm V_{A}}}\right)^{2}}
-\end{array}
-$$
-
-$$
-\begin{array}{l}
- \frac {\sqrt{\left(\vec{P_{\Delta 2}}\vec{V_{A}}\right)^{2} - D_{\Delta 2}\left(- \vec{P_{\mathrm{\Delta 2}}}\vec{P_{\mathrm{\Delta 2}}}\right)} + \left(\vec{P_{\Delta 2}}\vec{V_{A}}\right) \\
-  + \sqrt{\left(-\vec{P_{\Delta}}\vec{V_{A}}\right)^{2} - D_{\Delta O}\left(- \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\right)} + \left(-\vec{P_{\Delta}}\vec{V_{A}}\right) }  { C^{2} - \left({\vec{\pm V_{A}}}\right)^{2}}
-\end{array}
-$$
-
-
- $$  \vec{X_{B}} - \vec{X_{A}} - 2\vec{V_{A}}(T_{O}+T_{\Delta O}) - \vec{X_{A}} - \vec{X_{B}} + 2\vec{V_{A}}T_{O} $$
-$$   - 2\vec{X_{A}} - 2\vec{V_{A}}T_{O}+ 2\vec{V_{A}}T_{\Delta O}   + 2\vec{V_{A}}T_{O} $$
-$$   2(\vec{V_{A}}T_{\Delta O} - \vec{X_{A}})   $$
-
-
-$$
-\begin{array}{l}
- \frac {\sqrt{\left(\vec{P_{\Delta 2}}\vec{V_{A}}\right)^{2} - D_{\Delta 2}\left(- \vec{P_{\mathrm{\Delta 2}}}\vec{P_{\mathrm{\Delta 2}}}\right)}  \\
-  + \sqrt{\left(-\vec{P_{\Delta}}\vec{V_{A}}\right)^{2} - D_{\Delta O}\left(- \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\right)} + \left( 2(\vec{V_{A}}T_{\Delta O} - \vec{X_{A}}) \vec{V_{A}}\right) }  { C^{2} - \left({\vec{\pm V_{A}}}\right)^{2}}
-\end{array}
-$$
-
-$$ (PV)^2 - D(P^2) $$
-P^2(V^2-C^2+V^2) 
-
-P^2(2V^2-C^2) 
-
 
 
 
@@ -649,99 +602,63 @@ If it's based on the light propagation equation, then, that time included the mo
 $T_O = T_E + T_{\Delta}$
 
 $$T_{\Delta} = \frac { || (X_O + (T_E+T_{\Delta})V_O)-(X_E+T_EV_E) || } {C}  $$
-
+Observer and emitter are moving in the same direction, so they have the same V.... This cancels some terms immediately.
 $$T_{\Delta} = \frac { ||  X_O + T_EV+T_{\Delta}V  -X_E-T_EV|| } {C}  $$
 
 $L=X_O-X_E$  ;...  $-L=X_E-X_O$
 
+With the terms removed...
 $$T_{\Delta} = \frac { || X_O+T_{\Delta}V -X_E ) || } {C}  $$
-
+Replace displacements with L.
 $$T_{\Delta} = \frac { \sqrt{ ( L+T_{\Delta}V  )^2 }} {C}  $$
-
+Expand magnitude operation
 $$T_{\Delta} {C} = { \sqrt{ ( LL+2LT_{\Delta}V+T_{\Delta}T_{\Delta}VV  ) }}  $$
-
+Square both sides...
 $$T_{\Delta} T_{\Delta} {C}{C} = { { ( LL+2LT_{\Delta}V+T_{\Delta}T_{\Delta}VV  ) }}  $$
-
+Move $T_{\Delta}$ terms to the left.
 $$T_{\Delta} T_{\Delta} ({C}{C}-VV) -2LT_{\Delta}V = { {  LL }}  $$
-
+Create a term to simplify this; it's $\frac 1{C{\gamma}^2}$..
 $D=({C}{C}-VV)$
+
+Replace D into equation, find square term on left, remove extra term...
 
 $$\left(T_{\Delta}  \sqrt{D} -\frac{LV}{\sqrt{D}}\right)^2 - \frac{LLVV}{D}= { {  LL }}  $$
 
-
+Move non $T_{\Delta}$ terms to the right, take square root of both sides...
 $$\left(T_{\Delta}  \sqrt{D} -\frac{LV}{\sqrt{D}}\right) = \sqrt{ { LL + \frac{LLVV}{D}}}  $$
+Move non $T_{\Delta}$ terms to the right, divide both sides by sqrt(D); combine term under radical with common denominator.
+$$T_{\Delta} = \frac{\sqrt {  \frac{DLL +LLVV}{D}} +\frac{LV}{\sqrt{D}}}{\sqrt D} $$
+Combine $\sqrt{D}\sqrt{D}=D$,...
+$$T_{\Delta}  = \frac{\sqrt { DLL + LLVV} +LV}{ D} $$
+Combine LL factor...
+$$T_{\Delta}  = \frac{\sqrt { LL(D+{VV}) } +LV}{D}$$
+Expanding D will reveal a -VV term which cancels the +VV term under the radical...
+$$T_{\Delta}  = \frac{\sqrt { LL(CC-VV+{VV}) } +LV}{D}$$
+Remove term.
+$$T_{\Delta}  = \frac{\sqrt { LLCC } +LV}{D}$$
+Reduce $\sqrt{C^2}$ to C, and convert $\sqrt{L\cdot L}$ to $|L|$.
 
-$$T_{\Delta} = \frac{\sqrt {  LL + \frac{LLVV}{D}} +\frac{LV}{\sqrt{D}}}{\sqrt D} $$
+$$T_{\Delta}  = \frac{C|L| +LV}{D}$$
 
-$$T_{\Delta}  = \frac{\sqrt { LL + \frac{LLVV}{D}} }{\sqrt D} +\frac{LV}{D}$$
-
-$$T_{\Delta}  = \frac{\sqrt { LL(1+\frac{VV}{D}) } }{\sqrt D} +\frac{LV}{D}$$
+$$T_{2{way}}=T_{\Delta}(L)+T_{\Delta}(-L)$$
 
 
+$$T_{2{way}}=\frac{C|L| +LV}{D} + \frac{C|-L| -LV}{D}$$
+
+
+$$ T_{2{way}}=\frac{2C|L| }{CC-VV}  $$
+Apply length contraction to L...
+$$ T_{2{way}}=\frac{2\sqrt { LL(CC) } }{CC-VV} * \frac{\sqrt{CC-VV}}{C} $$
+So then time contraction on the result with another gamma...??
+
+Results with 
+
+$$T_{2{way}}=2L$$
+
+And then L is length-contracted, which cancels the C/CC-VV delay.  so it becomes =2L.  But this clock is global time, and is against an unscaled global clock.
 $$
- \frac{\sqrt { L(2+L(1+\frac{VV}{D})) } }{\sqrt D} +\frac{LV}{D}
-+  \frac{\sqrt { -L(2-L(1+\frac{VV}{D})) } }{\sqrt D} -\frac{LV}{D}
-$$
-
-
-$$
- \frac{\sqrt { L(2+L(1+\frac{VV}{D})) } }{\sqrt D} 
-+  \frac{\sqrt { L^2 =2L  -L\frac{VV}{D}  } }{\sqrt D} 
-$$
-
-
-
-
-$$T_{\Delta} = \frac { \sqrt{ ( -L+T_{\Delta}V  )^2 }} {C}  $$
-
-$$T_{\Delta} {C} = { \sqrt{ ( LL-2LT_{\Delta}V+T_{\Delta}T_{\Delta}VV  ) }}  $$
-
-$$T_{\Delta} T_{\Delta} {C}{C} = { { ( LL-2LT_{\Delta}V+T_{\Delta}T_{\Delta}VV  ) }}  $$
-
-$$T_{\Delta} T_{\Delta} ({C}{C}-VV) +2LT_{\Delta}V = { { LL }}  $$
-
-$$ ( T_{\Delta} \sqrt D + \frac{LV}{\sqrt{D}})^2 -\frac{LLVV} {D} = { { LL }}  $$
-
-
-$$ T_{\Delta}  =\frac{ { \sqrt{ LL  +\frac{LLVV}{D} }} =\frac{LV}{\sqrt{D}}}{ \sqrt{ D}} $$
-$$ T_{\Delta}  =\frac{ { \sqrt{ LL (1 +\frac{VV}{D}) }} }{ \sqrt{ D}} =\frac{LV}{{D}}$$
-
-
-$$
- \frac{\sqrt { LL(1+\frac{VV}{D}) } }{\sqrt D} +\frac{LV}{D}
-+  \frac{ { \sqrt{ LL (1 +\frac{VV}{D}) }} }{ \sqrt{ D}} =\frac{LV}{{D}}
-$$
-$$
- \frac{2\sqrt { LL(1+\frac{VV}{D}) } }{\sqrt D}
+ T_{\Delta}=\frac{2|L|C}{ CC-VV} * \frac{CC-VV}{C}
  $$
-$$
- {2\sqrt { LL(\frac{1}{D}+\frac{VV}{DD}) } }
- $$
-
-$$
- {2\sqrt { LL(\frac{D}{DD}+\frac{VV}{DD}) } }
- $$
-
-$$
- {2\sqrt { LL(\frac{D+VV}{DD}) } }
- $$
-
-$$
- {2\sqrt { LL(\frac{CC-VV+VV}{DD}) } }
- $$
-
-
-$$
- {2\sqrt { LL(\frac{CC}{DD}) } }
- $$
-
-$$
- \frac{2LC}{D}
- $$
-$$
- \frac{2LC}{ CC-VV}
- $$
-
 ## Simple Form
 
 $$t=\sqrt{(a+bt)^2}$$
@@ -775,3 +692,23 @@ $l(x,y)=If(b(x,y)<b_{2}(x,y), b(x,y), b_{2}(x,y))$
 
 (leaving emitter event)
 k(x,y)=If(b(x,y)>b_{2}(x,y), b(x,y), b_{2}(x,y))
+
+
+---
+A little on rotations
+
+R3->Q 
+
+$A(x,y,z)$, $(2\pi-A)(-x,-y,-z)$ go to the same quaternion ( cos(x) or (cos(2pi-x),  and sin(x)(x,y,z),-sin(2pi-x)(x,y,z)  are the same ))
+
+A(x,y,z), ($2\pi$-A)(-x,-y,-z), (A-$2\pi$)(x,y,z), -A(-x,-y,-z) are all the same quaternion.  They are only 2 pairs of real points though. (Ax,Ay,Az) and ((A-$2\pi$)x,(A-$2\pi$)y,(A-$2\pi$)z); since -A(-x) = Ax, and (A-$2\pi$)(-x) = ($2\pi$-A)x.  
+
+So over the course of time if one has a point at (Ax,Ay,Az) and later another point at ($2\pi$-A)(-x,-y,-z), even though they are in an entirely different area of the space of rotations, the quaternion cannot distinguish which it is.  say ($\pi$/sqrt(2),$\pi$/sqrt(2),0) and (-$\pi$/sqrt(2),-$\pi$/sqrt(2),0 ).  The neighborhood of points that are near that rotation is also distinct between the two; but again the quaternion puts them in the same space.  A quaternion with a real part that is -1 to 1 can either be (-2pi to zero) or  2pi to zero, directionally ).  The sin part doesn't help distinguish, because it gets multiplied by a direction vector which has negative components, and really only goes from 0 to 1 and back to 0 over the angle/2 converted quaternion.
+
+![[Pasted image 20240417173351.png]]
+
+Matrices cover the first half, inner hemisphere, quaternions cover the inner hemisphere.  
+
+Reverse computation of angle only covers all positive or all negative; the spin direction around the spin axis therefore should be assigned a separate variable.... splitting axis from the angle almost accomplishes that.
+
+So that makes R3 a double cover of Q(SU(2)) which is a double cover of SO(3).

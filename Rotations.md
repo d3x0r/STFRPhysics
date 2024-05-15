@@ -62,6 +62,65 @@ https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_composition_o
   
 ```
 
+cos(x/2),sin(x/2) = cos(y/2),sin(y/2)
+
+Rotates a rotation $\vec{b}$ and rotates around $\vec{a}$ 
+
+$$
+
+
+\begin{array}{} 
+x=|\vec{a}|; y=|\vec{b}|\\
+A=\frac{\vec{a}}{|\vec{a}|} \\
+B=\frac{\vec{b}}{|\vec{b}|}  \\
+
+{sxpy}=\sin( \frac{x+y}{2} )\\ {sxmy}=\sin(\frac{x-y}{2})\\ {cxpy}=\cos( \frac{x+y}{2} )\\ {cxmy}=\cos(\frac{x-y}{2})\\
+\\
+	ang = 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} ); \\
+
+  	ang = 2\arccos( \frac{( ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2})) + \cos(\frac{x-y}{2}) + \cos( \frac{x+y}{2} ) )}{2} );\\
+
+
+(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  \\
+
+\vec{C}=\frac { (A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy) } {sin(\frac{ang}{2})} \\
+
+\vec{c} = \vec{C}*ang
+
+ \end{array}
+$$
+
+```js
+    const q2a = Math.cos( q.θ /2 );
+    const q1s = Math.sin( q.θ /2 )
+    const q2b = q1s*q.nx;
+    const q2c = q1s*q.ny;
+    const q2d = q1s*q.nz;
+    const q1a = Math.cos( th /2 );
+    const q2s = Math.sin( th /2 );
+    const q1b = q2s*ax;
+    const q1c = q2s*ay;
+    const q1d = q2s*az;
+
+  
+
+    // quaternion multiplication
+    
+    // dot product
+    q3a = q1a*q2a - q1b*q2b - q1c*q2c - q1d*q2d;
+    // cross product in parens
+    q3b = q1a*q2b + q1b*q2a + (q1c*q2d - q1d*q2c);
+    q3c = q1a*q2c + q1c*q2a + (q1d*q2b - q1b*q2d);
+    q3d = q1a*q2d + q1d*q2a + (q1b*q2c - q1c*q2b);
+
+/*
+    const q3a = q1a*q2a - q1b*q2b - q1c*q2c - q1d*q2d;
+    const q3b = q1a*q2b + q1b*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1c*q2d - q1d*q2c);
+    const q3c = q1a*q2c + q1c*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1d*q2b - q1b*q2d);
+    const q3d = q1a*q2d + q1d*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1b*q2c - q1c*q2b);
+*/
+```
+
 ## Rotating a vector (V RV Q)
 
 The Rodrigues Rotation formula may also be used to apply a point, and result with a rotated point.
@@ -70,13 +129,17 @@ The Rodrigues Rotation formula may also be used to apply a point, and result wit
 ```
    Given input axis A with angle a, and a point V to rotate.
    
-   V` = V + cos(a)( 2* A * sin(a) × V ) + A * sin(a) × V 
+   V' = V + cos(a)( 2 * sin(a)* A × V ) + A * sin(a) × V 
 
      - or - 
 	
-   V` = cos(a)*V  +  sin(a) * A × V  + (1-cos(a))(A ∙ V ) * A
+   V' = cos(a)*V  +  sin(a) * A × V  + (1-cos(a))(A ∙ V ) * A
 ```
 
+  $${V'} = V\cos{a}  +  \sin{a} ( A × V ) +  A(1-cos(a))(A ∙ V ) $$
+
+$${V'} = V + \cos{a} ( 2 \sin{a} ( A × V )) +  A(\sin{a})(A ∙ V ) $$
+  
 ## Integrating a Rotation
 
 Given an orientation Q, which is the initial position, and a known axis-angle (P) to update the position.

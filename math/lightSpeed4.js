@@ -1,6 +1,7 @@
 
 //import {lnQuat} from "../3d/src/lnQuatSq.js"
 
+import {RealTime} from "./relativistic.util.js"
 const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
 //canvas.width = 5000;
@@ -411,95 +412,21 @@ function realTimeToObserverTimeSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az ) {
 	return Math.sqrt( L.z*L.z + (D+L.y)*(D+L.y) + pos*pos )/C+T;
 }
 
-/*
-$$ x=\sqrt{( Z*Z + (D+Y)*(D+Y) + ((V*T) + A)^2 )}/C+T;$$
 
-$$ \frac { \sqrt{(-2XV-2C{T_O})^2 - 4\left(C^2-V^2\right)\left( -X^2 + C^2{T_O}^2 - D^2 -2DY - Y^2 - Z^2\right) }  + 2XV + 2C^2{T_O} } { 2\left(C^2-V^2\right) } $$
-
-
-/*
-function realTimeToObserverTimeSpin( T, Lx, Ly, Lz, Ax, Ay, Az ) {
-
-
-if(0) {
-		// this is Rodrigues rotation formula.  2 multiplies shorter, and 1 less add than below quat method
-		const c = Math.cos(q.θ);
-		const s = Math.sin(q.θ);
-
-		const qx = q.nx, qy = q.ny, qz = q.nz;
-		const vx = v.x , vy = v.y , vz = v.z;
-		// (1-cos theta) * dot
-		// 1-cos theta * cos(angle between vectors)
-		const dot =  (1-c)*((qx * vx ) + (qy*vy)+(qz*vz));
-		// v *cos(theta) + sin(theta)*cross + q * dot * (1-c)
-		return new vectorType(
-			  vx*c + s*(qy * vz - qz * vy) + qx * dot
-			, vy*c + s*(qz * vx - qx * vz) + qy * dot
-			, vz*c + s*(qx * vy - qy * vx) + qz * dot );
-}
-}
-*/
-
-function observerTimeToRealTimeWithSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az  ) {
-
-	//Lx
-	if( C === V ) {
-		const num = Lx*Lx-C*C*TT*T + D*D + 2*D*Ly + Ly*Ly + Lz*Lz;
-		const den = C*(2*Lx+2*C*T);
-		return [ num/den, num/den ];
-	} else {
-		const num = Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const num2 = -Math.sqrt( 2*Lx*V - 2*C*T - 4 * ( C*C-V^V ) * ( -X*X + C*C*T - D*D - 2*D*Ly - Ly*Ly - Lz*Lz )) + 2*Lx * V + 2*C*C*T;
-		const den = 2*(C*C-V*V);
-		return [ num/den, num2/den ];
-	}
-}
-
-
-function observerTimeToRealTime( T, L ) {
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
-
-	if( C==V ) {
-		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a];
-		return [];
-	}
-
-	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-//	const a =   C*T(C - V )/(C*C - V*V);
-
-	if( a < T ) r.push(a);
-	// positive solution walks backwards...
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( b < T ) r.push(b); 
-	return r;
-
-}
-
-function observerTimeToRealPos( T, L ) {
-	// things have to be able to propagate forwardly.
-	if( C <= 0 ) return [0,0];
-
-	if( C==V ) {
-		const a = (C*C*T*T - D*D - L*L ) / (2*C*(C * T + L));
-		if( a < T ) return [a*V+L];
-		return [];
-	}
-
-	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( a < T ) r.push(a*V+L);
-	// positive solution walks backwards...
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
-	if( b < T ) r.push(b*V+L); 
-	return r;
-
-}
 
 
 function ObservedTime( T, V, P, V_o, P_o ) {
+
+	const p_x = (P_o.z - P.x) + V_o.x*T;
+	const p_y = (P_o.y - P.y) + V_o.y*T;
+	const p_z = (P_o.z - P.z) + V_o.z*T;
+
+	const D = C*C-(V.x*V.x+V.y*V.y+V.z*V.z); // C, V_E
+	const px = p_x-T*V.x;
+	const py = p_y-T*V.y;
+	const pz = p_z-T*V.z;
+
+	return [( C*Math.sqrt( px*px+py*py+pz*pz ) + C*C* T - (  p_x * V.x  +  p_y*V.y  +  p_z*V.z ) )/D];
 	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 	const xd = P.x-P_o.x;
 	const yd = P.y-P_o.y;

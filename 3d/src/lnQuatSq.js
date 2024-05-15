@@ -156,22 +156,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 		// the remining of this is update()
 		q.θ = Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
 		q.dirty = false;
-		/*
-		// the above is this;  getBasis(up), compute new forward and cross right
-		// and restore from basis.
-		const trst = q.getBasis();
-		const fN = 1/Math.sqrt( tz*tz+tx*tx );
-	                                      
-		trst.forward.x = tz*fN;
-		trst.forward.y = 0;
-		trst.forward.z = -tx*fN;
-		trst.right.x = (trst.up.y * trst.forward.z)-(trst.up.z * trst.forward.y );
-		trst.right.y = (trst.up.z * trst.forward.x)-(trst.up.x * trst.forward.z );
-		trst.right.z = (trst.up.x * trst.forward.y)-(trst.up.y * trst.forward.x );
-	                                      
-		q.fromBasis( trst );
-		q.update();						
-		*/
+
 	}
 
 
@@ -1092,13 +1077,16 @@ function finishRodrigues_by_Quaternion(q, oct, ax, ay, az, th, extrinsic) {
 	const q1c = q2s*ay;
 	const q1d = q2s*az;
 
+	// quaternion multiplication
 	const q3a = q1a*q2a - q1b*q2b - q1c*q2c - q1d*q2d;
 	const q3b = q1a*q2b + q1b*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1c*q2d - q1d*q2c);
 	const q3c = q1a*q2c + q1c*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1d*q2b - q1b*q2d);
 	const q3d = q1a*q2d + q1d*q2a + (extrinsic?-1:1)*(lnQuat.invertCrossProduct?-1:1)*(q1b*q2c - q1c*q2b);
 
+	// keep octive from what we are rotated by
 	oct = oct || Math.floor(q.θ / (Math.PI * 2));
 
+	// convert back to axis-angle for storage...
 	let ang = acos(q3a) * 2 + oct * (Math.PI * 2);
 
 	if (ang ) {
@@ -1177,22 +1165,15 @@ function finishRodrigues( q, oct, ax, ay, az, th, extrinsic ) {
 		const Cy = ( crsY * cc1 +  ay * ss1 + q.ny * ss2 );
 		const Cz = ( crsZ * cc1 +  az * ss1 + q.nz * ss2 );
 
-		         /*
-		        ax qx  -crsz   crsy
-			crsz   ay qy  -crsx
-			-crsy  crsy   az qz
-			  */
+		/*
+		     ax qx  -crsz   crsy
+		     crsz   ay qy  -crsx
+		     -crsy  crsy   az qz
+		*/
 		// this is NOT /sin(theta);  it is, but only in some ranges...
 		const Clx = (lnQuat.sinNormal)
 		          ?(1/(2*Math.sin( ang/2 )))
 		          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-		if(0) {
-			// this normalizes the rotation so there's no overflows.
-			const other = 1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
-			if( Math.abs( other - Clx ) > 0.001 ) {
-				console.log( "Compare A and B:", Clx, other, th, q.θ );
-			}
-		}
 		q.rn = Clx; // I'd like to save this to see what the normal actually was
 		q.θ  = ang;
 		q.nx = Cx*Clx;

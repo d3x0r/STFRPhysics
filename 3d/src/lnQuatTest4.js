@@ -199,7 +199,6 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			let q3 = dq.clone();
 			if( externalSpin) {
 				// q ** r ** s
-				
 				q3.multiply( q1 ).multiply( q2 )
 			}else {
 				// s ** ( r ** q )
@@ -211,16 +210,17 @@ function QuatPathing2(q, v, c,normalVertices,normalColors) {
 			//if( Math.abs(len-1) > 0.01 ) console.log( "Result:", len, nTotal, q3 );
 			//console.log( "resulting quat:", len );
 			const a_ = Math.atan2( len, q3.w ) * 2;//Math.acos( q3.w/len ) * 2;
-				// because it's *2, only 0 to PI results, which is only cos 1;0;-1  and sin 0;1;0
+			// atan2 ( +, +/-) = 0 to pi
+			// because it's *2, only 0 to PI results, which is only cos 1;0;-1  and sin 0;1;0
 				// the sqrt above is always positive.
 
 			// this is what the 0 to pi space seems to look like, when you wrap from >180 to -180<
-			const a = (a_>Math.PI)?(-2*Math.PI+a_):a_;
-			
+			const a = a_;//(a_>Math.PI)?/*(Math.PI-(a_-Math.PI))*/(2*Math.PI-a_):a_;
+			const i = 1;//(a_>Math.PI)?-1:1;
 			//const s = Math.sin( a/2 );
-			lnQq.nx = q3.x / len;
-			lnQq.ny = q3.y / len;
-			lnQq.nz = q3.z / len;
+			lnQq.nx = i*q3.x / len; // there is still a +/- here...
+			lnQq.ny = i*q3.y / len;
+			lnQq.nz = i*q3.z / len;
 			lnQq.θ = a;
 			lnQq.x = a * lnQq.nx;
 			lnQq.y = a * lnQq.ny;
@@ -638,7 +638,7 @@ let lnQ_;
 
 export function updateShapes( shapes,camera ) {
 	const atTick = Date.now();
-	const nTotal = ( ( (atTick )/(turnCount*useStepFunction?5000:25000) ) %1) * stepCount * turnCount  /* this 5 and turn count must relate*/;
+	const nTotal = ( ( (atTick )/(turnCount*useStepFunction?5000:250000) ) %1) * stepCount * turnCount  /* this 5 and turn count must relate*/;
 
 	const lABC = Math.sqrt(A*A+B*B+C*C);
 	const steps = stepCount;
