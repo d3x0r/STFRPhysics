@@ -66,18 +66,32 @@ cos(x/2),sin(x/2) = cos(y/2),sin(y/2)
 
 Rotates a rotation $\vec{b}$ and rotates around $\vec{a}$ 
 
-$$\begin{array}{} 
-x=|\vec{a}|; y=|\vec{b}|\\
-A=\frac{\vec{a}}{|\vec{a}|} \\
-B=\frac{\vec{b}}{|\vec{b}|}  \\
-{sxpy}=\sin( \frac{x+y}{2} )\\ {sxmy}=\sin(\frac{x-y}{2})\\ {cxpy}=\cos( \frac{x+y}{2} )\\ {cxmy}=\cos(\frac{x-y}{2})\\
-\\
-	ang = 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} ); \\
-  	ang = 2\arccos( \frac{( ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2})) + \cos(\frac{x-y}{2}) + \cos( \frac{x+y}{2} ) )}{2} );\\
-(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  \\
-\vec{C}=\frac { (A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy) } {sin(\frac{ang}{2})} \\
-\vec{c} = \vec{C}*ang
-\end{array} $$
+$$x=|\vec{a}|; y=|\vec{b}|$$
+
+$${l} x=|\vec{a}|; y=|\vec{b}|$$
+
+$$A=\frac{\vec{a}}{|\vec{a}|} $$
+
+$$B=\frac{\vec{b}}{|\vec{b}|} $$ 
+
+$${sxpy}=\sin( \frac{x+y}{2} )$$
+
+$${sxmy}=\sin(\frac{x-y}{2}) $$
+
+$${cxpy}=\cos( \frac{x+y}{2} )$$
+
+$${cxmy}=\cos(\frac{x-y}{2})$$
+
+$$ang = 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} ); $$
+
+$$ang = 2\arccos( \frac{( ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2})) + \cos(\frac{x-y}{2}) + \cos( \frac{x+y}{2} ) )}{2} );$$
+   
+$$(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  $$
+
+$$\vec{C}=\frac { (A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy) } {sin(\frac{ang}{2})} $$
+
+$$\vec{c} = \vec{C}*ang$$
+
 
 ```js
     const q2a = Math.cos( q.θ /2 );
