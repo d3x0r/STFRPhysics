@@ -292,6 +292,7 @@ myForm.sliderAmax.oninput = readValues;
 myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
 myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
 myForm.sliderD.oninput = myForm.sliderValD.oninput = readValues;
+Rand.onchange = readValues;
 
 myForm.sliderA.value = 0;
 myForm.sliderAmax.value = 0;
