@@ -27,16 +27,7 @@ const wells = [/* {x:5,y:5,z:0,g:1.0}
               , {x:-5,y:5,z:0,g:1.0} 
               , {x:-5,y:-5,z:0,g:1.0} */ ];
 
-if(0)
-for( let w = 0; w < 100; w++ ) {
-	wells.push( {x:(Math.random()-0.5)* 200/2,y:(Math.random()-0.5)* 200/2,z:(Math.random()-0.5)* 0,g:Math.random()/3+0.5} );
-}
-
-
-for( let w = 0; w < 14; w++ ) {
-	for( let t = 0; t <= w; t++ )
-		wells.push( {x:(20-w)*10-100,y:(t-15)*10+50,z:0,g:1 } );
-}
+let wasChecked = !Rand.checked;
 
 
 const localDel = 0.1;
@@ -318,6 +309,24 @@ function readValues()  {
 	myForm.sliderValB.textContent = values.B;
 	myForm.sliderValC.textContent = values.C;
 	myForm.sliderValD.textContent = values.D;
+
+	if(Rand.checked != lastChecked) {
+		if( lastChecked ) {
+			wells.length = 0;
+			for( let w = 0; w < 100; w++ ) {
+				wells.push( {x:(Math.random()-0.5)* 200/2,y:(Math.random()-0.5)* 200/2,z: 0,g:Math.random()/3+0.5} );
+			}
+		} else {
+		   wells.length = 0;
+			for( let w = 0; w < 14; w++ ) {
+				for( let t = 0; t <= w; t++ )
+					wells.push( {x:(20-w)*10-100,y:(t-15)*10+50,z:0,g:1 } );
+			}
+		}
+		lastChecked = Rand.checked;
+	}
+
+
 	drawsomething();
 	//drawQuatTwist();
 }
