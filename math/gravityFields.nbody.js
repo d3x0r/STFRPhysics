@@ -27,7 +27,7 @@ const wells = [/* {x:5,y:5,z:0,g:1.0}
               , {x:-5,y:5,z:0,g:1.0} 
               , {x:-5,y:-5,z:0,g:1.0} */ ];
 
-let wasChecked = !Rand.checked;
+let lastChecked = !Rand.checked;
 
 
 const localDel = 0.1;
