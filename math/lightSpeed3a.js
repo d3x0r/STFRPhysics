@@ -161,6 +161,9 @@ class D3xTransform {
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa-D, 0, myV, 0*now*myV*ca_o, 0*now*myV*sa_o, 0, ca, sa, ca_o, sa_o );
 					const hx =  here[0] * (V) * ca + X - myX;
 					const hy =  here[0] * (V) * sa + T-D - myY;
+					const hx2 =  here.length>1?here[1] * (V) * ca + X - myX:0;
+					const hy2 =  here.length>1?here[1] * (V) * sa + T-D - myY:0;
+
 					let right = RealTime( now, { x: V*ca, y: V*sa, z: 0 }
 											, { x:X+1, y:T-D, z:0 }
 											, { x:ca_o*myV, y:sa_o*myV, z: 0 }
@@ -168,25 +171,29 @@ class D3xTransform {
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X+1, T+0*V*now*sa-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 					const rx =  right[0] * (V) * ca + (X+1) - myX;
 					const ry =  right[0] * (V) * sa + T-D - myY;
+					const rx2 =  right.length>1?right[1] * (V) * ca + (X+1) - myX:0;
+					const ry2 =  right.length>1?right[1] * (V) * sa + T-D - myY:0;
 					let next   = RealTime( now, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:T+1-D, z:0 }, { x:ca_o*myV, y:sa_o*myV, z: 0 }, { x:0, y:0, z:0 } );
 							//observedTimeToRealTimeXYZ2( now, V, +0*V*now*ca + X, T+0*V*now*sa+1-D, 0, myV, 0*myX, 0*myY, 0, ca, sa, ca_o, sa_o );
 					const nx =  next[0] * (V) * ca + X - myX;
 					const ny =  next[0] * (V) * sa + (T+1)-D - myY;
+					const nx2 =  next.length>1?next[1] * (V) * ca + X - myX:0;
+					const ny2 =  next.length>1?next[1] * (V) * sa + (T+1)-D - myY:0;
 
 					const len = Math.sqrt( hx*hx+hy*hy);
-					const angle = Math.atan2( hy, -hx );
+					const angle = Math.atan2( hy, hx );
 					const new_angle = aberration( angle, myV );
 					const dx = Math.cos( new_angle ) * len;
 					const dy = Math.sin( new_angle ) * len;
 
 					const len2 = Math.sqrt( rx*rx+ry*ry);
-					const angle2 = Math.atan2( ry, -rx );
+					const angle2 = Math.atan2( ry, rx );
 					const new_angle2 = aberration( angle2, myV );
 					const dx2 = Math.cos( new_angle2 ) * len2;
 					const dy2 = Math.sin( new_angle2 ) * len2;
 
 					const len3 = Math.sqrt( nx*nx+ny*ny);
-					const angle3 = Math.atan2( ny, -nx );
+					const angle3 = Math.atan2( ny, nx );
 					const new_angle3 = aberration( angle3, myV );
 					const dx3 = Math.cos( new_angle3 ) * len3;
 					const dy3 = Math.sin( new_angle3 ) * len3;
@@ -197,6 +204,13 @@ class D3xTransform {
 					ctx.strokeStyle= "red";
 					//ctx.strokeStyle= `#${Math.floor(((X+20)/40*255)).toString(16).padStart( '0', 2 ) }0000`;
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+					if( here.length>1) {
+						ctx.moveTo( ofs + (xscale_)*(hx2), ofs + (xscale_)*(hy2) );
+						ctx.lineTo( ofs + (xscale_)*(rx2), ofs + (xscale_)*(ry2) );
+						//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+						ctx.moveTo( ofs +  (xscale_)*(hx2), ofs + (xscale_)*(hy2) );
+						ctx.lineTo( ofs + (xscale_)*(nx2), ofs + (xscale_)*(ny2) );
+					}
 					ctx.moveTo( ofs + (xscale_)*(dx), ofs + (xscale_)*(dy) );
 					ctx.lineTo( ofs + (xscale_)*(dx2), ofs + (xscale_)*(dy2) );
 					//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
@@ -299,19 +313,23 @@ class D3xTransform {
 
 			const hdx =  head[0] * (V) * ca +headx - myX;
 			const hdy =  head[0] * (V) * sa +heady  - myY-D;
+			const hdx2 =  head.length>1?head[1] * (V) * ca +headx - myX:0;
+			const hdy2 =  head.length>1?head[1] * (V) * sa +heady  - myY-D:0;
 			const tx =  tail[0] * (V) * ca +tailx - myX;
 			const ty =  tail[0] * (V) * sa +taily - myY-D;
+			const tx2 =  tail.length>1?tail[1] * (V) * ca +tailx - myX:0;
+			const ty2 =  tail.length>1?tail[1] * (V) * sa +taily - myY-D:0;
 
 
 			
 					const len = Math.sqrt( hdx*hdx+hdy*hdy);
-					const angle = Math.atan2( hdy, -hdx );
+					const angle = Math.atan2( hdy, hdx );
 					const new_angle = aberration( angle, myV );
 					const dx = Math.cos( new_angle ) * len;
 					const dy = Math.sin( new_angle ) * len;
 
 					const len2 = Math.sqrt( tx*tx+ty*ty);
-					const angle2 = Math.atan2( ty, -tx );
+					const angle2 = Math.atan2( ty, tx );
 					const new_angle2 = aberration( angle2, myV );
 					const dx2 = Math.cos( new_angle2 ) * len2;
 					const dy2 = Math.sin( new_angle2 ) * len2;
@@ -319,6 +337,11 @@ class D3xTransform {
 
 			ctx.beginPath();
 			//ctx.strokeStyle= `hsl(${Math.floor((1+(bias+bias2+bias3)/3%3)*120)},100%,50%`;
+			if( head.length > 1 ) {
+				ctx.moveTo( ofs + (xscale_)*(hdx2), ofs + (xscale_)*(hdy2) );
+				ctx.lineTo( ofs + (xscale_)*(tx2), ofs + (xscale_)*(ty2) );
+			}
+
 			ctx.moveTo( ofs + (xscale_)*(dx), ofs + (xscale_)*(dy-D) );
 			ctx.lineTo( ofs + (xscale_)*(dx2), ofs + (xscale_)*(dy2-D) );
 			ctx.stroke();
@@ -834,77 +857,30 @@ function ObservedTime( T, V, P, V_o, P_o, c ) {
 
 function RealTime( T_o, V, P, V_o, P_o ) {
 
-	const p_x = (P_o.x - P.x) + V_o.x*T_o;
-	const p_y = (P_o.y - P.y) + V_o.y*T_o;
-	const p_z = (P_o.z - P.z) + V_o.z*T_o;
+
+	const p_x = (P.x - P_o.x);
+	const p_y = (P.y - P_o.y);
+	const p_z = (P.z - P_o.z);
 
 	const D = C*C-(V.x*V.x+V.y*V.y+V.z*V.z); // C, V_E
-	const px = p_x-T_o*V.x;
-	const py = p_y-T_o*V.y;
-	const pz = p_z-T_o*V.z;
+	const px = p_x + (V.x- V_o.x)*T_o ;
+	const py = p_y + (V.y- V_o.y)*T_o ;
+	const pz = p_z + (V.z- V_o.z)*T_o ;
 
-	return [ ( C*Math.sqrt( px*px+py*py+pz*pz ) + C*C* T_o - ( p_x * V.x  +  p_y*V.y  +  p_z*V.z ) )/D ];
+	const T1 = ( -C*Math.sqrt( px*px+py*py+pz*pz ) + ( p_x * V.x  +  p_y*V.y  +  p_z*V.z ) + (C*C-(V.x*V_o.x+V.y*V_o.y+V.z*V_o.z))* T_o )/D;
+	const T2 = ( C*Math.sqrt( px*px+py*py+pz*pz ) + ( p_x * V.x  +  p_y*V.y  +  p_z*V.z ) + (C*C-(V.x*V_o.x+V.y*V_o.y+V.z*V_o.z))* T_o )/D;
+	if( T2 < T_o ) return [T2,T1];
+	if( T1 < T_o ) return [T1];
+	return 0;
 
-
-
-	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
-	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
-	//                       - 4 (C^2 - D^2 - E^2 - F^2) 
-	//                          * (C^2 S^2 - J^2 S^2 + 2 J S X - K^2 S^2 + 2 K S Y - L^2 S^2 + 2 L S Z - X^2 - Y^2 - Z^2)) 
-	//            + 2 C^2 S - 2 D J S + 2 D X - 2 E K S + 2 E Y - 2 F L S + 2 F Z}{2 (C^2 - D^2 - E^2 - F^2)}$
-	const X = P.x-P_o.x;
-	const Y = P.y-P_o.y;
-	const Z = P.z-P_o.z;
-	let VV = V.x*V.x+V.y*V.y+V.z*V.z;
-
-	const S = T_o;
-
-	//const D = V.x;
-	const E = V.y;
-	const F = V.z;
-
-	const J = V_o.x;
-	const K = V_o.y;
-	const L = V_o.z;
-
-	const jsx = X-J*S;
-	const ksy = Y-K*S;
-	const lsz = Z-L*S;
-
-
-	const CV = C*C - VV;
-	if( Math.abs(CV) < 0.000001 ) {
-		// D*D+E*E+F*F = C
-		// solve (S-T)^2 = ( ( (X+D*T-J*S)^2+(Y+E*T - K*S)^2+(Z + F*T - L* S)^2) )/(D*D+E*E+F*F) for T
-		// T = ((J^2 S^2)/(D^2 + F^2 + e^2) - (2 J S X)/(D^2 + F^2 + e^2) + (K^2 S^2)/(D^2 + F^2 + e^2) - (2 K S Y)/(D^2 + F^2 + e^2) + (L^2 S^2)/(D^2 + F^2 + e^2) - (2 L S Z)/(D^2 + F^2 + e^2) + X^2/(D^2 + F^2 + e^2) + Y^2/(D^2 + F^2 + e^2) + Z^2/(D^2 + F^2 + e^2) - S^2)
-		//        /((2 D J S)/(D^2 + F^2 + e^2) + (2 e K S)/(D^2 + F^2 + e^2) + (2 F L S)/(D^2 + F^2 + e^2) - (2 D X)/(D^2 + F^2 + e^2) - (2 e Y)/(D^2 + F^2 + e^2) - (2 F Z)/(D^2 + F^2 + e^2) - 2 S)
-		// T = ((J^2 S^2)/C - (2 J S X)/C + (K^2 S^2)/C - (2 K S Y)/C + (L^2 S^2)/C - (2 L S Z)/C + X^2/C + Y^2/C + Z^2/C - S^2)
-		//        /((2 D J S)/C + (2 e K S)/C + (2 F L S)/C - (2 D X)/C - (2 e Y)/C - (2 F Z)/C - 2 S)
-		// T = ((J^2 S^2) - (2 J S X) + (K^2 S^2) - (2 K S Y) + (L^2 S^2) - (2 L S Z) + X^2 + Y^2 + Z^2 - S^2*C)
-		//        /((2)*( (D J S) + (e K S) + (F L S) - (D X) - (e Y) - (F Z) - S C))
-
-		const T =  ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz ) / ( 2*( ( C * S*C + D*jsx + E*ksy + F*lsz ) ) )
-		if( T < T_o ) return [T];
-		return -Math.Infinity;
-	}
-	
-	const tmp = ( C*C * S + D*jsx + E*ksy + F*lsz );
-	const tmp2 = ( S*S * C*C - jsx*jsx - ksy*ksy - lsz*lsz );
-
-	const T = (-Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
-	if( T > T_o ) {
-
-		const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
-		if( T2 < T_o ) return [T2];
-		return [];
-	}
-	const T2 = (+Math.sqrt(tmp*tmp - CV * tmp2	) + tmp )/CV;
-	return (T2<T_o)?[T,T2]:[T];
+	//return [ (- C*Math.sqrt( px*px+py*py+pz*pz ) + ( p_x * V.x  +  p_y*V.y  +  p_z*V.z ) + (C*C-(V.x*V_o.x+V.y*V_o.y+V.z*V_o.z))* T_o )/D ];
 }
 
 function observedTimeToRealTimeXYZ2( T_o, V, X, Y, Z, V_o, X_o, Y_o, Z_o, ca, sa, ca_o, sa_o ){ 
 //		if( V !== C )
 	//return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
+
+	return RealTime( T_o, { x: V*ca, y: V*sa, z: 0 }, { x:X, y:Y, z:Z }, { x:ca_o*V_o, y:sa_o*V_o, z: 0 }, { x:X_o, y:Y_o, z:Z_o } );
 
 	const p_x = (X_o - X) + V_o*T_o*ca_o;
 	const p_y = (Y_o - Y) + V_o*T_o*sa_o;
@@ -983,7 +959,7 @@ function update( evt ) {
 	if( animate ) {
 	}else
 		now = (Number(sliderNow.value)/100*runT/2);
-	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now/Math.sqrt(1-V/C)).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
+	spanNow.textContent = "T(world s):" +  (now).toFixed(2)  + " T(obs s):" + (now*Math.sqrt(1-(V*V)/(C*C))).toFixed(2) /*+ " T(obs m-m/s):" + (now*(C*C-V*V)).toFixed(2)*/;
 
 	spanC.textContent = C.toFixed(2)+ " scalar: "+ ((C*C-V*V)/(C*C)).toFixed(3) ;
 
