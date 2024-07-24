@@ -317,7 +317,11 @@ function observerTimeToRealTime( T, L ) {
 	}
 
 	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+
+	const Td = (Math.sqrt( C*C*D*D - V*V*D*D + C*C*(V*T+L)*(V*T+L) ) - V*(V*T+L)) / (C*C-V*V);
+	const a = T - Td;
+
+	//const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
 	if( a < T ) r.push(a);
 	// positive solution walks backwards...
 	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
@@ -337,10 +341,15 @@ function observerTimeToRealPos( T, L ) {
 	}
 
 	const r = [];
-	const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	const Td = (Math.sqrt( C*C*D*D-V*V*D*D+C*C*(V*T+L)*(V*T+L) ) - V*(V*T+L)) / (C*C-V*V);
+	const a = T - Td;
+
+	//const a =  (C*C*T + L*V - Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
 	if( a < T ) r.push(a*V+L);
 	// positive solution walks backwards...
-	const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
+	const Td2 = (-Math.sqrt( C*C*D*D-V*V*D*D+C*C*(V*T+L)*(V*T+L) ) - V*(V*T+L)) / (C*C-V*V);
+	const b = T - Td2;
+	//const b = (C*C*T + L*V + Math.sqrt(C*C*D*D + C*C*L*L + 2*C*C*L*V*T + V*V*(C*C*T*T- D*D)))/(C*C - V*V);
 	if( b < T ) r.push(b*V+L); 
 	return r;
 
