@@ -140,7 +140,7 @@ The cross of two nearly parallel vectors is nearly 0; so dead on collisions resu
 
 ## Implementation
 
-[JS Implementation](3d/src/dual-quat.js)...
+[JS Implementation](3d/src/lnQuat.js)...
 
 For implementation, existing `Quaternion.log()` function should return a new type 'LogQuaternion' which has different operator to apply and apply-inverse to vectors.
 
