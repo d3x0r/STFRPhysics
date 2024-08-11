@@ -819,7 +819,8 @@ class SimpleNotice extends Popup {
 	textOutput = document.createElement( "SPAN" );
 
 	constructor( title, question, ok, cancel, opts ) {
-		super( title, null, {suffix:(opts?.suffix?opts.suffix:"")+"-notice"} );
+		opts = opts || {parent:null,suffix:null};
+		super( title, opts.parent||null, {suffix:(opts?.suffix?opts.suffix:"")+"-notice"} );
 		const popup = this;
 		const form = document.createElement( "form" );
 		{
@@ -913,7 +914,7 @@ class List extends Events{
     constructor( parentDiv, parentList, toString, opens, opts )
 	{
 
-		let in_form = form;
+		let in_form = parentDiv;
 		let in_popup = null;
 		while( in_form && !(( in_popup = popupMap.get(in_form)) instanceof Popup ) ) in_form = in_form.parentNode;
 	
@@ -2952,10 +2953,28 @@ function fillFromURL(popup, url, opts) {
 	here.pathname = here.pathname.substring( 0, herePathIndex+1 );
 	const hereHref = here.href;
 	
-	console.log( "Base:", base );
+	//console.log( "Base:", base );
+
 	//control.appendChild( shadow );
 	return fetch(url).then(response => {
 		return response.text().then( (text)=>{
+			if( opts.origin ) {
+				let n = 0;
+				while( n < text.length ) {
+					const k = text.indexOf( "from \"", n );
+					const j = text.indexOf( "href=", n );
+					const i = text.indexOf( "src=", n );
+					if( i < 0 && j < 0 && k < 0 ) break;
+					if( (i < 0 && j < 0) || (k >= 0 && ( i < 0 || k < i ) && ( j < 0 || k < j ) ) ) 
+						n = k+6;
+					else if( i < 0 || (j >= 0 && j < i) ) 
+						n = j+6;
+					else
+						n = i+5;
+					if( text[n] !== '/' || text[n] == '.' )
+						text = text.substring( 0, n ) + opts.origin + text.substring( n );
+				}
+			}
 			shadow.innerHTML = text;
 			if( !opts.noDefaultStyle ){
 				utils.preAddPopupStyles( shadow );

@@ -6,15 +6,15 @@ So it looks like I need a reference sheet of the equivalent ln(q) functions for 
 
 This only considers the subset of log quaternions that have a 0 real value, such that `exp(0) = 1`, and always generate a unit quaternion as a result.
 
-Quaternions are not themselves a thing.  They are a projection or function of angle and axis.  Quaternions are not reversible to their projection (within finite precision represenations); except in a small range around 0 (unit quaternions).  If f(q)+g(p) > 1 information is lost; 
-this 'irrersability' can be avoided by defering evalution of the non-bijective functions especially those that have implicit functions.
-Multiplication of quaternions results in a quaternion in a priniciple angle position; and is non-bijective such that `|A X B| != |B X A|` and has no implicit function.
+Quaternions are not themselves a thing.  They are a projection or function of angle and axis.  Quaternions are not reversible to their projection (within finite precision representations); except in a small range around 0 (unit quaternions).  If f(q)+g(p) > 1 information is lost; 
+this 'irreversibility' can be avoided by deferring evaluation of the non-bijective functions especially those that have implicit functions.
+Multiplication of quaternions results in a quaternion in a principle angle position; and is non-bijective such that `|A X B| != |B X A|` and has no implicit function.
 
 `quaternion( theta, N )` generates a vector which can be operated on with standard quaternion math methods; with a finite numeric representation of math functions.
 
-Natural log quatnerions are not themselves a thing.  `Q(theta,N)`... They are a projection or function of angle and axis.
-Is not reversible when the rotation approaches 0 (again, within finite precision represention); there is the exception
-if the evalution of the scalars of the log-quternion are able to be defered, it is reversible. Addition of log quaternions 
+Natural log quaternions are not themselves a thing.  `Q(theta,N)`... They are a projection or function of angle and axis.
+Is not reversible when the rotation approaches 0 (again, within finite precision representation); there is the exception
+if the evaluation of the scalars of the log-quaternion are able to be deferred, it is reversible. Addition of log quaternions 
 represents a rotation, but they maintain the over-rotation and result in the total rotation; 
 when transformed to a Quaternion they are only the principle angle of the rotation.
 
