@@ -161,10 +161,6 @@ export function RealTime2( T_o, V, P, Ofs, V_o, P_o ) {
 	const Y = (P.y+oY)-P_o.y;
 	const Z = (P.z+oZ)-P_o.z;
 
-
-
-
-
 	const S = T_o;
 
 	const D = V.x;
