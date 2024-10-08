@@ -84,8 +84,8 @@ Ordered (mostly) so terms later are built on previously defined terms; however, 
         - curves may be open or closed, continuous or discrete, ...
     - perimeter - a closed curve.
     - area is a set of all points contained within and on a curve.  The points that are on the curve do not add to the area; the thickness of the perimeter around an area is 0.
- - bi-vector  - a pair of vectors; perhaps defining an orthoganal area or space (an origin and diagonal normal to the corner of the space is sufficent to define a cubical space)
- - bi-vector  - a triplet of vectors; perhaps defining an orthoganal area or space ()
+ - bi-vector  - a pair of vectors; perhaps defining an orthogonal area or space (an origin and diagonal normal to the corner of the space is sufficient to define a cubical space)
+ - tri-vector  - a triplet of vectors; perhaps defining an orthogonal area or space ()
  - space   - A volume.... no relation to `counterspace`; other than values of counters in counterspace may represent or project-as points in a space.  This typically is intended to represent real space,
     but this is of course itself just a projection of real space into a counterspace.  To further clarify this `space` with no other qualifier.
     - points are contained in spaces.  Points in planes are 2 parameter vectors.  Vectors that relate to a location are points.
@@ -261,7 +261,7 @@ if ( multiply two quaternions... )
 
 ## Complex number reduction and testing
 
-### Mandelbrot groundword
+### Mandelbrot groundwork
 
 [3D Graph of equations](https://www.geogebra.org/3d/a5dauj6s)    `cos^(-1)(cos(x) + cos(y)) = π/2 -cos(x) -cos(y);`; The graph is composed of several layers;  (quick summary, red-error, blue - composite of green, purple proposed solution, green - actual computations)
   1) Red - this is the error layer; or the difference between
@@ -269,8 +269,8 @@ if ( multiply two quaternions... )
   3) Green - 3 Layers; this is `arccos(cos(a)+cos(b))` shifted to cover the full range of possible values; cos(a)+cos(b) can be greater than 1 and less than -1, so arccos faults and returns NaN.
   4) Purple - Hypothetical equal graph.
 
-A mandelbrot is a recursive application of a complex number plus a second, constant complex number.  A Quaternion or Log Quaternion can represent a complex number with `y` and `z`
-corrdinates set to 0.  Axis normal is `x=1`.
+A Mandelbrot is a recursive application of a complex number plus a second, constant complex number.  A Quaternion or Log Quaternion can represent a complex number with `y` and `z`
+coordinates set to 0.  Axis normal is `x=1`.
 
 ```
 F(0) = 0 + 0i;
@@ -441,7 +441,7 @@ The normal length is the sum of the axels of rotation. ( ratio of rotation vs no
 
 ```
 
-The shape of the paramters to actually track matters.
+The shape of the parameters to actually track matters.
 A quaternion is itself a second order polynomial that acts on its prior state.
 Every state between before and now is a single state based on the direction, 
 so both forward and backward time is continuous; the previous state can always be considered as a delta from 'before' to here and from here into the future.

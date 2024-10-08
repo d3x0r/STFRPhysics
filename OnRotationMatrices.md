@@ -341,3 +341,24 @@ the trace by 2  subtract from 2?)
 
 
 
+---
+The actual view should be structured from 
+
+1d distance and 1d angle twist around said line of distance.  Line is locally flat, but may exist in extra dimensions of itself.
+
+2d is 2d distance, and a 2nd angle of twist around that axis.  Neither of these should no require a third spatial axis for the rotation result, because it's the surface of the plane that has for every x,y point two angles alpha, beta which operate on the surface curvature... though probably more like a normal a map for a direction vector in the plane out of the plane... 
+
+3d is a 3d distance, and 3rd angle around that axis, now we can rotate the plane, previously could only rotate lines(2d) and points (1).
+
+4d rotation is another distance (in time) but now the rotation isn't actually around the 4th axis, but is a rotation between two other 3D rotation vectors
+
+5D rotations then include 2 more rotations to commute to, and the ratio of  4 and 5d rotation coordinates maps to the transform of the 3d rotation vectors....
+
+But now we should revisit the lower dimensions with this language in the higher dimensions, so we can be consistent from the start.
+
+1d distance and a twist around that distance...
+
+2d  rotations then can rotate the line direction/flex, but really it's 
+2d rotation is a rotation between two 1d rotations
+
+with the first line untwisted, the lines extending in 1 plane perpendicular then each have their twist.  But it's only self relative to some arbitrary 0 point to start the rotations from.

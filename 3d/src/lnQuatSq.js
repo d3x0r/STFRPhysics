@@ -183,29 +183,28 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 			//if( ASSERT ) if( theta) throw new Error( "Why? I mean theta is always on the unit circle; else not a unit projection..." );
 			// create with 4 raw coordinates
 			//throw new Error( "CHECK INITIALIZER" );
-                        if( "number" === typeof b ){
-                        if( theta !== 0 ) console.log( "set is setting a non-zero lnquat" )
-       			this.x = d;
-			this.y = a;
-			this.z = b;
+			if( "number" === typeof b ){
+				if( theta !== 0 ) console.log( "set is setting a non-zero lnquat" )
+			this.x = d;
+				this.y = a;
+				this.z = b;
 				if( e ) {
 					this.update();
 					alignZero(this);
 				}
-			this.dirty = true;
-                        return this;
-                        }else {
-       			this.x = theta;
-			this.y = d;
-			this.z = a;
-			this.dirty = true;
+				this.dirty = true;
+				return this;
+			}else {
+				this.x = theta;
+				this.y = d;
+				this.z = a;
+				this.dirty = true;
 				if( e ) {
 					this.update();
 					alignZero(this);
 				}
-                        return this;
-                        }
-
+				return this;
+			}
 		}else {
 			if( "object" === typeof theta ) {
 				if( "up" in theta ) {
@@ -369,7 +368,7 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 					}
 				}
 				if( "a" in theta ) {
-// angle-angle-angle  {a:,b:,c:}
+					// angle-angle-angle  {a:,b:,c:}
 					const l1 = Math.abs(theta.b)+Math.abs(theta.b)+Math.abs(theta.c);
 					const l3 = Math.sqrt(theta.a*theta.a+theta.b*theta.b+theta.c*theta.c);
 					if( l3 > 0.000001 ) {

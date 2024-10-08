@@ -158,7 +158,7 @@ a scalar(T) of 0 to 1.
 	
    R = P RRF Q         ; rotate the frame P into Q
                        ;  (is this also PT RRF Q)?
-```	
+```
 
 
 ## Rotating between two arbitrary Frames (SLERP proper)
@@ -167,15 +167,15 @@ Rotation between to arbitrary frames may be done by projecting the target to a r
 and then rotating the resulting axis, and applying the resulting
 axis-angle to the starting frame.
 
-```
+
   given Q as an initial frame, P as the target frame, and T as a value from 0 to 1.
 
-   P`  = P RRF Q-1       ; multiply Q angle by -1 to rotate P to relative to Q
+   $P'  = P\  {RRF}\  Q-1$       ; multiply Q angle by -1 to rotate P to relative to Q
    
-   P`` = P` RV Q         ; rotate the direction of P` into frame Q; also ||P`|| = ||P``||
+   $P'' = P' RV Q$        ; rotate the direction of P' into frame Q; also $||P'|| = ||P''||$
    
-   R   = Q RRF (P`` * T) ; result Q rotated by P`` scaled from 0 to 1.
-```
+   R   = Q RRF (P'' * T) ; result Q rotated by P'' scaled from 0 to 1.
+
 
 
 ## Caveats
