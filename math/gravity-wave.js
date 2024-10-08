@@ -135,14 +135,16 @@ function draw() {
 	for( let i = 0; i < values.sun_gravity.length; i++ ) {
 		const sg = values.sun_gravity[i];
 		const pg = values.planet_gravity[i];
-		ctx.beginPath();
-		ctx.strokeStyle = "white";
 		const now = (sliders.valueNow - i)*scalars.Now;
+		ctx.beginPath();
+		ctx.strokeStyle = "hsl(0%,0%,"+(100-(sunSize + now*values.C)*100/(sunSize + (sliders.valueNow)*scalars.Now*values.C))+"%)";
 		ctx.arc( 500 + sg.x, 500 + sg.y, (sunSize + now * values.C)* values.Scale, 0, Math.PI*2 );
 		ctx.stroke();
 
 		ctx.beginPath();
-		ctx.strokeStyle = "white";
+		const c2 = "hsl(0,0%,"+(100-(planetSize + now * values.C)*100/(planetSize + (sliders.valueNow)*scalars.Now*values.C)).toFixed(2)+"%)";
+		//console.log( "distance = ", (100-(planetSize + now * values.C)*100/(planetSize + runT*values.C)), c2 )
+		ctx.strokeStyle = c2;//"hsl(0,0,"+(100-(planetSize + now * values.C)*100/(planetSize + runT*values.C)).toFixed(2)+"%)";
 		ctx.arc( 500 + pg.x, 500 + pg.y, (planetSize + now * values.C)* values.Scale, 0, Math.PI*2 );
 		ctx.stroke();
 	}
