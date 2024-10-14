@@ -3,16 +3,16 @@
 ### Under Development; forgive me for asserting things I may not fully proven.
 
 
-<TBD>
+.TBD.
 
 d3ck0r@gmail.com
 
-Independant Studies
+Independent Studies
 
 ## Abstract
 
 Rodrigues rotation system.
-This describes from first princpals, _____, which is a system that works on [rotation vectors](https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation#Rotation_vector).  Efficient smooth
+This describes from first principals, _____, which is a system that works on [rotation vectors](https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation#Rotation_vector).  Efficient smooth
 differentiation is possible within this space.
 
 Abstractly this exists before matrix conversion of so(3) group of Lie Algebra.

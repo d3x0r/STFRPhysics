@@ -106,7 +106,7 @@ canvas.addEventListener( "mousemove", (e)=>{
 	const y = -(((e.clientY-rect.top)-(h/2.0))/h) * 10;
 	mouseX = x;
 	mouseY = y;
-	drawsomething();
+//	drawsomething();
 } );
 
 let start = 0;//performance.now();
@@ -123,8 +123,11 @@ function drawsomething() {
 	let atsec = (start % 10000);
 
 	const sa = atsec/1000;
+	const sa05 = sa + 0.5;
 
-	const n = Math.floor( atsec/1000 );
+	const n = Math.floor( sa );
+	const n05 = Math.floor( sa05 );
+
 	const n1 = Math.floor( atsec/1000 + 1 );
 
 	const s = Math.sin( atsec * Math.PI/2 / 1000 );
@@ -135,51 +138,72 @@ function drawsomething() {
 
 	const cc = Math.abs(sa%2-1)
 
-	let from = Math.floor( n/4 ) * 200 + 100 + 50;
-	let to = Math.floor( n/4 ) * 200 + 100  ;
+	const dd = Math.abs((sa+0.5)%2-1)
+	const ee = Math.abs((sa-0.5+10)%2-1)
 
-	const from2 = Math.floor( atsec/1000 ) * 50+50;
-	const to2 = Math.floor( atsec/1000 ) * 50 ;
+	let from = Math.floor( n/4 ) * 200 + 150;
+	let to = Math.floor( n/4 ) * 200 + 100  ;
+	let f2 = 25;
+	let t2 = 25;
+
+	let f1 = 0;
+	let t1 = 0;
+
+	const from2 = Math.floor( n05/4 ) * 200+150;
+	const to2 = Math.floor( n05/4 ) * 200 + 100 ;
 
 //	if( Math.floor(n/4) )
+	switch( n05%4 ){
+	case 0:
+		t2 = 25;
+		f2 = -75;
+		break;
+	case 1:
+		t2 = 25;
+		f2 = 25;
+		break;
+	case 2:
+		t2 = 125;
+		//f2 = 75;
+		f2 = 25
+		break;
+	case 3:
+		t2 = 125;
+		f2 = 125
+		break;
+	}
+	switch( n%4 ){
+	case 0:
+		break;
+	case 1:
+		t1 = 100;
+		break;
+	case 2:
+		f1 = 100;		
+		t1 = 100;
+		break;
+	case 3:
+		f1 = 100;		
+		t1 = 200;
+		break;
+	}
 
-	if( (n % 4) >=1 && (n%4) <=2 ) {
-		to += 100;		
-	}
-	if( (n % 4) >=3 ) {
-		to += 200;		
-	}
 	
-	if( (n % 4) >=2 && (n%4) <=3 ) {
-		from += 100;		
-	}
-
 	ctx.beginPath();
 	ctx.strokeStyle = "green";  // starts max, at origin, and +100
-	if( from > to ) {
-		ctx.moveTo( from + ss * 50, 480 );
-		ctx.lineTo( from+ss * 50, 520 );
-		ctx.stroke();
-	}
-	else{
-		ctx.moveTo( to + cc* 50, 480 );
-		ctx.lineTo( to+cc * 50, 520 );
+	{
+		ctx.moveTo( sa * 50 + 150, 480 );
+		ctx.lineTo( sa * 50 + 150, 520 );
 		ctx.stroke();
 	}
 
 
 	ctx.beginPath();
 	ctx.strokeStyle = "magenta";  // starts max, at origin, and +100
-	if( from > to ) {
-		ctx.moveTo( from + ss * 50 - 100, 480 );
-		ctx.lineTo( from+ss * 50 - 100, 520 );
+		ctx.moveTo( sa * 50 + 50, 480 );
+		ctx.lineTo( sa * 50 + 50, 520 );
 		ctx.stroke();
-	}
-	else{
-		ctx.moveTo( to + cc* 50 - 100, 480 );
-		ctx.lineTo( to+cc * 50 - 100, 520 );
-		ctx.stroke();
-	}
+	
 
 
 	for( let a = 0; a <= n+1; a++ ) {
@@ -196,14 +220,26 @@ function drawsomething() {
 
 	ctx.beginPath();
 	ctx.strokeStyle = "red"; // starts min, at +50
-	ctx.arc( (from) , 500, ss * 50, 0, Math.PI*2 );
+	ctx.arc( (from+f1) , 500, ss * 50, 0, Math.PI*2 );
 	ctx.stroke();
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";  // starts max, at origin, and +100
-	ctx.arc( (to) , 500, cc * 50, 0, Math.PI*2 );
+	ctx.arc( (to+t1) , 500, cc * 50, 0, Math.PI*2 );
 	ctx.stroke();
-ctx.fillStyle="black";
-	ctx.fillText( ""+n, 400, 400 );
+
+
+	ctx.beginPath();
+	ctx.strokeStyle = "#088"; // starts min, at +50
+	ctx.arc( (from2+f2) , 500, dd * 50, 0, Math.PI*2 );
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.strokeStyle = "#880";  // starts max, at origin, and +100
+	ctx.arc( (to2+t2) , 500, ee * 50, 0, Math.PI*2 );
+	ctx.stroke();
+
+
+	ctx.fillStyle="black";
+	ctx.fillText( ""+n + " " + n05, 400, 400 );
 	requestAnimationFrame( drawsomething );	
 
 }

@@ -1,4 +1,4 @@
-==Quaternion Natural Log==
+==Euler Axis==
 
 The natural log of a quaternion represents curving space by 3 angles around 3 axles of rotation; similar to Euler angles, but order independent<ref>{{cite web|url=https://github.com/d3x0r/STFRPhysics|title=STFRPhysics Repository|author=d3x0r}}</ref>.  The axles of rotation are aligned to the standard cartesian <math>X,Y,Z</math> axii. These rotations may be simply added and subtracted, especially when the frames being rotated are fixed to each other as in IK chains.  Differences between two objects that are in the same reference frame are found by simply subtracting their orientations.  Rotations that are applied from external sources, or are from sources relative to the current rotation still require multiplications, application of the Rodriguez Formula is provided. 
 

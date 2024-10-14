@@ -410,7 +410,6 @@
 					geometryNormals.vertices.length = 0;
 					geometryNormals.faces.length = 0;
 					geometryNormals.colors.length = 0;
-					//geometryNormals	= new THREE.LineSegmentsGeometry2();
 					geometryNormalsvertices.length = 0;
 					geometryNormalsfaces.length = 0;
 					geometryNormalscolors.length = 0;
@@ -446,59 +445,13 @@
 	 	 	 // geometry.verticesNeedUpdate = true;
 	 	 	 // geometry.elementsNeedUpdate = true;
 	 	 	 // geometry.normalsNeedUpdate = true;
-			if( geometryNormals ) {
-				if(0)
-				{	
-				const arr = [];
-				for( let p of geometryNormals.vertices ) {	
-					arr.push(p.x);arr.push(p.y);arr.push(p.z);
-				}
-				const arrc = [];
-				for( let p of geometryNormals.colors ) {	
-					arrc.push(p.r);arrc.push(p.g);arrc.push(p.b);
-				}
-				const newgeometryNormals	= new THREE.LineSegmentsGeometry2();
-
-				//const tmplineSegments =  new THREE.LineSegments( geometryNormals, linematerial );
-
-
-				newgeometryNormals.setPositions( arr );
-				
-				newgeometryNormals.setColors( arrc );
-				/*
-				var linematerial2 = new MeshLineMaterial({
-					color : 0xffffff
-				   , lineWidth : 0.1
-				  , vertexColors: THREE.VertexColors
-					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
-				});
-		        
-				for( var i = 0; i < geometryNormals.vertices.length; i+=2 ) {
-					const arr = [geometryNormals.vertices[i*2+0],geometryNormals.vertices[i*2+1]];
-					const ml = new MeshLine();
-					ml.setGeometry( arr );
-		        
-				}
-		                  */
-				var linematerial = new THREE.LineBasicMaterial({
-//				var linematerial = new THREE.LineMaterial2({
-					color : 0xffffffff
-				   , linewidth : 2.75
-				  , vertexColors: THREE.VertexColors
-					, resolution : new THREE.Vector2( canvasWidth, canvasHeight )
-				});
-				lineSegments = new THREE.LineSegments2( newgeometryNormals, linematerial );
-				//lineSegments = new THREE.Mesh( ml.geometry, linematerial2 );
-				scene.add( lineSegments );
-				}
-			if(1)
 			{
-			var linematerial = new THREE.LineBasicMaterial({
-				color : 0xffffff
-			  , vertexColors: THREE.VertexColors
-			});
-			lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
-				scene.add( lineSegments );
+				var linematerial = new THREE.LineBasicMaterial({
+					color : 0xffffff
+				, vertexColors: THREE.VertexColors
+				});
+				lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
+					scene.add( lineSegments );
 			}
 
 			}
