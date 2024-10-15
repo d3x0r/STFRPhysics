@@ -1,19 +1,46 @@
 
 
 
-v1,v2 are unit vectors already... so rotating them they can end up on the same...
+v1,v2 are(or will be) unit vectors already... so rotating them they can end up on the same...
 
 $(A,B)$  $(C,D)$
 
 $(a,b)A$ $(c,d)B$    ;  $(a,b)=\frac{(A,B)}{|(A,B)|}$    $(c,d)= \frac{(C,D)}{|(C,D)|}$ $A=|(A,B)|$  $B=|(C,D)|$
 
-if( $AD$ > $BC$ ) s=1  else s=-1
+
+$(ad * AB >bc * AB)=AB(ad>bc)=(  ad > bc )$
+
+
+if( ad > bc ) s=1  else s=-1
+
+$a = \cos(\alpha)$
+$b = \sin(\alpha)$
+$c=cos(\beta)$
+$d=sin(\beta)$
+
+cross product produces...
+
+$cos(\alpha)sin(\beta) > sin(\alpha)cos(\beta)$
+
+$cos(\alpha)sin(\beta) - sin(\alpha)cos(\beta) = x$
+
+
+$\sin(a-b)=\sin a \cos b - \cos a \sin b$
+
+$-\sin(\alpha-\beta)=+\cos \alpha \sin \beta -\sin \alpha \cos \beta$
+
+$\sin( \beta-\alpha)$
+
+dot product produces...
+
+$cos(\alpha-\beta)$ or $cos(\beta-\alpha)$
+
 
 dot product is (a,b)x(c,d) = (ac+bd)
 
 $s*\sqrt{1-(db+ac)^2}*A*B = (ad-bc)*A*B$
 
-// why isn't that 2 single values, like next is 3 single values?
+- why isn't that 2 single values, like next is 3 single values?
 
 (bd, ac)
 
@@ -51,9 +78,102 @@ if( (CF,AG,BE) > (BG,CE,AF)  1  else -1
 
 
 
+---
+
+There's some other possible direction information maybe?
+
+a direction vector... in 1D has nowhere to rotate to, and would always be identity.
+A twist around that 1D line can be in its 1+1D without needing any other line... 
+comparisons a+b, a-b, make sense to do...  on the rotation direction it's modulo 4.
+modulo 4(q-turns) is 1 rotation, could be modulo 1(turns), or 2pi(radian) or 400(gradian);
+0 1 2 3 ... `1` is 90 degrees like `1i` is 90 degrees and in binary 00, 01, 10, 11, the first two
+are positive, the next two are negative.
+
+2D now there's somewhere to turn from a point on the axis to the other axis, around a 
+rotation axis which doesn't actually exist, and in the 3rd dimension is the new z axis.
+and the plane is where z=0.  so cos( t ) = x direction  degrees around Z,  sin(t) = y direction
+
+a=arccos(x) b=arcsin(y)
+
+if( a > 0 && b > 0 ) a=a     b=b   a=b
+if( a > 0 && b < 0 ) a=-a    b=b  a=b
+if( a < 0 && b > 0 ) a=a     b=b+pi/2
+if( a < 0 && b < 0 ) a=-a    b=b - pi/2
+
+3D, (X,Y,Z) 
+It's not this simple, because when unwinding the other angles... well no I can just do cos(x),...
 
 
 
+```js
+	// normal conversion is linear.
+	// rotates 'up' to point in the line's direction.
+function setUp( A,B,C ) {
+	const theta = {x:A, y:B, z:C};
+	const l2 = (Math.abs(theta.x)/*+abs(theta.y)*/+Math.abs(theta.z));
+	if( l2 ) {
+		const l3 = Math.sqrt(theta.x*theta.x+theta.y*theta.y+theta.z*theta.z);
+		//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
+		
+		const ty = theta.y /l3; // square normal
+		const cosTheta = acos( ty ); // 1->-1 (angle from pole around this circle.
+		const norm1 = Math.sqrt(theta.x*theta.x+theta.z*theta.z);
+		// get square normal...
+		this.nx = theta.z/norm1;
+		this.ny = 0;
+		// this is a simple perpendicular
+		this.nz = -theta.x/norm1;
+
+		this.θ = cosTheta;							
+		this.x = this.nx*cosTheta;
+		this.y = this.ny*cosTheta;
+		this.z = this.nz*cosTheta;
+		
+		if( twistDelta ) {
+			// the frame has an implicit direction based on 
+			// parallel transport from the frame at the pole around the great
+			// circle tot his point.... can change the function of that
+			// stepping.....
+			yaw( this, twistDelta /*+ angle*/ );
+		}
+	} else {
+		// up is UP, and there is no rotation
+		// setup a default frame.
+		this.nx = 0;
+		this.ny = theta.y > 0?1:-1;
+		this.nz = 0;
+	
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+	
+		// the remining of this is update()
+		this.θ = 0;
+		this.dirty = false;
+	}
+
+```
+
+``` js
+up() {
+			s = Math.sin( t*q.θ );
+			c1 = Math.cos( t*q.θ );
+			c = 1 - c1;
+			return new vectorType(   ( xy() - wz() ),   c1 + yy(),      ( wx() + yz() ) );
+
+	const q = this;
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1- c1;
+	const cn = c*q.ny;
+	return new vectorType( 
+	        -s*q.nz  + cn*q.nx
+	       , c1      + cn*q.ny  //( c + (1-c)yy =  c +yy-cyy  =  c(1-yy)+yy
+	       , s*q.nx  + cn*q.nz
+	       );
+}
+
+```
 
 ```
 
