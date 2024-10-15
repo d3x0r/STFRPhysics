@@ -49,7 +49,7 @@ export class ControlForm extends Popup {
 			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
-		this.move( 0,300);
+		this.move( 0,3);
 		forms.push( this );
 	}
 	

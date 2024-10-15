@@ -10,7 +10,7 @@
 <script src="NaturalCamera.js"></script>
 */
 
-import {THREE,Viewer} from "./three-js-view.js"
+import {THREE,Viewer,BufferAttribute} from "./three-js-view.js"
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
@@ -117,14 +117,14 @@ function init() {
 	});
 //	myBrainBoard = form;
 	
-        
+		
 	let tmp;
-        tmp = document.getElementById( "Controls") ;
-        if( tmp ) {
-        	tmp.addEventListener( "click", (evt)=>{
-                	form.show();
-                } );
-        	
+		tmp = document.getElementById( "Controls") ;
+		if( tmp ) {
+			tmp.addEventListener( "click", (evt)=>{
+					form.show();
+				} );
+			
 	}
 
 
@@ -133,23 +133,24 @@ function init() {
 
 
 
-		const geometryNormals	= new THREE.Geometry();
-		geometryNormals.vertices.length = 0;
-		geometryNormals.faces.length = 0;
-		geometryNormals.colors.length = 0;
-		lineGeometry = geometryNormals
+		const geometryNormals	= new THREE.BufferGeometry();
+		const normalVerts = new BufferAttribute(Float32Array, 3);
+		const normalColors = new BufferAttribute(Float32Array, 4);
+		
 		{
 			var linematerial = new THREE.LineBasicMaterial({
 				color : 0xffffff
-			, vertexColors: THREE.VertexColors
+				, vertexColors: true
+				, vertexAlphas: true
 			});
 			lineSegments = new THREE.LineSegments( geometryNormals, linematerial );
 			viewer.addModelToScene(lineSegments )
 		}
 
 
-		updateGeometry(geometryNormals.vertices,geometryNormals.colors);
-
+		updateGeometry(normalVerts,normalColors);
+		geometryNormals.setAttribute( "position", new THREE.BufferAttribute( normalVerts.buffer, 3 ) );
+		geometryNormals.setAttribute( "color", new THREE.BufferAttribute( normalColors.buffer, 4, true ) );
 
 }
 
