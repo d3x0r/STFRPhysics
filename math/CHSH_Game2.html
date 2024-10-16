@@ -26,6 +26,11 @@
 .width-limit {
 	width: 30vw;
 }
+
+td {
+	border-left:solid black 1px;
+}
+
 </style>
 
 </head>
@@ -144,7 +149,8 @@
 const tablebody = dotList.createTBody();
 tablebody.className = "list-body";
 const header = dotList.createTHead();
-const headerRow = header.insertRow();
+const headerRow = tablebody.insertRow();
+headerRow.style.borderType = "solid black 1px";
 const h1 = headerRow.insertCell();
 h1.textContent = "Current A";
 const h2 = headerRow.insertCell();
