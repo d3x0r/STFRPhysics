@@ -9,14 +9,12 @@
 	position:absolute;
 	top:10vh;
    left:43vw;
-	height:80vh;
+	height:30vh;
 	overflow:auto;
 
 }
 .list-body{
-/*	height: 100%;*/
     display: table-row-group;
-/*	overflow-y:scroll;*/
 	
 }
 .list-header {
@@ -30,6 +28,11 @@
 .width-limit {
 	width: 30vw;
 }
+
+td {
+	border-left:solid black 1px;
+}
+
 </style>
 
 </head>
@@ -151,7 +154,7 @@ const tablebody = dotList.createTBody();
 tablebody.className = "list-body";
 const header = dotList.createTHead();
 header.className = "list-header";
-const headerRow = header.insertRow();
+const headerRow = tablebody.insertRow();
 const h1 = headerRow.insertCell();
 h1.textContent = "Current A";
 const h2 = headerRow.insertCell();
@@ -274,6 +277,25 @@ begin(); // do a onetime setup.
 
 function begin() {
 	while( tablebody.firstChild ) tablebody.firstChild.remove();
+
+const headerRow = tablebody.insertRow();
+const h1 = headerRow.insertCell();
+h1.textContent = "Current A";
+const h2 = headerRow.insertCell();
+h2.textContent = "Current B";
+const h3 = headerRow.insertCell();
+h3.textContent = "Current Match";
+
+const h4 = headerRow.insertCell();
+h4.textContent = "a0b0";
+const h5 = headerRow.insertCell();
+h5.textContent = "a1b0";
+const h6 = headerRow.insertCell();
+h6.textContent = "a0b1";
+const h7 = headerRow.insertCell();
+h7.textContent = "a1b1";
+
+
 	choices.forEach( c=>c.forEach((v,i)=>c[i]=0));
 
 	const seed = seedText.value;
