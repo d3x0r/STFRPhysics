@@ -21,35 +21,69 @@ export class ControlForm extends Popup {
 	#controls = null;
 	#mover = null;	
 
+	controlGroups = [];
+
 	constructor( parent, opts ) {
 		super( "Controls", parent );
+		this.controlGroups.push( document.createElement( "div" ) );
+		this.appendChild( this.controlGroups[0] );
+		this.controlGroups[0].className = "control-group";
+		this.controlGroups.push( document.createElement( "div" ) );
+		this.appendChild( this.controlGroups[1] );
+		this.controlGroups[1].className = "control-group";
+
 		this.#controls = opts.controls;
-		popups.makeSlider( this, this, "rotationRate", "Rotation Rate" );
-		popups.makeCheckbox( this, this, "applyAccel", "Apply Accel" );
+		
 
-		this.xControl = popups.makeTextField( this, this, "z", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.yControl = popups.makeTextField( this, this, "y", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.zControl = popups.makeTextField( this, this, "x", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
+		popups.makeSlider( this.controlGroups[0], this, "rotationRate", "Rotation Rate" );
+		popups.makeCheckbox( this.controlGroups[0], this, "applyAccel", "Apply Accel" );
+		popups.makeCheckbox( this.controlGroups[0], this, "animate", "Animate" );
 
-		this.sxControl = popups.makeTextField( this, this, "Vz", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.syControl = popups.makeTextField( this, this, "Vy", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.szControl = popups.makeTextField( this, this, "Vx", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.xControl = popups.makeTextField( this.controlGroups[0], this, "z", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.yControl = popups.makeTextField( this.controlGroups[0], this, "y", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.zControl = popups.makeTextField( this.controlGroups[0], this, "x", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
 
-		this.yawControl = popups.makeTextField( this, this, "yaw", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.pitchControl = popups.makeTextField( this, this, "pitch", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.rollControl = popups.makeTextField( this, this, "roll", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.sxControl = popups.makeTextField( this.controlGroups[0], this, "Vz", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.syControl = popups.makeTextField( this.controlGroups[0], this, "Vy", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.szControl = popups.makeTextField( this.controlGroups[0], this, "Vx", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
 
-		this.yawControlM = popups.makeTextField( this, this, "yawm", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.pitchControlM = popups.makeTextField( this, this, "pitchm", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
-		this.rollControlM = popups.makeTextField( this, this, "rollm", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
-		const input = popups.makeTextInput( this, this, "objectCount", "Object Count" );
-		const linInput = popups.makeTextInput( this, this, "linScalar", "Linear Accel Scalar" );
-		const rotInput = popups.makeTextInput( this, this, "rotScalar", "Rotation Scalar" );
-		popups.makeButton( this, "Re-init", ()=>{
+		this.yawControl = popups.makeTextField( this.controlGroups[0], this, "yaw", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.pitchControl = popups.makeTextField( this.controlGroups[0], this, "pitch", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.rollControl = popups.makeTextField( this.controlGroups[0], this, "roll", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
+
+		this.yawControlM = popups.makeTextField( this.controlGroups[0], this, "yawm", "Yaw", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.pitchControlM = popups.makeTextField( this.controlGroups[0], this, "pitchm", "Pitch", false, false ); //makeTextField( form, input, value, text, money, percent )
+		this.rollControlM = popups.makeTextField( this.controlGroups[0], this, "rollm", "Roll", false, false ); //makeTextField( form, input, value, text, money, percent )
+		const input = popups.makeTextInput( this.controlGroups[0], this, "objectCount", "Object Count" );
+		const linInput = popups.makeTextInput( this.controlGroups[0], this, "linScalar", "Linear Accel Scalar" );
+		const rotInput = popups.makeTextInput( this.controlGroups[0], this, "rotScalar", "Rotation Scalar" );
+		popups.makeButton( this.controlGroups[0], "Re-init", ()=>{
 			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
 		this.move( 0,3);
+
+		[{field:"sliderAX", text: "A x"}
+		, {field:"sliderAY", text: "A y"}
+		, {field:"sliderAZ", text: "A z"}
+		, {field:"sliderAW", text: "A w"}
+		, {field:"sliderBX", text: "B x"}
+		, {field:"sliderBY", text: "B y"}
+		, {field:"sliderBZ", text: "B z"}
+		, {field:"sliderBW", text: "B w"}].forEach( slider=>{
+
+			const sld = popups.makeSlider( this.controlGroups[1], this, slider.field, slider.text, (x)=>{
+					// slider to value.
+					return (x-500)/100;
+				}, 
+				(x)=>{
+					// value to slider
+					return x*100+500;
+				} );			
+			sld.on( "change", ()=>{
+				this.on( "change", true );
+			} );
+		} );
 		forms.push( this );
 	}
 	

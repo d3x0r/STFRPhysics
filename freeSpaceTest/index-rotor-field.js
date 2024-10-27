@@ -158,6 +158,7 @@ function init() {
 
 
 	function tick() {
+		if( controlForm.animate )
 		clock += Math.PI/16;
 
 
@@ -182,11 +183,13 @@ function updateGeometry(verts,cols) {
 	verts.length = 0;
 	cols.length = 0;
 	const color = new THREE.Color( 1,0,0,1 );
+	const colorg = new THREE.Color( 0,1,0,1 );
+	const colorb = new THREE.Color( 0,0,1,1 );
 	const color2 = new THREE.Color( 0,1,0,1 );
 	//color.setHSL( (seg % 100) / 100, 1.0, 0.5 );
 	//const axis = new THREE.Vector3( 0, 1, 0 );
 	const Q = new lnQuat( {x:0,y:1,z:0} );
-	const stress = Math.PI*4 * (controlForm.sliderAX||0.5);
+	const stress = Math.PI*4 * (controlForm.sliderAX||0.5)/5;
 	const cdel1 = 1/5;
 	const rdel1 = 1/5;
 	for( let r = 0; r < 50; r++ ) {
@@ -242,31 +245,93 @@ function updateGeometry(verts,cols) {
 
 			verts.push( here_rot)
 			verts.push( c_plus1_rot)
-		
 
+			const tmpBasis = { right: {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
+			                 , forward: {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z}, up: {x:0,y:0,z:0} };
+						tmpBasis.up.x = tmpBasis.forward.y * tmpBasis.right.z - tmpBasis.forward.z * tmpBasis.right.y;
+						tmpBasis.up.y = tmpBasis.forward.z * tmpBasis.right.x - tmpBasis.forward.x * tmpBasis.right.z;
+						tmpBasis.up.z = tmpBasis.forward.x * tmpBasis.right.y - tmpBasis.forward.y * tmpBasis.right.x;
+				const rlen = Math.sqrt( tmpBasis.right.x*tmpBasis.right.x+ tmpBasis.right.y*tmpBasis.right.y+ tmpBasis.right.z*tmpBasis.right.z );
+				const flen = Math.sqrt( tmpBasis.forward.x*tmpBasis.forward.x+ tmpBasis.forward.y*tmpBasis.forward.y+ tmpBasis.forward.z*tmpBasis.forward.z );
+				const ulen = Math.sqrt( tmpBasis.up.x*tmpBasis.up.x+ tmpBasis.up.y*tmpBasis.up.y+ tmpBasis.up.z*tmpBasis.up.z );
+			tmpBasis.right.x /= rlen; tmpBasis.right.y /= rlen; tmpBasis.right.z /= rlen;
+			tmpBasis.forward.x /= flen; tmpBasis.forward.y /= flen; tmpBasis.forward.z /= flen;
+			tmpBasis.up.x /= ulen; tmpBasis.up.y /= ulen; tmpBasis.up.z /= ulen;
+						Q.fromBasis( tmpBasis );
+
+			//Q.set( {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
+			//     ,  {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z} );
+			const basis = Q.getBasis();
+
+			basis.forward.x = basis.forward.x * spaceScale*0.05 +here_rot.x;
+			basis.forward.y = basis.forward.y * spaceScale*0.05 +here_rot.y;
+			basis.forward.z = basis.forward.z * spaceScale*0.05 +here_rot.z;
+			basis.right.x = basis.right.x * spaceScale*0.05 +here_rot.x;
+			basis.right.y = basis.right.y * spaceScale*0.05 +here_rot.y;
+			basis.right.z = basis.right.z * spaceScale*0.05 +here_rot.z;
+			basis.up.x = basis.up.x * spaceScale*0.05 +here_rot.x;
+			basis.up.y = basis.up.y * spaceScale*0.05 +here_rot.y;
+			basis.up.z = basis.up.z * spaceScale*0.05 +here_rot.z;
+
+			cols.push( color );
+			cols.push( color );
+
+
+			verts.push( here_rot )
+			verts.push( basis.right )
+			cols.push( colorg );
+			cols.push( colorg );
+
+			verts.push( here_rot )
+			verts.push( basis.up )
+			
+			cols.push( colorb );
+			cols.push( colorb );
+
+			verts.push( here_rot )
+			verts.push( basis.forward )
+
+
+if(0)
+{
+		// this draws either the resulting rotated space vector, or the 
+		// first rotor.
+			const basis = Q.getBasis();
+
+			Q.set( 0, cs*rot_here, sn*rot_here, 0 );
+
+			basis.forward.x = basis.forward.x * spaceScale*0.05 +Q.x;
+			basis.forward.y = basis.forward.y * spaceScale*0.05 +Q.y;
+			basis.forward.z = basis.forward.z * spaceScale*0.05 +Q.z;
+			basis.right.x = basis.right.x * spaceScale*0.05 +Q.x;
+			basis.right.y = basis.right.y * spaceScale*0.05 +Q.y;
+			basis.right.z = basis.right.z * spaceScale*0.05 +Q.z;
+			basis.up.x = basis.up.x * spaceScale*0.05 +Q.x;
+			basis.up.y = basis.up.y * spaceScale*0.05 +Q.y;
+			basis.up.z = basis.up.z * spaceScale*0.05 +Q.z;
+
+			cols.push( color );
+			cols.push( color );
+
+
+			verts.push( Q )
+			verts.push( basis.right )
+			cols.push( colorg );
+			cols.push( colorg );
+
+			verts.push( Q )
+			verts.push( basis.up )
+			
+			cols.push( colorb );
+			cols.push( colorb );
+
+			verts.push( Q )
+			verts.push( basis.forward )
+
+}
 		}	
 	}	
 
-if(0)
-	for( let seg = 0; seg < 400; seg++ ) {
-		const color = new THREE.Color( 0,0,0,1 );
-		color.setHSL( (seg % 100) / 100, 1.0, 0.5 );
-		cols.push( color );
-		cols.push( color );
-
-		verts.push( new THREE.Vector3( seg*spaceScale,0, 0 ))
-		verts.push( new THREE.Vector3( (seg+1)*spaceScale ,0,0 ))
-		if( seg % 3 == 0 ) {
-			for( let seg2 = 0; seg2 < 400; seg2++ ) {
-				const color = new THREE.Color( 0,0,0,1 );
-				color.setHSL( (seg2 % 100) / 100, 1.0, 0.5 );
-				cols.push( color );
-				cols.push( color );
-				verts.push( new THREE.Vector3( seg*spaceScale,0, 0 ))
-				verts.push( new THREE.Vector3( seg*spaceScale,5*spaceScale * Math.cos(seg/100*Math.PI*2), 5*spaceScale * Math.sin(seg/100*Math.PI*2) ))
-			}
-		}
-	}
 	//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
 	//normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
 	//normalColors.push( new THREE.Color( "hsl(0, 100%, 50%)", 255,0,255,255 ))
