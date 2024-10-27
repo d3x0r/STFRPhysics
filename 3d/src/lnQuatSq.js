@@ -1230,6 +1230,7 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	// make sure it's normalized
 
 	//-------- apply rotation to the axle... (put axle in this basis)
+/*	
 	const nst = Math.sin((lnQuat.invertCrossProduct?-1:1)*this.θ/2); // normal * sin_theta
 	const qw = Math.cos((lnQuat.invertCrossProduct?-1:1)*this.θ/2);  //Math.cos( pl );   quaternion q.w  = (exp(lnQ)) [ *exp(lnQ.W=0) ]
 	
@@ -1244,6 +1245,21 @@ lnQuat.prototype.spin = function(th,axis,oct){
 	const ax = ax_ + qw * tx + ( qy * tz - ty * qz )
 	const ay = ay_ + qw * ty + ( qz * tx - tz * qx )
 	const az = az_ + qw * tz + ( qx * ty - tx * qy );
+*/
+	// rodrigues full angle multiply
+	const c = Math.cos(this.θ);
+	const s = Math.sin(this.θ);
+
+	const qx = this.nx;
+	const qy = this.ny;
+	const qz = this.nz;
+
+	const dot =  (1-c)*((qx * ax_ ) + (qy*ay_)+(qz*az_));
+	const ax = ax_*c + s*(qy * az_ - qz * ay_) + qx * dot;
+	const ay = ay_*c + s*(qz * ax_ - qx * az_) + qy * dot;
+	const az = az_*c + s*(qx * ay_ - qy * ax_) + qz * dot;
+///			, vw*c + s*(qx * vy - qy * vx) + qw * dot 
+
 
 	return finishRodrigues( this, oct||0, ax, ay, az, th, false );
 }
