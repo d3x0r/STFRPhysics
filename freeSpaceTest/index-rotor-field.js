@@ -12,11 +12,12 @@
 
 import {THREE,Viewer,BufferAttribute} from "./three-js-view.js"
 
+import {Motion} from "../3d/src/three.js/personalFill.mjs"
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
 
 import {BrainForm} from "./brainBoard.mjs"
-import {ControlForm} from "./controlForm.mjs"
+import {ControlForm} from "./controlForm-rotor.mjs"
 import {BrainStem,ref} from "./automaton/brain/brain.mjs"
 import {Skybox} from "./skybox.mjs"
 
@@ -32,7 +33,7 @@ var l = 0;
 let world = null;
 var myMover = null;
 var myBrainBoard = null;
-var myMotion = null;
+let myMotion = null;
 var movers2 = [];
 var movers = [];
 let skybox = null;
@@ -109,6 +110,11 @@ function tickScene( ) {
 function init() {
 
 	
+	myMotion = Viewer.addModelToScene2( new THREE.Object3D() );
+	myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
+   myMotion.orientation.set( 0, 0, -Math.PI/2, 0 );
+	myMotion.position.set( 3, 0, 0 );
+	
 //	const form = new BrainForm( controlContainer  );
 	controlForm = new ControlForm( document.getElementById( "controls" ), {
 		controls:controls,
@@ -174,7 +180,7 @@ function init() {
 
 
 
-const spaceScale = 0.1;
+const spaceScale = 0.5;
 const spaceScale2 = 0.01;
 
 const grid = [];
@@ -192,14 +198,26 @@ function updateGeometry(verts,cols) {
 	const stress = Math.PI*4 * (controlForm.sliderAX||0.5)/5;
 	const cdel1 = 1/5;
 	const rdel1 = 1/5;
-	for( let r = 0; r < 50; r++ ) {
-		const rdel = (r-24.5)/5;
-		for( let c = 0; c < 50; c++ ) {
-			const cdel = (c-24.5)/5;
+	
+	const axis = {x:controlForm.sliderAY, y:controlForm.sliderAZ, z:controlForm.sliderAW};
+	const axislen2 = axis.x*axis.x + axis.y*axis.y + axis.z*axis.z;
+	const axislen = axislen2?Math.sqrt( axislen2):1;
+	axis.x/= axislen;
+	axis.y/= axislen;
+	axis.z/= axislen;
 
-			const here = new THREE.Vector3( rdel*spaceScale,cdel*spaceScale, 0 )
-			const r_plus1 = new THREE.Vector3( (rdel+rdel1)*spaceScale ,cdel*spaceScale,0 )
-			const c_plus1 = new THREE.Vector3( (rdel)*spaceScale ,(cdel+cdel1)*spaceScale,0 )
+	const axisRot = Q.set( clock, {x:controlForm.sliderBX, y:controlForm.sliderBY, z:controlForm.sliderBZ } ).apply( axis );
+
+	const firstSpin = new lnQuat();
+
+	for( let r = 0; r < 100; r++ ) {
+		const rdel = (r-49.5)/5;
+		for( let c = 0; c < 100; c++ ) {
+			const cdel = (c-49.5)/5;
+
+			const here = new THREE.Vector3( 0,rdel*spaceScale,cdel*spaceScale )
+			const r_plus1 = new THREE.Vector3( 0,(rdel+rdel1)*spaceScale ,cdel*spaceScale )
+			const c_plus1 = new THREE.Vector3( 0,(rdel)*spaceScale ,(cdel+cdel1)*spaceScale )
 
 			const rsq = rdel*rdel + cdel*cdel;
 			const rsq_r = (rdel+rdel1)*(rdel+rdel1) + cdel*cdel;
@@ -208,13 +226,13 @@ function updateGeometry(verts,cols) {
 			const cs = Math.cos( clock );
 			const sn = Math.sin( clock );
 
-			const rot_here = stress*(Math.pow(1/(1+Math.sqrt(rsq)),1));
-			const rot_r = stress*(Math.pow(1/(1+Math.sqrt(rsq_r)),1));
-			const rot_c = stress*(Math.pow(1/(1+Math.sqrt(rsq_c)),1))
+			const rot_here = stress*(1/(1+(rsq)));
+			const rot_r = stress*(1/(1+(rsq_r)));
+			const rot_c = stress*(1/(1+(rsq_c)))
 
-			const here_rot = Q.set( 0, cs*rot_here, sn*rot_here, 0 ).apply( here );
-         const r_plus1_rot = Q.set( 0, cs*rot_r, sn*rot_r   , 0 ).apply( r_plus1 )
-         const c_plus1_rot = Q.set( 0, cs*rot_c, sn*rot_c   , 0 ).apply( c_plus1 )
+			const here_rot = Q.set( firstSpin.set( rot_here, axisRot )). apply( here );
+         const r_plus1_rot = Q.set( firstSpin.set( rot_r, axisRot ) ).apply( r_plus1 )
+         const c_plus1_rot = Q.set( firstSpin.set( rot_c, axisRot ) ).apply( c_plus1 )
 
 
 			cols.push( color );
@@ -231,7 +249,7 @@ function updateGeometry(verts,cols) {
 
 
 			const color2 = new THREE.Color( 0,1,0,1 );
-				color2.setHSL( rot_here/(stress), 1.0, 0.5 );
+				color2.setHSL( rot_here/(Math.PI*4), 1.0, 0.5 );
 //if( clock == 0 ) console.log( "stuff:", r, c, rdel, cdel, rot_here, rot_here/stress );
 
 			cols.push( color2 );
@@ -291,44 +309,6 @@ function updateGeometry(verts,cols) {
 			verts.push( here_rot )
 			verts.push( basis.forward )
 
-
-if(0)
-{
-		// this draws either the resulting rotated space vector, or the 
-		// first rotor.
-			const basis = Q.getBasis();
-
-			Q.set( 0, cs*rot_here, sn*rot_here, 0 );
-
-			basis.forward.x = basis.forward.x * spaceScale*0.05 +Q.x;
-			basis.forward.y = basis.forward.y * spaceScale*0.05 +Q.y;
-			basis.forward.z = basis.forward.z * spaceScale*0.05 +Q.z;
-			basis.right.x = basis.right.x * spaceScale*0.05 +Q.x;
-			basis.right.y = basis.right.y * spaceScale*0.05 +Q.y;
-			basis.right.z = basis.right.z * spaceScale*0.05 +Q.z;
-			basis.up.x = basis.up.x * spaceScale*0.05 +Q.x;
-			basis.up.y = basis.up.y * spaceScale*0.05 +Q.y;
-			basis.up.z = basis.up.z * spaceScale*0.05 +Q.z;
-
-			cols.push( color );
-			cols.push( color );
-
-
-			verts.push( Q )
-			verts.push( basis.right )
-			cols.push( colorg );
-			cols.push( colorg );
-
-			verts.push( Q )
-			verts.push( basis.up )
-			
-			cols.push( colorb );
-			cols.push( colorb );
-
-			verts.push( Q )
-			verts.push( basis.forward )
-
-}
 		}	
 	}	
 

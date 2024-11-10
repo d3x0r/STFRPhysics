@@ -78,7 +78,7 @@ var l = 0;
 let world = null;
 var myMover = null;
 var myBrainBoard = null;
-var myMotion = null;
+let myMotion = null;
 var movers2 = [];
 var movers = [];
 let skybox = null;
@@ -219,6 +219,7 @@ export class Viewer {
 	//   var object = new THREE.Mesh(geometry, material);
 		var x;
 		var m;
+	if(0)
 		for( var n = 0; n < 10; n++ ) {
 			scene.add(x = object.clone());
 			x.matrixAutoUpdate = true;
@@ -251,9 +252,9 @@ export class Viewer {
 		x.matrixAutoUpdate = true;
 		// attach the camera to one smart object.
 		myMover.add( camera );
-		body.brain = myBrainBoard.brain;
-		myBrainBoard.setBody( body )
-
+		//body.brain = myBrainBoard.brain;
+		//myBrainBoard.setBody( body )
+		return myMotion;
 	}
 
 		
@@ -301,7 +302,9 @@ function handleKeyEvents( event, isDown ) {
 			myMotion.stabilizeRotation = isDown?0.9:0;
 			break;
 		case keys.TILDE:
-			controls.userRotate = !controls.userRotate;
+			if( isDown )   {
+				controls.userRotate = !controls.userRotate;
+			}
 			break;
 		case keys.NUM2:
 			if( isDown )
@@ -773,8 +776,8 @@ function animate( cb, tick ) {
 
 	});
 
-	if( myMotion )
-	skybox.update( myMover.position, camera.position, new THREE.Vector3( myMotion.speed.nx, myMotion.speed.ny, myMotion.speed.nz ), myMotion.speed.θ );
+	if( myMotion && skybox )
+		skybox.update( myMover.position, camera.position, new THREE.Vector3( myMotion.speed.nx, myMotion.speed.ny, myMotion.speed.nz ), myMotion.speed.θ );
 
 
 //	if( myMotion &&( myMotion.torque.x || myMotion.torque.y|| myMotion.torque.z ))

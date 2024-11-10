@@ -35,10 +35,9 @@ export class ControlForm extends Popup {
 		this.#controls = opts.controls;
 		
 
-		popups.makeSlider( this.controlGroups[0], this, "rotationRate", "Rotation Rate" );
-		popups.makeCheckbox( this.controlGroups[0], this, "applyAccel", "Apply Accel" );
 		popups.makeCheckbox( this.controlGroups[0], this, "animate", "Animate" );
 
+/*
 		this.xControl = popups.makeTextField( this.controlGroups[0], this, "z", "X", false, false ); //makeTextField( form, input, value, text, money, percent )
 		this.yControl = popups.makeTextField( this.controlGroups[0], this, "y", "Y", false, false ); //makeTextField( form, input, value, text, money, percent )
 		this.zControl = popups.makeTextField( this.controlGroups[0], this, "x", "Z", false, false ); //makeTextField( form, input, value, text, money, percent )
@@ -61,17 +60,24 @@ export class ControlForm extends Popup {
 			input.blur();
 			if( opts.reInit ) opts.reInit(); 
 		} );
+*/
 		this.move( 0,3);
-
-		[{field:"sliderAX", text: "A x"}
-		, {field:"sliderAY", text: "A y"}
-		, {field:"sliderAZ", text: "A z"}
-		, {field:"sliderAW", text: "A w"}
+		this.sliderAX = 0.25;
+		this.sliderAY = 0.1;
+		this.sliderAZ = 0;
+		this.sliderAW = 0;
+		this.sliderBX = 0;
+		this.sliderBY = 0;
+		this.sliderBZ = 0.1;
+		[{field:"sliderAX", text: "Torsion Amount"}
+		, {field:"sliderAY", text: "A x"}
+		, {field:"sliderAZ", text: "A y"}
+		, {field:"sliderAW", text: "A z"}
 		, {field:"sliderBX", text: "B x"}
 		, {field:"sliderBY", text: "B y"}
 		, {field:"sliderBZ", text: "B z"}
-		, {field:"sliderBW", text: "B w"}].forEach( slider=>{
-
+		//, {field:"sliderBW", text: "B w"}
+		].forEach( slider=>{
 			const sld = popups.makeSlider( this.controlGroups[1], this, slider.field, slider.text, (x)=>{
 					// slider to value.
 					return (x-500)/100;
@@ -80,7 +86,7 @@ export class ControlForm extends Popup {
 					// value to slider
 					return x*100+500;
 				} );			
-			sld.value = 0;
+			//sld.value = 0;
 			sld.on( "change", ()=>{
 				this.on( "change", true );
 			} );
