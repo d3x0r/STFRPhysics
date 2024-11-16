@@ -540,6 +540,8 @@ function drawClock( x, y, T,label ) {
 	ctx.stroke();
 	ctx.fill();
 	
+	ctx.beginPath()
+		ctx.fillStyle = "white";
 	ctx.fillText( T.toFixed(3), centerX+x, centerY-y + (4+4*clockRadius) )
 
 }
