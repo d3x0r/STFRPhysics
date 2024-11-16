@@ -161,7 +161,7 @@ export function RealTime( T_o, V, P, V_o, P_o ) {
 	return (T2<T_o)?[T,T2]:[T];
 }
 
-export function RealTime2( T_o, V, P, Ofs, V_o, P_o ) {
+export function RealTime2a( T_o, V, P, Ofs, V_o, P_o ) {
 	const C = params.C;
 	//$S = ( || {(X, Y, Z) + (D, E, F) T - (J, K, L) S} || )/C + T$; solve for T.
 	//$T = \frac {\sqrt((-2 C^2 S + 2 D J S - 2 D X + 2 E K S - 2 E Y + 2 F L S - 2 F Z)^2 
