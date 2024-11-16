@@ -77,6 +77,7 @@ export function ObservedTime( T, V, P, V_o, P_o ) {
 
 export function RealTime2( T_o, V, P, V_o, P_o ) {
 
+	const C = params.C;
 
 	const p_x = (P.x - P_o.x);
 	const p_y = (P.y - P_o.y);
