@@ -524,7 +524,8 @@ function draw(  ) {
 	points[0].x = params.lGam*points[0].x;
 	points[2].x = params.lGam*points[2].x;
 
-	for( let del = 0; del < 6; del++ ) 
+	// count back up to 10 hours... 
+	for( let del = 0; del < 10; del++ ) 
 	{
 		const hr = lastHour -del;
 
@@ -583,9 +584,9 @@ function draw(  ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "green";
 			if( hr > 5 && hr < 18 )
-				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+(del*60+lastMin)), Math.PI*5/4, 3 * Math.PI/4, true);
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+lastMin), Math.PI*5/4, 3 * Math.PI/4, true);
 			else
-				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+(del*60+lastMin)),  -Math.PI/4, Math.PI/4, false);
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+lastMin),  -Math.PI/4, Math.PI/4, false);
 			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y );
 			ctx.closePath();
 			ctx.stroke()
