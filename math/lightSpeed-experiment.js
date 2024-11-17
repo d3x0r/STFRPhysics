@@ -524,38 +524,56 @@ function draw(  ) {
 	points[0].x = params.lGam*points[0].x;
 	points[2].x = params.lGam*points[2].x;
 
-
+	for( let del = 0; del < 6; del++ ) 
 	{
+		const hr = lastHour -del;
+
+
+	lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
+	lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
+	lnQ.freeSpin( hr/24*Math.PI*2, {x:0,y:1,z:0} );
+	
+	points[0] = lnQ.apply( {x:-L*xscale,y:0,z:0} );
+	points[2] = lnQ.apply( {x:L*xscale,y:0,z:0} );
+
+	points[0].x = params.lGam*points[0].x;
+	points[2].x = params.lGam*points[2].x;
+
+
 		const l1 = Math.sqrt( points[0].x * points[0].x + points[0].y * points[0].y + points[0].z * points[0].z );
 		const l2 = Math.sqrt( points[2].x * points[2].x + points[2].y * points[2].y + points[2].z * points[2].z );
-		const del0 = ObservedTime( lastHour*60, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
-		const del1 = ObservedTime( lastHour*60, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
+		const del0 = ObservedTime( (lastHour-del)*60, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
+		const del1 = ObservedTime( (lastHour-del)*60, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
+		if( !( ( now < del0 ) || ( now < del1 ) ) ) {
+			break;
+		}
+
 		if( now < del0 ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
-			if( lastHour > 5 && lastHour < 18 )
-				ctx.arc(500+points[0].x - V/C*lastMin/60*xscale, 500+points[0].y, lastMin,  -Math.PI/4, Math.PI/4, false);
+			if( hr > 5 && hr < 18 )
+				ctx.arc(500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y, (del*60+lastMin),  -Math.PI/4, Math.PI/4, false);
 			else
-				ctx.arc(500+points[0].x - V/C*lastMin/60*xscale, 500+points[0].y, lastMin, Math.PI*5/4, 3 * Math.PI/4, true);
-			ctx.lineTo( 500+points[0].x - V/C*lastMin/60*xscale, 500+points[0].y );
+				ctx.arc(500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y, (del*60+lastMin), Math.PI*5/4, 3 * Math.PI/4, true);
+			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y );
 		ctx.closePath();
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[0].x, 500+points[0].y );
-			ctx.lineTo( 500+points[0].x - V/C*lastMin/60*xscale, 500+points[0].y );
+			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y );
 			ctx.stroke()
 
 
 			ctx.beginPath();
-				ctx.arc(500+points[0].x - V/C*lastMin, 700+points[0].z, lastMin/60*xscale, 0, 2 * Math.PI, true);
+				ctx.arc(500+points[0].x - V/C*(del*60+lastMin), 700+points[0].z, (del*60+lastMin), 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[0].x, 700+points[0].z );
-			ctx.lineTo( 500+points[0].x - V/C*lastMin/60*xscale, 700+points[0].z );
+			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin), 700+points[0].z );
 			ctx.stroke()
 
 			ctx.beginPath();
-				ctx.arc(700+points[0].y, 700+points[0].z, lastMin/60*xscale, 0, 2 * Math.PI, true);
+				ctx.arc(700+points[0].y, 700+points[0].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 		}
@@ -564,29 +582,29 @@ function draw(  ) {
 	
 			ctx.beginPath();
 			ctx.strokeStyle = "green";
-			if( lastHour > 5 && lastHour < 18 )
-				ctx.arc(500+points[2].x - V/C*lastMin/60*xscale, 500+points[2].y, lastMin, Math.PI*5/4, 3 * Math.PI/4, true);
+			if( hr > 5 && hr < 18 )
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+(del*60+lastMin)), Math.PI*5/4, 3 * Math.PI/4, true);
 			else
-				ctx.arc(500+points[2].x - V/C*lastMin/60*xscale, 500+points[2].y, lastMin,  -Math.PI/4, Math.PI/4, false);
-			ctx.lineTo( 500+points[2].x - V/C*lastMin/60*xscale, 500+points[2].y );
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+(del*60+lastMin)),  -Math.PI/4, Math.PI/4, false);
+			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y );
 			ctx.closePath();
 			ctx.stroke()
 			ctx.moveTo( 500+points[2].x, 500+points[2].y );
-			ctx.lineTo( 500+points[2].x - V/C*lastMin/60*xscale, 500+points[2].y );
+			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y );
 			ctx.stroke()
 
 			ctx.beginPath();
-				ctx.arc(500+points[2].x - V/C*lastMin/60*xscale, 700+points[2].z, lastMin, 0, 2 * Math.PI, true);
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 700+points[2].z, (del*60+lastMin), 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[2].x, 700+points[2].z );
-			ctx.lineTo( 500+points[2].x - V/C*lastMin/60*xscale, 700+points[2].z );
+			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 700+points[2].z );
 			ctx.stroke()
 
 
 
 			ctx.beginPath();
-				ctx.arc(700+points[2].y, 700+points[2].z, lastMin/60*xscale, 0, 2 * Math.PI, true);
+				ctx.arc(700+points[2].y, 700+points[2].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 		}
@@ -756,221 +774,6 @@ function draw(  ) {
 	ctx.fillText( "Y-Z", 700-xscale, 700-xscale );
 
 
-/*
-	// stationary event to moving tail
-	if( now >= eventFrames[0].T_start && now <= eventFrames[2].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+0*xscale, 250, C*(now-eventFrames[1].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-	// stationary event to moving head
-	if( now >= eventFrames[1].T_start && now <= eventFrames[1].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+0*xscale, 250, C*(now-eventFrames[0].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-
-
-	// stationary event to stationary tail
-	if( now >= eventFrames[2].T_start && now <= eventFrames[1].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+0*xscale, 250, C*(now-eventFrames[2].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-	// stationary event to stationary head
-	if( now >= eventFrames[3].T_start && now <= eventFrames[2].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+0*xscale, 250, C*(now-eventFrames[3].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-
-	ctx.strokeStyle = "red";
-	// time from moving tail to moving observer
-	if( now >= eventFrames[4].T_start && now <= eventFrames[4].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+(0+ eventFrames[4].from.x)*xscale, 250, C*(now-eventFrames[4].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-	// time from moving head to moving observer
-	if( now >= eventFrames[5].T_start && now <= eventFrames[5].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+(0+ eventFrames[5].from.x)*xscale, 250, C*(now-eventFrames[5].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-
-	// time from moving tail to stationary observer
-	if( now >= eventFrames[6].T_start && now <= eventFrames[6].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+(0+ eventFrames[6].from.x)*xscale, 250, C*(now-eventFrames[6].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-	// time from moving head to stationary observer
-	if( now >= eventFrames[7].T_start && now <= eventFrames[7].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+(0+ eventFrames[7].from.x)*xscale, 250, C*(now-eventFrames[7].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-
-	ctx.strokeStyle = "green";
-	// time from stationary tail to moving observer
-	if( now >= eventFrames[8].T_start && now <= eventFrames[8].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+(0+ eventFrames[8].from.x)*xscale, 250, C*(now-eventFrames[8].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-	// time from stationary head to moving observer
-	if( now >= eventFrames[9].T_start && now <= eventFrames[9].T_end ) {
-		ctx.beginPath();
-		ctx.arc(750+(0+ eventFrames[9].from.x)*xscale, 250, C*(now-eventFrames[9].T_start)*(xscale),  Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-
-	// time from stationary tail to stationary observer
-	if( now >= eventFrames[10].T_start && now <= eventFrames[10].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+(0+ eventFrames[10].from.x)*xscale, 250, C*(now-eventFrames[10].T_start)*(xscale), -Math.PI/4, Math.PI/4, false);
-		ctx.stroke()
-	}
-	// time from stationary head to stationary observer
-	if( now >= eventFrames[11].T_start && now <= eventFrames[11].T_end ) {
-		ctx.beginPath();
-		ctx.arc(250+(0+ eventFrames[11].from.x)*xscale, 250, C*(now-eventFrames[11].T_start)*(xscale), Math.PI*5/4, 3 * Math.PI/4, true);
-		ctx.stroke()
-	}
-
-	ctx.strokeStyle = "yellow";
-	ctx.beginPath();
-	ctx.moveTo( 250 + (now*V-L*lengthContract)*xscale, 250 );
-	ctx.lineTo( 250 + (now*V+L*lengthContract)*xscale, 250 );
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.moveTo( 250, 250 - 0.25*xscale );
-	ctx.lineTo( 250, 250 + 0.25*xscale );
-	ctx.stroke();
-
-
-	ctx.beginPath();
-	ctx.moveTo( 750 + (now*V-L*lengthContract)*xscale, 250 );
-	ctx.lineTo( 750 + (now*V+L*lengthContract)*xscale, 250 );
-	ctx.stroke();
-	ctx.beginPath();
-	ctx.moveTo( 750 + (now*V)*xscale, 250 - 0.25*xscale );
-	ctx.lineTo( 750 + (now*V)*xscale, 250 + 0.25*xscale );
-	ctx.stroke();
-
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = "#ffffff20";
-	[{x:250,y:250},{x:750,y:250}, {x:250,y:750}, {x:750,y:750}].forEach( center=>{
-
-		for( let x = -5; x <= 5; x++ ) {
-				ctx.beginPath();
-				ctx.moveTo( center.x + xscale*(-4.5), center.y - xscale*(x) );
-				ctx.lineTo( center.x + xscale*4.5, center.y-xscale*(x));
-			ctx.stroke();
-				ctx.beginPath();
-				ctx.moveTo( center.x + xscale*(x), center.y + xscale*(-4.5) );
-				ctx.lineTo( center.x + xscale*(x), center.y+xscale*(4.5	));
-			ctx.stroke();
-
-		}
-	} )
-
-	ctx.beginPath();
-	ctx.strokeStyle="white";
-	ctx.moveTo( 250 + (-L)*xscale, 750 - now*xscale );
-	ctx.lineTo( 250 + (L)*xscale, 750 - now*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-	ctx.strokeStyle="yellow";
-	ctx.moveTo( 750 + (-L*lengthContract)*xscale, 752 - lNow*xscale );
-	ctx.lineTo( 750 + (+L*lengthContract)*xscale, 752 - lNow*xscale );
-	ctx.stroke();
-
-	ctx.beginPath();
-	// moving tail to stationary observer (fastest path)
-	ctx.strokeStyle="red";
-	ctx.moveTo( 250 + (eventFrames[6].from.x)*xscale, 750 - eventFrames[6].T_start*xscale );
-	ctx.lineTo( 250 + (eventFrames[6].from.x)*xscale, 750 - (eventFrames[6].T_end)*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-	// moving head to stationary observer (fastest path)
-	ctx.strokeStyle="red";
-	ctx.moveTo( 250 + (eventFrames[7].from.x)*xscale, 750 - eventFrames[7].T_start*xscale );
-	ctx.lineTo( 250 + (eventFrames[7].from.x)*xscale, 750 - (eventFrames[7].T_end)*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-	// Simul events to moving observer
-	ctx.strokeStyle="#ddd";
-	ctx.moveTo( 250 + (eventFrames[7].from.x)*xscale, 750 - (eventFrames[7].T_end)*xscale );
-	ctx.lineTo( 250 + (eventFrames[6].from.x)*xscale, 750 - (eventFrames[6].T_end)*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-
-	ctx.beginPath();
-	// stationary head to moving observer
-	ctx.strokeStyle="green";
-	ctx.moveTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_end*lengthContract*xscale );
-	ctx.stroke();
-
-	ctx.beginPath();
-	// stationary tail to moving observer (fastest path)
-	ctx.strokeStyle="green";
-	ctx.moveTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_end*lengthContract*xscale );
-	ctx.stroke();
-	// simul events stationary observer
-
-	ctx.beginPath();
-	ctx.strokeStyle="#ddd";
-	ctx.moveTo( 750 + (-L-V*eventFrames[8].T_start)*xscale, 750 - eventFrames[8].T_end*lengthContract*xscale );
-	ctx.lineTo( 750 + (L-V*eventFrames[9].T_start)*xscale, 750 - eventFrames[9].T_end*lengthContract*xscale );
-	ctx.stroke();
-	
-	ctx.beginPath();
-	ctx.strokeStyle="green";
-		// stationary head to stationary observer
-	ctx.moveTo( 250 + (eventFrames[10].from.x)*xscale, 750 - eventFrames[10].T_start*xscale );
-	ctx.lineTo( 250 + (eventFrames[10].from.x)*xscale, 750 - (eventFrames[10].T_end)*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-		// stationary tail to stationary observer
-	ctx.moveTo( 250 + (eventFrames[11].from.x)*xscale, 750 - eventFrames[11].T_start*xscale );
-	ctx.lineTo( 250 + (eventFrames[11].from.x)*xscale, 750 - eventFrames[11].T_end*xscale );
-	ctx.stroke();
-
-
-
-
-	ctx.strokeStyle="red";
-	ctx.beginPath();
-		// moving tail to moving observer
-	ctx.moveTo( 750 + (-L)*lengthContract*xscale, 750 - eventFrames[4].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (-L)*lengthContract*xscale, 750 - (eventFrames[4].T_end_local)*xscale );
-	ctx.stroke();
-	ctx.beginPath();
-		// moving head to moving observer
-	ctx.moveTo( 750 + (L)*lengthContract*xscale, 750 - eventFrames[5].T_start*lengthContract*xscale );
-	ctx.lineTo( 750 + (L)*lengthContract*xscale, 750 - eventFrames[5].T_end_local*xscale );
-	ctx.stroke();
-
-
-
-	ctx.beginPath();
-	ctx.strokeStyle="yellow";
-	ctx.moveTo( 250 + (V*now-L*lengthContract)*xscale, 752 - now*xscale );
-	ctx.lineTo( 250 + (V*now+L*lengthContract)*xscale, 752 - now*xscale );
-	ctx.stroke();
-	//if( now < eventFrames[9].T_start )
-	{
-		ctx.beginPath();
-		ctx.strokeStyle="white";
-		ctx.moveTo( 750 + (-V*now-L)*xscale, 750 - lNow*xscale );
-		ctx.lineTo( 750 + (-V*now+L)*xscale, 750 - lNow*xscale );
-		ctx.stroke();
-	}
-*/
 
 
 	if( animate ) 	requestAnimationFrame( draw );
