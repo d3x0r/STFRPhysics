@@ -25,6 +25,7 @@ let V2=0; // observer's velocity  (m/s)
 let S=60*60; // time scalar (s/s)
 let tilt = 0;
 let lat = 0;
+let angle = 0;
 let points = [{x:0,y:0,z:0},{x:0,y:0,z:0},{x:0,y:0,z:0}];
 let lengthContract = 1;
 let runT = 24*60;
@@ -334,6 +335,28 @@ span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
 
+span = document.createElement( "span" );
+span.textContent = "Ether Direction";
+controls.appendChild( span );
+
+const sliderAngle = document.createElement( "input" );
+sliderAngle.setAttribute( "type", "range" );
+controls.appendChild( sliderAngle );
+sliderAngle.addEventListener( "input", update );
+
+sliderAngle.setAttribute( "max",3600 );
+sliderAngle.value = 0;
+sliderAngle.style.width="250px";
+
+const spanAngle = document.createElement( "span" );
+spanAngle.textContent = "1";
+controls.appendChild( spanAngle );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+
+//----------------------
+
 
 
 //----------------------
@@ -410,6 +433,9 @@ function update( evt ) {
 	lat = Number(sliderLat.value)/900 * Math.PI/2;
 	spanLat.textContent = (lat*180/Math.PI).toFixed(2)+"°";
 	
+	angle = Number(sliderAngle.value)/10;
+	spanAngle.textContent = angle.toFixed(2)+"°";
+
 
 	//S = Number(sliderS.value)/10;
 	//spanS.textContent = S.toFixed(2);
@@ -510,7 +536,10 @@ function draw(  ) {
 
 
 	
+		const etherSin = Math.sin( angle /360 * 2 * Math.PI );
+		const etherCos = Math.cos( angle /360 * 2 * Math.PI );
 
+		const effV =  {x:V*etherCos,y:V*etherSin,z:0};
 //	drawClock( 0, -550, now, now.toFixed(2) );
 //	drawClock( 500, -550, now*lengthContract, (now*lengthContract).toFixed(2) );
 
@@ -521,8 +550,10 @@ function draw(  ) {
 	points[0] = lnQ.apply( {x:-L*xscale,y:0,z:0} );
 	points[2] = lnQ.apply( {x:L*xscale,y:0,z:0} );
 
-	points[0].x = params.lGam*points[0].x;
-	points[2].x = params.lGam*points[2].x;
+	points[0].x = params.lGam*points[0].x*etherCos;
+	points[2].x = params.lGam*points[2].x*etherCos;
+	points[0].x = params.lGam*points[0].y*etherSin;
+	points[2].x = params.lGam*points[2].y*etherSin;
 
 	// count back up to 10 hours... 
 	for( let del = 0; del < 10; del++ ) 
@@ -533,18 +564,21 @@ function draw(  ) {
 	lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
 	lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
 	lnQ.freeSpin( hr/24*Math.PI*2, {x:0,y:1,z:0} );
-	
+		
 	points[0] = lnQ.apply( {x:-L*xscale,y:0,z:0} );
 	points[2] = lnQ.apply( {x:L*xscale,y:0,z:0} );
 
-	points[0].x = params.lGam*points[0].x;
-	points[2].x = params.lGam*points[2].x;
+	points[0].x = params.lGam*points[0].x*etherCos;
+	points[2].x = params.lGam*points[2].x*etherCos;
+	points[0].y = params.lGam*points[0].y*etherSin;
+	points[2].y = params.lGam*points[2].y*etherSin;
+
 
 
 		const l1 = Math.sqrt( points[0].x * points[0].x + points[0].y * points[0].y + points[0].z * points[0].z );
 		const l2 = Math.sqrt( points[2].x * points[2].x + points[2].y * points[2].y + points[2].z * points[2].z );
-		const del0 = ObservedTime( (lastHour-del)*60, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
-		const del1 = ObservedTime( (lastHour-del)*60, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} );
+		const del0 = ObservedTime( (lastHour-del)*60, effV, points[0], effV, {x:0,y:0,z:0} );
+		const del1 = ObservedTime( (lastHour-del)*60, effV, points[2], effV, {x:0,y:0,z:0} );
 		if( !( ( now < del0 ) || ( now < del1 ) ) ) {
 			break;
 		}
@@ -552,24 +586,28 @@ function draw(  ) {
 		if( now < del0 ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
-			ctx.arc(500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y, (del*60+lastMin), 0, 2*Math.PI, true);
+			ctx.arc(500+points[0].x - V/C*(del*60+lastMin)*etherCos, 500+points[0].y- V/C*(del*60+lastMin)*etherSin, (del*60+lastMin), 0, 2*Math.PI, true);
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[0].x, 500+points[0].y );
-			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin), 500+points[0].y );
+			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin)*etherCos, 500+points[0].y- V/C*(del*60+lastMin)*etherSin );
 			ctx.stroke()
 
 
 			ctx.beginPath();
-				ctx.arc(500+points[0].x - V/C*(del*60+lastMin), 700+points[0].z, (del*60+lastMin), 0, 2 * Math.PI, true);
+				ctx.arc(500+points[0].x - V/C*(del*60+lastMin)*etherCos, 700+points[0].z, (del*60+lastMin), 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[0].x, 700+points[0].z );
-			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin), 700+points[0].z );
+			ctx.lineTo( 500+points[0].x - V/C*(del*60+lastMin)*etherCos, 700+points[0].z );
 			ctx.stroke()
 
 			ctx.beginPath();
-				ctx.arc(700+points[0].y, 700+points[0].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
+				ctx.arc(700+points[0].y- V/C*(del*60+lastMin)*etherSin, 700+points[0].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
+			ctx.stroke()
+
+			ctx.moveTo( 700+points[0].y, 700+points[0].z );
+			ctx.lineTo( 700+points[0].y - V/C*(del*60+lastMin)*etherSin, 700+points[0].z );
 			ctx.stroke()
 
 		}
@@ -578,24 +616,28 @@ function draw(  ) {
 	
 			ctx.beginPath();
 			ctx.strokeStyle = "green";
-				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y, (del*60+lastMin), 0, 2*Math.PI, true);
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin)*etherCos, 500+points[2].y - V/C*(del*60+lastMin)*etherSin, (del*60+lastMin), 0, 2*Math.PI, true);
 			ctx.stroke()
 			ctx.moveTo( 500+points[2].x, 500+points[2].y );
-			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 500+points[2].y );
+			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin)*etherCos, 500+points[2].y - V/C*(del*60+lastMin)*etherSin );
 			ctx.stroke()
 
 			ctx.beginPath();
-				ctx.arc(500+points[2].x - V/C*(del*60+lastMin), 700+points[2].z, (del*60+lastMin), 0, 2 * Math.PI, true);
+				ctx.arc(500+points[2].x - V/C*(del*60+lastMin)*etherCos, 700+points[2].z, (del*60+lastMin), 0, 2 * Math.PI, true);
 			ctx.stroke()
 
 			ctx.moveTo( 500+points[2].x, 700+points[2].z );
-			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin), 700+points[2].z );
+			ctx.lineTo( 500+points[2].x - V/C*(del*60+lastMin)*etherCos, 700+points[2].z );
 			ctx.stroke()
 
 
 
 			ctx.beginPath();
-				ctx.arc(700+points[2].y, 700+points[2].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
+				ctx.arc(700+points[2].y - V/C*(del*60+lastMin)*etherSin, 700+points[2].z, (del*60+lastMin)/60*xscale, 0, 2 * Math.PI, true);
+			ctx.stroke()
+
+			ctx.moveTo( 700+points[2].y, 700+points[2].z );
+			ctx.lineTo( 700+points[2].y - V/C*(del*60+lastMin)*etherSin, 700+points[2].z );
 			ctx.stroke()
 
 		}
@@ -620,9 +662,10 @@ function draw(  ) {
 	points[0] = lnQ.apply( {x:-L,y:0,z:0} );
 	points[2] = lnQ.apply( {x:L,y:0,z:0} );
 
-	points[0].x = params.lGam*points[0].x;
-	points[2].x = params.lGam*points[2].x;
-
+	points[0].x = params.lGam*points[0].x*etherCos;
+	points[2].x = params.lGam*points[2].x*etherCos;
+	points[0].y = params.lGam*points[0].y*etherSin;
+	points[2].y = params.lGam*points[2].y*etherSin;
 
 
 	ctx.beginPath();
@@ -668,6 +711,7 @@ function draw(  ) {
 		lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
 		lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
 		lnQ.freeSpin( m/(24*60)*Math.PI*2, {x:0,y:1,z:0} );
+		lnQ.freeSpin( angle/(360)*Math.PI*2, {x:0,y:0,z:1} );
 		
 		points[0] = lnQ.apply( {x:-L,y:0,z:0} );
 		points[2] = lnQ.apply( {x:L,y:0,z:0} );
@@ -692,6 +736,7 @@ function draw(  ) {
 		lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
 		lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
 		lnQ.freeSpin( m/(24*60)*Math.PI*2, {x:0,y:1,z:0} );
+		lnQ.freeSpin( angle/(360)*Math.PI*2, {x:0,y:0,z:1} );
 		
 		points[0] = lnQ.apply( {x:-L,y:0,z:0} );
 		points[2] = lnQ.apply( {x:L,y:0,z:0} );
@@ -702,7 +747,7 @@ function draw(  ) {
 		const l1 = Math.sqrt( points[0].x * points[0].x + points[0].y * points[0].y + points[0].z * points[0].z );
 		const l2 = Math.sqrt( points[2].x * points[2].x + points[2].y * points[2].y + points[2].z * points[2].z );
 		if( m === 0 ) {
-			const Y = 300-xscale*((ObservedTime( m, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m)+ObservedTime( m, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m )*params.lGam;
+			const Y = 300-xscale*((ObservedTime( m, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m)+ObservedTime( m, effV, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m )*params.lGam;
 			ctx.fillText( "A+B (two-way time)", 100, Y-10 );
 
 			ctx.moveTo( m/runT*990 + 5, Y );
@@ -719,6 +764,7 @@ function draw(  ) {
 		lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
 		lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
 		lnQ.freeSpin( m/(24*60)*Math.PI*2, {x:0,y:1,z:0} );
+		lnQ.freeSpin( angle/(360)*Math.PI*2, {x:0,y:0,z:1} );
 		
 		points[0] = lnQ.apply( {x:-L,y:0,z:0} );
 		points[2] = lnQ.apply( {x:L,y:0,z:0} );
@@ -745,6 +791,7 @@ function draw(  ) {
 		lnQuat.setTwistDelta( Math.PI/2 + tilt/360*Math.PI*2 );
 		lnQ.set( {lat:Math.PI/2 + lat,lng:Math.PI/2}, true );
 		lnQ.freeSpin( m/(24*60)*Math.PI*2, {x:0,y:1,z:0} );
+		lnQ.freeSpin( angle/(360)*Math.PI*2, {x:0,y:0,z:1} );
 		
 		points[0] = lnQ.apply( {x:-L,y:0,z:0} );
 		points[2] = lnQ.apply( {x:L,y:0,z:0} );
@@ -753,11 +800,11 @@ function draw(  ) {
 		points[2].x = params.lGam*points[2].x;
 
 		if( m === 0 ) {
-			const Y = 300-xscale*(ObservedTime( m, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m - ( ObservedTime( m, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m) )*params.lGam
+			const Y = 300-xscale*(ObservedTime( m, effV, points[0], effV, {x:0,y:0,z:0} )-m - ( ObservedTime( m, effV, points[2], effV, {x:0,y:0,z:0} )-m) )*params.lGam
 			ctx.moveTo( m/runT*990 + 5, Y );
 			ctx.fillText( "A-B", 20, Y-10 );
 		} else
-			ctx.lineTo( m/runT*990 + 5, 300-xscale*(ObservedTime( m, {x:V,y:0,z:0}, points[0], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m - (ObservedTime( m, {x:V,y:0,z:0}, points[2], {x:V,y:0,z:0}, {x:0,y:0,z:0} )-m) )*params.lGam );
+			ctx.lineTo( m/runT*990 + 5, 300-xscale*(ObservedTime( m, effV, points[0], effV, {x:0,y:0,z:0} )-m - (ObservedTime( m, effV, points[2], effV, {x:0,y:0,z:0} )-m) )*params.lGam );
 	}
 	ctx.stroke();
 
