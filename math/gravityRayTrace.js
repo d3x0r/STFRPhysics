@@ -359,7 +359,7 @@ function drawsomething() {
 
 	}
 
-	for( let r = 0.01; r < 8; r+=0.5 ) {
+	for( let r = 0.01; r < 18; r+=0.5 ) {
 		// circles have no elongation to have to scale,it only needs the radius scaled.
 		const Gr = B_0(r,r,0,values.B,values.A, values.Amax );
 		// draw a circle with an aprox number of dots... could be smarter (or draw segments)
@@ -376,14 +376,14 @@ function drawsomething() {
 	for( let t = 0; t < 360; t+= 10 ) {
 		let slopex = Math.cos( t/180*Math.PI );
 		let slopey = Math.sin( t/180*Math.PI );
-		for( let t=0; t < 10; t+= 10/1000 ) {
+		for( let t=0; t < 20; t+= 20/1000 ) {
 			const mx = mouseX + slopex * t;
 			const my = mouseY + slopey * t;
 				const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
 				const Ay = B_0(my,mx,my,values.B,values.A, 0 );
 			//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
 			if( Math.sqrt(mx*mx+my*my)< (values.Amax) ) break;
-			plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
+			//plot(Ax,Ay, ColorAverage( BASE_COLOR_RED, BASE_COLOR_BLUE, t/10, 1 ));
 		}
 	}
 	 //if(0)
@@ -515,7 +515,7 @@ if(1)
 	for( let t = -45; t < 45; t+= 90/4096 ) {
 		let slopex = Math.cos( angle+t/180*Math.PI );
 		let slopey = Math.sin( angle+t/180*Math.PI );
-		for( let t2=0; t2 < 10; t2+= 10/400 ) {
+		for( let t2=0; t2 < 20; t2+= 20/400 ) {
 			const mx = mouseX + slopex * t2;
 			const my = mouseY + slopey * t2;
 				const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
@@ -548,7 +548,7 @@ if(1)
 			continue;
 		}
 		{
-			let t2=10
+			let t2=15
 			const mx = mouseX + slopex * t2;
 			const my = mouseY + slopey * t2;
 			const Ax = B_0(mx,mx,my,values.B,values.A, 0 );
