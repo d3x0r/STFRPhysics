@@ -441,10 +441,11 @@ lnQuat.prototype.set = function(theta,d,a,b,e)
 				this.x = d.x * θ;
 				this.y = d.y * θ;
 				this.z = d.z * θ;
+				this.dirty = true;
 				this.update();
-				return this;
 			}
 		}
+		return this;
 	}
 }
 
@@ -485,7 +486,6 @@ lnQuat.prototype.cross = function( other, target ){
 	return target;
 }
 
-let tzz = 0;
 lnQuat.prototype.fromBasis = function( basis ) {
 	// tr(M)=2cos(theta)+1 .
 	const t = ( ( basis.right.x + basis.up.y + basis.forward.z ) - 1 )/2;
@@ -517,18 +517,16 @@ lnQuat.prototype.fromBasis = function( basis ) {
 	const xy = basis.right  .y - basis.up     .x;
 	const tmp = 1 /Math.sqrt(yz*yz + xz*xz + xy*xy );
 
-	this.nx = yz *tmp;
-	this.ny = xz *tmp;
-	this.nz = xy *tmp;
-	const lNorm = angle;// / (abs(this.nx)+abs(this.ny)+abs(this.nz));
-	this.x = this.nx * lNorm;
-	this.y = this.ny * lNorm;
-	this.z = this.nz * lNorm;
+	this.θ = angle;
+	this.x = ( this.nx = yz *tmp ) * angle;
+	this.y = ( this.ny = xz *tmp ) * angle;
+	this.z = ( this.nz = xy *tmp ) * angle;
 	//console.log( "frombasis primary values:", this.x, this.y, this.z );
 
 	this.dirty = true;
 	return this;
 }
+
 
 
 lnQuat.prototype.exp = function(target,t ) {
