@@ -66,7 +66,7 @@ function displace( now) {
 
 			const seetime = rel.RealTime2( 0, {x:values.Velocity*c,y:values.Velocity*s, z:0}
 								, {x:now*values.Velocity*c*values.Scale,y:now*values.Velocity*s*values.Scale, z:0}
-								, {x:0, y:0, z:0}, {x:values.Velocity*c,y:values.Velocity*s, z:0}, {x:gx, y:gy, z:0} );
+								, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			//console.log( "see Time:", seetime, now, gx, gy );
 			const seedel = seetime[0]-0;
 			// actual sun position...
@@ -81,17 +81,17 @@ function displace( now) {
 				, {x:values.planet_position.x //+ now*values.Velocity*c*values.Scale
 				  ,y:values.planet_position.y //+ now*values.Velocity*s*values.Scale
 				  , z:0}
-				, {x:0, y:0, z:0}, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
+				, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			const agoPlanet = -seetimePlanet[0];
 			row[x].seedel = realLen;//agoPlanet;
 			//console.log( "ago:", ago, gx, gy, (values.sun_position.x-ago*values.Velocity*c*values.Scale), x, y );
 				const Ax = B_0(gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
 				              ,gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
-				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), 300*sunSize )
+				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), values.Scale*values.SunSize )
 				         + (values.sun_position.x-ago*values.Velocity*c*values.Scale);
 				const Ay = B_0(gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale)
 				              ,gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
-				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), 300*sunSize )
+				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), values.Scale*values.SunSize )
 				         + values.sun_position.y-ago*values.Velocity*s*values.Scale;
 
 				const Bx = B_0(Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
@@ -120,7 +120,7 @@ function displace( now) {
 
 			const seetime = rel.RealTime2( 0, {x:values.Velocity*c,y:values.Velocity*s, z:0}
 								, {x:now*values.Velocity*c*values.Scale,y:now*values.Velocity*s*values.Scale, z:0}
-								, {x:0, y:0, z:0}, {x:values.Velocity*c,y:values.Velocity*s, z:0}, {x:gx, y:gy, z:0} );
+								, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			//console.log( "see Time:", seetime, now, gx, gy );
 			const seedel = seetime[0]-0;
 			// actual sun position...
@@ -135,28 +135,28 @@ function displace( now) {
 				, {x:values.planet_position.x //+ now*values.Velocity*c*values.Scale
 				  ,y:values.planet_position.y //+ now*values.Velocity*s*values.Scale
 				  , z:0}
-				, {x:0, y:0, z:0}, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
+				, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			const agoPlanet = -seetimePlanet[0];
 			row[x].seedel = realLen;//agoPlanet;
 			//console.log( "ago:", ago, gx, gy, (values.sun_position.x-ago*values.Velocity*c*values.Scale), x, y );
 				const Ax = B_0(gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
 				              ,gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
-				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), 300*sunSize )
+				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), values.Scale*values.SunSize )
 				         + (values.sun_position.x-ago*values.Velocity*c*values.Scale);
 				const Ay = B_0(gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale)
 				              ,gx- (values.sun_position.x-ago*values.Velocity*c*values.Scale)
-				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), 300*sunSize )
+				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), values.Scale*values.SunSize )
 				         + values.sun_position.y-ago*values.Velocity*s*values.Scale;
 
 				const Bx = B_0(Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
 				              ,Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
 				              ,Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
-				              ,200*planetSize ) 
+				              ,values.Scale*planetSize ) 
 				         + (values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale);
 				const By = B_0(Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
 				              ,Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
 				              ,Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
-				              ,200*planetSize ) 
+				              ,values.Scale*planetSize ) 
 				         + (values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale);
 
 				row[x].x = Bx;
@@ -173,9 +173,10 @@ addSpan( "Velocity", 1000, 0.4, 0, 2/1000, "Velocity" );
 addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
 addSpan( "Orbit", 400, 0.4, 0, 1/100, "Orbit" );
 addSpan( "Orbit Velocity", 400, 0.4, 0, 1/100, "OrbitVelocity" );
+addSpan( "SunSize", 400, 0.4, 0, 1/100, "SunSize" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 
-const sunSize = 0.5;
+//const sunSize = 0.5;
 const planetSize = 0.1;
 
 update();
@@ -285,6 +286,8 @@ function draw() {
 		for( let t = 0; t < Math.PI*2; t += Math.PI/180 ) {
 			const x = 500+values.sun_position.x+ Math.cos( t ) * r * values.Scale;
 			const y = 500+values.sun_position.y+Math.sin( t ) * r*values.Scale;
+			if( x < 0 || x >= (canvas.width-1)) continue;
+			if( y < 0 || y >= (canvas.height-1) ) continue;
 			const dx1 = displacements2[Math.floor((y)/1)][Math.floor((x)/1)].x;
 			const dy1 = displacements2[Math.floor((y)/1)][Math.floor((x)/1)].y;
 			const dx2 = displacements2[Math.floor((y)/1)][Math.floor((x)/1)+1].x;
@@ -305,6 +308,8 @@ function draw() {
 		const row1 = displacements[y+1];
 		if( !row1 ) continue;
 		for( let x = 0; x < row.length; x++ ) {
+			if( x < 0 || x >= canvas.width) continue;
+			if( y < 0 || y >= canvas.height ) continue;
 			const d = row[x];
 			const d1 = row1[x];
 			const d2 = row[x+1];
@@ -376,7 +381,7 @@ if(0) {
 	if(1) {
 	ctx.beginPath();
 	ctx.fillStyle = "yellow";
-	ctx.arc( 500 + values.sun_position.x, 500 + values.sun_position.y, sunSize*values.Scale/3, 0, Math.PI*2 );
+	ctx.arc( 500 + values.sun_position.x, 500 + values.sun_position.y, values.SunSize*values.Scale/3, 0, Math.PI*2 );
 	ctx.fill();
 
 	ctx.beginPath();
@@ -390,8 +395,8 @@ if(0)
 		const pg = values.planet_gravity[i];
 		const now = (sliders.valueNow - i)*scalars.Now;
 		ctx.beginPath();
-		ctx.strokeStyle = "hsl(0%,0%,"+(100-(sunSize + now*values.C)*100/(sunSize + (sliders.valueNow)*scalars.Now*values.C))+"%)";
-		ctx.arc( 500 + sg.x, 500 + sg.y, (sunSize + now * values.C)* values.Scale, 0, Math.PI*2 );
+		ctx.strokeStyle = "hsl(0%,0%,"+(100-(values.SunSize + now*values.C)*100/(values.SunSize + (sliders.valueNow)*scalars.Now*values.C))+"%)";
+		ctx.arc( 500 + sg.x, 500 + sg.y, (values.SunSize + now * values.C)* values.Scale, 0, Math.PI*2 );
 		ctx.stroke();
 
 		ctx.beginPath();

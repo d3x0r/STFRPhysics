@@ -17,9 +17,12 @@ let D2=0; // shortest distance to moving body (m) (D/C = time to view closest ev
 let V=0.50; // velocity  (m/s)
 let S=1.0; // time scalar (s/s)
 let A=0; // length of body (m)  (L/C = time of body (s))
+let View = 0;
 let Z = 0;
 let sa = 0;// Math.sin(A);
 let ca = 0;//Math.cos(A);
+let sin_view = 0;
+let cos_view = 1;
 let lengthContract = 1;
 let debugAb = false;
 
@@ -207,6 +210,28 @@ sliderA.style.width="250px";
 const spanA = document.createElement( "span" );
 spanA.textContent = "1";
 controls.appendChild( spanA );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//----------------------
+
+span = document.createElement( "span" );
+span.className = "left";
+span.textContent = "View Direction";
+controls.appendChild( span );
+
+const sliderView = document.createElement( "input" );
+sliderView.setAttribute( "type", "range" );
+controls.appendChild( sliderView );
+sliderView.addEventListener( "input", update );
+
+sliderView.setAttribute( "max",200 );
+sliderView.value = View*100;
+sliderView.style.width="250px";
+
+const spanView = document.createElement( "span" );
+spanView.textContent = "1";
+controls.appendChild( spanView );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -747,6 +772,9 @@ function update( evt ) {
 	lengthContract = Math.sqrt( C*C-V*V)/C;
 
 	A = Number(sliderA.value)/100*Math.PI;
+	View = Number(sliderView.value)/100 * Math.PI;
+	sin_view = Math.sin( View );
+	cos_view = Math.cos( View );
 	sa = Math.sin(A);
 	ca = Math.cos(A);
 	L_o = L;
@@ -1014,8 +1042,21 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 
 		const aberrantx = newPos.x;
 		const aberranty = newPos.y;
-		
-	if(debugAb) {
+		ctx.moveTo( 500+(curx)*xscale +20*cos_view - 20*sin_view, 500+(cury)*xscale +20*sin_view+ 20*cos_view ) ;
+		ctx.lineTo( 500+(curx)*xscale +20*cos_view+ 20*sin_view, 500+(cury)*xscale +20*sin_view- 20*cos_view ) ;
+		ctx.stroke();
+
+		const view_dot = newPos.x * cos_view + newPos.y * sin_view;
+		const vx = curx + (aberrantx - curx) / view_dot;
+		const vy = cury + (aberranty - cury) / view_dot;
+			ctx.beginPath();
+			ctx.strokeStyle = "white";
+		ctx.moveTo( 500+(curx)*xscale , 500+(cury)*xscale ) ;
+		ctx.lineTo( 500+(vx)*xscale , 500+(vy)*xscale  ) ;
+		ctx.stroke();
+		//const view_depth = ( newPos.x - curx )
+
+		if(debugAb) {
 			ctx.beginPath();
 			if( cont.x < 0 )
 				ctx.strokeStyle = "cyan";
