@@ -48,6 +48,7 @@ function displace( now) {
 	const c = Math.cos( values.Direction );
 	values.sun_position.x = ( 0 + values.Now * values.Velocity * c ) * values.Scale;
 	values.sun_position.y = ( 0 + values.Now * values.Velocity * s ) * values.Scale;
+
 	const planet_direction = values.Now * values.OrbitVelocity;
 	const ps = -Math.sin( planet_direction );
 	const pc = Math.cos( planet_direction );
@@ -61,6 +62,7 @@ function displace( now) {
 		const row = displacements[y];
 		rel.params.C = values.C * values.Scale;
 		for( let x = 0; x < row.length; x++ ) {
+
 			const gx = x * 10 - 500;
 			//const xx=x*x; 
 
@@ -77,9 +79,21 @@ function displace( now) {
 
 			const ago = -seedel;//ll / (100*values.C);
 
+		const pdel = Math.sqrt((values.planet_position.x - gx ) * ( values.planet_position.x-gx) + (values.planet_position.y-gy)*(values.planet_position.y-gy)) / (values.Scale*values.C);
+
+	const pnow = values.Now - pdel;
+
+	const planet_direction = (pnow) * values.OrbitVelocity;
+	const ps = -Math.sin( planet_direction );
+	const pc = Math.cos( planet_direction );
+
+	const px = ( 0 + pnow * values.Velocity * c ) * values.Scale + (values.Orbit * pc) * values.Scale;
+	const py = ( 0 + pnow * values.Velocity * s ) * values.Scale + (values.Orbit * ps) * values.Scale;
+
+
 			const seetimePlanet = rel.RealTime2( 0, {x:values.Velocity*c,y:values.Velocity*s, z:0}
-				, {x:values.planet_position.x //+ now*values.Velocity*c*values.Scale
-				  ,y:values.planet_position.y //+ now*values.Velocity*s*values.Scale
+				, {x:px //+ now*values.Velocity*c*values.Scale
+				  ,y:py //+ now*values.Velocity*s*values.Scale
 				  , z:0}
 				, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			const agoPlanet = -seetimePlanet[0];
@@ -94,16 +108,16 @@ function displace( now) {
 				              ,gy- (values.sun_position.y-ago*values.Velocity*s*values.Scale), values.Scale*values.SunSize )
 				         + values.sun_position.y-ago*values.Velocity*s*values.Scale;
 
-				const Bx = B_0(Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
-				              ,Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
-				              ,Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
+				const Bx = B_0(Ax-(px)
+				              ,Ax-(px)
+				              ,Ay-(py)
 				              ,200*planetSize ) 
-				         + (values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale);
-				const By = B_0(Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
-				              ,Ax-(values.planet_position.x-agoPlanet*values.Velocity*c*values.Scale)
-				              ,Ay-(values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale)
+				         + (px);
+				const By = B_0(Ay-(py)
+				              ,Ax-(px)
+				              ,Ay-(py)
 				              ,200*planetSize ) 
-				         + (values.planet_position.y-agoPlanet*values.Velocity*s*values.Scale);
+				         + (py);
 
 				row[x].x = Bx;
 				row[x].y = By;
@@ -131,9 +145,20 @@ function displace( now) {
 
 			const ago = -seedel;//ll / (100*values.C);
 
+		const pdel = Math.sqrt((values.planet_position.x - gx ) * ( values.planet_position.x-gx) + (values.planet_position.y-gy)*(values.planet_position.y-gy)) / values.C;
+
+	const pnow = values.Now - pdel;
+
+	const planet_direction = (pnow) * values.OrbitVelocity;
+	const ps = -Math.sin( planet_direction );
+	const pc = Math.cos( planet_direction );
+
+	const px = ( 0 + pnow * values.Velocity * c ) * values.Scale + (values.Orbit * pc) * values.Scale;
+	const py = ( 0 + pnow * values.Velocity * c ) * values.Scale + (values.Orbit * ps) * values.Scale;
+
 			const seetimePlanet = rel.RealTime2( 0, {x:values.Velocity*c,y:values.Velocity*s, z:0}
-				, {x:values.planet_position.x //+ now*values.Velocity*c*values.Scale
-				  ,y:values.planet_position.y //+ now*values.Velocity*s*values.Scale
+				, {x:px //+ now*values.Velocity*c*values.Scale
+				  ,y:py //+ now*values.Velocity*s*values.Scale
 				  , z:0}
 				, {x:0, y:0, z:0}, {x:gx, y:gy, z:0} );
 			const agoPlanet = -seetimePlanet[0];
