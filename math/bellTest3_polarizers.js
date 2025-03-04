@@ -198,6 +198,7 @@ let ang = -180;
 
         let prior_x_ed = -1;
         let prior_y_ed = -1;
+let maxval = 0;
 
 function drawsomething() {
 
@@ -340,6 +341,9 @@ if( c[1])
 			line( 0, 1024-per*10.24, 1024, 1024-per*10.24, [0,0,0,255] );
 	
 		}
+			line( 0, 1024-25*10.24, 1024, 1024-25*10.24, [0,0,0,255] );
+			line( 0, 1024-27.75*10.24, 1024, 1024-27.75*10.24, [0,0,0,255] );
+			line( 0, 1024-29.18*10.24, 1024, 1024-29.18*10.24, [0,0,0,255] );
 		drawing = true;
 		ang = -180;
 	}
@@ -347,10 +351,10 @@ if( c[1])
 	for( ; ang <= 180; ang++ ) {
 		if( (Date.now() -now) > 30 ) break;
         	const xpos = (ang + 180)/360 * 1020 + 2;
-		axis2_angle = ang/180*Math.PI;
-                axis2[0] = Math.cos( axis2_angle );
-                axis2[1] = Math.sin( axis2_angle );
-                const valArr = test1();//getState( axis2 );
+			axis2_angle = ang/180*Math.PI;
+			axis2[0] = Math.cos( axis2_angle );
+			axis2[1] = Math.sin( axis2_angle );
+			const valArr = test1();//getState( axis2 );
 
                 //const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
@@ -395,7 +399,8 @@ if( c[1])
 		let val = (Block>Trans)?( 1+(Trans-Block)/(Block)):((Trans-Block)/Trans);
 		val *= 2;
 		//val = -val;
-                const ypos = 1024-(val * 1024);
+	if( val > maxval ) maxval = val;
+		const ypos = 1024-(val * 1024);
                     //if( ang === 45 ) debugger;
 		const val2 = (1/2-Math.abs(Math.cos( 2*ang/180*Math.PI )*Math.cos( 2*ang/180*Math.PI )/2))/2;
 		const ypos_b = 1024-(val2 * 1024);
