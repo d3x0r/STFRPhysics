@@ -371,6 +371,7 @@ function observerTimeToRealPos( T, L ) {
 
 function update( evt ) {
 	C = Number(sliderC.value)/100;
+	ru.params.C = C;
 	spanC.textContent = C.toFixed(2);
 	D = Number(sliderD.value)/10;
 	spanD.textContent = D.toFixed(2);
@@ -382,7 +383,7 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(2);
 
-	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C*C):Math.sqrt(V*V-C*C)/(C*C):1;
+	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C):Math.sqrt(V*V-C*C)/(C):1;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
@@ -428,8 +429,8 @@ function update( evt ) {
 		f.bounces.length = 0;
 		f.emitted.length = 0;
 		for( let n = 0; n < 37; n++ ) {
-			let dx = (-runT/2*V+ (now+runT/2)*Math.cos( n*Math.PI/18 ));
-			let dy = (now+runT/2)*Math.sin( n*Math.PI/18);
+			let dx = (-runT/2*V+ (now+runT/2)*C*Math.cos( n*Math.PI/18 ));
+			let dy = (now+runT/2)*C*Math.sin( n*Math.PI/18);
 			if( !prior_f || !prior_f.bounces[n] ) {
 				if( (dx-f.Pc)*(dx-f.Pc)/(lengthContract*lengthContract) + dy*dy > L*L ){
 					const last = f.emitted.length-1;
@@ -440,7 +441,7 @@ function update( evt ) {
 					f.bounces[n] = {x:dx, y:dy, ot: ot, at:now, tx:ot*V, ty:0, dx : (V*ot-dx), dy:(0-dy) };
 
 				}
-				f.emitted.push( [500+xscale*(-runT/2*V+ (now+runT/2)*Math.cos( n*Math.PI/18 )), 500+xscale*(now+runT/2)*Math.sin( n*Math.PI/18) ] );
+				f.emitted.push( [500+xscale*(-runT/2*V+ C*(now+runT/2)*Math.cos( n*Math.PI/18 )), 500+xscale*C*(now+runT/2)*Math.sin( n*Math.PI/18) ] );
 			} else {
 				const lastBounce = f.bounces[n] = prior_f.bounces[n];
 				f.emitted.push( [500+xscale*(lastBounce.x + (lastBounce.dx)*(now-lastBounce.at)/(lastBounce.ot-lastBounce.at))
