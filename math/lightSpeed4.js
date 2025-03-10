@@ -355,7 +355,7 @@ controls.appendChild( spanChkDebug );
 
 const chkLblDebug = document.createElement( "input" );
 chkLblDebug.setAttribute( "type", "checkbox" );
-chkLblDebug.checked = false;
+chkLblDebug.checked = true;
 spanChkDebug.appendChild( chkLblDebug );
 chkLblDebug.addEventListener( "input", update );
 
@@ -977,7 +977,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			ctx.lineTo( 500 + ca * 4 * xscale
 					, 500 + sa*4 * xscale );
 			ctx.stroke();
-	if(0) // if aberration indicators
+	if(true) // if aberration indicators
 	for( let x = 0; x < 360; x += 2 ) {
 		const ab = aberration2( 900, 100, Z, 900 + Math.cos( x / 180 * Math.PI  ) * 90, 100  + Math.sin( x / 180 * Math.PI  ) * 90, 0 );
 		//console.log( "ab is:", ab );
@@ -1025,6 +1025,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	const cury =  sa*V*now+pcont.y;
 	for( let n = -20; n <= 20; n++ ) {
 		const t = (n/20)*L; // L is already contracted
+		const t0 = (n/20)*L_o;
 		const cont = {x:t,y:0};//contract( t, 0 );
 		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
 		const time = EmitTime( now, {x:ca*V,y:sa*V, z:0}, {x:cont.x, y:0, z:0 }
@@ -1036,6 +1037,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		ctx.fillStyle =  `hsl(${((time)%3)*120+120},100%,50%`
 		ctx.strokeStyle =  `green`
 		centerBoxXY( 500+( apparentx ) *xscale, 500+(  apparenty )*xscale, false );
+		
 		//const epos = EmitPos( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
 		//const apparentx = epos.x;
 		//const apparenty = epos.y;
@@ -1073,13 +1075,18 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			//ctx.moveTo( 500 + ( frame.Po.x + abc * len *2 ) * xscale, 500 + ( frame.Po.y + abs * len *2 ) * xscale );
 			//ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
 			//ctx.stroke();
-
-			ctx.moveTo( 500 + ( newPos.x ) * xscale, 500 + ( newPos.y ) * xscale );
+			const l = Math.sqrt( (newPos.x-curx)*(newPos.x-curx) + (newPos.y-cury)*(newPos.y-cury) );
+			const D2del = D2-t0;
+			const Ddist = Math.sqrt( D2del*D2del + D*D );
+			ctx.moveTo( 500 + ( curx + (newPos.x-curx)/l*Ddist ) * xscale, 500 + ( cury+(newPos.y-cury)/l*Ddist) * xscale );
 			ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
 			ctx.stroke();
+
+			if(0) {
 			ctx.moveTo( 500 + ( (newPos.x -frame.Po.x) * 2 + frame.Po.x ) * xscale, 500 + ( (newPos.y -frame.Po.y) * 2 + frame.Po.y ) * xscale );
 			ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
 			ctx.stroke();
+			}
 		}
 		
 		//centerBoxXY( 500+( apparentx ) *xscale, 500+( apparenty )*xscale, false );
@@ -1154,6 +1161,8 @@ if(0)
 	{
 
 	}
+	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%,0.5)`
+	ctx.fillRect( 500+(ca*V*now-L_o)*xscale, 500+(sa*V*now)*xscale-5, (2*L_o)*xscale, 10 );
 
 
 	last_draw_time = now;
