@@ -25,6 +25,8 @@ let sin_view = 0;
 let cos_view = 1;
 let lengthContract = 1;
 let debugAb = false;
+let showAb = true;
+let showDelay = true;
 
 let runT = 4;
 let E = 0;
@@ -348,6 +350,27 @@ chkLblContract.setAttribute( "type", "checkbox" );
 chkLblContract.checked = animate;
 spanChkContract.appendChild( chkLblContract );
 chkLblContract.addEventListener( "input", update );
+
+const spanChkShowDelay = document.createElement( "label" );
+spanChkShowDelay.textContent = "Show Delay";
+controls.appendChild( spanChkShowDelay );
+
+const chkLblShowDelay = document.createElement( "input" );
+chkLblShowDelay.setAttribute( "type", "checkbox" );
+chkLblShowDelay.checked = true;
+spanChkShowDelay.appendChild( chkLblShowDelay );
+chkLblShowDelay.addEventListener( "input", update );
+
+const spanChkShowAberrated = document.createElement( "label" );
+spanChkShowAberrated.textContent = "Show Aberrated";
+controls.appendChild( spanChkShowAberrated );
+
+const chkLblShowAberrated = document.createElement( "input" );
+chkLblShowAberrated.setAttribute( "type", "checkbox" );
+chkLblShowAberrated.checked = true;
+spanChkShowAberrated.appendChild( chkLblShowAberrated );
+chkLblShowAberrated.addEventListener( "input", update );
+
 
 const spanChkDebug = document.createElement( "label" );
 spanChkDebug.textContent = "Debug Aberration";
@@ -759,7 +782,6 @@ function aberration2a( Xox, Xoy, Xoz, Xx, Xy, Xz ) {
 	}
 
 
-
 function update( evt ) {
 	C = Number(sliderC.value)/100;
 	spanC.textContent = C.toFixed(2);
@@ -804,6 +826,10 @@ function update( evt ) {
 	spanE.textContent = E.toFixed(1);
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(1);
+	
+	showAb = chkLblShowAberrated.checked;
+	showDelay = chkLblShowDelay.checked;
+
 	if( animate != chkLblNow.checked ) {
 		animate = chkLblNow.checked;
 		if( animate ) draw();
@@ -1035,8 +1061,10 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		const len = Math.sqrt( (apparentx-curx) * (apparentx-curx) + (apparenty-cury) * (apparenty-cury) );
 
 		ctx.fillStyle =  `hsl(${((time)%3)*120+120},100%,50%`
-		ctx.strokeStyle =  `green`
-		centerBoxXY( 500+( apparentx ) *xscale, 500+(  apparenty )*xscale, false );
+		if( showDelay ) {
+			ctx.strokeStyle =  `green`
+			centerBoxXY( 500+( apparentx ) *xscale, 500+(  apparenty )*xscale, false );
+		}
 		
 		//const epos = EmitPos( now, {x:ca*V,y:sa*V, z:0}, {x:t, y:0, z:0 }, {x:ca*V, y:sa*V, z:0}, {x:D2, y:D, z:0 } );
 		//const apparentx = epos.x;
@@ -1075,10 +1103,17 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			//ctx.moveTo( 500 + ( frame.Po.x + abc * len *2 ) * xscale, 500 + ( frame.Po.y + abs * len *2 ) * xscale );
 			//ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
 			//ctx.stroke();
+
+			// this length is from the current position on the display to the apparent position on the display.
 			const l = Math.sqrt( (newPos.x-curx)*(newPos.x-curx) + (newPos.y-cury)*(newPos.y-cury) );
+			// these distance offsets the real distance that the target appears.
+			// they are not lorentz contracted.
 			const D2del = D2-t0;
 			const Ddist = Math.sqrt( D2del*D2del + D*D );
-			ctx.moveTo( 500 + ( curx + (newPos.x-curx)/l*Ddist ) * xscale, 500 + ( cury+(newPos.y-cury)/l*Ddist) * xscale );
+			let tx1 = 500 + ( curx + (newPos.x-curx)/l*Ddist ) * xscale;
+			let ty1 = 500 + ( cury + (newPos.y-cury)/l*Ddist) * xscale;
+			centerBoxXY( tx1, ty1, false );
+			ctx.moveTo( tx1, ty1 );
 			ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
 			ctx.stroke();
 
@@ -1090,8 +1125,10 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		}
 		
 		//centerBoxXY( 500+( apparentx ) *xscale, 500+( apparenty )*xscale, false );
-		ctx.strokeStyle =  `white`
-		centerBoxXY( 500+(aberrantx)*xscale, 500+(aberranty )*xscale, false );
+		if( showAb ) {
+			ctx.strokeStyle =  `white`
+			centerBoxXY( 500+(aberrantx)*xscale, 500+(aberranty )*xscale, false );
+		}
 
 		//ctx.strokeStyle =  `red`
 		//centerBoxXY( 500+( newPos.x)*xscale, 500+( newPos.y )*xscale, false );
@@ -1161,8 +1198,8 @@ if(0)
 	{
 
 	}
-	ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%,0.5)`
-	ctx.fillRect( 500+(ca*V*now-L_o)*xscale, 500+(sa*V*now)*xscale-5, (2*L_o)*xscale, 10 );
+	//ctx.fillStyle =  `hsl(${120*(now%3)-240},100%,50%,0.5)`
+	//ctx.fillRect( 500+(ca*V*now-L_o)*xscale, 500+(sa*V*now)*xscale-5, (2*L_o)*xscale, 10 );
 
 
 	last_draw_time = now;
