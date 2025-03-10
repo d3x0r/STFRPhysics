@@ -441,7 +441,7 @@ function realTimeToObserverTimeSpin( T, P, Lx, Ly, Lz, Ax, Ay, Az ) {
 
 
 function ObservedTime( T, V, P, V_o, P_o ) {
-
+/*
 	const p_x = (P_o.z - P.x) + V_o.x*T;
 	const p_y = (P_o.y - P.y) + V_o.y*T;
 	const p_z = (P_o.z - P.z) + V_o.z*T;
@@ -452,6 +452,7 @@ function ObservedTime( T, V, P, V_o, P_o ) {
 	const pz = p_z-T*V.z;
 
 	return [( C*Math.sqrt( px*px+py*py+pz*pz ) + C*C* T - (  p_x * V.x  +  p_y*V.y  +  p_z*V.z ) )/D];
+*/	
 	//	$S = \frac {\sqrt((-C^2 T + D J T + E K T + F L T + J X + K Y + L Z)^2 - (C^2 - J^2 - K^2 - L^2) (C^2 T^2 - D^2 T^2 - 2 D T X - E^2 T^2 - 2 E T Y - F^2 T^2 - 2 F T Z - X^2 - Y^2 - Z^2)) + C^2 T - D J T - E K T - F L T - J X - K Y - L Z}{C^2 - J^2 - K^2 - L^2}$
 	const xd = P.x-P_o.x;
 	const yd = P.y-P_o.y;
@@ -787,15 +788,15 @@ function update( evt ) {
 	D = (Number(sliderD.value)/500-1)*5;
 	spanD.textContent = D.toFixed(3) ;
 
-	D2 = (Number(sliderD2.value)/500-1)*L;
-	spanD2.textContent = D2.toFixed(3);
+	D2 = (Number(sliderD2.value)/500-1)*L_o;
 
 	Z = (Number(sliderZ.value)/100);
 	spanZ.textContent = Z.toFixed(3);
 
 	const posContract = contract( D2, D );
 	//D = posContract.y;
-	spanD.textContent = D.toFixed(3) ;
+	spanD.textContent = posContract.y.toFixed(3);//D.toFixed(3) ;
+	spanD2.textContent = posContract.x.toFixed(3);//D2.toFixed(3);
 	//D2 = posContract.x;
 	//spanD2.textContent = D2.toFixed(3) + " T(world s):" + (-2*(C*D2+L*V)/(C*C-V*V)).toFixed(2)  + " T(obs s):"+ ((-2*(C*D2+L*V)/(C*C-V*V))/Math.sqrt(1-V/C)).toFixed(2) /*+ " O(m-m/s):"+ (-2*(C*D2+L*V)).toFixed(2)*/;
 
@@ -846,8 +847,8 @@ function update( evt ) {
 
 		const nowE = (del * runT)-runT/2;
 		frame.hue =120*(Treal%3)-240;
-		frame.Po = {x:ca*V*Treal + posContract.x,y:sa*V*Treal+posContract.y};
 		frame.Pc = {x:ca*V*Treal + 0,y:sa*V*Treal};
+		frame.Po = {x:frame.Pc.x + posContract.x,y:frame.Pc.y +posContract.y};
 		frame.Ph = {x:ca*V*Treal + L,y:sa*V*Treal};
 		frame.Pt = {x:ca*V*Treal + -L,y:sa*V*Treal};
 
@@ -901,12 +902,13 @@ function draw(  ) {
 
 	for( let f = 0; f < curFrame; f++ ) {
 		const frame = eventFrames[f];
+
 		if( frame.T_start < now   ) 
 		{
 			ctx.strokeStyle =  `hsl(${frame.hue},${100*(frame.T_start>now?0.5:1)}%,50%`
 			if( frame.T_see_t > now ) {
 				ctx.beginPath();
-				ctx.moveTo( 500 +frame.Pt.x*xscale/*+ frame.Pc*xscale*/, 500+frame.Pt.y*xscale );
+				ctx.moveTo( 500 +frame.Pt.x*xscale /*+ frame.Pc.x*xscale*/, 500+frame.Pt.y*xscale );
 				ctx.lineTo( 500 +(frame.Po.x + (frame.T_see_t-frame.T_start)*ca*V)*xscale
 							, 500 +(frame.Po.y + (frame.T_see_t-frame.T_start)*sa*V)*xscale );
 				ctx.stroke();
@@ -914,7 +916,7 @@ function draw(  ) {
 	   
 			if( frame.T_see_h > now ) {
 				ctx.beginPath();
-				ctx.moveTo( 500 +frame.Ph.x*xscale/*+ frame.Pc*xscale*/, 500+frame.Ph.y*xscale );
+				ctx.moveTo( 500 +frame.Ph.x*xscale/*+ frame.Pc.x*xscale*/, 500+frame.Ph.y*xscale );
 				ctx.lineTo( 500 +(frame.Po.x + (frame.T_see_h-frame.T_start)*ca*V)*xscale
 							, 500 +(frame.Po.y + (frame.T_see_h-frame.T_start)*sa*V)*xscale );
 				ctx.stroke();
@@ -975,7 +977,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			ctx.lineTo( 500 + ca * 4 * xscale
 					, 500 + sa*4 * xscale );
 			ctx.stroke();
-	//if(0)
+	if(0) // if aberration indicators
 	for( let x = 0; x < 360; x += 2 ) {
 		const ab = aberration2( 900, 100, Z, 900 + Math.cos( x / 180 * Math.PI  ) * 90, 100  + Math.sin( x / 180 * Math.PI  ) * 90, 0 );
 		//console.log( "ab is:", ab );
@@ -1022,8 +1024,8 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	const curx = ca*V*now+ pcont.x;
 	const cury =  sa*V*now+pcont.y;
 	for( let n = -20; n <= 20; n++ ) {
-		const t = (n/20)*L;
-		const cont = contract( t, 0 );
+		const t = (n/20)*L; // L is already contracted
+		const cont = {x:t,y:0};//contract( t, 0 );
 		//const time = getObservedTimePos( frame.Po.x - (frame.Pc.x+t), frame.Po.y - frame.Pc.y );
 		const time = EmitTime( now, {x:ca*V,y:sa*V, z:0}, {x:cont.x, y:0, z:0 }
 									, {x:ca*V, y:sa*V, z:0}, {x:pcont.x, y:pcont.y, z:Z } );
@@ -1046,6 +1048,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		ctx.lineTo( 500+(curx)*xscale +20*cos_view+ 20*sin_view, 500+(cury)*xscale +20*sin_view- 20*cos_view ) ;
 		ctx.stroke();
 
+/*
 		const view_dot = newPos.x * cos_view + newPos.y * sin_view;
 		const vx = curx + (aberrantx - curx) / view_dot;
 		const vy = cury + (aberranty - cury) / view_dot;
@@ -1054,6 +1057,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 		ctx.moveTo( 500+(curx)*xscale , 500+(cury)*xscale ) ;
 		ctx.lineTo( 500+(vx)*xscale , 500+(vy)*xscale  ) ;
 		ctx.stroke();
+*/
 		//const view_depth = ( newPos.x - curx )
 
 		if(debugAb) {
@@ -1066,17 +1070,17 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			ctx.stroke();
 			ctx.beginPath();
 			ctx.strokeStyle = "white";
-		//ctx.moveTo( 500 + ( frame.Po.x + abc * len *2 ) * xscale, 500 + ( frame.Po.y + abs * len *2 ) * xscale );
-		//ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
-		//ctx.stroke();
+			//ctx.moveTo( 500 + ( frame.Po.x + abc * len *2 ) * xscale, 500 + ( frame.Po.y + abs * len *2 ) * xscale );
+			//ctx.lineTo( 500 + frame.Po.x * xscale, 500 + frame.Po.y * xscale );
+			//ctx.stroke();
 
-		ctx.moveTo( 500 + ( newPos.x ) * xscale, 500 + ( newPos.y ) * xscale );
-		ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
-		ctx.stroke();
-		ctx.moveTo( 500 + ( (newPos.x -frame.Po.x) * 2 + frame.Po.x ) * xscale, 500 + ( (newPos.y -frame.Po.y) * 2 + frame.Po.y ) * xscale );
-		ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
-		ctx.stroke();
-	}
+			ctx.moveTo( 500 + ( newPos.x ) * xscale, 500 + ( newPos.y ) * xscale );
+			ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
+			ctx.stroke();
+			ctx.moveTo( 500 + ( (newPos.x -frame.Po.x) * 2 + frame.Po.x ) * xscale, 500 + ( (newPos.y -frame.Po.y) * 2 + frame.Po.y ) * xscale );
+			ctx.lineTo( 500 + curx * xscale, 500 + cury * xscale );
+			ctx.stroke();
+		}
 		
 		//centerBoxXY( 500+( apparentx ) *xscale, 500+( apparenty )*xscale, false );
 		ctx.strokeStyle =  `white`
@@ -1099,10 +1103,12 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 			headTri( (+L)*(1-delT) +(delT)*frame.Ph, photonStart*(1-delT)+toY*(delT) );
 
 			if( frame.event ) eventMark( (frame.Pc+L)*(1-delT)+(delT)*frame.Pc , photonStart*(1-delT)+toY*(delT), true );
+if( 1 ) { // draw circles around head
 ctx.beginPath();
 //ctx.arc(500+(L-Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 ctx.arc(500+(frame.Ph.x)*xscale, 500+(frame.Ph.y)*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
 ctx.stroke()
+}
 
 		}
 		if( frame.T_start <now && frame.T_see_t>now) {
@@ -1111,6 +1117,7 @@ ctx.stroke()
 			const delT = passed/del;
 			tailTri( (-L)*(1-delT)+(delT)*frame.Pt, photonStart*(1-delT)+toY*(delT) );
 			if( frame.event ) eventMark( (frame.Pc-L)*(1-delT)+(delT)*frame.Pc, photonStart*(1-delT)+toY*(delT)+20, true );
+
 if(1){ // draw circles around tail
 	ctx.beginPath();
 	//ctx.arc(500-(L+Math.cos(A)*V*(now-frame.T_start))*xscale, photonStart+(Math.sin(A)*V*(now-frame.T_start))*xscale, C*(now-frame.T_start)*(xscale), 0, 2 * Math.PI, false);
