@@ -490,6 +490,7 @@ function draw(  ) {
 
 	{
 	ctx.strokeStyle = "white";
+ctx.fillStyle = "white";
 		ctx.beginPath();
 		const now = eventFrames[frame];
 		if( now ) {
@@ -500,7 +501,7 @@ function draw(  ) {
 			ctx.stroke();
 
 		ctx.beginPath();
-	ctx.strokeStyle = "red";
+		ctx.strokeStyle = "red";
 		if( now.emits )
 			for( let r = 0; r < now.emits.length; r++ ) {			
 				ctx.beginPath();
@@ -512,6 +513,13 @@ function draw(  ) {
 					else ctx.lineTo( now.emits[r].emitted[n][0], now.emits[r].emitted[n][1] );
 				}
 				ctx.stroke();
+
+				for( let n = 0; n < 37; n++  ) {
+					if( now.emits[r].bounces[n] ) {
+						ctx.fillRect( 500+xscale*now.emits[r].bounces[n].x-1,500+xscale*now.emits[r].bounces[n].y-1,3,3);
+					}
+				}
+
 			}
 
 	if(0)
