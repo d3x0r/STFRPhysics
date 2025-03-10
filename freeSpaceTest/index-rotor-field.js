@@ -53,6 +53,7 @@ var controls;
 	var geometry, material, mesh = [];
 	var frame_target = [];
 	var slow_animate = false;
+	let toroidal = false;
 	var frame = 0;
 
 	var tests = [];
@@ -165,14 +166,14 @@ function init() {
 
 	function tick() {
 		if( controlForm.animate )
-		clock += Math.PI/16;
+			clock += Math.PI/16;
 
 
-				geometryNormals.setAttribute( "position", new THREE.BufferAttribute( normalVerts.buffer, 3 ) );
-				geometryNormals.setAttribute( "color", new THREE.BufferAttribute( normalColors.buffer, 4, true ) );
-		updateGeometry( normalVerts, normalColors );
-		geometryNormals.setDrawRange( 0, normalVerts.used );
-		setTimeout( tick, 100 );
+			geometryNormals.setAttribute( "position", new THREE.BufferAttribute( normalVerts.buffer, 3 ) );
+			geometryNormals.setAttribute( "color", new THREE.BufferAttribute( normalColors.buffer, 4, true ) );
+			updateGeometry( normalVerts, normalColors );
+			geometryNormals.setDrawRange( 0, normalVerts.used );
+			setTimeout( tick, 100 );
 	}
 	tick();
 
@@ -207,111 +208,128 @@ function updateGeometry(verts,cols) {
 	axis.z/= axislen;
 
 	const axisRot = Q.set( clock, {x:controlForm.sliderBX, y:controlForm.sliderBY, z:controlForm.sliderBZ } ).apply( axis );
+	//const axisRot = Q.set( clock, {x:cdel1, y:rdel1, z:0 } ).apply( axis );
 
 	const firstSpin = new lnQuat();
 
-	for( let r = 0; r < 100; r++ ) {
-		const rdel = (r-49.5)/5;
+	if( controlForm.toroidal ) {
+		
+	} else {
+
+	   
 		for( let c = 0; c < 100; c++ ) {
-			const cdel = (c-49.5)/5;
+			const divs = c*Math.PI/2;
+			for( let r = 0; r < c*Math.PI; r++ ) {
 
-			const here = new THREE.Vector3( 0,rdel*spaceScale,cdel*spaceScale )
-			const r_plus1 = new THREE.Vector3( 0,(rdel+rdel1)*spaceScale ,cdel*spaceScale )
-			const c_plus1 = new THREE.Vector3( 0,(rdel)*spaceScale ,(cdel+cdel1)*spaceScale )
+				//const rdel = (r-49.5)/5;
+				//const cdel = (c-49.5)/5;
+				const cdel = Math.cos(r/divs*Math.PI)*c/5;//(c-49.5)/5;
+				const rdel = Math.sin(r/divs*Math.PI)*c/5;
+				const cdelx = Math.sin(r/divs*Math.PI)*(c+1)/5-rdel;
+				const cdely = Math.cos(r/divs*Math.PI)*(c+1)/5-cdel;
+				const rdelx = Math.sin((r+1)/divs*Math.PI)*(c)/5-rdel;
+				const rdely = Math.cos((r+1)/divs*Math.PI)*(c)/5-cdel;
 
-			const rsq = rdel*rdel + cdel*cdel;
-			const rsq_r = (rdel+rdel1)*(rdel+rdel1) + cdel*cdel;
-			const rsq_c = rdel*rdel + (cdel+cdel1)*(cdel+cdel1);
-	
-			const cs = Math.cos( clock );
-			const sn = Math.sin( clock );
+				
+	   
+				const here = new THREE.Vector3( 0,rdel*spaceScale,cdel*spaceScale )
+				const r_plus1 = new THREE.Vector3( 0,(rdel+rdelx)*spaceScale ,(cdel+rdely)*spaceScale )
+				const c_plus1 = new THREE.Vector3( 0,(rdel+cdelx)*spaceScale ,(cdel+cdely)*spaceScale )
+	   
+				const rsq = rdel*rdel + cdel*cdel;
+				const rsq_r = (rdel+rdel1)*(rdel+rdel1) + cdel*cdel;
+				const rsq_c = rdel*rdel + (cdel+cdel1)*(cdel+cdel1);
+		
+				const cs = Math.cos( clock );
+				const sn = Math.sin( clock );
+	   
+				const rot_here = stress*(1/(1+(rsq)));
+				const rot_r = stress*(1/(1+(rsq_r)));
+				const rot_c = stress*(1/(1+(rsq_c)))
+	   
+				const here_rot = Q.set( firstSpin.set( rot_here, axisRot )). apply( here );
+            const r_plus1_rot = Q.set( firstSpin.set( rot_r, axisRot ) ).apply( r_plus1 )
+            const c_plus1_rot = Q.set( firstSpin.set( rot_c, axisRot ) ).apply( c_plus1 )
+      
+      
+				cols.push( color );
+				cols.push( color );
+	   
+	   
+				verts.push( here)
+				verts.push( r_plus1)
+				cols.push( colorg );
+				cols.push( colorg );
+	   
+				verts.push( here)
+				verts.push( c_plus1)
+	   
 
-			const rot_here = stress*(1/(1+(rsq)));
-			const rot_r = stress*(1/(1+(rsq_r)));
-			const rot_c = stress*(1/(1+(rsq_c)))
-
-			const here_rot = Q.set( firstSpin.set( rot_here, axisRot )). apply( here );
-         const r_plus1_rot = Q.set( firstSpin.set( rot_r, axisRot ) ).apply( r_plus1 )
-         const c_plus1_rot = Q.set( firstSpin.set( rot_c, axisRot ) ).apply( c_plus1 )
-
-
-			cols.push( color );
-			cols.push( color );
-
-
-			verts.push( here)
-			verts.push( r_plus1)
-			cols.push( color );
-			cols.push( color );
-
-			verts.push( here)
-			verts.push( c_plus1)
-
-
-			const color2 = new THREE.Color( 0,1,0,1 );
-				color2.setHSL( rot_here/(Math.PI*4), 1.0, 0.5 );
-//if( clock == 0 ) console.log( "stuff:", r, c, rdel, cdel, rot_here, rot_here/stress );
-
-			cols.push( color2 );
-			cols.push( color2 );
-
-
-			verts.push( here_rot)
-			verts.push( r_plus1_rot)
-			cols.push( color2 );
-			cols.push( color2 );
-
-			verts.push( here_rot)
-			verts.push( c_plus1_rot)
-
-			const tmpBasis = { right: {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
-			                 , forward: {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z}, up: {x:0,y:0,z:0} };
-						tmpBasis.up.x = tmpBasis.forward.y * tmpBasis.right.z - tmpBasis.forward.z * tmpBasis.right.y;
-						tmpBasis.up.y = tmpBasis.forward.z * tmpBasis.right.x - tmpBasis.forward.x * tmpBasis.right.z;
-						tmpBasis.up.z = tmpBasis.forward.x * tmpBasis.right.y - tmpBasis.forward.y * tmpBasis.right.x;
-				const rlen = Math.sqrt( tmpBasis.right.x*tmpBasis.right.x+ tmpBasis.right.y*tmpBasis.right.y+ tmpBasis.right.z*tmpBasis.right.z );
-				const flen = Math.sqrt( tmpBasis.forward.x*tmpBasis.forward.x+ tmpBasis.forward.y*tmpBasis.forward.y+ tmpBasis.forward.z*tmpBasis.forward.z );
-				const ulen = Math.sqrt( tmpBasis.up.x*tmpBasis.up.x+ tmpBasis.up.y*tmpBasis.up.y+ tmpBasis.up.z*tmpBasis.up.z );
-			tmpBasis.right.x /= rlen; tmpBasis.right.y /= rlen; tmpBasis.right.z /= rlen;
-			tmpBasis.forward.x /= flen; tmpBasis.forward.y /= flen; tmpBasis.forward.z /= flen;
-			tmpBasis.up.x /= ulen; tmpBasis.up.y /= ulen; tmpBasis.up.z /= ulen;
-						Q.fromBasis( tmpBasis );
-
-			//Q.set( {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
-			//     ,  {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z} );
-			const basis = Q.getBasis();
-
-			basis.forward.x = basis.forward.x * spaceScale*0.05 +here_rot.x;
-			basis.forward.y = basis.forward.y * spaceScale*0.05 +here_rot.y;
-			basis.forward.z = basis.forward.z * spaceScale*0.05 +here_rot.z;
-			basis.right.x = basis.right.x * spaceScale*0.05 +here_rot.x;
-			basis.right.y = basis.right.y * spaceScale*0.05 +here_rot.y;
-			basis.right.z = basis.right.z * spaceScale*0.05 +here_rot.z;
-			basis.up.x = basis.up.x * spaceScale*0.05 +here_rot.x;
-			basis.up.y = basis.up.y * spaceScale*0.05 +here_rot.y;
-			basis.up.z = basis.up.z * spaceScale*0.05 +here_rot.z;
-
-			cols.push( color );
-			cols.push( color );
-
-
-			verts.push( here_rot )
-			verts.push( basis.right )
-			cols.push( colorg );
-			cols.push( colorg );
-
-			verts.push( here_rot )
-			verts.push( basis.up )
-			
-			cols.push( colorb );
-			cols.push( colorb );
-
-			verts.push( here_rot )
-			verts.push( basis.forward )
-
+if(1) {	   
+				const color2 = new THREE.Color( 0,1,0,1 );
+					color2.setHSL( rot_here/(Math.PI*4), 1.0, 0.5 );
+				//if( clock == 0 ) console.log( "stuff:", r, c, rdel, cdel, rot_here, rot_here/stress );
+      
+				cols.push( color2 );
+				cols.push( color2 );
+	   
+	   
+				verts.push( here_rot)
+				verts.push( r_plus1_rot)
+				cols.push( color2 );
+				cols.push( color2 );
+	   
+				verts.push( here_rot)
+				verts.push( c_plus1_rot)
+	   
+				const tmpBasis = { right: {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
+				                 , forward: {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z}, up: {x:0,y:0,z:0} };
+							tmpBasis.up.x = tmpBasis.forward.y * tmpBasis.right.z - tmpBasis.forward.z * tmpBasis.right.y;
+							tmpBasis.up.y = tmpBasis.forward.z * tmpBasis.right.x - tmpBasis.forward.x * tmpBasis.right.z;
+							tmpBasis.up.z = tmpBasis.forward.x * tmpBasis.right.y - tmpBasis.forward.y * tmpBasis.right.x;
+					const rlen = Math.sqrt( tmpBasis.right.x*tmpBasis.right.x+ tmpBasis.right.y*tmpBasis.right.y+ tmpBasis.right.z*tmpBasis.right.z );
+					const flen = Math.sqrt( tmpBasis.forward.x*tmpBasis.forward.x+ tmpBasis.forward.y*tmpBasis.forward.y+ tmpBasis.forward.z*tmpBasis.forward.z );
+					const ulen = Math.sqrt( tmpBasis.up.x*tmpBasis.up.x+ tmpBasis.up.y*tmpBasis.up.y+ tmpBasis.up.z*tmpBasis.up.z );
+				tmpBasis.right.x /= rlen; tmpBasis.right.y /= rlen; tmpBasis.right.z /= rlen;
+				tmpBasis.forward.x /= flen; tmpBasis.forward.y /= flen; tmpBasis.forward.z /= flen;
+				tmpBasis.up.x /= ulen; tmpBasis.up.y /= ulen; tmpBasis.up.z /= ulen;
+							Q.fromBasis( tmpBasis );
+	   
+				//Q.set( {x:r_plus1_rot.x-here_rot.x,y:r_plus1_rot.y-here_rot.y, z:r_plus1_rot.z-here_rot.z}
+				//     ,  {x:c_plus1_rot.x-here_rot.x,y:c_plus1_rot.y-here_rot.y, z:c_plus1_rot.z-here_rot.z} );
+				const basis = Q.getBasis();
+	   
+				basis.forward.x = basis.forward.x * spaceScale*0.05 +here_rot.x;
+				basis.forward.y = basis.forward.y * spaceScale*0.05 +here_rot.y;
+				basis.forward.z = basis.forward.z * spaceScale*0.05 +here_rot.z;
+				basis.right.x = basis.right.x * spaceScale*0.05 +here_rot.x;
+				basis.right.y = basis.right.y * spaceScale*0.05 +here_rot.y;
+				basis.right.z = basis.right.z * spaceScale*0.05 +here_rot.z;
+				basis.up.x = basis.up.x * spaceScale*0.05 +here_rot.x;
+				basis.up.y = basis.up.y * spaceScale*0.05 +here_rot.y;
+				basis.up.z = basis.up.z * spaceScale*0.05 +here_rot.z;
+	   
+				cols.push( color );
+				cols.push( color );
+	   
+	   
+				verts.push( here_rot )
+				verts.push( basis.right )
+				cols.push( colorg );
+				cols.push( colorg );
+	   
+				verts.push( here_rot )
+				verts.push( basis.up )
+				
+				cols.push( colorb );
+				cols.push( colorb );
+	   
+				verts.push( here_rot )
+				verts.push( basis.forward )
+	   }
+			}	
 		}	
-	}	
-
+	}
 	//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
 	//normalVertices.push( new THREE.Vector3( x*spaceScale + x*l*normal_del,y*spaceScale + y*l*normal_del,z*spaceScale + z*l*normal_del ))
 	//normalColors.push( new THREE.Color( "hsl(0, 100%, 50%)", 255,0,255,255 ))

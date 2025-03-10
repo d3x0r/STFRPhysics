@@ -1,0 +1,835 @@
+0.343 m/ms
+
+0.0277778 m/ms
+
+2 meters = 5.830903790087464ms
+
+0.1619696793002915m
+
+2*2 + ( 0.162*0.162 ) = 4.026244
+
+2.0065502734793364753065014642274
+
+2.0065/(0.343) + (2.0065/0.343)   11.699708454810495626822157434402  (0.99676052827756998203383983352487)
+
+
+2.0/(0.343) + (2.00/0.343)   11.6618075801
+
+99.7%
+
+
+2/(0.343+0.0278) + ( 2/(0.343-0.0278) )  11.738920922795ms  0.99665961  0.0034   0.9934309686
+
+
+speed of sound by angle...
+
+2D/C
+
+( D*cos(a) + E*sin(a) ) / C
+
+sqrt(  - vvyy cos(a) + ccyy ) + vy(sin(a))/(cc-vv)
+
+
+
+sqrt( (V/C * cos(a)*Y)^2 + (V/C * sin(a)*Y)^2 ) / (C+V)  + 
+
+
+worst cases
+
+2*2/0.343 = 11.6618075 
+L/(C+V) + L/(C-V) = (2/(0.343+0.0278)) + (2/(0.343-0.0278)) = 11.73892  0.9934310  0.00334
+
+2*(sqrt( (L/C)^2 + (V*(L/C))^2 ) = 2*sqrt( (1+VV)*LL/(CC) ) = 11.699708454 0.99676052  0.0033  diff = 0.0392116  percent diff = 0.00335150
+ sqrt(  33.9994390 + 0.402615356 ) = 5.86532644922
+ 2*sqrt(  33.9994390 + 0.402615356 ) = 11.73065289
+ 
+ 
+cos(a)*L/(C+V) + cos(a)*L/(C-V) + sqrt( cos(a)*(L/C)^2 + (sin(a)*V*(L/C))^2 )
+
+
+F = frequency
+dT = deltaT = C/F   (time between full waves)
+
+A = angle light travels ( real space )
+L = distance light travels
+
+D = angle (angle device travels)
+V = Velocity
+
+Aberration2a ( 0, 0, cos(A),sin(A) ) {
+	const forward = { x : Math.cos(D) * values.Velocity, y: -Math.sin(values.Direction) * values.Velocity };
+
+	let delx = Xx;
+	let dely = Xy;
+	// result xy
+	let rx = Xx;
+	let ry = Xy;
+
+	let len2 = delx*delx + dely*dely;
+	let Vdot = cos(A) * cos(D) + sin(A)*sin(D);  //   cos( A-D )
+	const Vcrsz = sin(a) * cos(D) - cos(A) * sin(D); // LA x VD  sin(A-D)
+	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz); 
+	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
+	if( values.Velocity > 0.00001 ) {
+		let len = Math.sqrt( len2 ); // L
+		let Vlen = values.Velocity;  // V
+		let norm = len*Vlen;  L*V
+		let CosVDot = Vdot/norm;  // cos( A-D )
+		
+		let baseAng = Math.acos( CosVDot ); // A-D
+		const delAng = Math.acos( ( CosVDot + Vlen/values.C)/(1 + Vlen/values.C * CosVDot))-baseAng;
+		                // return  A + acos( ( cos(A-D) + V/C) / (1+V/C cos(A-D) ) - (A-D)
+		                // return  acos( ( cos(A-D) + V/C) / (1+V/C cos(A-D)  ) + D
+						
+						
+		if( Math.abs( delAng) > 0.00001 ) {
+			const c = Math.cos(delAng );
+			const s= Math.sin( delAng);
+			let vx = delx, vy=dely;
+			let qz = Math.sign( Vcrs );
+			// rotate delx dely by delAng
+			rx = Xox + vx*c + s*(-qz * vy) + 0;
+			ry = Xoy + vy*c + s*(qz * vx) + 0;						
+		}
+	}
+	return { x:rx, y:ry };
+
+}
+
+
+
+	const speed = values.Velocity;
+	let da = angle - direction;
+	const mod = Math.abs( Math.floor( da / (Math.PI) ) ) % 2;
+	let neg = mod?-1:1;
+	const a = neg*Math.acos( (Math.cos(da)+speed/values.C)/(1+speed/values.C*Math.cos(da)) ) + direction;
+	return a;
+
+
+Ccos(A), Csin(A)
+Vcos(D), Vsin(D)
+
+Ccos(A) - Vcos(D), Csin(A) - Vsin(D)
+
+
+
+CC cos^2(A) - 2CVcos(A)cos(D) + VVcos^2(D) + CC sin^2(A) - 2CVsin(A)sin(D) + VV sin^2(D)
+
+CC + VV - 2CV( cos(A)cos(D) + sin(A)sin(D) ) cos(A-D)
+
+sqrt( 1+ VV/CC - 2V/C ( cos(A)cos(D) + sin(A)sin(D) ) cos(A-D) )
+
+a = -cos^(-1)((V - C cos(b - d))/(V cos(b - d) - C)) + d 
+
++ 2 π n and C - V cos(b - d)!=0 and C^2 - V^2!=0 and Re(d) = Re(b) - π and Im(d)>=Im(b) and n element Z
+
+
+$$\frac{1}{\sqrt{\left(1-\frac{V^2}{C^2}\right)}}\left(1-V\cos\left(\theta\right)\right)$$
+
+$$\frac{1}{\sqrt{\left(1-\frac{V^2}{C^2}\right)}} \sqrt{1+\frac{V^2}{C^2}-\frac{2V}{C}\ \cos\theta}\ $$
+
+------------
+(Fermilab)
+https://www.youtube.com/watch?v=eOCKNH0zaho Why E=mc² is wrong
+
+(gamma is 1/sqrt(1-vv/cc) )
+E= gamma mc^2  this gives gamma=1 at V=0 (1-0)=1.  
+E^2 = (pc)^2 + (mc^2)^2   (momemtum and rest mass) (stationary momentum is 0, and rest mass is all) 
+   (mass =0 (photon) then momentum is th eonly factor and it's pc )
+   
+   gamma = E/mc^2  (e moving/e not moving)
+
+
+https://www.youtube.com/watch?v=LTJauaefTZM&t=0sated  Is relativistic mass real?  
+
+https://www.youtube.com/watch?v=qXxtqK7G4Uw&t=0s  Relativity's key concept: Lorentz gamma  
+This messes up a lot of concepts - like 'they see it take a longer time when moving' and that's not true.
+By their own clock, and assuming the light is going from light to mirror and back straight, it takes exactly as much 
+time but their own clock as the person outside that sees it moving the long path on the hypotenuse.
+   gamma = Tmoving/Tstationary.
+   
+
+(Physics Explained)
+https://www.youtube.com/watch?v=KZ8G4VKoSpQ 
+
+c=1/sqrt(mu_o epsilon_0) (maxwell which is dielectric constant and magnetic permeability)
+
+(constancy of the speed of light only applies to light emitted along the forward velocity vector, which then 
+time contraction fixes the moving clock so the fixed C still seems like it is C and not C+V; it's really C-V)   
+
+   g\left(x\right)=\sqrt{1-\frac{xx}{1}}
+   g\left(x\right)\cdot\frac{1}{\left(C-x\right)}g\left(x\right)\ -\ x
+
+	g(x)=sqrt(1-VV/CC) (contraction)
+	the distance to cover is 1, contracted is 1*g(x)
+		the time to cover the distance is (1/C) time contracted is (g(x)/C)
+		g(x) / ( g(x)/C ) = C.  But; this is false.  
+		g(x)t(x)g(x)C/2 = 1 
+		
+		g(x)t(x)g(x) = 2/C  (can 1 both sides and get = C)
+		
+		g(x)t(x)g(x)CC/2 = C
+		
+	This video claims that t = 2T = 2/sqrt( CC-VV) = 2/c / sqrt(1-VV/CC) ... which is what I got
+      that's what they claim for time dilation because of 2x trips... 	
+	  And then they erase a term buried in T_0 ... 
+	     T_o = 2/c
+		 t = T_o / sqrt( 1-VV/CC)
+		 and gamma = 1/sqrt(1-VV/CC) 
+		 t = gamma T_0
+		 and the units of T_0 is 2/c * N.
+		 
+  Relativistic energy
+     KE = W = integral( x1, x2) Fdx - force over distance X1 to X2 is kinetic energy (gained?) = work done
+	   F = ma (accelration, changes velocity, which does change momentum... )
+	      m is a constant to taking the derivitive makes it go away... but I guess really it's (m dv)/dt too?
+	   F = dp/dt  (change in momentum over change in time)
+	   p = mv
+	   
+	   rest frame of moving object = p=m dx/dt_0
+	     and chain rule?  m dx/dt dt/dt_0
+		   and dt_dt_0 (above) is gamma
+		 gamma m dx/dt
+		 
+		the gamma m dx/dt is the relativistic momentum, and taking the derivitive gives relativistic force 
+		
+		   m  d( v(1-v^2/c^2)^1/2 )  /dt
+		   (then using product rule... d(A(t)B(t)) = A(db/dt) + (da/dt)B  (A(t) turns into A?)
+		       A = v
+			   b = (1-v^2/c^2)^1/2 )
+			   
+			   m dv/dt sqrt(1-VV/CC) + mv d sqrt(1-VV/CC) / dt
+			   
+			   derivitive of 1/gamma is then v/CC dv/dt ( 1-VV/CC)^-3/2
+			   
+			   gamma^3 m dv/dt
+			   
+			   
+			   which goes back to the integral above   KE = integral( x1,x2 ) ( m/ (1-vv/cc)^3/2 ) (dv/dt) dx
+			   
+			   change integral to integrate dv instead of dx... which chanes (dv/dt)dx -> dv(dx/dt)  and  x1 v=0  x2 v=v  
+			   
+			   replaces dx/dt with v  (which is change in position over change in time, which is velocity)
+			   KE = integral( 0,v) ( mv / (1-vv/cc)^3/2) dv   
+			   
+			      =  [ mc^2 / sqrt(1-vv/cc) ] 0,v
+				    = mcc / sqrt(1-vv/cc) {at v} - mcc [at 0]
+					  (refactors to...)
+					= mc^2 ( gamma-1)
+					
+				E (total energy) = KE + mc^2 = gamma mc^2	
+				
+				(binomial theorum expands and gets a simple
+				
+				E = mc^2 + 1/2 mv^2  (potential + kinetic classical)
+				
+				
+Have no issues or corrections to apply to the above; the only factor that applies is length/time correction, and 
+a quick calculation of const speed of forward light worked out... that's not to say that the reverse direction is also
+the speed of light.				
+--------------				
+
+(Earth escape velocity to find stretch of space)
+
+11,200 m/s
+125,440 m-m/s-s
+
+1/11.200 = 0.089285714
+
+Escape velocity of earth 11km/s.  3.674541e-5ft/ns  0.0004409449 inches/ns
+
+11200 nm/ns
+
+which is the same factor for time contraction  sqrt( CC (ls/s) -VV ) 300,000km/s  0.000037333 ls/s  1.39377778e-9
+
+0.999 999 998 6   
+
+accel = 9.807m/s^2 G
+
+
+-----------
+
+Accelerating frame contracts in the direction of the acceleration...
+
+but clocks will skew to an observer in the center....
+
+(It is claimed that hyperbolic motion spacetime diagram matches this behavior)
+
+time contraction on the clocks counts too...
+
+at -L-O clock is -L/(C-V) behind
+at L-O clock is L/(C+V) behind observer
+
+----------
+
+Relativistic acceleration  - reveals that accelerating (decelerating from negative speed of light) causes the time
+from the back of the craft to read backwards(slightly, not even a whole second though), but also accelerating
+past a certain speed at a constant real-space acceleration causes the back clock to read backwards; but only
+while accelerating.  (But also accelerating from negative speed of light would show times from the clock
+that were from way in the past, times that the clock could not have ticked since before being at the speed of light).
+
+But really, the acceleration should also be gamma-scaled... which makes a nice recursive function Ax is the velocity 
+at a time with an acceleration, so sqrt((CC-Ax)^2)/C) with Ax = sqrt(CC-(sqrt((CC-Ax)^2)/C))/C 
+
+https://www.desmos.com/calculator/87trcyfo0x  
+
+sqrt( 1-vv/C^2)x dx
+
+sqrt( CC-VV )L /CC (C+V)
+
+sqrt(CC-VV)/C * sqrt(CC-VV)/C = (CC-VV)/CC 
+1/2x^2 g(x)
+
+( (1-VV/CC) L ) / (C+V)
+
+(CC-VV)L/CC(C+V)
+
+(C-V)L/CC
+
+
+sqrt(CC-AAxx)/C = 0
+
+within the local context... crossing 1 in 0 seconds requires a lot of acceleration.
+  from the front at C, the acceleration is infinite, 
+  from the back, at C, the acceleration is 1/2A because it crosses 1 distance in 2 seconds
+
+If a marble has to cross 1 in 2 seconds, then acceleration is 1/2 and first velocity is 1/2
+if a marble has to cross 1 in 0.5 seconds then acceleration is 2
+
+difference at 0.001c is less than one in 10,000,000,000 (between worst case differences) with acceleration on the order of 9.8m/s
+difference at 0.001c is less than one in 100,000,000 (between worst case differences) with acceleration on the order of 100*9.8m/s
+
+9.8m/s = 3.26893e-8 light-seconds/s  0.0000000326 light-seconds/s
+
+(accelerations in the local frame)
+A * CC/(C+V) : Acceleration Forward (from front to back)  (delta V)
+A * CC/(C-V) : (from back to front)  (delta V)
+A  : lateral acceleration.  
+
+A*C  * C/(C+Vcos(theta))  (dot product of direction of acceleration on velocity vector)
+
+The laws of physics are the same in any frame... but what those laws are may be currently incomplete.
+
+If light travels 1 light second in 0 seconds, then any other clock must also travel some unit of distance in 0 time; and conversely
+if light travels 1 unit in 2 time units, then any other clock must also behave the same.
+
+Let's use a clock that is either 1) an hour glass in a centrifuge; or 2) marbles in a device that receive a kick that go out to a sensor; both
+of these are one way time keeping devices and do not require a symmetry of two-way travel to keep time.  In the case of marbles in
+various directions, a constant force is applied to accelerate the marbles.  The force in the local frame becomes scaled by a factor such
+that the marbles that go in various directions end up with a certain velocity, and the acceleration gets a scalar depending on the 
+direction.  (what is an acceleration though?  Is the thing that does the accelerating also scaled?)
+
+acceleration methods 
+   - a magnetic solenoid is engaged for a certain amount of time
+       - light speed propagation, when launched backward the ball will get a bunch of flux all at once after a delay
+	   - when launched forward, the ball will get few flux in a fast time, so the power transfered is asymmetric...
+	   
+   - a spring plunger (like a pinball machine), which itself has to be accelerated by the force in the spring
+      - spring expansion propagates through the spring at the speed of sound... (6000m/s in metal, 0.000 019 68 ft/ns )
+   - centrifugal launcher - it's spinning at a certain rate, and at some time opens a gate to let a marble out and head straight. 
+      (deflection angle of this device becomes an issue then), maybe the ball is like on top of the spinning plate, in a cylinder that just drops?
+	  - the centrifuge won't itself be running very fast...otherwise it would tear itself apart, so the length expansion on one side 
+		vs the length contraction on the other is insinificant... at 1/1000c, the contraction is only like 0.9999995.
+		( 3600rpm, 60rps, for 6 inches (18.8 inches * 60 = 1130 inches per second; 94 feet per second, 0.000 000 094 ft/ns a long way from 1ft/ns; 
+		  1/10_000_000 = 0.000 000 1.
+   - a chemical reaction takes place and generates a force ( like gunpowder/bullet )
+   - a compressed air stream is applied (pre compressed, already in place, opening the valve then accelerates some of the air)
+   - same idea as compressed air, but driven by a vacuum with an open-back tube (similar to magnetic propulsion too)
+   - some ball the same size, at a known speed hits the ball, and the resulting speed is?  Is it scaled because the ball
+      has more energy? or scaled just because of the direction of acceleration?
+   
+Maybe let us consider the change in kinetic energy in the global frame... initial velocity is $V_0$; additional $V_a$ is added, 
+the resulting kinetic energy change in the direction of +V_a and -V_a must be the same. p = mv.  But really we recently learn that
+E = gamma mc.  So we have to account for gamma when computing the velocity therefore 
+	1/sqrt( CC-(V_o+V_a)^2 ) - 1/sqrt( CC-V_o^2) = - (1/sqrt( CC-(V_o-V_b)^2 ) - 1/sqrt(CC-V_0^2 ) ).
+	
+	In order for the above to be true, the velocity change is not and cannot be the same.
+	
+	
+---------
+Back on gravity.
+
+G =  6.67e−11 m^3·kg^−1·s^−2
+
+G = 6.67e-8 m^3 / g-s-s
+g = GM/d^2  (d=r at surface)
+
+
+1km/s =  3.28084e-6 ft/ns
+  0.00000328084
+
+earth   escape vel:11.2km/s.  3.674541e-5ft/ns    0.000 036 75   (2.46615 hydrogen)
+		radius:  3,958.8 mi
+		mass: 5.97219e+24kg             calculated(current)1.9939760283e+28  (2x)
+		gravity: 9.807 m/s²
+
+mars   escape vel:5.03km/s   0.00001650262 
+    radius:2106.1 mi    11120208 feet  = 183.505672416 ft
+	mass: 6.39e+23     calculated 2.6871640622e+26
+	gravity:  3.71 m/s²
+	
+moon   escape vel:2.38km/s   0.00000656168   (3.3 hydrogen)  37 ft(radius)
+    radius: 1,079.6 mi
+	mass: 7.34767309e+22 kg    calculated 2.2209873537e+24
+	gravity: 1.62 m/s²
+	
+	
+             1.00000656168
+	7.34767309e+22 kg
+	
+    6,786 mi = 3.583e+7ft
+	35830000
+	35830235.105
+	36830241.6
+	 5861695785.07
+
+Escape velocity = gravity time dilation.
+Time dilation at 0 space covered vs N space covered; either way the clock takes 1 space.
+24,901 mi (earth circumference)  
+   1.31477e+8 ft
+   131 477 000ft
+    20 925 214 ft radius
+    20 925 983.4545
+           769ft displacement radially
+	    3.845e+12 (15? fm?)hydrogen   2.3811e+38  2.3811×1047 
+  		5.2842193e+23g  5.2842193e+20kg
+		
+		5.97219e+24kg
+		
+   131 481 831.78
+   
+   3.674541e-5ft/ns
+   0.000 036 75 
+   
+   (orbit speed of earth 18.5 miles/sec)
+   9.768e-5
+   0.000 097 67 ft/ns
+   
+   Earth orbits around the Sun at a speed of about 67,000 miles per hour 
+	(107,000 km/hr or nearly 30 km/s). 
+	At the same time, Earth spins on its axis at about 1,000(1037.54166667) miles per hour (460 m/s or 1,600 km/hr)
+    1.458151e-6
+	0.000 001 458 ft/ns
+	
+   moon orbits earth at 2,288 miles per hour
+   
+   
+----
+
+
+
+
+\sqrt{\left(x+B\right)^{2}+DD}-\sqrt{\left(x\cdot x\right)+DD}
+
+
+
+A=sqrt((x+B)^2+DD) - sqrt( (x)^2+DD) )
+
+A^2 = (X+B)^2+DD - 2sqrt(( xx+DD ) * ((X+B)^2+DD)) + XX+DD
+       2XX+2XB+BB +2DD
+	            - ( xx+DD * XX+2XB+BB+DD  )
+				    XXXX + BBXX + 2XBXX + 2XXDD + 2XBDD + BBDD + DDDD
+ 2XX + 2XB + 2DD + BB -AA
+ 
+    4XXXX + 4XBXX + 4DDXX + 2XXBB - 2XXAA 
+  + 4XBXX + 4XBXB + 4XBDD + 2XBBB - 2XBAA 
+  + 4DDXX + 4DDXB + 4DDDD + 2DDBB - 2DDAA
+  + 2XXBB + 2XBBB + 2DDBB +  BBBB - BBAA
+  - 2XXAA - 2XBAA - 2DDAA - 2BBAA + AAAA
+  
+  
+    4XXXX                                    = xxxx bbxx 2xbxx 2xxdd 2xbdd bbdd dddd
+  + 8XBXX + 4XBXB                            
+  + 8DDXX + 8DDXB + 4DDDD                     
+  + 4XXBB + 4XBBB + 4DDBB +  BBBB            
+  - 4XXAA - 4XBAA - 4DDAA - 2BBAA + AAAA       
+
+
+    3XXXX                                    = 0
+  + 6XBXX + 3XBXB                            
+  + 6DDXX + 6DDXB + 3DDDD                     
+  + 4XXBB + 4XBBB + 3DDBB +  BBBB            
+  - 4XXAA - 4XBAA - 4DDAA - 2BBAA + AAAA       
+  
+  
+    3XXXX + 6XBXX + 7XXBB                                   = 0
+  + 6DDXX + 6DDXB + 3DDBB + 3DDDD                     
+  + 4XBBB + BBBB            
+  - 4XXAA - 4XBAA - 4DDAA - 2BBAA + AAAA       
+
+
+    XX(3XX + 6XB + 7BB)                                   = 0
+  + DD(6XX + 6XB + 3BB) + 3DDDD                     
+  + 4XBBB + BBBB            
+  - AA(4XX + 4XB + 4DD + 2BB) - AAAA       
+  
+  
+  arctan( (x+b)/d ) - arctan( x/d ) 
+
+
+---
+
+https://www.youtube.com/watch?v=tgenS5vxe4M  Equivalence principle is not absolute.
+http://gamelab.mit.edu/games/a-slower-speed-of-light/  actually with the light aberration whats behind you looks larger, and pushing forward angled things further forward, it looks more elongated...  (a video from The Action Lab playing this https://www.youtube.com/watch?v=udqihUBGuZ8 )
+So no, other than the lorentz transform, which doesn't actually account for light propagation
+
+---
+
+8 ships each leave the earth at +0.1c from each other.
+
+each ship has a propagation lag of +0.1 seconds per second. such that after 10 seconds there's 1 light second between them and 1 second delayed signal.
+between the first and last ship then is 8 seconds of delay per 10 seconds of travel.
+
+each ship has a relative 'time dilation' of 1.005038 or 0.9949874
+so after 1 seconds, each ship is 10*(1-.9949874) = 0.050126 slower seconds per 10 seconds of travel slower than the previous ship.
+obviously the lorentz transform that results in 0.05 seconds does not include the 1 seconds of propagation time between each ship.
+when really each ship sees the next as 1.05 seconds per 10 seconds slower.
+
+the total difference from the first ship to the last is then 80/9.95 or call it 8 seconds of lag
+while the total time dialation between the first and 8th is 0.6.
+80/9.94 != 0.6.
+
+0     1       2     3       4      5      6      7      8
+1.0  0.995  0.978  0.954  0.917  0.866  0.800  0.714  0.600 ( actual time contraction)
+1.0  0.995  0.99   0.985  0.980  0.975  0.970  0.960  0.960 ( computed from each relative clock to the next)
+1 sees 2 1 second + 10*(1-0.995)=0.05 seconds ... so 1 sees 2 lagged by 1.05 seconds.
+7 sees 8 1 second + 10*(0.714-0.600)=1.14 seconds ... so 7 to 8 sees the clock lagged by 2.14 seconds per 10 seconds.
+
+but - 7 to 8 and 1 to 2 are both relative 0.1c.
+----
+
+C/sqrt(CC-VV) = 42000000000
+
+
+
+sqrt( CC-( ( C/ 42 000 000 000 )  ) ^2 ) = VV
+
+
+
+-----------
+Official Derivations of the lorentz transform
+
+Length Contraction and Time contraction are defined before we even get to the math.
+
+https://en.wikipedia.org/wiki/Derivations_of_the_Lorentz_transformations is a good start, but seems to take leaps of logic 
+to get quickly from a base idea to the end.
+
+https://oyc.yale.edu/sites/default/files/notes_relativity_3.pdf  This is more of an exposition then a derivation.
+
+https://www.youtube.com/watch?v=6f_yxbtM2TI (Linear Algebra Derivation of Lorentz Transformation)
+  This just assumes that ct and ct' make sense.
+  T: S -> S'
+    S' has velocity V in S
+	
+	coordinates [x, ct]  -> [x', ct']
+	
+	
+https://www.youtube.com/watch?v=_qiFIMviIeM (Lorentz transformation derivation part 1 | Special relativity | Physics | Khan Academy) 
+  again starts with 'ct' means something.
+  
+  
+	
+https://www.youtube.com/watch?v=6pj1f8x3APg 	Derive Lorentz Transformations
+  2 frames S and S'; the S' frame has a constant velocity relative to S.
+  with two people at {x,y,z,t} and {x',y',z',t}
+  The transform just given is Gallilean
+     X'=x-vt
+	 y'=y;
+	 z'=z;
+	 t'=t;  (throw these out not where we are going)
+	 
+   Requirements - must be linear
+   
+   (b started with V)
+   x' = ax+bt
+   
+   x = ax'+bt'
+   
+   given:
+   
+     physical event happens at origin x'=0 of s'
+     x=vt   position of event in S
+     x'=0   position of event in S'
+	 x' = ax+bt
+   
+      0 = avt + bt
+	  0 = t(av+b)
+	  b = -avt/t
+   	  b = -av         (2)
+	  
+	  x'=ax-avt
+	  - this is the position of the event in S' in terms of S
+         x' = a(x-vt)    (3)
+	
+    given2:
+      physical event happens at origin x=0 of S
+      x = 0   position of event in S
+      x'= -vt'	position of event in S'
+	  
+	  x = ax'+bt'
+	  
+	  0 = -avt' + bt'
+	  -bt' = -avt'
+	  b = av;
+	  
+	  x = ax' + avt';
+	  x = a(x'+vt');
+	  
+	   - this is the position of the event in S in terms of S'
+         x' = a(x-vt)    (3)
+	       x = a(x'+vt') (4)
+	   
+	given3:
+	   pulse of light goes off from the origin
+	     S : x = ct
+		 S' : x' = ct'
+		 
+	   ct' = a( ct - vt )
+	   ct' = a( c - v )t
+	   
+	   ratio of times of light propagating
+	   t/t' = c / a(c-v)  (6)
+	   
+	   ct = a(ct' + vt')
+	   ct = a(c + v)t'
+	   
+	   ratio of times of light propagating
+	   t/t' = a(c+v)/c    (7)
+
+	   c^2 = a^2(c^2-v^2)
+	   
+	   a^2 = c^2/(c^2-v^2) 
+	   
+	   since the ratios are equal, then this becomes non-ratio of light propagation
+	   a = c/sqrt(c^2-v^2)  (8)  
+	   
+	   
+	   
+	   Going back to 3 and 4, and refactoring... there is a non-equivalence....
+         x' = a(x-vt)    (3)
+		 x' = ax-avt
+		 (x'+avt)/a = x
+		 x = x'/a+vt
+		 
+         x = a(x'+vt') (4)
+		  x' = x/a-vt'
+	   
+	   
+	     subst 3 into 4  (target is t' = a(t-vx/c^2)  &  t = a(t'+vx'/c^2 )   t'/a = t-vx/c^2 -> t'/a + vx/c^2 = t
+	     x' = (x'/a + vt)/a -vt
+		 
+		 x' = (x'/a^2+vt/a) - vt
+	   
+	     subst 4 into 3
+		 
+		 x = (x/a - vt' )/a+vt
+		 
+		 x-vt = (x/a - vt' )/a
+		 
+		 ax-avt = x/a - vt' 
+	   
+	     ax - x/a = avt-vt'     
+		 
+		 x( (a^2-1)/a)  = v(ta-t')
+	   
+	      x/v((a+1)/a)  = ta-t'
+		  
+	   t'/a + x/v((1/a + 1/a^2))  = t
+	   
+    // this is propagation - not translation, it's when an event is seen.
+	// the event that happens is at 0, and isn't moving
+	// so the event is observed at position ||-vt||/c
+	
+    t' = || (0+0T)-(0 + vt) || / c	
+	t = || (0-vT')-(0 + 0t) || / c	
+	x' = vvt'/c
+	
+	
+	(a+b-c-d)^2 = a^2 + 2 a b - 2 a c - 2 a d + b^2 - 2 b c - 2 b d + c^2 + 2 c d + d^2
+	
+	-------------------
+	  P= ( X_E - ( X_O + TV_O) )
+	T_E= ( sqrt( (CCT + X_EV_E - X_OV_E - TV_OV_E  )^2 - (CC-V_EV_E)(CCTT-( X_E - ( X_O + TV_O) )( X_E - ( X_O + TV_O) ) ) )   + CCT - ( X_E - ( X_O + TV_O) )V_E ) / CC-V_E_V_E
+	
+	A=X_E
+	B=V_E
+	C=C
+	D=X_O
+	E=V_O
+	T=T
+	
+	  P= ( X_E - ( D + TE) )
+	T_E= ( sqrt( (C*C*T + A*B - D*B - T*E*B  )^2 - (C*C-B*B)*(C*C*T*T-( A - ( D + T*E) )*( A - ( D + T*E) ) ) )   + C*C*T - ( A - ( D + T*E) )*B ) / (C*C-B*B)
+	
+	sqrt( C^2((A+BT)-(D+ET))^2 ) - B(A-D-(E-C^2/B)T )
+	-----------------
+	CC-BB	
+	
+	sqrt( C^2((A+BT)-(D+ET))^2 ) - B(A-D-(E-C^2/B)T )
+	-----------------
+	CC-BB	
+	98722189-64-a99
+	
+	5
+	0.000 000 211 13184191207752254518590897642e-7
+	
+	
+	(P)ower (E)nergy (T)ime (I)current/inductance (current is directly related to the magnetic field), (V)oltage (which is directly related to the electric field) E=PT P = E/T  E/T=IV (Ohms law version)   
+	
+	p(t)=i(t)v(t) (AC circuit starts being dependent on time) 
+	(S)apparent Power, real power(P), reactive power(Q) 
+	
+	(S/T)apparent energy, real energy(P/T), reactive energy(Q/T) 
+	
+	P^2=S^2+Q^2
+	P^2=S^2+Q^2
+
+	(P/T)^2 = (S/T)^2 + (Q/T)^2
+	
+	
+	S=IV  Q=IV
+	
+	(f)requency (C)apacitance (L)inductance
+	X_C = -1/wC = -1/2πfC  
+	X_L = wL = 2πfL
+	
+	The phase of the voltage across a purely reactive device (i.e. with zero parasitic resistance) lags the current by  π/2 radians for a capacitive reactance and leads the current by 
+π/2 radians for an inductive reactance. Without knowledge of both the resistance and reactance the relationship between voltage and current cannot be determined.
+
+	(j) is the square root of minus one, usually represented by (i) in non-electrical formulas.  (j) is used so as not to confuse the imaginary unit with current, commonly represented by (i).
+	
+	P=S=I^2R = V^2/R
+	
+	
+	sqrt( 1-0.5*0.5) = sqrt( 3/4 ) = sqrt(3)/2
+	
+	sqrt( 1-0.5 ) sqrt( 0.5 ) 1/sqrt(2) = 0.707 
+	sqrt( 1+0.5 ) sqrt( 3/2 ) sqrt(3)/sqrt(2)
+	
+	60rpm
+	1/1000 360/1000 .36 degrees
+	1 ft radius = 2pi r
+	6.2831 ft
+	0.075 inches
+	
+	
+	
+-----------
+ON THE ELECTRODYNAMICS OF MOVING BODIES  By A. EINSTEIN  June 30, 1905
+
+We have not defined a common “time” for
+A and B, for the latter cannot be defined at all unless we establish *by definition*
+that the “time” required by light to travel from A to B equals the “time” it
+requires to travel from B to A. Let a ray of light start at the “A time” tA from
+A towards B, let it at the “B time” tB be reflected at B in the direction of A,
+and arrive again at A at the “A time” t`a.
+
+- This definitely a two way speed to compare ta with ta'.  
+-  ta - origin of event
+   tb - time of reflection in b
+   ta' - time of event received back at A.
+   
+   
+
+tb - ta = t'a-tb
+
+tab = ObservedTime( ta, {a_v}, {a}, {b_v}, {b} );
+tab_ba = ObservedTime( tab, {b_v}, {b}, {a_v}, {a} );
+
+tba = ObservedTime( tb, {b_v}, {b}, {a_v}, {a} );
+tba_ab = ObservedTime( tba, {a_v}, {a}, {b_v}, {b} );
+
+tba_ab = tba_ab
+tab != tba (may be equal, but may not)
+ta != tb (may be equal, but may not)
+
+
+ sqrt(G)Te - B/sqrt(G)  =  sqrt(A + BB/G)
+ 
+ A1 sends B1 recvs + sends
+ A2 recvs+sends( A2, A2-A1)  B2 recvs, sets clock to A2+(A2-A1)/2
+ 
+ A3 next whole second, sends( A3 )                             b3 marks next whole second, sends B3
+ A4 recvs compares if (A4-A3)=(A2-A1)/2 which it will not      //B4 recvs, compares if B4-B3 = (A1-A2)/2 which it will...
+
+ Te   =  ( sqrt(A + BB/G) + B/sqrt(G) )/ sqrt(G)
+
+ Te   =  ( sqrt(GA + BB) + B )/G
+
+
+---------------- 
+Include frame motion in local calculation
+
+C = speed of light
+V = velocity
+g = sqrt(CC-VV)/C
+L = length
+
+from 0 to gL
+  0 = gL + (V)T - CT
+  T = gL/(C-V)
+  
+  P= VT+L
+  P = VgL/(C-V)
+  D = VgL/(C-V) + L 
+from P to 0
+
+  0 =  (V)T - CT -gL
+
+  0 = D - (P + V(T2)) - C(T2)
+  0 = D - P - V(T2) - C(T2)
+  (V_C)T2 = D - P
+  T2 = (D - P)/(V_C)
+  
+  T2 = P/(1-V)
+  T2 = (1-V)VgL/(1+V)
+  P2 = P + TV2
+  
+  
+  gamma*L/((C-v)) + gamma*L/(C+v)
+  gamma*L( 1/((C-v)) + 1/(C+v))
+  gamma*L( (C+v)/((C-v)) + (C-v)/(C+v))
+  
+  gamma*L*(2C)/(CC-VV)
+  
+  2*L + gamma*L*v/((C-v)) - gamma*L*v/((C+v))
+  
+  2*L + (gamma*L*v(C+v) - gamma*L*v(C-v))/((CC-vv))
+
+  2*L ( 1 + gamma*vv/((CC-vv))
+
+ -- total C
+ 
+2*L*(1 + gamma*v*v/(C*C-v*v)) / gamma*gamma*L*2*C/(C*C-v*v) 
+
+(1 + gamma*v*v/(C*C-v*v))/ gamma*gamma*C/(C*C-v*v) 
+
+C + C*gamma*v*v/(C*C-v*v)
+
+
+  
+-------------------------------  
+
+A+B = 2C
+A/C + B/C = 2
+
+a = A/C
+b = B/C
+
+a+b = 2
+
+( (A+1)/C - (A-1)/C ) / ( A+1 )/C
+
+(A/C-A/C) / A/C - 2/C / (A+1)/C
+
+(b-a)/a   (b-a)/b
+
+(2-2a)/a -2/aa   (2-2a)/(2-a)  -2/(2-a)^2
+
+(2-2a)/a -(a+b)/aa   (2-2a)/(2-a)  -(a+b)/(b)^2
+
+(2-x-x)/x  (2-x-x)/(2-x)
+
+
+-------------------------------------
+
