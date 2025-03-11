@@ -77,6 +77,47 @@ if( (BE,DF,AH) > (AF,BH,DE)  1  else -1
 if( (CF,AG,BE) > (BG,CE,AF)  1  else -1
 
 
+---
+
+1) Vector A, B
+
+1) project A into x,y,z
+2) convert to A(x,y,z) unit vector and scalar
+3) project B into x,y,z, rotate 90 degrees in plane of A and B...
+4) convert to B(x,y,z) 
+
+cross product (A,B) / (AB)
+
+	(A - dot product(A,B) * A)
+
+b = right
+(0,y,z) * arcsin(x)
+
+get 'up' 
+``` js
+	const s = Math.sin( q.θ ); // double angle sin
+	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
+	const c = 1-c1;  // 2\sin\left(\frac{x}{\left(2\right)}\right)^{2}  2*sin(x/2)^2   2sin(x/2)sin(x/2)  (1-cos(2(x/2)))   or  \(-\cos ^{2}a+1\)
+	const cn = c*q.ny;
+	return new vectorType( 
+	        -s*q.nz  + (1-c)*q.ny * q.nx
+	       , c1      + (1-c)*q.ny * q.ny  //( c + (1-c)yy =  c +yy-cyy  =  c(1-yy)+yy
+	       , s*q.nx  + (1-c)*q.ny * q.nz
+	       );
+```
+
+\theta = arccos( up dot (B-(a dot b)A)))
+
+rotate Q around right as an axis, by -\theta 
+
+Q is perpendicular to the line/frame too to start... it's built from yz , x is 'right'
+
+
+if( A dot resulting 'up' < 0 ) then rotate again by 180 (up=-up and forward=-forward, 
+forward is the direction of the resulting cross product)
+
+
+
 
 ---
 
@@ -102,6 +143,293 @@ if( a < 0 && b < 0 ) a=-a    b=b - pi/2
 
 3D, (X,Y,Z) 
 It's not this simple, because when unwinding the other angles... well no I can just do cos(x),...
+
+
+---
+
+so we want to have the frame that is aligned with right along the projection, up on the plane of projection, and forward becomes the cross.
+but still - can have Y in the plane aligned in two directions which flips the Z correspondingly.
+
+it's projected on a plane, so the original vectors are known...
+
+(A.y,A.z,0)
+(A.z,-A.y, 0)
+(0,0,1)
+
+(B.y,B.z,0)
+(B.z,-B.y, 0)
+(0,0,1)
+
+t1 = arccos(A.y)  if( arcsin( A.z ) < 0 ) t1 = 2pi-t1;
+
+t2 = arccos(B.y)  if( arcsin( B.z ) < 0 ) t2 = pi/2+2pi-t2; // perpendicular, so this is 'up'
+   (A.x,A.y) dot ( cos(t2)B, sin(t2)B )
+
+t3 = arccos(A.z)  if( arcsin( A.x ) < 0 ) t3 = -t3 or 2pi-t3;
+
+t4 = arccos(B.z)  if( arcsin( B.x ) < 0 ) t4 = pi/2+-t4 or 2pi-t4; // perpendicular version
+   (A.x,A.y) dot ( cos(t4)B, sin(t4)B )
+
+t5 = arccos(A.x)  if( arcsin( A.y ) < 0 ) t5 = -t5 or 2pi-t5;
+
+t6 = arccos(B.x)  if( arcsin( B.y ) < 0 ) t6 = pi/2+-t6; or 2pi-t6; // perpendicular version
+   (A.x,A.y) dot ( cos(t6)B, sin(t6)B )
+   
+this becomes the dot product of the perpendicular and normal...
+( )
+( cos(t2-t1)AB, cos(t4-t3)AB, cos(t6-t5)AB )
+
+
+
+(A.x, A.y, A.z, 0) 
+(B.y, B.z, B.x, 0 )
+(0,0,0,1)
+
+3d cross( A,B )  = normal of plane of rotation (Z)
+3d cross( Z, A )
+3d cross( Z, B )
+
+
+---
+
+``` js
+function cross3( A, B ) {
+	const Al = A.length();
+	const Bl = B.length();
+
+	if( Al && Bl ) {
+
+		const a = A.clone().multiplyScalar( 1/Al );	
+		const b = B.clone().multiplyScalar( 1/Bl );		
+	   
+		const Q = new lnQuat();
+
+		const l2 = (Math.abs(b.y)/*+abs(theta.y)*/+Math.abs(b.z));
+		
+		if( l2 ) {
+			const l3 = Math.sqrt(b.x*b.x+b.y*b.y+b.z*b.z);
+			//if( l2 < 0.1 ) throw new Error( "Normal passed is not 'normal' enough" );
+			
+			const tx = b.x /l3; // square normal
+			const theta = Math.acos( tx ); // 1->-1 (angle from pole around this circle.
+			const norm1 = Math.sqrt(b.y*b.y+b.z*b.z);
+			// get square normal...
+			Q.nx = 0;
+			Q.ny = -b.z/norm1;
+			Q.nz = b.y/norm1;
+
+			Q.θ = theta;
+			Q.x = 0;
+			Q.y = Q.ny*theta;
+			Q.z = Q.nz*theta;
+			
+			const up = Q.up(); // get whatever the resulting 'up' is for this 'right'
+
+			// tx will only be from 0 to pi
+			// sign is always positive from 0 to pi so sqrt can work.
+			const s = Math.sqrt( 1-tx*tx); // Math.sin( Math.acos( tx ) ); // double angle sin
+			const c1 = tx;//Math.cos( q.θ ); // sin/cos are the function of exp()
+			const c = 1- c1;
+
+			/*
+				const vx = v.x , vy = v.y , vz = v.z, vw = v.w;;
+				const dot =  ((qx * vx ) + (qy*vy)+(qz*vz)+(qw*qw));
+				// vector from origin to V * cos (right * cos)
+				// vector from origin to VxQ (Q is unit, V has length)
+				//     this is the perpendicular in the plane defined by Q and V
+				const c4 = cross4( q, v );
+				target.set( (vx*c + (1-c)*qx * dot) + s*c4.x //(qy * vz - qz * vy)
+				          , (vy*c + (1-c)*qy * dot) + s*c4.y //(qz * vx - qx * vz)
+				          , (vz*c + (1-c)*qz * dot) + s*c4.z //(qx * vy - qy * vx) 
+				          , (vw*c + (1-c)*qw * dot) + s*c4.w //( These are more complex terms than solved up to 3D ) 
+			*/
+
+			const cny = c*q.ny; // (1-Math.cos(q.θ))*q.ny * q
+			const up = new vectorType(
+			        -s*q.nz  + cny*q.nx
+			       , c1      + cny*q.ny
+			       , s*q.nx  + cny*q.nz
+			       , ?       + cny*q.nw
+			       );
+
+			/*
+			const cnx = c*q.nx; // (1-Math.cos(q.θ))*q.nx * q
+			const right = new vectorType(
+			         c1      + cnx*q.nx
+			       , s*q.nz  + cnx*q.ny
+			       ,-s*q.ny  + cnx*q.nz
+			       , ?       + cnx*q.nw
+			       );
+
+
+
+			const cnz = c*q.nz; // (1-Math.cos(q.θ))*q.nz * q
+			const forward = new vectorType(
+			         s*q.ny  + cnz*q.nx
+			       ,-s*q.nx  + cnz*q.ny
+			       , c1      + cnz*q.nz
+			       , ?       + cnz*q.nw
+			       );
+
+			const cnw = c*q.nw; // (1-Math.cos(q.θ))*q.nw * q
+			const counter = new vectorType(
+			         s*q.nz  + cnw*q.nx
+			       , s*q.nx  + cnw*q.ny
+			       ,-s*q.ny  + cnw*q.nz
+			       , c1      + cnw*q.nw
+			       );
+			*/
+
+
+			// need perpendicular to A in plane of A-B
+			const cosAngle = a.dot( b );
+			// (a.b)
+			//const angle = Math.acos( cosAngle );
+			const AprojectedOnB = b.clone().multiplyScalar( cosAngle * Al ).sub( A );
+			// (b*(a.b) - A)
+			//const BtoAPerp = B.clone().sub( AprojectedOnB );
+
+			const unitBtoAPerp = AprojectedOnB.clone().multiplyScalar( -1/AprojectedOnB.length() );
+
+			// (b*(a.b) - A) / -1/|(b*(a.b) - A)|    ; Bl*dot-Al
+
+			// now we can find how much to turn around right
+			// which is forward->up by an angle
+
+			const upDotPerp = unitBtoAPerp.dot( up );
+
+			// ( ((b*(a.b) - A) / -1/|(b*(a.b) - A)| ) . up )
+
+			const angDotPerp = -Math.acos( upDotPerp );
+
+			// Math.acos( ((b*(a.b) - A) / -1/|(b*(a.b) - A)| ) . up )
+
+			const Q2 = new lnQuat( Q ); // clone Q
+			let useQ = Q2;
+			// this could be refactored with the known values to rotate with... 
+			Q2.freeSpin( angDotPerp, b, 0 );
+
+			//  Q.theta = acos( b.x );
+			//  Q.nx = 0;
+			//  Q.ny = -b.z;
+			//  Q.nz = b.y;
+
+			//  b dot Q is 0
+			//  b cross Q is 1
+
+
+			/*
+
+
+	// A dot B   = cos( angle A->B )
+	// cos( C/2 ) 
+	//  cos(angle between the two rotation axii)
+	const AdotB = 0;//(q.nx*ax + q.ny*ay + q.nz*az + q.nw*aw);
+
+	// using sin(x+y)+sin(x-y)  expressions replaces multiplications with additions...
+	// same sin/cos lookups sin(x),cos(x),sin(y),cos(y)  
+	//   or sin(x+y),cos(x+y),sin(x-y),cos(x-y)
+	const xmy = (+/-angDotPerp - theta)/2; // X - Y  ('x' 'm'inus 'y')
+	const xpy = (+/-angDotPerp + theta)/2  // X + Y  ('x' 'p'lus 'y' )
+	const cxmy = Math.cos(xmy);
+	const cxpy = Math.cos(xpy);
+
+	let ang = acos( cos(theta)cos(+/-angDotPerp) )*2;
+
+	if( ang ) {
+		const sxmy = Math.sin(xmy);
+		const sxpy = Math.sin(xpy);
+		// vector rotation is just...
+		// when both are large, cross product is dominant (pi/2)
+		const ss1 = sxmy + sxpy  // 2 cos(y) sin(x)
+		const ss2 = sxpy - sxmy  // 2 cos(x) sin(y)
+		const cc1 = cxmy - cxpy  // 2 sin(x) sin(y)
+
+		//1/2 (B sin(a/2) cos(b/2) - A sin^2(b/2) + A cos^2(b/2))
+		// the following expression is /2 (has to be normalized anyway keep 1 bit)
+		// and is not normalized with sin of angle/2.
+		const crsX = (b.y*b.y + b.z*b.z);
+		const crsY = (-b.x*b.y);
+		const crsZ = (-b.x*b.z);
+		const Cx = ( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1 + 0 * ss2 );
+		const Cy = ( (-b.x*b.y) * cc1          +  b.y * ss1 + -b.z * ss2 );
+		const Cz = ( (-b.x*b.z) * cc1          +  b.z * ss1 + b.y * ss2 );
+		//const Cw = ( crsW * cc1          +  b.z * ss1 + b.y * ss2 );
+
+		// this is NOT /sin(theta);  it is, but only in some ranges...
+		const Clx = (lnQuat.sinNormal)
+		          ?(1/(2*Math.sin( ang/2 )))
+		          :1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+		q.rn = Clx; // I'd like to save this to see what the normal actually was
+		q.θ  = ang;
+		q.nx = Cx*Clx;
+		q.ny = Cy*Clx;
+		q.nz = Cz*Clx;
+
+		q.x  = q.nx*ang;
+		q.y  = q.ny*ang;
+		q.z  = q.nz*ang;
+
+		q.dirty = false;
+	}
+
+			const cny = c*Cx; // (1-Math.cos(q.θ))*q.ny * q
+			const up = new vectorType(
+			        -s*Cz    + (1-c1)*Cx*Cx
+			       , c1      + (1-c1)*Cx*Cy
+			       , s*Cx    + (1-c1)*Cx*Cz
+			       );
+
+
+			A.x* ( -s*( (-b.x*b.z) * cc1         +  b.z * ss1 + b.y * ss2 )     + c*( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1 )*( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1 + 0 * ss2 ) ) * Bl
+			A.y* ( c1                                                           + c*( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1 )*( (-b.x*b.y) * cc1          +  b.y * ss1 + -b.z * ss2 ) ) * Bl
+			A.z* ( s*( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1             )     + c*( (b.y*b.y + b.z*b.z) * cc1 +  b.x * ss1 )*( (-b.x*b.z) * cc1          +  b.z * ss1 + b.y * ss2 ) ) * Bl
+
+		*/
+
+
+			const up2 = Q2.up();
+			// if the rotation didn't result on the target, then it's the inverse angle to rotate
+			// or B should be small
+			if( Math.abs(up2.x-unitBtoAPerp.x)+Math.abs(up2.y-unitBtoAPerp.y)+Math.abs(up2.z-unitBtoAPerp.z) > 0.000001 ) {
+				const Q3 = new lnQuat( Q );
+				Q3.freeSpin( -angDotPerp, b, 0 );
+				useQ = Q3;
+			}
+			const up3 = useQ.up(); // this should be forward?
+			const crossProduct = up3.dot( A ) * Bl;
+			return crossProduct;
+
+		} else {
+			Q.nx = 0;
+			Q.ny = b.x > 0?1:-1;
+			Q.nz = 0;
+		
+			Q.x = 0;
+			Q.y = 0;
+			Q.z = 0;
+		
+			// the remining of this is update()
+			Q.θ = 0;
+			Q.dirty = false;
+			
+		}
+	}
+	return 0;
+}
+
+function dotcross4( A, B ) {
+	return { x:cross3( new Vector3( A.w, A.z, A.y ), new Vector3( B.w, B.z, B.y ) )
+	       , y:cross3( new Vector3( A.x, A.w, A.z ), new Vector3( B.x, B.w, B.z ) )
+	       , z:cross3( new Vector3( A.y, A.x, A.w ), new Vector3( B.y, B.x, B.w ) )
+	       , w:cross3( new Vector3( A.z, A.y, A.x ), new Vector3( B.x, B.y, B.x ) ) };
+}
+
+
+```
+
+
+
 
 
 

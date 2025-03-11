@@ -34,7 +34,7 @@ None of the sliders and options really apply to this; it's just a copy from othe
 
 ### The breakdown...
 
-The spin probabilities are computes as two orthagonal axii that are related through a proportionality.
+The spin probabilities are computes as two orthogonal axii that are related through a proportionality.
 
 The alpha and beta factors are a unit complex number, so it's easily represented with an angle.
 

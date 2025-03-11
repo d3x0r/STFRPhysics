@@ -204,12 +204,14 @@ LHV prediction `x = 60 *pi/180 * 2/pi  120/180 = 2/3; p=1-(x/(2-x))` = 50% or 0.
 
 ## GHZ Experiment
 
-This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the reults for the other
-detectors. This does not happen with 100% chance but  [However, we experimentally observed such terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic](https://web.physics.ucsb.edu/~quopt/ghz.pdf).
+This test passes through a polarizer to align first within 90 degrees, and then tests with the same alignment detector 
+and two other detectors at 45 degrees.  The assumed correlation is that measuring with the center detector aligns the 
+results for the other detectors. This does not happen with 100% chance but  [However, we experimentally observed such 
+terms with a fraction of 0.87 +/-0.04  (Fig. 4c), which violates the local realistic](https://web.physics.ucsb.edu/~quopt/ghz.pdf).
 
 GHZ QM predcition - 100% (?) 
 
-GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.4, that's 0.83; and within the error bars).
+GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.04, that's 0.83; and within the error bars).
 
 
 ## CHSH Experiment
