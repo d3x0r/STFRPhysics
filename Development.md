@@ -1,7 +1,7 @@
 
 # The before-fore...
 
-Early 2020, I started investigating rotations; figuring maybe now 20 years later, maybe there was more 
+Early 2020, I started re-investigating rotations; figuring maybe now 20 years later, maybe there was more 
 information and development on the internet regarding rotations.
 
 I wrote this document a few years ago about my view of handling rotations, and why matrices end up better
@@ -54,17 +54,11 @@ https://math.stackexchange.com/questions/3747951/find-curvature-of-bertrand-curv
 
 https://math.stackexchange.com/questions/3759693/finding-the-parameters-of-curves-of-rotations-in-rotation-space 
 
-And then looking at what quaternions were, from a log-quaternion perspective, 
-and I found the Rodriguez Rotation Formula applied to quaternion parts, 
-which are just terms of axis and angle.  And using this formula, with the expected axis-angle calculations from
-the matrix math, I ended up with a axis-angle, intrinsic rotation implementation of the Rodrigues Rotation Formula.
+And then looking at what quaternions were, from a log-quaternion perspective, and I found the Rodriguez Rotation Formula applied to quaternion parts, which are just terms of axis and angle.  And using this formula, with the expected axis-angle calculations from the matrix math, I ended up with a axis-angle, intrinsic rotation implementation of the Rodrigues Rotation Formula.
 
 I ran with that for a long time, developed all sort of things that worked wonderfully.
 
-I did run into an issue with Cannon.JS (A JS physics engine) which I was replacing the quaternion math with the 
-developed math, and mostly worked really well, except in the case that the force from from an external thing; a mouse pick
-on a cube for example, has to have the rotation axis rotated out of the frame before being applied.
-
+I did run into an issue with Cannon.JS (A JS physics engine) which I was replacing the quaternion math with the developed math, and mostly worked really well, except in the case that the force from from an external thing; a mouse pick on a cube for example, has to have the rotation axis rotated out of the frame before being applied.
 
 ## More on spherical orientations
 
@@ -97,11 +91,8 @@ https://d3x0r.github.io/STFRPhysics/3d/index4.html and added options
 Internal rotation also matches quaternion, as well as invert cross product; so I guess Rodrigues rotation formula has a single sign that controls
 whether the rotation is intrinsic or extrinsic?
 
-Anyway, I lef the sign defaulted, and was going to demonstrate real gimbal lock: https://d3x0r.github.io/STFRPhysics/3d/indexArmProper.html (which can be done with that)
-which is a real thing, not that a matrix multipication ends up with `[(0,0,0),(0,c,0),(0,0,0)]` as a result (hooray for matrix multiplication?  I ran into this matrix as one of the early terms
-of the hopf fibration that is a graceful toroid.  The initial rotation starts at Pi around one axis, and the first rotation is -2Pi+(a small number) around another axis.)  But I found
-that the rotations weren't working right.  What had previously had nice graceful curves now formed loops, and controls on frames that were composited from other frams were always
-rotated by an external exis.  As if they weren't mounted to their parent frames at all.  So I added the invert cross product option to this test, and of course that fixes the original
+Anyway, I left the sign defaulted, and was going to demonstrate real gimbal lock: https://d3x0r.github.io/STFRPhysics/3d/indexArmProper.html (which can be done with that) which is a real thing, not that a matrix multiplication ends up with `[(0,0,0),(0,c,0),(0,0,0)]` as a result (hooray for matrix multiplication?  I ran into this matrix as one of the early terms of the hopf fibration that is a graceful toroid.  The initial rotation starts at Pi around one axis, and the first rotation is -2Pi+(a small number) around another axis.)  But I found
+that the rotations weren't working right.  What had previously had nice graceful curves now formed loops, and controls on frames that were composited from other frames were always rotated by an external axis.  As if they weren't mounted to their parent frames at all.  So I added the invert cross product option to this test, and of course that fixes the original
 rotation; but then this inverted cross product really should apply in other places - like rotating a vector should now be inverted?  The specific axis for some frame are still the same, so the same
 relative rotations should work, but no, they're all inverted...  
 
@@ -116,8 +107,7 @@ to rotate, is using that in an external sense to rotate the frame.
 
 # Compatibility with Quaternions
 
-Quaternion `QxP` is an extrinsic rotation of Q around P, or an intrinsic rotation of P around Q. In the intrinsic case, the axis 'Q' is within the frame of 'P', and moves as P moves. In the extrinsic case, 'P' is external
-to the frame of Q and rotates Q.
+Quaternion `QxP` is an extrinsic rotation of `Q` around `P`, or an intrinsic rotation of `P` around `Q`. In the intrinsic case, the axis `Q` is within the frame of `P`, and moves as `P` moves. In the extrinsic case, `P` is external to the frame of `Q` and rotates `Q`.
 
 Inverting the cross product in the Rodrigues rotation formula makes this work the same; [The Demo](https://d3x0r.github.io/STFRPhysics/3d/index4.html) ~~has some inversed options still~~, but at least can demonstrate the same configurations;
 and the rotating cube indicating the rotation combination over time shows the difference between intrinsic and extrinsic rotations.

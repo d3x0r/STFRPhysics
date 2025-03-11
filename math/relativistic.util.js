@@ -368,8 +368,8 @@ export function freqShift( angle, direction, V, C ) {
 }
 
 // results in Xx,Xy transformed to new coordinate, (rotates around Xox, Xoy)
-export function aberration_coord( Xox, Xoy, Xx, Xy, V ) {
-	const forward = { x : Math.cos(values.Direction) * values.Velocity, y: -Math.sin(values.Direction) * values.Velocity };
+export function aberration_coord( Xox, Xoy, Xx, Xy, Direction, Velocity ) {
+	const forward = { x : Math.cos(Direction) * Velocity, y: -Math.sin(Direction) * Velocity };
 
 	let delx = Xx-Xox;
 	let dely = Xy-Xoy;
@@ -381,13 +381,13 @@ export function aberration_coord( Xox, Xoy, Xx, Xy, V ) {
 	const Vcrsz = dely * forward.x - delx * forward.y;
 	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
 	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
-	if( values.Velocity > 0.00001 ) {
+	if( Velocity > 0.00001 ) {
 		let len = Math.sqrt( len2 );
-		let Vlen = values.Velocity;
+		let Vlen = Velocity;
 		let norm = len*Vlen;
 		let CosVDot = Vdot/norm;
 		let baseAng = Math.acos( CosVDot );
-		const delAng = Math.acos( ( CosVDot + Vlen/values.C)/(1 + Vlen/values.C * CosVDot))-baseAng;
+		const delAng = Math.acos( ( CosVDot + Vlen/params.C)/(1 + Vlen/params.C * CosVDot))-baseAng;
 		if( Math.abs( delAng) > 0.00001 ) {
 			const c = Math.cos(delAng );
 			const s= Math.sin( delAng);
@@ -401,8 +401,8 @@ export function aberration_coord( Xox, Xoy, Xx, Xy, V ) {
 }
 
 // results in relative angle
-function aberration_angle( Xox, Xoy, Xx, Xy, V ) {
-	const forward = { x : Math.cos(values.Direction) * values.Velocity, y: -Math.sin(values.Direction) * values.Velocity };
+function aberration_angle( Xox, Xoy, Xx, Xy, Direction, Velocity ) {
+	const forward = { x : Math.cos(Direction) * Velocity, y: -Math.sin(Direction) * Velocity };
 
 	let delx = Xx-Xox;
 	let dely = Xy-Xoy;
@@ -412,15 +412,15 @@ function aberration_angle( Xox, Xoy, Xx, Xy, V ) {
 	const Vcrsz = dely * forward.x - delx * forward.y;
 	const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
 	//let Vcrs = { x: 0, y:0, z:dely*forward.x - delx * forward.y};
-	if( values.Velocity > 0.00001 ) {
+	if( Velocity > 0.00001 ) {
 		let len = Math.sqrt( len2 );
-		let Vlen = values.Velocity;
+		let Vlen = Velocity;
 		let norm = len*Vlen;
 		let CosVDot = Vdot/norm;
 		let baseAng = Math.acos( CosVDot );
 		//console.log( "baseAng:", baseAng )
 		let qz = Math.sign( Vcrs );
-		const delAng = -qz*(Math.acos( ( CosVDot + Vlen/values.C)/(1 + Vlen/values.C * CosVDot))-baseAng);
+		const delAng = -qz*(Math.acos( ( CosVDot + Vlen/params.C)/(1 + Vlen/params.C * CosVDot))-baseAng);
 		return delAng;
 	}
 	return 0;

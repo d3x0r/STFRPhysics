@@ -4,7 +4,7 @@
 const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
 import * as ru from "./relativistic.util.js"
-console.log( "ru is:", ru );
+//console.log( "ru is:", ru );
 //canvas.width = 5000;
 //canvas.height = 5000;
 const ctx = canvas.getContext( '2d' );
@@ -394,7 +394,8 @@ function update( evt ) {
 	spanNow.textContent = now.toFixed(2);
 
 
-
+	old_update();
+	return;
 
 	//const hLen = (L-D2)/(C+V) ;
 	//const tLen = ((L+D2)/(C-V));//((D2-L)/C)*Math.sqrt(C*C-V*V);
@@ -412,7 +413,7 @@ function update( evt ) {
 		const now = (del * runT )-runT/2;
 
 		const f = eventFrames[n];
-		f.Pc = now*V 
+		f.Pc = 0;//now*V 
 		f.Ph = f.Pc+L*lengthContract;
 		f.Pt = f.Pc-L*lengthContract;
 		f.hue = 120*(now%3)-240;
@@ -423,25 +424,31 @@ function update( evt ) {
 
 		f.body.length = 0;
 		for( let n = 0; n < 37; n++ ) {
-			f.body.push( [500+xscale*(f.Pc+ L*lengthContract*Math.cos( n*Math.PI/18 )), 500+L*xscale*Math.sin( n*Math.PI/18) ] );
+			f.body.push( [500+xscale*( L*Math.cos( n*Math.PI/18 )), 500+L*xscale*Math.sin( n*Math.PI/18) ] );
 		}
+
 
 		f.bounces.length = 0;
 		f.emitted.length = 0;
 		for( let n = 0; n < 37; n++ ) {
-			let dx = (-runT/2*V+ (now+runT/2)*C*Math.cos( n*Math.PI/18 ));
+			let dx = (now+runT/2)*C*Math.cos( n*Math.PI/18 );
 			let dy = (now+runT/2)*C*Math.sin( n*Math.PI/18);
+			const cx = ( V*(-runT/2-now)+C*(now+runT/2)*Math.cos( n*Math.PI/18 ))/lengthContract;
+			const cy = C*(now+runT/2)*Math.sin( n*Math.PI/18);
+
 			if( !prior_f || !prior_f.bounces[n] ) {
-				if( (dx-f.Pc)*(dx-f.Pc)/(lengthContract*lengthContract) + dy*dy > L*L ){
+				if( (cx*cx+cy*cy) > L*L ){
 					const last = f.emitted.length-1;
 					const l = f.emitted[last];
-					const ot = ru.ObservedTime( now, {x:0,y:0,z:0}, {x:dx, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+					//ru.params.C = C - Math.cos( n*Math.PI/18 )*V
+					const ot = ru.ObservedTime( now, {x:0,y:0,z:0}, {x:cx, y:cy,z:0}, { x:0,y:0,z:0},{x:0,y:0,z:0} );
 					
 
-					f.bounces[n] = {x:dx, y:dy, ot: ot, at:now, tx:ot*V, ty:0, dx : (V*ot-dx), dy:(0-dy) };
+					f.bounces[n] = {x:cx, y:cy, ot: ot, at:now, tx:ot*V, ty:0, dx : (-dx), dy:(0-dy) };
 
 				}
-				f.emitted.push( [500+xscale*(-runT/2*V+ C*(now+runT/2)*Math.cos( n*Math.PI/18 )), 500+xscale*C*(now+runT/2)*Math.sin( n*Math.PI/18) ] );
+
+				f.emitted.push( [500+xscale*cx, 500+xscale*cy ] );
 			} else {
 				const lastBounce = f.bounces[n] = prior_f.bounces[n];
 				f.emitted.push( [500+xscale*(lastBounce.x + (lastBounce.dx)*(now-lastBounce.at)/(lastBounce.ot-lastBounce.at))
@@ -454,7 +461,7 @@ function update( evt ) {
 	//draw(  );
 }
 function draw(  ) {
-	
+	return olddraw()
 	const beamX = canvas.width/2;
 	const beamY = canvas.height/2 + 40;
 
@@ -468,6 +475,18 @@ function draw(  ) {
 
 	ctx.clearRect( 0, 0, 1024, 1024);
 
+	ctx.strokeStyle = "white";
+	for( let n = 0; n < 37; n++ ) {
+		const Vx = -V*Math.cos( n*Math.PI/18 );
+		const x = (Vx+C)*Math.cos( n*Math.PI/18 );
+		const y = C*Math.sin( n*Math.PI/18 );
+		ctx.beginPath();
+		ctx.moveTo( 500, 500 );
+		ctx.lineTo( 500+4*xscale*x, 500+4*xscale*y );
+		ctx.stroke();
+	}
+
+	//if(0)
 	{
 		ctx.beginPath();
 		ctx.strokeStyle = "white";
@@ -487,6 +506,7 @@ function draw(  ) {
 			ctx.stroke();
 	}
 
+	if(true)
 		for( let n = 0; n < 37; n++  ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "blue";
@@ -511,3 +531,143 @@ function draw(  ) {
 
 		draw();
 
+
+
+
+
+		function old_update( evt ) {
+		
+			let prior_f = null;
+			for( let n = 0; n < nFrames; n++ ) {
+				const del = n/nFrames;
+				const now = (del * runT )-runT/2;
+		
+				const f = eventFrames[n];
+				f.Pc = now*V 
+				f.Ph = f.Pc+L*lengthContract;
+				f.Pt = f.Pc-L*lengthContract;
+				f.hue = 120*(now%3)-240;
+				f.T_start = now;
+				f.T_see_h = realTimeToObserverTime( now, L );
+				f.T_see_c = realTimeToObserverTime( now, 0 );
+				f.T_see_t = realTimeToObserverTime( now, -L );
+		
+				f.body.length = 0;
+				for( let n = 0; n < 37; n++ ) {
+					f.body.push( [500+xscale*(+ L*Math.cos( n*Math.PI/18 )), 500+L*xscale*Math.sin( n*Math.PI/18) ] );
+				}
+
+
+				f.bounces.length = 0;
+				f.emitted.length = 0;
+				for( let n = 0; n < 37; n++ ) {
+
+					const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+					const vab = (C-V*Math.cos(n*Math.PI/18))/lengthContract;
+					const abx = (now+runT/2)*vab*c.x;
+					const aby = (now+runT/2)*vab*c.y;
+					const abl = Math.sqrt(abx*abx+aby*aby);
+					
+					if( !prior_f || !prior_f.bounces[n] ) {
+					
+
+						if( abl > L ){
+							const usenow = now - (abl-L)/vab;
+							let dx = (-(usenow+runT/2)*V+ (usenow+runT/2)*C*Math.cos( n*Math.PI/18 ));
+							let dy = (usenow+runT/2)*C*Math.sin( n*Math.PI/18);
+							const last = f.emitted.length-1;
+							const l = f.emitted[last];
+							const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+							
+		
+							f.bounces[n] = {x:dx, y:dy, ot: usenow+ot, at:usenow, tx:(usenow+ot)*V, ty:0, dx : (-dx), dy:(0-dy) };
+							f.emitted.push( [500+xscale*( (-(usenow+runT/2)*V)+(usenow+runT/2)*C*Math.cos( n*Math.PI/18 ))/lengthContract
+											, 500+xscale*(usenow+runT/2)*C*Math.sin( n*Math.PI/18) ] );
+						}else
+						/*
+						if( (dx)*(dx)/(lengthContract*lengthContract) + dy*dy > L*L ){
+
+							const last = f.emitted.length-1;
+							const l = f.emitted[last];
+							const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+							
+		
+							f.bounces[n] = {x:dx, y:dy, ot: now+ot, at:now, tx:(now+ot)*V, ty:0, dx : (-dx), dy:(0-dy) };
+		
+						}
+						*/
+						f.emitted.push( [500+xscale*( (-(now+runT/2)*V)+(now+runT/2)*C*Math.cos( n*Math.PI/18 ))/lengthContract, 500+xscale*(now+runT/2)*C*Math.sin( n*Math.PI/18) ] );
+					} else {
+						const lastBounce = f.bounces[n] = prior_f.bounces[n];
+						f.emitted.push( [500+xscale*(lastBounce.x + (lastBounce.dx)*(now-lastBounce.at)/(lastBounce.ot-lastBounce.at))/lengthContract
+											, 500+xscale*(lastBounce.y + (lastBounce.dy)*(now-lastBounce.at)/(lastBounce.ot-lastBounce.at) ) ] );
+					}
+				}
+				prior_f = f;
+		
+			}
+			//draw(  );
+		}
+
+		function olddraw(  ) {
+			
+			const beamX = canvas.width/2;
+			const beamY = canvas.height/2 + 40;
+		
+			if( animate ) {
+				now = ( ( (Date.now() * S) %(runT*1000) ) / 1000) - runT/2;
+				sliderNow.value =100*now*2/runT
+				spanNow.textContent = now.toFixed(2);
+			}
+			const frame = Math.floor( (now+runT/2)/runT*nFrames );
+		
+			ctx.clearRect( 0, 0, 1024, 1024);
+		
+			for( let n = 0; n < 37; n++  ) {
+				ctx.beginPath();
+				ctx.strokeStyle = "blue";
+				for( let f = 0; f < eventFrames.length; f++  ) {
+					
+						if( !n ) ctx.moveTo( eventFrames[f].emitted[n][0], eventFrames[f].emitted[n][1] );
+						else ctx.lineTo( eventFrames[f].emitted[n][0], eventFrames[f].emitted[n][1] );
+				}
+				ctx.stroke();
+	
+			}
+	
+
+			for( let n = 0; n < 37; n++ ) {
+				ctx.beginPath();
+				ctx.strokeStyle = "green";
+				
+				const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+				ctx.moveTo( 500, 500 );
+				ctx.lineTo( 500+(now+runT/2)*(C-V*Math.cos(n*Math.PI/18))*xscale*c.x/lengthContract
+							, 500+(now+runT/2)*(C-V*Math.cos(n*Math.PI/18))*xscale*c.y/lengthContract );
+				ctx.stroke();
+			}
+
+			{
+				ctx.beginPath();
+				ctx.strokeStyle = "white";
+				const now = eventFrames[frame];
+					for( let n = 0; n < 37; n++  ) {
+						if( !n ) ctx.moveTo( now.body[n][0], now.body[n][1] );
+						else ctx.lineTo( now.body[n][0], now.body[n][1] );
+					}
+					ctx.stroke();
+		
+				ctx.beginPath();
+				ctx.strokeStyle = "red";
+					for( let n = 0; n < 37; n++  ) {
+						if( !n ) ctx.moveTo( now.emitted[n][0], now.emitted[n][1] );
+						else ctx.lineTo( now.emitted[n][0], now.emitted[n][1] );
+					}
+					ctx.stroke();
+			}
+			
+		
+			last_draw_time = now;
+			requestAnimationFrame( draw );
+
+		}

@@ -1,0 +1,635 @@
+
+<html>
+
+<head>
+<meta charset="utf-8">
+
+<style>
+.dotList {
+	position:absolute;
+	top:10vh;
+   left:43vw;
+	height:30vh;
+	overflow:auto;
+
+}
+.list-body{
+    display: table-row-group;
+	
+}
+.list-header {
+	display:table-header-group;
+}
+.dotList-table {
+/*	height:100%;
+	max-height:100%;
+    display: block; */
+}
+.width-limit {
+	width: 30vw;
+}
+
+td {
+	border-left:solid black 1px;
+}
+
+</style>
+
+</head>
+<body>
+   <p>
+
+	<div class="setup">
+	<div class="dotList">
+		<table id="dotList" class="dotList-table"></table>
+	</div>
+	<div style="display:none">
+	Ruleset:<select ID="ruleset">
+		<option ID="CHSH" checked>Use CHSH Test Angles (22,45,67)</option>
+		<option ID="IDEAL">Use Ideal Test Angles (30,60,90)</option>
+		<option ID="IDEAL2">Use Ideal Test Angles (-45,0,+45)</option>
+	</select>
+</div>
+	 RNG:<select ID="RNG">
+		<option ID="RNG1" checked>SFC32</option>
+		<option ID="RNG2">MUL32</option>
+		<option ID="RNG3">XOR32</option>
+		<option ID="RNG4">JSF32</option>
+	</select>
+	 Seed:<input ID="seed" size=25></input>
+	<p><button ID="start">Begin with new seed</button>
+	<p>Step: <span ID="step">-0-</span>
+
+
+	</div>
+	<!--
+	<div>
+	<P><a href="CHSH_Game2.html">Alternate scoring</a>; I think this scoring method is wrong, and is not what QM 
+ 	predicts; to get 50% correlation I'd have to match 75 in 100 samples, and the curve between 0% correlation and 50%
+	is crazy steep; conversely with only 25% matches I should be 50% correlated in the other direction.
+	</div>
+	-->
+
+	<div>
+		<ul>
+		<li><label><input type="radio" ID="q0" name="Questions" checked>Shape Shape Shape</input></label>
+		<li><label><input type="radio" ID="q1" name="Questions">Color Color Color</input></label>
+		<li><label><input type="radio" ID="q2" name="Questions">Shape Color Color</input></label>
+		<li><label><input type="radio" ID="q3" name="Questions">Color Shape Color</input></label>
+		<li><label><input type="radio" ID="q4" name="Questions">Color Color Shape</input></label>
+		</ul>	
+	</div>
+
+	<div>
+
+	<div style="display:inline-block;border-radius:10px;border:2px solid black;" class="PlayerA">
+		Player A can select 0 or 1...
+	<p><input disabled type="radio" ID="a0" name="Aselector" checked>0 Choice</input>
+	<input disabled type="radio" ID="a1" name="Aselector">1 Choice</input>
+	<p>Output is:<span ID="AValue">-Aval-</span>
+	</DIV>
+
+	<div style="display:inline-block;border-radius:10px;border:2px solid black;" class="PlayerB">
+		Player B can select 0 or 1...
+	<p><input disabled type="radio" ID="b0" name="Bselector" checked>0 Choice</input>
+	<input disabled type="radio" ID="b1" name="Bselector">1 Choice</input>
+	<p>Output is:<span ID="BValue">-BVal-</span>
+	</DIV>
+
+	<div style="display:inline-block;border-radius:10px;border:2px solid black;" class="PlayerB">
+		Player C can select 0 or 1...
+	<p><input disabled type="radio" ID="c0" name="Cselector" checked>0 Choice</input>
+	<input disabled type="radio" ID="c1" name="Cselector">1 Choice</input>
+	<p>Output is:<span ID="CValue">-CVal-</span>
+	</DIV>
+
+	<p>Is Correlated:<span ID="DValue">-CVal-</span>
+		
+
+	<p><button ID="play">Get Results</button>
+
+	<p><table ID="stats"><tr><th>A (a0b0)</th><th>B (a1b0)</th><th>C (a0b1)</th>
+						<th>D (a1b1)</th>
+						<th>D (a1b1)</th>
+						<th>D (a1b1)</th>
+						<th>D (a1b1)</th>
+						<th>D (a1b1)</th>
+						<th>S (A+B+C-D)</th>
+					</tr>
+		</table>
+
+	</div>
+
+
+	<div> 
+	<H1>How to Play</H1>
+	<p>TBD 
+
+	<p>RNG Choices: (<a href="https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript">implemented from</a>)
+		<UL>
+			<LI>SFC32 - Simple Fast Counter
+			<LI>MUL32 - Mulberry
+			<LI>XOR32 - xoshiro 128
+			<LI>JSF32 - Jenkins Small Fast
+		</UL>
+
+	<p>Seed: May be any string the two agree on; the string content is bit shuffled to generate a random start point in the random number generator.
+
+	<H2>Result Table meanings</H2>
+	The result table is somewhat abbreviated to fit in a smaller space.
+	 <UL>
+		<LI>same - when the two detectors are selected, the results were correlated.
+		<LI>diff - when the two detectors are selected, the results were different.
+		<li>ratio - calculation of abs(same-diff)/(same+diff); where same+diff is the total results.
+	</UL>
+	The proposed Bell samples then would have to be 3:1 <code>3-1/(3+1) = 2/4 = 50% </code>.  
+
+	<h2>...</h2>
+	The scoring of this game is generous; and I'd pit myself against QM predictions with this ruleset applied to its data (if there was a similar experiment).
+	The first place I heard about the game (the See Also page below), it was described as an ideal 4 point game.  If the 4th term's points can only ever subtract, then
+	the ideal is only 3, and a penalty from 3 for excess matches.  
+
+	This Game also counts excessive different results as a correlated negative result.
+
+	<H2>Other Information</H2>
+	This isn't much of a game itelf, so this keeps the running statistics for every set of choices both players might make, and reports on the number of correlated and non-correlated results for each of those settings.
+	
+	<p> The following are related but not directly about this.</p>
+	<P><a href="https://github.com/d3x0r/STFRPhysics/blob/master/QuantizedProbability.md">See Also</a>; very long discussion of the idea and math of this Local Hidden Variable (LHV).
+	<P>also <a href="https://github.com/d3x0r/STFRPhysics/blob/master/SpinProbabilities.md">Spin Probabilities</a> markdown that is fairly chaotic, and starts with some resources used to understand QM math.
+	
+
+</body>
+<script type="module"> 
+
+// seeded random number generators; all return a number from 0 to 1.0
+// seed is a string.
+//import {SFC32,MUL32,XOR32,JSF32} from "./prng_short.mjs"
+
+const tablebody = dotList.createTBody();
+tablebody.className = "list-body";
+const header = dotList.createTHead();
+header.className = "list-header";
+const headerRow = tablebody.insertRow();
+const h1 = headerRow.insertCell();
+h1.textContent = "Current A";
+const h2 = headerRow.insertCell();
+h2.textContent = "Current B";
+const h3 = headerRow.insertCell();
+h3.textContent = "Current Match";
+
+const h4 = headerRow.insertCell();
+h4.textContent = "a0b0";
+const h5 = headerRow.insertCell();
+h5.textContent = "a1b0";
+const h6 = headerRow.insertCell();
+h6.textContent = "a0b1";
+const h7 = headerRow.insertCell();
+h7.textContent = "a1b1";
+
+
+const choices = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+
+const axis1 = [1,0,0];
+
+const axis2_0 = [Math.cos(0),Math.sin(0),0];
+const axis2_30 = [Math.cos(Math.PI/6),Math.sin(Math.PI/6),0];
+//const axis2_30 = [Math.cos(Math.PI*40/180),Math.sin(Math.PI*40/180),0];
+const axis2_60 = [Math.cos(Math.PI/3),Math.sin(Math.PI/3),0];
+const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];
+
+// optimal? rough guess...
+// 3.4 (0.80 + (1-0) ) should be optimal for this hidden variable.
+// that is 80% right for A,B,C and 100% not right for D.
+
+let a0 = axis2_0;
+let a1 = axis2_90;
+
+let b0 = axis2_0;
+let b1 = axis2_90;
+
+let c0 = axis2_0;
+let c1 = axis2_90;
+
+
+const axis2_22_5 = [Math.cos(Math.PI*22.5/180),Math.sin(Math.PI*22.5/180),0];
+const axis2_45   = [Math.cos(Math.PI*45/180),Math.sin(Math.PI*45/180),0];
+const axis2_m45  = [Math.cos(-Math.PI*45/180),Math.sin(-Math.PI*45/180),0];
+const axis2_67_5 = [Math.cos(Math.PI*67.5/180),Math.sin(Math.PI*67.5/180),0];
+
+// CHSH angles only get 3.16 win z
+/*
+const a0 = axis2_45;
+const a1 = axis2_0;
+const b0 = axis2_22_5;
+const b1 = axis2_62_5;
+*/
+
+
+//let axis2 = axis2_45;
+
+const tmp = [0,0,0];
+const tmp2 = [0,0,0];
+
+// fills 'tmp' global.
+function pick(){
+	let t = RNG();
+        //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
+        //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	tmp[0] = Math.cos( t * 2*Math.PI );
+	tmp[1] = Math.sin( t * 2*Math.PI );
+	tmp[2] = 0;
+	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
+
+        return tmp;
+}
+
+// Pick1 picks more diagonals, unfairly, and is between LHV and QM
+// pick2 is fair vector choice; and matches LHV computed; but only picks a direction in a plane.
+// pick3 is another fair version, but 3d.
+// pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
+
+
+let step = 0;
+let ruleSelect = document.getElementById( "ruleset" );
+let RNGSelect = document.getElementById( "RNG" );
+let seedText = document.getElementById( "seed" );
+let stepText = document.getElementById( "step" );
+let startBtn = document.getElementById( "start" );
+let aText = document.getElementById( "AValue" );
+let bText = document.getElementById( "BValue" );
+let cText = document.getElementById( "CValue" );
+let dText = document.getElementById( "DValue" );
+let statsTable = document.getElementById( "stats" );
+let statsRow = statsTable.insertRow();
+let barsRow = statsTable.insertRow();
+let statsRow2 = statsTable.insertRow();
+let picks = [statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell(),statsRow.insertCell()];
+let barCells = [barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell(),barsRow.insertCell()];
+let same_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "⚪";
+	bar.appendChild( label );
+	const el = document.createElement( "meter" );  bar.appendChild( el ); bar.appendChild( document.createElement("br")); return el } );
+let diff_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "⚫";
+	bar.appendChild( label );
+
+	const el = document.createElement( "meter" );  bar.appendChild( el ); bar.appendChild( document.createElement("br")); return el } );
+let weight_bars = barCells.map( bar=>{ const label = bar.appendChild( document.createElement("span")); 
+	label.textContent =  "Weight";
+	bar.appendChild( label );
+
+	const el = document.createElement( "meter" );  bar.appendChild( el ); return el } );
+let stats = [statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell(),statsRow2.insertCell()];
+
+let selectors = [ [document.getElementById( "a0" ),document.getElementById( "a1" )],[document.getElementById( "b0" ),document.getElementById( "b1" )]
+		, [document.getElementById( "c0" ),document.getElementById( "c1" )]
+		, [document.getElementById( "q0"), document.getElementById("q1"), document.getElementById("q2"), document.getElementById("q3"), document.getElementById("q4")] ];
+
+
+let playBtn = document.getElementById( "play" );
+
+let RNG = null;
+
+startBtn.addEventListener( "click", begin );
+playBtn.addEventListener( "click", play );
+
+seedText.value = "Seed Value";
+	
+begin(); // do a onetime setup.
+
+function begin() {
+	while( tablebody.firstChild ) tablebody.firstChild.remove();
+
+const headerRow = tablebody.insertRow();
+const h1 = headerRow.insertCell();
+h1.textContent = "Current A";
+const h2 = headerRow.insertCell();
+h2.textContent = "Current B";
+const h2a = headerRow.insertCell();
+h2a.textContent = "Current C";
+const h3 = headerRow.insertCell();
+h3.textContent = "Current Match";
+
+const h4 = headerRow.insertCell();
+h4.textContent = "a0b0";
+const h5 = headerRow.insertCell();
+h5.textContent = "a1b0";
+const h6 = headerRow.insertCell();
+h6.textContent = "a0b1";
+const h7 = headerRow.insertCell();
+h7.textContent = "a1b1";
+
+
+	choices.forEach( c=>c.forEach((v,i)=>c[i]=0));
+
+	const seed = seedText.value;
+	//console.log( "Setup RNG:", seed );
+	const sel = RNGSelect.selectedOptions[0].id;
+	switch( sel ) {
+	case "RNG1": RNG=SFC32( seed ); break;
+	case "RNG2": RNG=MUL32( seed ); break;
+	case "RNG3": RNG=XOR32( seed ); break;
+	case "RNG4": RNG=JSF32( seed ); break;
+	default: console.log( "Selection out of bounds." ); break;
+	}
+	const rulesel = ruleSelect.selectedOptions[0].id;
+	switch( rulesel ) {
+//	case "CHSH": a0=axis2_22_5; a1=axis2_67_5; b0=axis2_45; b1=axis2_0; break;
+//	case "IDEAL": a0=axis2_30; a1=axis2_90; b0=axis2_60; b1=axis2_0; break;
+//	case "IDEAL2": a0=axis2_0; a1=axis2_45; b0=axis2_0; b1=axis2_m45; break;
+	default: console.log( "Selection out of bounds." ); break;
+	}
+	step = 0;
+	aText.textContent = '';
+	bText.textContent = '';
+	cText.textContent = '';
+	dText.textContent = '';
+	picks.forEach( pick=>pick.textContent='' );
+	same_bars.forEach( bar=>pick.value = 0 );
+	diff_bars.forEach( bar=>pick.value = 0 );
+	weight_bars.forEach( bar=>pick.value = 0 );
+	stats.forEach( pick=>pick.textContent='' );
+	stepText.textContent = "- 0 -";
+
+}
+                                                 
+function play() {
+	const Qselector = selectors[3][0].checked?1
+					:selectors[3][1].checked?2
+					:selectors[3][2].checked?3
+					:selectors[3][3].checked?4
+					:selectors[3][4].checked?5:0;
+
+	switch( Qselector ) {
+		case 1: selectors[0][0].checked = true; selectors[1][0].checked = true; selectors[2][0].checked = true; break;
+		case 2: selectors[0][1].checked = true; selectors[1][1].checked = true; selectors[2][1].checked = true; break;
+		case 3: selectors[0][0].checked = true; selectors[1][1].checked = true; selectors[2][1].checked = true; break;
+		case 4: selectors[0][1].checked = true; selectors[1][0].checked = true; selectors[2][1].checked = true; break;
+		case 5: selectors[0][1].checked = true; selectors[1][1].checked = true; selectors[2][0].checked = true; break;
+	}
+
+	const Aselector = selectors[0][0].checked?1:0;
+	const Bselector = selectors[1][0].checked?1:0;
+	const Cselector = selectors[2][0].checked?1:0;
+	step++;
+	stepText.textContent = step;
+
+	pick();
+	let a,b;
+	let c = 0;
+	let S = 0;
+	[a0,a1].forEach( a=>{
+		[b0,b1].forEach( b=>{
+			[c0,c1].forEach( cx=>{
+				let s = '';
+				const as = getState(a); 
+				const bs = getState(b);
+				const cs = getState(cx);
+				if( as&bs 
+					|| (!as && !bs) 
+					) { 
+					choices[c][0]++;
+						s += '⚪';}
+					else {
+					choices[c][1]++;
+					s += '⚫';
+				}
+				
+				picks[c].textContent = s;
+				// (a-b)/a = 3.40(ideal), 3.30(ideal2), 3.19(CHSH)
+				// ratio of excessive correlations with total possible correlations; 
+				// assuming every non-correlation has to be countered by a correlation
+				//   99 samples, 66 correlate, 33 non-correlate = 0.5 score. 50%
+				//  100 samples, 25 correlate, 75 non-correlate = -0.66 (well in this case, non-correlations, or negatives, 
+				//       are actually correlations, I can be assured that every up is a down.)
+				//  100 samples, 50 correlate, 50 non-correlate = 0% correlation
+				//  100 samples, 75 correlate, 25 non-correlate = 66% correlation
+				//  100 samples, 100 correlate, 0 non-correlate = 100% correlation
+				//  100 samples, 0 correlate, 100 non-correlate = (-)100% correlation
+				const thisVal = (1-choices[c][1]/choices[c][0]);
+
+				// (a-b)/(a+b) = 2.0 (without bonus point either... point 3 is only a penalty reduces ideal to 3 not 4... 
+				// so I was misinformed on my initial introduction to the game.
+				//const thisVal = (choices[c][0]-choices[c][1])/(choices[c][1]+choices[c][0]);
+
+				if( c == 3 ) S += 1-thisVal;
+				else S += thisVal;
+				same_bars[c].value = choices[c][0] / (choices[c][1]+choices[c][0]);
+				diff_bars[c].value = choices[c][1] / (choices[c][1]+choices[c][0]);
+				if( thisVal  <0 ) {
+					weight_bars[c].style.background="red";
+					if( thisVal < -1 )
+						weight_bars[c].value = 1;
+					else
+					weight_bars[c].value = -thisVal;
+				} else{
+					weight_bars[c].style.background="";
+					weight_bars[c].value = thisVal;
+				}
+				stats[c].innerHTML = choices[c][0] + " same<br>" + choices[c][1] + " diff<br>" + thisVal.toFixed(3) + " Ratio<br>actual/possible";
+				c++;
+			} )
+		} )
+
+	} )
+
+	stats[4].textContent = S.toFixed(3);
+
+	//console.log( "Aselector:", Aselector, Bselector );		
+
+	if( Aselector )
+		a= getState( a0 );
+	else a= getState( a1 );
+
+	if( a ) 
+		aText.textContent = "⚪";
+	else
+		aText.textContent = "⚫";
+
+	if( Bselector )
+		b= getState( b0 );
+	else b= getState( b1 );
+	if( b ) 
+		bText.textContent = "⚪";
+	else
+		bText.textContent = "⚫";
+
+	if( Cselector )
+		c= getState( c0 );
+	else c= getState( c1 );
+	if( c ) 
+		cText.textContent = "⚪";
+	else
+		cText.textContent = "⚫";
+
+	switch( Qselector){
+	case 0:
+	case 1:
+		if( Math.abs(((a?1:-1)+(b?1:-1)+(c?1:-1))) & 1 )
+			dText.textContent = "⚪";
+		else
+			dText.textContent = "⚫";
+		break;
+	case 2: case 3: case 4:
+		if( Math.abs(((a?1:-1)+(b?1:-1)+(c?1:-1))) & 1 )
+			dText.textContent = "⚫";
+		else
+			dText.textContent = "⚪";
+		break;
+	}
+
+
+	const status = tablebody.insertRow();
+	
+	for( let i = 0; i < 7; i++ ) {
+		const cell = status.insertCell();
+
+		switch(i) { 
+		case 0:
+			cell.textContent = a?"⚪":"⚫";
+			break;
+		case 1:
+			cell.textContent = b?"⚪":"⚫";
+			break;
+		case 2:
+			cell.textContent = (a^b)?"⚫":"⚪";
+			break;
+		case 3:
+			cell.textContent = (getState( a0 )?"⚪":"⚫") + (getState( b0 )?"⚪":"⚫") + (getState( a0 )^getState(b0)?"⚪":"⚫");
+			break;
+		case 4:
+			cell.textContent = (getState( a1 )?"⚪":"⚫") + (getState( b0 )?"⚪":"⚫") + (getState( a1 )^getState(b0)?"⚪":"⚫");
+			break;
+		case 5:
+			cell.textContent = (getState( a0 )?"⚪":"⚫") + (getState( b1 )?"⚪":"⚫") + (getState( a0 )^getState(b1)?"⚪":"⚫");
+			break;
+		case 6:
+			cell.textContent = (getState( a1 )?"⚪":"⚫") + (getState( b1 )?"⚪":"⚫") + (getState( a1 )^getState(b1)?"⚪":"⚫");
+			break;
+		}		
+	}
+
+}
+
+function getStateByChance( axis ) {    
+	let s = 0;
+
+	let dot= axis[0]*axis1[0] ;
+	let chance = dot;// Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
+	
+	if( Math.random() < chance ) 
+		s += 1;
+
+	dot= axis[0]*axis2[0] + axis[1]*axis2[1]
+	chance = dot;//Math.sin( Math.PI/4 * (1+dot) );
+	//chance = chance*chance;
+	if( Math.random() < chance ) 
+		s += 2;
+	return s;
+}
+
+const  getState = ( axis )=>( (axis[0]*tmp[0] + axis[1]*tmp[1]) >= 0 );
+
+
+// Implemented from: https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
+// more https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
+
+// used to get a seed from a string.
+
+export function xmur3(str) {
+    for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+        h = h << 13 | h >>> 19;
+    } return function() {
+        h = Math.imul(h ^ (h >>> 16), 2246822507);
+        h = Math.imul(h ^ (h >>> 13), 3266489909);
+        return (h ^= h >>> 16) >>> 0;
+    }
+}
+
+
+
+/*
+var seed = 1337 ^ 0xDEADBEEF; // 32-bit seed with optional XOR value
+// Pad seed with Phi, Pi and E.
+// https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number
+var rand = sfc32(0x9E3779B9, 0x243F6A88, 0xB7E15162, seed);
+for (var i = 0; i < 15; i++) rand();
+*/
+
+// simple fast counter
+/*
+sfc32 is part of the PractRand random number testing suite (which it passes of course). sfc32 has a 128-bit state and is very fast in JS.
+*/
+
+function sfc32(a, b, c, d) {
+    return function() {
+      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; 
+      var t = (a + b) | 0;
+      a = b ^ b >>> 9;
+      b = c + (c << 3) | 0;
+      c = (c << 21 | c >>> 11);
+      d = d + 1 | 0;
+      t = t + d | 0;
+      c = c + t | 0;
+      return (t >>> 0) / 4294967296;
+    }
+}
+
+/*
+Mulberry32 is a simple generator with a 32-bit state, but is extremely fast and has good quality randomness (author states it passes all tests of gjrand testing suite and has a full 232 period, but I haven't verified).
+*/
+function mulberry32(a) {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
+/*
+As of May 2018, xoshiro128** is the new member of the Xorshift family, by Vigna & Blackman (professor Vigna was also responsible for the Xorshift128+ algorithm powering most Math.random implementations under the hood). It is the fastest generator that offers a 128-bit state.
+*/
+function xoshiro128ss(a, b, c, d) {
+    return function() {
+        var t = b << 9, r = a * 5; r = (r << 7 | r >>> 25) * 9;
+        c ^= a; d ^= b;
+        b ^= c; a ^= d; c ^= t;
+        d = d << 11 | d >>> 21;
+        return (r >>> 0) / 4294967296;
+    }
+}
+
+/*
+This is JSF or 'smallprng' by Bob Jenkins (2007), who also made ISAAC and SpookyHash. It passes PractRand tests and should be quite fast, although not as fast as sfc32.
+*/
+
+function jsf32(a, b, c, d) {
+    return function() {
+        a |= 0; b |= 0; c |= 0; d |= 0;
+        var t = a - (b << 27 | b >>> 5) | 0;
+        a = b ^ (c << 17 | c >>> 15);
+        b = c + d | 0;
+        c = d + t | 0;
+        d = a + t | 0;
+        return (d >>> 0) / 4294967296;
+    }
+}
+
+function getSeed(s) { return xmur3( s ); }
+
+function SFC32( seed ) { const s = xmur3( seed ); return sfc32(s(),s(),s(),s()); }
+function MUL32( seed ) { const s = xmur3( seed ); return mulberry32(s(),s(),s(),s()); }
+function XOR32( seed ) { const s = xmur3( seed ); return xoshiro128ss(s(),s(),s(),s()); }
+function JSF32( seed ) { const s = xmur3( seed ); return jsf32(s(),s(),s(),s()); }
+
+
+
+</script>
+</html>
+
+
+
