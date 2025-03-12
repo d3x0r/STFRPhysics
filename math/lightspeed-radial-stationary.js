@@ -15,6 +15,7 @@ let C=1; // speed of propagation (m/s)
 let D=1; // shortest distance to moving body (m) (D/C = time to view closest event (s))
 let V=0.75; // velocity  (m/s)
 let S=1; // time scalar (s/s)
+let Rings=1; // time scalar (s/s)
 let lengthContract = 1;
 let runT = 10;
 let now = 0;
@@ -211,6 +212,26 @@ span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
 
+
+span = document.createElement( "span" );
+span.textContent = "Rings";
+controls.appendChild( span );
+
+const sliderRings = document.createElement( "input" );
+sliderRings.setAttribute( "type", "range" );
+controls.appendChild( sliderRings );
+sliderRings.addEventListener( "input", update );
+
+sliderRings.setAttribute( "min",1 );
+sliderRings.setAttribute( "max",100 );
+sliderRings.value = 1;
+sliderRings.style.width="250px";
+
+const spanRings = document.createElement( "span" );
+spanRings.textContent = "1";
+controls.appendChild( spanRings );
+
+//---------------------
 const spanChkContract = document.createElement( "label" );
 spanChkContract.textContent = " Length Contract";
 controls.appendChild( spanChkContract );
@@ -383,6 +404,9 @@ function update( evt ) {
 	S = Number(sliderS.value)/10;
 	spanS.textContent = S.toFixed(2);
 
+	Rings = Number(sliderRings.value);
+	spanRings.textContent = Rings;
+
 	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C):Math.sqrt(V*V-C*C)/(C):1;
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
@@ -532,7 +556,72 @@ function draw(  ) {
 		draw();
 
 
+function computePoint( now, n ) {
 
+	let abl = 0;
+	let vab = 0;
+	let abx = 0;
+	let aby = 0;
+
+	return step1( -runT/2, now+runT/2, n );
+
+
+	function step1( from, span, n ) {
+		const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+		vab = (C-V*Math.cos(n*Math.PI/18))/lengthContract;
+
+		abx = (span)*vab*c.x;
+		aby = (span)*vab*c.y;
+		if( ((span)*vab) > L ){
+			const deltime = ((span*vab)-L)/(vab);
+			return step2( from+span-deltime, deltime, n );
+		}
+		/*
+		ctx.save();
+		ctx.beginPath();
+		ctx.strokeStyle = "green";
+		ctx.moveTo( 500,500 );
+		ctx.lineTo( 500+xscale*abx,500+xscale*aby );
+		ctx.stroke();
+		ctx.restore();
+		*/
+		return {x:abx,y:aby,s:1};
+	}
+	function step2( from, span, n ) {
+
+		const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+
+		//const deltime = (abl-L)/(vab);
+		let dx = L*c.x;
+		let dy = L*c.y;
+
+		const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx*lengthContract, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+		const real_vab = 1/ot;
+		const dist = Math.sqrt((dx*lengthContract - V*ot) *(dx*lengthContract- V*ot) + dy*dy);
+		vab = real_vab*L;
+		const c2 = ru.aberration_coord(  0,0, Math.cos(Math.PI+n*Math.PI/18), Math.sin(Math.PI+n*Math.PI/18),0, V )
+		//L/real_vab
+		abx = dx+(span)*real_vab*(-dx);
+		aby = dy+(span)*real_vab*(-dy);
+		//let abl_new = Math.sqrt(abx_new*abx_new+aby_new*aby_new);
+
+		if( (span)*vab > L ) {
+			const deltime = ((span*vab)-L)/(vab);
+			return step1( from+span-deltime, deltime, n );
+		}
+		/*
+		ctx.save();
+		ctx.beginPath();
+		ctx.strokeStyle = "yellow";
+		ctx.moveTo( 500+xscale*dx,500+xscale*dy );
+		ctx.lineTo( 500+xscale*abx,500+xscale*aby );
+		ctx.stroke();
+		ctx.restore();
+		*/
+		return {x:abx,y:aby,s:2};
+
+	}
+}
 
 
 		function old_update( evt ) {
@@ -660,62 +749,41 @@ function draw(  ) {
 	
 			}
 	
+			ctx.beginPath();
+			ctx.strokeStyle = "red";
+			ctx.lineWidth = 1;
+			let mode = 0;
+			let priorp = null;
 
+			for( let r = 0; r < Rings; r++ ) 
 			for( let n = 0; n < 37; n++ ) {
 				
-				const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
-				const vab = (C-V*Math.cos(n*Math.PI/18))/lengthContract;
-				//const lnow = (now+runT/2)*vab;
-				const abx = (now+runT/2)*vab*c.x;
-				const aby = (now+runT/2)*vab*c.y;
-				let abl = Math.sqrt(abx*abx+aby*aby);
-				let gnow = now;
-				if( abl > L ){
-					const deltime = (abl-L)/(vab);
-					const usenow = now - deltime;
-					gnow = usenow;
-					const abAngle = ru.aberration_angle_from_angles( Math.PI+n*Math.PI/18, 0, V,C );
-					const c2 = ru.aberration_coord(  0,0, Math.cos(Math.PI+n*Math.PI/18), Math.sin(Math.PI+n*Math.PI/18),0, V )
-					
-					let dx = ((usenow+runT/2)*(C*Math.cos( n*Math.PI/18 )-V))/lengthContract;
-					let dy = (usenow+runT/2)*C*Math.sin( n*Math.PI/18);
-
-					const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx*lengthContract, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
-					const vab_new = L/ot;
-					
-					const abx_new = dx+(deltime)*vab_new*c2.x/lengthContract;
-					const aby_new = dy+(deltime)*vab_new*c2.y;
-					let abl_new = Math.sqrt(abx_new*abx_new+aby_new*aby_new);
-
-					ctx.beginPath();
-					ctx.strokeStyle = "yellow";
-					ctx.moveTo( 500+xscale*dx,500+xscale*dy );
-					ctx.lineTo( 500+xscale*(dx+deltime*c2.x*vab_new)+0*abx_new,500+xscale*(dy+deltime*c2.y*vab_new)+0*aby_new );
+				const p = computePoint( now + r*0.3, n );
+				if( p.s != mode ) {
 					ctx.stroke();
-					/*
 					ctx.beginPath();
-					ctx.strokeStyle = "white";
-					ctx.lineWidth=1;
-					ctx.moveTo( 500+4*xscale*c2.x*vab_new/lengthContract,500+4*xscale*c2.y*vab_new );
-					ctx.lineTo( 500-0*xscale*c2.x,500-0*xscale*c2.y );
-					
-					//ctx.lineTo( 500+xscale*vab_new*Math.cos(Math.PI+n*Math.PI/18) ,500+xscale*vab_new*Math.sin(Math.PI+n*Math.PI/18) );
-					ctx.stroke();
-					*/
-					abl = abl_new;
-				}
-
-				ctx.beginPath();
-				ctx.strokeStyle = "green";
-				ctx.moveTo( 500, 500 );
-				ctx.lineTo( 500+(gnow+runT/2)*vab*xscale*c.x
-							, 500+(gnow+runT/2)*vab*xscale*c.y );
-				ctx.stroke();
+					if( p.s === 2 ) 
+						ctx.strokeStyle = "green";
+					else ctx.strokeStyle = "yellow";
+					if( !n )
+						ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale);
+					else {
+						ctx.moveTo( priorp.x*xscale+500,priorp.y*xscale+500 );
+						ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale);
+					}
+					mode = p.s;
+				} else if( !n ) ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale);
+				else
+					ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale);
+				priorp = p;
 			}
+			ctx.stroke();
+			 
 
 			{
 				ctx.beginPath();
 				ctx.strokeStyle = "white";
+				ctx.lineWidth = 3;
 				const now = eventFrames[frame];
 				if( now ) {
 					for( let n = 0; n < 37; n++  ) {
@@ -723,7 +791,7 @@ function draw(  ) {
 						else ctx.lineTo( now.body[n][0], now.body[n][1] );
 					}
 					ctx.stroke();
-		
+		if(0){
 				ctx.beginPath();
 				ctx.strokeStyle = "red";
 					for( let n = 0; n < 37; n++  ) {
@@ -732,6 +800,7 @@ function draw(  ) {
 					}
 					ctx.stroke();
 				}
+			}
 			}
 			
 		
