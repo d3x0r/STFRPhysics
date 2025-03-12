@@ -647,7 +647,7 @@ function draw(  ) {
 			const frame = Math.floor( (now+runT/2)/runT*nFrames );
 		
 			ctx.clearRect( 0, 0, 1024, 1024);
-		
+		if(0)
 			for( let n = 0; n < 37; n++  ) {
 				ctx.beginPath();
 				ctx.strokeStyle = "blue";
@@ -665,26 +665,43 @@ function draw(  ) {
 				
 				const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
 				const vab = (C-V*Math.cos(n*Math.PI/18))/lengthContract;
+				//const lnow = (now+runT/2)*vab;
 				const abx = (now+runT/2)*vab*c.x;
 				const aby = (now+runT/2)*vab*c.y;
 				let abl = Math.sqrt(abx*abx+aby*aby);
 				let gnow = now;
 				if( abl > L ){
-					const deltime = (abl-L)/vab;
+					const deltime = (abl-L)/(vab);
 					const usenow = now - deltime;
 					gnow = usenow;
-					const c2 = ru.aberration_coord( 0, 0, Math.cos(Math.PI+n*Math.PI/18), Math.sin(Math.PI+n*Math.PI/18), 0, V )
-					const vab_new = (C+V*Math.cos((n)*Math.PI/18));
-					let dx = (-(usenow+runT/2)*V+ (usenow+runT/2)*C*Math.cos( n*Math.PI/18 ))/lengthContract;
+					const abAngle = ru.aberration_angle_from_angles( Math.PI+n*Math.PI/18, 0, V,C );
+					const c2 = ru.aberration_coord(  0,0, Math.cos(Math.PI+n*Math.PI/18), Math.sin(Math.PI+n*Math.PI/18),0, V )
+					
+					let dx = ((usenow+runT/2)*(C*Math.cos( n*Math.PI/18 )-V))/lengthContract;
 					let dy = (usenow+runT/2)*C*Math.sin( n*Math.PI/18);
-					const abx_new = dx+(deltime)*vab_new*c2.x;
+
+					const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx*lengthContract, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+					const vab_new = L/ot;
+					
+					const abx_new = dx+(deltime)*vab_new*c2.x/lengthContract;
 					const aby_new = dy+(deltime)*vab_new*c2.y;
 					let abl_new = Math.sqrt(abx_new*abx_new+aby_new*aby_new);
+
 					ctx.beginPath();
 					ctx.strokeStyle = "yellow";
 					ctx.moveTo( 500+xscale*dx,500+xscale*dy );
-					ctx.lineTo( 500+xscale*abx_new,500+xscale*aby_new );
+					ctx.lineTo( 500+xscale*(dx+deltime*c2.x*vab_new)+0*abx_new,500+xscale*(dy+deltime*c2.y*vab_new)+0*aby_new );
 					ctx.stroke();
+					/*
+					ctx.beginPath();
+					ctx.strokeStyle = "white";
+					ctx.lineWidth=1;
+					ctx.moveTo( 500+4*xscale*c2.x*vab_new/lengthContract,500+4*xscale*c2.y*vab_new );
+					ctx.lineTo( 500-0*xscale*c2.x,500-0*xscale*c2.y );
+					
+					//ctx.lineTo( 500+xscale*vab_new*Math.cos(Math.PI+n*Math.PI/18) ,500+xscale*vab_new*Math.sin(Math.PI+n*Math.PI/18) );
+					ctx.stroke();
+					*/
 					abl = abl_new;
 				}
 
@@ -700,6 +717,7 @@ function draw(  ) {
 				ctx.beginPath();
 				ctx.strokeStyle = "white";
 				const now = eventFrames[frame];
+				if( now ) {
 					for( let n = 0; n < 37; n++  ) {
 						if( !n ) ctx.moveTo( now.body[n][0], now.body[n][1] );
 						else ctx.lineTo( now.body[n][0], now.body[n][1] );
@@ -713,6 +731,7 @@ function draw(  ) {
 						else ctx.lineTo( now.emitted[n][0], now.emitted[n][1] );
 					}
 					ctx.stroke();
+				}
 			}
 			
 		

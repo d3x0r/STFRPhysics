@@ -369,7 +369,7 @@ export function freqShift( angle, direction, V, C ) {
 
 // results in Xx,Xy transformed to new coordinate, (rotates around Xox, Xoy)
 export function aberration_coord( Xox, Xoy, Xx, Xy, Direction, Velocity ) {
-	const forward = { x : Math.cos(Direction) * Velocity, y: -Math.sin(Direction) * Velocity };
+	const forward = { x : Math.cos(Direction) * Velocity, y: Math.sin(Direction) * Velocity };
 
 	let delx = Xx-Xox;
 	let dely = Xy-Xoy;
