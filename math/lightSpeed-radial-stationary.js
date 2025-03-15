@@ -20,6 +20,7 @@ let lengthContract = 1;
 let runT = 10;
 let now = 0;
 let animate = true;
+let frameMoving = true;
 
 const eventFrames = [];
 let curFrame = -1;
@@ -96,26 +97,6 @@ span = document.createElement( "br" );
 controls.appendChild( span );
 //----------------------
 
-span = document.createElement( "span" );
-span.textContent = "Distance";
-controls.appendChild( span );
-
-const sliderD = document.createElement( "input" );
-sliderD.setAttribute( "type", "range" );
-controls.appendChild( sliderD );
-sliderD.addEventListener( "input", update );
-
-sliderD.setAttribute( "max",100 );
-sliderD.value = D*10;
-sliderD.style.width="250px";
-
-const spanD = document.createElement( "span" );
-spanD.textContent = "1";
-controls.appendChild( spanD );
-
-span = document.createElement( "br" );
-controls.appendChild( span );
-//----------------------
 
 span = document.createElement( "span" );
 span.textContent = "Velocity";
@@ -231,6 +212,8 @@ const spanRings = document.createElement( "span" );
 spanRings.textContent = "1";
 controls.appendChild( spanRings );
 
+span = document.createElement( "br" );
+controls.appendChild( span );
 //---------------------
 const spanChkContract = document.createElement( "label" );
 spanChkContract.textContent = " Length Contract";
@@ -241,6 +224,19 @@ chkLblContract.setAttribute( "type", "checkbox" );
 chkLblContract.checked = true;
 spanChkContract.appendChild( chkLblContract );
 chkLblContract.addEventListener( "input", update );
+
+span = document.createElement( "br" );
+controls.appendChild( span );
+//---------------------
+const spanChkFrameMoving = document.createElement( "label" );
+spanChkFrameMoving.textContent = " Show Frame Moving";
+controls.appendChild( spanChkFrameMoving );
+
+const chkLblFrameMoving = document.createElement( "input" );
+chkLblFrameMoving.setAttribute( "type", "checkbox" );
+chkLblFrameMoving.checked = frameMoving;
+spanChkFrameMoving.appendChild( chkLblFrameMoving );
+chkLblFrameMoving.addEventListener( "input", update );
 
 span = document.createElement( "br" );
 controls.appendChild( span );
@@ -394,8 +390,8 @@ function update( evt ) {
 	C = Number(sliderC.value)/100;
 	ru.params.C = C;
 	spanC.textContent = C.toFixed(2);
-	D = Number(sliderD.value)/10;
-	spanD.textContent = D.toFixed(2);
+	D = 1;//Number(sliderD.value)/10;
+	//spanD.textContent = D.toFixed(2);
 	V = Number(sliderV.value)/1000*C;
 	spanV.textContent = V.toFixed(2);
 	L = Number(sliderL.value)/10;
@@ -408,6 +404,8 @@ function update( evt ) {
 	spanRings.textContent = Rings;
 
 	lengthContract = chkLblContract.checked?V<C?Math.sqrt(C*C-V*V)/(C):Math.sqrt(V*V-C*C)/(C):1;
+	frameMoving = chkLblFrameMoving.checked;
+
 	runT = Number(sliderRunT.value)/5;
 	spanRunT.textContent = runT.toFixed(2);
 
@@ -563,43 +561,60 @@ function computePoint( now, n ) {
 	let abx = 0;
 	let aby = 0;
 
-	return step1( -runT/2, now+runT/2, n );
+	return step1( -runT/2, now+runT/2, n*Math.PI/18 );
 
 
-	function step1( from, span, n ) {
-		const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
-		vab = (C-V*Math.cos(n*Math.PI/18))/lengthContract;
+	function step1( from, span, angle ) {
+
+		//export function aberration_coord( Xox, Xoy, Xx, Xy, Direction, Velocity ) {
+
+		const forward = { x : Math.cos(Math.PI) * V, y: Math.sin(Math.PI) * V };
+		const Xx = Math.cos(angle);
+		const Xy = Math.sin(angle);
+		let rx = Xx;
+		let ry = Xy;
+	
+		//let len2 = Xx*Xx + Xy*Xy;
+		const Vcrsz = Xy * forward.x - Xx * forward.y;
+		const Vcrs = ( Vcrsz === 0 ? 1 : Vcrsz);
+		//let Vcrs = { x: 0, y:0, z:Xy*forward.x - Xx * forward.y};
+		if( V > 0.00001 ) {
+			let CosVDot = (Xx * forward.x + Xy*forward.y)/V;
+			let baseAng = Math.acos( CosVDot );
+			const delAng = Math.acos( ( CosVDot + V/C)/(1 + V/C * CosVDot))-baseAng;
+			if( Math.abs( delAng) > 0.00001 ) {
+				const c = Math.cos(delAng );
+				const s= Math.sin( delAng);
+				let qz = Math.sign( Vcrs );
+				rx = Xx*c + s*(-qz * Xy);
+				ry = Xy*c + s*(qz * Xx);
+			}
+		}
+		const c = { x:rx, y:ry };
+		//const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+		vab = (C-V*Math.cos(angle))/lengthContract;
 
 		abx = (span)*vab*c.x;
 		aby = (span)*vab*c.y;
 		if( ((span)*vab) > L ){
 			const deltime = ((span*vab)-L)/(vab);
-			return step2( from+span-deltime, deltime, n );
+			return step2( from+span-deltime, deltime, angle );
 		}
-		/*
-		ctx.save();
-		ctx.beginPath();
-		ctx.strokeStyle = "green";
-		ctx.moveTo( 500,500 );
-		ctx.lineTo( 500+xscale*abx,500+xscale*aby );
-		ctx.stroke();
-		ctx.restore();
-		*/
 		return {x:abx,y:aby,s:1};
 	}
-	function step2( from, span, n ) {
+	function step2( from, span, angle ) {
 
-		const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+		const c = ru.aberration_coord( 0, 0, Math.cos(angle), Math.sin(angle), Math.PI, V )
 
 		//const deltime = (abl-L)/(vab);
 		let dx = L*c.x;
 		let dy = L*c.y;
 
-		const ot = ru.ObservedTime( 0, {x:0,y:0,z:0}, {x:dx*lengthContract, y:dy,z:0}, { x:V,y:0,z:0},{x:0,y:0,z:0} );
+		const ot = (Math.sqrt( (C*C)*dx*lengthContract* dx*lengthContract 
+							+ C*C *dy*dy - V*V *dy*dy )  - V * dx*lengthContract ) / (C*C - V*V);
+
 		const real_vab = 1/ot;
-		const dist = Math.sqrt((dx*lengthContract - V*ot) *(dx*lengthContract- V*ot) + dy*dy);
 		vab = real_vab*L;
-		const c2 = ru.aberration_coord(  0,0, Math.cos(Math.PI+n*Math.PI/18), Math.sin(Math.PI+n*Math.PI/18),0, V )
 		//L/real_vab
 		abx = dx+(span)*real_vab*(-dx);
 		aby = dy+(span)*real_vab*(-dy);
@@ -607,7 +622,7 @@ function computePoint( now, n ) {
 
 		if( (span)*vab > L ) {
 			const deltime = ((span*vab)-L)/(vab);
-			return step1( from+span-deltime, deltime, n );
+			return step1( from+span-deltime, deltime, angle );
 		}
 		/*
 		ctx.save();
@@ -752,13 +767,50 @@ function computePoint( now, n ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
 			ctx.lineWidth = 1;
+
+			const moveOfs =frameMoving?V*now*xscale:0;
+			for( let w = 0; w < 10; w++ ) {
+					
+			ctx.beginPath();
+			for( let n = 0; n < 37; n++  ) {
+				const ab = ru.aberration_inverse_angle( Math.PI/18*n, 0, V, C );
+				const dx = Math.cos( Math.PI/18*n )/lengthContract;
+				const dy = Math.sin( Math.PI/18*n );
+				const f = ru.freqShift2(  Math.PI/18*n, 0, V, C );
+				if( !n ) ctx.moveTo( 500 + dx*xscale*0.3*w*f*lengthContract,133+500+dx*xscale*0.3*w*f );
+				ctx.lineTo( 500 +dx*xscale*0.3*w*f*lengthContract,133+500+dy*xscale*0.3*w*f );
+			}
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			for( let n = 0; n < 37; n++  ) {
+				const ab = ru.aberration_inverse_angle( Math.PI/18*n, 0, V, C );
+				const dx = Math.cos( Math.PI/18*n )*lengthContract;
+				const dy = Math.sin( Math.PI/18*n );
+				const f = ru.freqShift2(  Math.PI/18*n, 0, V, C );
+				if( !n ) ctx.moveTo( 500+moveOfs + (-(w)*0.01)*xscale
+							+dx*xscale*0.5*w*f
+							,-250+500+dx*xscale*0.5*w*f );
+				ctx.lineTo( 500 +moveOfs + (-(w)*0.01)*xscale
+							+dx*xscale*0.5*w*f
+							,-250+500+dy*xscale*0.5*w*f );
+			}
+			ctx.closePath();
+			ctx.stroke();
+
+		}
+
+			ctx.beginPath();
+			ctx.strokeStyle = "red";
+			ctx.lineWidth = 1;
 			let mode = 0;
 			let priorp = null;
 
 			for( let r = 0; r < Rings; r++ ) 
-			for( let n = 0; n < 37; n++ ) {
+			for( let n = 0; n < 73; n++ ) {
 				
-				const p = computePoint( now + r*0.3, n );
+				const p = computePoint( now + r*0.3, n/2 );
 				if( p.s != mode ) {
 					ctx.stroke();
 					ctx.beginPath();
@@ -766,15 +818,15 @@ function computePoint( now, n ) {
 						ctx.strokeStyle = "green";
 					else ctx.strokeStyle = "yellow";
 					if( !n )
-						ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale);
+						ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale +133);
 					else {
-						ctx.moveTo( priorp.x*xscale+500,priorp.y*xscale+500 );
-						ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale);
+						ctx.moveTo( priorp.x*xscale+500,priorp.y*xscale+500 +133 );
+						ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale +133);
 					}
 					mode = p.s;
-				} else if( !n ) ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale);
+				} else if( !n ) ctx.moveTo( 500 +p.x*xscale,500 +p.y*xscale +133);
 				else
-					ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale);
+					ctx.lineTo( 500 +p.x*xscale,500 +p.y*xscale +133);
 				priorp = p;
 			}
 			ctx.stroke();
@@ -787,22 +839,59 @@ function computePoint( now, n ) {
 				const now = eventFrames[frame];
 				if( now ) {
 					for( let n = 0; n < 37; n++  ) {
-						if( !n ) ctx.moveTo( now.body[n][0], now.body[n][1] );
-						else ctx.lineTo( now.body[n][0], now.body[n][1] );
-					}
-					ctx.stroke();
-		if(0){
-				ctx.beginPath();
-				ctx.strokeStyle = "red";
-					for( let n = 0; n < 37; n++  ) {
-						if( !n ) ctx.moveTo( now.emitted[n][0], now.emitted[n][1] );
-						else ctx.lineTo( now.emitted[n][0], now.emitted[n][1] );
+						if( !n ) ctx.moveTo( now.body[n][0], now.body[n][1] +133 );
+						else ctx.lineTo( now.body[n][0], now.body[n][1] +133 );
 					}
 					ctx.stroke();
 				}
 			}
-			}
 			
+			{
+
+				{
+				ctx.beginPath();
+				ctx.strokeStyle = "red";
+				ctx.lineWidth = 1;
+				let mode = 0;
+				let priorp = null;
+				for( let r = 0; r < Rings; r++ ) 
+				for( let n = 0; n < 37; n++ ) {
+					
+					const p = computePoint( now + r*0.3, n );
+					if( p.s != mode ) {
+						ctx.stroke();
+						ctx.beginPath();
+						if( p.s === 2 ) 
+							ctx.strokeStyle = "green";
+						else ctx.strokeStyle = "yellow";
+						if( !n )
+							ctx.moveTo( moveOfs+500 +lengthContract*p.x*xscale,500 +p.y*xscale -250);
+						else {
+							ctx.moveTo( moveOfs+priorp.x*lengthContract*xscale+500,priorp.y*xscale+500 -250 );
+							ctx.lineTo( moveOfs+500 +lengthContract*p.x*xscale,500 +p.y*xscale -250);
+						}
+						mode = p.s;
+					} else if( !n ) ctx.moveTo( moveOfs+500 +lengthContract*p.x*xscale,500 +p.y*xscale -250);
+					else
+						ctx.lineTo( moveOfs+500 +lengthContract*p.x*xscale,500 +p.y*xscale -250);
+					priorp = p;
+				}
+				ctx.stroke();
+				}
+	
+
+				ctx.beginPath();
+				ctx.strokeStyle = "white";
+				ctx.lineWidth = 3;
+				const now_ = eventFrames[frame];
+				if( now_ ) {
+					for( let n = 0; n < 37; n++  ) {
+						if( !n ) ctx.moveTo( moveOfs+500+(now_.body[n][0]-500)*lengthContract, now_.body[n][1] -250 );
+						else ctx.lineTo( moveOfs+500+(now_.body[n][0]-500)*lengthContract, now_.body[n][1] -250 );
+					}
+					ctx.stroke();
+				}
+			}
 		
 			last_draw_time = now;
 			requestAnimationFrame( draw );

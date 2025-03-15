@@ -225,6 +225,7 @@ function drawsomething() {
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";  // starts max, at origin, and +100
 	ctx.arc( (to+t1) , 500, cc * 50, 0, Math.PI*2 );
+	ctx.ellipse( (to+t1) , 500, cc*10, cc * 50, 0, 0, Math.PI*2 );
 	ctx.stroke();
 
 

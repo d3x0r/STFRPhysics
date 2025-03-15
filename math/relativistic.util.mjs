@@ -423,15 +423,18 @@ export function aberration_inverse_angle( b, d, V, C ) {
 	return a;
 }
 
-// returns the frequency shift seen for a transmission in some direction (angle) 
+// returns the frequency shift (1 +/-x) seen for a transmission in some direction (angle) 
 // from a frame moving in (direction) at velocity (V) and the speed of light (C).
 export function freqShift( angle, direction, V, C ) {
 	// V/C 
 	if( V >= C ) V = C-0.000001;
-	const ab = aberration_aa( angle, direction, V, C );
-	const f = 1/( ( timeDilate?1/Math.sqrt( 1-V*V/(C*C) ):1 ) * Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
+	const ab = aberration_angle_from_angles( aberration_inverse_angle( angle, direction, V, C )
+						, direction, V, C );
+	const f = 1/( Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
 	return f;
 }
+
+export const dopperShift = freqShift;
 
 // results in Xx,Xy transformed to new coordinate, (rotates around Xox, Xoy)
 export function aberration_coord( Xox, Xoy, Xx, Xy, V ) {
@@ -507,3 +510,4 @@ export function feelLikeV( x ) {
 export function feelLikeClock( x ) {
 	return Math.sqrt(  C*C*C*C / (C*C*C*C+x*x) );
 }
+

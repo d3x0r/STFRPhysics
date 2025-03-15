@@ -362,9 +362,22 @@ export function aberration_inverse_angle( b, d, V, C ) {
 export function freqShift( angle, direction, V, C ) {
 	// V/C 
 	if( V >= C ) V = C-0.000001;
-	const ab = aberration_aa( angle, direction, V, C );
-	const f = 1/( ( timeDilate?1/Math.sqrt( 1-V*V/(C*C) ):1 ) * Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
+	const ab = angle;//aberration_angle_from_angles( aberration_inverse_angle( angle, direction, V, C ), direction, V, C );
+	const f = 1/( ( false?1/Math.sqrt( 1-V*V/(C*C) ):1 ) * Math.sqrt( 1+ V*V/(C*C) - 2*V/C*Math.cos( ab-direction ) ) );
 	return f;
+}
+export const dopperShift = freqShift;
+
+
+export function freqShift2( angle, direction, V, C) {
+	const ab = aberration_angle_from_angles( angle, direction, V, C );
+	//const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+	return  (C-V*Math.cos(ab));///(Math.sqrt(C*C-V*V)/C);
+
+	const c = { x:rx, y:ry };
+	//const c = ru.aberration_coord( 0, 0, Math.cos(n*Math.PI/18), Math.sin(n*Math.PI/18), Math.PI, V )
+	vab = (C-V*Math.cos(angle))/lengthContract;
+
 }
 
 // results in Xx,Xy transformed to new coordinate, (rotates around Xox, Xoy)
