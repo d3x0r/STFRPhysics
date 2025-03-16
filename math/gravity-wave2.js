@@ -224,8 +224,8 @@ addSpan( "Orbit Velocity", 400, 0.4, 0, 1/100, "OrbitVelocity" );
 addSpan( "SunSize", 400, 0.060, 0, 1/100, "SunSize" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 addSpan( "G", 10000, 0.018, 0.00001, 1/500, "G" );
-addSpan( "VPlanet", 1000, 8.280, 1, 1/50, "VP" );
-addSpan( "VPlanetX", 1000, 0.0, -1, 1/500, "VPX" );
+addSpan( "VPlanet", 1000, 18.2, -100, 1/5, "VP" );
+addSpan( "VPlanetX", 1000, 4.98, -10, 1/50, "VPX" );
 
 //const sunSize = 0.5;
 const planetSize = 0.1;
@@ -321,6 +321,7 @@ function draw() {
 	displace( values.Now );
 	ctx.clearRect( 0, 0, canvas.width, canvas.height );
 	const lengthContract = Math.sqrt( values.C*values.C - values.Velocity*values.Velocity ) / values.C;
+	sliders["span"+"C"].textContent = values.C.toFixed(3) + "("+lengthContract.toFixed(3)+")";
 	if(0)
 	for( let y = 0; y < displacements.length; y++ ) {
 		const row = displacements[y];
@@ -368,8 +369,8 @@ function draw() {
 		const abf = rel.aberration_angle_from_angles( t, 0, values.Velocity, values.C );
 		const ab = rel.aberration_inverse_angle( t, 0, values.Velocity, values.C );
 		const f = rel.freqShift2( ab, 0,- values.Velocity, values.C );
-		const x = 500+values.sun_position.x+ Math.cos( t - values.Direction) * values.Orbit*f* values.Scale/1.5;
-		const y = 500+values.sun_position.y+Math.sin( t - values.Direction) * values.Orbit*f*values.Scale/1.5;
+		const x = 500+values.sun_position.x+ Math.cos( t - values.Direction) * values.Orbit*f* values.Scale;
+		const y = 500+values.sun_position.y+Math.sin( t - values.Direction) * values.Orbit*f*values.Scale;
 
 		if( x < 0 || x >= (canvas.width-1)) continue;
 		if( y < 0 || y >= (canvas.height-1) ) continue;
@@ -401,11 +402,25 @@ if(0) {
 	ctx.lineWidth = 1;
 }
 
-	let prior={x:500+values.sun_position.x+values.Orbit*values.Scale,y:values.sun_position.y+500
-				, dx:0.15+values.VPX,dy:-3.69+values.VP
+	const fdown = rel.freqShift2( Math.PI/2, 0, values.Velocity, values.C );
+	let prior={x:500+values.sun_position.x,y:values.sun_position.y+500+values.Orbit*values.Scale*fdown
+				, dx:0+values.VP,dy:0+values.VPX
 				, ddx:0, ddy:0 };
 
-	for( let t = 0; t < Math.PI*2*5; t += Math.PI/60 ) {
+				ctx.moveTo( 0, 500+fdown*values.Orbit*values.Scale );
+				ctx.lineTo( 1000, 500+fdown*values.Orbit*values.Scale );
+		ctx.stroke();
+		ctx.fillRect( prior.x-4, prior.y-4, 9, 9 );
+				if(0)
+
+		
+				for( let x = 0; x < 10; x++ ) {
+		ctx.moveTo( 500+x*fdown*10, 500 );
+		ctx.lineTo( 500+x*fdown*10, 700 );
+		ctx.stroke();
+	}
+
+	for( let t = 0; t < Math.PI*2*50; t += Math.PI/60 ) {
 		const abf = rel.aberration_angle_from_angles( t, 0, values.Velocity, values.C );
 		const ab2f = rel.aberration_angle_from_angles( t+Math.PI/60, 0, values.Velocity, values.C );
 
@@ -421,13 +436,13 @@ if(0) {
 		const delp = Math.sqrt( delpx*delpx+delpy*delpy );
 		//const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp)) * values.Scale*0.1;
 		//const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp))*values.Scale*0.1;
-		const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit)) * values.Scale*0.1;
-		const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit))*values.Scale*0.1;
+		const x2 = Math.cos( Math.PI+a ) * 1/(/*(1/fat*values.Orbit)**/(1/fat*values.Orbit)) * values.Scale*0.1;
+		const y2 = Math.sin( Math.PI+a ) * 1/(/*(1/fat*values.Orbit)**/(1/fat*values.Orbit))*values.Scale*0.1;
 
 		ctx.beginPath();
 		ctx.strokeStyle = "green";
-		ctx.moveTo( (t)*30, 0 );
-		ctx.lineTo( (t)*30, delp*100*4 );
+		ctx.moveTo( (t)*30/10, 0 );
+		ctx.lineTo( (t)*30/10, delp*100 );
 		ctx.stroke();
 
 		ctx.beginPath();
@@ -436,13 +451,14 @@ if(0) {
 		ctx.moveTo( 0, 400 );
 		ctx.lineTo( 1000, 400 );
 		ctx.stroke();
-
+if(0) {
 		ctx.beginPath();
 		ctx.lineWidth=1;
 		ctx.strokeStyle = "blue";
-		ctx.moveTo( t*30+1, 0 );
-		ctx.lineTo( t*30+1, values.Orbit * 100*5 / fat );
+		ctx.moveTo( t*30/10+1, 0 );
+		ctx.lineTo( t*30/10+1, values.Orbit * 100*5 / fat );
 		ctx.stroke();
+}
 
 		const heredx = prior.dx + x2  /(values.G*10000);
 		const heredy = prior.dy + y2 /(values.G*10000);
@@ -468,7 +484,7 @@ if(0) {
 			ctx.stroke();
 }
 
-if(1) {
+if(0) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
 			ctx.moveTo( prior.x, prior.y );
@@ -488,8 +504,8 @@ if(1) {
 
 			ctx.beginPath();
 			ctx.strokeStyle = "purple";
-			ctx.moveTo( prior.x, prior.y );
-			ctx.lineTo( herex, herey );
+			ctx.moveTo( (prior.x-500-values.sun_position.x)*lengthContract+500+values.sun_position.x, prior.y );
+			ctx.lineTo( (herex-500-values.sun_position.x)*lengthContract+500+values.sun_position.x, herey );
 			ctx.stroke();
 
 			prior.x = herex;
