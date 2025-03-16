@@ -224,8 +224,8 @@ addSpan( "Orbit Velocity", 400, 0.4, 0, 1/100, "OrbitVelocity" );
 addSpan( "SunSize", 400, 0.060, 0, 1/100, "SunSize" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 addSpan( "G", 10000, 0.018, 0.00001, 1/500, "G" );
-addSpan( "VPlanet", 1000, 18.2, -100, 1/5, "VP" );
-addSpan( "VPlanetX", 1000, 4.98, -10, 1/50, "VPX" );
+addSpan( "VPlanet", 1000, 19, -100, 1/5, "VP" );
+addSpan( "VPlanetX", 1000, 5.18, -10, 1/50, "VPX" );
 
 //const sunSize = 0.5;
 const planetSize = 0.1;
@@ -436,8 +436,8 @@ if(0) {
 		const delp = Math.sqrt( delpx*delpx+delpy*delpy );
 		//const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp)) * values.Scale*0.1;
 		//const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp))*values.Scale*0.1;
-		const x2 = Math.cos( Math.PI+a ) * 1/(/*(1/fat*values.Orbit)**/(1/fat*values.Orbit)) * values.Scale*0.1;
-		const y2 = Math.sin( Math.PI+a ) * 1/(/*(1/fat*values.Orbit)**/(1/fat*values.Orbit))*values.Scale*0.1;
+		const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit)) * values.Scale*0.1;
+		const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit))*values.Scale*0.1;
 
 		ctx.beginPath();
 		ctx.strokeStyle = "green";
