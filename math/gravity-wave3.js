@@ -224,8 +224,8 @@ addSpan( "Orbit Velocity", 400, 0.4, 0, 1/100, "OrbitVelocity" );
 addSpan( "SunSize", 400, 0.060, 0, 1/100, "SunSize" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 addSpan( "G", 10000, 0.018, 0.00001, 1/500, "G" );
-addSpan( "VPlanet", 1000, 5.8, -100, 1/5, "VP" );
-addSpan( "VPlanetX", 1000, 0.140, -10, 1/50, "VPX" );
+addSpan( "VPlanet", 1000, 17.6, -100, 1/5, "VP" );
+addSpan( "VPlanetX", 1000, 1.340, -10, 1/50, "VPX" );
 
 //const sunSize = 0.5;
 const planetSize = 0.1;
@@ -317,6 +317,21 @@ function update() {
 		draw();
 }
 
+function getAngle(x, y) {
+	// Use Math.atan2 to get the angle in radians
+	let angleRad = Math.atan2(-y, x);
+  
+	// Convert radians to degrees
+	
+	// Normalize the angle to be within the range [0, 360)
+	if (angleRad < 0) {
+	  angleRad += Math.PI*2;
+	}
+  
+	return angleRad;
+  }
+
+
 function draw() {
 	displace( values.Now );
 	ctx.clearRect( 0, 0, canvas.width, canvas.height );
@@ -365,12 +380,20 @@ function draw() {
 	ctx.beginPath();
 	ctx.strokeStyle = "green";
 	ctx.lineWidth = 3;
+
+	ctx.moveTo( 500 + values.sun_position.x, 500 + values.sun_position.y );
+	ctx.lineTo( 500 + values.sun_position.x + values.Scale * Math.cos( rel.aberration_angle_from_angles( Math.PI/2,0,values.Velocity, values.C ) - values.Direction )
+				,500 + values.sun_position.y + values.Scale * Math.sin( rel.aberration_angle_from_angles( Math.PI/2,0,values.Velocity, values.C ) - values.Direction )
+				)
+
+		ctx.stroke();
 	for( let t = 0; t < Math.PI*2; t += Math.PI/60 ) {
-		const abf = rel.aberration_angle_from_angles( t, 0, values.Velocity, values.C );
-		const ab = rel.aberration_inverse_angle( t, 0, values.Velocity, values.C );
-		const f = rel.freqShift2( ab, 0,- values.Velocity, values.C );
-		const x = 500+values.sun_position.x+ Math.cos( t - values.Direction) * values.Orbit*f* values.Scale;
-		const y = 500+values.sun_position.y+Math.sin( t - values.Direction) * values.Orbit*f*values.Scale;
+		// wide angles behind velocity, narrow in front
+		const ab = rel.aberration_angle_from_angles( t, 0, values.Velocity, values.C );
+		// frequency is just the shift along some angle.
+		const f = rel.freqShift2( ab, 0,- values.Velocity, values.C )/lengthContract;
+		const x = 500+values.sun_position.x+ Math.cos( ab - values.Direction) * values.Orbit*f* values.Scale;
+		const y = 500+values.sun_position.y+Math.sin( ab - values.Direction) * values.Orbit*f*values.Scale;
 
 		if( x < 0 || x >= (canvas.width-1)) continue;
 		if( y < 0 || y >= (canvas.height-1) ) continue;
@@ -403,13 +426,14 @@ if(0) {
 }
 
 	const fdown = rel.freqShift2( Math.PI/2, 0, values.Velocity, values.C );
-
-	//const ab = rel.aberration_inverse_angle( 0, 0, values.Velocity, values.C );
-	const fp = rel.freqShift2( 0, 0,-values.Velocity, values.C )/lengthContract;
-
-	let prior={x:500+values.sun_position.x+fp*values.Orbit*values.Scale,y:values.sun_position.y+500
+	let prior={ x:500+values.sun_position.x 
+			   	+ values.Orbit*values.Scale*Math.cos( rel.aberration_angle_from_angles( Math.PI/2,0,values.Velocity, values.C ))
+			   , y:values.sun_position.y+500+values.Orbit*values.Scale*fdown
 				, dx:0+values.VPX,dy:0+values.VP
 				, ddx:0, ddy:0 };
+
+	prior.x = 500+values.sun_position.x + values.Orbit*values.Scale;
+	prior.y = 500+values.sun_position.y;
 
 				ctx.moveTo( 0, 500+fdown*values.Orbit*values.Scale );
 				ctx.lineTo( 1000, 500+fdown*values.Orbit*values.Scale );
@@ -424,30 +448,53 @@ if(0) {
 		ctx.stroke();
 	}
 
-	for( let t = 0; t < Math.PI*2*50; t += Math.PI/60 ) {
+	for( let t = 0; t < Math.PI*2*4; t += Math.PI/60 ) {
 		const abf = rel.aberration_angle_from_angles( t, 0, values.Velocity, values.C );
 		const ab2f = rel.aberration_angle_from_angles( t+Math.PI/60, 0, values.Velocity, values.C );
+		const ab1f = rel.aberration_angle_from_angles( t-Math.PI/60, 0, values.Velocity, values.C );
 
-		const f = rel.freqShift2( abf, 0, values.Velocity, values.C );
-		const x = Math.cos( abf ) * 1/((1/f*values.Orbit)*(1/f*values.Orbit)) * values.Scale*0.1;
-		const y = Math.sin( abf ) * 1/((1/f*values.Orbit)*(1/f*values.Orbit))*values.Scale*0.1;
+		const f = rel.freqShift2( abf, 0, values.Velocity, values.C )/lengthContract;
+		const x = -Math.cos( abf ) * 1/((f*values.Orbit)*(f*values.Orbit)) * values.Scale*0.1;
+		const y = -Math.sin( abf ) * 1/((f*values.Orbit)*(f*values.Orbit))*values.Scale*0.1;
 
-		const a = Math.atan2( prior.y-(500+values.sun_position.y), prior.x-(values.sun_position.x+500) );
-		const abf2 = rel.aberration_angle_from_angles( a, 0, values.Velocity, values.C );
-		const fat = rel.freqShift2( a, 0, values.Velocity, values.C );
+		const a = Math.PI-getAngle( prior.x-(500+values.sun_position.x), prior.y-(values.sun_position.y+500) );
+
+		//const abf2 = rel.aberration_angle_from_angles( a, 0, values.Velocity, values.C );
+		const fat = rel.freqShift2( a, 0, values.Velocity, values.C )/lengthContract;
 		const delpx = (prior.x-(500+values.sun_position.x))/values.Scale;
 		const delpy = (prior.y-(500+values.sun_position.y))/values.Scale;
 		const delp = Math.sqrt( delpx*delpx+delpy*delpy );
 		//const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp)) * values.Scale*0.1;
 		//const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*delp)*(1/fat*delp))*values.Scale*0.1;
-		const x2 = Math.cos( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit)) * values.Scale*0.1;
-		const y2 = Math.sin( Math.PI+a ) * 1/((1/fat*values.Orbit)*(1/fat*values.Orbit))*values.Scale*0.1;
+		const x2 = Math.cos( a ) * 1/((1/fat*delp)*(1/fat*delp)) * values.Scale*0.1;
+		const y2 = Math.sin( a ) * 1/((1/fat*delp)*(1/fat*delp)) * values.Scale*0.1;
 
+		const area = (ab2f-abf)*f*f/2 * 10000;
+		const ab = rel.aberration_inverse_angle( t, 0, values.Velocity, values.C );
+		const areax = Math.sqrt(prior.x*prior.x+prior.y*prior.y)/(rel.freqShift2( ab, 0,- values.Velocity, values.C )/lengthContract);
+		ctx.beginPath();
+		ctx.strokeStyle = "pink";
+		ctx.moveTo( (t)*30/10, 1000 );
+		ctx.lineTo( (t)*30/10, 1000-area*0.1 );
+		ctx.stroke();
+
+		if(0) {
+			// keplar wedges
+			ctx.moveTo( 500+values.sun_position.x+ (values.Orbit)/(ab2f-ab1f)/2*Math.cos(abf)*values.Scale/4.75, 500+values.sun_position.y+ (values.Orbit)/(ab2f-ab1f)/2*Math.sin(abf)*values.Scale/4.75 );
+			ctx.lineTo( 500+values.sun_position.x+ (values.Orbit/0.650)/(ab2f-ab1f)/2*Math.cos(abf)*values.Scale/300, 500+values.sun_position.y + (values.Orbit/0.650)/(ab2f-ab1f)/2*Math.sin(abf)*values.Scale/300 );
+			ctx.stroke();
+		}
+
+		if(0) {
 		ctx.beginPath();
 		ctx.strokeStyle = "green";
 		ctx.moveTo( (t)*30/10, 0 );
-		ctx.lineTo( (t)*30/10, delp*100 );
+		ctx.lineTo( (t)*30/10, fat*delp*100 );
 		ctx.stroke();
+		ctx.moveTo( 500+Math.cos(abf)*100*f, 500+Math.sin(abf)*100 *f);
+		ctx.lineTo( 500+Math.cos(abf)*300*f, 500+Math.sin(abf)*300*f );
+		ctx.stroke();
+		}
 
 		ctx.beginPath();
 		ctx.strokeStyle = "green";
@@ -464,10 +511,10 @@ if(0) {
 		ctx.stroke();
 }
 
-		const heredx = prior.dx + x2  /(values.G*10000);
-		const heredy = prior.dy + y2 /(values.G*10000);
-		prior.ddx = x2;
-		prior.ddy = y2;
+		const heredx = prior.dx + x  /(values.G*100);
+		const heredy = prior.dy + y /(values.G*100);
+		prior.ddx = x;
+		prior.ddy = y;
 		const herex = prior.x + heredx;
 		const herey = prior.y + heredy;
 		// x * f = x'
@@ -488,14 +535,14 @@ if(0) {
 			ctx.stroke();
 }
 
-if(0) {
+if(1) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
 			ctx.moveTo( prior.x, prior.y );
 			//ctx.lineTo( prior.x+prior.dx*values.Scale/20, prior.x+prior.dy*values.Scale/20 );
 			ctx.lineTo( prior.x+(heredx-prior.dx)*values.Scale*0.2, prior.y+(heredy-prior.dy)*values.Scale*0.2 );
 			ctx.stroke();
-
+	if(0) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
 			ctx.moveTo( t*30+2
@@ -503,6 +550,7 @@ if(0) {
 			ctx.lineTo( t*30+2
 						, 1/((1/fat*values.Orbit)*(1/fat*values.Orbit))*100);//Math.sqrt(((heredx-prior.dx)*(heredx-prior.dx)+(heredy-prior.dy)*(heredy-prior.dy)))*500 );
 			ctx.stroke();
+	}
 	
 }
 
@@ -767,9 +815,13 @@ if(0) {
 		ctx.ellipse( 500 + values.sun_position.x, 500 + values.sun_position.y, values.SunSize*values.Scale/3*lengthContract, values.SunSize*values.Scale/3, -values.Direction, 0, Math.PI*2 );
 		//ctx.arc( 500 + values.sun_position.x, 500 + values.sun_position.y, values.SunSize*values.Scale/3, 0, Math.PI*2 );
 		ctx.fill();
-		if(0) // draw metric around sun
+		if(0)
 		for( let r = 0; r < 2; r+= 0.1) {
 			ctx.arc( 500 + values.sun_position.x-r*values.Velocity*values.Scale, 500 + values.sun_position.y, values.Scale*r, 0, Math.PI*2 );
+			ctx.stroke();
+		}
+		for( let r = 0; r < 2; r+= 0.1) {
+			ctx.arc( 500 + values.sun_position.x, 500 + values.sun_position.y, values.Scale*r, 0, Math.PI*2 );
 			ctx.stroke();
 		}
 
