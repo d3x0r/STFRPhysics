@@ -226,6 +226,8 @@ addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
 addSpan( "G", 10000, 0.347, 0.00001, 1/5000, "G" );
 addSpan( "VPlanet", 1000, 14.6, -100, 1/5, "VP" );
 addSpan( "VPlanetX", 1000, 0.400, -10, 1/50, "VPX" );
+addSpan( "XPlanet", 1000, 0, -100, 1/5, "XP" );
+addSpan( "XPlanetX", 1000, 0, -100, 1/5, "XPX" );
 addSpan( "Ticks", 2000, 1, 0, 1/100, "Ticks" );
 
 //const sunSize = 0.5;
@@ -464,12 +466,12 @@ if(0) {
 				+ values.Orbit*values.Scale*fright
 			   , y:values.sun_position.y+500
 			   		//+values.Orbit*values.Scale*fdown
-				, dx:0+values.VPX,dy:0+values.VP
+				, dx:Math.sqrt(10*values.G/values.Orbit)*values.VPX,dy:Math.sqrt(values.G/values.Orbit) * values.VP
 				, ddx:0, ddy:0 };
 
 		
-	prior.x = 500+values.sun_position.x + values.Orbit*fright*values.Scale  + ( fright*values.Scale*0.1)  /(values.G*100) ;
-	prior.y = 500+values.sun_position.y ;
+	prior.x = values.XPX + 500+values.sun_position.x + values.Orbit*fright*values.Scale  + ( fright*values.Scale*0.1)  /(values.G*100) ;
+	prior.y = values.XP  + 500+values.sun_position.y ;
 
 
 				ctx.moveTo( prior.x, 0);
@@ -493,13 +495,14 @@ if(0) {
 		const ab1f = rel.aberration_angle_from_angles( t-Math.PI/60, 0, values.Velocity, values.C );
 
 		const f = rel.freqShift2( abf, 0, values.Velocity, values.C )/lengthContract;
-		const x = -Math.cos( abf ) * f * values.Scale*0.1;
-		const y = -Math.sin( abf ) * f*values.Scale*0.1;
+		const x = -Math.cos( abf ) * f * values.Scale*0.1*(values.Orbit)  *(values.G/30);
+		const y = -Math.sin( abf ) * f * values.Scale*0.1*(values.Orbit)  *(values.G/30);
 		const alen = ( f*values.Scale*0.1)  /(values.G*100);
 		ctx.moveTo( 700, 500 );
-		ctx.lineTo( 700+x, 500+y );
+		ctx.lineTo( 700+x*100, 500+y*100 );
 		ctx.stroke();
 		
+		// V = √(GM/r),
 // time is an inverse frequency shift
 /*		
 ctx.moveTo( 700, 500 );
@@ -620,8 +623,8 @@ if(0) {
 		ctx.lineTo( t*30/10+1, values.Orbit * 100*5 / fat );
 		ctx.stroke();
 }
-		const heredx = prior.dx + x  /(values.G*100);//*(( abf-ab1f < 0 )?Math.PI*2:0+abf-ab1f); // time of arc is scaled
-		const heredy = prior.dy + y /(values.G*100);//*(( abf-ab1f < 0 )?Math.PI*2:0+abf-ab1f);  // time of arc is scaled
+		const heredx = prior.dx + x;//*(( abf-ab1f < 0 )?Math.PI*2:0+abf-ab1f); // time of arc is scaled
+		const heredy = prior.dy + y;//*(( abf-ab1f < 0 )?Math.PI*2:0+abf-ab1f);  // time of arc is scaled
 		prior.ddx = x;
 		prior.ddy = y;
 		const herex = prior.x + heredx;
