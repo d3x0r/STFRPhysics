@@ -216,16 +216,16 @@ if(0)
 // orbit 0.4 
 
 addSpan( "C", 1000, 1, 0, 2/1000, "C" );
-addSpan( "Light Second Length", 1000, 573, 0, 1, "Scale" );
+addSpan( "Light Second Length", 1000, 480, 0, 1, "Scale" );
 addSpan( "Velocity", 1000, 0.634, 0, 2/1000, "Velocity" );
 addSpan( "Direction", 1000, 0, 0, (Math.PI*2)/1000, "Direction", (val)=>(val/Math.PI).toFixed(3)+"pi" );
-addSpan( "Orbit", 400, 0.65, 0, 1/100, "Orbit" );
+addSpan( "Orbit", 400, 0.59, 0, 1/100, "Orbit" );
 addSpan( "Orbit Velocity", 400, 0.4, 0, 1/100, "OrbitVelocity" );
 addSpan( "SunSize", 400, 0.060, 0, 1/100, "SunSize" );
 addSpan( "Now", 1000, -1, -runT/2, runT/1000, "Now" );
-addSpan( "G", 10000, 0.347, 0.00001, 1/5000, "G" );
-addSpan( "VPlanet", 1000, 14.6, -100, 1/5, "VP" );
-addSpan( "VPlanetX", 1000, 0.400, -10, 1/50, "VPX" );
+addSpan( "G", 10000, 1.261, 0.00001, 1/5000, "G" );
+addSpan( "VPlanet", 1000, 7.2, -100, 1/5, "VP" );
+addSpan( "VPlanetX", 1000, 0.060, -10, 1/50, "VPX" );
 addSpan( "XPlanet", 1000, 0, -100, 1/5, "XP" );
 addSpan( "XPlanetX", 1000, 0, -100, 1/5, "XPX" );
 addSpan( "Ticks", 2000, 1, 0, 1/100, "Ticks" );
