@@ -347,9 +347,19 @@ controls.appendChild( spanChkContract );
 
 const chkLblContract = document.createElement( "input" );
 chkLblContract.setAttribute( "type", "checkbox" );
-chkLblContract.checked = animate;
+chkLblContract.checked = true;
 spanChkContract.appendChild( chkLblContract );
 chkLblContract.addEventListener( "input", update );
+
+const spanChkContractSep = document.createElement( "label" );
+spanChkContractSep.textContent = "Length Contract Separation";
+controls.appendChild( spanChkContractSep );
+
+const chkLblContractSep = document.createElement( "input" );
+chkLblContractSep.setAttribute( "type", "checkbox" );
+chkLblContractSep.checked = true;
+spanChkContractSep.appendChild( chkLblContractSep );
+chkLblContractSep.addEventListener( "input", update );
 
 const spanChkShowDelay = document.createElement( "label" );
 spanChkShowDelay.textContent = "Show Delay";
@@ -815,7 +825,7 @@ function update( evt ) {
 	Z = (Number(sliderZ.value)/100);
 	spanZ.textContent = Z.toFixed(3);
 
-	const posContract = contract( D2, D );
+	const posContract = chkLblContractSep.checked?contract( D2, D ):{x:D2,y:D};
 	//D = posContract.y;
 	spanD.textContent = posContract.y.toFixed(3);//D.toFixed(3) ;
 	spanD2.textContent = posContract.x.toFixed(3);//D2.toFixed(3);
@@ -1046,7 +1056,7 @@ if( Math.abs(frame.T_start- now) <= runT/ (2*nFrames)) {
 	centerBox( frame.Pc.x-ca*V*(frame.T_see_c-now), 500+(frame.Pc.y-sa*V*(frame.T_see_c-now))*xscale, true );
 	centerBoxXY( 500 + frame.Po.x*xscale, 500+frame.Po.y*xscale, true );
 
-		const pcont = contract( D2, D );
+		const pcont = chkLblContractSep.checked?contract( D2, D ):{x:D2,y:D};
 	const curx = ca*V*now+ pcont.x;
 	const cury =  sa*V*now+pcont.y;
 	for( let n = -20; n <= 20; n++ ) {
