@@ -106,7 +106,9 @@ function pick4(){
 // pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
 const pick = pick2;  
 
-                                                 
+const threshold = 1;
+const decay = 0.5;
+const settle = 0.1;
 
 function getStateByChance( axis ) {    
 	let s = 0;
@@ -127,44 +129,68 @@ function getStateByChance( axis ) {
 }
 
 	const ax2 = [0,0,0];
-function getState( axis ) {    
+let det1 = 0;
+let det2 = 0;
+let det3 = 0;
+function getState( axis ) {   
+// 0 = pass -- +
+// 1 = pass 1--
+// 2 = pass -1-
+// 3 = pass 11- // both, but not third vertical
+// 4 = pass --1
+// 5 = pass 1-1
+// 6 = pass -11
+// 7 = pass 111 // both and a third vertical
 	let s = 0;
 	let newAngle;
-	if( Math.abs(axis[0]*axis1[0]) >= 0.707 ) {
+	det1 += Math.abs(axis[0]) ;
+
+	if( det1 >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
 		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
+		det1 -= threshold;
 		s += 1;
+		// pass 1
 		newAngle = (((Math.random()*2)-1) * Math.PI/4);
 	}else{
+		det2 *= decay;
+		//det1 *= decay;
 		// if it didn't pass 45 degrees, then it rotated right.
-// 0 and 2 are blocked events (or would-have)
+		// 0 and 2 are blocked events (or would-have)
 		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
 		newAngle = Math.PI/2 + (((Math.random()*2)-1) * Math.PI/4);
 	}
 	ax2[0] = Math.cos( newAngle );
 	ax2[1] = Math.sin( newAngle );
 // if s=0, this should be no result; but we rectify it anyway and use it against the second.
-	if( Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
-		//choices_d[2] += Math.sin( Math.PI/4*(1+(axis[0]*axis2[0]+axis[1]*axis2[1])) );
+	det2 += Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1]));
+
+	if( det2 >= threshold ) { //Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
+		det2-=threshold;
+		// passed filter 2.  3, 7 are pass both
 		s += 2;
 		newAngle = axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
 	} else {
+		det2 = det2*decay - settle;
 		//choices_d[3] += Math.sin( Math.PI/4*(1+(axis[0]*axis2[0]+axis[1]*axis2[1])) );
 		newAngle = Math.PI/2 + axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
 	}
-
+return s;
 	ax2[0] = Math.cos( newAngle );
 	ax2[1] = Math.sin( newAngle );
 
-	if( Math.abs(ax2[1]*axis1[0]) >= 0.707 ) {
+	det3 += Math.abs(ax2[0]);
+	if( det3 >= threshold ) { //Math.abs(ax2[0]*axis1[0]) >= 0.707 ) {
+		// 4 is that it was a negative match.
 		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
+		det3 -=threshold;
 		s += 4;
 	}else{
+		det3 *= decay;
 		// if it didn't pass 45 degrees, then it rotated right.
-// 0 and 2 are blocked events (or would-have)
 		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
 	}
 
-        return s;
+	return s;
 }
 
 
@@ -173,9 +199,9 @@ function test1() {
 	for( i = 0; i < 8; i++ ) { choices[i] = 0; choices_d[i] = 0; }
 
 	for( i = 0; i < testSize; i++ ) {
-        	const s = getState( pick() );
-                choices[s]++;
-        }
+		const s = getState( pick() );
+		choices[s]++;
+	}
 
 	return choices;	
 
@@ -347,10 +373,10 @@ if( c[1])
 	for( ; ang <= 180; ang++ ) {
 		if( (Date.now() -now) > 30 ) break;
         	const xpos = (ang + 180)/360 * 1020 + 2;
-		axis2_angle = ang/180*Math.PI;
-                axis2[0] = Math.cos( axis2_angle );
-                axis2[1] = Math.sin( axis2_angle );
-                const valArr = test1();//getState( axis2 );
+			axis2_angle = ang/180*Math.PI;
+			axis2[0] = Math.cos( axis2_angle );
+			axis2[1] = Math.sin( axis2_angle );
+			const valArr = test1();//getState( axis2 );
 
                 //const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
@@ -413,7 +439,9 @@ a = 1/(2-cos(x))
 			// math that works.
 			if( val < 0 ) val /=(valArr[1]);
 			else  val /=(valArr[3]);
-			val = (val+1)/2;
+
+
+			val = ((valArr[3])/(testSize/2));//(val+1)/2;
 		}
 		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
 
@@ -425,8 +453,9 @@ a = 1/(2-cos(x))
                 //console.log( "Test:", ang, axis2_angle /Math.PI*180, valArr,  (valArr[3]+valArr[1]), (valArr[3]), val );
                 //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
 	
-                const ypos = 1024-(val * 1024);
-                    //if( ang === 45 ) debugger;
+		const ypos = 1024-(val * 1024);
+
+		//if( ang === 45 ) debugger;
 		const val2 = Math.cos( ang/180*Math.PI )*Math.cos( ang/180*Math.PI );
 		const ypos_b = 1024-(val2 * 1024);
 
@@ -471,34 +500,34 @@ a = 1/(2-cos(x))
 			line( xpos, 0, xpos, 1024, [0,0,0,255] );
 		}
 		
-                if( prior_x > 0 ) {
+		if( prior_x > 0 ) {
 			line( prior_x, prior_y, xpos, ypos, pens[2] );
 		
-                	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
+       	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
 
-                	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
+//       	line( prior_x_d, prior_y_d, xpos, ypos_d, pens[2] );
 
-                	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
-                	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
+       	line( prior_x_e, prior_y_e, xpos, ypos_e, pens[0] );
+       	line( prior_x_ed, prior_y_ed, xpos, ypos_ed, pens[0] );
 
 		//	ctx.putImageData(_output, 0,0);
 
-                }
-                prior_x = xpos;
-                prior_y = ypos;
+      }
+      prior_x = xpos;
+      prior_y = ypos;
 
-                prior_x_b = xpos;
-                prior_y_b = ypos_b;
+      prior_x_b = xpos;
+      prior_y_b = ypos_b;
 
-                prior_x_d = xpos;
-                prior_y_d = ypos_d;
+      prior_x_d = xpos;
+      prior_y_d = ypos_d;
 		
-                prior_x_e = xpos;
-                prior_y_e = ypos_e;
+      prior_x_e = xpos;
+      prior_y_e = ypos_e;
 
-                prior_x_ed = xpos;
-                prior_y_ed = ypos_ed;
-        }
+      prior_x_ed = xpos;
+      prior_y_ed = ypos_ed;
+	}
 	if( ang > 180 ) drawing = false;
 	
 
