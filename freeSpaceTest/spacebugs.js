@@ -16,6 +16,7 @@ import {Motion} from "../3d/src/three.js/personalFill.mjs"
 //import {popups} from "../node_modules/@d3x0r/popups/popups.mjs"
 
 
+import { LineGeometry } from '../3d/src/three.js/LineGeometry.js'
 
 import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
 import {lnQuat} from "../3d/src/lnQuatSq.js"
@@ -553,11 +554,9 @@ function addDipoles() {
 			color: 0x0000ff
 		});
 	        
-		var geometry = new THREE.Geometry();
-		geometry.vertices.push(
-			new THREE.Vector3( 0, 0, 0 ),
-			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
-		);
+		var geometry = new LineGeometry();
+		geometry.setPositions( [0,0,0,m.rotation.x*2,m.rotation.y*2,m.rotation.z*2] )
+
 	        
 		var line = new THREE.Line( geometry, material );
 		line.matrixAutoUpdate = true;
@@ -573,11 +572,8 @@ function addDipoles() {
 			color: 0x00FF00
 		});
 		
-		geometry = new THREE.Geometry();
-		geometry.vertices.push(
-			new THREE.Vector3( 0, 0, 0 ),
-			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
-		);
+		geometry = new LineGeometry ();
+		geometry.setPositions( [0,0,0,m.rotation.x*2,m.rotation.y*2,m.rotation.z*2] )
 	        
 		var line2 = new THREE.Line( geometry, material2 );
 		line2.matrixAutoUpdate = true;
@@ -591,11 +587,8 @@ function addDipoles() {
 			color: 0xff0000
 		});
 		
-		geometry = new THREE.Geometry();
-		geometry.vertices.push(
-			new THREE.Vector3( 0, 0, 0 ),
-			new THREE.Vector3( m.rotation.x*2, m.rotation.y*2, m.rotation.z*2 )
-		);
+		geometry = new LineGeometry();
+		geometry.setPositions( [0,0,0,m.rotation.x*2,m.rotation.y*2,m.rotation.z*2] )	
 	        
 		var line3 = new THREE.Line( geometry, material3 );
 		line3.matrixAutoUpdate = true;
@@ -1025,22 +1018,21 @@ function animate() {
 
 		//const newDir3 = motion.tmpDir;
 		if( newDir ) {
-
-			dirLine.geometry.vertices[1].x = newDir.x*5;
-			dirLine.geometry.vertices[1].y = newDir.y*5;
-			dirLine.geometry.vertices[1].z = newDir.z*5;
+			dirLine.geometry.attributes.position.setXYZ( 1, newDir.x*5, newDir.y*5, newDir.z*5 );
 			dirLine.position.copy( m.position );
 		}
 		if( newDir2 ) {
-			dirLine2.geometry.vertices[1].x = newDir2.nx*5;
-			dirLine2.geometry.vertices[1].y = newDir2.ny*5;
-			dirLine2.geometry.vertices[1].z = newDir2.nz*5;
+			dirLine2.geometry.attributes.position.setXYZ( 1, newDir2.x*5, newDir2.y*5, newDir2.z*5 );
+			//dirLine2.geometry.vertices[1].x = newDir2.nx*5;
+			//dirLine2.geometry.vertices[1].y = newDir2.ny*5;
+			//dirLine2.geometry.vertices[1].z = newDir2.nz*5;
 			dirLine2.position.copy( m.position );
 		}
 		if( newDir3 ) {
-			dirLine3.geometry.vertices[1].x = newDir3.nx*5;
-			dirLine3.geometry.vertices[1].y = newDir3.ny*5;
-			dirLine3.geometry.vertices[1].z = newDir3.nz*5;
+			dirLine3.geometry.attributes.position.setXYZ( 1, newDir3.x*5, newDir3.y*5, newDir3.z*5 );
+			//dirLine3.geometry.vertices[1].x = newDir3.nx*5;
+			//dirLine3.geometry.vertices[1].y = newDir3.ny*5;
+			//dirLine3.geometry.vertices[1].z = newDir3.nz*5;
 			dirLine3.position.copy( m.position );
 		}
 

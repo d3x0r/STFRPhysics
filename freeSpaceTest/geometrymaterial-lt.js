@@ -322,7 +322,6 @@ fragmentShader:`
 
     	#include <premultiplied_alpha_fragment>
     	#include <tonemapping_fragment>
-    	#include <encodings_fragment>
     	#include <fog_fragment>
 
     }

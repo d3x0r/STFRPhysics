@@ -19,35 +19,41 @@ export class Skybox{
 	const counters = [0,0,0, 0];
 		for( let s = 0; s < 10000; s++ ) {
 			do{
-			counters[3]++;
-		const r = Math.cos( this.rng() * Math.PI/2 ) * 40000;
-			const a = vertices[s*3+0] = this.rng() * r-r/2;
-			const b = vertices[s*3+1] = this.rng() * r-r/2;
-			const c = vertices[s*3+2] = this.rng() * r-r/2;
-			// it's valid....
-			if( (a*a+b*b+c*c) < 20000*20000 ) {
-				// it's pretty close, and random chance 80% keep it
-				if( (a*a+b*b+c*c) < 2000*2000 )  {
-					// if it's really close, and random chance 90% to keep it
-					if( (a*a+b*b+c*c) < 100*100 ) {
-						if( this.rng() < 0.20 ) {
-							counters[0]++;
-							break;
+				counters[3]++;
+				const r = Math.cos( this.rng() * Math.PI/2 ) * 40000;
+				const a = vertices[s*3+0] = this.rng() * r-r/2;
+				const b = vertices[s*3+1] = this.rng() * r-r/2;
+				const c = vertices[s*3+2] = this.rng() * r-r/2;
+				// it's valid....
+				if( (a*a+b*b+c*c) < 20000*20000 ) {
+					// it's pretty close, and random chance 80% keep it
+					if( (a*a+b*b+c*c) < 2000*2000 )  {
+						// if it's really close, and random chance 90% to keep it
+						if( (a*a+b*b+c*c) < 100*100 ) {
+							if( (a*a+b*b+c*c) < 10*10 ) {
+								if( this.rng() < 0.005 ) {
+									counters[0]++;
+									break;
+								}
+							}else {
+								if( this.rng() < 0.05 ) {
+									counters[0]++;
+									break;
+								}
+							}
+						} else {
+							// medium to keep...
+							if( this.rng() < 0.05 ) {
+								counters[1]++;
+								break;
+							}
 						}
-					} else {
-						// medium to keep...
-						if( this.rng() < 0.05 ) {
-							counters[1]++;
-
-							break;
-}	
+						// distant keep
+					}	else if( this.rng() < 0.004 ) {
+						counters[2]++;
+						break; // otherwise 10% distant....
 					}
-					// distant keep
-				}	else if( this.rng() < 0.004 ) {
-							counters[2]++;
-							break; // otherwise 10% distant....
 				}
-			}
 			//break;
 			} while ( true );
 		}

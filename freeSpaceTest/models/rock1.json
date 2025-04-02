@@ -7,7 +7,7 @@
 	"geometries": [
 		{
 			"uuid": "70D88060-8F09-4924-83C2-A906F2470BDB",
-			"type": "SphereBufferGeometry",
+			"type": "SphereGeometry",
 			"radius": 1.6,
 			"widthSegments": 8,
 			"heightSegments": 6,
@@ -18,7 +18,7 @@
 		},
 		{
 			"uuid": "90A6CE3D-E10C-42D9-B3AA-E59E6C8B39F1",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -28,7 +28,7 @@
 		},
 		{
 			"uuid": "0132E92E-7AF2-45BB-8AC3-FB4E9A43D938",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -38,7 +38,7 @@
 		},
 		{
 			"uuid": "ABE34145-7A9D-40E3-8ADA-16C383B396E2",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -48,7 +48,7 @@
 		},
 		{
 			"uuid": "789AE4D4-9FFE-4253-BD73-4E59890917CF",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -58,7 +58,7 @@
 		},
 		{
 			"uuid": "10587A65-762E-4180-87AB-1866F128459E",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -68,7 +68,7 @@
 		},
 		{
 			"uuid": "7F802596-5668-4BE8-AF94-912902151140",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -78,7 +78,7 @@
 		},
 		{
 			"uuid": "666946F0-A135-4B83-A676-4F400D85B245",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -88,7 +88,7 @@
 		},
 		{
 			"uuid": "77BB1981-9FD5-483B-9711-1111E7E799DE",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -98,7 +98,7 @@
 		},
 		{
 			"uuid": "F48A9A6A-B462-4416-979A-7957E7C924B5",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -108,7 +108,7 @@
 		},
 		{
 			"uuid": "6B7EAD0D-E6C6-4D26-B2E6-3332DF8E0D7B",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,
@@ -118,7 +118,7 @@
 		},
 		{
 			"uuid": "1F07D45E-37E9-4D5A-9FFE-3F74FF133ED1",
-			"type": "BoxBufferGeometry",
+			"type": "BoxGeometry",
 			"width": 1,
 			"height": 1,
 			"depth": 1,

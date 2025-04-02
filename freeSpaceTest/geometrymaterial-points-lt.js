@@ -143,7 +143,7 @@ const defaultParams = {
             mat3 rotmat = mat3( modelViewMatrix );
             vec3 realVel2 = (rotmat *  (speed2*direction2) );
 
-            vec3 abb_pos = aberration( position, -speed2*direction2, -bodyOffset-viewOffset );
+            vec3 abb_pos = aberration( position, -speed2*direction2, -bodyOffset );
             gl_Position = projectionMatrix * modelViewMatrix * vec4( abb_pos, 1.0 );
         } else {
             gl_Position = projectionMatrix * vec4(startPos,1.0)/0.2;
@@ -219,7 +219,6 @@ fragmentShader:`
 
     	#include <premultiplied_alpha_fragment>
     	#include <tonemapping_fragment>
-    	#include <encodings_fragment>
     	#include <fog_fragment>
 
     }
