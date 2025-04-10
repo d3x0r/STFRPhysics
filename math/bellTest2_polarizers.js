@@ -1,9 +1,45 @@
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
-const testSize= 200000;
+const testSize= 2000;
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
+
+const threshold = 1;
+let decay = 0.607;
+let settle = 0.03;
+
+
+const sl1 = document.createElement( "input" )
+sl1.type = "range";
+sl1.min = 0;
+sl1.max = 1000;
+sl1.value = 707;
+//sl1.setAttribute( "min", 0 );
+//sl1.setAttribute( "max", 1000 );
+//sl1.m
+sl1.addEventListener( "change", ()=>{
+	console.log( "Value?", sl1.value );
+	decay = sl1.value/1000;
+drawsomething();
+} );
+document.body.appendChild( sl1 );
+
+const sl2 = document.createElement( "input" )
+sl2.type = "range";
+sl2.min = 0;
+sl2.max = 1000;
+sl2.value = 100;
+//sl2.setAttribute( "min", 0 );
+//sl2.setAttribute( "max", 1000 );
+//sl2.m
+sl2.addEventListener( "change", ()=>{
+	console.log( "Value?", sl2.value );
+	settle = sl2.value/1000;
+drawsomething();
+} );
+document.body.appendChild( sl2 );
+
 
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
@@ -106,9 +142,6 @@ function pick4(){
 // pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
 const pick = pick2;  
 
-const threshold = 1;
-const decay = 0.5;
-const settle = 0.1;
 
 function getStateByChance( axis ) {    
 	let s = 0;
@@ -143,38 +176,32 @@ function getState( axis ) {
 // 7 = pass 111 // both and a third vertical
 	let s = 0;
 	let newAngle;
-	det1 += Math.abs(axis[0]) ;
+	det1 += Math.abs(axis[0]); // first detector is 0 degrees.
 
 	if( det1 >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
 		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
 		det1 -= threshold;
 		s += 1;
-		// pass 1
-		newAngle = (((Math.random()*2)-1) * Math.PI/4);
-	}else{
-		det2 *= decay;
-		//det1 *= decay;
-		// if it didn't pass 45 degrees, then it rotated right.
-		// 0 and 2 are blocked events (or would-have)
-		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
-		newAngle = Math.PI/2 + (((Math.random()*2)-1) * Math.PI/4);
 	}
-	ax2[0] = Math.cos( newAngle );
-	ax2[1] = Math.sin( newAngle );
-// if s=0, this should be no result; but we rectify it anyway and use it against the second.
-	det2 += Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1]));
+	//else 
+	{
+		
+		det1 = det1 * decay-settle;
+   }
+	// second detextor uses the incoming light (axis1) and dot product on current test angle.
+	det2 += Math.abs((axis[0]*axis2[0]+axis[1]*axis2[1]));
 
 	if( det2 >= threshold ) { //Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
 		det2-=threshold;
 		// passed filter 2.  3, 7 are pass both
 		s += 2;
-		newAngle = axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
-	} else {
+	} //       else
+//	else
 		det2 = det2*decay - settle;
-		//choices_d[3] += Math.sin( Math.PI/4*(1+(axis[0]*axis2[0]+axis[1]*axis2[1])) );
-		newAngle = Math.PI/2 + axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
-	}
-return s;
+
+	return s;
+
+
 	ax2[0] = Math.cos( newAngle );
 	ax2[1] = Math.sin( newAngle );
 
