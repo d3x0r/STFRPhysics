@@ -21,7 +21,8 @@ sl1.value = 707;
 sl1.addEventListener( "change", ()=>{
 	console.log( "Value?", sl1.value );
 	decay = sl1.value/1000;
-drawsomething();
+	if( !animating ) drawsomething();
+	else animate_one = true;
 } );
 document.body.appendChild( sl1 );
 
@@ -36,7 +37,8 @@ sl2.value = 100;
 sl2.addEventListener( "change", ()=>{
 	console.log( "Value?", sl2.value );
 	settle = sl2.value/1000;
-drawsomething();
+	if( !animating ) drawsomething();
+	else animate_one = true;
 } );
 document.body.appendChild( sl2 );
 
@@ -44,6 +46,7 @@ document.body.appendChild( sl2 );
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
+const BASE_COLOR_PURPLE = [192,0,192,255];
 const BASE_COLOR_BLUE = [0,0,255,255];
 const BASE_COLOR_YELLOW = [255,255,0,255];
 const BASE_COLOR_GREEN = [0,255,0,255];
@@ -59,10 +62,12 @@ function ColorAverage( a, b, i,m) {
     return c;//`#${(c[0]<16?"0":"")+c[0].toString(16)}${(c[1]<16?"0":"")+c[1].toString(16)}${(c[2]<16?"0":"")+c[2].toString(16)}`
 }
 
-
+let animating = false;
+let animate_one = false;; // animate +1
 const lnQ= new lnQuat();
 
 const choices = [0,0,0,0,0,0,0,0];
+const choices2 = [0,0,0,0,0,0,0,0];
 const choices_d = [0,0,0,0,0,0,0,0];
 
 const axis1 = [1,0,0];
@@ -79,6 +84,7 @@ const axis2_60 = [Math.cos(Math.PI/3),Math.sin(Math.PI/3),0];  // 44%
 const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];  // 90 degrees separation;
 
 let axis2 = axis2_45;
+let lastPick= 0;
 
 const tmp = [0,0,0];
 const tmp2 = [0,0,0];
@@ -97,6 +103,7 @@ function pick2(){
 	let t = Math.random();
         //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
         //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
+	lastPick = t *2*Math.PI;
 	tmp[0] = Math.cos( t * 2*Math.PI );
 	tmp[1] = Math.sin( t * 2*Math.PI );
 	tmp[2] = 0;
@@ -163,7 +170,9 @@ function getStateByChance( axis ) {
 
 	const ax2 = [0,0,0];
 let det1 = 0;
+let det1T = 0;
 let det2 = 0;
+let det2T = 0;
 let det3 = 0;
 function getState( axis ) {   
 // 0 = pass -- +
@@ -221,6 +230,44 @@ function getState( axis ) {
 }
 
 
+// this projects pure states, and is inaccurate to the partial accumulator.
+function getStateAbs( axis ) { 
+	let s = 0;
+
+	if( (lastPick <= Math.PI/4) || (lastPick > Math.PI*3/4 && lastPick <= Math.PI*5/4) || (lastPick > Math.PI*7/4) ) {
+		s += 1;
+	}
+	let testPick = (lastPick + axis2_angle+Math.PI*2)%(Math.PI*2);
+	if( (testPick <= Math.PI/4) || (testPick> Math.PI*3/4 && testPick <= Math.PI*5/4) || (testPick > Math.PI*7/4) ) {
+		s += 2;
+	} //       else
+
+	return s;
+
+}
+
+function getStateTotals( axis ) {
+	let s = 0;
+	det1T += Math.abs(axis[0]); // first detector is 0 degrees.
+
+	if( det1T >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
+		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
+		det1T -= threshold;
+		s += 1;
+	}
+	// second detextor uses the incoming light (axis1) and dot product on current test angle.
+	det2T += Math.abs((axis[0]*axis2[0]+axis[1]*axis2[1]));
+
+	if( det2T >= threshold ) { //Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
+		det2T-=threshold;
+		// passed filter 2.  3, 7 are pass both
+		s += 2;
+	} //       else
+
+	return s;
+
+}
+
 function test1() {
 	let i;
 	for( i = 0; i < 8; i++ ) { choices[i] = 0; choices_d[i] = 0; }
@@ -235,11 +282,25 @@ function test1() {
         //console.log( "choices:", choices, choices.map( c=>(c/i)*Math.log2(c/i) ).reduce( ((acc,val)=>acc+=val),0 )+2, (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
 }
 
+function test2() {
+	let i;
+	for( i = 0; i < 8; i++ ) { choices2[i] = 0;  }
+
+	for( i = 0; i < testSize; i++ ) {
+		const s = getStateTotals( pick() );
+		choices2[s]++;
+	}
+
+	return choices2;	
+
+        //console.log( "choices:", choices, choices.map( c=>(c/i)*Math.log2(c/i) ).reduce( ((acc,val)=>acc+=val),0 )+2, (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
+}
 
 let drawing = false;
 let ang = -180;
         let prior_x = -1;
         let prior_y = -1;
+		let prior_y_abs = -1;
 
         let prior_x_b = -1;
         let prior_y_b = -1;
@@ -254,7 +315,9 @@ let ang = -180;
 
 function drawsomething() {
 
-
+	if( !animating ) {
+		prior_x = -1;
+	}
 	const squareSize = 1024;
 
 	if( !drawing ) {
@@ -405,6 +468,7 @@ if( c[1])
 			axis2[1] = Math.sin( axis2_angle );
 			const valArr = test1();//getState( axis2 );
 
+			const valArrAbs = test2();//getState( axis2 );
                 //const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
@@ -470,6 +534,23 @@ a = 1/(2-cos(x))
 
 			val = ((valArr[3])/(testSize/2));//(val+1)/2;
 		}
+
+
+		let valAbs = (valArrAbs[3]-valArrAbs[1]);
+		if( 0 ) {
+			// required math to score probabilities
+			valAbs /= (valArrAbs[3]+valArrAbs[1]);
+			valAbs = (valAbs+1)/2;
+		}else {
+			// math that works.
+			if( valAbs < 0 ) valAbs /=(valArrAbs[1]);
+			else  valAbs /=(valArrAbs[3]);
+
+
+			valAbs = ((valArrAbs[3])/(testSize/2));//(val+1)/2;
+		}
+	valAbs = (valArrAbs[3])/(valArrAbs[0]+valArrAbs[1]+valArrAbs[2]+valArrAbs[3])
+
 		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
 
 // 3 stackpolarizer result
@@ -481,6 +562,7 @@ a = 1/(2-cos(x))
                 //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
 	
 		const ypos = 1024-(val * 1024);
+		const ypos_abs = 1024-(valAbs * 1024);
 
 		//if( ang === 45 ) debugger;
 		const val2 = Math.cos( ang/180*Math.PI )*Math.cos( ang/180*Math.PI );
@@ -527,7 +609,10 @@ a = 1/(2-cos(x))
 			line( xpos, 0, xpos, 1024, [0,0,0,255] );
 		}
 		
+
+
 		if( prior_x > 0 ) {
+			line( prior_x, prior_y_abs, xpos, ypos_abs, BASE_COLOR_PURPLE );
 			line( prior_x, prior_y, xpos, ypos, pens[2] );
 		
        	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
@@ -542,6 +627,7 @@ a = 1/(2-cos(x))
       }
       prior_x = xpos;
       prior_y = ypos;
+		prior_y_abs = ypos_abs;
 
       prior_x_b = xpos;
       prior_y_b = ypos_b;
@@ -559,7 +645,17 @@ a = 1/(2-cos(x))
 	
 
 	ctx.putImageData(_output, 0,0);
-	if( drawing ) requestAnimationFrame( drawsomething);
+	if( drawing ) {
+		animating = true;
+		requestAnimationFrame( drawsomething);
+	} else {
+		animating = false;
+		if( animate_one ) {
+			animate_one = false;
+			requestAnimationFrame( drawsomething);
+		}
+	}
+
 }
 
 try {
