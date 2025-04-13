@@ -22,6 +22,7 @@ travel time; that is the time a photon travels perpendicular to the
 velocity, that scalar is then applied to the length in the direction of
 the velocity vector.
 
+
 In the following equations, $\vec{V}$ is the velocity of a moving body, to
 determine contraction in the specified direction:
 
@@ -43,7 +44,7 @@ $$\begin{array}{r}
 
 The best-case time is:
 
-<img src="attach/media/image1.png"
+<img src="../attach/media/image1.png"
 style="width:1.90652in;height:1.67732in"
 alt="Figure 1: Graph relating C_L for distance related to velocity and C for velocity related to velocity. Used to show the geometric relation used for calculation T_B." />  
 Figure 1: Graph relating $C_L$ for distance related to

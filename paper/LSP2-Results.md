@@ -28,7 +28,7 @@ plotting points as they would appear from light propagation, length
 contraction, and light aberration in a 2D space-time graph makes the
 graphs very distorted; or in the following case plogging the x-y change
 of a square body that is observed moving.
-<img src="attach/media/image2.png" style="width:7.125in;height:7.125in"
+<img src="../attach/media/image2.png" style="width:7.125in;height:7.125in"
 alt="Figure 2: Distortion of an observed space that is moving at 0.61c for an observer moving at 0.31c. This from this demo. The demonstration program allows " />Figure
 2: Distortion of an observed space that is moving at 0.61c for an
 observer moving at 0.31c. This from [this demo.](#two_space_demo) The
@@ -76,7 +76,7 @@ v_{x} = \left( \sqrt{(VT)^{2} + DD} - \sqrt{DD + \left( V(T - 0.001) \right)^{2}
 
 Give this graph:
 
-<img src="attach/media/image3.jpg"
+<img src="../attach/media/image3.jpg"
 style="width:7.125in;height:1.24687in"
 alt="Figure 3: a constant velocity (V) at an offset distance (D on the Y axis) is shown as the green line, while the relative time to an observer at X=0 is shown in purple. " />  
 Figure 3: a constant velocity (V) at an offset distance (D on the Y
@@ -400,7 +400,7 @@ transformation though, but when scaled with gamma correction factors,
 the results are very close near the slow speed the Earth is moving
 through the universe.
 
-<img src="attach/media/image4.png"
+<img src="../attach/media/image4.png"
 style="width:7.125in;height:5.93333in"
 alt="Example desmos graph from link below" />
 

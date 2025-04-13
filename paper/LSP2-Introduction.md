@@ -130,6 +130,152 @@ aberration](#d-aberration-with-rotation).
     in the following
     equation:$\vec{X'} = \cos(\theta)\vec{X} + \sin(\theta)(\vec{A} \times \vec{X}) + (1 - \cos(\theta)) \cdot (\vec{A} \cdot \vec{X})\vec{A}$
 
+
+## A Thought Experiment
+
+Before diving into [the math](#_Light_Propagation), let me put forth my extended train through experiment.
+
+Consider a somewhat extended thought experiment of an observer named Abe in the center of a train car with an observer by the train named Bonny.  The train car is 2 light-seconds long, which makes the ends of the train 1 light second away from Abe in both directions on each of the ends of the train car are two light emitters.  At the same position as the ends of the train are two light posts 2 light-seconds apart.  Bonny is standing at the midway point between the two light posts, one light is mounted on each of the light posts.  At time zero(0), Abe and Bonny are at their closest distance.  The train car is moving at a speed of 50% of the speed of light and has been moving at that speed even before time zero.  At time zero all 4 lights flash for a moment long enough to be seen; the four lights are the two on the ends of the train and the two on the light posts by the train. 
+
+The lights emit a pulse of light that is a certain frequency of green. Green is specified since it is a frequency between blue and red, blue is a higher frequency than green, and red is a lower frequency.  The terms redshift and blueshift are a shift from green towards blue or red.
+
+The notion of time contraction is ignored, so assume they can both use a clock that is in the frame of the train tracks. 
+
+Abe on the train will see the two flashes from the front of the train and the light post near the front of the train before the two flashes at the back of the train. The time that the flashes from the front of the train are seen is 0.5 seconds. The time that the flashes from the back of the train is 1.5 seconds. The flashes from the front and back of the train will be seen at the exact frequency that was emitted.  The flash from the light post towards the front of the train is seen as blue shifted, and the flash from the light post towards the back of the train is seen as red-shifted.
+
+Bonny by the train will see all four flashes at the same time 1 second after they are emitted.  The flashes from the light posts by the train are seen at exactly the frequency that was emitted.  The flash from the back of the train is seen as blueshifted, and the flash from the front of the train is seen redshifted.
+
+
+
+|          |                 |       |                 |       |
+| -------- | --------------- | ----- | --------------- | ----- |
+| Observer | Lights in Train |       | Lights by Train |       |
+| Front    | Back            | Front | Back            |       |
+| Abe      | green           | green | blue            | red   |
+| Bonny    | red             | blue  | green           | green |
+
+Table 1: summary of frequency shifts by emissions from certain places as seen by each observer.
+
+|          |                 |       |                 |      |
+| -------- | --------------- | ----- | --------------- | ---- |
+| Observer | Lights in Train |       | Lights by Train |      |
+| Front    | Back            | Front | Back            |      |
+| Abe      | 0.5s            | 1.5s  | 0.5s            | 1.5s |
+| Bonny    | 1s              | 1s    | 1s              | 1s   |
+
+Table 2: summary of length of time an observer will see the flashes from the time they are emitted.
+
+
+### Modified Experiment
+
+The other experiment which is more in-line with special relativity, is to replace the emitters in the above thought experiment with mirrors and then give Abe and Bonny each a light emitter.  When the emitter initially fires, it’s assumed there’s essentially 0 distance between Abe and Bonny and the emitter, so they don’t see the initial flash; though it can just note that first, almost instantaneously from the time of emission they see the flash, but it’s the subsequent information from the mirrors that are considered.  The flash from Abe that is seen by Bonny and vice versa are not shifted in frequency; at time 0 when Abe is exactly passing Bonny their relative speed is 0.
+
+The pulses are emitted at the same time, and for the time calculations, which light is used doesn’t matter.  When considering what the frequency of the light is, it matters which emitted light is used.  In the above case, the light only has a single emitter and single observer to consider.  The lights from the train are seen by Abe and Bonny, and the lights from the light posts are seen by Abe and Bonny, and there’s only 4 combinations to consider.  When introducing mirrors, there are 2 emitters and 2 observers along the path to consider and there are a total of 8 combinations to consider below.
+
+Mirrors are both observers and emitters.  An emitter that is moving emits a signal that is blue shifted to the front, and red shifted behind.  One way of looking at it is that a photon is not instantaneously produced but is produced over a small amount of time; when the creation of the photon starts, the emitter is in a certain location, and before completion of the wave the emitter has moved.  The motion of the emitter causes the wave to be compressed if the wave is ahead of the emitter along its velocity, while a wave trailing the emitter is elongated.  An observer or detector moving into a wave sees the wave as more compressed, and is blue shifted, while an observer moving away from a wave sees the wave elongated.  Redshift is associated with elongation, and blueshift is compression.  A mirror that is moving into a wave will blue shift it on the observation side and produce a compressed version when sending it. Conversely, a mirror moving away from a wave will elongate the wave and double redshift the wave.
+
+Abe, on the train, will see the flashes reflected from the mirrors on the train 2.667 seconds after they were emitted, he will see the reflections from the light post at the back of the train 4 seconds after it was emitted, and will see the flashes reflected from the light post at the front of the train 1.333 seconds after the flash, while light from the back light post will be seen after 4 seconds.
+
+The flash will hit the back mirror in the train only 0.667, because in the time the light is travelling, it will then take 2 seconds from the back mirror to get back to Abe. 
+
+The flashes will hit the back mirror on the light post in 1 second, and the train will have moved 0.5 light seconds forward and have a total distance from the mirror to Abe of 1.5 light seconds to cover (while still moving forward).  In the next second, the light will be back at the starting position, and Abe will have moved another 0.5 light seconds, but now the light is only 1 light second from Abe.  In the next second, the light will be where Abe was, and at the front light post, but Abe will have moved another 0.5 light seconds forward and be 0.5 light seconds away from the light.  In the next second, which is a total of 4, the light will finally reach Abe.
+
+The flashes will hit the front light post mirror in 1 second, and still the train will have move 0.5 light seconds forward.  The return over 0.5 light seconds with the train moving at 0.5 light seconds into it is 0.333 seconds, for a total of 1.333 seconds.
+
+Considering the case of Bonny looking at the reflections from the train’s mirrors, the trip times are different.  The flash hits the back mirror in the train in 0.666 seconds, which the train will have moved forward 0.333 light-seconds, and reflect to Bonny another 0.666 seconds, for a total of 1.333 seconds.  The flashes will hit the front mirror of the train in 2 seconds, and the train will have moved forward 1 light second in that time, making the return trip 2 seconds, for a total of 4 seconds.
+
+Abe will see the reflection of his own emitter unshifted in frequency from the mirrors on the train. The initial flash from Abe’s emitter is blue shifted towards the front of the train, and redshifted towards the back. When the mirror receives the light, it will undo the shift and go back to green, but then the front mirror will reflect the blueshifted signal as redshifted, and Abe will be heading into that wave and blue shift the signal back to green. A similar case, but the opposite, will happen with the back mirror.
+
+Abe will see his own emitter reflected from the front light post blue shifted twice, once for the forward motion blue shifting emitted light and again from the reflection of the blue shifted light returning to him that he’s heading into, and from the back light post red shifted twice.  The mirrors are not moving in this case, and so the blue- or redshifted light received is reflected with the same frequency.
+
+Abe will see the reflected light from Bonny’s emitter from the front of the train is red shifted, and the light from the back of the train is blue shifted. Bonny is not moving, so the signal she emits is green, when it hits the front mirror, it will be red shifted, and when it’s emitted from the mirror again it will be red shifted again.  Abe’s motion towards the front mirror’s location will blueshift one of the redshifts, and it will have 1 redshift component left.
+
+Abe will see the reflected light of Bonny’s emitter from the front light post blue shifted, and the light from the back light post red shifted.  The emitted light from Bonny will not be shifted, and the stationary mirrors will not additionally shift the frequency, the only shift that happens is when Abe observes the signal.
+
+Bonny will see the reflection of her own emitter unshifted in frequency from the mirrors by the track each 2 seconds after the light is emitted.  She will see the light reflected from the back of the train double blue shifted, 1.33 seconds after it was emitted.  Bonny will see the light reflected from the front of the train double red shifted, 4 seconds after it was emitted.  As mentioned earlier, when the mirrors receive the light, they always double-apply whatever shift they cause when first observing a signal.
+
+|   |   |   |   |   |
+|---|---|---|---|---|
+|Abe’s Emitter  <br>Observer|Mirrors in Train|   |Mirrors by Train|   |
+|Front|Back|Front|Back|
+|Abe|Green|green|2*blue|2*red|
+|blue emitted|red emitted|blue emitted|red emitted|
+|red into mirror|blue into mirror|No shift|No shift|
+|red from mirror|blue from mirror|No shift|No shift|
+|Blue received|red received|blue received|red Received|
+|Bonny|red  <br>(blue+red+red+none)|blue  <br>(red+blue+blue+none)|blue  <br>(blue+none+none+none)|red  <br>(red+none+none+none)|
+
+Table 3: summary of frequency shifts by emissions from certain places as seen by each observer.
+
+|   |   |   |   |   |
+|---|---|---|---|---|
+|Bonny’s Emitter  <br>Observer|Mirrors in Train|   |Mirrors by Train|   |
+|Front|Back|Front|Back|
+|Abe|red  <br>(none+red  <br>+red+blue)|blue  <br>(none+blue  <br>+blue+red)|blue  <br>(none+none  <br>+none+blue)|red  <br>(none+none  <br>+none+red)|
+|Bonny|2*red  <br>(none+red  <br>+red+none)|2*blue  <br>(none+blue  <br>+blue+none)|green  <br>(0+0+0+0)|green  <br>(0+0+0+0)|
+
+Table 4: summary of frequency shifts by emissions reflected from Bonny’s emitter as seen by each observer.
+
+|   |   |   |   |   |
+|---|---|---|---|---|
+|Observer|Mirrors in Train|   |Mirrors by Train|   |
+|Front|Back|Front|Back|
+|Abe|2.667s  <br>(0.667+2)|2.667s  <br>(2+0.667)|1.33s  <br>(1+0.33)|4s  <br>(1+3)|
+|Bonny|4s  <br>(2+2)|1.33s  <br>(0.66+0.67)|2s|2s|
+
+Table 5: Summary of length of time before an observer will see the reflected flashes from the time they are emitted.
+
+If time and length contraction are also considered, Abe’s frame is contracted, Bonny’s is not, Abe’s clock is running slow by the same amount the length is contracted, so he will still see the flashes from his own mirrors in 2s.  It does change the time that Bonny sees the flashes from the train’s mirrors because the train is contracted; the reflection from the front will be , and from the back is .  Abe’s clock also changes the time he sees the flashes from the light posts because his clock is contracted. 
+
+|   |   |   |   |   |
+|---|---|---|---|---|
+|Observer|Mirrors in Train|   |Mirrors by Train|   |
+|Front|Back|Front|Back|
+|Abe|2s  <br>(1.5+0.5)|2s  <br>(0.5+1.5)|1.154s  <br>(0.866+0.288)|3.464s  <br>(0.866+2.589)|
+|Bonny|3.464s  <br>(1.732+1.732)|1.154s  <br>(0.577+0.577)|2s  <br>(1+1)|2s  <br>(1+1)|
+
+Table 6: Summary of length of time before an observer will see the reflected flashes including length and time contraction.
+
+There are a bunch of numbers which are presented for which the math has not been presented yet.  By the end of the paper, you should be able to revisit this and perform the math yourself.
+
+Abe, in his own frame, with his own clock, sees reflections in the mirrors in his frame after 2 seconds.  Bonny, in her own frame, with her own clock, sees reflections in mirrors in her frame after 2 seconds. 
+
+Abe, in his frame, sees reflections in the mirrors by the tracks after 1.154 seconds from the front mirror and 3.464 seconds from the back mirror; the partial trip times from the time of emission until the reflection and from the reflection to observation are not the same as the partial times that apply for Bonny in her frame.  Bonny conversely sees the reflection from the back of the train in 1.154 seconds and from the front of the train after 3.464 seconds.
+
+The length contraction means the signal travels a shorter path, and the time contraction means that the time it takes to cover that shorter path is longer.  The overall effect is that in real time, Abe sees the signal from the front and back of the train at 2.309 seconds according to Bonny’s clock, which is after Bonny sees her simultaneous signals, but is still 2 seconds on his own clock, which matches the 2 seconds on Bonny’s clock.
+
+A craft that is 2 light-second long travelling at 0.5c, with a photon emitter in the center and a beam splitter before a mirror at each ends of the craft, with a final detector in the middle of the craft will always see the signal from either end come back at the same time, and the distance divided by one-half of the time will equal the speed of light.  The beam splitters allow for an external observer to register where the light pulse was detected, and two photon detectors placed externally can give the time the pulse is detected.  The position of these detectors can be computed ahead of time to already be a constant distance. 
+
+![Natural Lightspeed](../lightspeed-natural.png)
+Figure 1: Modified experiment graph and calculations.
+
+Figure 1 includes a calculation that, if the internal observer also included their position update, then the speed of light would be calculated as slightly faster than the speed of light.  The inclusion of the frame’s velocity within the frame is usually not done; If you’re considering flying on a plane, and throwing a ball back and forth, the speed of the plane is usually not included in the calculated speed of the ball.
+
+The above image includes length contraction of the moving body, and time contraction for the internal observer’s clock.  Space outside of the frame is not contracted, and the position shown for the internal observer is the real position, that if they were to stop at that time value on their clock, both the internal and external observer would agree on the position of the train.  The stationary observer external to the train can measure the time and distance signals happen within the craft, and using the one-way constant speed through space calculation this paper presents will observe that all segments of the trip, that light has traveled at the speed of light.
+
+The internal observer will only calculate that the two-way path from the center to the ends and back to the center is the speed of light covering the contracted distance (which they do not observe as contracted, and assume that the length is still 1 light second), but they also have a contracted clock, which ticks slow, and means that their contracted distance divided by a slow clock is the speed of light.
+
+If the internal observer does include the speed of their craft, then  is what they will calculate for the speed of light, which is entirely dependent on their velocity, and is already more than C; however, as mentioned before, this is not the usual calculation since they are assumed to be stationary and without the ability to measure their speed.
+
+## Clock Synchronization
+
+  ![Clock sync graph](ClockSyncGraph.png)
+Figure 2: Various conditions of asynchronous clock transmission times.  Transmission starts from the lower side and goes up; time goes from left to right.
+
+
+In modern communications networks, sometimes the send path is faster than the receive path or vice versa or can be entirely symmetric.  The case where the paths are symmetric is represented by the middle graph in the above figure.  The path where the transmission from bottom to top is slower than the return path is the top graph; and the bottom graph represents the condition where the transmission is faster than reception path.  There is no algorithm that can exactly synchronize the clocks in the above figures.  Instead, what can be done will have a skew between the two clocks, indicated by the numbers above and below the graph, where transmitting from one point to another seems like it’s accurate, this is what happens if you synchronize to round-trip time divided by 2.
+
+This is a similar condition to what happens in Special Relativity with the mechanism specified by Einstein.  It is potentially not true that the forward path from clock A to clock B is the same as the transmission time from B to A.  If the speed of light one-way was always 'THE speed of light' as is the current consensus belief, an external observer would see the signal propagate at more than or less than the speed of light and would not meet the criteria that the speed of light is constant to all observers.
+
+![Einstein magic one-way](../lightspeed-ext-einstein.png)
+Figure 3: This is a diagram of what would be observed by an external observer if, as hypothesized by Einstein that the speed of light for any observer is always the same in any direction.
+
+Figure 3 shows what an external observer would see if somehow the light emitted from the center hit both ends at 1 second according to the local clock and reflected to the outside. The overall speed of light the external observer would compute would be 0.75 times the speed of light.  This means that the speed of light is not the same for an external frame.  Not even the two-way speed is the speed of light.
+
+The length is contracted to 0.866, and the clock of the local frame is also contracted by 0.866.  For the external observer, the distance that the light would have to cover to the back of the craft is only 0.288 light seconds, while it would have to cover 1.444 light seconds to reach the front reflector.  The return trips are the same, for a total of 1.732 light seconds (0.288+1.444), and the time it takes to return to the center is 2.308.  It would only be the speed of light to an observer in the moving frame, which makes their frame privileged, and the only one that can compute their speed of light as the speed of light.  While in the other case of a true one-way speed of light that propagates through stationary space, the local observer can compute a wo-way speed of light that is constant, which is all that experimental evidence has been able to prove.  An external stationary observer would be able to say every segment of the trip is the speed of light, and it’s just relatively offset for the observer because they are able to move while the light is travelling.
+
+The speed of light is not affected by the speed of the transmitter, and once transmitted light is moving through a stationary space.  The speed of the receiver relative to space is what can affect their relative sense of the speed of light in one direction.
+
 ## The Equivalence Principle
 
 The equivalence principle is an idea which is used for thought
