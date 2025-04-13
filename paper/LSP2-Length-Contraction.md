@@ -24,7 +24,7 @@ the velocity vector.
 
 
 In the following equations, $\vec{V}$ is the velocity of a moving body, to
-determine contraction in the specified direction:
+determine contraction in the specified direction, $T_W$ is the worst case time, parallel to the velocity vector:
 
 $$\begin{array}{r}
 {T_{W}} = \frac{1}{{2}}\left( \frac{C_{{L}}}{C + \left\| \vec{{V}} \right\|} + \frac{C_{{L}}}{C - \left\| \vec{{V}} \right\|} \right)\\ (2.1)
