@@ -247,6 +247,7 @@ The length contraction means the signal travels a shorter path, and the time con
 A craft that is 2 light-second long travelling at 0.5c, with a photon emitter in the center and a beam splitter before a mirror at each ends of the craft, with a final detector in the middle of the craft will always see the signal from either end come back at the same time, and the distance divided by one-half of the time will equal the speed of light.  The beam splitters allow for an external observer to register where the light pulse was detected, and two photon detectors placed externally can give the time the pulse is detected.  The position of these detectors can be computed ahead of time to already be a constant distance. 
 
 ![Natural Lightspeed](../lightspeed-natural.png)
+
 Figure 1: Modified experiment graph and calculations.
 
 Figure 1 includes a calculation that, if the internal observer also included their position update, then the speed of light would be calculated as slightly faster than the speed of light.  The inclusion of the frame’s velocity within the frame is usually not done; If you’re considering flying on a plane, and throwing a ball back and forth, the speed of the plane is usually not included in the calculated speed of the ball.
@@ -259,7 +260,8 @@ If the internal observer does include the speed of their craft, then  is what t
 
 ## Clock Synchronization
 
-  ![Clock sync graph](ClockSyncGraph.png)
+  ![Clock sync graph](../ClockSyncGraph.png)
+  
 Figure 2: Various conditions of asynchronous clock transmission times.  Transmission starts from the lower side and goes up; time goes from left to right.
 
 
@@ -268,6 +270,7 @@ In modern communications networks, sometimes the send path is faster than the re
 This is a similar condition to what happens in Special Relativity with the mechanism specified by Einstein.  It is potentially not true that the forward path from clock A to clock B is the same as the transmission time from B to A.  If the speed of light one-way was always 'THE speed of light' as is the current consensus belief, an external observer would see the signal propagate at more than or less than the speed of light and would not meet the criteria that the speed of light is constant to all observers.
 
 ![Einstein magic one-way](../lightspeed-ext-einstein.png)
+
 Figure 3: This is a diagram of what would be observed by an external observer if, as hypothesized by Einstein that the speed of light for any observer is always the same in any direction.
 
 Figure 3 shows what an external observer would see if somehow the light emitted from the center hit both ends at 1 second according to the local clock and reflected to the outside. The overall speed of light the external observer would compute would be 0.75 times the speed of light.  This means that the speed of light is not the same for an external frame.  Not even the two-way speed is the speed of light.
