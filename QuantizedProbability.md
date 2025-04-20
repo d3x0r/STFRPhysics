@@ -12,7 +12,28 @@ This is related to Quantum Mechanics, and correlation of results, transmission o
 and the method of measure changes considerations slightly.  A Stern-Gerlach(SG) device passes every event to the next, while a polarizer
 ends up blocking the event instead, and nothing is transmitted.
 
-This is also quantized weight on a beam-balance. (This is not in conflict with Newtonian Physics, as there was nothing given for this).
+## ...
+
+
+for each direction a light wave can be oscillating... compare vs a fixed 0 polarizer, and a relative polarizer offset by `c`
+
+`sum n=0 to 360 |cos(n *pi/180)cos(x+c*pi/180)|/360`
+
+results in this function - which is `cos^2(x) * ( pi-2/2pi ) + 1/pi`  where `(1/2-1/pi)` is the full range of the cos curve, and
+`1/pi` is the minimum value.
+
+`0.181690113816 = 0.5 - 1/pi`  `1/pi = 0.318309886184`
+
+` ((cos(2x) + 1)(pi - 2) + 4) / 4pi `
+
+or $\frac{\left(\cos^{2}\left(x\right)\right)\left(\pi-2\right)+2}{2\pi}$
+
+$$\frac{\left(\cos\left(2x\right)+1\right)\left(\pi-2\right)+4}{4\pi}$$
+
+This is the actual value for 2 polarizers, separate, with full coindence.
+
+[Desmos Graph](https://www.desmos.com/calculator/xpu4xmtug3)
+
 
 ## Thought Experiment (RNG simulation)
 
