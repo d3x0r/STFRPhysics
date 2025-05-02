@@ -21,6 +21,9 @@ const wells = [ {x:5,y:5,z:0}
               , {x:-5,y:5,z:0} 
               , {x:-5,y:-5,z:0} ];
 
+const fixedWells = [ {x:-600,y:50,z:0, d:500}, {x:6,y:-250,z:0, d:200} ];
+
+
 const localDel = 0.1;
 const local = [ {x:1,y:1,z:1} 
 	      , {x:-1,y:1,z:1} 
@@ -109,6 +112,28 @@ function measureArcs( p, s, q ) {
 		P.x = p.x + del.x*localDel;
 		P.y = p.y + del.y*localDel;
 		P.z = p.z + del.z*localDel;
+
+		for( let o of fixedWells ) {
+			// for each displament point, get the spacial density for this well.
+			t.x = P.x - o.x;
+			t.y = P.y - o.y;
+			t.z = P.z - o.z;
+			const S = measureArc( t, s, q );
+			// this is the arc, in the direction of
+			if( first ) {
+				// in the direction of x/y/z is S.  that means some transform of 
+				const forward = { x:t.x, y:t.y, z:t.z }
+
+			
+				//plane normal UV				
+			
+				dens.push( { x:1, y:1, z:1 } );
+			}else dens[idx] *= S;
+
+			first = false;	
+		}
+
+
 		for( let o of wells ) {
 			// for each displament point, get the spacial density for this well.
 			t.x = P.x - o.x;
@@ -126,8 +151,10 @@ function measureArcs( p, s, q ) {
 				dens.push( { x:1, y:1, z:1 } );
 			}else dens[idx] *= S;
 
-		first = false;	
+			first = false;	
 		}
+
+
 	})
 
 	const localDels2 = localDels.map( (del,idx)=>{
@@ -474,6 +501,16 @@ function updateWells() {
 	const s={x:values.A,y:0,z:0};
 	const q={x:values.Amax,y:0,z:0};
 	let first = true;			
+
+	for( let o of fixedWells ) {
+		const a = measureBox( o, {x:o.d,y:0,z:0}, {x:0,y:0,z:0} );
+		line( o.x, o.y, o.x+a.x, o.y+a.y, BASE_COLOR_BLUE );
+		//const al = _3to1(a.x,a.y,a.z);
+		o.x += a.x/50;
+		o.y += a.y/50;
+//		o.z += -a.z/50;
+	}
+
 	for( let o of wells ) {
 		if( first ) { first = false; continue; }
 		const a = measureBox( o, s, q );
@@ -644,36 +681,6 @@ if(0)
 //	p.z = ;
 //	p0.z = 0;
 	const rows = [];
-		if(0)
-		{
-			
-				const P = {x:0,y:0,z:0};
-				const M = {x:0,y:0,z:0};
-				const N = {x:0,y:0,z:0};
-
-			
-				for( let o of wells ) {
-
-					M.x = o.x+0.1;
-					M.y = o.y+0.1;
-					M.z = o.z+0.1;
-
-					plot( o.x,o.y,pens[0]);
-					line( p.y,p.x,P.y,P.x, pens[1] )
-				
-
-					const p_ = L_sq(p, 0, o, s, q );
-					const a = p_.x - p.x;
-					const b = p_.y - p.y;
-					const c = p_.z - p.z;
-					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
-					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
-					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
-					P.x += a;
-					P.y += b;
-					P.z += c;
-				}
-		}
 if(1)
 	for( let r = minScale; r < maxScale; r += step(20) ) {
 		for( let t = minScale; t < maxScale; t += step(20) ) {
@@ -694,11 +701,14 @@ if(1)
 			}
 	 let first = true;
 
+
+		let biasy = 0;
 if(1)
 	for( let r = -58.99; r < 58; r+=1 ) {
 		const row = [];
 	//	rows.push(row );
 		first = true;
+		let biasx = 0;
 		for( let t=-68.99; t < 68; t+= step(1000) ) {
 		 	p.x = t;
 			p.y = r;
@@ -712,6 +722,29 @@ if(1)
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
+				for( let o_ of fixedWells ) {
+					const o = o_;
+					{
+						 p__ = L_sq(p_, 0, o, {x:o.d,y:0,z:0} , {x:0,y:0,z:0} );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+
+						P.x += a;
+						P.y += b;
+						P.z += c;
+					}
+				}
+				if( !biasx ) { biasx = p_.x+69}
+				if( !biasy ) { biasy = p_.y+60}
+				p_.x -= biasx;
+				P.x -= biasx;
+				p_.y -= biasy;
+				P.y -= biasy;
+
 				for( let o_ of rel_wells ) {
 					const o = o_.w;
 					{
@@ -751,6 +784,29 @@ if(1)
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
+
+				for( let o_ of fixedWells ) {
+					const o = o_;
+					{
+						 p__ = L_sq(p_, 0, o, {x:o.d,y:0,z:0} , {x:0,y:0,z:0} );
+						const a = p__.x - p_.x;
+						const b = p__.y - p_.y;
+						const c = p__.z - p_.z;
+						p_.x = p__.x;
+						p_.y = p__.y;
+						p_.z = p__.z;
+
+						P.x += a;
+						P.y += b;
+						P.z += c;
+					}
+				}
+				p_.x -= biasx;
+				P.x -= biasx
+				p_.y -= biasy;
+				P.y -= biasy;
+
+
 				for( let o_ of rel_wells ) {
 					const o = o_.w;
 					{
@@ -825,6 +881,8 @@ if(1)
 		let slopex = Math.cos( t/180*Math.PI );
 		let slopey = Math.sin( t/180*Math.PI );
 		let red_blue = 0.5;
+		let mouse_ofs = 0;
+		let mouse_ofs_y = 0;
 		for( let t=0; t < 50; t+= 50/1000 ) {
 
 			const mx = mouseX + slopey*Math.cos(2*t) + slopex * t;
@@ -839,6 +897,23 @@ if(1)
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
+
+				for( let o of fixedWells ) {
+					const p_ = L_sq(p, 0, o, {x:o.d,y:0,z:0}, {x:0,y:0,z:0} );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
+				}
+				if( !mouse_ofs) { mouse_ofs = P.x; mouse_ofs_y = P.y };
+				P.x -= mouse_ofs;
+				P.y -= mouse_ofs_y;
+
 				for( let o of wells ) {
 					const p_ = L_sq(p, 0, o, s, q );
 					const a = p_.x - p.x;
@@ -871,6 +946,23 @@ if(1)
 				const P = {x:0,y:0,z:0};
 				const M = {x:0,y:0,z:0};
 				const N = {x:0,y:0,z:0};
+
+				for( let o of fixedWells ) {
+					const p_ = L_sq(p, 0, o, {x:o.d,y:0,z:0}, {x:0,y:0,z:0} );
+					const a = p_.x - p.x;
+					const b = p_.y - p.y;
+					const c = p_.z - p.z;
+					if( a > M.x ) M.x = a; if(a<N.x)N.x=a;
+					if( b > M.y ) M.y = b; if(b<N.y)N.y=b;
+					if( c > M.z ) M.z = c; if(c<N.z)N.z=c;
+					P.x += a;
+					P.y += b;
+					P.z += c;
+				}
+				P.x -= mouse_ofs;
+				P.y -= mouse_ofs_y;
+
+
 				for( let o of wells ) {
 					const p_ = L_sq(p, 0, o, s, q );
 					const a = p_.x - p.x;
