@@ -1,52 +1,13 @@
 
 import {lnQuat} from "../3d/src/lnQuatSq.js"
 
-const testSize= 20000;
+const testSize= 200000;
 const canvas = document.getElementById( "testSurface" );
-const ctx = canvas.getContext( '2d' );
-
-const threshold = 1;
-let decay = 0.607;
-let settle = 0.03;
-
-
-const sl1 = document.createElement( "input" )
-sl1.type = "range";
-sl1.min = 0;
-sl1.max = 1000;
-sl1.value = 707;
-//sl1.setAttribute( "min", 0 );
-//sl1.setAttribute( "max", 1000 );
-//sl1.m
-sl1.addEventListener( "change", ()=>{
-	console.log( "Value?", sl1.value );
-	decay = sl1.value/1000;
-	if( !animating ) drawsomething();
-	else animate_one = true;
-} );
-document.body.appendChild( sl1 );
-
-const sl2 = document.createElement( "input" )
-sl2.type = "range";
-sl2.min = 0;
-sl2.max = 1000;
-sl2.value = 100;
-//sl2.setAttribute( "min", 0 );
-//sl2.setAttribute( "max", 1000 );
-//sl2.m
-sl2.addEventListener( "change", ()=>{
-	console.log( "Value?", sl2.value );
-	settle = sl2.value/1000;
-	if( !animating ) drawsomething();
-	else animate_one = true;
-} );
-document.body.appendChild( sl2 );
-
+const ctx = canvas?.getContext( '2d' );
 
 const BASE_COLOR_WHITE = [255,255,255,255];
 const BASE_COLOR_BLACK = [0,0,0,255];
 const BASE_COLOR_RED = [255,0,0,255];
-const BASE_COLOR_PURPLE = [192,0,192,255];
 const BASE_COLOR_BLUE = [0,0,255,255];
 const BASE_COLOR_YELLOW = [255,255,0,255];
 const BASE_COLOR_GREEN = [0,255,0,255];
@@ -62,13 +23,11 @@ function ColorAverage( a, b, i,m) {
     return c;//`#${(c[0]<16?"0":"")+c[0].toString(16)}${(c[1]<16?"0":"")+c[1].toString(16)}${(c[2]<16?"0":"")+c[2].toString(16)}`
 }
 
-let animating = false;
-let animate_one = false;; // animate +1
+
 const lnQ= new lnQuat();
 
-const choices = [0,0,0,0,0,0,0,0];
-const choices2 = [0,0,0,0,0,0,0,0];
-const choices_d = [0,0,0,0,0,0,0,0];
+const choices = [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0];
+const choices_d = [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0];
 
 const axis1 = [1,0,0];
 
@@ -84,9 +43,9 @@ const axis2_60 = [Math.cos(Math.PI/3),Math.sin(Math.PI/3),0];  // 44%
 const axis2_90 = [Math.cos(Math.PI/2),Math.sin(Math.PI/2),0];  // 90 degrees separation;
 
 let axis2 = axis2_45;
-let lastPick= 0;
 
-const tmp = [0,0,0];
+let ti = 0;
+const tmpBuf = [[0,0,0,0],[0,0,0,0]];
 const tmp2 = [0,0,0];
 
 function pick1(){
@@ -100,13 +59,15 @@ function pick1(){
         return tmp;
 }
 function pick2(){
+	const tmp = tmpBuf[ti++]; if( ti>1 ) ti = 0;
+
 	let t = Math.random();
         //l += ( tmp[0] = Math.random()*2-1 ) * tmp[0];
         //l += ( tmp[1] = Math.random()*2-1 ) * tmp[1];
-	lastPick = t *2*Math.PI;
 	tmp[0] = Math.cos( t * 2*Math.PI );
 	tmp[1] = Math.sin( t * 2*Math.PI );
 	tmp[2] = 0;
+	tmp[3] = t;
 	//l += ( tmp[2] = Math.random()*2-1 ) *tmp[2];
 
         return tmp;
@@ -124,7 +85,7 @@ function pick3(){
 }
 
 function pick4(){
-	let t = Math.random()*Math.PI*2;
+	let t = Math.random()*2*Math.PI;
 	let u = Math.random()*2*Math.PI;
 	let l = 0;
 	lnQ.x=lnQ.y=lnQ.z=lnQ.nz=lnQ.nx=lnQ.θ=0; lnQ.ny= 1; lnQ.dirty = false;
@@ -149,6 +110,19 @@ function pick4(){
 // pick4 is an unfair pick that has greater than QM chance of correlation over 2/3 of the curve.
 const pick = pick2;  
 
+const threshold = 0.333;
+const decay = 0.95;
+const settle = 0.0;
+
+
+function rotate( axis, angle ) {
+	const c = Math.cos(angle *2*Math.PI);
+	const s = Math.sin(angle *2*Math.PI);
+	const x = c*axis[0] - s*axis[1];
+	const y = s*axis[0] + c*axis[1];
+	axis[0] = x;
+	axis[1] = y;
+}
 
 function getStateByChance( axis ) {    
 	let s = 0;
@@ -169,12 +143,18 @@ function getStateByChance( axis ) {
 }
 
 	const ax2 = [0,0,0];
-let det1 = 0;
-let det1T = 0;
-let det2 = 0;
-let det2T = 0;
-let det3 = 0;
-function getState( axis ) {   
+let det1_a = 0;
+let det1_b = 0;
+let det2_a = 0;
+let det2_b = 0;
+let det3_a = 0;
+let det3_b = 0;
+let det4_a = 0;
+let det4_b = 0;
+function getState( axis1, axis2 ) {   
+
+	let s = 0;
+
 // 0 = pass -- +
 // 1 = pass 1--
 // 2 = pass -1-
@@ -183,34 +163,184 @@ function getState( axis ) {
 // 5 = pass 1-1
 // 6 = pass -11
 // 7 = pass 111 // both and a third vertical
-	let s = 0;
+	const axis1_copy = axis1.slice();
+	const axis1_copy2 = [0,0,0,0];
+	{
+
+// A 780 nm mode-locked femtosecond laser pumped an 1 mm-thick bismuth
+// https://web.stanford.edu/~oas/SI/QM/notes/GHZreference2.pdf  - the notch filters provide guaranteed separation of pulses...
+//  which in theory should register '1' photon events if they were there ... but still it's the same pulse interval as the source even if
+// time-delayed overall.
+
+	{
+		// setup 2 split photons through BBO which goes H and V in separate paths
+		// but this is also overall the same direction; and this already started as split between x and y
+		// 
+     	axis2[0] = axis1[0];
+		axis2[1] = axis1[1];
+		axis2[3] = axis1[2];
+
+		// axis1 -> PBS (polarized beam split)
+		det1_a += Math.abs( axis1[0] );
+		// this part is used... (unused code)
+		axis1[0] = 0;
+		
+		// send remainder through HWP (at 45degrees)
+		axis1[0] = Math.sqrt(2)/2 * axis1[1];
+		axis1[1] = Math.sqrt(2)/2 * axis1[1];
+
+		// and a PBS(1)
+		
+		// rotate 1/4
+		axis1_copy[0] = axis1[0];
+		axis1_copy[1] = axis1[1];
+		axis1_copy[3] = axis1[3];
+//		rotate( axis1, 0.25 );
+		det1_b += Math.abs( axis1[0] );
+
+//		rotate( axis1_copy, 0.25 );
+		det2_a += Math.abs( axis1[1] );
+
+		
+		// other half of PBS from this is 0.
+
+
+
+		//------
+		// second path(axis2), goes to a BS
+		// which goes 50-50 each way... 
+		axis1_copy[0] = axis2[0]/2;
+		axis1_copy[1] = axis2[1]/2;
+		axis1_copy[3] = axis2[3]/2;
+
+		axis2[0] /= 2;
+		axis2[1] /= 2;
+		axis2[3] /= 2;
+
+		// rotate quater wave
+//		rotate( axis1_copy, 0.25 );
+		//go through a fixed polarizer (V)
+		// and IF
+		// to the detector.
+		det3_a += Math.abs( axis1_copy[0] );
+
+
+		// axis2 goes to PBS(1)
+		axis1_copy[0] = Math.sqrt(2)/2*axis2[0];
+		axis1_copy[1] = Math.sqrt(2)/2*axis2[0];
+		//rotate( axis1_copy, 0.25 );
+		det1_b += Math.abs( axis1_copy[0] );
+
+		// second part of PBS(1) goes to quarter wave 
+		axis1_copy[0] = Math.sqrt(2)/2*axis2[1];
+		axis1_copy[1] = Math.sqrt(2)/2*axis2[1];
+		//rotate( axis1_copy, 0.25 );
+		det2_a += Math.abs( axis1_copy[1] ); // add to detector
+
+		if( det1_a >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
+			//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
+			det1_a -= threshold;
+			s += 1;
+		} 
+		if( det1_b >= threshold ) {
+			det1_b -= threshold;
+			s += 2;
+		}
+		if( det2_a >= threshold ) {
+			det2_a -= threshold;
+			s += 4;
+		}
+		if( det3_a >= threshold ) {
+			det3_a -= threshold;
+			s += 8;
+		}
+
+
+		det1_a -= settle;
+		det1_b -= settle;
+		det2_a -= settle;
+		det3_a -= settle;
+		det1_a *= decay;
+		det1_b *= decay;
+		det2_a *= decay;
+		det3_a *= decay;
+
+		return s;
+
+	}
+
+    if(0)
+	{
+		// 1
+		// EPR->fiber coupler->HWP
+		axis1[0] = Math.cos( (axis1[3]+0.5) * 2*Math.PI );
+		axis1[1] = Math.sin( (axis1[3]+0.5) * 2*Math.PI );
+		axis1[3] += 0.5;
+
+		axis1_copy[0] = Math.cos( (axis1_copy[3]+0.5) * 2*Math.PI );
+		axis1_copy[1] = Math.sin( (axis1_copy[3]+0.5) * 2*Math.PI );
+		axis1_copy[3] += 0.5;
+
+		// 3nmIF
+
+		axis1[0] = Math.cos( (axis1[3]+0.75) * 2*Math.PI );
+		axis1[1] = Math.sin( (axis1[3]+0.75) * 2*Math.PI );
+		axis1[3] += 0.75;
+
+		det1_a += axis1[0];				
+		det1_b += axis1[0];				
+
+
+		///--- resume pcopy
+		// PBS->2nmif
+		//    ->QWP->2nmif
+		// 
+
+		axis1_copy2[0] = 0;
+		axis1_copy2[1] = axis1_copy[1];
+			// 2nm if
+
+		axis1_copy[1] = 0;
+		
+				
+
+	}
+
+	           }
+
 	let newAngle;
-	det1 += Math.abs(axis[0]); // first detector is 0 degrees.
+	det1 += Math.abs(axis[0]) ;
 
 	if( det1 >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
 		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
 		det1 -= threshold;
 		s += 1;
+		// pass 1
+		newAngle = (((Math.random()*2)-1) * Math.PI/4);
+	}else{
+		det2 *= decay;
+		//det1 *= decay;
+		// if it didn't pass 45 degrees, then it rotated right.
+		// 0 and 2 are blocked events (or would-have)
+		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
+		newAngle = Math.PI/2 + (((Math.random()*2)-1) * Math.PI/4);
 	}
-	//else 
-	{
-		
-		det1 = det1 * decay-settle;
-   }
-	// second detextor uses the incoming light (axis1) and dot product on current test angle.
-	det2 += Math.abs((axis[0]*axis2[0]+axis[1]*axis2[1]));
+	ax2[0] = Math.cos( newAngle );
+	ax2[1] = Math.sin( newAngle );
+// if s=0, this should be no result; but we rectify it anyway and use it against the second.
+	det2 += Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1]));
 
 	if( det2 >= threshold ) { //Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
 		det2-=threshold;
 		// passed filter 2.  3, 7 are pass both
 		s += 2;
-	} //       else
-//	else
+		newAngle = axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
+	} else {
 		det2 = det2*decay - settle;
-
-	return s;
-
-
+		//choices_d[3] += Math.sin( Math.PI/4*(1+(axis[0]*axis2[0]+axis[1]*axis2[1])) );
+		newAngle = Math.PI/2 + axis2_angle + (((Math.random()*2)-1) * Math.PI/4);
+	}
+return s;
 	ax2[0] = Math.cos( newAngle );
 	ax2[1] = Math.sin( newAngle );
 
@@ -230,77 +360,37 @@ function getState( axis ) {
 }
 
 
-// this projects pure states, and is inaccurate to the partial accumulator.
-function getStateAbs( axis ) { 
-	let s = 0;
-
-	if( (lastPick <= Math.PI/4) || (lastPick > Math.PI*3/4 && lastPick <= Math.PI*5/4) || (lastPick > Math.PI*7/4) ) {
-		s += 1;
-	}
-	let testPick = (lastPick + axis2_angle+Math.PI*2)%(Math.PI*2);
-	if( (testPick <= Math.PI/4) || (testPick> Math.PI*3/4 && testPick <= Math.PI*5/4) || (testPick > Math.PI*7/4) ) {
-		s += 2;
-	} //       else
-
-	return s;
-
-}
-
-function getStateTotals( axis ) {
-	let s = 0;
-	det1T += Math.abs(axis[0]); // first detector is 0 degrees.
-
-	if( det1T >= threshold ) { //Math.abs(axis[0]/**axis1[0] */) >= 0.707 ) {
-		//choices_d[0] += Math.sin( Math.PI/4*(1+axis[0]) );
-		det1T -= threshold;
-		s += 1;
-	}
-	// second detextor uses the incoming light (axis1) and dot product on current test angle.
-	det2T += Math.abs((axis[0]*axis2[0]+axis[1]*axis2[1]));
-
-	if( det2T >= threshold ) { //Math.abs((ax2[0]*axis2[0] + ax2[1]*axis2[1])) >= 0.707 ) {
-		det2T-=threshold;
-		// passed filter 2.  3, 7 are pass both
-		s += 2;
-	} //       else
-
-	return s;
-
-}
-
 function test1() {
 	let i;
-	for( i = 0; i < 8; i++ ) { choices[i] = 0; choices_d[i] = 0; }
+	for( i = 0; i < 16; i++ ) { choices[i] = 0; choices_d[i] = 0; }
 
 	for( i = 0; i < testSize; i++ ) {
-		const s = getState( pick() );
+		const s = getState( pick(), pick() );
 		choices[s]++;
 	}
+	console.log( "Results:", choices );
+	console.log( "Ratio:", choices[7]/choices[15] );
+
+	const l1 = document.createElement( "div" );
+	const l2 = document.createElement( "div" );
+	const l3 = document.createElement( "div" );
+	l1.textContent =  "Results:" + JSON.stringify( choices );
+	l2.textContent = "Failure Ratio:" +  (100*choices[7]/choices[15]).toFixed(2) + "%  Sucess Ratio:" + ((1-choices[7]/choices[15])*100).toFixed(2) +"%";
+	l3.textContent = "threshold:" +  (threshold).toFixed(2) + "(intensity:"+ (1/threshold).toFixed(2) +")  decay:" + decay.toFixed(2) + " settle:" + settle.toFixed(2);
+	document.body.appendChild( l1 )
+	document.body.appendChild( l2 );
+	document.body.appendChild( l3 );
 
 	return choices;	
 
         //console.log( "choices:", choices, choices.map( c=>(c/i)*Math.log2(c/i) ).reduce( ((acc,val)=>acc+=val),0 )+2, (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
 }
 
-function test2() {
-	let i;
-	for( i = 0; i < 8; i++ ) { choices2[i] = 0;  }
-
-	for( i = 0; i < testSize; i++ ) {
-		const s = getStateTotals( pick() );
-		choices2[s]++;
-	}
-
-	return choices2;	
-
-        //console.log( "choices:", choices, choices.map( c=>(c/i)*Math.log2(c/i) ).reduce( ((acc,val)=>acc+=val),0 )+2, (choices[0]-choices[1])/i, 1-(choices[1]-choices[1]/2)/(choices[0]-choices[1]/2), choices_d );
-}
 
 let drawing = false;
 let ang = -180;
         let prior_x = -1;
         let prior_y = -1;
-		let prior_y_abs = -1;
 
         let prior_x_b = -1;
         let prior_y_b = -1;
@@ -313,11 +403,11 @@ let ang = -180;
         let prior_x_ed = -1;
         let prior_y_ed = -1;
 
+test1();
+
 function drawsomething() {
 
-	if( !animating ) {
-		prior_x = -1;
-	}
+
 	const squareSize = 1024;
 
 	if( !drawing ) {
@@ -459,26 +549,6 @@ if( c[1])
 		drawing = true;
 		ang = -180;
 	}
-
-	// 0.5 1.0
-	line(0,512,1024,512, [255,0,255,255]);
-
-	line(0,0.25*1024,1024,0.25*1024, [255,0,255,255]);
-	line(0,0.75*1024,1024,0.75*1024, [255,0,255,255]);
-	
-	// 90    0.64
-	line(20,512-(-0.18)*1024,1024,(1-0.32)*1024, [255,0,255,255]);
-	// 67.5    0.68
-	line(0,512-(-0.16)*1024,1024,(1-0.34)*1024, [255,128,128,255]);
-
-	// 22.5   0.92
-	line(0,512-(-0.04)*1024,1024,(1-0.46)*1024, [255,255,0,255]);
-
-
-	line(22.5/360*1024+512,0,22.5/360*1024+512,1024, [255,0,255,255]);
-	line(67.5/360*1024+512,0,67.5/360*1024+512,1024, [255,0,255,255]);
-
-
 	const now = Date.now();
 	for( ; ang <= 180; ang++ ) {
 		if( (Date.now() -now) > 30 ) break;
@@ -488,7 +558,6 @@ if( c[1])
 			axis2[1] = Math.sin( axis2_angle );
 			const valArr = test1();//getState( axis2 );
 
-			const valArrAbs = test2();//getState( axis2 );
                 //const val = valArr[1] < valArr[0]?(1-valArr[1]/valArr[0]):(1-valArr[0]/valArr[1]);
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
                 //const val = valArr[1] < valArr[0]?(valArr[0]-valArr[1])/(valArr[0]+valArr[1]):((valArr[1]-valArr[0])/(valArr[0]+valArr[1]));
@@ -554,23 +623,6 @@ a = 1/(2-cos(x))
 
 			val = ((valArr[3])/(testSize/2));//(val+1)/2;
 		}
-
-
-		let valAbs = (valArrAbs[3]-valArrAbs[1]);
-		if( 0 ) {
-			// required math to score probabilities
-			valAbs /= (valArrAbs[3]+valArrAbs[1]);
-			valAbs = (valAbs+1)/2;
-		}else {
-			// math that works.
-			if( valAbs < 0 ) valAbs /=(valArrAbs[1]);
-			else  valAbs /=(valArrAbs[3]);
-
-
-			valAbs = ((valArrAbs[3])/(testSize/2));//(val+1)/2;
-		}
-	valAbs = (valArrAbs[3])/(valArrAbs[0]+valArrAbs[1]+valArrAbs[2]+valArrAbs[3])
-
 		//const val = (valArr[7]+valArr[3])/(valArr[7]+valArr[3]+valArr[1]+valArr[5]);
 
 // 3 stackpolarizer result
@@ -582,7 +634,6 @@ a = 1/(2-cos(x))
                 //console.log( "Test:", ang, valArr,  (valArr[7]+valArr[3]), (valArr[7]+valArr[3]+valArr[1]+valArr[5]), val );
 	
 		const ypos = 1024-(val * 1024);
-		const ypos_abs = 1024-(valAbs * 1024);
 
 		//if( ang === 45 ) debugger;
 		const val2 = Math.cos( ang/180*Math.PI )*Math.cos( ang/180*Math.PI );
@@ -629,10 +680,7 @@ a = 1/(2-cos(x))
 			line( xpos, 0, xpos, 1024, [0,0,0,255] );
 		}
 		
-
-
 		if( prior_x > 0 ) {
-			line( prior_x, prior_y_abs, xpos, ypos_abs, BASE_COLOR_PURPLE );
 			line( prior_x, prior_y, xpos, ypos, pens[2] );
 		
        	line( prior_x_b, prior_y_b, xpos, ypos_b, pens[1] );
@@ -647,7 +695,6 @@ a = 1/(2-cos(x))
       }
       prior_x = xpos;
       prior_y = ypos;
-		prior_y_abs = ypos_abs;
 
       prior_x_b = xpos;
       prior_y_b = ypos_b;
@@ -665,21 +712,11 @@ a = 1/(2-cos(x))
 	
 
 	ctx.putImageData(_output, 0,0);
-	if( drawing ) {
-		animating = true;
-		requestAnimationFrame( drawsomething);
-	} else {
-		animating = false;
-		if( animate_one ) {
-			animate_one = false;
-			requestAnimationFrame( drawsomething);
-		}
-	}
-
+	if( drawing ) requestAnimationFrame( drawsomething);
 }
 
 try {
-		drawsomething();
+		//drawsomething();
 }catch(err) {
 	alert( "GotError:"+err );
 }
