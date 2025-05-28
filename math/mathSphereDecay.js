@@ -29,6 +29,7 @@ const myForm = {
 	sliderB : document.getElementById( "B" ),
 	sliderC : document.getElementById( "C" ),
 	sliderD : document.getElementById( "D" ),
+	sliderBias : document.getElementById( "bias" ),
 	sliderAmax : document.getElementById( "Amax" ),
 	sliderBmax : document.getElementById( "Bmax" ),
 	sliderCmax : document.getElementById( "Cmax" ),
@@ -48,12 +49,14 @@ if(myForm.sliderAmax) myForm.sliderAmax.oninput = readValues;
 myForm.sliderB.oninput = myForm.sliderValB.oninput = readValues;
 myForm.sliderC.oninput = myForm.sliderValC.oninput = readValues;
 myForm.sliderD.oninput = myForm.sliderValD.oninput = readValues;
+myForm.sliderBias.oninput = readValues;
 
 myForm.sliderA.value = 0;
 if(myForm.sliderAmax) myForm.sliderAmax.value = 0;
 myForm.sliderB.value = 0;
 
 function readValues()  {
+	values.bias = (Number(myForm.sliderBias.value)) / 1000;
 	values.A = (Number(myForm.sliderA.value)/20.0);
 	values.Amax = (myForm.sliderAmax)? (Number(myForm.sliderAmax.value)/20.0):0;
 	values.B = (Number(myForm.sliderB.value)/20.0);
@@ -108,9 +111,10 @@ const AB_0 = (l,x,y,z,w,q) => l/_3to1(x,y,0) * M_0( x,y,0,q );
 // this normalizes a value from ( ( x/y/z -> x/y/z/w ) -> x/y/z/q )
 //const B_0 = (l,x,y,z,w,q) => A_0(l,x,y,z,w)/_4to1(x,y,z,w) * M_00( x,y,z,w,q );
 // single expression version.
-const B_0 = (l,x,y,z,w,q) =>{ const xx=x*x; const yy=y*y; const zz=z*z; return (l/Math.sqrt(xx+yy+zz) * Math.sqrt(xx+yy+zz+((invertCurvature?-1:1)* w*w)))/Math.sqrt(xx+yy+zz+w*w) * Math.sqrt(xx+yy+zz+w*w+q*q) };
+let one = 0.001;
+const B_0 = (l,x,y,z,w,q) =>{ const xx=x*x; const yy=y*y; const zz=z*z; return Math.sign(l)*(-one+((Math.abs(l)+one)/Math.sqrt(one+xx+yy+zz) * Math.sqrt(one+xx+yy+zz+((invertCurvature?-1:1)* w*w)))/*/Math.sqrt(xx+yy+zz+w*w) * Math.sqrt(xx+yy+zz+w*w+q*q)*/) };
 
-const B_i = (l,x,y,z,w,q) => A_i(l,x,y,z,w)/_4to1(x,y,z,w) * (invertCurvature?M_00( x,y,z,w,q ):M_ii( x,y,z,w,q ));
+const B_i = (l,x,y,z,w,q) => A_i(l,x,y,z,w)/1/*_4to1(x,y,z,w)*/ * (invertCurvature?M_00( x,y,z,w,q ):M_ii( x,y,z,w,q ));
 
 // sequential space would enumerate in a sort of alternating sign, alternating reiprocal
 // spaces infinity to 0 - 0 to infinity - infinity to 0 - ...
@@ -181,6 +185,8 @@ canvas.addEventListener( "mousemove", (e)=>{
 function drawsomething() {
 	let x, y, z, w, X, Y, Z, W;
 
+	one = values.bias;
+
 	ctx.clearRect(0,0,squareSize,squareSize );
 	var _output = ctx.getImageData(0, 0, squareSize, squareSize );
 	var output = _output.data;
@@ -207,6 +213,107 @@ function drawsomething() {
 		output[((x+y*squareSize)<<2)+2] |= c[2];
 		output[((x+y*squareSize)<<2)+3] |= c[3];
 	}
+
+	function line( x1, y1, x2, y2, c ) {
+		if( x1 < -5 || y1 < -5 ) return
+		if( x1 > 5 || y1 > 5 ) return
+		if( x2 < -5 || y2 < -5 ) return
+		if( x2 > 5 || y2 > 5 ) return
+		const realX1 = unit(x1);
+		const realY1 = unit(-y1);
+		const realX2 = unit(x2);
+		const realY2 = unit(-y2);
+		//const realLen = Math.sqrt( (realX2-realX1)*(realX2-realX1)  + (realY2-realY1)*(realY2-realY1) );
+		x1=realX1;
+		y1=realY1;
+		x2=realX2;
+		y2=realY2;
+		//x1 *= realLen;
+		//y1 *= realLen;
+		//x2 *= realLen;
+		//y2 *= realLen;
+		// scale coordinates to a unit-pixel size...
+
+		var err, delx, dely, len, inc;
+		//if( !pImage || !pImage->image ) return;
+		delx = x2 - x1;
+		if( delx < 0 )
+			delx = -delx;
+        
+		dely = y2 - y1;
+		if( dely < 0 )
+			dely = -dely;
+        
+		if( dely > delx ) // length for y is more than length for x
+		{
+			len = dely;
+			if( y1 > y2 )
+			{
+				var tmp = x1;
+				x1 = x2;
+				x2 = tmp;
+				y1 = y2; // x1 is start...
+			}
+			if( x2 > x1 )
+				inc = 1;
+			else
+				inc = -1;
+        
+			err = -(dely / 2);
+			while( len >= 0 )
+			{
+		output[((x1+y1*squareSize)<<2)+0] = c[0];
+		output[((x1+y1*squareSize)<<2)+1] = c[1];
+		output[((x1+y1*squareSize)<<2)+2] = c[2];
+		output[((x1+y1*squareSize)<<2)+3] = c[3];
+				y1++;
+				err += delx;
+				while( err >= 0 )
+				{
+					err -= dely;
+					x1 += inc;
+				}
+				len--;
+			}
+		}
+		else
+		{
+			if( !delx ) // 0 length line
+				return;
+			len = delx;
+			if( x1 > x2 )
+			{
+				var tmp = y1;
+				y1 = y2;
+				y2 = tmp;
+				x1 = x2; // x1 is start...
+			}
+			if( y2 > y1 )
+				inc = 1;
+			else
+				inc = -1;
+        
+			err = -(delx / 2);
+			while( len >= 0 )
+			{
+		output[((x1+y1*squareSize)<<2)+0] = c[0];
+		output[((x1+y1*squareSize)<<2)+1] = c[1];
+		output[((x1+y1*squareSize)<<2)+2] = c[2];
+		output[((x1+y1*squareSize)<<2)+3] = c[3];
+				x1++;
+				err += dely;
+				while( err >= 0 )
+				{
+					err -= delx;
+					y1 += inc;
+				}
+				len--;
+			}
+		}
+        
+	}
+	
+
 		
 //	const thisDel = (n,m)=>n*n*n-(n-m)*(n-m)*(n-m);
 	const thisDel = (n,y)=>n*n*n-(n-step(1000))*(n-step(1000))*(n-step(1000))+y*y*y;
@@ -262,8 +369,11 @@ function drawsomething() {
 	}
 
 
-	for( let r = -8.99; r < 8; r+=0.08 ) {
-		for( let t=-18.99; t < 18; t+= 5/1000 ) {
+if(0)
+	for( let r = -0.99; r < 0.99; r+=0.01 ) {
+		for( let t=-0.99; t < 0.99; t+= 0.01 ) {
+
+			
 
 			// these two draw the X/Y grid lines.
 			{
@@ -277,57 +387,40 @@ function drawsomething() {
 				const Ay = B_0(t,t,r,values.B,values.A, values.Amax );
 				plot(Ax,Ay,pens[2] );
 			}
+	}
+	}
 
-			if(0)
+	let ax1 = 0;
+	let ay1 = 0;
+	let ax2 = 0;
+	let ay2 = 0;
+	let first = true;
+
+	for( let r = -8.99; r < 8; r+=0.08 ) {
+		for( let t=-18.99; t < 18; t+= 5/1000 ) {
+
+			
+
+			// these two draw the X/Y grid lines.
 			{
+				const Ax = B_0(t,t,r,values.B,values.A, values.Amax );
+				const Ay = B_0(r,t,r,values.B,values.A, values.Amax );
+				if( !first ) line( ax1,ay1,Ax, Ay,pens[1]); 
 
-// this is change in virtual Y by time... 
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(t,t,r,values.B,values.A)-t;
-					const Ay = A_0(r,t,r,values.B,values.A)-r;
-					const Az = A_0(values.B,t,r,values.B,values.A)-values.B;
-					const Bx = A_0(Ax,Ax,Ay,Az, values.Amax );
-					const By = A_0(Ay,Ax,Ay,Az, values.Amax );
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Bx,By,pens[4] );
-					//plot(Bx,By,pens[7] );
-				}
-				{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-					const Ax = A_0(r,t,r,values.B,values.A)-r;
-					const Ay = A_0(t,t,r,values.B,values.A)-t;
-					const Az = A_0(values.B,t,r,values.B,values.A)-values.B;
-					const Bx = A_0(Ax,Ax,Ay,Az, values.Amax );
-					const By = A_0(Ay,Ax,Ay,Az, values.Amax );
-					//const Bx = Math.sign(Ax)*Ax*Ax/Math.sqrt(Ax*Ax+Ay*Ay);
-					//const By = Math.sign(Ay)*Ay*Ay/Math.sqrt(Ax*Ax+Ay*Ay);
-					plot(Bx,By,pens[5] );
-					//plot(Bx,By,pens[8] );
-				}
-
-			}
-if(0) {
-			{
-// which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			//const Ax = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
-			//const Ay = dQ_0(_3to1(t,r,values.B),t,r,values.B,values.Amax );
-			const Ax = dM_0(r,t,r,values.B,values.A,values.Amax );
-			const Ay = dM_0(t,t,r,values.B,values.A,values.Amax );
-			//plot(t,Ay,pens[3] );
-			//plot(t,Ax,pens[4] );
-			plot(Ax,Ay,pens[5] );
+				ax1=Ax; ay1=Ay;
+				//plot(Ax,Ay,pens[1] );
 			}
 			{
 // which is why this is parametarized across x,y,z,T axis... T isn't even a factor in this though
-			const Ax = dM_0(t,t,r,values.B,values.A,values.Amax );
-			const Ay = dM_0(r,t,r,values.B,values.A,values.Amax );
-			//plot(t,Ay,pens[3] );
-			//plot(t,Ax,pens[4] );
-			plot(Ax,Ay,pens[4] );
+				const Ax = B_0(r,t,r,values.B,values.A, values.Amax );
+				const Ay = B_0(t,t,r,values.B,values.A, values.Amax );
+				if( !first ) line( ax2,ay2,Ax, Ay,pens[2]); 
+
+				ax2=Ax; ay2=Ay;
+				//plot(Ax,Ay,pens[2] );
 			}
-}
+			if( first ) first = false;
+
 		}
 
 	}
@@ -462,6 +555,8 @@ if(0)
 	ctx.putImageData(_output, 0,0);
 
 }
+
+
 
 try {
 	drawsomething();
