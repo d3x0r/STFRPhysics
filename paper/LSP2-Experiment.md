@@ -90,7 +90,7 @@ to cover the lateral distance increases with speed; hence dividing by
 square root of C squared minus V squared and the resulting time
 contracted, so multiply by gamma).
 
-![image](/attach/media/image6.jpg)
+![image](/attach/media/image6.png)
 
 Figure 5: the X-axis is the speed of a body, the Y-axis is time to cover a unit distance, the green line is the time from front to back at a speed, the purple line is the time from back to front, and the black line through 1 is the time laterally. Green plus purple over 2 is a constant 1 time, matching the two-way propagation in the worst-case scenario.
 Figure 6: the X-axis is the speed of a body, the Y-axis is time to cover
