@@ -152,14 +152,15 @@ difference in linear rate while the earth rotates.
 
 ![example data](/lightspeed-example-data.png)
 
-	$A$ : constant delay between beginning a transmission.
-	$D_1$: delay between starting a transmission and signal starts transmitting.
-	$D_2$: delay between receiving circuit registers signal and timestamp is recorded.
-	$T_0$: Fixed tick rate of signal emitters
-	$T_1$: Total time between tick and timestamp. T_1=D_1+T_2+D_2
-	$T_2$: Time-of-flight between laser and detector.  Hypothesis predicts this will vary depending on direction of devices.
-	$T_F$: First timestamp.
-	$\delta_1$,$\delta_2$,$\delta_3$,$\delta4_$: Example deltas between recorded timestamps.
+
+  $A$ : constant delay between beginning a transmission.
+  $D_1$: delay between starting a transmission and signal starts transmitting.
+  $D_2$: delay between receiving circuit registers signal and timestamp is recorded.
+  $T_0$: Fixed tick rate of signal emitters
+  $T_1$: Total time between tick and timestamp. $T_1=D_1+T_2+D_2$
+  $T_2$: Time-of-flight between laser and detector.  Hypothesis predicts this will vary depending on direction of devices.
+  $T_F$: First timestamp.
+  $\delta_1$,$\delta_2$,$\delta_3$,$\delta4_$: Example deltas between recorded timestamps.
 
 In the above figure 18, the first line demonstrates a consistent clock period and constant time of propagation; the black marks (or the left of two marks together) are the clock pulses that trigger a transmission.  When transmission is triggered, a small delay happens represented by D_1, which is time for the laser to turn on.  Then the time-of-flight of light happens represented by T_2 as the time between D_1 and D_2.  Then the laser will hit the detector, and a small delay happens represented by D_2, and finally the time of observation by the detector is marked at T_1.
 
