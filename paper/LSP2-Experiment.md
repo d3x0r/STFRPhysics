@@ -150,6 +150,39 @@ probably from a slightly different gravitational gradient; though slight
 differences in north latitude will also skew the clock time, from a
 difference in linear rate while the earth rotates.
 
+![example data](/lightspeed-example-data.png)
+
+	$A$ : constant delay between beginning a transmission.
+	$D_1$: delay between starting a transmission and signal starts transmitting.
+	$D_2$: delay between receiving circuit registers signal and timestamp is recorded.
+	$T_0$: Fixed tick rate of signal emitters
+	$T_1$: Total time between tick and timestamp. T_1=D_1+T_2+D_2
+	$T_2$: Time-of-flight between laser and detector.  Hypothesis predicts this will vary depending on direction of devices.
+	$T_F$: First timestamp.
+	$\delta_1$,$\delta_2$,$\delta_3$,$\delta4_$: Example deltas between recorded timestamps.
+
+In the above figure 18, the first line demonstrates a consistent clock period and constant time of propagation; the black marks (or the left of two marks together) are the clock pulses that trigger a transmission.  When transmission is triggered, a small delay happens represented by D_1, which is time for the laser to turn on.  Then the time-of-flight of light happens represented by T_2 as the time between D_1 and D_2.  Then the laser will hit the detector, and a small delay happens represented by D_2, and finally the time of observation by the detector is marked at T_1.
+
+The delay in turning it on, and the delay for the electronics to register the signal should be constant.  The time-of-flight is predicted to change over time in small increments.  When the time-of-flight is shorter, then an offset will show up as a shorter time between subsequent pulses.  While the time-of-flight remains constant, there will be no offset between the pulses.  When the time-of-flight increases, then a longer time between two pulses will appear, but while the time-of-flight remains the same, there is no difference between subsequent pulses.
+
+The second line in the graph shows an example of transmission timestamp delays.  The first tick is the same width as the first line.  The second tick is slightly longer, and that delta is marked as +1.  The next tick is again to be longer marked with a +1, until the time settles out and the delta between red marks remains at 1 second.  Then after a few ticks, the time-of-flight decreases, which offsets the red mark from the black mark, and gets indicated with -1 steps.  
+
+The third line shows the sum of the delta times, which shows the total delta over time.
+
+The receiver only needs to record the times it receives a pulse and compare the differential time between each pulse.  The very first timestamp(T_F) marked is subtracted from all other timestamps, to bias the entire graph to 0; this step isn’t absolutely required.  The first differential time(Δ_0) is then subtracted from all other differential timestamps, which then shortens the delta to just how much difference there is between each red mark to the next red mark minus the off time between each mark, and the offset of the on time and reception triggering time.  Then all differentials are added together to get a total sum of differentials, and the total is divided by the number of samples minus one, and for each differential n from 1 to N, (n*total/(N-1)) is subtracted from each differential to remove any drift or cumulative error.  The first delta might be longer or shorter than expected, which will cause an overall shift to all deltas.  The test is meant to be done over 24 hours, so the speed of the first and last samples should be basically the same.  The last step to flatten the graph puts the start and end at 0.  
+
+The following graph is synthesized data and computed by this method.
+
+
+![example graph](/lightspeed-example-graph.png)
+
+
+Figure 19 above is an example graph of simulated data (https://d3x0r.github.io/STFRPhysics/math/indexAsyncClocks.html).  Both very noisy data and a smoothed function.  The horizontal grid represents nanoseconds of separation.  The send and receive time offsets are given 5 nano seconds of jitter instead of assuming they are constant.  The resulting signal is still quite legible.  Red is one simulated sensor; green is the other simulated sensor and white is the total difference between the sensors (red minus green in this case).
+The algorithm for analyzing the data is to take the first time delta as a base clock step (baseClock = event[1]-event[0]).  Each step is then computed from deltaTime[n-1] = event[n]-event[n-1] – baseClock.  This is saved in a separate array that accumulates the deltaTime for each step.  The last store total deltaTime is divided by the samples, and then scaled as a linear adjustment between the first and last sample and subtracted from the accumulated time.  This is assuming a complete run of data spans 1 day, and the measured differences in the speed of light at the start and at the end should be identical and are computed as 0.
+The resulting accumulated delta can be smoothed by stepping from 1 to the number of samples -1 and calculating deltaTime[n] = (deltaTime[n-1]+deltaTime[n]+deltaTime[n+1])/2.  The above graph applied the smoothing 10 times to get the smoothed curve.
+A smoothing of the times of the events vs the time-of-day clock recorded with the data, so comparisons can be made at the same moment.  The simulated data test filled in an array, and only compared each array entry to the other same index in the array; while the actual times recorded in each are skewed.  A simple linear interpolation is probably sufficient.
+
+
 ## Increased Accuracy
 
 It might be a good idea to put a splitter near each emitter, and record
@@ -162,6 +195,25 @@ There is no requirement for synchronization of the remote clocks, and it
 doesn't matter whether they are transported or not, they can be switched
 on at any time, and as long as they tick at the same period can still
 produce a signal that the delta can be detected.
+
+## Existing Experiments on One Way Speed of Light
+
+Existing experiments that have been performed have generally resulted with no measurable effect.  None take note of specifical astrometric alignment and can easily only show a difference on the order of 〖5e〗^(-12), which was beyond detection.  That number is computed from the earth’s speed through the universe of ≈0.001c, and the earth’s rotation being 1/1000th of that.  √(〖0.001〗^2+〖0.000001〗^2 )=0.001000000005.  
+
+Many experiments expect that motion of the source of photons is responsible for a change, and this is inaccurate, other than changing the angle by light aberration effects, the speed of the light is not changed.
+
+Some experiments tried to measure distant x-rays from stars, which have already travelled many years, and then the earth’s rotation around the sun, plus or minus the rotation of the earth should give a small difference in time the signals are received, but again, it’s probable that these sources are perpendicular to the motion of the Earth, and have a very small effect on the time of measurement.
+
+https://en.wikipedia.org/wiki/De_Sitter_double_star_experiment - based on the idea that speed of light changes with motion of the source, which it does not.  Its frequency is shifted, that is the specific wave formed in space is determined by the motion of the source, but the speed is independent of the speed of the emitter.
+
+https://en.wikipedia.org/wiki/One-way_speed_of_light This article has many fallacies at the time of this writing (12-29-2023).  In the second paragraph “Experiments that attempt to directly probe the one-way speed of light independent of synchronization have been proposed, but none have succeeded in doing so.”  References a book by Michael Tooly ‘Time, tense, and causation’, (which is a rather expensive book to read a few pages in).  What it actually says is ‘many proposals have been advanced, and continue to be advanced, concerning experiments that could be used to determine the one-way speed of light—though as yet, no satisfactory experiment seems to have been devised.’  No experiments have been devised.  It also talks about ‘synchrony-free’ Special Relativity, but not about ‘synchrony-free’ experiments.
+
+Much further down the Wikipedia article also says, “Although experiments cannot be done in which the one-way speed of light is measured independently of any clock synchronization scheme,” which is somewhat true, but that does not discount that a difference in the speed of light can be measured.   
+
+Many words can be used to address each situation, but I haven’t yet seen an experiment that is either like the proposed experiment, or really deserves any more than the above thoughts. 
+
+It is possible that the 2011 OPERA faster-than-light neutrino anomaly [ref 9] is not entirely an error, but it depends on the time of day the experiment was conducted, the date and is known. OPERA used GPS to synchronize distant clocks.
+
 
 ## Alternative deployments
 
