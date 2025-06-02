@@ -175,7 +175,7 @@ The receiver only needs to record the times it receives a pulse and compare the 
 The following graph is synthesized data and computed by this method.
 
 
-![example graph](/lightspeed-example-graph.png)
+![example graph](/lightspeed-example-graph.jpg)
 
 
 Figure 19 above is an example graph of simulated data (https://d3x0r.github.io/STFRPhysics/math/indexAsyncClocks.html).  Both very noisy data and a smoothed function.  The horizontal grid represents nanoseconds of separation.  The send and receive time offsets are given 5 nano seconds of jitter instead of assuming they are constant.  The resulting signal is still quite legible.  Red is one simulated sensor; green is the other simulated sensor and white is the total difference between the sensors (red minus green in this case).
