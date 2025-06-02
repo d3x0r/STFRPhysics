@@ -12,6 +12,15 @@ This is related to Quantum Mechanics, and correlation of results, transmission o
 and the method of measure changes considerations slightly.  A Stern-Gerlach(SG) device passes every event to the next, while a polarizer
 ends up blocking the event instead, and nothing is transmitted.
 
+
+With the recent advent of LLMs I was able to ask it to show me other equations of the form `1-a/b`, and it led me to find 'relative change'.
+
+https://en.wikipedia.org/wiki/Relative_change
+
+Percentage error is equivalent.  Which can also be the percentage of occurance, or rate of occurance even, since probability over time is the same
+as number of events over time.
+
+
 ## ...
 
 
@@ -234,6 +243,54 @@ GHZ QM predcition - 100% (?)
 
 GHZ LHV Prediction - 66%+16% = 83.33%  (if the experiemental result is 0.87 minus 0.04, that's 0.83; and within the error bars).
 
+On further inepction, GHZ experiments trigger on the all 3 on state, and I've not found one that tests the other state. 
+Further,polarization spin and linear polarization are not separate basises, but are quite related. A quaurter wave filter
+will make a polarizer's direction not matter... other than polarizing the light past that point.
+
+https://www.youtube.com/watch?v=EBVNbRN805o MIT OpenCourseware   Optics: Quarter-wave plate | MIT Video Demonstrations in Lasers and Optics
+https://www.youtube.com/watch?v=_sUVXHfUVsY MIT OpenCourseware   Optics: Half-wave plate | MIT Video Demonstrations in Lasers and Optics
+https://www.youtube.com/watch?v=YNueJ1Al-CI MIT OpenCourseware   Optics: Scattered light in a dielectric | MIT Video Demonstrations in Lasers and Optics
+
+
+I did a monte carlo simulation - I turned up the intensity to 3; so there's 3 photons emitted per 1 detected; but this uses a xenon pulsed laser, which is certainly more than 3 photons.
+My detector 3 (on one of the setups) was most sporadic; since a beam splitter splits a beam by 1/2 and a polarizer actually transmits 0.707 (RMS).  But then polarizers I have personally used 
+seem to split more 60-40; and others in conversations on IRC said their experience could even be higher like 80-20 but not 50-50.
+
+https://d3x0r.github.io/STFRPhysics/math/indexBellInequality_GHZ.html  
+
+## Aspect Experiments
+
+These used two separate polarizers, tuned to detect only occasional signals from a sodium oven.  At 90 degrees, the total power that would be
+co-incidental would actually be 1/pi at 90 degrees not close to 0.  The experiment from 1975 detected non-zero coincidences of 0.049, but that's 
+a long way from 0.318. Photon detectors are high voltage things that will settle and lose partial signals at a time;  For simulation purposes I had
+to add a decay factor which mulitplied the current total by an percentage loss, and a settle factor which was just a flat subtraction from the value; either
+could be adjusted independantly so there's no decay and only settle, or vice versa.  Playing with those factors I could tune my detectors such that
+they would register a low detection rate at 90 degrees and a high at 0 degrees.  But mostly this is tuning of the parameters of the experiment to 
+give the results one was looking for; and is a bit of confirmation bias (looks right, can't be an error or measurement device parameter that was off).
+And, with perfect detectors, the simulation would detect between 50% and 31.8% coincidence.  (1/pi*100).  and polarizers are 50% transmissive anyway.
+
+Higher intensity photon experiments used stacked polarizers, and projecting cos(polarization angle) through each other
+results in the same results as the experiment; the 'signature cosine curve' of bell inequality is from the interaction of the polarizers with 
+the wavelets.
+
+Quantum Qubit (transmons) around 45 degrees are supposed to have violated CHSH.  This is statistaical error in the op-amp reading the phase of the
+wave.  At 45 degrees, it's 45 degrees which isn't up or down; there's a slight bump over a small range near 45 degrees.  op-amps are similar in character 
+to photodetectors, and have a threshold of detection, a rate that they settle or decay without further input.  at 45 degrees, the probe pulse is emitted as 1 cycle of a wave,
+and is received as a 2x wave 1/2 the hight of the original.  It's two waves; which in resonance of the op-amp can either register as 1 or 0 signals.
+
+## Misc Entanglement experiment over long distance
+
+https://arxiv.org/abs/1603.05705
+
+I'm not sure what the actual correlation is supposed to be - that RNGs picked the same number?
+
+Since everything is arranged at 45 degree offset, CHSH would lose a lot for excessive correlations; yet they give themselves a lot of a point.
+
+The math applied to the results is `sqrt( rate ratio )`, `(\sqrt{ 1 - <x.y>^2_{a,b}/n(a,b) } )`.  `sqrt( cos^2 )` ? which could just be `1 - x.y/n(a,b)`
+
+pulsed lasers establish a resonant spin rate; pulses are rarely 1 photon; it's no electrons that are transmitted, but information about the spin of the electron, and there's a high degree 
+of corelation anyway.  There is a dichroic(sp?) mirror that splits the wavelengths going back from the measurement; there's red and yellow lasers that are pumped; the yellow laser goes 
+through 5 
 
 ## CHSH Experiment
 
@@ -245,6 +302,7 @@ LHV Prediction `3*0.8 + 1` = 3.4.  That is to say I can (and did: [CHSH Game](ht
 
 LHV Prediction using CHSH Experimental angles of 0, 22.5, 45, and 67.5 : ( 0.86 + 0.86 + 0.86 - 0.6 )  or (2.58 - 0.6 ) = 3.18;  (still higher than QM prediction).
 
+And this is through a rate-ratio too.
 
 ### Scoring in Game
 
