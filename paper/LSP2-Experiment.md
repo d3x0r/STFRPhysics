@@ -31,7 +31,7 @@ delay as between the detector and emitter. (This isn't strictly a
 requirement, but a higher frequency isn't going to add any information
 either.)
 
-<img src="attach/media/image5.jpg" style="width:4.26562in;height:1.8in"
+![image](/attach/media/image5.jpg)
 alt="Figure 4: Example of pulse generation, which has a very short period of on-time, and a delay between pulses that is longer than the transmission delay between emitter and detector." />  
 Figure 5: Example of pulse generation, which has a very short period of
 on-time, and a delay between pulses that is longer than the transmission
@@ -90,9 +90,9 @@ to cover the lateral distance increases with speed; hence dividing by
 square root of C squared minus V squared and the resulting time
 contracted, so multiply by gamma).
 
-<img src="attach/media/image6.png"
-style="width:4.8861in;height:4.8861in"
-alt="Figure 5: the X-axis is the speed of a body, the Y-axis is time to cover a unit distance, the green line is the time from front to back at a speed, the purple line is the time from back to front, and the black line through 1 is the time laterally. Green plus purple over 2 is a constant 1 time, matching the two-way propagation in the worst-case scenario." />  
+![image](/attach/media/image6.jpg)
+
+Figure 5: the X-axis is the speed of a body, the Y-axis is time to cover a unit distance, the green line is the time from front to back at a speed, the purple line is the time from back to front, and the black line through 1 is the time laterally. Green plus purple over 2 is a constant 1 time, matching the two-way propagation in the worst-case scenario.
 Figure 6: the X-axis is the speed of a body, the Y-axis is time to cover
 a unit distance, the green line is the time from front to back at a
 speed, the purple line is the time from back to front, and the black

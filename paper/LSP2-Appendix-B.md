@@ -12,7 +12,7 @@ $$\begin{array}{r}
 T_{O} = \frac{\sqrt{\left( \left( \vec{X_{E}} + \vec{V_{E}}T \right) - \left( \vec{X_{O}} + \vec{V_{O}}T_{O} \right) \right)^{2}}}{C} + T\\ (1.2)
 \end{array}$$
 
-Define position term $\vec{P_{O}}\\$:
+Define position term $\vec{P_{O}}$:
 
 $$\begin{array}{r}
 \vec{P_{O}} = \vec{X_{E}} + \vec{V_{E}}T - \vec{X_{O}}\\ (1.11)
@@ -105,8 +105,8 @@ T_{O} = \frac{\sqrt{\frac{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2}}{D_
 \end{array}$$
 
 Multiply right-side by $\frac{\sqrt{D_{O}}}{\sqrt{D_{O}}}$,
-substituting *D*<sub>*O*</sub> will give equation (12).
-
+substituting $D_O$ will give equation (12).
+(This is a bad rendition I think) 
 $$\begin{array}{r}
 \boxed{T_{O} = \frac{\sqrt{\left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)^{2} - D_{O}\left( C^{2}T^{2} - \vec{P_{O}}\vec{P_{O}} \right)} + \left( C^{2}T + \vec{P_{O}}\vec{V_{O}} \right)}{D_{O}}}\\ (B.14)
 \end{array}$$
