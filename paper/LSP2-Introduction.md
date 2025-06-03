@@ -18,6 +18,16 @@ in a system that expects a null result from any interferometer
 experiments such as Michelson-Morley, or interferometer implementations
 such as The Laser Interferometer Gravitational-Wave Observatory (LIGO).
 
+
+## Postulates
+  1.	Light propagates at a constant speed.
+  2.	In a local frame, the two-way speed of light takes the same amount of time, on a local clock, in any direction.
+
+These are described in more detail later; (at the end of this page)   (provide links in markdown) 
+
+
+## Frames
+
 A frame is a set of orthogonal axes which measure distances between
 locations within the frame, the orientation of the frame, and a time.
 When a velocity is applied, the frame moves in the direction and speed
@@ -101,6 +111,13 @@ This makes variables mentioned in the text stand out.
 -  $\vec{X}^2$ is the same as $\vec{X}\cdot\vec{X}$.
 -  $\|\vec{X}\|$ is the same as $\sqrt{{\vec{X}}^{2}}$
 -  $X\cdot Y$ denotes a multiplication of two simple numbers; may also be written as $XY$.
+
+Other typical vector math applies:
+
+-	$\vec{X} + \vec{Y}$ or $\vec{X} - \vec{Y}$  Adds(or subtracts) each component of the vectors, and results in a vector.  Subtraction might be considered as multiplying a vector by -1, then adding them together.
+-	$c\vec{X}$ or $\vec{X}c$ Multiplies each component of a vector by a scalar.
+-	(+ -) occasionally the math might result in a + and a – together, convention is to not write the +.  
+
 
 $C$ is the constant speed of propagation defined in light-seconds per
 second as used in this paper. It may also be used as a distance, in
@@ -346,6 +363,8 @@ at the speed of light, unless the body is stationary.
 
 ## One Way Constant Speed of Light(C)
 
+(Postulate 1)
+
 Given a propagation speed of C, in a stationary, frictionless, massless
 medium, bodies move at various speeds in various directions, or combined
 into a single term at a certain velocity. This medium is called space.
@@ -354,3 +373,12 @@ time contraction (this is a term that will be defined later) that
 applies, the clock in the frame of space ticks at the fastest and
 constant rate. This clock may also be called the global clock as opposed
 to a local clock on a moving body, or in a local frame.
+
+
+Two Way Constant Duration of Light (local C)
+
+(Postulate 2)
+
+The time it takes for light to cover a span of space in a 2-way trip, within a frame, with all measurements done in that frame, will take the same amount of time on a clock in that frame, regardless of velocity. 
+A two-way trip is that light is emitted from a location, it goes some distance and is retroflected to the originating location to be detected.  The length of time this two-way trip takes is constant.   This will imply a requirement for time dilation, where the clock in the frame will run slower, to account for the fact the light takes a longer amount of time to cover that span at a velocity.
+The other constraint this imposes is length contraction, which is required for the forward-backward path along the velocity to take the same amount of time as a perpendicular path to the velocity.
