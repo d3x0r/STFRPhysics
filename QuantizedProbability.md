@@ -20,9 +20,22 @@ https://en.wikipedia.org/wiki/Relative_change
 Percentage error is equivalent.  Which can also be the percentage of occurance, or rate of occurance even, since probability over time is the same
 as number of events over time.
 
-The interpretations and implementations of 'Relative Change' do differ. no absolute value required - negative numbers give you down-down as `-` and up-up as `+`.
+## TLDR
+
+The interpretations and implementations of 'Relative Change' do differ. no absolute value required - negative numbers give you down-down as `-` and up-up as `+`.  A and B are
+always positive counts in this application anyway.
 
 The full expression is a multipart equation though, as the inflection of the curve changes at 0.
+
+The other constraint is `A+B=2C` which simplifies to `a+b=2` where `a=A/C` and `b=B/C` where C is in whatever units A and B are.. and is 1/2 the total value I guess... doesn't matter though
+`((A-B)/C)/(B/C)` or `((A-B)/2C)/(B/2C)`  or `(a-b)/b` doesn't really matter.  `(a-b)/b` is `a/b-b/b` or `a/b-1`.  The rule is though to divide by which ever is larger; so the other side is `(a-b)/a` or `1-b/a`.  which completes
+the curve when A>B.  `0 <= a,b <= 2`; a and b will be values between and including 0 and 2. They have an explicit relation of `a=2-b` and `b=2-a`  depending on which way you'd like to substitute.
+
+So `(a-(2-a))/(2-a)` and `a-(2-a)/a`  becomes `a/(2-a)-1` and `1-(2-a)/a`.
+
+`((2-b)-b)/(b)` and `((2-b)-b)/(2-b)`  or `(2-b)/b-1` and `1-b/(2-b)`.
+
+
 
 ## ...
 
