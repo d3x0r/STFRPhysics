@@ -15,7 +15,7 @@ ends up blocking the event instead, and nothing is transmitted.
 
 With the recent advent of LLMs I was able to ask it to show me other equations of the form `1-a/b`, and it led me to find 'relative change'.
 
-https://en.wikipedia.org/wiki/Relative_change
+https://en.wikipedia.org/wiki/Relative_change 
 
 Percentage error is equivalent.  Which can also be the percentage of occurance, or rate of occurance even, since probability over time is the same
 as number of events over time.
@@ -290,7 +290,7 @@ The math applied to the results is `sqrt( rate ratio )`, `(\sqrt{ 1 - <x.y>^2_{a
 
 pulsed lasers establish a resonant spin rate; pulses are rarely 1 photon; it's no electrons that are transmitted, but information about the spin of the electron, and there's a high degree 
 of corelation anyway.  There is a dichroic(sp?) mirror that splits the wavelengths going back from the measurement; there's red and yellow lasers that are pumped; the yellow laser goes 
-through 5 
+through 5 beam splitters before interacting with the sample - surely there's a lot of wavelets there.
 
 ## CHSH Experiment
 
