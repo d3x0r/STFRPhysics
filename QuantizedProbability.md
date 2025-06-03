@@ -20,6 +20,9 @@ https://en.wikipedia.org/wiki/Relative_change
 Percentage error is equivalent.  Which can also be the percentage of occurance, or rate of occurance even, since probability over time is the same
 as number of events over time.
 
+The interpretations and implementations of 'Relative Change' do differ. no absolute value required - negative numbers give you down-down as `-` and up-up as `+`.
+
+The full expression is a multipart equation though, as the inflection of the curve changes at 0.
 
 ## ...
 
