@@ -238,24 +238,26 @@ of linear veocity.
 
 ### Balance of weights
 
-The first apparatus we start with is a beam balance scale. The ideal scale has 3 pivots, one in the middle where the fulcrum is (the point the beam turns 
+This was falsified with subsequent experimentation with 3D printed parts... weights weren't the equivalence.
+
+__The first apparatus we start with is a beam balance scale. The ideal scale has 3 pivots, one in the middle where the fulcrum is (the point the beam turns 
 around), and 2 pivots where 
 objects to be compared are hung.  A beam balance will settle into a set angle for some ratio of objects, it's not just that if one side is heavier the 
 scale hasa critical failure and falls with the
-heaviest side straight down.
+heaviest side straight down.__
 
-When balancing on a scale, there has to be a total of 2 things to have any sort of balance. Even when the scale is empty, on one side you have 'nothing' 
+__When balancing on a scale, there has to be a total of 2 things to have any sort of balance. Even when the scale is empty, on one side you have 'nothing' 
 and the other side is 'nothing' for a total of 2 'nothing's.  If you have 10 apples and another 10 apples you have 2 (10 apples); and even if you were comparing parts of objects
-1/2 of an apple compares against another half apple and you have two half apples.
+1/2 of an apple compares against another half apple and you have two half apples.__
 
 
-The calculation for the angle for a count of similar objects `A` and `B` is just `(A-B)/A` or `(A-B)/B` depending on whether `A` or `B` is larger respectively.  These can be algebraicly
+__The calculation for the angle for a count of similar objects `A` and `B` is just `(A-B)/A` or `(A-B)/B` depending on whether `A` or `B` is larger respectively.  These can be algebraicly
 rearranged as `1-B/A` and `A/B-1`.  Another truth is `A+B=2c`.  Really since A/B and B/A are the values being used, any common divisor they have cancels out with itself; as in `A/C+B/C=2` and `A/C / B/C = A/B`.
-And really just saying `A+B=2` is another useful identity in the algebra. 
+And really just saying `A+B=2` is another useful identity in the algebra. __
 
-The function `f(a,b) = { a>b: 1-b/a, a/b-1 }` can plotted with `g(x)=f(x, 2-x)`, which uses x and it's compliment of 2-x to graph the fraction of 90 degrees for any ratio of objects.  `1-(x/(2-x))` and `(2-x)/x-1` then are the expressions for a plot;
+__The function `f(a,b) = { a>b: 1-b/a, a/b-1 }` can plotted with `g(x)=f(x, 2-x)`, which uses x and it's compliment of 2-x to graph the fraction of 90 degrees for any ratio of objects.  `1-(x/(2-x))` and `(2-x)/x-1` then are the expressions for a plot;
 note that were there is a `2` that `a+b` can be substitued.  The 2 in this case is sort of a scalar to the function; 2 can be replaced with 'pi' for radians input, or '180' for degrees.  2 is actually 2
-quarter turns.
+quarter turns.__
 
 
 
