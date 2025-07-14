@@ -1,22 +1,24 @@
 
 // convert a rotation vector R3 to 3x3 rotation matrix
 // maybe upper left of 4x4 rotation +translation matrix
-
+// https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Axis%E2%80%93angle_composition  
+// applied to (1,0,0),(0,1,0), and (0,0,1) to result with the components
+// of the resulting vector.  (not half-angle)
 mat3 q_to_basis( vec3 q ) {
 
 	float th = sqrt( q*q )
-	vec3 const a = q/th;
+	vec3 a = q/th;
 
 	float s,c1;
 	sincos( th, s, c1 );
-	float const c = 1-c1;
+	float c = 1-c1;
 
-	vec3 const ca = c*a;
+	vec3 ca = c*a;
 	// mixed product, not cross...
 	// used as a common basis to add/subtract from
-	vec3 const yzxzxy = { ca.y*a.z, ca.z*a.x, ca.x*a.y };
-	vec3 const sa = s*a;
-	vec3 const xxyyzz = ca*a;
+	vec3 yzxzxy = { ca.y*a.z, ca.z*a.x, ca.x*a.y };
+	vec3 sa = s*a;
+	vec3 xxyyzz = ca*a;
 	vec3 spx = yzxzxy + sa;
 	vec3 smx = yzxzxy - sa;
 	mat3 basis = { { cl+xxyyzz.x, smx.z,       spx.y }
@@ -26,6 +28,35 @@ mat3 q_to_basis( vec3 q ) {
 	return basis;	
 
 }
+
+mat3 q4_to_basis( vec4 q ) {
+
+	float th = sqrt( q*q )
+	vec3 a = q/th;
+
+	float s,c1;
+	sincos( th, s, c1 );
+	float c = 1-c1;
+
+	vec4 ca = c*a;
+	// mixed product, not cross...
+	// used as a common basis to add/subtract from
+	vec4 yzw_xzw_xyw_xyz = { ca.y*a.z*a.w*a.w, ca.z*a.x*a.w, ca.x*a.y*a.w, ca.x*a.y*a.z };
+	vec3 sa = s*a;
+	vec3 xxyyzzww = ca*a;
+	vec3 spx = yzxzxyww + sa;
+	vec3 smx = yzxzxyww - sa;
+/*
+	mat4 basis = { { cl+xxyyzz.x, smx.z,       spx.y,       ?smx.w  }
+	             , { spx.z,       c1+xxyyzz.y, smx.x,       ?smx.w  }
+	             , { smx.y,       spx.x,       c1+xxyyzz.z, ?smx.w } 
+	             , {     ?,           ?,       ?,           c1+xxyyzz.w } 
+					};
+*/
+	return basis;	
+
+}
+
 
 // apply torque to a rotation; rotate a rotation around an axis
 // by and amount theta rotation is intrinsic - that is the torque 
@@ -40,8 +71,8 @@ vec3 q_rot_q( vec3 q, float qth, vec3 a, float th, float intrin ) {
 	float cxmy,cxpy,sxmy,sxpy;
 	sincos( (th - qth)/2, sxmy, cxmy );
 	sincos( (th + qth)/2, sxpy, cxpy );
-
-	float ang = acos( ( ( dot( q,a )*(cxpy - cxmy) + cxmy + cxpy )/2 )*2;// + oct * (Math.PI*2);
+	float AdotB = dot( q,a );
+	float ang = acos( ( AdotB*(cxpy - cxmy) + cxmy + cxpy )/2 )*2;// + oct * (Math.PI*2);
 	if( ang ) {
 		vec3 C = ( (1-2*intrin)*cross( a, q ) * (cxmy - cxpy) +  a * (sxmy + sxpy) + q * (sxpy - sxmy) );
 		// C will be greater than 0 since angle > 0
@@ -51,6 +82,7 @@ vec3 q_rot_q( vec3 q, float qth, vec3 a, float th, float intrin ) {
 		return C*Clx;
 	} 
 	// result angle is 0
+	// 2pi is actually also 0... and would keep the vector's direction...
 	if( AdotB > 0 ) {
 		return q*PI*2.0;
 	}
@@ -81,6 +113,10 @@ vec3 r_rot_v( vec3 q, vec3 v ) {
 		// this is also similar to  https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
 		//  but this isn't half angle - so it's not a conversion to quaternion, so the result is different...
 		// more like Rodrigues rotation formula https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+		// if this had vec4 inputs, cross product is 6 terms
+		// which makes it incompatible with any other output dimensions.
+		// the cross product is relative to planes defined by pairs of axii
+		// and in no way represents a rotation around the 4th axis.
 		return v*c + s*cross( ax, v ) + ax * (1-c)*dot(ax,v);
 	}
 }
