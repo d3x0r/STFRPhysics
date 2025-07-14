@@ -267,6 +267,13 @@ function drawAnalogArm(curSliders,slerp) {
 	const v = { x:0,y:1,z:0};
 
 	{
+
+	const r0 = new lnQuat( 0, lnQ1.x,lnQ1.y,lnQ1.z).update();
+	const r1 = new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update();
+	const r2 = new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update();
+	const r3 = new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update();
+	const r4 = new lnQuat( 0, lnQ5.x,lnQ5.y,lnQ5.z).update();
+
 	const t2 = fixAxleRotation?new lnQuat( 0, lnQ2.x,lnQ2.y,lnQ2.z).update().freeSpin( lnQ1.θ*timeScale, lnQ1 ):new lnQuat(lnQ2);
 	const t3 = fixAxleRotation?new lnQuat( 0, lnQ3.x,lnQ3.y,lnQ3.z).update().freeSpin( t2.θ*timeScale, t2 ):new lnQuat(lnQ3);
 	const t4 = fixAxleRotation?new lnQuat( 0, lnQ4.x,lnQ4.y,lnQ4.z).update().freeSpin( t3.θ*timeScale, t3 ):new lnQuat(lnQ4);
@@ -398,11 +405,16 @@ function drawAnalogArm(curSliders,slerp) {
 			if( showArms )
 			{
 				{
-					const xyz = {x:to.nx, y:to.ny, z:to.nz};
-					const delxyz = to.applyDel( xyz, -1 );
+					const xyz = n==0?{x:r0.nx, y:r0.ny, z:r0.nz}
+								:n==1?{x:r1.nx, y:r1.ny, z:r1.nz}
+								:n==2?{x:r2.nx, y:r2.ny, z:r2.nz}
+								:n==3?{x:r3.nx, y:r3.ny, z:r3.nz}
+								:{x:r4.nx, y:r4.ny, z:r4.nz}
+
+					//const delxyz = to.applyDel( xyz, -1 );
 
 					normalVertices.push( new THREE.Vector3( (0  )*spaceScale   ,( 0)*spaceScale      , (0)*spaceScale  ))
-					normalVertices.push( new THREE.Vector3( (0 + delxyz.x*3)*spaceScale   ,( 0+ delxyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (0 + xyz.x*3)*spaceScale   ,( 0+ xyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
 					pushN2(n,4.9,0.2);
 				}
 
