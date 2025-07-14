@@ -1,4 +1,7 @@
 
+// convert a rotation vector R3 to 3x3 rotation matrix
+// maybe upper left of 4x4 rotation +translation matrix
+
 mat3 q_to_basis( vec3 q ) {
 
 	float th = sqrt( q*q )
@@ -9,14 +12,16 @@ mat3 q_to_basis( vec3 q ) {
 	float const c = 1-c1;
 
 	vec3 const ca = c*a;
+	// mixed product, not cross...
+	// used as a common basis to add/subtract from
 	vec3 const yzxzxy = { ca.y*a.z, ca.z*a.x, ca.x*a.y };
 	vec3 const sa = s*a;
 	vec3 const xxyyzz = ca*a;
 	vec3 spx = yzxzxy + sa;
 	vec3 smx = yzxzxy - sa;
-	mat3 basis = { { cl+xxyyzz.x, smx.z, spx.y }
-	             , { spx.z, c1+xxyyzz.y, smx.x }
-	             , { smx.y, spx.x, c1+xxyyzz.z } };
+	mat3 basis = { { cl+xxyyzz.x, smx.z,       spx.y }
+	             , { spx.z,       c1+xxyyzz.y, smx.x }
+	             , { smx.y,       spx.x,       c1+xxyyzz.z } };
 
 	return basis;	
 
