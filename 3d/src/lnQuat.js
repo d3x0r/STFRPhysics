@@ -1,3 +1,10 @@
+
+
+// this is obsolete
+// this was replaced by lnQuatSq.js
+
+if(false) {
+
 const speedOfLight = 1;
 
 // control whether type and normalization (sanity) checks are done..
@@ -1093,5 +1100,6 @@ function longslerp(a, b, t ) {
       q[3] /= length;
     }
 
+}
 // End SLERP
 //----------------------------------------------
