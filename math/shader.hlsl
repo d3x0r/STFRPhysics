@@ -22,9 +22,14 @@ mat3 q_to_basis( vec3 q ) {
 
 }
 
-
-vec3 q_rot_q( vec3 q, float qth, vec3 a, float th ) {
-//	function finishRodrigues( q, oct, ax, ay, az, th, extrinsic ) {
+// apply torque to a rotation; rotate a rotation around an axis
+// by and amount theta rotation is intrinsic - that is the torque 
+// vector is anchored to the rotation.
+// the cross product needs to be reversed if torque is external to the
+// rotating frame.
+// 0 intrin is 1 scalar
+// 1 intrin is -1 scalar
+vec3 q_rot_q( vec3 q, float qth, vec3 a, float th, float intrin ) {
 //	oct = oct || Math.floor(q.Î¸/(Math.PI*2));
 
 	float cxmy,cxpy,sxmy,sxpy;
@@ -33,20 +38,22 @@ vec3 q_rot_q( vec3 q, float qth, vec3 a, float th ) {
 
 	float ang = acos( ( ( dot( q,a )*(cxpy - cxmy) + cxmy + cxpy )/2 )*2;// + oct * (Math.PI*2);
 	if( ang ) {
-		vec3 C = ( cross( a, q ) * (cxmy - cxpy) +  a * (sxmy + sxpy) + q * (sxpy - sxmy) );
-
-		float Clx = 1/sqrt(dot(c*c));
+		vec3 C = ( (1-2*intrin)*cross( a, q ) * (cxmy - cxpy) +  a * (sxmy + sxpy) + q * (sxpy - sxmy) );
+		// C will be greater than 0 since angle > 0
+		float Clx = 1/sqrt(dot(C,C));
 
 		vec3 n = C*Clx;
 		return C*Clx;
 	} 
 	// result angle is 0
 	if( AdotB > 0 ) {
-		return q*(qth+th);
+		return q*PI*2.0;
 	}
-	return q*(qth-th);
+	return -q*PI*2.0;
 }
 
+//  rotation vector input (axis*angle), (axis*angle)
+// decompose to (axis,angle), (axis,angle) and call common rotation
 vec3 r_rot_r( vec3 q, vec3 a ) {
 	float qth = sqrt( dot(q,q) )
 	vec3 nq = q/qth;
@@ -55,7 +62,10 @@ vec3 r_rot_r( vec3 q, vec3 a ) {
 	return q_rot_q( nq, qth, na, th );
 }
 
+
+// rotate a point V around axis*angle
 vec3 r_rot_v( vec3 q, vec3 v ) {
+	// decompose to axis, angle
 	float len = sqrt( dot( q,q ) );
 	if( len < 0.000000001 ) {
 		return v;
@@ -63,9 +73,19 @@ vec3 r_rot_v( vec3 q, vec3 v ) {
 		float c, s;
 		sincos( angle, c, s );
 		vec3 ax = q/len;
-		return v*c + s*cross( ax, v ) + ax * (1-c)*dot(q,v);
+		// this is also similar to  https://blog.molecular-matters.com/2013/05/24/a-faster-quaternion-vector-multiplication/
+		//  but this isn't half angle - so it's not a conversion to quaternion, so the result is different...
+		// more like Rodrigues rotation formula https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+		return v*c + s*cross( ax, v ) + ax * (1-c)*dot(ax,v);
 	}
 }
+
+// this computes a cross product of two axis, angle rotation axii
+// and results with a rotation vector that rotates one rotation vector
+// to the other (doesn't it?)
+// if this is used to compute the cross produce of an impulse
+// with a body, the resultig torque vector as a rotation vector
+// becomes additive with all other torque vectors.
 
 vec3 q_cross_q( vec3 a, float ath, vec3 b, float bth ) {
         float angle = acos( dot( a, b ) );
@@ -80,7 +100,8 @@ vec3 q_cross_q( vec3 a, float ath, vec3 b, float bth ) {
         return a;
 }
 
-
+// 3d rotation vectors - this isn't a thing...
+// 
 vec3 r_cross_r( vec3 a, vec3 b ) {
         float ath = sqrt( dot(a,a));
         float bth = sqrt( dot(b,b));
