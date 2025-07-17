@@ -54,7 +54,7 @@ mat3 q_to_basis( vec3 q ) {
 }
 
 ```
-$$q=\begin{bmatrix}x\\y\\z\end{bmatrix}$$
+$$q=\begin{bmatrix}x \\ y \\ z\end{bmatrix}$$
 
 $$ \theta = \sqrt{q\cdot q}$$
 
@@ -66,7 +66,9 @@ $$\vec{sa} =\sin(\theta)a$$
 
 $$\begin{matrix}\vec{xxyyzz}=ca * a & | & \begin{bmatrix}\frac{(1-\cos\left(\theta\right))xx}{\theta\theta}\\ \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} \\ \frac{(1-\cos\left(\theta\right))zz}{\theta\theta} \end{bmatrix} \end{matrix}$$
 
-$$\begin{matrix}\vec{xyz} = (ca.y*a.z, ca.z*a.x, ca.x*a.y) & |& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} \\  \end{bmatrix} \end{matrix}$$
+(not sure why the following is broken)
+
+$$\begin{matrix}\vec{xyz} = (ca.y*a.z, ca.z*a.x, ca.x*a.y) & | & \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} \\  \end{bmatrix} \end{matrix}$$
 
 $$\begin{matrix}\vec{xyz} + \vec{sa} &|& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} + \sin(\theta)\frac{x}{\theta} \\
 (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} + \sin(\theta)\frac{y}{\theta} \\
