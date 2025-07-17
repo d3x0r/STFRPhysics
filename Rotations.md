@@ -25,6 +25,63 @@ from https://en.wikipedia.org/wiki/Euler%27s_rotation_theorem
     A × B   indicates cross product
 ```
 
+## Get Basis Matrix
+
+``` glsl
+mat3 q_to_basis( vec3 q ) {
+
+	float th = sqrt( q*q )
+	vec3 a = q/th;
+
+	float s,c;
+	sincos( th, s, c );
+	float c1 = 1-c;
+
+	vec3 ca = c1*a;
+	// mixed product, not cross...
+	// used as a common basis to add/subtract from
+	vec3 yzxzxy = { ca.y*a.z, ca.z*a.x, ca.x*a.y };
+	vec3 sa = s*a;
+	vec3 xxyyzz = ca*a;
+	vec3 spx = yzxzxy + sa;
+	vec3 smx = yzxzxy - sa;
+	mat3 basis = { { c+xxyyzz.x, smx.z,      spx.y }
+	             , { spx.z,      c+xxyyzz.y, smx.x }
+	             , { smx.y,      spx.x,      c+xxyyzz.z } };
+
+	return basis;	
+
+}
+
+```
+$$q=\begin{bmatrix}x\\y\\z\end{bmatrix}$$
+$$ \theta = \sqrt{q\cdot q}$$
+$$ \begin{matrix} a = \frac{q}{\theta} & \begin{bmatrix}\frac{x}{\theta}\\ \frac{y}{\theta} \\ \frac{z}{\theta} \end{bmatrix}\end{matrix}$$
+$$ \vec{ca} =(1-\cos\left(\theta\right))  a $$
+$$\vec{sa} =\sin(\theta)a$$
+$$\begin{matrix}\vec{xxyyzz}=(1-\cos\left(\theta\right)) * a^2 & | & \begin{bmatrix}\frac{(1-\cos\left(\theta\right))xx}{\theta\theta}\\ \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} \\ \frac{(1-\cos\left(\theta\right))zz}{\theta\theta} \end{bmatrix} \end{matrix}$$
+$$\begin{matrix}\vec{xyz} = (ca.y*a.z, ca.z*a.x, ca.x*a.y) & |& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} \\  \end{bmatrix} \end{matrix}$$
+$$\begin{matrix}\vec{xyz} + \vec{sa} &|& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} + \sin(\theta)\frac{x}{\theta} \\
+(1-\cos\left(\theta\right))\frac{zx}{\theta\theta} + \sin(\theta)\frac{y}{\theta} \\
+(1-\cos\left(\theta\right))\frac{xy}{\theta\theta} + \sin(\theta)\frac{z}{\theta} \\
+\end{bmatrix} \end{matrix}$$
+$$\begin{matrix}\vec{xyz} - \vec{sa}&| & \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} - \sin(\theta)\frac{x}{\theta} \\
+(1-\cos\left(\theta\right))\frac{zx}{\theta\theta} - \sin(\theta)\frac{y}{\theta} \\
+(1-\cos\left(\theta\right))\frac{xy}{\theta\theta} - \sin(\theta)\frac{z}{\theta} \\
+\end{bmatrix} \end{matrix}$$
+### Final Matrix output
+
+$$
+ \begin{bmatrix} 
+ \cos(\theta)- \frac{(1-\cos\left(\theta\right))xx}{\theta\theta} & (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} - \sin(\theta)\frac{z}{\theta}& (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} + \sin(\theta)\frac{y}{\theta} \\
+ (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} + \sin(\theta)\frac{z}{\theta}& \cos(\theta)- \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} &(1-\cos\left(\theta\right))\frac{yz}{\theta\theta} - \sin(\theta)\frac{x}{\theta}  \\
+ (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} - \sin(\theta)\frac{y}{\theta} &(1-\cos\left(\theta\right))\frac{yz}{\theta\theta} + \sin(\theta)\frac{x}{\theta} &\cos(\theta)- \frac{(1-\cos\left(\theta\right))zz}{\theta\theta}
+ \end{bmatrix}
+$$```$$
+
+
+
+$$ \sin\left(\theta\right)   \cos\left(\theta\right)   (1-\cos\left(\theta\right))$$
 ## Rotating a Rotation(A RRF B)
 
 The Rodrigues Rotation Formula may be used with axis-angle representation to compose multiple rotations, 
