@@ -55,20 +55,29 @@ mat3 q_to_basis( vec3 q ) {
 
 ```
 $$q=\begin{bmatrix}x\\y\\z\end{bmatrix}$$
+
 $$ \theta = \sqrt{q\cdot q}$$
+
 $$ \begin{matrix} a = \frac{q}{\theta} & \begin{bmatrix}\frac{x}{\theta}\\ \frac{y}{\theta} \\ \frac{z}{\theta} \end{bmatrix}\end{matrix}$$
+
 $$ \vec{ca} =(1-\cos\left(\theta\right))  a $$
+
 $$\vec{sa} =\sin(\theta)a$$
-$$\begin{matrix}\vec{xxyyzz}=(1-\cos\left(\theta\right)) * a^2 & | & \begin{bmatrix}\frac{(1-\cos\left(\theta\right))xx}{\theta\theta}\\ \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} \\ \frac{(1-\cos\left(\theta\right))zz}{\theta\theta} \end{bmatrix} \end{matrix}$$
+
+$$\begin{matrix}\vec{xxyyzz}=ca * a & | & \begin{bmatrix}\frac{(1-\cos\left(\theta\right))xx}{\theta\theta}\\ \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} \\ \frac{(1-\cos\left(\theta\right))zz}{\theta\theta} \end{bmatrix} \end{matrix}$$
+
 $$\begin{matrix}\vec{xyz} = (ca.y*a.z, ca.z*a.x, ca.x*a.y) & |& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} \\ (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} \\  \end{bmatrix} \end{matrix}$$
+
 $$\begin{matrix}\vec{xyz} + \vec{sa} &|& \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} + \sin(\theta)\frac{x}{\theta} \\
 (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} + \sin(\theta)\frac{y}{\theta} \\
 (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} + \sin(\theta)\frac{z}{\theta} \\
 \end{bmatrix} \end{matrix}$$
+
 $$\begin{matrix}\vec{xyz} - \vec{sa}&| & \begin{bmatrix} (1-\cos\left(\theta\right))\frac{yz}{\theta\theta} - \sin(\theta)\frac{x}{\theta} \\
 (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} - \sin(\theta)\frac{y}{\theta} \\
 (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} - \sin(\theta)\frac{z}{\theta} \\
 \end{bmatrix} \end{matrix}$$
+
 ### Final Matrix output
 
 $$
@@ -77,11 +86,11 @@ $$
  (1-\cos\left(\theta\right))\frac{xy}{\theta\theta} + \sin(\theta)\frac{z}{\theta}& \cos(\theta)- \frac{(1-\cos\left(\theta\right))yy}{\theta\theta} &(1-\cos\left(\theta\right))\frac{yz}{\theta\theta} - \sin(\theta)\frac{x}{\theta}  \\
  (1-\cos\left(\theta\right))\frac{zx}{\theta\theta} - \sin(\theta)\frac{y}{\theta} &(1-\cos\left(\theta\right))\frac{yz}{\theta\theta} + \sin(\theta)\frac{x}{\theta} &\cos(\theta)- \frac{(1-\cos\left(\theta\right))zz}{\theta\theta}
  \end{bmatrix}
-$$```$$
+$$
 
 
 
-$$ \sin\left(\theta\right)   \cos\left(\theta\right)   (1-\cos\left(\theta\right))$$
+
 ## Rotating a Rotation(A RRF B)
 
 The Rodrigues Rotation Formula may be used with axis-angle representation to compose multiple rotations, 
