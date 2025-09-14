@@ -6,12 +6,9 @@
 | 2. [Length Contraction](LSP2-Length-Contraction.md) | 6. [Results](LSP2-Results.md)                         | [Appendix B](LSP2-Appendix-B.md)                                      | [Appendix F](LSP2-Appendix-F.md) | [Appendix J](LSP2-Appendix-J.md) |
 # Appendix D (V=C)
 
-When V=C, then the equations can be solved by substituting C for the
-appropriate velocity. Later in the process the V term that was replaced
-can be restored back to C, but then this covers the singularity of
-dividing by $C^2$ − $V$<sup>2</sup> = 0 when it equals 0.
+When V=C, then the equations can be solved by substituting C for the appropriate velocity. Later in the process the V term that was replaced can be restored back to C, but then this covers the singularity of dividing by $C^2$ − $V$<sup>2</sup> = 0 when it equals 0.
 
-## Solve for T when $\left\| \vec{{V}_{{E}}} \right\|$=C…
+## Solve for $T_E$ when $\left\| \vec{{V}_{{E}}} \right\|$=C…
 
 This only works if
 $\vec{X_{E}} \neq \vec{X_{O}}$.

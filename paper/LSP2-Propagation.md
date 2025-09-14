@@ -183,13 +183,13 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\left( D_{E} + \vec{V_{O}}\vec{V_{O}} \right)} - \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{D_{E}}\\ (1.20)
+T_{\Delta O} = \frac{\sqrt{\left(\vec{P_{\mathrm{\Delta}}} \vec{V_{O}}\right)^2+\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}D_{E} } + \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{D_{E}}\\ (1.20)
 \end{array}$$
 
 Broken into partial expressions:
 
 $$\begin{array}{r}
-A_{\Delta O} = - \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (1.21)
+A_{\Delta O} = \vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}\\ (1.21)
 \end{array}$$
 
 $$\begin{array}{r}
@@ -201,7 +201,7 @@ D_{\Delta O} = C^{2} - {\vec{V_{O}}}^{2}\\ (1.23)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} - D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\ (1.24)
+T_{\Delta O} = \frac{\sqrt{{B_{\Delta O}}^{2} + D_{\Delta O}A_{\Delta O}} + B_{\Delta O}}{D_{\Delta O}}\\ (1.24)
 \end{array}$$
 
 The position an event is seen:
@@ -228,13 +228,13 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{\Delta E} = \frac{\sqrt{D_{\Delta O}\vec{P_{\Delta O}}\vec{P_{\Delta O}} + {\vec{P_{\Delta O}}}^{2}{\vec{V_{E}}}^{2}} + \vec{P_{\Delta O}}\vec{V_{E}}}{D_{\Delta O}}}\\ (1.29)
+\boxed{T_{\Delta E} = \frac{\sqrt{D_{\Delta O}\vec{P_{\Delta O}}\vec{P_{\Delta O}} + \left({\vec{P_{\Delta O}}}{\vec{V_{O}}}\right)^{2}} + \vec{P_{\Delta O}}\vec{V_{O}}}{D_{\Delta O}}}\\ (1.29)
 \end{array}$$
 
 Broken into partial expressions:
 
 $$\begin{array}{r}
-A_{\Delta E} = - \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (1.30)
+A_{\Delta E} = \vec{P_{\Delta O}}\vec{P_{\Delta O}}\\ (1.30)
 \end{array}$$
 
 $$\begin{array}{r}
@@ -246,7 +246,7 @@ D_{\Delta E} = C^{2} - {\vec{V_{E}}}^{2}\\ (1.32)
 \end{array}$$
 
 $$\begin{array}{r}
-T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}}\\ (1.33)
+T_{\Delta E} = \frac{\sqrt{{B_{\Delta E}}^{2} + D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}}\\ (1.33)
 \end{array}$$
 
 Event seen position, change in emitter position:
@@ -256,25 +256,14 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - \frac{\sqrt{{B_{\Delta E}}^{2} - D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}} \right)\vec{V_{E}}\\ (1.35)
+\vec{X_{P}} = \vec{X_{E}} + \left( T_{O} - \frac{\sqrt{{B_{\Delta E}}^{2} + D_{\Delta E}A_{\Delta E}} + B_{\Delta E}}{D_{\Delta E}} \right)\vec{V_{E}}\\ (1.35)
 \end{array}$$
 
 ## Special Case for V=C
 
-The above equations are the propagation delay between any two points on
-two moving bodies each with their own independent velocities. The above
-solutions are only valid for $V$ &lt; $C$, or $V$ &gt; $C$; if
-$V$ &gt; $C$, then the negative of the square root should also be
-considered as a solution; this will show the craft going backwards
-towards where it came from, as the signals it had emitted when it was
-there will finally reach the viewer. If $V$ = $C$, the following special
-case formula can used.
+The above equations are the propagation delay between any two points on two moving bodies each with their own independent velocities. The above solutions are only valid for $V \lt C$, or $V \gt C$; if $V \gt C$, then the negative of the square root should also be considered as a solution; this will show the craft going backwards towards where it came from, as the signals it had emitted when it was there will finally reach the viewer. If $V$ = $C$, the following special case formula can used.
 
-This solution also only works if
-$\vec{X_{E}} \neq \vec{X_{O}}$; and then only
-when $T_O&gt;T$, the observer can’t see an event before
-it is emitted. If the position an event is emitted is the same as the
-observer, then it can be assumed there is 0 time to observe the event.
+This solution also only works if $\vec{X_{E}} \neq \vec{X_{O}}$; and then only when $T_O\gt T$, the observer can’t see an event before it is emitted. If the position an event is emitted is the same as the observer, then it can be assumed there is 0 time to observe the event.  This only requires the velocity of the emitter, which itself plays very little role.  If it is the observer that is going the speed of light
 
 Instead of the first equation:
 
@@ -282,8 +271,7 @@ $$\begin{array}{r}
 T_{O} = T + \frac{\left\| \left( \vec{X_{E}} + T\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (1.1)
 \end{array}$$
 
-Replace C with ||V<sub>e</sub>||, and solve as normal ([Appendix
-D](#appendix-d-vc)):
+Replace C with ||V<sub>e</sub>||, and solve as normal ([Appendix D](LSP2-Appendix-D)):
 
 $$\begin{array}{r}
 T_{O} = T_{E} + \frac{\left\| \left( \vec{X_{E}} + T_{E}\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{\left\| \vec{V_{E}} \right\|}\\ (1.36)
