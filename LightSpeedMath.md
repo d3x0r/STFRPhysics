@@ -393,14 +393,14 @@ $$T_C=\frac{\sqrt{(C^2T_B+\vec{P_E}\vec{V_O})^2 - (C^2-\vec{V_O}^2)(C^2{T_B}^2-\
 
 
 
-## Length Contraction 
+## Length Contraction (NOT)
 
 Given a point $\vec{X}$, and a velocity vector $\vec{V}$, and a speed of light $c$
 (Length contraction is more complicated than this see below...)
 
 https://www.desmos.com/calculator/frbv1e652p
 
-the contraction has to be more than lorentz; otherwise the total time for light to bounce back and forth, accounting for the surface itself moving and making the light travel more or less of the distance that is the measured path for the light.  This means, that length will contract to 0 before reaching the speed of light in reality.
+the contraction has to be more than Lorentz (It's not, and this section is useless, preserved for 'don't do this'); otherwise the total time for light to bounce back and forth, accounting for the surface itself moving and making the light travel more or less of the distance that is the measured path for the light.  This means, that length will contract to 0 before reaching the speed of light in reality.
 
 $L_{t2}(x)$ is time.  It is how long it takes for light to cross L in the forward direction.
 
