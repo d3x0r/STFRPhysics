@@ -281,17 +281,13 @@ $$ \begin{array}{ll}
 $$
 
 
-$$ \begin{array}{ll}
-     CC ( {{\vec{P_O}\vec{P_O} }}   + T_{O}^2\vec{V_E}\vec{V_E} -2T_O\vec{P_O}\vec{V_E})
-
-\end{array}
-$$
+$$   CC ( {{\vec{P_O}\vec{P_O} }}   + T_{O}^2\vec{V_E}\vec{V_E} -2T_O\vec{P_O}\vec{V_E})$$
 
 
 $$  CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 $$
 
 
-$T_E  = \frac { \begin{array}{}\sqrt  { CC ( {{\vec{P_O} }}   + T_{O}\vec{V_E})^2 }\\ + {CCT_{O}}\end{array} +\vec{P_O}\vec{V_E}}{D_E}$
+$T_E  = \frac { \sqrt  { CC ( {{\vec{P_O} }}   + T_{O}\vec{V_E})^2 } + {CCT_{O}} +\vec{P_O}\vec{V_E}}{D_E}$
 
 
 
@@ -307,6 +303,7 @@ $$ T_{\Delta}T_{\Delta}{C}{C}={\vec{P_O}\vec{P_O}+2V_O\vec{P_O}T_{\Delta} + V_OV
 move T_delta terms to the left.
 
 $$ T_{\Delta}T_{\Delta}({C}{C}- \vec{V_O}\vec{V_O}) -2\vec{V_O}\vec{P_O}T_{\Delta} ={\vec{P_O}\vec{P_O} }$$
+
 Replace CC-VV with a 'D' expression.
 
 $D=CC-\vec{V_O}\vec{V_O}$
