@@ -199,7 +199,11 @@ produce a signal that the delta can be detected.
 
 ## Existing Experiments on One Way Speed of Light
 
-Existing experiments that have been performed have generally resulted with no measurable effect.  None take note of specifical astrometric alignment and can easily only show a difference on the order of 〖5e〗^(-12), which was beyond detection.  That number is computed from the earth’s speed through the universe of ≈0.001c, and the earth’s rotation being 1/1000th of that.  √(〖0.001〗^2+〖0.000001〗^2 )=0.001000000005.  
+There was an experiment in 1984 that was performed and found an imprecise signal detectable.  This is essentially the same setup as above.  This paper says they are detecting the motion of the earth around the galaxy; this is wrong, since the test was aligned east-west, and our motion in the galaxy is mostly polar.  The forward motion of the galaxy is more likely the detection.  But there are issues with this experiment, sending the signal over coax introduces a drag on the signal because of the motion of the medium it’s travelling in (Fizeau’s Telescope).  However, the signal is also slowed down.  The separation was 500m, or 1640ft which would be +/- 3.2ns approximately, which is what was normally measured.  Another issue is that they seem to have groups the data according to local solar time instead of local sidereal time; which one might find strange since they were testing for motion in the galaxy and should be aware of the differences.  They do measure sidereal days, but at no time mention sidereal time.
+
+https://ivanik3.narod.ru/TorrKolen/Experiment.pdf This isn’t a great scan, but it’s the best available apparently.  A note on research gate regarding this paper indicates that it used to be more widely available but other copies disappeared.
+
+Many existing experiments that have been performed have generally resulted with no measurable effect.  None take note of specifical astrometric alignment and can easily only show a difference on the order of 〖5e〗^(-12), which was beyond detection.  That number is computed from the earth’s speed through the universe of ≈0.001c, and the earth’s rotation being 1/1000th of that.  √(〖0.001〗^2+〖0.000001〗^2 )=0.001000000005.  
 
 Many experiments expect that motion of the source of photons is responsible for a change, and this is inaccurate, other than changing the angle by light aberration effects, the speed of the light is not changed.
 
@@ -264,3 +268,4 @@ is larger than the difference of their perigee-apogee.
     514-516km
 
 [!Pasted image 20231018204213.png]
+
