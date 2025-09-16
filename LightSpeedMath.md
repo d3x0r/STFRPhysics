@@ -208,6 +208,7 @@ $$T_O=T_E+T_{\Delta O}$$
 $$T_E=T_O-T_{\Delta E}$$
 
 $$T_{\Delta} = \frac {\left|(\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right|} {C}$$
+Setup some partial expressions... 
 
 ---
 $$\vec{P_E} = \vec{X_O}-(\vec{X_E}+\vec{V_E}T_E)$$
@@ -225,37 +226,51 @@ $$CC(T_{O}^2-2T_{O}T_{E}+T_E^2) =   {{\vec{P_O}\vec{P_O}+2\vec{P_O}\vec{V_E}T_E 
 
 $$ T_E^2(CC-\vec{V_E}\vec{V_E}) -2T_{E}(CCT_{O} -\vec{P_O}\vec{V_E}) =    {{\vec{P_O}\vec{P_O} }} -CCT_{O}^2 $$
 
+split on multiple lines...
+
 $$ \begin{array}{}
 \left(T_E\sqrt{(CC-\vec{V_E}\vec{V_E})} - \\
 \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{(CC-\vec{V_E}\vec{V_E})}}\right)^2 \\
--\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{CC-\vec{V_E}\vec{V_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{CC-\vec{V_E}\vec{V_E}} \\
+=  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
 \end{array}
 $$
 
-$D_E = CC-\vec{V_E}\vec{V_E}$
+Define partial term to simplify some expressions:
+
+$$D_E = CC-\vec{V_E}\vec{V_E}$$
 
 
 $$ \begin{array}{}
-\left(T_E\sqrt{{D_E}} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\right)^2\\-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+\left(T_E\sqrt{{D_E}} - \\
+\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\right)^2\\
+-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\
+=  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
 \end{array}
 $$
 
 
 $$ \begin{array}{}
-T_E\sqrt{{D_E}} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\\ = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
+T_E\sqrt{{D_E}} - \\
+\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\\
+= \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
++\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
 \end{array}
 $$
 
 
 $$ \begin{array}{}
-T_E\sqrt{{D_E}} \\ = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
-\\ + \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}
+T_E\sqrt{{D_E}} \\
+= \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
++\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}\\
++ \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}
 \end{array}
 $$
 
 $$ \begin{array}{}
-T_E  = \frac { \sqrt  {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}
-\\ + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
+T_E  = \frac { \sqrt  {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
++\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}\\
++ {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
 \end{array}
 $$
 
@@ -288,8 +303,8 @@ $$  CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 $$
 
 
 $$ \begin{array}{}
-T_E  = \frac { \sqrt  { CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 }
-\\ + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
+T_E  = \frac { \sqrt  { CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 }\\
++ {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
 \end{array}
 $$
 
