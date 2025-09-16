@@ -244,15 +244,15 @@ $$D_E = CC-\vec{V_E}\vec{V_E}$$
 $$ \begin{array}{}
 \left(T_E\sqrt{{D_E}} - \\
 \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\right)^2 \\
- - \frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\
- =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\
+=  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
 \end{array}
 $$
 
 
 $$ \begin{array}{}
 T_E\sqrt{{D_E}} - \\
-\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}\\
+\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}} \\
 = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
 +\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}
 \end{array}
@@ -262,14 +262,14 @@ $$
 $$ \begin{array}{}
 T_E\sqrt{{D_E}} \\
 = \sqrt \frac {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
-+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}}\\
++\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{{D_E}} \\
 + \frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{{D_E}}}
 \end{array}
 $$
 
 $$ \begin{array}{}
 T_E  = \frac { \sqrt  {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} \\
-+\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}\\
++\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2} \\
 + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}
 \end{array}
 $$
