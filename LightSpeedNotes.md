@@ -1,5 +1,43 @@
 
 
+Variation of force based on velocity.
+
+$F=ma$
+$dv/dt=a$
+$dv/dt=F/m$
+
+$F_{b}\left(x\right)=\frac{\sqrt{CC+VV\cos\left(x\right)}}{C}$
+
+$F_{f}\left(x\right)=\frac{C}{\sqrt{CC+VV\cos\left(x\right)}}$
+
+
+
+$F_{f}\left(x\right)=\frac{\sqrt{CC-VV\left|\cos\left(x\right)\right|}}{C}$
+
+$F_{b}\left(x\right)=\frac{C}{\sqrt{CC-VV\left|\cos\left(x\right)\right|}}$
+
+
+As a thing moves, it falls back in time relative to the observer.  The further away it is, the longer ago it is seen.   When a body is moving away from the observer, in the forward direction, its position is seen relatively closer (aberration doesn't change distance, so perspective elongation makes it look further.)
+
+so the wall of the ship, is seen closer; so the ball has to move slower than $V_{ball}$ ... 
+
+$dT = \frac{vt}{C-V}$
+$d=vt$
+
+$\frac{D}{\gamma v} = \frac{\gamma D}{x(C+V)}$
+
+$x=\frac{(CC-\frac{VV}{CC})v}{(C+\frac{V}{C})}$
+
+$x=(C-\frac{V}{C})v$
+
+
+
+$\frac{D}{\gamma v} = \frac{\gamma D}{x(C-V)}$
+
+$x=\frac{(CC-\frac{VV}{CC})v}{(C-\frac{V}{C})}$
+
+$x=(C+\frac{V}{C})v$
+
 ## Old considerations for clock dilation 
 
  - The other possible clock dilation is the N-way speed of light, that sums all possible speeds and gets a result - the 4-way speed of light comes close... 
@@ -124,6 +162,7 @@ Group common factors of T from (4) set equal to 0
 Group common factors of T from (4), and move other parts to the right.
 
 - Equation 6: $({C^2}-{V^2}){T^2} - ({S}{C^2} - {VL} )2T = { {{D}^{2}} +{L^2}}-{C^2}{S^2}$
+- Note : $ax^2 \pm 2bx=0=( \sqrt{a}x\pm\frac{b}{\sqrt{a}})^2-\frac{b^2}{a}$
 
 Factor out 1 $T$ from (6); no further references to (7)
 
@@ -133,7 +172,7 @@ Quadratic formula on T parts, leaving a remainder outside. from (6)
 
 - Equation 8: $\left(\sqrt{{C^2}-{V^2}}){T} - \frac {({S}{C^2} - {VL} )} {\sqrt{CC-VV}}\right)^2 - \frac { (SC^2-VL)^2}{CC-VV} = { {{D}^{2}} +{L^2}}-{C^2}{S^2}$
 
-Move non-T expresssion to the right, Square both sides... from (8)
+Move non-T expression to the right, Square both sides... from (8)
 - Equation 9: $\sqrt{{C^2}-{V^2}}){T} - \frac {({S}{C^2} - {VL} )} {\sqrt{CC-VV}}  = \sqrt{{ {{D}^{2}} +{L^2}}-{C^2}{S^2} + \frac { (SC^2-VL)^2}{CC-VV}}$
 
 Move partial term to the right....  divide both sides by what T is...
@@ -483,3 +522,135 @@ $$A = C^2{T_o}^2 - x*x$$
 $$B = C^2{T_o} + V \cdot x$$
 $$D = C^2-\vec{V}\cdot\vec{V}$$
 if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
+
+
+
+# Observed Length
+
+$g\left(x\right)=\frac{\sqrt{CC-xx}}{C}$
+
+$T\left(V,S,D,L\right)=\frac{CCS+VL-\sqrt{CCDD+CCLL+2CCSVL+VVCCSS-VVDD}}{CC-VV}$
+
+$T\left(V,S,L\right)=\frac{CCS+VL-\sqrt{CCLL+2CCSVL+VVCCSS}}{CC-VV}$
+
+$T_f\left(V,S\right)=\frac{CCS+Vg(V)-C|VS+g(V)|}{CC-VV}$
+$T_b\left(V,S\right)=\frac{CCS+Vg(V)-C|VS-g(V)|}{CC-VV}$
+
+$P_f\left(V,S\right)=\frac{VCCS+VVg(V)-VC|VS+g(V)| + g(V)(CC-VV)}{CC-VV}$
+$P_b\left(V,S\right)=\frac{VCCS-VVg(V)-VC|VS-g(V)| - g(V)(CC-VV)}{CC-VV}$
+
+$f\left(x\right)=T\left(V,x,D,Lg\left(V\right)\right)$
+
+$b\left(x\right)=T\left(V,x,D,-Lg\left(V\right)\right)$
+
+
+
+$P_{b}\left(t\right)\ =\ b\left(t\right)V-Lg\left(V\right)$
+
+$P_{f}\left(t\right)\ =\ f\left(t\right)V+Lg\left(V\right)$
+
+$P_{f}\left(x\right)-P_{b}\left(x\right)$
+
+
+
+$L_{diff}\left(V,S\right)=\frac{VCCS+VVg(V)-VC|VS+g(V)| + g(V)(CC-VV)}{CC-VV}-\frac{VCCS-VVg(V)-VC|VS+g(V)| - g(V)(CC-VV)}{CC-VV}$
+
+$L_{diff}\left(V,S\right)=\frac{VCCS+VVg(V)-VC|VS+g(V)| + g(V)(CC-VV) - (VCCS-VVg(V)-VC|VS-g(V)| - g(V)(CC-VV))}{CC-VV}$
+
+$L_{diff}\left(V,S\right)=\frac{VCCS+VVg(V)-VC|VS+g(V)| + g(V)(CC-VV)  -VCCS + VVg(V) +VC|VS-g(V)| + g(V)(CC-VV)}{CC-VV}$
+
+$L_{diff}\left(V,S\right)=\frac{ + VVg(V)-VC|VS+g(V)|  + CC-VV  + VVg(V) +VC|VS-g(V)| + CC-VV}{CC-VV}$
+
+$L_{diff}\left(V,S\right)=\frac{ 2VVg(V) + VC(|VS-g(V)|-|VS+g(V)|) + 2g(V)(CC-VV) }{CC-VV}$
+
+
+
+
+-----------------
+## Time dilation Effects
+
+**7,000 mph**, or 18.5 miles a second. 108,000 km/h, 30km/s.
+
+1,670 km/h, 465.10 m/s
+
+October 1971  Virgo to Libra line is at noon during the day.
+So this flight would not measure any other difference.
+
+370km/s  (0.001233..c)
+
+371.21 km/s   with virgo-cetus + sun orbit speed (which is about tangential)
+370.749 km/s with earth counter-rotation speed to cancel orbital speed  (0.001235c)    Td = 0.99999923738  -41 181 480
+                                                                         0.9999992366848
+(from gravity 11.186 km/s))   0.000037286..c
+11.18km/s
+11.186
+
+
+Td = 0.99999999930485   37.538.1
+
+15 hours = 54,000,000,000,000ns
+
+The escape velocity from the Sun at Earth's orbit is approximately ==42 kilometers per second==
+
+The Earth orbits the Sun at a distance of approximately 149.6 million kilometers (1 AU
+Sun radius 700,000 kilometers
+
+(0.396ns difference)  side facing sun to side away from sun - polar tip isn't going to be that much....
+
+537 km/s escape velocity from galaxy at solar system.  
+0.002c
+
+0.9999979999979999959
+299 792 458  0.0371905   11,157km/s
+
+
+42/300000 = 
+
+---
+(flight experiment)
+ [University of Maryland](https://en.wikipedia.org/wiki/University_of_Maryland "University of Maryland") between September 1975 and January 1976
+ (detail on maryland)
+ https://user.it.uu.se/~marlu734/relativity/Alley1979-relativity_and_clocks.pdf
+
+---
+
+## Speeds...
+  5.858230814294  0.7071067 4.1423947345 seconds
+So we're travelling at 0.618c forward.  The wall that is 10 nanoseconds away we see is only $\frac{10}{1+0.618}$ seconds RT 6.1804697  0.78617809 contraction = 4.85894 seconds.
+
+0.95c = 1/20L (0.5) seconds ahead/behind 'now'  (on real clock)
+
+
+0.995c = 1/20L  (0.5) seconds behind 'now' (on local clock)
+
+
+
+0.5c = 1/2 L (5) seconds ahead/behind 'now'  (on real clock)
+0.6c = 1/2 L (5) seconds ahead/behind 'now' (on local clock)
+
+so - throwing a ball forward, that should cover the distance in 1000 seconds or L/0.01c (should be a lot slower than V)
+
+then the position I see the ball in, has to be a sub-fraction of the distance to the wall over time.
+The ball cannot be seen going past the wall.  
+so the ball's position at the wall has to be at the wall at no longer in the past than the wall.
+
+### 0.5c
+
+at t=1, the ball is $0.01Lt$ , and the ball has moved towards the front wall , and to the ball, the front wall is still far.
+
+
+then at some point
+5 seconds ago, the ball is at the wall, and it is seen to bounce (assume half the ball penetrates the wall, and disregard size of ball).
+
+
+0.01L dt   L=10
+V=0.5c
+g=0.866
+realL = 8.66
+local clock = (slower) $T * g$
+so forward V has to be at least length contracted
+
+V L (dt)
+0.00866 8.66  (0.866 dt  )
+
+$3\sqrt{3}/8$ 0.0064951 L

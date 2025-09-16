@@ -153,8 +153,14 @@ $${cxmy}=\cos(\frac{x-y}{2})$$
 $$ang = 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} ); $$
 
 $$ang = 2\arccos( \frac{( ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2})) + \cos(\frac{x-y}{2}) + \cos( \frac{x+y}{2} ) )}{2} );$$
-   
+This is the working part; it results in a vector($\vec{C}$) which is either scaled by $\left|\vec{C}\right|$  or $sin(\frac{\theta}{2})$, which if $\theta = 0$ or $\theta=n2\pi$, that's $\frac {\infty}{0}$.  A and B are unit vectors so $A \times B$ is a vector from 0 to 1; any of the $\sin {or} \cos (x \pm y)$ terms are -1 to 1.  The result vector will never be greater than 1.  And actually, 
+
 $$(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  $$
+
+
+Expanded Equation....
+
+$$(A \times B)(\cos( \frac{x+y}{2} ) - \cos( \frac{x-y}{2} )) + A(\sin( \frac{x+y}{2} ) + \sin( \frac{x+y}{2} ))+B(\sin( \frac{x+y}{2} ) - \sin( \frac{x-y}{2} ))$$
 
 $$\vec{C}=\frac { (A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy) } {sin(\frac{ang}{2})} $$
 

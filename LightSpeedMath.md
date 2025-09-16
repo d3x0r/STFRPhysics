@@ -27,7 +27,7 @@ Although - which side Emitter or Observer is subtracted from the other, the over
 
 ${P}$ has been the symbol used for the base position.  
 
-$\vec{P}=\vec{X_O}+T_E \vec{V_O} - \vec{X_E} - T_E \vec{V_E}$
+$$\vec{P}=\vec{X_O}+T_E \vec{V_O} - \vec{X_E} - T_E \vec{V_E}$$
 
 $\vec{P}$ is all of the terms in the magnitude expression that do not include $T_{\Delta O}$.   Its the difference in positions, plus the initial velocity for the emitter at the time a signal was emitted.
 
@@ -40,13 +40,13 @@ Which simplifies to a position plus a change in position for the velocity times 
 Solves to become:
 
 $$
- {T_{\Delta O}} =\frac{\sqrt{ {{\vec{P}}^2(C^2 -{V_O}^2) + {V_O}^2}  } +V_O }{{C^2 -{V_O}^2}} 
+ {T_{\Delta O}} =\frac{\sqrt{ {\left({\vec{P}\vec{V_O}}\right)^2+(C^2 -{V_O}^2)  {V_O}^2}  } +\vec{P}\vec{V_O} }{{C^2 -{V_O}^2}} 
 $$
 
 A term $D$ can be defined which is $\left(C^2-{\vec{V_O}}^2\right)$...
 
 $$
- {T_{\Delta O}} =\frac{\sqrt{ {{D\vec{P}}^2 + {V_O}^2}  } +V_O }{D} 
+ {T_{\Delta O}} =\frac{\sqrt{ {\left({\vec{P}\cdot\vec{V_O}}\right)^2 + D\vec{V_O}^2}  } + \vec{P}\vec{V_O} }{D} 
 $$
 ## 1D Bad Math Solve
 
@@ -208,6 +208,7 @@ $$T_O=T_E+T_{\Delta O}$$
 $$T_E=T_O-T_{\Delta E}$$
 
 $$T_{\Delta} = \frac {\left|(\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right|} {C}$$
+
 ---
 $$\vec{P_E} = \vec{X_O}-(\vec{X_E}+\vec{V_E}T_E)$$
 
@@ -225,7 +226,9 @@ $$CC(T_{O}^2-2T_{O}T_{E}+T_E^2) =   {{\vec{P_O}\vec{P_O}+2\vec{P_O}\vec{V_E}T_E 
 $$ T_E^2(CC-\vec{V_E}\vec{V_E}) -2T_{E}(CCT_{O} -\vec{P_O}\vec{V_E}) =    {{\vec{P_O}\vec{P_O} }} -CCT_{O}^2 $$
 
 $$ \begin{array}{}
-\left(T_E\sqrt{(CC-\vec{V_E}\vec{V_E})} - \\\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{(CC-\vec{V_E}\vec{V_E})}}\right)^2\\-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{CC-\vec{V_E}\vec{V_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
+\left(T_E\sqrt{(CC-\vec{V_E}\vec{V_E})} - \\
+\frac{CCT_{O} -\vec{P_O}\vec{V_E}}{\sqrt{(CC-\vec{V_E}\vec{V_E})}}\right)^2 \\
+-\frac {\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2}{CC-\vec{V_E}\vec{V_E}} \\ =  {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2 
 \end{array}
 $$
 

@@ -85,6 +85,9 @@
 		F:<input type="range" id="lnQF" min=1  max=28 value=1>
 		<SPAN id="lnQFval">1.0</SPAN>  
 		Octive:<SPAN id="lnQAval">1.0</SPAN></p>
+
+		Wave Height:<input type="range" id="waveHeight" min=1  max=100 value=50>
+		waveHeight:<SPAN id="waveHeightVal">1.0</SPAN></p>
 		
 <div style="visibility:hidden">
 	
@@ -450,6 +453,8 @@ for (let i = 0; i < 3; i++) {
 			is = document.getElementById( "lnQE" );
 			is.oninput = updateMesh;
 			is = document.getElementById( "lnQF" );
+			is.oninput = updateMesh;
+			is = document.getElementById( "waveHeight" );
 			is.oninput = updateMesh;
 			//is.value = 500;
 			//is.range = 1000;

@@ -1,6 +1,7 @@
 import {lnQuat} from "./lnQuatSq.js" 
 
 let A,B,C,D,E,F,G,T;  // slider values
+let waveHeight = 0.5;
 let twistDelta = 0;
 let normalizeNormalTangent = false;
 let xRot, yRot, zRot;
@@ -458,6 +459,21 @@ const D = curSliders.lnQT/3*4;
 E = E /3 * 4;
 F = F /3 * 4;
 
+	let dmin = 100;
+	let dmax = 0;
+
+		for( let h = 1*-1; h <= 1; h+= 1/spots * 0.05 ) {
+			const h_ = (1-Math.abs(h));
+			for( let t = 1*-Math.PI; t < 1*Math.PI; t+= 1/spots * 0.05/Math.sin(h_) ){
+				let x = Math.sin(t );
+				const z = Math.cos(t);
+				const lnQ = new lnQuat( {x:x*h_, y:h, z:z*h_ } );
+				//lnQ.twist( twistDelta );
+				rangeN( lnQ );
+			}
+		}
+
+
 	if(drawNormalBall/*draw normal ball with twist*/)
 		for( let h = 1*-1; h <= 1; h+= 1/spots * 0.05 ) {
 			const h_ = (1-Math.abs(h));
@@ -466,7 +482,6 @@ F = F /3 * 4;
 				const z = Math.cos(t);
 				const lnQ = new lnQuat( {x:x*h_, y:h, z:z*h_ } );
 				//lnQ.twist( twistDelta );
-
 				drawN( lnQ );
 			}
 		}
@@ -539,9 +554,9 @@ F = F /3 * 4;
 			//const height = 10 + (Math.cos( Math.atan2(lnQ.nz,lnQ.nx)*A )) + Math.cos( ax*B ) + Math.cos( az*C );
 
 	                // in a radius from the height...
-			new_v.x *= height/4;	
-			new_v.y *= height/4;	
-			new_v.z *= height/4;	
+			new_v.x *= height*curSliders.waveHeight;	
+			new_v.y *= height*curSliders.waveHeight;	
+			new_v.z *= height*curSliders.waveHeight;	
 
 			// the original normal direction; projected offset of sphere (linear scaled)
 			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
@@ -593,7 +608,7 @@ F = F /3 * 4;
 			}
 	}
 */
-	function drawN( lnQ )
+	function rangeN( lnQ )
 	{
 			const new_v = lnQ.apply( v );
 			const basis = lnQ.getBasis( );
@@ -603,7 +618,7 @@ F = F /3 * 4;
 		const az =  Math.asin(new_v.z);
 
 			//const height = 5 + (Math.cos( ax*4 )) + Math.cos( ay*4 ) + Math.cos( az*4 );
-
+	
 			let height=0;
 
 			if(sixEmitters) {
@@ -624,7 +639,7 @@ F = F /3 * 4;
 				}			
 			}
 			else if(fiveEmitters) {
-				height = 6;
+				height = 0;
 
 				for( let v = 0; v < 5; v++ ) {
 					const dot = vecs5[v].x * new_v.x + vecs5[v].y * new_v.y + vecs5[v].z * new_v.z;
@@ -636,12 +651,13 @@ F = F /3 * 4;
 					                  : (v==4)?E 
 					                  : (v==5)?F
 							  : 1 
-								) );
+								) )/6;
 					//height += 1-(freq/(Math.PI-freq));
 				}			
+
 			}
 			else if(fourEmitters) {
-				height = 4;
+				height = 0;
 
 				for( let v = 0; v < 4; v++ ) {
 					const dot = vecs[v].x * new_v.x + vecs[v].y * new_v.y + vecs[v].z * new_v.z;
@@ -654,7 +670,93 @@ F = F /3 * 4;
 				}			
 			}
 			else {
-				height = 3;
+				//height = 3;
+				{
+					const freq = ax*A;
+					height += cos2(freq);
+				}
+				{
+					const freq = ay*B;
+					height += cos2(freq);
+				}
+				{
+					const freq = az*C;
+					height += cos2(freq);
+				}
+
+				//height = 3 + (Math.cos( ax*A )) + Math.cos( ay*B ) + Math.cos( az*C );
+			}
+
+		if( 	height > dmax ) dmax = height;
+		if( height < dmin ) dmin = height;
+	}
+
+
+
+	function drawN( lnQ )
+	{
+			const new_v = lnQ.apply( v );
+			const basis = lnQ.getBasis( );
+
+		const ax =  Math.asin(new_v.x);
+		const ay =  Math.asin(new_v.y);
+		const az =  Math.asin(new_v.z);
+
+			//const height = 5 + (Math.cos( ax*4 )) + Math.cos( ay*4 ) + Math.cos( az*4 );
+	
+
+			let height=0;
+
+			if(sixEmitters) {
+				height = 0;
+
+				for( let v = 0; v < 6; v++ ) {
+					const dot = vecs6[v].x * new_v.x + vecs6[v].y * new_v.y + vecs6[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					const freq = ( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								));
+					//height += (freq/(Math.PI-freq));
+				}			
+			}
+			else if(fiveEmitters) {
+				height = 0;
+
+				for( let v = 0; v < 5; v++ ) {
+					const dot = vecs5[v].x * new_v.x + vecs5[v].y * new_v.y + vecs5[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					height += cos2( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : (v==3)?D 
+					                  : (v==4)?E 
+					                  : (v==5)?F
+							  : 1 
+								) )/6;
+					//height += 1-(freq/(Math.PI-freq));
+				}			
+
+			}
+			else if(fourEmitters) {
+				height = 0;
+
+				for( let v = 0; v < 4; v++ ) {
+					const dot = vecs[v].x * new_v.x + vecs[v].y * new_v.y + vecs[v].z * new_v.z;
+					const angl = Math.asin(dot);
+					const freq= Math.cos( angl * ((v==0)?A
+					                  : (v==1)?B
+					                  : (v==2)?C
+					                  : D ) );
+					height += cos2(freq);
+				}			
+			}
+			else {
+				//height = 3;
 				{
 					const freq = ax*A;
 					height += cos2(freq);
@@ -676,9 +778,9 @@ F = F /3 * 4;
 			//const height = 10 + (Math.cos( Math.atan2(lnQ.nz,lnQ.nx)*A )) + Math.cos( ax*B ) + Math.cos( az*C );
 
 	                // in a radius from the height...
-			new_v.x *= height/4;	
-			new_v.y *= height/4;	
-			new_v.z *= height/4;	
+			new_v.x *= 1+(height - dmin) / (dmax-dmin)*curSliders.waveHeight;	
+			new_v.y *= 1+(height - dmin) / (dmax-dmin)*curSliders.waveHeight;	
+			new_v.z *= 1+(height - dmin) / (dmax-dmin)*curSliders.waveHeight;	
 
 			// the original normal direction; projected offset of sphere (linear scaled)
 			//normalVertices.push( new THREE.Vector3( x*spaceScale,y*spaceScale, z*spaceScale ))
@@ -706,6 +808,7 @@ F = F /3 * 4;
 	}
 
 
+
 }
 
 window.DrawQuatPaths = DrawQuatPaths;
@@ -727,7 +830,9 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 			let lnQE = document.getElementById( "lnQE" ).value;
 			let lnQF = document.getElementById( "lnQF" ).value;
 			let lnQA = document.getElementById( "lnQA" ).value;
+		let wh = document.getElementById( "waveHeight" ).value;
 
+	curSliders.waveHeight = ( wh - 50 ) / 50;
 	curSliders.lnQX = lnQX;
 	curSliders.lnQY = lnQY;
 	curSliders.lnQZ = lnQZ;
@@ -749,6 +854,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	F = Number(lnQF);
 	D = Number(T) ;
 	twistDelta = A;
+	waveHeight = curSliders.waveHeight;
 
 	let tmp;
 	tmp = document.getElementById( "xRot" ).value;
@@ -799,6 +905,7 @@ export function DrawQuatPaths(normalVertices_,normalColors_) {
 	document.getElementById( "lnQFval").textContent = F;
 	document.getElementById( "lnQTval").textContent = T;
 	document.getElementById( "lnQAval").textContent = ((E/3)|0)-4;
+	document.getElementById( "waveHeightVal" ).textContent = waveHeight;
 
 	tmp = document.getElementById( "turnCounter" );
 	turnCount = tmp.value;

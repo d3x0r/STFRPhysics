@@ -21,19 +21,19 @@ Why ?
 
 This started looking at quaternions as rotation vectors, and attempting to find a computation method of rotations which required less work and worked over longer ranges.
 Matrix multiplication for rotation can only express 1/2 of a rotation, it can go from -1 to 1 but 1 to -1 looks exactly like -1 to 1... so you never get the other half of the rotation.
-Quaternion representation has singulatities at 0 rotation; the axis of rotation becomes unintelligable on (finite math systems). (References can be provided to existing information 
+Quaternion representation has singularities at 0 rotation; the axis of rotation becomes unintelligible on (finite math systems). (References can be provided to existing information 
 to review; see Readme.md References title... )
 
-There is an operation that goes from a log-quaternion to a quaternion; Although the math on wikipedia page ends at merely stating this fact.  
+There is an operation that goes from a log-quaternion to a quaternion; Although the math on Wikipedia page ends at merely stating this fact.  
 `Exponential, logarithm, and power functions` on https://en.wikipedia.org/wiki/Quaternion 
 This gives me a method to take axis-angle representation and convert to quaternion; which is fairly cheap, and then I can always have the normal
 axis of rotation regardless of a insignificant angle... resulting in a 'high quality' small-rotation quaternion.
 
 `Q(angle,axis) = cos(angle) * 1 + sin(angle) * ( unit vector/ vector length=1)`
 
-Which follows that `1*cos + 1*sin` are also remeniscent of a unit circle in complex plane.
+Which follows that `1*cos + 1*sin` are also reminiscent of a unit circle in complex plane.
 
-Log quaternions, quatnerions in the log-space, have 3 `angle`; However, these are more properly arcs over time.  The sum of the angles of a rotation is the sum of the angles.
+Log quaternions, quaternions in the log-space, have 3 `angle`; However, these are more properly arcs over time.  The sum of the angles of a rotation is the sum of the angles.
 And the human readable total sum of the system angles is the total angle of rotation of the system; this is a linear length `linLen = |x| + |y| + |z|`.
 
  https://en.wikipedia.org/wiki/Curvature
@@ -44,7 +44,7 @@ The axis of rotation is the square normalized x y and z curvatures... `squareLen
 This square normal is the axis of rotation to use to convert to a quaternion or matrix.
 
 For a simple IK chain (computer inverse kinetics), the fixed chain of angles on a robot arm are simply the addition of all the angles at each point.   
-The rotation has to be 'applied'/multiplied to offset points to get the positions of the arm in space from the base origin.  [(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf)... logrithm quaternion adoptation.
+The rotation has to be 'applied'/multiplied to offset points to get the positions of the arm in space from the base origin.  [(FPGA lnQuat adder)](http://www.acsel-lab.com/arithmetic/arith20/papers/ARITH20_Arnold.pdf)... logarithm quaternion adaptation.
 But the classical system of quaternions or matrix multiplications requires multiplication with the origin/offset AND the rotation quaternion/matrix; working
 with log-quaternions is, again, a simple matter of scaled(T) addition of N axels of curvature.
 
@@ -55,21 +55,21 @@ because it's used to walk over the surface of a surface (and not both sides at o
 the surface.)
 
 Translation from curvature to a rotation can be done by taking the angle-angle-angle (curl-curl-curl) 
-and normalizing it, with a square-normal, and converting to a quaternion, then applying the quatnerion in a
+and normalizing it, with a square-normal, and converting to a quaternion, then applying the quaternion in a
 order-free rotation of the points  (1,0,0), (0,1,0) and (0,0,1); which are respectively called 'right' 'up' and 'forward'.
 (These points can be weighted in another application like
 computing the oblong rotation by setting the axis points at the min/max/mid mass points of an object....) 
 
 This results in a basis frame that has the tangent as the axis of rotation;  (This is equivalent to the Tangent of a frenet frame, which is a faster method of computation than the above
 applied rotation.)   The forward vector is along the direction of rotation around the axis of rotation at that point.    The up vector is away from the origin  ( '0,0,0' of the above axis points), 
-and is always perpendicular to the surface; the Frenet frame loses this information... in using just the 'right' to compute the 'up' the tip aorund the 'right' is lost.... which will
+and is always perpendicular to the surface; the Frenet frame loses this information... in using just the 'right' to compute the 'up' the tip around the 'right' is lost.... which will
 also lead to problems figuring out what is 'over' and 'under' another rotation.  The frenet frame only produces coordinates of rotation x/z coordinates, and not Y.
 
 
 ## The Demo (HOWTO?)
 
 
-I have [this mockup](https://d3x0r.github.io/STFRPhysics/3d/index3.html); REquires WebGL2.
+I have [this mockup](https://d3x0r.github.io/STFRPhysics/3d/index3.html); Requires WebGL2.
 
 The model of the sphere has nothing to do with the line segments that are shown, and because of the framework is a little misaligned with the vector origins. (the framework recomputes the center 
 of the model and the extra data above/around the model confuse the centering).

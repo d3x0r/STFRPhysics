@@ -26,6 +26,7 @@ Product search/lookup with the above....
 (https://www.digikey.com/en/products/filter/oscillators/172?s=N4IgjCBcpgHAzFUBjKAzAhgGwM4FMAaEAeygG0R5YwA2eRI%2BAdgBYWAmBy5pgVnZBE2ATjAAGJoMrU6AgLpEADgBcoIAMrKATgEsAdgHMQAXyLteiaCFSRMuQiXLgx7YVNq9JCkCrWbdhiamIDRIIDoAJmrmXL6QGtr6RkTKAJ6KeGoYOKjGxkA)
 
 __Divider__ - take 10mhz clock to 1 second.
+https://www.ti.com/lit/ds/symlink/sn74lv8154.pdf?ts=1745928752146&ref_url=https%253A%252F%252Fwww.google.com%252F
 
 Generate short pulse (several nanosecond range, every second.... could be 100ns which is 1 clock tick - maybe the divider can be fed to some logic to gate the pulse?)
 

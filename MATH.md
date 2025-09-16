@@ -239,7 +239,7 @@ PN/QN + (1,1,1)*sin(Qw)/sin(Pw)
 
 
 
-https://www.geogebra.org/3d/ye9fxxzg
+(dead link)https://www.geogebra.org/3d/ye9fxxzg
 
 
 

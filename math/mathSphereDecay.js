@@ -319,7 +319,49 @@ function drawsomething() {
 	const thisDel = (n,y)=>n*n*n-(n-step(1000))*(n-step(1000))*(n-step(1000))+y*y*y;
 
 	invertCurvature	= document.getElementById( "invertCurvature")?.checked;
-	                   
+
+	const D = values.A*values.A;
+	const Zz = values.B*values.B;
+	let maxdel = 0;
+	let maxdel1 = 0;
+	let maxdel2 = 0;
+	let maxdel3 = 0;
+	function pnp(x,y) {
+		const px = x/(squareSize/(maxScale-minScale)) + minScale;
+		const py = y/(squareSize/(maxScale-minScale)) + minScale;
+		if( px*px+py*py < (D-Zz) ) return 1;
+		const L = Math.sqrt(px*px+py*py - (D-Zz));
+		const del1 = B_0(L,0,L,values.B,values.A, values.Amax )
+		const del2 = B_0(L+0.1,0,L,values.B,values.A, values.Amax )
+		const del3 = B_0(0.1,+0.1,L,values.B,values.A, values.Amax )
+		const del4 = B_0(-0.1,-0.1,L,values.B,values.A, values.Amax )
+		const delx = (del3-del4)*(del3-del4)/(del2-del1);
+		if( delx < 1) return (delx);
+		return (delx-1)/8;
+	}
+
+	{
+		for( let x = 0; x < squareSize; x++ )
+			for( let y = 0; y < squareSize; y++ ){
+				const px = x/(squareSize/(maxScale-minScale)) + minScale;
+				const py = y/(squareSize/(maxScale-minScale)) + minScale;
+				//if( px*px+py*py < (D-Zz) ) continue;
+				/*
+				const L = Math.sqrt(px*px+py*py - D);
+				const del1 = B_0(L,0,L,values.B,values.A, values.Amax )
+				const del2 = B_0(L+0.1,0,L,values.B,values.A, values.Amax )
+				const del3 = B_0(0.1,+0.1,L,values.B,values.A, values.Amax )
+				const del4 = B_0(-0.1,-0.1,L,values.B,values.A, values.Amax )
+				const delx = (del2-del1) * (del2-del1) / (del3-del4);
+				*/
+				const val = pnp(x,y);
+				if( val === 1 ) plot( px, py, BASE_COLOR_RED );
+				else if( val > 1 )  plot( px, py, BASE_COLOR_GREEN );
+				else plot( px, py, ColorAverage( BASE_COLOR_WHITE, BASE_COLOR_BLACK, pnp(x,y), 1) );
+			
+		}
+	}
+
 	//field is 2xg or 2g or g^2 for 2m?
 	const scalar = (values.A+values.Amax);
 	const zscalar =(values.B+scalar)?  scalar*scalar /Q_0(0,0,values.B,scalar):0;
@@ -513,12 +555,14 @@ if(0)
 	const slopey = mouseY/Math.sqrt(mouseX*mouseX+mouseY*mouseY);
 	const _mouseX = B_0(mouseX, mouseX,mouseY,values.B,values.A, values.Amax );
 	const _mouseY = B_0(mouseY, mouseX,mouseY,values.B,values.A, values.Amax );
-	for( let t = 0; t < 2; t+= 2/1000 ) {
+	let x_,y_;
+	let x2_,y2_;
+	for( let t = 0; t < 0.1; t+= 0.1/10 ) {
 		
 		{
 			{
-			const dx = -slopey*0.1 + slopex * (t-1);
-			const dy = slopex*0.1 + slopey * (t-1);
+			const dx = -slopey*0.1 + slopex * (t-0.05);
+			const dy = slopex*0.1 + slopey * (t-0.05);
 				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				{
@@ -527,18 +571,22 @@ if(0)
 					const Ax = mx;// / _4to1(mx,my,values.B,values.A) * B_i(mx,mx,my,values.B,values.A, values.Amax );
 					const Ay = my;//B_i(my,mx,my,values.B,values.A, values.Amax );
 					//if( Math.sqrt(Ax*Ax+Ay*Ay)< (values.A+values.Amax+1) ) continue;
-					plot(Ax,Ay, pens[2] );
+					if( t === 0 ) x_ = Ax, y_ = Ay;
+					else line( x_,y_,Ax,Ay,pens[2] ), x_=Ax, y_=Ay;
+					//plot(Ax,Ay, pens[2] );
 				}
 			}
 			{
-			const dx = slopey*0.1 + slopex * (t-1);
-			const dy = -slopex*0.1 + slopey * (t-1);
+			const dx = slopey*0.1 + slopex * (t-0.05);
+			const dy = -slopex*0.1 + slopey * (t-0.05);
 				const mx = _mouseX + B_i( dx, _mouseX, _mouseY, values.B, values.A, values.Amax );
 				const my = _mouseY + B_i( dy, _mouseX, _mouseY, values.B, values.A, values.Amax );
 
 					const Ax = mx;// / _4to1(mx,my,values.B,values.A) * B_i(mx,mx,my,values.B,values.A, values.Amax );
 					const Ay = my;//B_i(my,mx,my,values.B,values.A, values.Amax );
-				plot(Ax,Ay, pens[2] );
+					if( t === 0 ) x2_ = Ax, y2_ = Ay;
+					else line( x2_,y2_,Ax,Ay,pens[2] ), x2_=Ax, y2_=Ay;
+				//plot(Ax,Ay, pens[2] );
 
 /*				const mx = mouseX -slopey*0.1 + slopex * (t-1);
 				const my = mouseY +slopex*0.1 + slopey * (t-1);
