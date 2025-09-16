@@ -313,6 +313,7 @@ Find perfect square of T_delta terms, and remove the extra term that gets create
 $$ \left(T_{\Delta}\sqrt{D } - \frac{\vec{V_O}\vec{P_O}}{\sqrt{D}}\right)^2 -\frac{\vec{V_O}\vec{V_O}\vec{P_O}\vec{P_O}}{D}={\vec{P_O}\vec{P_O} }$$
 
 move non-tdelta to the right, take square root, divide both sides by sqrt(d) to isolate T_Delta result.
+
 $$ T_{\Delta}=\frac{\sqrt{\vec{P_O}\vec{P_O} +\frac{\vec{V_O}\vec{V_O}\vec{P_O}\vec{P_O}}{D} }}{\sqrt{D}} + \frac{\vec{V_O}\vec{P_O}}{D}$$
 
 $$ T_{\Delta}=\frac{\sqrt{\frac{\vec{P_O}\vec{P_O}( D+\vec{V_O}\vec{V_O})}{D} }}{\sqrt{D}} + \frac{\vec{V_O}\vec{P_O}}{D}$$
@@ -408,18 +409,10 @@ $$
 A=L\\
 B=C-v(x)\\
 D=v(x)\\
-A(\frac{1}{B} + \frac{\frac{1D}{B}}{B} 
-
-
-+\frac{D\frac{\frac{D}{B}}{B}}{B}+ 
-
-\frac{\frac{\frac{\frac{DDD}{B}}{B}}{B} }
-
-  {B} )\\
- A(\frac{1}{B} + \frac{D}{B^2} +\frac{D^2}{B^3} + \frac{D^3}{B^4} + \frac{D^4}{B^5} ) 
- 
- \end{array}
- $$
+A(\frac{1}{B} + \frac{\frac{1D}{B}}{B} +\frac{D\frac{\frac{D}{B}}{B}}{B}+ \frac{\frac{\frac{\frac{DDD}{B}}{B}}{B} }  {B} )\\
+A(\frac{1}{B} + \frac{D}{B^2} +\frac{D^2}{B^3} + \frac{D^3}{B^4} + \frac{D^4}{B^5} ) 
+\end{array}
+$$
 
 
 
