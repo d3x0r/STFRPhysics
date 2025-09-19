@@ -62,7 +62,7 @@ function displace( now) {
 	values.planet_position.y = values.sun_position.y + (values.Orbit * ps) * pf*values.Scale;
 
 	const lengthContract = Math.sqrt( values.C*values.C - values.Velocity*values.Velocity ) / values.C;
-if(0)
+if(1)
 	for( let y = 0; y < displacements.length; y++ ) {
 		const gy = y * 10 - 500;
 		const row = displacements[y];
@@ -822,7 +822,7 @@ if(1) { // tangent
 		ctx.stroke();
 	}
 
-if(0)
+if(1)
 	for( let y = 0; y < displacements.length; y++ ) {
 		const row = displacements[y];
 		const row1 = displacements[y+1];
