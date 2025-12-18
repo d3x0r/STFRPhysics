@@ -162,6 +162,14 @@ $$\begin{array}{r}
 \sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta E}}\vec{V_{E}}}{\sqrt{D_{\Delta O}}} = \sqrt{\vec{P_{\Delta E}}\vec{P_{\Delta E}} + \frac{\left({\vec{P_{\Delta E}}}{\vec{V_{E}}}\right)^{2}}{D_{\Delta O}}}& (C.24)
 \end{array}$$
 
+$$\begin{array}{r}
+\sqrt{D_{\Delta O}}T_{\Delta E} - \frac{\vec{P_{\Delta E}}\vec{V_{E}}}{\sqrt{D_{\Delta O}}} = \sqrt{\vec{P_{\Delta E}}\vec{P_{\Delta E}} + \frac{\left({\vec{P_{\Delta E}}}{\vec{V_{E}}}\right)^{2}}{D_{\Delta O}}}& (C.24)
+\\ \vec{P_{\Delta E}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}& (1.29)
+\end{array}$$
+
+
+
+
 Move non $T_{\Delta E}$ expression to the right, divide by
 coefficient of $T_{\Delta E}$, reorder terms under radical:
 
@@ -172,7 +180,7 @@ T_{\Delta E} = \frac{\sqrt{\frac{\left({\vec{P_{\Delta E}}}{\vec{V_{E}}}\right)^
 Multiply by $\frac{\sqrt{D_{\Delta O}}}{\sqrt{D_{\Delta O}}}$:
 
 $$\begin{array}{r}
-\boxed{T_{\Delta E} = \frac{\sqrt{\left({\vec{P_{\Delta E}}}{\vec{V_{E}}}\right)^{2}D_{\Delta O} + \vec{P_{\Delta E}}\vec{P_{\Delta E}}} + \vec{P_{\Delta E}}\vec{V_{E}}}{D_{\Delta O}}}& (C.26)
+\boxed{T_{\Delta E} = \frac{\sqrt{\left({\vec{P_{\Delta E}}}{\vec{V_{E}}}\right)^{2} + D_{\Delta O}\vec{P_{\Delta E}}\vec{P_{\Delta E}}} + \vec{P_{\Delta E}}\vec{V_{E}}}{D_{\Delta O}}}& (C.26)
 \end{array}$$
 
 Simplify with partial expressions:

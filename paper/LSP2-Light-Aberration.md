@@ -15,14 +15,13 @@ received photon in a moving frame. It also applies for photons that are
 emitted.
 
 I used the existing math for light aberration as derived by Einstein
-from Wikipedia 'Relativistic Aberration' \[[ref
-2](#RelativsiticAberration)\]:
+from Wikipedia 'Relativistic Aberration' [ref 2](#RelativsiticAberration)\:
 
 $$\begin{array}{r}
 \cos\theta_{o} = \frac{\cos\theta_{s}\\ - \\\frac{V}{C}}{1 - \\\frac{V}{C}\\\cos\theta_{s}}\\ (3.1)
 \end{array}$$
 
-Where *θ*<sub>*o*</sub> is the observed angle for a frame moving at
+Where $θ_o$ is the observed angle for a frame moving at
 speed $V$. I extended the math slightly to include the direction part of
 the velocity:
 
@@ -51,22 +50,22 @@ The above formula generally works for the 3D case, but because arccos
 aka  cos<sup>−1</sup> only returns 0 to *π*, a correction needs to be
 applied based on the input angle.
 
-(*A*×*D*&lt;0?−1:1) Given an input of *D* which is the direction the
+$(A×D < 0?−1:1)$ Given an input of *D* which is the direction the
 body is travelling (where 0 is towards positive infinity on the X axis),
 and *A* which is the angle the observer is travelling, the delta angle
-is *d**A* = *D* − *A*. The multipart equation *N* computes a multiplier
+is $dA = D − A$. The multipart equation *N* computes a multiplier
 based on the angle; every *π* units the sign of the result flips; this
 is the absolute value of the floor of dA divided by *π*, mod 2, then if
 the result is 0 the value is 1, otherwise the value is -1:
 
 $$\begin{array}{r}
-dA = D - A\\ (3.6)
+dA = D - A& (3.6)
 \end{array}$$
 
 $$\begin{array}{r}
 N = \left\{ x = \left| \left\lfloor \frac{dA}{\pi} \right\rfloor \right|mod\\2\\\begin{aligned}
-1,\\\\ & x = 0 \\
- - 1,\\\\ & x = 1
+1, & x = 0 \\
+ - 1, & x = 1
 \end{aligned} \right.\\\\ (3.7)
 \end{array}$$
 
@@ -86,7 +85,7 @@ b = N\cdot\cos^{- 1}\frac{V - C\cos{dA}}{V\cos{dA} - C} + D\\ (3.9)
 Light aberration is one clue that a moving body has to determine that
 they are actually the ones moving, although the parallax of the stars
 shifts too, distant galaxies are still going to be distant enough that
-their aberrated position can be compared to a base stellar map.
+	their aberrated position can be compared to a base stellar map.
 ## 3D Aberration with Rotation
 
 The partial expressions required for producing the angle of aberration
@@ -100,15 +99,15 @@ The cross-product also gives the axis of rotation for the aberration.
 
 Calculate delta position:
 
-$\begin{array}{r}
+$$\begin{array}{r}
 \vec{\Delta X_{d}} = \vec{X} - \vec{X_{O}}\\ (3.10)
-\end{array}$
+\end{array}$$
 
 Compute cross product of position and observer's velocity:
 
-$\begin{array}{r}
+$$\begin{array}{r}
 \vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\ (3.11)
-\end{array}$
+\end{array}$$
 
 Normalize the cross product (axis of rotation):
 
