@@ -207,23 +207,64 @@ $$T_O = T_E + \frac {\left|(\vec{X_O} + \vec{V_O}T_O) - (\vec{X_E}+ \vec{V_E}T_E
 $$T_O=T_E+T_{\Delta O}$$
 $$T_E=T_O-T_{\Delta E}$$
 
+## Solve T_delta from T_e
+
 $$T_{\Delta} = \frac {\left|(\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right|} {C}$$
+
+
+$$T_{\Delta} = \frac {\sqrt{ \left((\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right)^2}} {C}$$
+
+$$ (T_{\Delta}C)^2 = {{ \left((\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right)^2}} $$
+
+Rather than taking the square root of both sides, have to keep the square so the vectors become scalars via dot products....
+$$ (T_{\Delta}C)^2 = {{ \left(\left( \vec{X_O} + \vec{V_O}(T_E+T_{\Delta})\right) - (\vec{X_E}+ \vec{V_E}T_E)\right)^2}} $$
+
+### This is wrong - why is it wrong?
+$$ T_{\Delta} = \frac { \vec{X_O}- \vec{X_E} + \left(\vec{V_O} - \vec{V_E}\right)T_E } { C-\vec{V_O} }$$
+
+$$\vec{P_E}=\vec{X_O}+\vec{V_O}T_E-(\vec{X_E}+\vec{V_E}T_E) $$
+$$T_{\Delta} = \frac {\left|(\vec{X_O} + \vec{V_O}(T_E+T_{\Delta}) - (\vec{X_E}+ \vec{V_E}T_E)\right|} {C}$$
+
+
+$$T_{\Delta} = \frac {\left|\vec{P_E}+\vec{V_O}T_{\Delta}\right|} {C}$$
+
+$$T_{\Delta}T_{\Delta}CC =  { \vec{P_E}\vec{P_E}+2\vec{P_E}\vec{V_O}T_{\Delta} +\vec{V_O}T_{\Delta}\vec{V_O}T_{\Delta} }$$
+
+$$T_{\Delta}T_{\Delta}(CC-\vec{V_O}\vec{V_O})-2\vec{P_E}\vec{V_O}T_{\Delta} =  { \vec{P_E}\vec{P_E} }$$
+
+$$( T_{\Delta}T_{\Delta}(CC-\vec{V_O}\vec{V_O})-2\vec{P_E}\vec{V_O}T_{\Delta} =  { \vec{P_E}\vec{P_E} }$$
+
+
+$$\left( \sqrt{(CC-\vec{V_O}\vec{V_O})} T_{\Delta}- \frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}} \right)^2 - \left(\frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}}\right)^2 =  { \vec{P_E}\vec{P_E} }$$
+
+
+$$(  T_{\Delta} )  = \frac { \sqrt{{ \vec{P_E}\vec{P_E} } + - \left(\frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}}\right)^2} + \frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}} } {\sqrt{(CC-\vec{V_O}\vec{V_O})}}$$
+
+$$(  T_{\Delta} )  = \frac { \sqrt{{ \vec{P_E}\vec{P_E} } + - \left(\frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}}\right)^2} + \frac{\vec{P_E}\vec{V_O}}{\sqrt{CC-VV}} } {\sqrt{(CC-\vec{V_O}\vec{V_O})}}$$
+
 Setup some partial expressions... 
 
+## Solve T_o from T_e
 ---
+solve time observed from time emitted
 $$\vec{P_E} = \vec{X_O}-(\vec{X_E}+\vec{V_E}T_E)$$
 
 $$T_{E} = T_O - \frac {\left|\vec{P_E}+\vec{V_O}T_O\right|} {C}$$
 
+---
+solve time emitted from time observed
+
 $$\vec{P_O} = \vec{X_O}+\vec{V_O}T_O-\vec{X_E}$$
 
 $$T_{O} = T_E + \frac {\left|\vec{P_O}+\vec{V_E}T_E\right|} {C}$$
-
+Convert length expression to sqrt(length^2)
 $$T_{O} = T_E + \frac {\sqrt{\left(\vec{P_O}+\vec{V_E}T_E\right)^2}} {C}$$
-
+Move Te, and C
 $$C(T_{O}-T_E) =   {\sqrt{\left(\vec{P_O}+\vec{V_E}T_E\right)^2}} $$
-$$CC(T_{O}^2-2T_{O}T_{E}+T_E^2) =   {{\vec{P_O}\vec{P_O}+2\vec{P_O}\vec{V_E}T_E + \vec{V_E}T_E\vec{V_E}T_E}} $$
 
+Square both sides, and expand squared expressions
+$$CC(T_{O}^2-2T_{O}T_{E}+T_E^2) =   {{\vec{P_O}\vec{P_O}+2\vec{P_O}\vec{V_E}T_E + \vec{V_E}T_E\vec{V_E}T_E}} $$
+move Te terms to the left, and To Terms to the right
 $$ T_E^2(CC-\vec{V_E}\vec{V_E}) -2T_{E}(CCT_{O} -\vec{P_O}\vec{V_E}) =    {{\vec{P_O}\vec{P_O} }} -CCT_{O}^2 $$
 
 split on multiple lines...
@@ -263,31 +304,9 @@ T_E\sqrt{{D_E}} \\
 \end{array}
 $$
 
-$$T_E  = \frac { \sqrt  {( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2){D_E} +\left(CCT_O-\vec{P_O}\vec{V_E}\right)^2} + {CCT_{O} -\vec{P_O}\vec{V_E}}}{D_E}$$
+$$T_E  = \frac { \sqrt  {( {({\vec{X_O}+\vec{V_O}T_O-\vec{X_E})^2 }}  -CCT_{O}^2){D_E} +\left(CCT_O-(\vec{X_O}+\vec{V_O}T_O-\vec{X_E})\vec{V_E}\right)^2} + {CCT_{O} -(\vec{X_O}+\vec{V_O}T_O-\vec{X_E})\vec{V_E}}}{D_E}$$
 
 
-
-$$ \begin{array}{ll}
-    \left( {{\vec{P_O}\vec{P_O} }}  -CCT_{O}^2\right)\left({CC- \vec{V_E}\vec{V_E}}\right) \\
-	  +CCT_OCCT_O-2CCT_O\vec{P_O}\vec{V_E} + \vec{P_O}\vec{V_E}\vec{P_O}\vec{V_E}
-\end{array}
-$$
-
-
-$$ \begin{array}{ll}
-    \left( {{\vec{P_O}\vec{P_O} }}CC - {{\vec{P_O}\vec{P_O} }}\vec{V_E}\vec{V_E}  -CCT_{O}^2CC+ CCT_{O}^2\vec{V_E}\vec{V_E}\right) \\
-	  +CCT_OCCT_O-2CCT_O\vec{P_O}\vec{V_E} + \vec{P_O}\vec{V_E}\vec{P_O}\vec{V_E}
-\end{array}
-$$
-
-
-$$   CC ( {{\vec{P_O}\vec{P_O} }}   + T_{O}^2\vec{V_E}\vec{V_E} -2T_O\vec{P_O}\vec{V_E})$$
-
-
-$$  CC ( {{\vec{P_O} }}   - T_{O}\vec{V_E})^2 $$
-
-
-$T_E  = \frac { \sqrt  { CC ( {{\vec{P_O} }}   + T_{O}\vec{V_E})^2 } + {CCT_{O}} +\vec{P_O}\vec{V_E}}{D_E}$
 
 
 
