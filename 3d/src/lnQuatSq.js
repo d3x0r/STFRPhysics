@@ -1456,7 +1456,8 @@ lnQuat.prototype.getRoll = function() {
 	const c = 1- c1;
 	const cn = c*q.nx;
 
-	return Math.asin( s*q.nz  + cn*q.ny );
+	return Math.asin(  cn*q.ny - s*q.nz  );
+	//asin( ( (1 - cos( r[ 3 ] )) * r[ 0 ] ) * r[ 1 ] - sin( r[ 3 ] ) * r[ 2 ] )
 }
 
 lnQuat.prototype.getYaw = function() {	
@@ -1486,6 +1487,7 @@ lnQuat.prototype.getPitch = function() {
 	const s = Math.sin( q.θ ); // double angle sin
 	const c1 = Math.cos( q.θ ); // sin/cos are the function of exp()
 	return Math.asin( s*q.nx + (c1-1)*q.nz*q.ny );
+
 }
 
 //-------------------------------------------------------------------------------
