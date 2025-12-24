@@ -170,6 +170,34 @@ $$dA = \cos^{-1} \left( cosvdot + \frac { \frac {|V|} c } { 1+ {cosvdot}  \frac 
 
 $$\vec{X'} = \vec{X_o} + \vec{dX}\cdot\cos(dA) + \sin(dA)\cdot( \vec{dX} \times \vec{V}) \vec{V}$$
 
+
+Mod expression that extends arccos based on the input angle.  Since above the axis is positive and below is negative, and the direction is in the same direction (towards 0) , the resulting angle can be +/-pi radians instead of just 0-pi.
+
+$$\begin{array}{r}
+N = \left\{ x = \left| \left\lfloor \frac{dA}{\pi} \right\rfloor \right|mod\\2\\\begin{aligned}
+1, & x = 0 \\
+ - 1, & x = 1
+\end{aligned} \right.
+\end{array}$$
+
+Normal aberration expressed with N expression
+$$a = N\cdot\cos^{- 1}\frac{\cos{dA} + \frac{V}{C}}{1 + \frac{V}{C}\cos{dA}} + D$$
+### Inverse Aberration
+
+This gives back what the angle was needed to get this angle of aberration
+$$b = N\cdot\cos^{- 1}\frac{V - C\cos{dA}}{V\cos{dA} - C} + D$$
+
+A and B can basically be used to walk opposite ends of a ray forward by a reflection step....
+
+a = angle to primary reflection
+b(b(a)) = secondary reflection from a ring
+
+## Doppler
+
+$$\begin{array}{r}
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\sin(\theta)}}\\ (6.1)
+\end{array}$$
+
 ## Time Contraction
 This is the long part of a sideways photon clock basically.  It's not just that the photon has to travel diagonally 1 unit for every unit forward, thereby being at the speed of light, and only having to go diagonal 1.414, the more it goes forward, the less it goes sideways, so at the speed of light the travel time is infinite, since any additional sideways motion would mean the thing was going slower than the speed of light.  So the triangle starts with a side as $V$ for velocity from 0 to C, the hypotenuse is C always, and the remaining side of the triangle is sqrt{CC - VV}.  V can never be greater than C, because C can't cover more than ${C_L}$ amount of space in any amount of time.
 Then we want this to be a simple ratio to scale time, so we scale from 0 to C to 0 to 1, and get a contraction factor:
