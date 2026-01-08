@@ -64,8 +64,8 @@ dA = D - A& (3.6)
 
 $$\begin{array}{r}
 N = \left\{ x = \left| \left\lfloor \frac{dA}{\pi} \right\rfloor \right|mod\\2\\\begin{aligned}
-1, & x = 0 \\
- - 1, & x = 1
+1, & x < 1 \\
+ - 1, & x >= 1
 \end{aligned} \right.\\\\ (3.7)
 \end{array}$$
 
