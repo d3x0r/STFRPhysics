@@ -34,6 +34,7 @@ $D$ is the direction the emitter is travelling. (same as in aberration)
 Equation \[6.3\] is the distance the signal travels in 1 tick:
 
 $$\begin{array}{r}\vec{A} = \left[C\cos\left( A_{O} \right), C\sin\left( A_{O} \right)\right]\\\\ (6.3)\end{array}$$
+
 Equation \[6.4\] is the distance the body travels in 1 tick:
 
 $$\begin{array}{r}
@@ -44,19 +45,19 @@ This is the difference between the distance traveled by 1 wave in 1 tick
 minus the distance traveled by the body:
 
 $$\begin{array}{r}
-\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\|\\ (6.5)
+\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\|\\\\ (6.5)
 \end{array}$$
 
 Square both sides, to work to getting length of the vector:
 
-$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}\left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\ + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)\end{array} \right)\\ (6.6)
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}\left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\\\ + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)\end{array} \right)\\\\ (6.6)
 \end{array}$$
 
 Combine common terms:
 
-$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\
- - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\
- + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)\\ (6.7)
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\\\
+ - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\\\
+ + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)\\\\ (6.7)
 \end{array}$$
 
 Remove terms that combine to be 1, and simplify cos(A)cos(D)+sin(A)sin(D)=cos(A-D) trig identity:
