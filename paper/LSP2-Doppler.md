@@ -1,7 +1,7 @@
 
 | [Abstract](LSP2-Abstract.md)                        | 3. [Light Aberration](LSP2-Light-Aberration.md)       | 7. [Experiment Proposal](LSP2-Experiment.md)                          | [Appendix C](LSP2-Appendix-C.md) | [Appendix G](LSP2-Appendix-G.md) |
 | --------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------- | -------------------------------- |
-| [Introduction](LSP2-Introduction.md)               | 4. [Full Transformation](LSP2-Full-Transformation.md) | 8. [References and Declarations](LSP2-References-and-Declarations.md) | [Appendix D](LSP2-Appendix-D.md) | [Appendix H](LSP2-Appendix-H.md) |
+| [Introduction](LSP2-Introduction.md)                | 4. [Full Transformation](LSP2-Full-Transformation.md) | 8. [References and Declarations](LSP2-References-and-Declarations.md) | [Appendix D](LSP2-Appendix-D.md) | [Appendix H](LSP2-Appendix-H.md) |
 | 1. [Light Propagation](LSP2-Propagation.md)         | 5. [Doppler Effects](LSP2-Doppler.md)                 | [Appendix A](LSP2-Appendix-A.md)                                      | [Appendix E](LSP2-Appendix-E.md) | [Appendix I](LSP2-Appendix-I.md) |
 | 2. [Length Contraction](LSP2-Length-Contraction.md) | 6. [Results](LSP2-Results.md)                         | [Appendix B](LSP2-Appendix-B.md)                                      | [Appendix F](LSP2-Appendix-F.md) | [Appendix J](LSP2-Appendix-J.md) |
 
@@ -13,7 +13,7 @@ relative to the velocity direction, and V is just the speed component of
 the velocity.
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}}\\ (6.1)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}}\\\\ (6.1)
 \end{array}$$
 
 The above factor is a scalar on the frequency, and $\frac{1}{F}$ should
@@ -22,7 +22,7 @@ be used to scale the wavelength.
 The composite frequency shift and light aberration function:
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\\left(  \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)}}\\ (6.2)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\ \left(  \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)}}\\\\ (6.2)
 \end{array}$$
 
 ## Derivation of Doppler Shift
@@ -33,11 +33,11 @@ $D$ is the direction the emitter is travelling. (same as in aberration)
 
 Equation \[6.3\] is the distance the signal travels in 1 tick:
 
-$$\begin{array}{r}\vec{A} = \{C\cos\left( A_{O} \right),C\sin\left( A_{O} \right)\}\\ (6.3)\end{array}$$
+$$\begin{array}{r}\vec{A} = \left[C\cos\left( A_{O} \right), C\sin\left( A_{O} \right)\right]\\\\ (6.3)\end{array}$$
 Equation \[6.4\] is the distance the body travels in 1 tick:
 
 $$\begin{array}{r}
-\vec{B} = \left\{ V\cos(D),V\sin(D) \right\}\\ (6.4)
+\vec{B} = \left[ V\cos(D),V\sin(D) \right]\\\\ (6.4)
 \end{array}$$
 
 This is the difference between the distance traveled by 1 wave in 1 tick
