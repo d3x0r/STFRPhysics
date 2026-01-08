@@ -13,7 +13,7 @@ relative to the velocity direction, and V is just the speed component of
 the velocity.
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}}\\\\ (6.1)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}}\\\\ &(6.1)
 \end{array}$$
 
 The above factor is a scalar on the frequency, and $\frac{1}{F}$ should
