@@ -59,7 +59,7 @@ Combine common terms:
 $$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\\\ - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\\\ + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)\\\\ &(6.7)
 \end{array}$$
 
-Remove terms that combine to be 1, and simplify cos(A)cos(D)+sin(A)sin(D)=cos(A-D) trig identity:
+Remove terms that combine to be 1, and simplify $\cos(A)\cos(D)+\sin(A)\sin(D)=\cos(A-D)$ trig identity:
 
 $$\begin{array}{r}
 ({\vec{A - B}})^{2} = C^{2} - 2CV\left( \cos(D - A) \right) + V^{2}\\\\ &(6.8)
