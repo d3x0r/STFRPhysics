@@ -1,0 +1,98 @@
+
+<html>
+<head><title>Gravity Blackhole Orbits</title></head>
+<body>
+   <p>
+	<div style="position:relative">
+	<div style="top:0">
+
+	</div>
+
+    <CANVAS WIDTH=1024 height=1024 ID="testSurface" ></CANVAS>
+
+	</div>
+
+
+</body>
+<script type="module"> 
+
+const canvas = document.getElementById( "testSurface" );
+const ctx = canvas.getContext( '2d' );
+
+const midx = canvas.width/2
+const midy = canvas.height/2
+
+const BASE_COLOR_WHITE = [255,255,255,255];
+const BASE_COLOR_BLACK = [0,0,0,255];
+const BASE_COLOR_RED = [255,0,0,255];
+const BASE_COLOR_BLUE = [0,0,255,255];
+const BASE_COLOR_YELLOW = [255,255,0,255];
+const BASE_COLOR_GREEN = [0,255,0,255];
+
+
+const C = 300000000;
+const G = 6.667e-11;
+const M = 6.649e26;
+const A = (M,r) => G*M/(r*r);
+const Rs = (M) => 2*G*M/(C*C) ;
+const Vo = (M,r) => Math.sqrt( G*M/r );
+
+
+const zoom = 50;
+const RScale = 4;
+
+	const t = 0.000000001;
+	const p = [Rs(M)*RScale,0];
+	const v = [0,1*Vo(M,Rs(M)*RScale)];
+	const a = [-A(M,Math.sqrt(p[0]*p[0]+p[1]*p[1])),0];
+
+
+	ctx.clearRect( 0, 0, canvas.width, canvas.height );
+ctx.beginPath();
+ctx.strokeStyle = "black";
+ctx.arc( midx, midy, Rs(M)*zoom, 0, Math.PI*2 );
+ctx.stroke();
+
+ctx.beginPath();
+
+ctx.strokeStyle = "red";
+ctx.arc( midx, midy, (G*M)/C*zoom, 0, Math.PI*2 );
+ctx.stroke();
+
+
+let h = 0;
+
+function draw() {
+
+    h += 10;
+	ctx.beginPath ();
+	ctx.strokeStyle= "hsl("+h+",100%,50%)";
+	ctx.moveTo( p[0] * zoom + midx, p[1] * zoom + midy );
+	for( let n = 0; n < 2000; n++ ) {
+		const d = Math.sqrt( p[0]*p[0] + p[1]*p[1] );
+		const ac = A(M,d);
+		const sin = p[0] / d
+		// normalized direction times acceleration at this radius for mass
+		a[0] = -(p[0]/d)*ac * ( 1-sin/10000 );
+		a[1] = -(p[1]/d)*ac;
+
+		v[0] = v[0] + 1*a[0]*t;
+		v[1] = v[1] + 1*a[1]*t;
+
+		p[0] = p[0] + v[0]*t;
+		p[1] = p[1] + v[1]*t;
+		ctx.lineTo( p[0] * zoom + midy, p[1] * zoom + midy );
+
+		
+	}
+	ctx.stroke();
+	setTimeout( draw, 100 );
+}
+
+draw();
+
+</script>
+</html>
+
+
+
