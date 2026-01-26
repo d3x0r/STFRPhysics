@@ -87,8 +87,9 @@ var camMat = null;
 var status_line;
 
 
-var controlNatural;
+export var controlNatural;
 var controlOrbit;
+var controlFree;
 var controls;
 	var scene;
 	var scene2;
