@@ -37,6 +37,7 @@ export function NaturalCamera( object, domElement ) {
 	let thetaDelta = 0;
 
 	this.userRotate = false;
+	this.alignUp = true;
 
 	this.rotateLeft = function ( angle ) {
 		if ( angle === undefined )  angle = 0;//getAutoRotationAngle();
@@ -66,7 +67,7 @@ export function NaturalCamera( object, domElement ) {
 		if( !scope.userRotate ) return;
 		touchUpdate();
 
-		const roll = scope.motion.orientation.getRoll();
+		const roll = scope.alignUp?scope.motion.orientation.getRoll():0;
 		if( phiDelta || thetaDelta || roll ){
 			scope.motion.rotation.x = -phiDelta;
 			scope.motion.rotation.y = thetaDelta;
@@ -79,8 +80,13 @@ export function NaturalCamera( object, domElement ) {
 			thetaDelta = 0;
 			phiDelta = 0;
 
-			scope.motion.move( scope.object, tick );			
+		} else {
+			scope.motion.rotation.x = 0;
+			scope.motion.rotation.y = 0;
+			scope.motion.rotation.z = 0;
+			scope.motion.rotation.dirty = true;
 		}
+			scope.motion.move( scope.object, tick );			
 
 	};
 
@@ -146,27 +152,30 @@ export function NaturalCamera( object, domElement ) {
 				keyEvent( event, true );
 			break;
 		case scope.keys.SHIFT:
+			if( !self.fastMove ) {
 			self.fastMove = true;
+			scope.motion.speed.multiplyScalar( 10 );
+			}
 			break;
             case scope.keys.SPACE:
             case scope.keys.E:
-                scope.motion.speed.y = self.moveSpeed * ( self.fastMove?100:1);
+                scope.motion.speed.y = self.moveSpeed * ( self.fastMove?10:1);
                 break;
             case scope.keys.C:
             case scope.keys.Q:
-                scope.motion.speed.y = -self.moveSpeed * ( self.fastMove?100:1);
+                scope.motion.speed.y = -self.moveSpeed * ( self.fastMove?10:1);
 				break;
 			case scope.keys.A:
-				scope.motion.speed.x = self.moveSpeed * ( self.fastMove?100:1);
+				scope.motion.speed.x = self.moveSpeed * ( self.fastMove?10:1);
 				break;
 			case scope.keys.W:
-				scope.motion.speed.z = -self.moveSpeed * ( self.fastMove?100:1);
+				scope.motion.speed.z = -self.moveSpeed * ( self.fastMove?10:1);
 				break;
 			case scope.keys.S:
-				scope.motion.speed.z = self.moveSpeed * ( self.fastMove?100:1);
+				scope.motion.speed.z = self.moveSpeed * ( self.fastMove?10:1);
 				break;
 			case scope.keys.D:
-				scope.motion.speed.x = -self.moveSpeed * ( self.fastMove?100:1);
+				scope.motion.speed.x = -self.moveSpeed * ( self.fastMove?10:1);
 				break;
 		}
 		const s = scope.motion.speed;
@@ -193,7 +202,10 @@ export function NaturalCamera( object, domElement ) {
 				keyEvent( event, false );
 			break;
 		case scope.keys.SHIFT:
+			if( self.fastMove ) {
 			self.fastMove = false;
+			scope.motion.speed.multiplyScalar( 1/10 );
+			}
 			break;
             case scope.keys.SPACE:
             case scope.keys.E:

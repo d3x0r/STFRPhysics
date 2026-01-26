@@ -10,7 +10,9 @@
 <script src="NaturalCamera.js"></script>
 */
 
-import {THREE,Viewer,BufferAttribute} from "./three-js-view.js"
+import {THREE,Viewer,BufferAttribute,controlNatural} from "./three-js-view.js"
+import * as  view from "./three-js-view.js"
+console.log( 'view:', view );
 
 import {Motion} from "../3d/src/three.js/personalFill.mjs"
 import {lnQuat} from "../3d/src/lnQuatSq.js"
@@ -66,8 +68,6 @@ var dirs = [];
 var camMat = null;
 var status_line;
 
-
-var controlNatural;
 var controlOrbit;
 var controls;
 	var scene;
@@ -128,6 +128,8 @@ let controlForm = null;
 let lineGeometry = null;
 let lineSegments  = null;
 let clock = 0;
+
+view.controlNatural.alignUp = false;
 
 function tickScene( ) {
 
