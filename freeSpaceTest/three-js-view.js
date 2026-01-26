@@ -76,9 +76,9 @@ var l = 0;
 
 //var words1 = voxelUniverse.createTextCluster( "Hello World" );
 let world = null;
-var myMover = null;
 var myBrainBoard = null;
 let myMotion = null;
+let myMover = null;
 var movers2 = [];
 var movers = [];
 let skybox = null;
@@ -219,42 +219,26 @@ export class Viewer {
 	//   var object = new THREE.Mesh(geometry, material);
 		var x;
 		var m;
-	if(0)
-		for( var n = 0; n < 10; n++ ) {
-			scene.add(x = object.clone());
-			x.matrixAutoUpdate = true;
-			x.position.x = n * 5;
 
-			m = new Motion( x );
-			m.orientation.x = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-			m.orientation.y = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-			m.orientation.z = 2*Math.PI * ( RNG.getBits( 11, true ) / 1024 );
-			const b = m.orientation.getBasis();
-			m.speed.x = b.forward.x * 5;
-			m.speed.y = b.forward.y * 5;
-			m.speed.z = b.forward.z * 5;
+		if( !myMover ) myMover = object;
+		scene.add( x = object);
+		
+		const motion =  new Motion(x);
+		if( !myMotion ) myMotion = motion;
 
-			const body = new SmartBody( x, m );
-
-			movers2.push(body);
-		}
-
-		scene.add(myMover = x = object);
-
-		myMotion =  new Motion(x);
-		myMotion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
-			myMotion.orientation.set( 0, 0, -Math.PI, 0 );
-		myMotion.position.set( 0, 0, 100 );
-		const body = new SmartBody( x, myMotion );
+		motion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
+			motion.orientation.set( 0, 0, -Math.PI, 0 );
+		motion.position.set( 0, 0, 100 );
+		const body = new SmartBody( x, motion );
 		if( controlForm )
-		controlForm.mover = myMotion;
+		controlForm.mover = motion;
 		movers2.push(body);
 		x.matrixAutoUpdate = true;
 		// attach the camera to one smart object.
 		myMover.add( camera );
 		//body.brain = myBrainBoard.brain;
 		//myBrainBoard.setBody( body )
-		return myMotion;
+		return motion;
 	}
 
 		
