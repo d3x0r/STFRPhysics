@@ -7,6 +7,11 @@
 
 # Doppler Effect or Frequency Shift
 
+- https://en.wikipedia.org/wiki/Relativistic_Doppler_effect#Transverse_Doppler_effect
+- https://en.wikipedia.org/wiki/Doppler_effect
+- [Doppler Desmos 3D toy](https://www.desmos.com/3d/h3lagdtlm0 )
+- [Doppler Desmos Toy](https://www.desmos.com/calculator/uktmgpli6v)
+
 The frequency shift depends on the angle the light was emitted, after aberration is applied. Theta (*θ*) in the equation is the emission angle relative to the velocity direction, and V is just the speed component of the velocity.  This is one-half of the formula typically given for doppler shift; this is the effective shift for an emitter, and how the waves in various directions from that emitter are perceived.
 
 $$\begin{array}{cr}
