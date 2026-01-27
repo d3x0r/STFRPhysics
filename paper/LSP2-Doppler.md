@@ -7,24 +7,50 @@
 
 # Doppler Effect or Frequency Shift
 
-The frequency shift depends on the angle the light was emitted, after
-aberration is applied. Theta (*θ*) in the equation is the emission angle
-relative to the velocity direction, and V is just the speed component of
-the velocity.
+The frequency shift depends on the angle the light was emitted, after aberration is applied. Theta (*θ*) in the equation is the emission angle relative to the velocity direction, and V is just the speed component of the velocity.  This is one-half of the formula typically given for doppler shift; this is the effective shift for an emitter, and how the waves in various directions from that emitter are perceived.
 
-$$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}}\\\\ &(6.1)
+$$\begin{array}{cr}
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\cos(\theta)}} &(6.1)
 \end{array}$$
+
 
 The above factor is a scalar on the frequency, and $\frac{1}{F}$ should
 be used to scale the wavelength.
 
-The composite frequency shift and inverse light aberration function; inverse light aberration gives the angle the light was smitted in
+The composite frequency shift and inverse light aberration function; inverse light aberration gives the angle the light was emitted in
 before being aberrated:
 
 $$\begin{array}{r}
-F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\ \left(  \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)}}\\\\ &(6.2)
+F = \frac{1}{\sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\\ \left(  \frac{\cos(dA) + \frac{V}{C}}{1 + \frac{V}{C}\cos(dA)} \right)}} &(6.2)
 \end{array}$$
+
+The reciprocal of (6.1) $\frac 1 F$, is used to scale incoming doppler effect, with an angle that is $+\pi$ from the emitted angle.  If the angle is taken as 0; the final result is
+$\frac{\left(C\pm V_{o}\right)}{\left(C\mp V_{s}\right)}$ which is the doppler formula considering the source and observer velocities.  
+
+
+$$\begin{array}{r}
+F = {\sqrt{\frac { \frac{V_O^{2}}{C^{2}} - \frac{2V_O}{C}\cos(\theta+pi) + 1}{\frac{V_S^{2}}{C^{2}} - \frac{2V_S}{C}\cos(\theta) + 1}}} &(6.3)
+\end{array}$$
+
+That is neglecting time dilation; which should slow down the process of emitting the waves, and cause a longer wavelength or lower frequency.
+
+$$\begin{array}{r}
+F = {\sqrt{\frac { \frac{V_O^{2}}{C^{2}} - \frac{2V_O}{C}\cos(\theta+pi) + 1}{\frac{V_S^{2}}{C^{2}} - \frac{2V_S}{C}\cos(\theta) + 1}}} \sqrt{\frac{C^2- {V_S^2}}{C^2- {V_O^2} }} &(6.4)
+\end{array}$$
+
+
+
+This matches the classic doppler effect within $\pm C$, but diverges outside of that range.  It loses the wavelength and frequency inversion since the waves have a negative velocity, which can be recovered with the following `sign()` modification. Do note, however that for velocities less than $C$, both expressions are always positive.
+
+$$
+\begin{array}{r}
+F\left(V_s,V_o\right)=\operatorname{sign}\left(C-V_O\right)\operatorname{sign}\left(V_S+C\right)\frac{F\left(V_O,\pi\right)}{F\left(V_S,0\right)}&(6.5)
+\end{array}
+$$
+
+For a small range of angles there is a difference between this and the classical doppler formula.  
+
+This would predict 0 transverse doppler shift; however relativistic time dilation and aberration may factor a part if not travelling at similar velocities, and being relatively stationary.
 
 ## Derivation of Doppler Shift
 
@@ -34,47 +60,45 @@ $D$ is the direction the emitter is travelling. (same as in aberration)
 
 Equation \[6.3\] is the distance the signal travels in 1 tick:
 
-$$\begin{array}{lr}\vec{A} = \left[C\cos\left( A_{O} \right), C\sin\left( A_{O} \right)\right]\\\\ &(6.3)\end{array}$$
+$$\begin{array}{lr}\vec{A} = \left[C\cos\left( A_{O} \right), C\sin\left( A_{O} \right)\right] &(6.6)\end{array}$$
 
 Equation \[6.4\] is the distance the body travels in 1 tick:
 
 $$\begin{array}{lr}
-\vec{B} = \left[ V\cos(D),V\sin(D) \right]\\\\ & (6.4)
+\vec{B} = \left[ V\cos(D),V\sin(D) \right] & (6.7)
 \end{array}$$
 
-This is the difference between the distance traveled by 1 wave in 1 tick
-minus the distance traveled by the body:
+This is the difference between the distance traveled by 1 wave in 1 tick minus the distance traveled by the body:
 
 $$\begin{array}{r}
-\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\|\\\\ & (6.5)
+\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\| & (6.8)
 \end{array}$$
 
 Square both sides, to work to getting length of the vector:
 
-$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}\left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\\\ + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)\end{array} \right)\\\\ &(6.6)
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}\left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\\\ + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)\end{array} \right) &(6.9)
 \end{array}$$
 
 Combine common terms:
 
-$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\\\ - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\\\ + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)\\\\ &(6.7)
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\\\ - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\\\ + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)&(6.10)
 \end{array}$$
 
 Remove terms that combine to be 1, and simplify $\cos(A)\cos(D)+\sin(A)\sin(D)=\cos(A-D)$ trig identity:
 
 $$\begin{array}{r}
-({\vec{A - B}})^{2} = C^{2} - 2CV\left( \cos(D - A) \right) + V^{2}\\\\ &(6.8)
+({\vec{A - B}})^{2} = C^{2} - 2CV\left( \cos(D - A) \right) + V^{2} &(6.11)
 \end{array}$$
 
-Take square root of both sides to result in length, and divide both
-sides by C to convert the distance to a time:
+Take square root of both sides to result in length, and divide both sides by C to convert the distance to a time which gives frequency:
 
 $$\begin{array}{r}
-\frac{\left\| \vec{A - B} \right\|}{C} = \frac{\sqrt{C^{2} - 2CV\left( \cos(D - A) \right) + V^{2}}}{C}\\\\ &(6.9)
+\frac{\left\| \vec{A - B} \right\|}{C} = \frac{\sqrt{C^{2} - 2CV\left( \cos(D - A) \right) + V^{2}}}{C} &(6.12)
 \end{array}$$
 
 Resulting equation:
 
 $$\begin{array}{r}
-\boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \cos(D - A) \right)}}\\\\ &(6.10)
+\boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \cos(D - A) \right)}}\\\\ &(6.13)
 \end{array}$$
 
