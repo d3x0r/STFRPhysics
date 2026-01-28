@@ -58,7 +58,7 @@ const L = (M,f,r) => 2*Math.PI*M*f*r*r;
 const Lv = (M,v,r) => M*r*v; // v perpendicular
 
 // 1/2 mv^2 
-const Ueff = m*v*v/(2);
+const Ueff = (m,v) => m*v*v/(2);
 
 const E = (m,v) => m*C*sqrt((v*v + C*C))
 
