@@ -60,7 +60,7 @@ const Lv = (M,v,r) => M*r*v; // v perpendicular
 // 1/2 mv^2 
 const Ueff = m*v*v/(2);
 
-const E(m,v) = m*C*sqrt((v*v + C*C))
+const E = (m,v) => m*C*sqrt((v*v + C*C))
 
 //const  Ueff = (r,v,m) => v/(2*m*r*r)
 
