@@ -221,22 +221,26 @@ export class Viewer {
 		var x;
 		var m;
 
-		if( !myMover ) myMover = object;
 		scene.add( x = object);
 		
 		const motion =  new Motion(x);
 		if( !myMotion ) myMotion = motion;
 
 		motion.dipole = new lnQuat( 0, 0, 0, 1 ).update();
-			motion.orientation.set( 0, 0, -Math.PI, 0 );
+		motion.orientation.set( 0, 0, -Math.PI, 0 );
 		motion.position.set( 0, 0, 100 );
 		const body = new SmartBody( x, motion );
-		if( controlForm )
-		controlForm.mover = motion;
 		movers2.push(body);
 		x.matrixAutoUpdate = true;
 		// attach the camera to one smart object.
-		myMover.add( camera );
+
+		if( !myMover ) {
+			myMover = object;
+			myMover.add( camera );
+			if( controlForm )
+			controlForm.mover = motion;
+		}
+
 		//body.brain = myBrainBoard.brain;
 		//myBrainBoard.setBody( body )
 		return motion;
@@ -735,6 +739,7 @@ function animate( cb, tick ) {
 		if( y > 600  ) m.position.y -= 1200;
 		if( z < -600  ) m.position.z += 1200;
 		if( z > 600  ) m.position.z -= 1200;
+		m.updateMatrix()
 /*
 
 		if( ( x1 < -200 || x1 > 200 ) 
