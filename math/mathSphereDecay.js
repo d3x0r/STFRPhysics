@@ -607,7 +607,8 @@ if(0)
 
 
 try {
-	drawsomething();
+	readValues();
+	//drawsomething();
 }catch(err) {
 	alert( "GotError:"+err );
 }
