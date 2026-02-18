@@ -1456,7 +1456,7 @@ lnQuat.prototype.getRoll = function() {
 	const c = 1- c1;
 	const cn = c*q.nx;
 
-	return Math.asin(  cn*q.ny - s*q.nz  );
+	return Math.asin(  cn*q.ny + s*q.nz  );
 	//asin( ( (1 - cos( r[ 3 ] )) * r[ 0 ] ) * r[ 1 ] - sin( r[ 3 ] ) * r[ 2 ] )
 }
 
