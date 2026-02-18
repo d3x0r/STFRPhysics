@@ -42,7 +42,7 @@ const defaultParams = {
     uniform int enableLorentz;
     uniform int enableContract;
 
-    const float C=100.0;
+    const float C=10.0;
 
     vec3 aberration( vec3 X, vec3 Vo, vec3 Xo ){
 
@@ -66,13 +66,14 @@ const defaultParams = {
         } else {
             float len = sqrt(len2);
             float Vlen = sqrt(Vlen2);
+				float VlenReal = Vlen*C/sqrt(C*C+Vlen2);
             float norm = Vlen*len;
              //const vAng = acos( Vo.x/Vlen ) * (Vo.y<0?1:-1);
              //console.log( "velocity angle:", vAng, "from", Vlen );
             float CosVDot = Vdot/(norm);
             float baseAng = acos( CosVDot );
-            float delAng = acos( ( CosVDot + Vlen/C ) 
-                    / ( 1.0 + Vlen/C * CosVDot ) )-baseAng;
+            float delAng = acos( ( CosVDot + VlenReal/C ) 
+                    / ( 1.0 + VlenReal/C * CosVDot ) )-baseAng;
     
             if( abs(delAng) < 0.00000001 ) {
                 Xr=Xo+X;
