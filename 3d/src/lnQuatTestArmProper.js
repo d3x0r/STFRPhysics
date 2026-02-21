@@ -414,7 +414,7 @@ function drawAnalogArm(curSliders,slerp) {
 					//const delxyz = to.applyDel( xyz, -1 );
 
 					normalVertices.push( new THREE.Vector3( (0  )*spaceScale   ,( 0)*spaceScale      , (0)*spaceScale  ))
-					normalVertices.push( new THREE.Vector3( (0 + xyz.x*3)*spaceScale   ,( 0+ xyz.y*3)*spaceScale      , (0+delxyz.z*3)*spaceScale  ))
+					normalVertices.push( new THREE.Vector3( (0 + xyz.x*3)*spaceScale   ,( 0+ xyz.y*3)*spaceScale      , (0+xyz.z*3)*spaceScale  ))
 					pushN2(n,4.9,0.2);
 				}
 
