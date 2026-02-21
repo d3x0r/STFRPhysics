@@ -6,6 +6,7 @@ import "./three.js/personalFill.js"  // adds pools, constants, and some matrix c
 
 import "./lnQuatSq.js"
 
+window.THREE=THREE
 import {Textures,on as TextureDone} from "./textureLoader.js"
 import {TextureStack} from "./textureStack.canvas.js"
 import {GeometryBuffer} from "./geometrybuffer.js"
@@ -14,7 +15,7 @@ import {GeometryMaterial} from "./geometrymaterial.texture.js"
 import {DualGeometryBuffer} from "./dual.geometrybuffer.js"
 import {DualGeometryMaterial} from "./dual.geometrymaterial.texture.js"
 
-
+console.log( "blah" )
 const common = {
 	stack : null,
 	cursorIcon : null,
