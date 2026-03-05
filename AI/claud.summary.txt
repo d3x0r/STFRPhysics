@@ -1,0 +1,93 @@
+Great. Let me draft it and you can correct anything I've gotten wrong or oversimplified.
+
+---
+
+# STFR Physics Framework — Briefing Document
+
+**Author:** Decker (d3x0r on GitHub, repo: STFRPhysics)
+
+## Core Philosophy
+Derived from first principles with different assumptions than Special Relativity. No postulates about spacetime geometry — effects emerge from light propagation kinematics and physical reasoning about matter interactions.
+
+## 1. Light Propagation
+The foundational equation — observation time is implicit in both sides:
+
+$$T_O = \frac{\|\vec{X_E} + T_E\vec{V_E} - (\vec{X_O} + T_O\vec{V_O})\|}{C} + T_E$$
+
+Solved for the delay time $T_{\Delta O}$ using intermediate quantities:
+
+$$D_{\Delta O} = C^2 - \vec{V_O}^2$$
+$$\vec{P_{\Delta O}} = \vec{X_E} + T_O\vec{V_E} - \vec{X_O} - T_O\vec{V_O}$$
+$$T_{\Delta O} = \frac{\sqrt{(\vec{P_\Delta}\cdot\vec{V_O})^2 + |\vec{P_\Delta}|^2(C^2 - V_O^2)} + \vec{P_\Delta}\cdot\vec{V_O}}{C^2 - V_O^2}$$
+
+Dual form solves $T_E$ from $T_O$ using $\vec{V_E}$ instead of $\vec{V_O}$. The two forms are symmetric.
+
+## 2. Length Contraction
+Derived from requiring equal two-way signal travel time in all directions for matter interactions (assuming matter is mediated by photon exchange).
+
+$$\Gamma = \frac{\sqrt{C^2 - V^2}}{C}$$
+
+This is $1/\gamma_{Lorentz}$ — converges to 0 at C rather than diverging, more natural as a multiplier for contraction. Applied to a point:
+
+$$L_C(\vec{X}, \vec{V}) = \vec{X} - \frac{\vec{V}(\vec{X}\cdot\vec{V})}{\vec{V}^2}\left(1 - \frac{\sqrt{C^2 - V^2}}{C}\right)$$
+
+## 3. Time Dilation
+Derived from the same photon clock argument with length contraction already applied. Results in standard $\gamma$ but emerged rather than postulated. Same $\Gamma$ factor — no distinction between length and time versions.
+
+## 4. Aberration
+Classical aberration formula extended with proper range handling via $N$ factor to unwrap $\arccos$ beyond $[0,\pi]$:
+
+$$\cos\theta_o = \frac{\cos\theta_s - V/C}{1 - (V/C)\cos\theta_s}$$
+
+**Key point:** Aberration applies to both emission and reception. A directed emitter (laser) must aim ahead due to its own motion. Spherical emitters are unaffected directionally. Doppler shift is applied before aberration — evidenced by synchrotron radiation electron beaming frequency distribution.
+
+## 5. Doppler
+Derived geometrically from vector difference between light travel and source motion in one tick:
+
+$$\frac{\|\vec{A}-\vec{B}\|}{C} = \sqrt{1 + \frac{V^2}{C^2} - \frac{2V}{C}\cos(D-A)}$$
+
+Contains $V^2/C^2$ term absent from classical Doppler. Time dilation effects on Doppler are an open question in the framework — the distinction between round-trip clock slowing vs actual atomic emission frequency is not yet fully resolved.
+
+## 6. Lorentz Transform Connection
+The simplified 1D propagation equation contains the Lorentz time transformation embedded:
+
+$$T_L = \frac{xv}{C^2 - v^2} \cdot \frac{\sqrt{C^2-v^2}}{C} = \gamma\frac{xv}{C^2}$$
+
+This is the relativity of simultaneity term — emerging naturally rather than postulated. Slow-clock transport and the impossibility of one-way synchronization (even NTP can't do better than rtt/2) follow as consequences.
+
+## 7. Velocity Addition
+Uses proper velocity as intermediate space where addition is linear:
+
+$$V_{feel}(x) = \frac{xC}{\sqrt{C^2 - x^2}}, \quad V_{real}(x) = \frac{x}{\sqrt{1 + x^2/C^2}}$$
+$$A(v,u) = V_{real}(V_{feel}(v) + V_{feel}(u))$$
+
+Differs from SR's formula most significantly when velocities are large and opposing in sign. Practically identical to SR in accessible ranges. No known experiment distinguishes them — particle collider kinematics would be the most likely test.
+
+## 8. FTL Behavior
+Framework handles FTL without breaking — denominator $C^2 - V^2$ goes negative, square root has two real solutions corresponding to two images of the FTL object seen by a stationary observer. Observer sees nothing until ship passes, then sees ship receding in both directions. Apparent velocity never exceeds C regardless of actual speed. FTL matter would experience inverted wave interactions — possibly analogous to antimatter (speculative).
+
+## 9. Gravity and Vacuum Medium
+Mass displaces the geometric structure of space radially while $\mu_0$ and $\varepsilon_0$ (vacuum permeability and permittivity) remain anchored in place. Displaced space near mass contains more vacuum medium per coordinate distance, slowing effective C — directly explaining Shapiro delay. C is constant relative to local medium but varies in coordinate terms through a gravitational gradient.
+
+Gravitational time dilation and velocity time dilation are the same mechanism — both increase effective rate of encounter with vacuum medium. $E=mc^2$ interpreted as mass representing vacuum medium displacement — energy required to create or annihilate that displacement.
+
+**Important:** C is not universally constant — it is constant per local vacuum impedance.
+
+## 10. Gravitational Aberration and Solar System
+Gravity propagates at C and is subject to the same aberration and propagation delay as light. The solar system has a bulk velocity of ~370 km/s relative to the CMB rest frame (toward Crater/Leo). This creates a systematic gravitational aberration affecting all solar system bodies — not just Mercury's own orbital velocity.
+
+This CMB-frame velocity ($\approx 0.00123C$) is the primary drift velocity for solar system orbital mechanics in this framework. Suggestive observational alignments:
+- Mercury's precession
+- Lunar perigee/apogee extremes aligning with CMB dipole vector (preliminary, needs rigorous testing against lunar laser ranging data)
+- Planet 9 candidate direction aligning with CMB dipole vector (conventional explanation requires undetected massive body; framework explains as systematic aberration bias on weakly-bound TNOs)
+
+## 11. Open Questions
+- Formal Mercury precession calculation (numerical integration needed)
+- Doppler + time dilation interaction resolved mathematically
+- Acceleration treatment and continuous $\Gamma$ application
+- Connection to Maxwell's equations and electromagnetic covariance
+- Lunar perigee/apogee alignment quantitative test
+- Planet 9 direction precise alignment with CMB dipole
+
+---
+
