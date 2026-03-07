@@ -1,0 +1,9 @@
+﻿Resume note for Quantized Probability conversation:
+Working draft exists at Quantized_Probability.md. The core argument is that spin-½ measurement probability P(↑)=sin⁡2((1+x)π/4)P(\uparrow) = \sin^2((1+x)\pi/4)
+P(↑)=sin2((1+x)π/4) can be derived geometrically from the spin axis projection, and that a continuous (analog) local hidden variable — the spin axis as a real unit 3-vector — produces correlation via relative change 1−x/(2−x)1 - x/(2-x)
+1−x/(2−x) rather than the standard (S−D)/N(S-D)/N
+(S−D)/N. Monte Carlo CHSH gives S≈2.39S \approx 2.39
+S≈2.39, ideal geometry gives S=3.40S = 3.40
+S=3.40. Key open questions: (1) the relative change vs. ratio-to-total distinction as the source of Bell discrepancy — strong claim, needs careful framing; (2) the cos⁡\cos
+cos rational approximation connection; (3) the cuboid sphere (cos⁡2\cos^2
+cos2 probability cloud shape) vs. the spherical LHV cloud as the geometric signature of the difference. Source material in SpinProbabilities.md, QuantizedProbability.md, two uploaded images (RGB sphere, yellow cuboid). Builds on the rotation vector framework from the R3 Spin Group monograph.
