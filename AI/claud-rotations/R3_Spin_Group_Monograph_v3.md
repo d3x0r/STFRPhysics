@@ -108,7 +108,7 @@ For many applications, the principal rotation (angle in $[0, 2\pi)$) is sufficie
 
 Consider a hypothetical failure case: an IK chain with a few links, where the full chain computation results in a net rotation of $1°$, but the total sum of inputs is $361°$. If the result is projected to its principal angle and fed back down the chain, the chain's joints are forced into configurations that distort the intended motion. In quaternion space, this distortion is unavoidable because quaternions cannot represent more than a half-turn. Rotation vectors preserve the full winding number.
 
-Free bodies (spacecraft, projectiles) accumulate rotation over time. The rotation vector accumulator can grow without bound. In practice, `principal()` should be applied when precision is the concern (very large magnitudes lose precision in the trigonometric functions), but the option to maintain the full count is available and sometimes necessary.
+Free bodies (spacecraft, projectiles) accumulate rotation over time. The rotation vector accumulator can grow without bound. The option to maintain the full count is available and sometimes necessary.
 
 ---
 
