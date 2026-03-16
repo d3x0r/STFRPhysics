@@ -1,4 +1,4 @@
-# A Light Propagation Equation in a Homogeneous-Speed Framework
+# Homogeneous Light Propagation Framework
 
 James Buckeyne  
 Independent Research  
@@ -17,13 +17,13 @@ The framework is also extended to signal transfer. There, a staged signal descri
 
 A central question in relativistic kinematics is which familiar transformation and signal-transfer relations must be taken as primitive assumptions and which may instead be recovered from a more basic propagation structure. The present paper examines that question in a propagation-first setting. It begins from a native light-propagation condition relating source, observer, and signal, and asks what standard kinematic forms emerge once that condition is reduced under specific observational constraints.
 
-The aim is to reorganize the derivation and interpretation of the familiar transformation laws while remaining consistent with their standard forms. In the development that follows, contraction, timing, and moving-frame mapping relations are recovered in form from a common propagation-based construction. The same viewpoint is then extended to signal transfer, where the source-side Doppler factor, scalar aberration relation, and frame-local frequency assignments are treated as distinct operational stages rather than collapsed immediately into a single packaged observational formula.
+The aim is to show how familiar transformation laws can be recovered from a propagation-based starting point while remaining within a broader framework not exhausted by those recovered forms. In the development that follows, contraction, timing, and moving-frame mapping relations are recovered in form from a common propagation-based construction. The same viewpoint is then extended to signal transfer, where the source-side Doppler factor, scalar aberration relation, and frame-local frequency assignments are treated as distinct operational stages rather than collapsed immediately into a single packaged observational formula.
 
 This separation is part of the paper’s interpretive claim. Propagation effects and frame-dependent frequency assignment are kept distinct until the final observational stage, so that the contribution of source motion to signal propagation can be tracked independently of the frame in which emission or reception is described.
 
-The paper proceeds in stages. Section 2 states the native propagation condition and its anchored forms, which serve as the formal starting point for the analysis. Section 3 develops the reduced cases needed for uniform motion and directional decomposition. Sections 4 and 5 show how contraction and timing factors emerge from the two-way interaction structure. Section 6 then recovers the moving-frame mapping in form and examines the associated composition law. Section 7 turns to signal transfer, where the source-side Doppler factor, scalar aberration relation, and frame-local frequency assignments are treated as distinct operational stages. Appendix A supplies the one-way interval derivation used by the centered reduction, and Appendix B develops the generalized signed aberration treatment.
+The paper proceeds in stages. Section 2 states the native propagation condition and its anchored forms, which serve as the formal starting point for the analysis. Section 3 develops the reduced cases needed for uniform motion and directional decomposition. Sections 4 and 5 show how contraction and timing factors emerge from the two-way interaction structure. Section 6 then recovers the moving-frame mapping in form and briefly notes speed composition together with the transport-induced rotational remainder that appears under non-collinear composition. Section 7 turns to signal transfer, where the source-side Doppler factor, scalar aberration relation, and frame-local frequency assignments are treated as distinct operational stages. Appendix A supplies the one-way interval derivation used by the centered reduction, and Appendix B develops the generalized signed aberration treatment.
 
-The argument developed below remains consistent with the familiar relativistic formulas, but reorganizes how those formulas may be derived and interpreted when propagation is taken as the primary starting point. On that reading, contraction, timing, moving-frame mapping, and signal-transfer relations appear not as disconnected ingredients, but as formally linked consequences of a common underlying structure. The resulting framework is offered as an interpretive and derivational reorganization, with particular emphasis on keeping propagation effects distinct from frame-dependent frequency assignment until the final observational stage.
+The argument developed below remains consistent with the familiar relativistic formulas, but reorganizes how those formulas may be derived and interpreted when propagation is taken as the primary starting point. On that reading, contraction, timing, moving-frame mapping, non-collinear transport structure, and signal-transfer relations appear not as disconnected ingredients, but as formally linked consequences of a common underlying structure. The resulting framework is offered as a propagation-based construction that recovers the familiar special-relativistic structures treated here from a different starting point, without reducing the broader framework to the Lorentz system.
 
 
 ## 2. Native light propagation equation
@@ -479,108 +479,43 @@ The role of the clock field is therefore subtler than a simple “moving clocks 
 
 In this sense, the simultaneity slope does not say that velocity itself directly decides synchronicity. Rather, it describes how the distributed clock field of a moving frame is organized, and how that organization enters the projection of separated events through the propagation structure.
 
-### 6.8 Velocity composition
+### 6.8 Speed composition and transport-induced rotational remainder
 
-The discussion above concerns the clock-offset and event-projection structure of a moving frame. It does not by itself require a general velocity-composition law. The composition issue is noted here separately because the recovered Lorentz transformation does not by itself fix a unique velocity-composition rule for the broader framework. In the present construction, the natural composition variable is the corresponding proper-velocity variable
+The discussion above concerns the clock-offset and event-projection structure of a moving frame. For the present paper, only a brief note on composition is needed.
 
-$$
-v_{\mathrm{proper}}(x)=\frac{x}{\sqrt{1-x^2/c^2}}=
-\frac{xc}{\sqrt{c^2-x^2}}.
-\tag{6.12}
-$$
-
-where $x=v_{\mathrm{physical}}$.
-
-This proper-velocity parametrization is standard, and it is used here because the composition rule is additive in the proper-velocity variable rather than in physical velocity itself. [6]
-
-The inverse map back to physical velocity is
+The endpoint translational state is represented naturally in the proper-velocity variable,
 
 $$
-v_{\mathrm{physical}}(x)=\frac{x}{\sqrt{1+x^2/c^2}}=
-\frac{xc}{\sqrt{c^2+x^2}}.
-\tag{6.13}
+v_{\mathrm{proper}}(x)=\frac{x}{\sqrt{1-x^2/c^2}}.
 $$
 
-The composition law adopted here is additive in proper velocity:
+with inverse
+
+$$
+v_{\mathrm{physical}}(x)=\frac{x}{\sqrt{1+x^2/c^2}}.
+$$
+
+Accordingly, the endpoint speed composition is written as
 
 $$
 v_{\mathrm{add}}(u,v)=
 v_{\mathrm{physical}}\!\bigl(v_{\mathrm{proper}}(u)+v_{\mathrm{proper}}(v)\bigr).
-\tag{6.14}
 $$
 
-Explicitly,
+This construction is commutative and associative because it is ordinary addition in the proper-velocity variable followed by inversion back to physical velocity.
+
+For non-collinear composition, however, the endpoint translational state does not by itself exhaust the full result. In this framework, the recovered simultaneity term is part of the moving-frame transport structure. The full non-collinear result therefore carries an accumulated rotational remainder associated with the ordered composition path.
+
+For a representative transverse build-up, let $v_x=v_1$ be established first and let $v_y=u$ build from $0$ to $v_2$. The corresponding accumulated contribution is
 
 $$
-v_{\mathrm{add}}(u,v)=
-\frac{v_{\mathrm{proper}}(u)+v_{\mathrm{proper}}(v)}
-{\sqrt{1+\dfrac{\left(v_{\mathrm{proper}}(u)+v_{\mathrm{proper}}(v)\right)^2}{c^2}}}.
-\tag{6.15}
+S_x=\int_0^{v_2}\frac{v_1}{c^2-v_1^2-u^2}\,du
+=
+\frac{v_1}{\sqrt{c^2-v_1^2}}
+\operatorname{arctanh}\!\left(\frac{v_2}{\sqrt{c^2-v_1^2}}\right).
 $$
 
-Since
-
-$$
-v_{\mathrm{proper}}(v)=\gamma(v)\,v,
-\tag{6.16}
-$$
-
-with $\gamma(v)$ given by Eq. (5.5), this may also be written as
-
-$$
-v_{\mathrm{add}}(u,v) = \frac{\gamma(u)u+\gamma(v)v}
-{\sqrt{1+\dfrac{\bigl(\gamma(u)u+\gamma(v)v\bigr)^2}{c^2}}}.
-\tag{6.17}
-$$
-
-This law is commutative, associative, and has $0$ as its identity element, because it is constructed by ordinary addition in the proper-velocity variable followed by inversion back to physical velocity.
-
-It is not the standard Einstein velocity-addition law [4],
-
-$$
-v_E(u,v)=\frac{u+v}{1+\dfrac{uv}{c^2}}.
-\tag{6.18}
-$$
-
-
-For equal input speeds, the present composition law reduces to
-
-$$
-v_{\mathrm{add}}(u,u)=\frac{2u}{\sqrt{1+3u^2/c^2}}.
-\tag{6.19}
-$$
-
-whereas Einstein addition gives
-
-$$
-v_E(u,u)=\frac{2u}{1+u^2/c^2}.
-\tag{6.20}
-$$
-
-The deviation between the two is maximal at
-
-$$
-u \approx 0.631637\,c.
-\tag{6.21}
-$$
-
-for which
-
-$$
-v_E(u,u)\approx 0.903006\,c,
-\qquad
-v_{\mathrm{add}}(u,u)\approx 0.852301\,c.
-\tag{6.22}
-$$
-
-so that
-
-$$
-\Delta_{\max}\approx 0.050705\,c.
-\tag{6.23}
-$$
-
-The discrepancy between the present composition law and Einstein velocity addition is noted here for completeness, but a full analysis lies outside the scope of the present paper. Since the present paper does not otherwise require a velocity-addition law for its main derivational results, that discrepancy will be addressed separately in a companion paper.
+This gives the exact transport accumulation for that build-up. In the small-angle regime, it yields the corresponding rotational remainder to leading order.
 
 ## 7. Signal transfer: propagation, directional update, and frame-local assignment
 
@@ -677,7 +612,7 @@ This separation is not merely terminological. It is part of the interpretive cla
 
 The framework developed in this paper begins from a native light-propagation condition and asks what familiar kinematic structure can be recovered once that condition is reduced under specific observational constraints. Within that construction, the contraction factor $\lambda(v)$, Eq. (4.8), is recovered from the directional disparity between longitudinal and transverse two-way interaction cost, while the timing factor $\gamma(v)$, Eq. (5.5), is recovered from the enlarged total two-way interaction cost of the moving system. The standard one-dimensional Lorentz transformation is then recovered in form in Eq. (6.9), but is interpreted here as emerging from a propagation-based construction rather than being posited independently at the outset.
 
-The present paper is intentionally narrow in scope. Its purpose is to establish the portion of the framework that overlaps most directly with the standard terrain of special relativity: contraction, timing structure, one-dimensional moving-frame mapping, velocity-composition comparison, and staged signal-transfer relations involving a source-side Doppler factor recovered in this staged way and the scalar aberration relation. It does not attempt to present the full framework or all of its further consequences.
+The present paper is intentionally narrow in scope. Its purpose is to establish the portion of the framework that overlaps most directly with the standard terrain of special relativity: contraction, timing structure, one-dimensional moving-frame mapping, a brief note on speed composition in the proper-velocity variable, the transport-induced rotational remainder associated with non-collinear composition, and staged signal-transfer relations involving a source-side Doppler factor recovered in this staged way and the scalar aberration relation. It does not attempt to present the full framework or all of its further consequences.
 
 At the signal level, the framework is presented in staged form. The source-side Doppler factor is recovered by combining a geometric propagation contribution with a separate source-local timing contribution, the scalar aberration relation is treated as a magnitude-level directional update, and any receiver-local timing assignment is applied separately according to frame. In this way, the geometric propagation contribution, timing contribution, directional update, and reception-side interpretation are not collapsed into a single undifferentiated signal law.
 
@@ -685,13 +620,13 @@ This separation is not merely terminological. It is part of the interpretive cla
 
 ## 9. Conclusion
 
-This paper has examined the part of the light-propagation framework that overlaps most directly with the familiar domain of special relativity. Within that restricted scope, the analysis recovers in form the standard contraction factor, the standard timing factor, and the standard one-dimensional Lorentz transformation while remaining consistent with the familiar special-relativistic results in that regime. It also presents signal transfer in staged form, separating source-local timing effects, the geometric and timing ingredients that recover the source-side Doppler factor, aberrational update, propagation, and receiver-local timing update rather than collapsing them immediately into a single packaged observational law. Taken together, these results show that the propagation-based construction remains consistent with the standard special-relativistic sector addressed here while deriving its familiar structures from different starting assumptions.
+This paper has examined the part of the light-propagation framework that overlaps most directly with the familiar domain of special relativity. Within that restricted scope, the analysis recovers in form the standard contraction factor, the standard timing factor, and the standard one-dimensional Lorentz transformation, while also presenting signal transfer in staged form and briefly noting the structure of non-collinear composition through proper-velocity endpoint composition and a transport-induced rotational remainder. Source-local timing effects, the geometric and timing ingredients that recover the source-side Doppler factor, aberrational update, propagation, and receiver-local timing update are treated as distinct stages rather than collapsed immediately into a single packaged observational law. Taken together, these results show that the propagation-based construction remains consistent with the special-relativistic sector addressed here while deriving its familiar structures from different starting assumptions.
 
 That point is important, but it is also limited. The aim of the paper is not to argue that the broader construction should be identified with the Lorentz framework once this overlap has been shown. On the contrary, the Lorentz transformation appears here as one recovered structure inside a larger propagation-based organization. It is significant within the restricted regime treated in this paper, but it does not define the full scope, method, or intended development of the framework. The present analysis therefore establishes compatibility at a specific level, not reduction of the broader construction to the standard formalism.
 
-This is why the scope of the paper has been kept intentionally narrow. Its purpose is to establish the special-relativistic side of the program first: to show that contraction, timing, moving-frame mapping, and the corresponding signal-transfer relations can be recovered in form from a common propagation-based starting point. That is a necessary step, because without it the broader framework would remain disconnected from the best-known relativistic results. But it is only a first step. The wider landscape to which this construction belongs is not developed here, and the further papers still to be written will be needed to show how that larger structure should be understood on its own terms.
+This is why the scope of the paper has been kept intentionally narrow. Its purpose is to establish the special-relativistic side of the program first: to show that contraction, timing, moving-frame mapping, a brief proper-velocity description of endpoint speed composition, the transport-induced rotational remainder associated with non-collinear composition, and the corresponding signal-transfer relations can be recovered in form from a common propagation-based starting point. That is a necessary step, because without it the broader framework would remain disconnected from the best-known relativistic results. But it is only a first step. The wider landscape to which this construction belongs is not developed here, and further work will be needed to show how that larger structure should be understood on its own terms.
 
-The main conclusion is therefore modest but definite. A propagation-first construction is already sufficient to recover the special-relativistic sector treated here in a coherent and internally connected way. That does not make the broader framework unnecessary, nor does it require the broader framework to remain conceptually confined within the Lorentz system once the overlap has been demonstrated. It shows instead that the familiar special-relativistic structures can be situated within a more primary propagation-based organization, and that this organization is viable enough to support further development beyond the limited regime examined in the present paper.
+The main conclusion is therefore modest but definite. A propagation-first construction is already sufficient to recover the special-relativistic sector treated here in a coherent and internally connected way, including the one-dimensional moving-frame mapping, the proper-velocity description of endpoint speed composition, and the transport-induced rotational remainder associated with non-collinear composition. This does not reduce the broader framework to the Lorentz system. It shows instead that familiar special-relativistic structures can be situated within a more primary propagation-based organization, and that this organization is viable enough to support further development beyond the limited regime examined here.
 
 ## Appendix A. Algebraic solution of the native propagation equation
 
