@@ -5,766 +5,665 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STFR 9-Body Solar System</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
   :root {
-    --bg:#050810;--panel:#0a0f1e;--border:#1a2340;--accent:#3af0c0;
-    --accent2:#f0823a;--accent3:#8a3af0;--text:#c8d8f0;--dim:#4a5878;
-    --sun:#ffdd44;
+    --bg:#050810;--panel:#0a0f1e;--border:#1a2340;
+    --accent:#3af0c0;--accent2:#f0823a;--accent3:#8a3af0;
+    --text:#c8d8f0;--dim:#4a5878;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;
     height:100vh;display:grid;
-    grid-template-rows:auto 1fr auto;
-    grid-template-columns:1fr 300px;
-    grid-template-areas:"header header" "canvas panel" "status status";
+    grid-template-rows:44px 1fr 26px;
+    grid-template-columns:1fr 290px;
+    grid-template-areas:"hdr hdr" "cv pnl" "st st";
     overflow:hidden;}
-  header{grid-area:header;padding:10px 16px;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;gap:16px;background:var(--panel);}
-  header h1{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
-    color:var(--accent);letter-spacing:.05em;}
-  header .sub{font-size:.6rem;color:var(--dim);letter-spacing:.1em;}
-  .controls{margin-left:auto;display:flex;gap:8px;align-items:center;}
-  button{background:transparent;border:1px solid var(--accent);color:var(--accent);
-    font-family:'Space Mono',monospace;font-size:.65rem;padding:4px 12px;
-    cursor:pointer;transition:all .15s;}
-  button:hover,button.active{background:var(--accent);color:var(--bg);}
-  .sp{display:flex;align-items:center;gap:6px;font-size:.6rem;color:var(--dim);}
-  .sp input{width:70px;accent-color:var(--accent);}
-  #canvas-wrap{grid-area:canvas;position:relative;overflow:hidden;}
+
+  /* HEADER */
+  header{grid-area:hdr;background:var(--panel);border-bottom:1px solid var(--border);
+    padding:0 16px;display:flex;align-items:center;gap:14px;}
+  header h1{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;
+    color:var(--accent);letter-spacing:.06em;}
+  .sub{font-size:.55rem;color:var(--dim);letter-spacing:.08em;}
+  .ctrls{margin-left:auto;display:flex;gap:7px;align-items:center;}
+  .sp{display:flex;align-items:center;gap:5px;font-size:.58rem;color:var(--dim);}
+  .sp input{width:65px;accent-color:var(--accent);}
+  btn,button{background:transparent;border:1px solid var(--accent);color:var(--accent);
+    font-family:'Space Mono',monospace;font-size:.6rem;padding:3px 10px;
+    cursor:pointer;letter-spacing:.03em;transition:all .15s;}
+  button:hover,button.on{background:var(--accent);color:var(--bg);}
+  button.dim{border-color:var(--border);color:var(--dim);}
+  button.dim:hover{border-color:var(--accent);color:var(--accent);background:transparent;}
+  button.on.dim{background:var(--accent);color:var(--bg);}
+
+  /* CANVAS */
+  #cv{grid-area:cv;position:relative;overflow:hidden;}
   canvas{width:100%;height:100%;display:block;}
-  .panel{grid-area:panel;background:var(--panel);border-left:1px solid var(--border);
-    overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;}
-  .ps h3{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:700;
-    color:var(--accent);letter-spacing:.12em;text-transform:uppercase;
-    margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-  .m{display:flex;justify-content:space-between;align-items:baseline;
-    margin-bottom:5px;font-size:.62rem;}
-  .m .l{color:var(--dim);}
-  .m .v{color:var(--text);font-weight:700;}
-  .m .v.hi{color:var(--accent);}
-  .m .v.ok{color:#4af0a0;}
-  .m .v.warn{color:var(--accent2);}
-  .pbar{position:relative;height:5px;background:var(--border);border-radius:3px;
-    margin:3px 0 7px;overflow:hidden;}
-  .pfill{height:100%;border-radius:3px;transition:width .4s;
-    background:linear-gradient(90deg,var(--accent3),var(--accent));}
-  .ptgt{position:absolute;right:0;top:-2px;height:9px;width:2px;background:var(--accent2);}
-  .mtog{display:flex;gap:5px;flex-wrap:wrap;}
-  .mb{font-size:.58rem;padding:3px 7px;border-color:var(--border);color:var(--dim);}
-  .mb.active{border-color:var(--accent);color:var(--accent);}
-  #status{grid-area:status;background:var(--panel);border-top:1px solid var(--border);
-    padding:5px 16px;font-size:.58rem;color:var(--dim);display:flex;gap:24px;}
-  #status span{color:var(--text);}
-  .plist{display:flex;flex-direction:column;gap:3px;}
-  .prow{display:grid;grid-template-columns:8px 1fr auto;align-items:center;
-    gap:7px;font-size:.58rem;padding:2px 0;}
-  .pd{width:7px;height:7px;border-radius:50%;}
+
+  /* PANEL */
+  .pnl{grid-area:pnl;background:var(--panel);border-left:1px solid var(--border);
+    overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:12px;}
+  .sec h3{font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;
+    color:var(--accent);letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+  .row{display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:4px;font-size:.6rem;}
+  .row .lbl{color:var(--dim);}
+  .row .val{font-weight:700;}
+  .hi{color:var(--accent);}
+  .ok{color:#4af0a0;}
+  .warn{color:var(--accent2);}
+  .bad{color:#f04a4a;}
+
+  /* Progress bar */
+  .bar{height:4px;background:var(--border);border-radius:2px;margin:2px 0 7px;overflow:hidden;position:relative;}
+  .bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent3),var(--accent));transition:width .5s;}
+  .bar-tgt{position:absolute;right:0;top:-1px;height:6px;width:2px;background:var(--accent2);}
+
+  /* Mode buttons */
+  .modes{display:flex;gap:4px;flex-wrap:wrap;}
+  .modes button{font-size:.55rem;padding:3px 7px;}
+
+  /* Planet list */
+  .prow{display:grid;grid-template-columns:7px 1fr auto;gap:6px;
+    align-items:center;font-size:.57rem;padding:2px 0;}
+  .dot{width:6px;height:6px;border-radius:50%;}
+  .pname{color:var(--dim);}
+
+  /* Comparison table */
+  .ctable{font-size:.57rem;width:100%;border-collapse:collapse;}
+  .ctable td{padding:2px 4px;}
+  .ctable tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+  .ctable .rval{text-align:right;font-weight:700;}
+
+  /* STATUS */
+  #st{grid-area:st;background:var(--panel);border-top:1px solid var(--border);
+    padding:0 16px;font-size:.55rem;color:var(--dim);display:flex;
+    align-items:center;gap:20px;}
+  #st span{color:var(--text);}
 </style>
 </head>
 <body>
 <header>
   <div>
-    <h1>STFR 9-BODY SOLAR SYSTEM</h1>
-    <div class="sub">RK4 · DISPLACEMENT FIELD GRAVITY · MERCURY PERIHELION VIA LRL VECTOR</div>
+    <h1>STFR 9-BODY</h1>
+    <div class="sub">RK4 · SCHWARZSCHILD FORCE · 2-BODY SHADOW MEASUREMENT</div>
   </div>
-  <div class="controls">
+  <div class="ctrls">
     <div class="sp">
-      <span>SPEED</span>
-      <input type="range" id="spd" min="1" max="500" value="100">
-      <span id="spdv">100×</span>
+      <span>DT</span>
+      <input type="range" id="spdSlider" min="1" max="500" value="100">
+      <span id="spdLbl">×100</span>
     </div>
-    <button id="btnPlay" class="active">PAUSE</button>
-    <button onclick="doReset()">RESET</button>
-    <button onclick="toggleZoom()" id="btnZoom">ZOOM HG</button>
+    <button id="btnPause" class="on">PAUSE</button>
+    <button id="btnReset" class="dim">RESET</button>
+    <button id="btnZoom" class="dim">ZOOM HG</button>
   </div>
 </header>
-<div id="canvas-wrap">
-  <canvas id="c"></canvas>
-</div>
-<div class="panel">
-  <div class="ps">
-    <h3>Mercury Precession (LRL)</h3>
-    <div class="m"><span class="l">Measured</span><span class="v hi" id="precVal">—</span></div>
-    <div class="m"><span class="l">GR target</span><span class="v">42.98 ″/cy</span></div>
-    <div class="m"><span class="l">Error vs GR</span><span class="v" id="precErr">—</span></div>
-    <div class="m"><span class="l">Minus baseline</span><span class="v hi" id="precNet">—</span></div>
-    <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div><div class="ptgt"></div></div>
-    <div class="m"><span class="l">Orbits</span><span class="v" id="nOrbits">0</span></div>
-    <div class="m"><span class="l">Sim years</span><span class="v" id="simYr">0.00</span></div>
-    <div class="m"><span class="l">LRL angle now</span><span class="v" id="lrlNow">—</span></div>
+
+<div id="cv"><canvas id="c"></canvas></div>
+
+<div class="pnl">
+
+  <!-- PRECESSION -->
+  <div class="sec">
+    <h3>Mercury Precession</h3>
+    <div class="row"><span class="lbl">Measured (2-body shadow)</span><span class="val hi" id="pMeas">—</span></div>
+    <div class="row"><span class="lbl">GR / STFR target</span><span class="val">42.980 ″/cy</span></div>
+    <div class="row"><span class="lbl">Ratio</span><span class="val" id="pRatio">—</span></div>
+    <div class="bar"><div class="bar-fill" id="pBar" style="width:0%"></div><div class="bar-tgt"></div></div>
+    <div class="row"><span class="lbl">Perihelia sampled</span><span class="val" id="pN">0</span></div>
+    <div class="row"><span class="lbl">Sim years</span><span class="val" id="pYr">0</span></div>
   </div>
-  <div class="ps">
-    <h3>STFR α Contributions</h3>
-    <div class="m"><span class="l">α₁ retardation</span><span class="v" id="a1">—</span></div>
-    <div class="m"><span class="l">α₂ W_STFR / Γ</span><span class="v" id="a2">—</span></div>
-    <div class="m"><span class="l">α₃ Σ(r) gradient</span><span class="v" id="a3">—</span></div>
-    <div class="m"><span class="l">α total</span><span class="v hi" id="aTotal">—</span></div>
+
+  <!-- ALPHA CONTRIBUTIONS -->
+  <div class="sec">
+    <h3>α Contributions</h3>
+    <table class="ctable">
+      <tr><td class="lbl">α₁ retardation</td><td class="rval" id="a1v">—</td><td style="color:var(--dim);font-size:.52rem"> tgt 0.333</td></tr>
+      <tr><td class="lbl">α₂ W_STFR / Γ</td><td class="rval" id="a2v">—</td><td style="color:var(--dim);font-size:.52rem"> tgt 0.333</td></tr>
+      <tr><td class="lbl">α₃ Σ(r) grad</td><td class="rval" id="a3v">—</td><td style="color:var(--dim);font-size:.52rem"> tgt 0.333</td></tr>
+      <tr><td class="lbl" style="color:var(--accent)">Total</td><td class="rval hi" id="aTot">—</td><td style="color:var(--dim);font-size:.52rem"> tgt 1.000</td></tr>
+    </table>
   </div>
-  <div class="ps">
+
+  <!-- MODE -->
+  <div class="sec">
     <h3>Gravity Mode</h3>
-    <div class="mtog">
-      <button class="mb active" onclick="setMode('stfr','STFR FULL')">STFR FULL</button>
-      <button class="mb" onclick="setMode('newton','NEWTON')">NEWTON</button>
-      <button class="mb" onclick="setMode('a1','α₁ ONLY')">α₁ ONLY</button>
-      <button class="mb" onclick="setMode('a12','α₁+α₂')">α₁+α₂</button>
+    <div class="modes">
+      <button class="on" data-mode="stfr">STFR FULL</button>
+      <button class="dim" data-mode="newton">NEWTON</button>
+      <button class="dim" data-mode="a1">α₁ ONLY</button>
+      <button class="dim" data-mode="a12">α₁+α₂</button>
     </div>
-    <div style="margin-top:8px;display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-      <button class="mb" id="btn2b" onclick="toggle2Body()">2-BODY</button>
-      <button class="mb" onclick="storeBaseline()">STORE BASELINE</button>
-      <span style="font-size:.55rem;color:var(--dim)" id="baselineStatus">no baseline</span>
+    <div style="margin-top:7px;display:flex;gap:5px;align-items:center">
+      <button class="dim" id="btnBaseline">STORE BASELINE</button>
+      <span style="font-size:.52rem;color:var(--dim)" id="baselineLbl">—</span>
     </div>
+    <div class="row" style="margin-top:5px"><span class="lbl">Net (minus baseline)</span><span class="val" id="pNet">—</span></div>
   </div>
-  <div class="ps">
-    <h3>Bodies (AU from Sun)</h3>
-    <div class="plist" id="plist"></div>
+
+  <!-- MODE COMPARISON -->
+  <div class="sec">
+    <h3>Mode Comparison</h3>
+    <table class="ctable">
+      <tr><td class="lbl">NEWTON</td><td class="rval" id="cNewton">run to measure</td></tr>
+      <tr><td class="lbl">α₁ only</td><td class="rval" id="cA1">—</td></tr>
+      <tr><td class="lbl">α₁+α₂</td><td class="rval" id="cA12">—</td></tr>
+      <tr><td class="lbl">STFR full</td><td class="rval" id="cStfr">—</td></tr>
+    </table>
   </div>
-  <div class="ps">
+
+  <!-- PLANETS -->
+  <div class="sec">
+    <h3>Planet Distances</h3>
+    <div id="plist"></div>
+  </div>
+
+  <!-- INTEGRATOR -->
+  <div class="sec">
     <h3>Integrator</h3>
-    <div class="m"><span class="l">Method</span><span class="v">RK4</span></div>
-    <div class="m"><span class="l">dt (hours)</span><span class="v" id="dtv">—</span></div>
-    <div class="m"><span class="l">ΔE/E₀</span><span class="v" id="dE">—</span></div>
+    <div class="row"><span class="lbl">Method</span><span class="val">RK4</span></div>
+    <div class="row"><span class="lbl">Main dt</span><span class="val" id="dtMain">—</span></div>
+    <div class="row"><span class="lbl">Shadow dt</span><span class="val">3 h (fixed)</span></div>
+    <div class="row"><span class="lbl">Steps/frame</span><span class="val" id="dtSpf">—</span></div>
+    <div class="row"><span class="lbl">ΔE/E₀</span><span class="val" id="dE">—</span></div>
   </div>
+
 </div>
-<div id="status">
-  <div>T: <span id="st0">0</span> d</div>
-  <div>Steps: <span id="st1">0</span></div>
+
+<div id="st">
+  <div>T: <span id="st0">—</span></div>
+  <div>Steps: <span id="st1">—</span></div>
   <div>Hg r: <span id="st2">—</span> AU</div>
   <div>Hg v: <span id="st3">—</span> km/s</div>
-  <div>LRL drift: <span id="st4">—</span> °/orbit</div>
+  <div>Compute: <span id="st4">—</span></div>
 </div>
+
 <script>
-// =====================================================================
+// ═══════════════════════════════════════════════════════════════
 // CONSTANTS
-// =====================================================================
-const AU  = 1.496e11;   // m
-const C   = 2.998e8;    // m/s
-const G   = 6.674e-11;
-const MSUN= 1.989e30;   // kg
-const DAY = 86400;
-const YR  = 365.25*DAY;
+// ═══════════════════════════════════════════════════════════════
+const AU=1.496e11, C=2.998e8, G=6.674e-11, MSUN=1.989e30, DAY=86400, YR=365.25*DAY;
+const MERC_M=3.301e23, MERC_A=0.38710*AU, MERC_E=0.20563;
 
-// =====================================================================
-// PLANET DATA  [name, mass_kg, a_AU, e, incl_deg, Ω_deg, ω_deg, color, rdisp]
-// Using standard osculating elements, starting at perihelion (θ=0)
-// =====================================================================
-const PD = [
-  ['Mercury', 3.301e23, 0.38710, 0.20563, 7.005, 48.331, 29.124, '#aaaaaa', 3],
-  ['Venus',   4.867e24, 0.72333, 0.00677, 3.395, 76.680,  54.88, '#e8c87a', 5],
-  ['Earth',   5.972e24, 1.00000, 0.01671, 0.000,  0.000, 102.94, '#4a9af0', 5],
-  ['Mars',    6.417e23, 1.52366, 0.09340, 1.850, 49.558, 286.50, '#e05a3a', 4],
-  ['Jupiter', 1.898e27, 5.20336, 0.04839, 1.303,100.464, 275.07, '#c8a06a', 9],
-  ['Saturn',  5.683e26, 9.53707, 0.05415, 2.485,113.665, 336.01, '#e8d8a0', 8],
-  ['Uranus',  8.681e25,19.19130, 0.04717, 0.773, 74.006, 96.99,  '#7adce8', 7],
-  ['Neptune', 1.024e26,30.06893, 0.00859, 1.770,131.784,276.34,  '#3a6ae0', 6],
+// Planets: [name, mass, a_AU, e, color, rdisp]
+const PD=[
+  ['Mercury',3.301e23,0.38710,0.20563,'#aaaaaa',3],
+  ['Venus',  4.867e24,0.72333,0.00677,'#e8c87a',5],
+  ['Earth',  5.972e24,1.00000,0.01671,'#4a9af0',5],
+  ['Mars',   6.417e23,1.52366,0.09340,'#e05a3a',4],
+  ['Jupiter',1.898e27,5.20336,0.04839,'#c8a06a',9],
+  ['Saturn', 5.683e26,9.53707,0.05415,'#e8d8a0',8],
+  ['Uranus', 8.681e25,19.1913,0.04717,'#7adce8',7],
+  ['Neptune',1.024e26,30.0689,0.00859,'#3a6ae0',6],
 ];
-let twoBodyMode = false;  // if true, only Sun + Mercury
+const COLORS=['#ffdd44',...PD.map(p=>p[4])];
+const RADII =[12,...PD.map(p=>p[5])];
 
-let mode = 'stfr';
-let bodies = [];
-let simTime = 0, steps = 0;
-let E0 = null;
-let running = true;
-let zoomHg = false;
-let speedMult = 100;
-let dt = DAY / 4; // 6-hour default timestep
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let mode='stfr', bodies=[], simTime=0, steps=0, E0=null;
+let running=true, zoomHg=false, speedMult=100;
+let dt=DAY/4;
+let trails={};
+const TLEN=350;
 
-// Trail storage
-let trails = {};
-const TLEN = 400;
+// Shadow 2-body for clean precession measurement
+let sh={sx:0,sy:0,svx:0,svy:0,mx:0,my:0,mvx:0,mvy:0,
+        lastR:1e30,prevR:1e30,prevAng:null};
 
-// LRL tracking: sample every SAMPLE_STEPS integration steps
-const MERC_PERIOD = 87.969 * DAY;
-const SAMPLE_STEPS = 100; // record LRL angle every 100 steps
-let lrl = {
-  angles: [],
-  times:  [],
-  nextSampleStep: 400,
-};
-let newtonBaseline = null;  // stored Newton precession for subtraction
+// LRL measurement
+let lrl={angs:[],times:[]};
 
-// Shadow 2-body state for clean precession measurement
-let shadow = {
-  sx:0,sy:0,svx:0,svy:0,
-  mx:0,my:0,mvx:0,mvy:0,
-  lastR: Infinity,
-  prevR: Infinity,
-  prevAng: null,   // LRL angle one step before perihelion
-  currAng: null,   // LRL angle at current step
-};
+// Stored comparison values
+let stored={newton:null,a1:null,a12:null,stfr:null};
+let baseline=null;
 
-// =====================================================================
-// INITIALIZATION
-// =====================================================================
-function lrlAngle(bIdx) {
-  // Laplace-Runge-Lenz vector angle for body bIdx relative to Sun (body 0)
-  const b = bodies[bIdx], s = bodies[0];
-  const rx = b.x - s.x, ry = b.y - s.y;
-  const vx = b.vx - s.vx, vy = b.vy - s.vy;
-  const r = Math.sqrt(rx*rx + ry*ry);
-  const GMtot = G * (s.mass + b.mass);
-  
-  // L = r × v (scalar in 2D, z-component)
-  const Lz = rx*vy - ry*vx;
-  
-  // e_vec = (v × L)/GM - r_hat
-  // In 2D: v × L = (vy*Lz, -vx*Lz)  (cross product → 2D)
-  const ex = (vy*Lz)/GMtot - rx/r;
-  const ey = (-vx*Lz)/GMtot - ry/r;
-  
-  return Math.atan2(ey, ex);
-}
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+function alphaFor(m){return{stfr:3,newton:0,a1:1,a12:2}[m]??0;}
 
-function initBodies() {
-  bodies = [{
-    name:'Sun', mass:MSUN, x:0, y:0, vx:0, vy:0, color:'#ffdd44', r:12
-  }];
-
-  const activePD = twoBodyMode ? PD.slice(0,1) : PD;
-  for (const [name,mass,a_AU,ecc,,,, color,rdisp] of activePD) {
-    const a = a_AU * AU;
-    const rp = a*(1-ecc);                          // perihelion distance
-    const vp = Math.sqrt(G*MSUN*(2/rp - 1/a));    // perihelion speed
-    bodies.push({name, mass, a_AU, ecc, color, r:rdisp,
-                 x:rp, y:0, vx:0, vy:vp});
+function initBodies(){
+  bodies=[{name:'Sun',mass:MSUN,x:0,y:0,vx:0,vy:0}];
+  for(const [name,mass,a_AU,ecc] of PD){
+    const a=a_AU*AU, rp=a*(1-ecc), vp=Math.sqrt(G*MSUN*(2/rp-1/a));
+    bodies.push({name,mass,a_AU,ecc,x:rp,y:0,vx:0,vy:vp});
   }
-
-  // Center of mass correction
+  // CM frame
   let mx=0,my=0,mvx=0,mvy=0,mt=0;
-  for (const b of bodies) {
-    mt+=b.mass; mx+=b.mass*b.x; my+=b.mass*b.y;
-    mvx+=b.mass*b.vx; mvy+=b.mass*b.vy;
-  }
-  for (const b of bodies) {
-    b.x-=mx/mt; b.y-=my/mt;
-    b.vx-=mvx/mt; b.vy-=mvy/mt;
-  }
+  for(const b of bodies){mt+=b.mass;mx+=b.mass*b.x;my+=b.mass*b.y;mvx+=b.mass*b.vx;mvy+=b.mass*b.vy;}
+  for(const b of bodies){b.x-=mx/mt;b.y-=my/mt;b.vx-=mvx/mt;b.vy-=mvy/mt;}
 
-  simTime=0; steps=0; E0=null; trails={};
-  lrl = {angles:[], times:[], nextSampleStep: 400};
+  // Shadow: Sun+Mercury at perihelion, CM frame
+  const rp=MERC_A*(1-MERC_E), vp=Math.sqrt(G*MSUN*(2/rp-1/MERC_A));
+  const mt2=MSUN+MERC_M, cmvy=MERC_M*vp/mt2;
+  sh={sx:0,sy:0,svx:0,svy:-cmvy,mx:rp,my:0,mvx:0,mvy:vp-cmvy,
+      lastR:1e30,prevR:1e30,prevAng:null};
 
-  // Init shadow 2-body: Sun + Mercury at perihelion, CM frame
-  { const _a=0.38710*AU, _e=0.20563, _mm=3.301e23;
-    const _rp=_a*(1-_e), _vp=Math.sqrt(G*MSUN*(2/_rp-1/_a));
-    const _mt=MSUN+_mm;
-    const _cmvy=(MSUN*0+_mm*_vp)/_mt;
-    shadow = {sx:0,sy:0,svx:0,svy:-_cmvy,
-              mx:_rp,my:0,mvx:0,mvy:_vp-_cmvy,
-              lastR:Infinity,prevR:Infinity,prevAng:null,currAng:null}; }
+  simTime=0;steps=0;E0=null;trails={};
+  lrl={angs:[],times:[]};
 }
 
-// =====================================================================
-// PHYSICS
-// =====================================================================
-function alphaFor(mode) {
-  if (mode==='stfr')   return 3;  // α1 + α2 + α3
-  if (mode==='a1')     return 1;  // α1 only
-  if (mode==='a12')    return 2;  // α1 + α2
-  return 0;                       // newton
-}
+// ═══════════════════════════════════════════════════════════════
+// PHYSICS — 9-BODY
+// ═══════════════════════════════════════════════════════════════
+function accel9(state){
+  const n=state.length, ax=new Float64Array(n), ay=new Float64Array(n);
+  const α=alphaFor(mode);
+  for(let i=0;i<n;i++){
+    for(let j=i+1;j<n;j++){
+      const dx=state[j].x-state[i].x, dy=state[j].y-state[i].y;
+      const dvx=state[j].vx-state[i].vx, dvy=state[j].vy-state[i].vy;
+      const r2=dx*dx+dy*dy, r=Math.sqrt(r2), r3=r2*r, r4=r3*r;
+      const GMi=G*state[i].mass, GMj=G*state[j].mass;
 
-function accel(state, mode) {
-  const n = state.length;
-  const ax = new Float64Array(n), ay = new Float64Array(n);
-  const α = alphaFor(mode);
+      // Newtonian
+      ax[i]+=GMj/r3*dx; ay[i]+=GMj/r3*dy;
+      ax[j]-=GMi/r3*dx; ay[j]-=GMi/r3*dy;
 
-  for (let i=0;i<n;i++) {
-    for (let j=i+1;j<n;j++) {
-      const dx = state[j].x-state[i].x;
-      const dy = state[j].y-state[i].y;
-      const dvx= state[j].vx-state[i].vx;
-      const dvy= state[j].vy-state[i].vy;
-      const r2 = dx*dx+dy*dy, r = Math.sqrt(r2), r3 = r2*r, r4=r3*r;
-      const GMi = G*state[i].mass, GMj = G*state[j].mass;
-      const GMs = G*MSUN;  // always use Sun mass for STFR correction
-
-      // Specific angular momentum of this pair's relative orbit
-      const h = dx*dvy - dy*dvx;
-      const h2 = h*h;
-
-      // Newtonian base
-      ax[i] += GMj/r3 * dx;
-      ay[i] += GMj/r3 * dy;
-      ax[j] -= GMi/r3 * dx;
-      ay[j] -= GMi/r3 * dy;
-
-      // STFR/GR correction: only apply Sun-Mercury style correction
-      // (Schwarzschild: F_extra = α*GMs*h²/r⁴/C² inward)
-      // For Sun-planet pairs only (i=0 is Sun)
-      if (α > 0 && (i === 0 || j === 0)) {
-        const a_extra = α * GMs * h2 / (r4 * C * C);
-        // Inward on the planet (toward Sun), outward on Sun (tiny)
-        const planet = i===0 ? j : i;
-        const sign = i===0 ? -1 : 1;  // planet attracted toward sun
-        ax[planet] += sign * a_extra * dx/r;
-        ay[planet] += sign * a_extra * dy/r;
+      // STFR correction only on Sun-planet pairs
+      if(α>0 && (i===0||j===0)){
+        const h=dx*dvy-dy*dvx, h2=h*h;
+        const aex=α*G*MSUN*h2/(r4*C*C);
+        // Inward on planet
+        const pi=i===0?j:i, s=i===0?-1:1;
+        ax[pi]+=s*aex*dx/r; ay[pi]+=s*aex*dy/r;
       }
     }
   }
-  return {ax,ay};
+  return{ax,ay};
 }
 
-function rk4(dt) {
-  const n = bodies.length;
-  const s0 = bodies.map(b=>({...b}));
-
-  function k(s) {
-    const {ax,ay} = accel(s, mode);
+function rk4_9(dt){
+  const n=bodies.length;
+  const s0=bodies.map(b=>({...b}));
+  function k(s){
+    const{ax,ay}=accel9(s);
     return s.map((b,i)=>({dx:b.vx,dy:b.vy,dvx:ax[i],dvy:ay[i]}));
   }
-
-  const k1 = k(s0);
-  const s1 = s0.map((b,i)=>({...b, x:b.x+.5*dt*k1[i].dx, y:b.y+.5*dt*k1[i].dy,
-                              vx:b.vx+.5*dt*k1[i].dvx, vy:b.vy+.5*dt*k1[i].dvy}));
-  const k2 = k(s1);
-  const s2 = s0.map((b,i)=>({...b, x:b.x+.5*dt*k2[i].dx, y:b.y+.5*dt*k2[i].dy,
-                              vx:b.vx+.5*dt*k2[i].dvx, vy:b.vy+.5*dt*k2[i].dvy}));
-  const k3 = k(s2);
-  const s3 = s0.map((b,i)=>({...b, x:b.x+dt*k3[i].dx, y:b.y+dt*k3[i].dy,
-                              vx:b.vx+dt*k3[i].dvx, vy:b.vy+dt*k3[i].dvy}));
-  const k4 = k(s3);
-
-  for (let i=0;i<n;i++) {
-    bodies[i].x  += dt/6*(k1[i].dx +2*k2[i].dx +2*k3[i].dx +k4[i].dx);
-    bodies[i].y  += dt/6*(k1[i].dy +2*k2[i].dy +2*k3[i].dy +k4[i].dy);
-    bodies[i].vx += dt/6*(k1[i].dvx+2*k2[i].dvx+2*k3[i].dvx+k4[i].dvx);
-    bodies[i].vy += dt/6*(k1[i].dvy+2*k2[i].dvy+2*k3[i].dvy+k4[i].dvy);
+  const k1=k(s0);
+  const s1=s0.map((b,i)=>({...b,x:b.x+.5*dt*k1[i].dx,y:b.y+.5*dt*k1[i].dy,
+    vx:b.vx+.5*dt*k1[i].dvx,vy:b.vy+.5*dt*k1[i].dvy}));
+  const k2=k(s1);
+  const s2=s0.map((b,i)=>({...b,x:b.x+.5*dt*k2[i].dx,y:b.y+.5*dt*k2[i].dy,
+    vx:b.vx+.5*dt*k2[i].dvx,vy:b.vy+.5*dt*k2[i].dvy}));
+  const k3=k(s2);
+  const s3=s0.map((b,i)=>({...b,x:b.x+dt*k3[i].dx,y:b.y+dt*k3[i].dy,
+    vx:b.vx+dt*k3[i].dvx,vy:b.vy+dt*k3[i].dvy}));
+  const k4=k(s3);
+  for(let i=0;i<n;i++){
+    bodies[i].x +=dt/6*(k1[i].dx +2*k2[i].dx +2*k3[i].dx +k4[i].dx);
+    bodies[i].y +=dt/6*(k1[i].dy +2*k2[i].dy +2*k3[i].dy +k4[i].dy);
+    bodies[i].vx+=dt/6*(k1[i].dvx+2*k2[i].dvx+2*k3[i].dvx+k4[i].dvx);
+    bodies[i].vy+=dt/6*(k1[i].dvy+2*k2[i].dvy+2*k3[i].dvy+k4[i].dvy);
   }
 }
 
-function energy() {
-  let E = 0;
-  const n = bodies.length;
-  for (let i=0;i<n;i++) {
-    E += .5*bodies[i].mass*(bodies[i].vx**2+bodies[i].vy**2);
-    for (let j=i+1;j<n;j++) {
+// ═══════════════════════════════════════════════════════════════
+// PHYSICS — SHADOW 2-BODY (fixed dt=3h, Schwarzschild force)
+// ═══════════════════════════════════════════════════════════════
+const SH_DT=DAY/8;
+
+function shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy){
+  const α=alphaFor(mode);
+  const dx=mx-sx, dy=my-sy, dvx=mvx-svx, dvy=mvy-svy;
+  const r=Math.sqrt(dx*dx+dy*dy), r3=r*r*r, r4=r3*r;
+  const GMs=G*MSUN, GMm=G*MERC_M;
+  const h=dx*dvy-dy*dvx, h2=h*h;
+  const aex=α*GMs*h2/(r4*C*C);
+  return[
+    GMm/r3*dx,                         // Sun ax (Newtonian only)
+    GMm/r3*dy,                         // Sun ay
+    -GMs/r3*dx - aex*dx/r,            // Mercury ax (Newt + STFR inward)
+    -GMs/r3*dy - aex*dy/r,            // Mercury ay
+  ];
+}
+
+function shadowStep(dt_s){
+  function d(sx,sy,svx,svy,mx,my,mvx,mvy){
+    const[asx,asy,amx,amy]=shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy);
+    return[svx,svy,asx,asy,mvx,mvy,amx,amy];
+  }
+  function adv(s,k,f){return s.map((v,i)=>v+f*k[i]);}
+  const s0=[sh.sx,sh.sy,sh.svx,sh.svy,sh.mx,sh.my,sh.mvx,sh.mvy];
+  const k1=d(...s0), k2=d(...adv(s0,k1,.5*dt_s));
+  const k3=d(...adv(s0,k2,.5*dt_s)), k4=d(...adv(s0,k3,dt_s));
+  const r=s0.map((v,i)=>v+dt_s/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]));
+  [sh.sx,sh.sy,sh.svx,sh.svy,sh.mx,sh.my,sh.mvx,sh.mvy]=r;
+}
+
+function shadowLRL(){
+  const rx=sh.mx-sh.sx, ry=sh.my-sh.sy;
+  const vx=sh.mvx-sh.svx, vy=sh.mvy-sh.svy;
+  const r=Math.sqrt(rx*rx+ry*ry), GM=G*(MSUN+MERC_M);
+  const Lz=rx*vy-ry*vx;
+  return Math.atan2(vy*Lz/GM-rx/r, -vx*Lz/GM-ry/r);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PERIHELION DETECTION & LRL SAMPLING
+// ═══════════════════════════════════════════════════════════════
+function trackLRL(){
+  const rx=sh.mx-sh.sx, ry=sh.my-sh.sy;
+  const r=Math.sqrt(rx*rx+ry*ry);
+  const ang=shadowLRL();
+  if(r>sh.lastR && sh.lastR<sh.prevR && sh.prevAng!==null){
+    lrl.angs.push(sh.prevAng);
+    lrl.times.push(simTime-SH_DT);
+    if(lrl.angs.length>3000){lrl.angs.shift();lrl.times.shift();}
+  }
+  sh.prevR=sh.lastR; sh.lastR=r; sh.prevAng=ang;
+}
+
+function precession(){
+  const n=lrl.angs.length;
+  if(n<5) return null;
+  const uw=[lrl.angs[0]];
+  for(let i=1;i<n;i++){
+    let da=lrl.angs[i]-uw[i-1];
+    while(da>Math.PI)da-=2*Math.PI;
+    while(da<-Math.PI)da+=2*Math.PI;
+    uw.push(uw[i-1]+da);
+  }
+  const tyr=lrl.times.map(t=>t/YR);
+  const mt=tyr.reduce((a,b)=>a+b,0)/n, ma=uw.reduce((a,b)=>a+b,0)/n;
+  let num=0,den=0;
+  for(let i=0;i<n;i++){num+=(tyr[i]-mt)*(uw[i]-ma);den+=(tyr[i]-mt)**2;}
+  if(den<1e-30)return null;
+  return num/den*(180/Math.PI)*3600*100; // arcsec/century
+}
+
+function energy(){
+  let E=0; const n=bodies.length;
+  for(let i=0;i<n;i++){
+    E+=.5*bodies[i].mass*(bodies[i].vx**2+bodies[i].vy**2);
+    for(let j=i+1;j<n;j++){
       const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
-      E -= G*bodies[i].mass*bodies[j].mass/Math.sqrt(dx*dx+dy*dy);
+      E-=G*bodies[i].mass*bodies[j].mass/Math.sqrt(dx*dx+dy*dy);
     }
   }
   return E;
 }
 
-// =====================================================================
-// LRL PERIHELION TRACKING  — no angle unwrapping needed!
-// Sample the LRL vector angle when Mercury passes perihelion.
-// The LRL vector directly points toward perihelion, magnitude = eccentricity.
-// Its secular precession rate = orbital precession rate.
-// =====================================================================
-function shadowStep(dt) {
-  // 2-body RK4: Sun + Mercury only
-  // STFR/GR correction via Schwarzschild effective potential:
-  // F_extra = +3*G*MS*h²/(r⁴*C²) inward (prograde precession)
-  // where h = |r × v| = specific angular momentum of relative orbit
-  // This gives exactly 6πGM/(aC²(1-e²)) precession per orbit ✓
-  const α = alphaFor(mode);
-  function shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy) {
-    const dx=mx-sx, dy=my-sy;
-    const vx=mvx-svx, vy=mvy-svy;
-    const r=Math.sqrt(dx*dx+dy*dy), r3=r*r*r, r4=r3*r;
-    const GMm=G*3.301e23, GMs=G*MSUN;
-    // Specific angular momentum (relative orbit)
-    const h = dx*vy - dy*vx;  // scalar in 2D
-    const h2 = h*h;
-    // Extra inward acceleration on Mercury (GR/STFR correction)
-    // Factor α/3 scales each contribution (α=3 gives full GR)
-    const a_extra = α * GMs * h2 / (r4 * C * C);
-    // Unit vector inward (toward Sun)
-    const rx_hat = -dx/r, ry_hat = -dy/r;
-    // Mercury acceleration: Newtonian + correction
-    const amx = -GMs/r3*dx + a_extra*rx_hat;
-    const amy = -GMs/r3*dy + a_extra*ry_hat;
-    // Sun recoil: Newtonian only (GR correction on sun is negligible)
-    const asx = GMm/r3*dx;
-    const asy = GMm/r3*dy;
-    return [asx,asy,0,0,amx,amy,0,0];
-  }
-  function deriv(sx,sy,svx,svy,mx,my,mvx,mvy) {
-    const ac=shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy);
-    return [svx,svy,ac[0],ac[1],mvx,mvy,ac[4],ac[5]];
-  }
-  function add(s,k,f){return s.map((v,i)=>v+f*k[i]);}
-  const s0=[shadow.sx,shadow.sy,shadow.svx,shadow.svy,
-             shadow.mx,shadow.my,shadow.mvx,shadow.mvy];
-  const k1=deriv(...s0);
-  const k2=deriv(...add(s0,k1,0.5*dt));
-  const k3=deriv(...add(s0,k2,0.5*dt));
-  const k4=deriv(...add(s0,k3,dt));
-  const r=s0.map((v,i)=>v+dt/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]));
-  [shadow.sx,shadow.sy,shadow.svx,shadow.svy,
-   shadow.mx,shadow.my,shadow.mvx,shadow.mvy]=r;
-}
-
-function shadowLRL() {
-  const rx=shadow.mx-shadow.sx, ry=shadow.my-shadow.sy;
-  const vx=shadow.mvx-shadow.svx, vy=shadow.mvy-shadow.svy;
-  const r=Math.sqrt(rx*rx+ry*ry);
-  const GM=G*(MSUN+3.301e23);
-  const Lz=rx*vy-ry*vx;
-  const ex=vy*Lz/GM-rx/r, ey=-vx*Lz/GM-ry/r;
-  return Math.atan2(ey,ex);
-}
-
-function trackLRL() {
-  if (steps >= lrl.nextSampleStep) {
-    const ang = shadowLRL();  // use clean 2-body shadow, not noisy 9-body
-    lrl.angles.push(ang);
-    lrl.times.push(simTime);
-    lrl.nextSampleStep += SAMPLE_STEPS;
-    if (lrl.angles.length > 5000) {
-      lrl.angles.shift();
-      lrl.times.shift();
-    }
-    if (lrl.angles.length <= 10) {
-      const drift = lrl.angles.length>1 ? (ang-lrl.angles[0])*(180/Math.PI)*3600 : 0;
-      console.log(`Shadow LRL ${lrl.angles.length}: t=${(simTime/DAY).toFixed(0)}d drift=${drift.toFixed(4)}"`);
-    }
-  }
-}
-
-function precessionArcsecPerCentury() {
-  const n = lrl.angles.length;
-  if (n < 4) return null;
-
-  // Linear regression on LRL angle vs time to get secular drift rate
-  // Need to unwrap LRL angle carefully — but drift is TINY (~0.001° per orbit)
-  // so just unwrap sequentially with 2π tolerance
-  const unwrapped = [lrl.angles[0]];
-  for (let i=1;i<n;i++) {
-    let da = lrl.angles[i] - unwrapped[i-1];
-    // Normalize da to [-π, π]
-    while (da >  Math.PI) da -= 2*Math.PI;
-    while (da < -Math.PI) da += 2*Math.PI;
-    unwrapped.push(unwrapped[i-1] + da);
-  }
-
-  // Linear regression: angle = m*t + b
-  const tArr = lrl.times.map(t=>t/YR);  // years
-  const meanT = tArr.reduce((a,b)=>a+b,0)/n;
-  const meanA = unwrapped.reduce((a,b)=>a+b,0)/n;
-  let num=0, den=0;
-  for (let i=0;i<n;i++) {
-    num += (tArr[i]-meanT)*(unwrapped[i]-meanA);
-    den += (tArr[i]-meanT)**2;
-  }
-  if (den < 1e-20) return null;
-  const mRadPerYear = num/den;   // radians per year
-
-  // Convert to arcsec per century
-  const arcsecPerCentury = mRadPerYear * (180/Math.PI) * 3600 * 100;
-  return arcsecPerCentury;
-}
-
-// =====================================================================
+// ═══════════════════════════════════════════════════════════════
 // RENDERING
-// =====================================================================
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
+// ═══════════════════════════════════════════════════════════════
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
 
-function w2c(x,y) {
-  const W=canvas.width, H=canvas.height;
-  const scale = zoomHg ? 0.5 : 32; // AU per (normalized canvas unit)
-  const ox = zoomHg ? bodies[1].x : bodies[0].x;
-  const oy = zoomHg ? bodies[1].y : bodies[0].y;
-  return [
-    W/2 + (x-ox)/(AU*scale) * W*0.46,
-    H/2 - (y-oy)/(AU*scale) * H*0.46
-  ];
+function w2c(x,y){
+  const W=canvas.width,H=canvas.height;
+  const sc=zoomHg?.5:32;
+  const ox=zoomHg?bodies[1].x:bodies[0].x;
+  const oy=zoomHg?bodies[1].y:bodies[0].y;
+  return[W/2+(x-ox)/(AU*sc)*W*.46, H/2-(y-oy)/(AU*sc)*H*.46];
 }
 
-const COLORS = ['#ffdd44','#aaaaaa','#e8c87a','#4a9af0','#e05a3a','#c8a06a','#e8d8a0','#7adce8','#3a6ae0'];
-const RADII  = [12,3,5,5,4,9,8,7,6];
+let stars=null;
+function drawStars(W,H){
+  if(!stars||stars.length<200){
+    stars=[];
+    for(let i=0;i<220;i++) stars.push([(i*7919+3)%W,(i*6271+17)%H,Math.random()*.6+.1]);
+  }
+  for(const[x,y,a] of stars){ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fillRect(x,y,.8,.8);}
+}
 
-function draw() {
-  const W = canvas.width  = canvas.offsetWidth;
-  const H = canvas.height = canvas.offsetHeight;
-
-  ctx.fillStyle = '#050810';
-  ctx.fillRect(0,0,W,H);
-
-  // Stars
-  ctx.fillStyle='rgba(255,255,255,0.12)';
-  for (let i=0;i<180;i++) ctx.fillRect((i*7919+3)%W,(i*6271+17)%H,0.8,0.8);
+function draw(){
+  const W=canvas.width=canvas.offsetWidth;
+  const H=canvas.height=canvas.offsetHeight;
+  ctx.fillStyle='#050810'; ctx.fillRect(0,0,W,H);
+  drawStars(W,H);
 
   // Orbit rings
-  ctx.strokeStyle='rgba(26,35,64,0.4)';
-  ctx.lineWidth=0.5;
-  const sunScreenXY = w2c(bodies[0].x, bodies[0].y);
-  for (const b of bodies.slice(1)) {
-    if (zoomHg && b.name!=='Mercury') continue;
-    const rs = b.a_AU / (zoomHg?0.5:32) * W*0.46;
-    ctx.beginPath(); ctx.arc(sunScreenXY[0],sunScreenXY[1],rs,0,2*Math.PI); ctx.stroke();
+  const[scx,scy]=w2c(bodies[0].x,bodies[0].y);
+  ctx.strokeStyle='rgba(26,35,64,.35)'; ctx.lineWidth=.5;
+  for(const b of bodies.slice(1)){
+    if(zoomHg&&b.name!=='Mercury')continue;
+    const rs=b.a_AU/(zoomHg?.5:32)*W*.46;
+    ctx.beginPath(); ctx.arc(scx,scy,rs,0,2*Math.PI); ctx.stroke();
   }
 
-  // LRL direction indicator for Mercury
-  if (lrl.angles.length>0) {
-    const ang = lrlAngle(1);
-    const hg=bodies[1], sun=bodies[0];
-    const a = 0.387*AU*(1-0.2056); // perihelion distance
-    const px = sun.x + a*Math.cos(ang);
-    const py = sun.y + a*Math.sin(ang);
-    const [sx,sy]=w2c(sun.x,sun.y);
-    const [px2,py2]=w2c(px,py);
-    ctx.strokeStyle='rgba(138,58,240,0.5)';
-    ctx.lineWidth=1;
+  // LRL direction arrow (shadow perihelion direction)
+  if(lrl.angs.length>0){
+    const ang=shadowLRL();
+    const rp=MERC_A*(1-MERC_E);
+    const px=bodies[0].x+rp*Math.cos(ang), py=bodies[0].y+rp*Math.sin(ang);
+    const[ax,ay]=w2c(bodies[0].x,bodies[0].y);
+    const[bx,by]=w2c(px,py);
+    ctx.strokeStyle='rgba(138,58,240,.55)'; ctx.lineWidth=1;
     ctx.setLineDash([4,4]);
-    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(px2,py2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke();
     ctx.setLineDash([]);
-    
-    // Show all recorded perihelion LRL directions
-    for (let i=Math.max(0,lrl.angles.length-15);i<lrl.angles.length;i++) {
-      const a2=lrl.angles[i];
-      const qx=sun.x+a*Math.cos(a2), qy=sun.y+a*Math.sin(a2);
-      const [qx2,qy2]=w2c(qx,qy);
-      const frac=i/Math.max(1,lrl.angles.length-1);
-      ctx.fillStyle=`rgba(58,240,192,${0.2+0.8*frac})`;
-      ctx.beginPath(); ctx.arc(qx2,qy2,3,0,2*Math.PI); ctx.fill();
+    // Recent perihelion dots
+    const N=Math.min(20,lrl.angs.length);
+    for(let i=lrl.angs.length-N;i<lrl.angs.length;i++){
+      const a2=lrl.angs[i];
+      const[qx,qy]=w2c(bodies[0].x+rp*Math.cos(a2),bodies[0].y+rp*Math.sin(a2));
+      const frac=(i-(lrl.angs.length-N))/N;
+      ctx.fillStyle=`rgba(58,240,192,${.15+.85*frac})`;
+      ctx.beginPath(); ctx.arc(qx,qy,2.5,0,2*Math.PI); ctx.fill();
     }
   }
 
   // Trails
-  for (const b of bodies.slice(1)) {
-    if (!trails[b.name]||trails[b.name].length<2) continue;
-    if (zoomHg && b.name!=='Mercury') continue;
+  for(const b of bodies.slice(1)){
+    if(!trails[b.name]||trails[b.name].length<2)continue;
+    if(zoomHg&&b.name!=='Mercury')continue;
     ctx.beginPath();
-    const [x0,y0]=w2c(trails[b.name][0].x,trails[b.name][0].y);
+    const[x0,y0]=w2c(trails[b.name][0].x,trails[b.name][0].y);
     ctx.moveTo(x0,y0);
-    for (let i=1;i<trails[b.name].length;i++) {
-      const [xi,yi]=w2c(trails[b.name][i].x,trails[b.name][i].y);
+    for(let i=1;i<trails[b.name].length;i++){
+      const[xi,yi]=w2c(trails[b.name][i].x,trails[b.name][i].y);
       ctx.lineTo(xi,yi);
     }
-    ctx.strokeStyle=b.color+'44'; ctx.lineWidth=1; ctx.stroke();
+    ctx.strokeStyle=b.color+'33'; ctx.lineWidth=1; ctx.stroke();
   }
 
   // Bodies
-  for (let i=0;i<bodies.length;i++) {
-    const b=bodies[i];
-    const [cx,cy]=w2c(b.x,b.y);
-    const rr = RADII[i]??4;
-    // Glow
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rr*3);
-    g.addColorStop(0,COLORS[i]+'88'); g.addColorStop(1,COLORS[i]+'00');
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,rr*3,0,2*Math.PI); ctx.fill();
-    // Body
-    ctx.fillStyle=COLORS[i]; ctx.beginPath(); ctx.arc(cx,cy,rr,0,2*Math.PI); ctx.fill();
-    // Label
-    ctx.fillStyle='rgba(200,216,240,0.65)';
-    ctx.font='8px Space Mono';
-    const label = b.name==='Sun'?'☀':b.name.substring(0,3).toUpperCase();
-    ctx.fillText(label,cx+rr+2,cy+3);
+  for(let i=0;i<bodies.length;i++){
+    const[cx,cy]=w2c(bodies[i].x,bodies[i].y);
+    const rr=RADII[i]??4, col=COLORS[i];
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rr*3.5);
+    g.addColorStop(0,col+'77'); g.addColorStop(1,col+'00');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,rr*3.5,0,2*Math.PI); ctx.fill();
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(cx,cy,rr,0,2*Math.PI); ctx.fill();
+    if(!zoomHg||bodies[i].name==='Mercury'||bodies[i].name==='Sun'){
+      ctx.fillStyle='rgba(200,216,240,.6)'; ctx.font='8px Space Mono';
+      ctx.fillText(bodies[i].name==='Sun'?'☀':bodies[i].name.slice(0,3).toUpperCase(),cx+rr+2,cy+3);
+    }
   }
 
   // HUD
-  const prec = precessionArcsecPerCentury();
-  if (prec!==null) {
-    ctx.fillStyle='rgba(10,15,30,0.85)';
-    ctx.fillRect(8,8,230,52);
-    ctx.strokeStyle=lrl.angles.length>10?'#3af0c0':'#1a2340';
-    ctx.lineWidth=1; ctx.strokeRect(8,8,230,52);
-    ctx.fillStyle='#3af0c0'; ctx.font='bold 9px Space Mono';
-    ctx.fillText('MERCURY PRECESSION (2-body shadow)',15,23);
-    ctx.fillStyle='#c8d8f0'; ctx.font='8px Space Mono';
-    ctx.fillText(`Measured: ${prec.toFixed(3)} ″/cy  (N=${lrl.angles.length} samples)`,15,37);
+  const prec=precession();
+  if(prec!==null){
     const ratio=prec/42.98;
-    const col=Math.abs(ratio-1)<0.05?'#4af0a0':Math.abs(ratio-1)<0.2?'#f0823a':'#f04a4a';
+    const col=Math.abs(ratio-1)<.05?'#4af0a0':Math.abs(ratio-1)<.15?'#f0823a':'#f04a4a';
+    ctx.fillStyle='rgba(10,15,30,.88)'; ctx.fillRect(8,8,260,48);
+    ctx.strokeStyle=col; ctx.lineWidth=1; ctx.strokeRect(8,8,260,48);
+    ctx.fillStyle='#3af0c0'; ctx.font='bold 9px Space Mono';
+    ctx.fillText('MERCURY PERIHELION PRECESSION',15,22);
+    ctx.fillStyle='#c8d8f0'; ctx.font='8px Space Mono';
+    ctx.fillText(`${prec.toFixed(3)} ″/cy   (N=${lrl.angs.length} perihelia)`,15,35);
     ctx.fillStyle=col;
-    ctx.fillText(`GR: 42.98  |  ratio: ${ratio.toFixed(4)}  |  err: ${((ratio-1)*100).toFixed(1)}%`,15,51);
+    ctx.fillText(`ratio: ${ratio.toFixed(4)}   target: 1.0000   mode: ${mode.toUpperCase()}`,15,48);
   }
 }
 
-// =====================================================================
+// ═══════════════════════════════════════════════════════════════
 // PANEL UPDATE
-// =====================================================================
-function updatePanel() {
+// ═══════════════════════════════════════════════════════════════
+function fmt(v,d=3){return v===null?'—':v.toFixed(d);}
+
+function updatePanel(){
   const hg=bodies[1],sun=bodies[0];
   const dx=hg.x-sun.x,dy=hg.y-sun.y;
   const r=Math.sqrt(dx*dx+dy*dy)/AU;
   const v=Math.sqrt(hg.vx**2+hg.vy**2)/1000;
 
-  document.getElementById('st0').textContent=(simTime/DAY).toFixed(0);
-  document.getElementById('st1').textContent=steps.toLocaleString();
+  document.getElementById('st0').textContent=(simTime/YR).toFixed(1)+' yr';
   document.getElementById('st2').textContent=r.toFixed(5);
   document.getElementById('st3').textContent=v.toFixed(2);
-  document.getElementById('simYr').textContent=(simTime/YR).toFixed(3);
-  const estOrbits = Math.floor(simTime/MERC_PERIOD);
-    document.getElementById('nOrbits').textContent=estOrbits+' orbits, '+lrl.angles.length+' samples';
-  document.getElementById('dtv').textContent=(dt/3600).toFixed(1)+'h';
-  document.getElementById('lrlNow').textContent=(lrlAngle(1)*180/Math.PI).toFixed(4)+'°';
+  document.getElementById('dtMain').textContent=(dt/3600).toFixed(1)+' h';
 
-  // LRL per-orbit drift for status bar
-  if (lrl.angles.length>=3) {
-    const n=lrl.angles.length;
-    const last=lrl.angles[n-1], prev=lrl.angles[n-2];
-    let da=last-prev;
-    while(da>Math.PI) da-=2*Math.PI;
-    while(da<-Math.PI) da+=2*Math.PI;
-    // Expected: ~5e-7 rad per sample = ~2.9e-5 degrees
-    document.getElementById('st4').textContent=(da*180/Math.PI*3.6e6).toFixed(2)+' μ°';
-  }
-
-  if (E0!==null) {
+  if(E0!==null){
     const dE=(energy()-E0)/Math.abs(E0);
-    document.getElementById('dE').textContent=dE.toExponential(3);
+    document.getElementById('dE').textContent=dE.toExponential(2);
   }
 
-  const prec=precessionArcsecPerCentury();
-  if (prec!==null) {
-    document.getElementById('precVal').textContent=prec.toFixed(3)+' ″/cy';
-    const pct=Math.min(100,Math.max(0,prec/42.98*100));
-    document.getElementById('pfill').style.width=pct+'%';
+  const prec=precession();
+  if(prec!==null){
     const ratio=prec/42.98;
-    const err=((ratio-1)*100).toFixed(2)+'%';
-    document.getElementById('precErr').textContent=err;
-    document.getElementById('precErr').className='v '+(Math.abs(ratio-1)<0.05?'ok':Math.abs(ratio-1)<0.2?'warn':'');
-    // Show net (after subtracting baseline)
-    if (newtonBaseline!==null && mode!=='newton') {
-      const net = prec - newtonBaseline;
-      const netRatio = net/42.98;
-      const netEl = document.getElementById('precNet');
-      netEl.textContent = net.toFixed(2)+' ″/cy (ratio: '+netRatio.toFixed(3)+')';
-      netEl.className = 'v '+(Math.abs(netRatio-1)<0.05?'ok':Math.abs(netRatio-1)<0.2?'warn':'');
-    } else {
-      document.getElementById('precNet').textContent = newtonBaseline!==null?'run STFR to see':'store Newton baseline first';
-    }
-    // α breakdown: each contribution = 1/3 of total when α=3
+    const cl=Math.abs(ratio-1)<.05?'ok':Math.abs(ratio-1)<.15?'warn':'bad';
+    document.getElementById('pMeas').textContent=prec.toFixed(3)+' ″/cy';
+    document.getElementById('pRatio').textContent=ratio.toFixed(4);
+    document.getElementById('pRatio').className='val '+cl;
+    document.getElementById('pBar').style.width=Math.min(100,ratio*100)+'%';
+    document.getElementById('pN').textContent=lrl.angs.length;
+    document.getElementById('pYr').textContent=(simTime/YR).toFixed(1);
+
     const α=alphaFor(mode)||1;
-    // ratio = prec/42.98; each α contributes ratio/3 of the GR result
-    const perA = α>0 ? (ratio/α).toFixed(4) : '—';
-    const tgt = α>0 ? ' (tgt:'+(1/α).toFixed(3)+')' : '';
-    document.getElementById('a1').textContent=perA+tgt;
-    document.getElementById('a2').textContent=α>=2?perA+tgt:'—';
-    document.getElementById('a3').textContent=α>=3?perA+tgt:'—';
-    document.getElementById('aTotal').textContent=ratio.toFixed(4)+' (target: 1.000)';
-    // Color the total
-    const aEl=document.getElementById('aTotal');
-    aEl.className='v '+(Math.abs(ratio-1)<0.05?'ok':Math.abs(ratio-1)<0.2?'warn':'');
+    const pa=(ratio/α).toFixed(4);
+    document.getElementById('a1v').textContent=pa;
+    document.getElementById('a2v').textContent=α>=2?pa:'—';
+    document.getElementById('a3v').textContent=α>=3?pa:'—';
+    const totEl=document.getElementById('aTot');
+    totEl.textContent=ratio.toFixed(4);
+    totEl.className='rval '+(Math.abs(ratio-1)<.05?'ok':Math.abs(ratio-1)<.15?'warn':'bad');
+
+    // Store comparison value for current mode
+    if(lrl.angs.length>20) stored[mode]=prec;
+    const cn={newton:'cNewton',a1:'cA1',a12:'cA12',stfr:'cStfr'};
+    for(const[k,id] of Object.entries(cn))
+      document.getElementById(id).textContent=stored[k]!==null?stored[k].toFixed(2)+' ″/cy':'—';
+
+    // Baseline subtraction
+    if(baseline!==null&&mode!=='newton'){
+      const net=prec-baseline;
+      const nr=net/42.98;
+      const ne=document.getElementById('pNet');
+      ne.textContent=net.toFixed(2)+' ″/cy ('+nr.toFixed(3)+')';
+      ne.className='val '+(Math.abs(nr-1)<.05?'ok':Math.abs(nr-1)<.15?'warn':'bad');
+    } else {
+      document.getElementById('pNet').textContent=baseline!==null?'run STFR mode':'store Newton first';
+    }
   }
 
-  // Planet distances
+  // Planet list
   const pl=document.getElementById('plist');
   pl.innerHTML='';
   bodies.slice(1).forEach((b,i)=>{
-    const s=bodies[0];
-    const r2=Math.sqrt((b.x-s.x)**2+(b.y-s.y)**2)/AU;
+    const r2=Math.sqrt((b.x-bodies[0].x)**2+(b.y-bodies[0].y)**2)/AU;
     const row=document.createElement('div');
     row.className='prow';
-    row.innerHTML=`<div class="pd" style="background:${COLORS[i+1]}"></div>
-      <div style="font-size:.58rem;color:var(--dim)">${b.name}</div>
-      <div style="font-size:.58rem">${r2.toFixed(4)}</div>`;
+    row.innerHTML=`<div class="dot" style="background:${COLORS[i+1]}"></div>
+      <div class="pname">${b.name}</div>
+      <div style="font-size:.57rem">${r2.toFixed(4)} AU</div>`;
     pl.appendChild(row);
   });
 }
 
-function toggle2Body(){
-  twoBodyMode=!twoBodyMode;
-  document.getElementById('btn2b').classList.toggle('active',twoBodyMode);
-  doReset();
-}
+// ═══════════════════════════════════════════════════════════════
+// MAIN LOOP — adaptive substep timing
+// ═══════════════════════════════════════════════════════════════
+let raf=null, _spf=10, _lastT=0;
 
-function storeBaseline(){
-  const prec=precessionArcsecPerCentury();
-  if(prec===null){alert('Need more samples first');return;}
-  newtonBaseline=prec;
-  document.getElementById('baselineStatus').textContent='baseline: '+prec.toFixed(2)+' ″/cy';
-}
-
-// =====================================================================
-// MAIN LOOP
-// =====================================================================
-let raf=null;
-let _lastFrameTime = 0;
-let _stepsPerFrame = 10;
-
-function loop(timestamp) {
-  if (!running) return;
-
-  // Adaptive substep count: target 12ms of compute per frame
-  const TARGET_MS = 12;
-  if (_lastFrameTime > 0) {
-    const elapsed = timestamp - _lastFrameTime;
-    // Compute time used last frame = elapsed - idle
-    // Simpler: measure just the step loop
-  }
-  _lastFrameTime = timestamp;
-
-  const t0 = performance.now();
-  let s = 0;
-  // Always do at least _stepsPerFrame steps, then keep going while time allows
-  const minSteps = _stepsPerFrame;
-  while (s < minSteps || (performance.now() - t0 < TARGET_MS && s < minSteps * 20)) {
-    rk4(dt);
-    // Shadow runs at fixed dt_s=3h regardless of main dt
-    { const dt_s=DAY/8; const n=Math.max(1,Math.round(dt/dt_s));
-      for(let _i=0;_i<n;_i++) shadowStep(dt_s); }
-    simTime += dt; steps++; s++;
-    trackLRL();
-    if (steps % 12 === 0) {
-      for (const b of bodies.slice(1)) {
-        if (!trails[b.name]) trails[b.name] = [];
-        trails[b.name].push({x:b.x, y:b.y});
-        if (trails[b.name].length > TLEN) trails[b.name].shift();
+function loop(ts){
+  if(!running)return;
+  const TARGET=12; // ms compute budget per frame
+  const t0=performance.now();
+  let s=0;
+  while(s<_spf||(performance.now()-t0<TARGET&&s<_spf*30)){
+    rk4_9(dt);
+    // Shadow: run enough sub-steps to cover same wall-clock time
+    const nsh=Math.max(1,Math.round(dt/SH_DT));
+    for(let k=0;k<nsh;k++){shadowStep(SH_DT); trackLRL();}
+    simTime+=dt; steps++; s++;
+    if(steps%10===0){
+      for(const b of bodies.slice(1)){
+        if(!trails[b.name])trails[b.name]=[];
+        trails[b.name].push({x:b.x,y:b.y});
+        if(trails[b.name].length>TLEN)trails[b.name].shift();
       }
     }
   }
-  // Adapt stepsPerFrame toward what we actually did
-  _stepsPerFrame = Math.max(10, Math.floor(s * 0.8));
+  _spf=Math.max(10,Math.floor(s*.75));
+  const ms=(performance.now()-t0).toFixed(1);
 
-  const computeMs = performance.now() - t0;
-
-  if (E0 === null && steps > 20) E0 = energy();
+  if(E0===null&&steps>20)E0=energy();
   draw();
-  if (steps % 80 === 0) updatePanel();
-
-  // Show compute utilisation in status bar
-  document.getElementById('st1').textContent = steps.toLocaleString() +
-    ' (' + s + ' steps/' + computeMs.toFixed(1) + 'ms)';
-
-  raf = requestAnimationFrame(loop);
+  if(steps%60===0){
+    updatePanel();
+    document.getElementById('st1').textContent=steps.toLocaleString();
+    document.getElementById('st4').textContent=s+' steps / '+ms+'ms';
+    document.getElementById('dtSpf').textContent=s;
+  }
+  raf=requestAnimationFrame(loop);
 }
 
-// =====================================================================
+// ═══════════════════════════════════════════════════════════════
 // CONTROLS
-// =====================================================================
-document.getElementById('btnPlay').onclick=function(){
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('btnPause').onclick=function(){
   running=!running;
   this.textContent=running?'PAUSE':'PLAY';
-  this.classList.toggle('active',running);
-  if (running) loop();
+  this.classList.toggle('on',running);
+  if(running)raf=requestAnimationFrame(loop);
 };
 
-function doReset(){
+document.getElementById('btnReset').onclick=()=>{
   running=false; cancelAnimationFrame(raf);
-  trails={};
+  trails={}; lrl={angs:[],times:[]};
   initBodies();
-  document.getElementById('btnPlay').textContent='PAUSE';
-  document.getElementById('btnPlay').classList.add('active');
-  running=true; loop();
-}
-
-document.getElementById('spd').oninput=function(){
-  speedMult=+this.value;
-  // Adjust dt: at high speed use larger timestep (but capped for accuracy)
-  // Cap dt at 1 day for numerical accuracy
-  dt = Math.min(DAY, DAY/4 * Math.max(1, speedMult/20));
-  document.getElementById('spdv').textContent=speedMult+'×';
+  document.getElementById('btnPause').textContent='PAUSE';
+  document.getElementById('btnPause').classList.add('on');
+  running=true; raf=requestAnimationFrame(loop);
 };
 
-function toggleZoom(){
-  zoomHg=!zoomHg;
-  trails={};
-  document.getElementById('btnZoom').textContent=zoomHg?'FULL VIEW':'ZOOM HG';
-}
+document.getElementById('btnZoom').onclick=function(){
+  zoomHg=!zoomHg; trails={};
+  this.textContent=zoomHg?'FULL VIEW':'ZOOM HG';
+  this.classList.toggle('on',zoomHg);
+};
 
-function setMode(m,label){
-  mode=m; trails={};
-  initBodies();
-  document.querySelectorAll('.mb').forEach(b=>{
-    b.classList.toggle('active', b.textContent===label);
-  });
-}
+document.getElementById('btnBaseline').onclick=()=>{
+  const p=precession();
+  if(!p){alert('Need more samples first (run for a while)');return;}
+  baseline=p;
+  document.getElementById('baselineLbl').textContent=p.toFixed(2)+' ″/cy stored';
+};
 
-// Start
+document.querySelectorAll('[data-mode]').forEach(btn=>{
+  btn.onclick=()=>{
+    mode=btn.dataset.mode;
+    trails={}; lrl={angs:[],times:[]};
+    // Re-init shadow with new mode
+    const rp=MERC_A*(1-MERC_E), vp=Math.sqrt(G*MSUN*(2/rp-1/MERC_A));
+    const mt=MSUN+MERC_M, cmvy=MERC_M*vp/mt;
+    sh={sx:0,sy:0,svx:0,svy:-cmvy,mx:rp,my:0,mvx:0,mvy:vp-cmvy,
+        lastR:1e30,prevR:1e30,prevAng:null};
+    E0=null;
+    document.querySelectorAll('[data-mode]').forEach(b=>{
+      b.classList.toggle('on',b===btn);
+      b.classList.toggle('dim',b!==btn);
+    });
+  };
+});
+
+const slider=document.getElementById('spdSlider');
+slider.oninput=()=>{
+  speedMult=+slider.value;
+  dt=Math.min(DAY,DAY/4*Math.max(1,speedMult/20));
+  document.getElementById('spdLbl').textContent='×'+speedMult;
+};
+
+// ═══════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════
 initBodies();
-loop();
+raf=requestAnimationFrame(loop);
 </script>
 </body>
 </html>
