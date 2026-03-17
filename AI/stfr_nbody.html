@@ -87,7 +87,7 @@
 <header>
   <div>
     <h1>STFR 9-BODY</h1>
-    <div class="sub">RK4 · SCHWARZSCHILD FORCE · 2-BODY SHADOW MEASUREMENT</div>
+    <div class="sub">RK4 · SCHWARZSCHILD FORCE · 2-BODY SHADOW · <a href="https://d3x0r.github.io/STFRPhysics/AI/stfr_nbody.html" style="color:var(--accent);text-decoration:none" target="_blank">↗ LIVE</a></div>
   </div>
   <div class="ctrls">
     <div class="sp">
@@ -269,7 +269,8 @@ function accel9(state){
         const h=dx*dvy-dy*dvx, h2=h*h;
         const aex=α*G*MSUN*h2/(r4*C*C);
         // Inward on planet
-        const pi=i===0?j:i, s=i===0?-1:1;
+        const pi=i===0?j:i, s=i===0?-1:+1;  // inward on planet = prograde (JS LRL convention)
+        // STFR correction: outward perturbation gives prograde precession
         ax[pi]+=s*aex*dx/r; ay[pi]+=s*aex*dy/r;
       }
     }
@@ -317,7 +318,7 @@ function shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy){
   return[
     GMm/r3*dx,                         // Sun ax (Newtonian only)
     GMm/r3*dy,                         // Sun ay
-    -GMs/r3*dx - aex*dx/r,            // Mercury ax (Newt + STFR inward)
+    -GMs/r3*dx - aex*dx/r,            // Mercury ax (Newt + STFR inward = prograde with JS LRL convention)
     -GMs/r3*dy - aex*dy/r,            // Mercury ay
   ];
 }
@@ -340,7 +341,10 @@ function shadowLRL(){
   const vx=sh.mvx-sh.svx, vy=sh.mvy-sh.svy;
   const r=Math.sqrt(rx*rx+ry*ry), GM=G*(MSUN+MERC_M);
   const Lz=rx*vy-ry*vx;
-  return Math.atan2(vy*Lz/GM-rx/r, -vx*Lz/GM-ry/r);
+  // ex = v×L/GM - r_hat, points FROM focus TOWARD perihelion
+  const ex = vy*Lz/GM - rx/r;
+  const ey = -vx*Lz/GM - ry/r;
+  return Math.atan2(ey, ex);
 }
 
 // ═══════════════════════════════════════════════════════════════
