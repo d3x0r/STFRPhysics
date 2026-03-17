@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Huygens Wavelet Sim</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #080810; color: #ddd;
+    font-family: 'Courier New', monospace;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 12px; min-height: 100vh;
+  }
+  h1 { font-size: 20px; letter-spacing: 4px; color: #ffdc50; margin-bottom: 4px; }
+  .subtitle { font-size: 10px; letter-spacing: 3px; color: #555; margin-bottom: 12px; }
+
+  .presets {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 12px; width: 900px;
+  }
+  .preset-btn {
+    background: #111827; border: 1px solid #2a3a4a; border-radius: 3px;
+    color: #7ab; font-family: 'Courier New', monospace; font-size: 10px;
+    letter-spacing: 1px; padding: 5px 10px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .preset-btn:hover { background: #1a2a3a; border-color: #50a0d0; color: #adf; }
+  .preset-btn.active { background: #0d2030; border-color: #50c0ff; color: #50e0ff; }
+
+  #canvas {
+    display: block; border: 1px solid #222;
+    box-shadow: 0 0 50px rgba(255,180,0,0.1);
+    width: 900px; height: 500px;
+  }
+  .controls {
+    margin-top: 12px; display: flex; flex-wrap: wrap; gap: 20px;
+    background: #0f0f18; border: 1px solid #1e1e2e; border-radius: 4px;
+    padding: 12px 20px; width: 900px;
+  }
+  .ctrl { flex: 1; min-width: 140px; }
+  .ctrl label { display: block; font-size: 10px; letter-spacing: 2px; color: #666; margin-bottom: 5px; }
+  .ctrl span  { color: #ffdc50; }
+  input[type=range] { width: 100%; }
+  #aperture-slider    { accent-color: #ffdc50; }
+  #wavelength-slider  { accent-color: #f06040; }
+  #propagation-slider { accent-color: #50e0ff; }
+
+  .stats {
+    margin-top: 8px; padding: 8px 20px;
+    background: #0f0f18; border: 1px solid #1e1e2e; border-radius: 4px;
+    width: 900px; display: flex; gap: 28px; align-items: center;
+    font-size: 11px; flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 9px; letter-spacing: 2px; color: #555; }
+  .stat-value { color: #ffdc50; font-size: 13px; font-weight: bold; }
+  #sv-regime { color: #999; font-size: 11px; }
+  #sv-rayleigh { color: #80ff90; }
+  #sv-theta   { color: #f08040; }
+  #sv-mode    { color: #70aacc; font-size: 10px; }
+  #sv-yscale  { color: #aa80ff; font-size: 10px; }
+
+  .legend {
+    margin-top: 6px; padding: 7px 20px;
+    background: #0a0a12; border: 1px solid #161622; border-radius: 4px;
+    width: 900px; font-size: 10px; color: #555; display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .leg { display: flex; align-items: center; gap: 6px; }
+  .sw { width: 20px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  #computing {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.78); align-items: center; justify-content: center;
+    font-size: 14px; letter-spacing: 4px; color: #ffdc50; z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<h1>HUYGENS WAVELET SIM</h1>
+<div class="subtitle">NEAR FIELD → FAR FIELD  ·  HYBRID FRAUNHOFER  ·  AUTO Y-SCALE</div>
+
+<!-- Presets -->
+<div class="presets">
+  <button class="preset-btn" data-d="8"   data-l="8"  data-r="500"    data-name="pinhole">PINHOLE<br><span style="color:#555;font-size:9px">D/λ=1</span></button>
+  <button class="preset-btn" data-d="60"  data-l="10" data-r="3000"   data-name="visible-laser">VISIBLE LASER<br><span style="color:#555;font-size:9px">D/λ=6</span></button>
+  <button class="preset-btn" data-d="200" data-l="4"  data-r="80000"  data-name="collimated">COLLIMATED BEAM<br><span style="color:#555;font-size:9px">D/λ=50</span></button>
+  <button class="preset-btn" data-d="120" data-l="3"  data-r="400000" data-name="lidar">LIDAR / EUV<br><span style="color:#555;font-size:9px">D/λ=40, long range</span></button>
+  <button class="preset-btn" data-d="40"  data-l="20" data-r="2000"   data-name="microwave">MICROWAVE<br><span style="color:#555;font-size:9px">D/λ=2, wide spread</span></button>
+</div>
+
+<canvas id="canvas" width="900" height="500"></canvas>
+
+<div class="controls">
+  <div class="ctrl">
+    <label>APERTURE D: <span id="ap-val">60</span> u</label>
+    <input type="range" id="aperture-slider" min="2" max="300" value="60">
+  </div>
+  <div class="ctrl">
+    <label>WAVELENGTH λ: <span id="wl-val">10</span> u</label>
+    <input type="range" id="wavelength-slider" min="2" max="80" value="10">
+  </div>
+  <div class="ctrl">
+    <label>RANGE: <span id="prop-val">3,000</span> u</label>
+    <input type="range" id="propagation-slider" min="100" max="500000" step="100" value="3000">
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span class="stat-label">D/λ</span><span class="stat-value" id="sv-ratio">—</span></div>
+  <div class="stat"><span class="stat-label">REGIME</span><span class="stat-value" id="sv-regime">—</span></div>
+  <div class="stat"><span class="stat-label">RAYLEIGH z=D²/λ</span><span class="stat-value" id="sv-rayleigh">—</span></div>
+  <div class="stat"><span class="stat-label">DIV HALF-ANGLE</span><span class="stat-value" id="sv-theta">—</span></div>
+  <div class="stat"><span class="stat-label">Y WINDOW</span><span class="stat-value" id="sv-yscale">—</span></div>
+  <div class="stat"><span class="stat-label">MODE</span><span class="stat-value" id="sv-mode">—</span></div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="sw" style="background:#ffdc50"></div>aperture</div>
+  <div class="leg"><div class="sw" style="background:rgba(80,160,255,0.8)"></div>wall</div>
+  <div class="leg"><div class="sw" style="background:rgba(80,255,120,0.6)"></div>Rayleigh boundary</div>
+  <div class="leg"><div class="sw" style="background:rgba(255,140,60,0.6)"></div>divergence envelope ±λ/D</div>
+  <div class="leg" style="color:#555">Y-axis auto-scales so beam always fits. Canvas height = true physical window shown.</div>
+</div>
+
+<div id="computing">COMPUTING…</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+const CW = canvas.width;   // 900
+const CH = canvas.height;  // 500
+
+const SRC_SIM_X = 30;
+
+let aperture   = 60;
+let wavelength = 10;
+let propRange  = 3000;
+let pending = false, dirty = false;
+let activePreset = 'visible-laser';
+
+function rayleigh(D, lam) { return (D * D) / lam; }
+function sinc(x) { return Math.abs(x) < 1e-9 ? 1.0 : Math.sin(x) / x; }
+
+function getRegime(r) {
+  if (r < 1)  return "spherical spread";
+  if (r < 3)  return "wide divergence";
+  if (r < 8)  return "moderate beam";
+  if (r < 20) return "tight beam";
+  return "laser-like";
+}
+
+function niceTick(approx) {
+  if (approx <= 0) return 1;
+  const mag  = Math.pow(10, Math.floor(Math.log10(approx)));
+  const norm = approx / mag;
+  return (norm < 1.5 ? 1 : norm < 3.5 ? 2 : norm < 7.5 ? 5 : 10) * mag;
+}
+
+function fmtU(v) {
+  if (v >= 1e6)  return `${(v/1e6).toPrecision(3)}M`;
+  if (v >= 1000) return `${(v/1000).toPrecision(3)}k`;
+  return `${Math.round(v)}`;
+}
+
+// ── Compute the Y window needed so beam fits at full range ──
+// At distance z, the beam half-width (first null of sinc) is:
+//   y_null(z) = z * lambda / D   (far field)
+// In near field, beam half-width ~ D/2 + z*lambda/D
+// We compute the required sim-height to show this + 20% margin.
+function computeSimH(D, lam, propRange) {
+  const zR        = rayleigh(D, lam);
+  const zEnd      = propRange;
+  // beam half-width at end of range
+  let halfWidth;
+  if (zEnd <= zR) {
+    // still in near field — width bounded by aperture + small spread
+    halfWidth = D / 2 + zEnd * (lam / D);
+  } else {
+    halfWidth = D / 2 + zEnd * (lam / D);
+  }
+  return Math.max(D * 3, halfWidth * 2.4);  // full height with margin
+}
+
+// ── Near field column ───────────────────────────────────────
+function nearCol(simX, simCY, sources, k) {
+  const col = new Float32Array(CH);
+  for (let cpy = 0; cpy < CH; cpy++) {
+    // simY mapped from canvas pixel via scaleY
+    const simY = cpy * (window._simH / CH) + (simCY - window._simH / 2);
+    let re = 0, im = 0;
+    for (let s = 0; s < sources.length; s++) {
+      const dx = simX - sources[s][0];
+      const dy = simY - sources[s][1];
+      const r  = Math.sqrt(dx*dx + dy*dy);
+      if (r < 0.5) continue;
+      const amp = 1.0 / Math.sqrt(r);
+      re += amp * Math.cos(k * r);
+      im += amp * Math.sin(k * r);
+    }
+    col[cpy] = re*re + im*im;
+  }
+  return col;
+}
+
+// ── Far field column ────────────────────────────────────────
+function farCol(z, simCY, D, lam) {
+  const col   = new Float32Array(CH);
+  const decay = 1.0 / z;
+  const simH  = window._simH;
+  for (let cpy = 0; cpy < CH; cpy++) {
+    const simY  = cpy * (simH / CH) + (simCY - simH / 2);
+    const dy    = simY - simCY;
+    const theta = Math.atan2(dy, z);
+    const arg   = (Math.PI * D * Math.sin(theta)) / lam;
+    const s2    = sinc(arg) * sinc(arg);
+    col[cpy]    = s2 * s2 * decay * decay;
+  }
+  return col;
+}
+
+// ── Main render ─────────────────────────────────────────────
+function render(D, lam, propRange) {
+  const zR    = rayleigh(D, lam);
+  const simH  = computeSimH(D, lam, propRange);
+  window._simH = simH;   // shared with col functions
+
+  const simW   = SRC_SIM_X + propRange;
+  const scaleX = CW / simW;
+  const scaleY = CH / simH;
+  const simCY  = simH / 2;   // beam centre in sim-units (y)
+
+  const k       = (2 * Math.PI) / lam;
+  const spacing = Math.max(0.5, lam / 2);
+  const half    = D / 2;
+  const sources = [];
+  for (let y = simCY - half; y <= simCY + half; y += spacing)
+    sources.push([SRC_SIM_X, y]);
+
+  const wallCx     = Math.round(SRC_SIM_X * scaleX);
+  const rayleighCx = Math.round((SRC_SIM_X + zR) * scaleX);
+
+  // Compute columns
+  const allCols = [];
+  let maxI = 0;
+
+  for (let cpx = 0; cpx < CW; cpx++) {
+    const simX = cpx / scaleX;
+    const z    = simX - SRC_SIM_X;
+    let col;
+    if (z <= 0) {
+      col = new Float32Array(CH);
+    } else if (z <= zR) {
+      col = nearCol(simX, simCY, sources, k);
+    } else {
+      col = farCol(z, simCY, D, lam);
+    }
+    allCols.push(col);
+    for (let i = 0; i < CH; i++) if (col[i] > maxI) maxI = col[i];
+  }
+
+  // Paint
+  const imgData = ctx.createImageData(CW, CH);
+  const d = imgData.data;
+  for (let cpx = 0; cpx < CW; cpx++) {
+    const col = allCols[cpx];
+    for (let cpy = 0; cpy < CH; cpy++) {
+      const t   = maxI > 0 ? Math.pow(col[cpy] / maxI, 0.40) : 0;
+      const idx = (cpy * CW + cpx) * 4;
+      d[idx]     = Math.min(255, t * 510);
+      d[idx + 1] = Math.min(255, Math.max(0, t * 400 - 40));
+      d[idx + 2] = Math.min(255, Math.max(0, t * 300 - 120));
+      d[idx + 3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  // canvas y of beam centre
+  const beamCY = Math.round((simCY - (simCY - simH/2)) * scaleY);
+
+  // Blocking wall
+  const topBot = beamCY - Math.round(half * scaleY);
+  const botTop = beamCY + Math.round(half * scaleY);
+  ctx.strokeStyle = 'rgba(80,160,255,0.75)';
+  ctx.lineWidth   = 3;
+  ctx.beginPath();
+  ctx.moveTo(wallCx, 0);      ctx.lineTo(wallCx, topBot);
+  ctx.moveTo(wallCx, botTop); ctx.lineTo(wallCx, CH);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(255,220,60,0.95)';
+  ctx.lineWidth   = 4;
+  ctx.beginPath();
+  ctx.moveTo(wallCx, topBot); ctx.lineTo(wallCx, botTop);
+  ctx.stroke();
+
+  // Rayleigh boundary
+  if (rayleighCx > wallCx && rayleighCx < CW) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(80,255,120,0.5)';
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([6, 5]);
+    ctx.beginPath(); ctx.moveTo(rayleighCx, 0); ctx.lineTo(rayleighCx, CH); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(80,255,120,0.65)';
+    ctx.font      = '10px Courier New';
+    ctx.fillText('z=D²/λ', rayleighCx + 4, 14);
+    ctx.restore();
+  }
+
+  // Divergence envelope — from aperture edge, in canvas coords
+  // y_edge(z) in sim = simCY ± (D/2 + z * lam/D)
+  // (D/2 term: beam starts at aperture width, then spreads)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,140,60,0.6)';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([4, 4]);
+  for (const sign of [-1, 1]) {
+    ctx.beginPath();
+    let started = false;
+    for (let cpx = wallCx; cpx < CW; cpx++) {
+      const simX  = cpx / scaleX;
+      const z     = simX - SRC_SIM_X;
+      if (z < 0) continue;
+      const yEdgeSim = simCY + sign * (half + z * lam / D);
+      const yEdgeCx  = (yEdgeSim - (simCY - simH/2)) * scaleY;
+      if (!started) { ctx.moveTo(cpx, yEdgeCx); started = true; }
+      else ctx.lineTo(cpx, yEdgeCx);
+    }
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Y-axis scale labels (physical sim-units on right edge)
+  ctx.fillStyle   = 'rgba(170,130,255,0.5)';
+  ctx.strokeStyle = 'rgba(170,130,255,0.2)';
+  ctx.lineWidth   = 1;
+  ctx.font        = '9px Courier New';
+  const yTickStep = niceTick(simH / 5);
+  const yOriginSim = simCY - simH / 2;
+  for (let yt = Math.ceil(yOriginSim / yTickStep) * yTickStep;
+           yt <= yOriginSim + simH; yt += yTickStep) {
+    const cy2 = (yt - yOriginSim) * scaleY;
+    ctx.beginPath(); ctx.moveTo(CW - 6, cy2); ctx.lineTo(CW, cy2); ctx.stroke();
+    const rel = Math.round(yt - simCY);
+    ctx.fillText(`${rel > 0 ? '+' : ''}${fmtU(rel)}`, CW - 52, cy2 - 2);
+  }
+
+  // X-axis ticks
+  const tickStep = niceTick(propRange / 7);
+  ctx.fillStyle   = 'rgba(255,255,255,0.3)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth   = 1;
+  ctx.font        = '9px Courier New';
+  for (let dist = tickStep; dist < propRange; dist += tickStep) {
+    const tx = Math.round((SRC_SIM_X + dist) * scaleX);
+    ctx.beginPath(); ctx.moveTo(tx, CH); ctx.lineTo(tx, CH - 7); ctx.stroke();
+    ctx.fillText(fmtU(dist), tx - 8, CH - 9);
+  }
+
+  // Info overlay
+  ctx.fillStyle = 'rgba(255,255,255,0.32)';
+  ctx.font      = '10px Courier New';
+  ctx.fillText(
+    `λ=${lam}  D=${D}  range=${fmtU(propRange)}  zR=${fmtU(zR)}  θ=${(lam/D).toFixed(4)} rad  y-win=±${fmtU(simH/2)}`,
+    wallCx + 10, 20
+  );
+
+  // Update stats
+  document.getElementById('sv-ratio').textContent    = (D/lam).toFixed(1);
+  document.getElementById('sv-regime').textContent   = getRegime(D/lam);
+  document.getElementById('sv-rayleigh').textContent = fmtU(zR) + ' u';
+  document.getElementById('sv-theta').textContent    =
+    `${(lam/D).toFixed(4)} rad  (${((lam/D)*180/Math.PI).toFixed(2)}°)`;
+  document.getElementById('sv-yscale').textContent   = `±${fmtU(simH/2)} u`;
+  document.getElementById('sv-mode').textContent     =
+    propRange > zR ? 'near + far (Fraunhofer)' : 'near-field only';
+}
+
+function runSim() {
+  if (pending) { dirty = true; return; }
+  pending = true; dirty = false;
+  document.getElementById('computing').style.display = 'flex';
+  const D = aperture, lam = wavelength, pr = propRange;
+  requestAnimationFrame(() => setTimeout(() => {
+    render(D, lam, pr);
+    document.getElementById('computing').style.display = 'none';
+    pending = false;
+    if (dirty) runSim();
+  }, 20));
+}
+
+// Sliders
+document.getElementById('aperture-slider').addEventListener('input', e => {
+  aperture = +e.target.value;
+  document.getElementById('ap-val').textContent = aperture;
+  clearActive();
+  runSim();
+});
+document.getElementById('wavelength-slider').addEventListener('input', e => {
+  wavelength = +e.target.value;
+  document.getElementById('wl-val').textContent = wavelength;
+  clearActive();
+  runSim();
+});
+document.getElementById('propagation-slider').addEventListener('input', e => {
+  propRange = +e.target.value;
+  document.getElementById('prop-val').textContent = propRange.toLocaleString();
+  clearActive();
+  runSim();
+});
+
+// Presets
+function clearActive() {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+function applyPreset(D, lam, range, name) {
+  aperture   = D;   wavelength = lam;   propRange  = range;
+  document.getElementById('aperture-slider').value    = D;
+  document.getElementById('wavelength-slider').value  = lam;
+  document.getElementById('propagation-slider').value = range;
+  document.getElementById('ap-val').textContent   = D;
+  document.getElementById('wl-val').textContent   = lam;
+  document.getElementById('prop-val').textContent = range.toLocaleString();
+  clearActive();
+  document.querySelector(`[data-name="${name}"]`).classList.add('active');
+  runSim();
+}
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    applyPreset(+btn.dataset.d, +btn.dataset.l, +btn.dataset.r, btn.dataset.name);
+  });
+});
+
+// Boot with visible-laser preset
+applyPreset(60, 10, 3000, 'visible-laser');
+</script>
+</body>
+</html>
