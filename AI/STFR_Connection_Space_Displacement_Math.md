@@ -204,7 +204,7 @@ The time dilation in a gravity well equals the time dilation from moving at the 
 
 $$\frac{d\tau}{dt}\bigg|_{\text{grav}} = \frac{1}{1 + \Sigma(r)} \approx 1 - \frac{GM}{C^2 r}$$
 
-$$\frac{d\tau}{dt}\bigg|_{\text{vel}} = \Gamma(v_{\text{esc}}) = \frac{\sqrt{C^2 - v_{\text{esc}}^2}}{C} \approx 1 - \frac{GM}{C^2 r}$$
+$$\frac{d\tau}{dt}\bigg|_{\text{vel}} = \lambda(v_{\text{esc}}) = \frac{\sqrt{C^2 - v_{\text{esc}}^2}}{C} \approx 1 - \frac{GM}{C^2 r}$$
 
 with $v_{\text{esc}} = \sqrt{2GM/r}$. Both give the same result with $d^2 = 2GM/C^2$.
 
@@ -336,7 +336,8 @@ The cleanest derivation of $\gamma = 1$ comes directly from $W_{STFR}$ and the d
 
 **At $v = C$, $W_{STFR}$ diverges.** The $W_{STFR}$ rotation for perpendicular velocity components $v_1$, $v_2$ is:
 
-$$W_{STFR}(v_1, v_2) = \frac{v_1}{G(v_1)} \operatorname{arctanh}\!\left(\frac{v_2}{G(v_1)} \right), \quad G(v) = \sqrt{1 - v^2/C^2}$$
+$$W_{STFR}(v_1, v_2) = \frac{v_1}{G(v_1)} \operatorname{arctanh}\!\left(\frac{v_2}{G(v_1)}
+ight), \quad G(v) = \sqrt{1 - v^2/C^2}$$
 
 As $v_1 \to C$: $G(v_1) \to 0$, so $v_1/G(v_1) \to \infty$. This means **any lateral perturbation to a photon's velocity produces a complete heading rotation** — the photon's direction is maximally sensitive to transverse forces.
 
@@ -395,9 +396,9 @@ Stripping out the light cone, the remaining simultaneity term is:
 
 $$\frac{Pv}{C^2 - v^2}$$
 
-The position $P$ is in physical space, length-contracted by $\Gamma = \sqrt{C^2 - v^2}/C$ relative to coordinate separation $x$:
+The position $P$ is in physical space, length-contracted by $\lambda = \sqrt{C^2 - v^2}/C$ relative to coordinate separation $x$:
 
-$$P = x\Gamma = x\frac{\sqrt{C^2 - v^2}}{C}$$
+$$P = x\lambda = x\frac{\sqrt{C^2 - v^2}}{C}$$
 
 Substituting:
 
@@ -515,7 +516,7 @@ For GPB: $W_{STFR}^{\text{orbit}} = 3.949 \times 10^{-9}$ rad $= 8.14 \times 10^
 
 **Contribution 2 — Time dilation of internal oscillations ($\alpha_2 = 1$):**
 
-The gyroscope's internal LC oscillations run slower by $\Gamma$ as it moves at $v_{orb}$. This modifies its mechanical response to the displacement field — the same mechanism as Mercury's $\alpha_2$ contribution. Using the virial theorem: contribution $\approx \frac{1}{2}\beta^2 \cdot 2\pi$ per orbit. Together with contribution 1 this gives $\frac{3}{2}\beta^2 \cdot 2\pi$ — matching GR's de Sitter formula $3\pi GM/(C^2 r)$ per orbit.
+The gyroscope's internal LC oscillations run slower by $\lambda$ as it moves at $v_{orb}$. This modifies its mechanical response to the displacement field — the same mechanism as Mercury's $\alpha_2$ contribution. Using the virial theorem: contribution $\approx \frac{1}{2}\beta^2 \cdot 2\pi$ per orbit. Together with contribution 1 this gives $\frac{3}{2}\beta^2 \cdot 2\pi$ — matching GR's de Sitter formula $3\pi GM/(C^2 r)$ per orbit.
 
 **Contribution 3 — Displacement gradient $\Sigma(r)$ ($\alpha_3 = 1$):**
 
@@ -593,7 +594,7 @@ The total precession arises from three effects, each of order $GM/(rC^2)$, all n
 
 **1. Retardation mismatch (cone geometry):** The displacement field's cone does not perfectly converge on Mercury's current position for accelerated motion. The residual tangential force integrated over one orbit gives a precession contribution with coefficient $\alpha_1 = 1$.
 
-**2. Time dilation of Mercury ($W_{STFR}$ mechanism):** Mercury's LC oscillations run slower by $\Gamma = \sqrt{C^2 - v^2}/C$ as it moves through connection space. Its mechanical response to the gravitational field is modified — the time-dilated internal oscillations change how momentum accumulates. Each incremental velocity change from the gravitational force is suppressed by the current $\Gamma$, and this suppression integrated over the orbit is precisely the $W_{STFR}$ rotation: the accumulated steering of the velocity vector from continuously time-dilated velocity changes. $W_{STFR}$ per orbit $= (\gamma^2-1)\cdot 2\pi \approx \beta^2 \cdot 2\pi$ is the Mercury analog of the GPB geodetic contribution 1. Using the virial theorem ($\langle v^2 \rangle = GM/a$), this gives $\alpha_2 = 1$.
+**2. Time dilation of Mercury ($W_{STFR}$ mechanism):** Mercury's LC oscillations run slower by $\lambda = \sqrt{C^2 - v^2}/C$ as it moves through connection space. Its mechanical response to the gravitational field is modified — the time-dilated internal oscillations change how momentum accumulates. Each incremental velocity change from the gravitational force is suppressed by the current $\lambda$, and this suppression integrated over the orbit is precisely the $W_{STFR}$ rotation: the accumulated steering of the velocity vector from continuously time-dilated velocity changes. $W_{STFR}$ per orbit $= (\gamma^2-1)\cdot 2\pi \approx \beta^2 \cdot 2\pi$ is the Mercury analog of the GPB geodetic contribution 1. Using the virial theorem ($\langle v^2 \rangle = GM/a$), this gives $\alpha_2 = 1$.
 
 **3. Cumulative displacement ($\Sigma$) effect on momentum:** Mercury traverses more $F \cdot H$ per unit coordinate distance when deeper in the Sun's displacement field. The cumulative displacement $\Sigma(r) = d^2/2r$ modifies the effective dynamics — a correction of order $(GM/rC^2) \cdot GM/r$ to the potential. This gives $\alpha_3 = 1$.
 
@@ -623,7 +624,7 @@ The local retardation mechanism accounts for the full 43 arcsec/century independ
 
 ### Note on Verification
 
-The mapping of the three contributions onto $\alpha = 1$ each relies on the standard post-Newtonian decomposition applied to STFR concepts. While the physical mechanisms are natural consequences of the framework (finite-$C$ cone geometry, $\Gamma$ time dilation, and $\Sigma(r)$ displacement), confirming the exact coefficients requires a full N-body numerical integration in the STFR framework. This has now been confirmed numerically — see Open Question 9 (resolved) and the [interactive simulation](https://d3x0r.github.io/STFRPhysics/AI/stfr_nbody.html).
+The mapping of the three contributions onto $\alpha = 1$ each relies on the standard post-Newtonian decomposition applied to STFR concepts. While the physical mechanisms are natural consequences of the framework (finite-$C$ cone geometry, $\lambda$ time dilation, and $\Sigma(r)$ displacement), confirming the exact coefficients requires a full N-body numerical integration in the STFR framework. This has now been confirmed numerically — see Open Question 9 (resolved) and the [interactive simulation](https://d3x0r.github.io/STFRPhysics/AI/stfr_nbody.html).
 
 ---
 
@@ -651,29 +652,29 @@ For a self-gravitating spinning body in equilibrium, every point on the surface 
 
 In STFR, since gravitational time dilation and velocity time dilation are the same mechanism (both increase the effective rate of encounter with vacuum medium), the equilibrium condition is:
 
-$$\Gamma_{\text{total}}(\phi) = \text{constant for all } \phi$$
+$$\lambda_{\text{total}}(\phi) = \text{constant for all } \phi$$
 
-where $\Gamma_{\text{total}}$ combines two contributions:
+where $\lambda_{\text{total}}$ combines two contributions:
 
-$$\Gamma_{\text{grav}}(\phi): \text{from cumulative displacement } \Sigma(r(\phi))$$
+$$\lambda_{\text{grav}}(\phi): \text{from cumulative displacement } \Sigma(r(\phi))$$
 
-$$\Gamma_{\text{vel}}(\phi) = \frac{\sqrt{C^2 - V(\phi)^2}}{C}$$
+$$\lambda_{\text{vel}}(\phi) = \frac{\sqrt{C^2 - V(\phi)^2}}{C}$$
 
 At the equator ($\phi = 0$): $r$ is largest (oblate bulge), $\Sigma$ is smallest (weakest gravitational dilation), $V$ is largest (strongest velocity dilation).
 
 At the poles ($\phi = \pi/2$): $r$ is smallest (oblate compression), $\Sigma$ is largest (strongest gravitational dilation), $V = 0$ (no velocity dilation).
 
-The equilibrium surface shape $r(\phi)$ is the oblate figure that satisfies $\Gamma_{\text{total}} = \text{const}$ at every latitude.
+The equilibrium surface shape $r(\phi)$ is the oblate figure that satisfies $\lambda_{\text{total}} = \text{const}$ at every latitude.
 
 ### Qualitative Difference: Equator vs. Poles
 
-Although $\Gamma_{\text{total}}$ is the same everywhere on the surface, the *character* of the time dilation differs fundamentally between equator and poles. This distinction is critical for understanding particle behavior.
+Although $\lambda_{\text{total}}$ is the same everywhere on the surface, the *character* of the time dilation differs fundamentally between equator and poles. This distinction is critical for understanding particle behavior.
 
 **At the equator:** The time dilation is dominated by linear velocity. An electron (or any LC excitation pattern) at the equator is a highly boosted particle — its overlapping phase states are stretched out along the direction of travel. The pattern's internal cycling is almost frozen, but the freezing is directional: the pattern's entire internal time budget is committed to maintaining coherence along the velocity vector. The particle is stable but locked into its trajectory. It cannot reorganize because it has no spare internal time in any direction other than its direction of motion.
 
 **At the poles:** The time dilation is dominated by gravitational depth. An LC excitation pattern at the pole has almost no linear velocity. Its internal cycling is equally slow in every direction — the slowness is isotropic. The pattern is not stretched along any preferred axis. This means polar matter retains the ability to interact laterally, recombine, and form new configurations. The particles are slow, but they are slow symmetrically, which is qualitatively different from being slow because all internal time is consumed by linear motion.
 
-The physical distinction: linear velocity imposes a directional structure on the LC pattern (momentum), while gravitational depth imposes an isotropic slowdown (time dilation without preferred direction). The same total $\Gamma$ produces very different internal conditions depending on how it is composed.
+The physical distinction: linear velocity imposes a directional structure on the LC pattern (momentum), while gravitational depth imposes an isotropic slowdown (time dilation without preferred direction). The same total $\lambda$ produces very different internal conditions depending on how it is composed.
 
 ### Polar Accumulation
 
@@ -732,7 +733,7 @@ $$\sqrt{S^2 + V^2} = C$$
 
 where $S$ is spin capacity (the rate at which internal oscillatory/rotational processes can occur) and $V$ is linear velocity. The total budget is $C$. As $V$ increases, $S$ decreases — not because "time slows down" metaphysically, but because less of the $C$ budget is available for rotational motion.
 
-This is directly the $\Gamma$ factor: $S = \sqrt{C^2 - V^2}$ and $\Gamma = S/C$.
+This is directly the $\lambda$ factor: $S = \sqrt{C^2 - V^2}$ and $\lambda = S/C$.
 
 **Critical consequence for black hole physics:** Linear velocity and spin are independent motions. Newtonian mechanics groups them as "motion," but in STFR they compete for the same $C$ budget. A particle with $V \approx C$ has $S \approx 0$ — it cannot spin, oscillate, or sustain internal LC cycling. A particle with $V = 0$ deep in a gravitational field has $S = C(1 - \Sigma)$ — reduced by gravity, but the reduction is isotropic and the spin capacity that remains is fully available in every direction.
 
@@ -848,7 +849,7 @@ However, the emission mechanism is not classical escape. The accumulated polar m
 
 Two hypotheses for how material reaches the poles, which are not mutually exclusive:
 
-**Hypothesis 1 — Vacancy Refill:** Matter already exists at the poles from the formation process. When a jet emission event occurs, it creates a vacancy — a localized deficit of mass/displacement at the pole. The equilibrium surface is now perturbed: less mass at the pole means less displacement, which means the equal-$\Gamma$ condition is locally violated. Matter from adjacent latitudes shifts poleward to restore equilibrium, creating a vacancy at slightly lower latitude, which is in turn filled from further away. The jet is self-sustaining: each emission event triggers the conditions for the next. No dissipative migration mechanism is needed — the driving force is simply relaxation toward the equilibrium configuration.
+**Hypothesis 1 — Vacancy Refill:** Matter already exists at the poles from the formation process. When a jet emission event occurs, it creates a vacancy — a localized deficit of mass/displacement at the pole. The equilibrium surface is now perturbed: less mass at the pole means less displacement, which means the equal-$\lambda$ condition is locally violated. Matter from adjacent latitudes shifts poleward to restore equilibrium, creating a vacancy at slightly lower latitude, which is in turn filled from further away. The jet is self-sustaining: each emission event triggers the conditions for the next. No dissipative migration mechanism is needed — the driving force is simply relaxation toward the equilibrium configuration.
 
 **Hypothesis 2 — Centrifugal Sorting:** In a spinning system, denser material migrates outward (toward the equator) and less dense material migrates inward (toward the axis). On the displacement surface, "denser" means more displacement per unit area — heavier particles, stable nuclei. "Less dense" means lighter particles — electrons, positrons, partially formed displacement bubbles, photon-like excitations.
 
@@ -1106,7 +1107,7 @@ $$\frac{\Delta\tau}{T} = \frac{GM_\oplus}{C^2}\!\left(\frac{1}{R} - \frac{1}{R+h
 
 The eastbound result agrees within measurement uncertainty. The westbound discrepancy reflects the simplified model — the actual flight did not fully counteract Earth's rotation, and the path traversed varying latitudes. A proper reconstruction requires integrating logged airspeed and altitude data. The qualitative structure is correctly predicted: eastbound loses time, westbound gains, with the asymmetry arising from velocity relative to the absolute frame.
 
-**Key STFR distinction from GR:** GR attributes Hafele-Keating to gravitational time dilation (altitude) plus special-relativistic time dilation (velocity relative to the rotating Earth frame). STFR uses the same $\Gamma = \sqrt{1 - v^2/C^2}$ for both effects, with velocity measured in the absolute CMB frame — no frame ambiguity, one preferred frame, same numerical predictions at this precision.
+**Key STFR distinction from GR:** GR attributes Hafele-Keating to gravitational time dilation (altitude) plus special-relativistic time dilation (velocity relative to the rotating Earth frame). STFR uses the same $\lambda = \sqrt{1 - v^2/C^2}$ for both effects, with velocity measured in the absolute CMB frame — no frame ambiguity, one preferred frame, same numerical predictions at this precision.
 
 ---
 
@@ -1162,29 +1163,29 @@ Distinguishing STFR from GR in gravitational wave observations remains an open e
 
 The STFR time dilation factor is:
 
-$$\Gamma = \frac{\sqrt{C^2 - V^2}}{C}$$
+$$\lambda = \frac{\sqrt{C^2 - V^2}}{C}$$
 
-A mass $M$ moving at velocity $V$ through connection space has its internal oscillations (LC cycling) slowed by $\Gamma$. The kinetic energy is the work done to accelerate the mass from rest to velocity $V$.
+A mass $M$ moving at velocity $V$ through connection space has its internal oscillations (LC cycling) slowed by $\lambda$. The kinetic energy is the work done to accelerate the mass from rest to velocity $V$.
 
 The relativistic momentum in STFR is:
 
-$$p = \frac{MV}{\Gamma} = \frac{MVC}{\sqrt{C^2 - V^2}}$$
+$$p = \frac{MV}{\lambda} = \frac{MVC}{\sqrt{C^2 - V^2}}$$
 
-(The $1/\Gamma$ factor appears because the mass's inertial resistance increases as its internal time slows — each unit of coordinate-time force produces less velocity change.)
+(The $1/\lambda$ factor appears because the mass's inertial resistance increases as its internal time slows — each unit of coordinate-time force produces less velocity change.)
 
 The work-energy integral:
 
 $$E_k = \int_0^V F\, dx = \int_0^V \frac{dp}{dt} \cdot V\, dt$$
 
-Evaluating this integral with $p = MV/\Gamma$:
+Evaluating this integral with $p = MV/\lambda$:
 
-$$E_k = \frac{MC^2}{\Gamma} - MC^2 = MC^2\left(\frac{1}{\Gamma} - 1\right)$$
+$$E_k = \frac{MC^2}{\lambda} - MC^2 = MC^2\left(\frac{1}{\lambda} - 1\right)$$
 
 The total energy is:
 
-$$E_{\text{total}} = \frac{MC^2}{\Gamma} = \frac{MC^3}{\sqrt{C^2 - V^2}}$$
+$$E_{\text{total}} = \frac{MC^2}{\lambda} = \frac{MC^3}{\sqrt{C^2 - V^2}}$$
 
-At rest ($V = 0$, $\Gamma = 1$):
+At rest ($V = 0$, $\lambda = 1$):
 
 $$E_0 = MC^2$$
 
@@ -1195,7 +1196,7 @@ This is $E = MC^2$. The rest energy is the energy stored in the vacuum medium di
 $C^2$ has units of $J/kg = m^2/s^2 = m^2/(F \cdot H)$. It is the specific energy of the vacuum: the energy stored per unit mass-equivalent of displacement.
 
 - **Rest energy** ($MC^2$): The energy stored in the displacement existing at all. The LC network has been deformed from its ground state; $MC^2$ is the total energy of that deformation.
-- **Kinetic energy** ($MC^2(1/\Gamma - 1)$): The additional energy stored in moving the displacement pattern through the LC medium. Moving through connection space increases the effective rate of encounter with vacuum medium, increasing the energy content.
+- **Kinetic energy** ($MC^2(1/\lambda - 1)$): The additional energy stored in moving the displacement pattern through the LC medium. Moving through connection space increases the effective rate of encounter with vacuum medium, increasing the energy content.
 
 The electron picture from the Briefing Document maps directly: an electron is a self-propagating LC excitation pattern. Its rest energy is the energy of the pattern itself — the charged capacitors, the current-carrying inductors. Its kinetic energy is the additional energy stored in the overlapping phase states that constitute momentum (the magnetic field that can only expand at $C$, creating a cascade of simultaneously active LC cycles in the direction of motion).
 
@@ -1205,11 +1206,11 @@ The total energy and momentum combine as:
 
 $$E^2 = (MC^2)^2 + (pC)^2$$
 
-This follows directly from the expressions above. With $E = MC^2/\Gamma$ and $p = MV/\Gamma$:
+This follows directly from the expressions above. With $E = MC^2/\lambda$ and $p = MV/\lambda$:
 
-$$E^2 - (pC)^2 = \frac{M^2C^4}{\Gamma^2} - \frac{M^2V^2C^2}{\Gamma^2} = \frac{M^2C^2(C^2 - V^2)}{\Gamma^2}$$
+$$E^2 - (pC)^2 = \frac{M^2C^4}{\lambda^2} - \frac{M^2V^2C^2}{\lambda^2} = \frac{M^2C^2(C^2 - V^2)}{\lambda^2}$$
 
-Since $\Gamma^2 = (C^2 - V^2)/C^2$:
+Since $\lambda^2 = (C^2 - V^2)/C^2$:
 
 $$E^2 - p^2C^2 = \frac{M^2C^2(C^2 - V^2) \cdot C^2}{C^2 - V^2} = M^2C^4$$
 
