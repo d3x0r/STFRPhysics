@@ -111,8 +111,7 @@ $$
 Their relation is expressed through the scaling factor $\lambda$:
 
 $$
-\Delta \tau_{\mathrm{realized}}
-=
+\Delta \tau_{\mathrm{realized}} = \
 \lambda(X_{\mathrm{local}},v)\,\Delta \tau_{\mathrm{coord}}.
 $$
 
@@ -150,8 +149,7 @@ $$
 and local geometry follows the displaced transport. On the temporal side, the corresponding relation is
 
 $$
-\Delta \tau_{\mathrm{realized}}
-=
+\Delta \tau_{\mathrm{realized}} = \
 \lambda(X_{\mathrm{local}},v)\,\Delta \tau_{\mathrm{coord}}.
 $$
 
@@ -192,6 +190,12 @@ $$
 Here $\Delta \tau_{\mathrm{coord}}$ is elapsed duration in the reference description, and $\Delta \tau_{\mathrm{realized}}$ is the duration realized by local physical processes. Both are understood relative to a chosen reference event from which duration is accumulated. The factor $\lambda$ is the homogeneous scaling factor derived in the propagation framework [1].
 
 Realized duration is the duration over which local physical processes unfold within the realized local description. Accordingly, $\lambda$ scales the duration assigned to those processes relative to the coordinate description.
+
+This scaling can also be understood through propagation cost. In the moving frame, the change is not merely geometric. As the frame moves through transport, the span of underlying vacuum storage effectively carried within that frame increases. A confined light process within the frame therefore traverses not only a longer path, but a larger effective capacity. This raises the total cost of propagation for processes realized within the frame. The slower rate of local processes, including the slower transport of clocks within the frame, is the realized result of that increased total cost. In that sense, the enlarged cost does not need to be compensated after the fact; it appears directly as the slower realized evolution of the frame’s internal processes.
+
+Along the direction of motion, there is a second effect. The propagation cost is not only larger in total, but asymmetric between forward and backward traversal. That asymmetry is handled differently. It is not what produces the slower process rate; rather, it is what requires the frame’s synchronization assignment across separated clocks. Clocks synchronized by any conventional signal-exchange scheme inherit this issue, since such schemes determine one-way timing by partitioning round-trip propagation cost. The assignment of times to those clocks absorbs the directional imbalance, so that one-way propagation is still measured internally at the standard light speed. The slower local process rate therefore follows from the increased total cost, while the synchronization structure compensates for the directional asymmetry.
+
+This ongoing maintenance of synchronization is natural in terrestrial frames. A frame attached to a rotating and orbiting planet is not statically realized once and then left unchanged. Its clocks and material processes are continually carried through the frame’s broader transport history. In that setting, the slow transport of clocks provides an ongoing physical mechanism by which scheduling relations are maintained. The point here is not to develop a full terrestrial timing model, but to note that in naturally evolving frames of this kind, synchronization is maintained through the frame’s transport history rather than being purely stipulated.
 
 ### 5.5 Propagation and measurement in one homogeneous setting
 
@@ -250,8 +254,7 @@ Local geometry then follows the displaced transport described in Section 4.
 The duration relation remains
 
 $$
-\Delta \tau_{\mathrm{realized}}
-=
+\Delta \tau_{\mathrm{realized}} = \
 \lambda(X_{\mathrm{local}},v)\,\Delta \tau_{\mathrm{coord}},
 $$
 
@@ -290,3 +293,9 @@ The task of this paper has been foundational. It defines the descriptive roles c
 [3] National Institute of Standards and Technology, *CODATA Value: vacuum electric permittivity*.
 
 [4] National Institute of Standards and Technology, *CODATA Value: vacuum magnetic permeability*.
+
+
+## Appendix A. Draft Changelog
+
+**2026-03-18**  
+Expanded the discussion of propagation cost and synchronization, including the distinction between increased total cost and directional asymmetry, and the note on synchronization being maintained through a frame’s transport history.
