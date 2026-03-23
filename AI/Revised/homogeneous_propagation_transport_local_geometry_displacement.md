@@ -28,8 +28,6 @@ This paper is foundational rather than dynamical. Its aim is to establish a stab
 
 The framework begins with one underlying domain, denoted $ \mathcal{M} $. The layered vocabulary describes different physical roles associated with that same domain. One role serves as reference, one expresses substrate support, one governs admissible propagation, and one expresses local realization.
 
-This develops an earlier four-layer picture in which coordinate space, vacuum-impedance space, connection space, and physical space were distinguished, together with the difference between a space **on** another space and a space **in** another space. The present paper keeps that structural idea and restates it in chart language.
-
 For each point $p \in \mathcal{M}$, the framework allows several chart-level descriptions associated with these roles. The transforms between those descriptions carry the relevant physical structure.
 
 ## 3. Core Objects and Vocabulary
@@ -76,7 +74,7 @@ This provides the simplest alignment between substrate support and reference des
 
 ### 3.5 Transport structure
 
-The **transport structure** is the propagation-supporting relational structure on $ \mathcal{M} $. It determines admissible continuation, path structure, and signal transport. In earlier language this role corresponds to connection space: the path structure through which propagation is evaluated.
+The **transport structure** is the propagation-supporting relational structure on $ \mathcal{M} $. It determines admissible continuation, path structure, and signal transport.
 
 ### 3.6 Transport chart
 
