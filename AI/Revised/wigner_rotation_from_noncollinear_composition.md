@@ -1,4 +1,4 @@
-# The Homogeneous Propagation Framework: Wigner Rotation from Noncollinear Composition
+# The Homogeneous Propagation Framework: Wigner Rotation and Accumulated Steering
 
 **James Buckeyne**  
 Independent Research  
@@ -16,11 +16,11 @@ The homogeneous propagation framework recovers the familiar special-relativistic
 
 ## 1. Introduction
 
-The preceding paper recovered contraction, timing structure, and the one-dimensional moving-frame map from a propagation-first starting point, while briefly noting proper-velocity endpoint composition and a transport-induced rotational remainder under noncollinear composition. The present paper develops that noncollinear remainder directly.
+The preceding paper recovered contraction, timing structure, and the one-dimensional moving-frame map from a propagation-first starting point, while briefly noting proper-velocity endpoint composition and a transport-induced steering remainder under noncollinear composition. The present paper develops that noncollinear remainder directly.
 
 The endpoint translational state is not in question. In the present framework, the natural composition variable is proper velocity: the endpoint physical speed is obtained by ordinary addition in proper-velocity space followed by inversion back to physical velocity. The endpoint is commutative and associative, and as an endpoint it is order-independent. What the endpoint map does not capture is the intermediate structure of the transition when one velocity component is already established and a perpendicular component is then acquired. The composition passes through a path of intermediate total speeds, and the same propagation structure that recovers the Lorentz simultaneity term places that term inside the moving-frame transport structure. Once that structure is treated as part of the composition process, the noncollinear case carries more than the endpoint alone.
 
-## 2. Accumulated Rotational Remainder
+## 2. Accumulated Steering Remainder
 
 Let $v$ be the established longitudinal speed, and let the transverse component be acquired through intermediate values $u\in[0,v_\perp]$. At each stage, the total speed is
 
@@ -36,13 +36,13 @@ $$
 c^2-v_{\mathrm{tot}}(u)^2=c^2-v^2-u^2.
 $$
 
-The incremental contribution to the accumulated remainder is therefore
+The incremental contribution to the accumulated steering remainder is therefore
 
 $$
 dW=\frac{v}{c^2-v^2-u^2}\,du.
 $$
 
-The buildup accumulates against a continuously tightening denominator as the total speed rises. The full remainder is
+The buildup accumulates against a continuously tightening denominator as the total speed rises. The full steering remainder is
 
 $$
 W=\int_0^{v_\perp}\frac{v}{c^2-v^2-u^2}\,du.
@@ -54,9 +54,9 @@ $$
 W(v,v_\perp)=\frac{v}{\sqrt{c^2-v^2}}\operatorname{arctanh}\!\left(\frac{v_\perp}{\sqrt{c^2-v^2}}\right).
 $$
 
-The extra term appears because the ordered acquisition of the second component samples different total speeds on the way to the endpoint, and the transport contribution must be integrated across the entire buildup. The remainder belongs to the process by which the endpoint is reached, not to the endpoint itself.
+The extra term appears because the ordered acquisition of the second component samples different total speeds on the way to the endpoint, and the transport contribution must be integrated across the entire buildup. The steering remainder belongs to the process by which the endpoint is reached, not to the endpoint itself.
 
-The effect is nonuniform. Early in the buildup, the denominator is larger and the accumulation is gentler. Later, as the total speed rises and $c^2-v_{\mathrm{tot}}^2$ narrows, the same incremental transverse addition contributes more. As $v_\perp\to\sqrt{c^2-v^2}$, the arctanh argument approaches unity and the remainder diverges, reflecting the non-finite character of the buildup at the light-speed boundary.
+The effect is nonuniform. Early in the buildup, the denominator is larger and the accumulation is gentler. Later, as the total speed rises and $c^2-v_{\mathrm{tot}}^2$ narrows, the same incremental transverse addition contributes more. As $v_\perp\to\sqrt{c^2-v^2}$, the arctanh argument approaches unity and the steering remainder diverges, reflecting the non-finite character of the buildup at the light-speed boundary.
 
 The low-speed form is instructive. To first order,
 
@@ -82,9 +82,9 @@ $$
 
 The leading coefficient differs by a factor of two. This difference is structural: it follows from the different starting objects of the two derivations and persists at all speeds. Thomas precession is read from the kinematics of continuously changing inertial frames, whereas $W$ is derived from the accumulated transport contribution of a rate-changing buildup in which the total speed evolves throughout the acquisition.
 
-A discrete comparison of sequential simultaneity terms can suggest that the present framework lacks the coupled SR cross-term from which Thomas/Wigner rotation is usually inferred. But once the noncollinear change is treated as a finite buildup rather than an endpoint update, a nonzero accumulated remainder appears naturally from the changing denominator $c^2-v_{\text{total}}^2$ along the path. The present remainder is a companion noncollinear accumulation derived from a different starting object, not a verbal variant of Thomas precession.
+A discrete comparison of sequential simultaneity terms can suggest that the present framework lacks the coupled SR cross-term from which Thomas/Wigner rotation is usually inferred. But once the noncollinear change is treated as a finite buildup rather than an endpoint update, a nonzero accumulated steering remainder appears naturally from the changing denominator $c^2-v_{\text{total}}^2$ along the path. The present steering remainder is a companion noncollinear accumulation derived from a different starting object, not a verbal variant of Thomas precession.
 
-In the weak-field regime, the companion dynamics paper [6] shows how the three-contribution structure of geodetic precession accommodates the larger kinematic steering term alongside the displacement-gradient and time-dilation contributions, recovering the correct observational totals.
+In the later weak-field development, the steering content isolated here is absorbed into the fuller orbital and geodetic treatment rather than carried forward as a separately named term. The companion dynamics paper [6] develops that broader displacement structure and recovers the corresponding observational totals.
 
 ## 5. Physical Interpretation
 
@@ -94,13 +94,13 @@ The derivation does not require an additional independent precession of an inter
 
 ## 6. Observational Context
 
-The noncollinear remainder developed here belongs to a framework whose weak-field consequences are quantitatively developed in the companion papers. Mercury perihelion advance is obtained from the combined effect of finite-speed retardation, time-dilation steering, and the cumulative displacement gradient, yielding approximately $43$ arcsec/century [6]. The Gravity Probe B geodetic result follows from the same three-contribution structure, with the frame-drag branch assigned to the rotating-source displacement field [6]. Lunar laser ranging consistency checks extend the same displacement structure to the Earth-Moon-Sun system. These comparisons are developed in full in the companion observational paper.
+The present paper isolates the noncollinear steering remainder $W$. In the later weak-field development, that content is absorbed into the fuller orbital and geodetic treatment, including Mercury perihelion advance at approximately $43$ arcsec/century, rather than carried forward as a separately named term [6]. Related applications to geodetic precession and lunar laser ranging are developed in the companion papers. Frame dragging is treated separately through the rotating-source displacement field, not as a consequence of $W$ alone [6].
 
 ## 7. Conclusion
 
-Noncollinear composition in the homogeneous propagation framework carries an accumulated remainder $W$ beyond the endpoint translational state. The endpoint remains recoverable and order-independent, but the ordered acquisition of a perpendicular velocity component proceeds through intermediate total speeds, and the transport contribution accumulates across that buildup. The resulting remainder has a leading low-speed coefficient twice the standard Thomas angle — a structural difference that persists at all speeds and is accommodated in the weak-field observational regime through the three-contribution structure of geodetic precession.
+Noncollinear composition in the homogeneous propagation framework carries an accumulated remainder $W$ beyond the endpoint translational state. The endpoint remains recoverable and order-independent, but the ordered acquisition of a perpendicular velocity component proceeds through intermediate total speeds, and the transport contribution accumulates across that buildup. The resulting remainder has a leading low-speed coefficient twice the standard Thomas angle.
 
-The remainder $W$ is read as an accumulated steering associated with ordered noncollinear velocity acquisition. It is derived from the ordered buildup itself rather than from the decomposition of composed Lorentz boosts, and it offers a different derivational and interpretive account of the noncollinear accumulation that standard relativity describes through Wigner rotation and Thomas precession.
+The present paper isolates that accumulated steering remainder. In the later weak-field development, its content is absorbed into the fuller orbital and geodetic treatment rather than carried forward as a separately named term, while rotating-source frame dragging belongs to the separate vector-response sector.
 
 ## References
 
