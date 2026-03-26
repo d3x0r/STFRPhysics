@@ -24,7 +24,7 @@ The present paper takes up those comparisons. The sections are ordered by the le
 ds^2=-\frac{c^2}{(1+\Sigma)^2}\,dt^2+D^2\,dr^2+r^2\,d\Omega^2
 \]
 
-and its orbit equation, while the final section requires the rotating-source vector sector. The three-contribution structure identified in the dynamics paper — retardation mismatch, time-dilation steering, and cumulative displacement gradient — appears in the orbital tests as three aspects of the single geometric fact that the displacement modifies the time and radial components while leaving the angular sector Euclidean.
+and its orbit equation, while the final section requires the rotating-source vector sector. The three-contribution structure identified in the dynamics paper — retardation mismatch, external-field kinematic steering, and cumulative displacement gradient — appears in the orbital tests as three aspects of the single geometric fact that the displacement modifies the time and radial components while leaving the angular sector Euclidean. The total coefficient \(\alpha=3\) is the primary result derived from the effective geometry; the decomposition into \(\alpha_1=1\), \(\alpha_2=1/2\), and \(\alpha_3=3/2\) is interpretive and matches the standard GR post-Newtonian breakdown.
 
 ## 2. Hafele-Keating: Direct Clock Transport
 
@@ -92,7 +92,7 @@ This cancellation explains why the Earth-centered inertial calculation gives the
 
 ## 3. Pound-Rebka: Gravitational Redshift
 
-The Pound-Rebka experiment (1959) and its refinement by Pound and Snider (1965) measured the gravitational frequency shift of 14.4 keV photons over a vertical height of 22.57 m using the Mössbauer effect in \({}^{57}\)Fe. In this framework, the result follows directly from the position-dependent realized clock rate set by the cumulative displacement.
+The Pound-Rebka experiment (1959) and its refinement by Pound and Snider (1965) measured the gravitational frequency shift of 14.4 keV photons over a vertical height of 22.57 m using the Mössbauer effect in \({}^{57}\)Fe. In this framework, the result is not introduced as a separate in-transit mechanism. It follows directly from the position-dependent realized clock rate set by the cumulative displacement. Once gravitationally differentiated clock rates are admitted, the observed shift is already fixed by the endpoint rate ratio.
 
 ### 3.1 Prediction
 
@@ -102,9 +102,9 @@ A clock at radius \(r_1\) from the Earth's center realizes duration at a rate go
 \frac{\Delta f}{f}=\frac{GM_\oplus}{C^2}\left(\frac{1}{r_1}-\frac{1}{r_2}\right)\approx\frac{g\,h}{C^2},
 \]
 
-where \(g=GM_\oplus/r^2\) is the local gravitational acceleration and \(h=r_2-r_1\) is the height difference. No metric or curved-spacetime construction is required — the shift is entirely a consequence of the displacement-gradient difference in realized clock rates between emitter and receiver.
+where \(g=GM_\oplus/r^2\) is the local gravitational acceleration and \(h=r_2-r_1\) is the height difference. No metric or curved-spacetime construction is required — the shift is entirely a consequence of the displacement-gradient difference in realized clock rates between emitter and receiver. This is already the full first-order prediction for two stationary endpoints at different heights.
 
-In this framework, the photon does not lose energy as it climbs out of the displacement field, nor does it gain energy as it falls in. The photon propagates at \(C\) through the transport structure and arrives unchanged. What differs between emitter and receiver is the rate at which local physical processes unfold — the realized clock rate. A photon emitted by a slower clock and received by a faster clock is measured as redshifted, not because anything happened to the photon in transit, but because the receiver's clock ticks faster than the emitter's. The observed frequency shift is a comparison of endpoint clock rates, not a property acquired by the photon along the way.
+In this framework, the photon does not lose energy as it climbs out of the displacement field, nor does it gain energy as it falls in. The photon propagates at \(C\) through the transport structure and arrives unchanged. What differs between emitter and receiver is the rate at which local physical processes unfold — the realized clock rate. A photon emitted by a slower clock and received by a faster clock is measured as redshifted, not because anything happened to the photon in transit, but because the receiver's clock ticks faster than the emitter's. The observed frequency shift is a comparison of endpoint clock rates, not a property acquired by the photon along the way. Once the endpoint clock-rate structure is admitted, no additional in-transit frequency-evolution term is needed to reproduce the experiment.
 
 ### 3.2 Comparison with measurement
 
@@ -114,11 +114,11 @@ For the Jefferson Physical Laboratory at Harvard (latitude 42.37° N, geocentric
 \frac{\Delta f}{f}=2.468\times10^{-15}.
 \]
 
-Pound and Snider (1965) measured \(2.46\times10^{-15}\) with approximately 1% precision, giving agreement within 0.3%. The experiment confirms the \(\Sigma\)-gradient clock-rate structure at the most elementary level: two stationary clocks at different depths in the displacement field realize different clock rates, and the observed frequency shift is the instantaneous ratio of those rates at the emission and reception points. The photon does not accumulate a shift along its path — it is emitted at one realized rate and received at another, and the fractional frequency difference is simply the difference in realized clock rates at the two endpoints.
+Pound and Snider (1965) measured \(2.46\times10^{-15}\) with approximately 1% precision, giving agreement within 0.3%. The experiment confirms the \(\Sigma\)-gradient clock-rate structure at the most elementary level: two stationary clocks at different depths in the displacement field realize different clock rates, and the observed frequency shift is the instantaneous ratio of those rates at the emission and reception points. The photon does not accumulate a shift along its path — it is emitted at one realized rate and received at another, and the fractional frequency difference is exhausted by the difference in realized clock rates at the two endpoints.
 
 ## 4. Shapiro Delay
 
-In this framework, the Shapiro delay is a pure clock-rate effect. Light does not slow locally near a mass; it continues to propagate at \(C\) in the locally realized description. The delay arises because clocks deeper in the displacement field run slower than clocks farther away, so a distant observer accumulates more elapsed time while the signal traverses the near-mass region.
+In this framework, the Shapiro delay is a path-integrated propagation-cost effect. Light does not slow locally near a mass; it continues to propagate at \(C\) in the locally realized description. The delay arises because the displaced transport structure near the mass contains more storage per coordinate meter, so the signal accumulates extra coordinate travel time along the path through the near-mass region.
 
 The relevant field quantity is the cumulative displacement
 
@@ -163,9 +163,9 @@ The interpretive point is that the delay is not attributed to a local slowing of
 
 ## 5. Mercury Perihelion Precession
 
-Mercury perihelion advance is treated in this framework as a local weak-field consequence of finite-speed displacement response on an eccentric orbit, rather than as the output of a purely static correction. The core point is that the Sun's displacement field propagates at \(c\), and while uniform relative motion preserves the usual cone compensation, Mercury's accelerated orbital motion does not. That imperfect compensation produces a small residual tangential effect whose orbit-average is prograde and nonzero.
+Mercury perihelion advance is treated in this framework as a local weak-field consequence of finite-speed displacement response on an eccentric orbit, rather than as the output of a purely static correction. The primary result is the integrated weak-field orbit equation on the effective displacement geometry, which yields the standard total coefficient \(\alpha=3\) and therefore the observed secular precession. The retardation, kinematic-steering, and displacement-geometry pieces discussed below are an interpretive unpacking of that integrated result, not independent fitted ingredients.
 
-The first contribution arises from the retardation mismatch. If the retardation time is
+The first interpretive contribution arises from the retardation mismatch. If the retardation time is
 
 \[
 \tau=\frac{r}{C},
@@ -189,27 +189,29 @@ That mismatch induces a tangential force
 F_\perp=\frac{GM}{r^2}\cdot\frac{L\dot r}{rC^2}.
 \]
 
-The second contribution comes from the time dilation of Mercury's internal dynamics, expressed through the orbital steering accumulation
+The second interpretive contribution comes from the external-field kinematic steering. Mercury is deflected by the Sun's gravitational field, which belongs to the transport structure. The accumulated steering per orbit uses the external-field coefficient developed in the companion noncollinear paper [3], giving
 
 \[
-W_{\text{orbit}}=(\gamma^2-1)\,2\pi\approx \beta^2\,2\pi.
+W_{\mathrm{ext,orbit}}=(\gamma-1)\,2\pi\approx \tfrac{1}{2}\beta^2\,2\pi.
 \]
 
-The third contribution comes from the cumulative displacement field
+This is the standard Thomas precession value. (Earlier versions of the companion notes listed the co-moving integral \(W_{\mathrm{co}}=(\gamma^2-1)\cdot 2\pi\) and a separate "time dilation of internal oscillations" as independent contributions. These are one effect: the external-field integral already incorporates the time-dilation mismatch through its \(1/(\gamma_{\mathrm{tot}}+1)\) correction factor.)
+
+The third interpretive contribution comes from the cumulative displacement field
 
 \[
 \Sigma(r)=\frac{d^2}{2r},
 \]
 
-which alters the effective dynamics through the same weak-field accumulated structure that governs timing effects elsewhere in the framework.
+which modifies the effective radial and temporal components of the coordinate geometry. This is the dominant geometric contribution.
 
-Taken together, the three contributions are written as
+Taken together, this interpretive decomposition gives
 
 \[
-\alpha=\alpha_1+\alpha_2+\alpha_3=3,
+\alpha=\alpha_1+\alpha_2+\alpha_3=1+\tfrac{1}{2}+\tfrac{3}{2}=3,
 \]
 
-so that the corrected effective potential may be written
+matching the total coefficient already obtained from the effective displacement geometry. The corrected effective potential may therefore be written
 
 \[
 V_{\text{eff}}=-\frac{GM}{r}\left(1+\frac{\alpha GM}{rC^2}\right).
@@ -443,7 +445,9 @@ For GPB, the accumulated in-plane orbital drift gives
 \delta_{\text{geodetic}}=6.59\ \text{arcsec/yr},
 \]
 
-close to the observed geodetic value. This result follows from the same effective coordinate geometry that produces the Mercury precession (Section 5), applied to the GPB orbital parameters. The three contributions previously identified — kinematic steering accumulation, time-dilation modification, and cumulative displacement gradient — are the same three aspects of the single geometric fact developed in the dynamics paper: the displacement modifies the time and radial components of the effective geometry while leaving the angular sector Euclidean. The kinematic steering contribution is the orbital manifestation of the accumulated remainder $W$ derived in the companion noncollinear paper [3], which carries a leading coefficient twice the standard Thomas angle. That factor-of-two difference persists here: $W$ contributes the largest single share of the geodetic total, while the time-dilation and displacement-gradient contributions supply the rest. The correct observational total is recovered because the three-contribution structure distributes the work among the contributions, not because any individual coefficient has been adjusted.
+close to the observed geodetic value. This result follows from the same effective coordinate geometry that produces the Mercury precession (Section 5), applied to the GPB orbital parameters. The total coefficient \(\alpha=3\) comes from the effective geometry as a single integrated result: the displacement modifies the time and radial components while leaving the angular sector Euclidean, and the orbit equation on that geometry does not close at the Keplerian rate.
+
+The interpretive decomposition is the same as for Mercury: \(\alpha_1=1\) (retardation mismatch), \(\alpha_2=1/2\) (external-field kinematic steering at the standard Thomas coefficient), and \(\alpha_3=3/2\) (displacement geometry). The kinematic steering contribution is the orbital manifestation of the external-field remainder \(W_{\mathrm{ext}}\) derived in the companion noncollinear paper [3], which gives \((\gamma-1)\cdot 2\pi \approx \frac{1}{2}\beta^2\cdot 2\pi\) per orbit — matching the standard Thomas precession. The displacement geometry carries the largest share of the geodetic total through the modification of the effective metric components.
 
 ### 9.2 Frame dragging: azimuthal twist of the transport structure
 

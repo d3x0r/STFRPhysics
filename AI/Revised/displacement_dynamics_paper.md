@@ -266,9 +266,9 @@ where \(u=1/r\) and \(L\) is the conserved angular momentum per unit mass. The \
 \delta\omega=\frac{6\pi GM}{a(1-e^2)\,c^2}=42.98\ \text{arcsec/century}.
 \]
 
-The three contributions previously identified for Mercury precession — retardation mismatch, time-dilation steering, and cumulative displacement gradient — are therefore not three separate physical mechanisms to be added independently. They are three aspects of a single geometric fact: the displacement of transport on the coordinate grid modifies the time component and the radial component of the effective coordinate geometry, while the angular component remains Euclidean. The orbit equation on that effective geometry produces the correct precession as one integrated result rather than as a sum of separately motivated corrections.
+The three contributions previously identified for Mercury precession — retardation mismatch, external-field kinematic steering, and cumulative displacement gradient — are therefore not three separate physical mechanisms to be added independently. They are three aspects of a single geometric fact: the displacement of transport on the coordinate grid modifies the time component and the radial component of the effective coordinate geometry, while the angular component remains Euclidean. The orbit equation on that effective geometry produces the correct precession as one integrated result rather than as a sum of separately motivated corrections. The interpretive decomposition is \(\alpha_1=1\) (retardation), \(\alpha_2=1/2\) (external-field kinematic steering at the standard Thomas coefficient), \(\alpha_3=3/2\) (displacement geometry), totaling \(\alpha=3\).
 
-The same effective geometry also supports the Shapiro delay as a pure clock-rate effect and the geodetic precession as the same three-contribution structure applied to the GPB orbit [7]. In each case, the coordinate-level description carries the full physics. Local clock rates, rod lengths, and other realized-geometry observables may be recovered from the coordinate description whenever needed, but the dynamics are most cleanly posed in coordinate terms.
+The same effective geometry also supports the Shapiro delay as a pure clock-rate effect and the geodetic precession applied to the GPB orbit [7]. In each case, the coordinate-level description carries the full physics. Local clock rates, rod lengths, and other realized-geometry observables may be recovered from the coordinate description whenever needed, but the dynamics are most cleanly posed in coordinate terms.
 
 ## 6. Rotating Sources and the Vector Response
 
@@ -290,7 +290,7 @@ This vector channel should be introduced carefully. The paper does not need to c
 
 The rotating-source vector response becomes physically meaningful only when it is tied to an observable. In this framework, the natural first test case is Gravity Probe B. The role of the present section is therefore not to introduce a new phenomenological domain, but to extract the first concrete weak-field observable from the rotating-source displacement field developed in the previous section.
 
-The observable to be extracted is the frame-drag component of the GPB gyroscope drift. The geodetic branch belongs to the already-established three-contribution weak-field structure and need not be rederived in the body. The present section is concerned only with the rotating-source contribution.
+The observable to be extracted is the frame-drag component of the GPB gyroscope drift. The geodetic branch follows from the effective coordinate geometry as a single integrated result and need not be rederived in the body. The present section is concerned only with the rotating-source contribution.
 
 Within the rotating-source construction, the relevant field is the retarded spin-odd azimuthal component
 
