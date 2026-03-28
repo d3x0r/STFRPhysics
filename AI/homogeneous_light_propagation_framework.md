@@ -28,9 +28,9 @@ The argument developed below remains consistent with the familiar relativistic f
 
 ## 2. Native light propagation equation
 
-We begin with a propagation law for light in this homogeneous-speed framework. The central assumption is that light propagates through connection space at baseline speed $c$, while sources and observers may move relative to that propagation layer during the interval between emission and reception. The resulting propagation relation is therefore implicit: the travel time to be solved for also enters the event geometry that defines the path.
+We begin with a propagation law for light in this homogeneous-speed framework. The central assumption is that light propagates relative to the transport structure at baseline speed $c$, while sources and observers may move relative to that transport structure during the interval between emission and reception. The resulting propagation relation is therefore implicit: the travel time to be solved for also enters the event geometry that defines the path.
 
-Let the source position be $\vec{x}_s(t)$ and the observer position be $\vec{x}_o(t)$, both expressed in the coordinate description associated with connection space. Let a signal be emitted at time $t_e$ and received at time $t_o$, with
+Let the source position be $\vec{x}_s(t)$ and the observer position be $\vec{x}_o(t)$, both expressed in the coordinate chart associated with the transport structure. Let a signal be emitted at time $t_e$ and received at time $t_o$, with
 
 $$
 t_o-t_e>0.
@@ -118,7 +118,7 @@ The backward form reconstructs an earlier emission geometry from a known receive
 
 ### 3.2 Uniform-motion form
 
-Assume uniform motion in the coordinate description associated with connection space. Let
+Assume uniform motion relative to the transport structure, with positions expressed in the coordinate chart. Let
 
 $$
 \vec{x}_s(t)=\vec{x}_{s0}+\vec{v}_s t,
@@ -148,7 +148,7 @@ $$
 
 ### 3.3 Longitudinal one-way forms
 
-For one-dimensional propagation along the direction of motion, let the system move at speed $v$ through connection space and let $L$ denote the relevant longitudinal separation. Then
+For one-dimensional propagation along the direction of motion, let the system move at speed $v$ relative to the transport structure and let $L$ denote the relevant longitudinal separation. Then
 
 $$
 \Delta t_{\rightarrow}=\frac{L}{c-v},
@@ -157,7 +157,7 @@ $$
 \tag{3.7}
 $$
 
-These are the raw one-way propagation costs associated with longitudinal motion through connection space.
+These are the raw one-way propagation costs associated with longitudinal motion relative to the transport structure.
 
 ### 3.4 Transverse one-way form
 
@@ -257,7 +257,7 @@ $$
 \tag{4.5}
 $$
 
-The unnormalized moving construction therefore contains a directional asymmetry in two-way interaction cost. A system that preserved the same fiducial longitudinal and transverse extents in physical space would not preserve equal two-way interaction structure across those directions.
+The unnormalized moving construction therefore contains a directional asymmetry in two-way interaction cost. A system that preserved the same fiducial longitudinal and transverse extents in local geometry would not preserve equal two-way interaction structure across those directions.
 
 ### 4.4 Longitudinal normalization factor
 
@@ -286,11 +286,11 @@ This is the canonical contraction form used below. As a contraction factor, $\la
 
 ### 4.5 Interpretation as longitudinal contraction
 
-Stable material structure in physical space is constrained by two-way photonic interactions carried through connection space. A material length therefore cannot be treated independently of the propagation cost required to sustain those interactions across it.
+Stable material structure in local geometry is constrained by two-way photonic interactions carried through the transport structure. A material length therefore cannot be treated independently of the propagation cost required to sustain those interactions across it.
 
-For a system moving at speed $v$ through connection space, the raw longitudinal round-trip interaction cost exceeds the corresponding transverse cost when the same fiducial extent $L$ is assigned in both directions. The longitudinal direction is therefore the limiting case for maintaining a consistent internal interaction structure. If the moving system is to preserve an internally coherent material geometry, its longitudinal extent in physical space must adjust so that the two-way longitudinal interaction cost matches the transverse reference case.
+For a system moving at speed $v$ relative to the transport structure, the raw longitudinal round-trip interaction cost exceeds the corresponding transverse cost when the same fiducial extent $L$ is assigned in both directions. The longitudinal direction is therefore the limiting case for maintaining a consistent internal interaction structure. If the moving system is to preserve an internally coherent material geometry, its longitudinal extent in local geometry must adjust so that the two-way longitudinal interaction cost matches the transverse reference case.
 
-That adjustment is the longitudinal normalization derived in Section 4.4. In the present framework, longitudinal contraction is therefore interpreted as the material adjustment in physical space required by the changed two-way interaction cost of motion through connection space. It is not introduced as an independent starting postulate, but as the normalization needed to restore directional consistency within the moving system.
+That adjustment is the longitudinal normalization derived in Section 4.4. In the present framework, longitudinal contraction is therefore interpreted as the material adjustment in local geometry required by the changed two-way interaction cost of motion relative to the transport structure. It is not introduced as an independent starting postulate, but as the normalization needed to restore directional consistency within the moving system.
 
 ## 5. Two-way interaction cost and recovered time structure
 
@@ -298,7 +298,7 @@ Longitudinal normalization does not exhaust the significance of the moving two-w
 
 ### 5.1 Stationary and moving two-way reference cases
 
-For a system at rest in connection space,
+For a system at rest relative to the transport structure,
 
 $$
 \tau_0=\frac{2L}{c}.
@@ -340,9 +340,9 @@ This is the canonical timing factor used below. As a dilation factor, $\gamma(v)
 
 ### 5.2 Interpretation of the excess two-way cost
 
-Normalization of longitudinal extent restores directional consistency of material geometry in physical space, but it does not restore the stationary two-way interaction cost. A moving system therefore remains dynamically distinguished from a stationary one at the level of total two-way photonic interaction time.
+Normalization of longitudinal extent restores directional consistency of material geometry within local geometry, but it does not restore the stationary two-way interaction cost. A moving system therefore remains dynamically distinguished from a stationary one at the level of total two-way photonic interaction time.
 
-If stable material processes in physical space are constrained by repeated two-way propagation through connection space, then an increase in round-trip interaction cost by the factor $\gamma(v)$ implies a corresponding dilation of the characteristic timing of the moving system. In the present framework, this is the timing counterpart to longitudinal contraction: $\lambda(v)$ governs the normalized longitudinal extent required for directional consistency, while $\gamma(v)$ governs the enlarged total two-way interaction cost that remains after that normalization has been imposed.
+If stable material processes in local geometry are constrained by repeated two-way propagation through the transport structure, then an increase in round-trip interaction cost by the factor $\gamma(v)$ implies a corresponding dilation of the characteristic timing of the moving system. In the present framework, this is the timing counterpart to longitudinal contraction: $\lambda(v)$ governs the normalized longitudinal extent required for directional consistency, while $\gamma(v)$ governs the enlarged total two-way interaction cost that remains after that normalization has been imposed.
 
 The moving system is therefore characterized by both a normalized longitudinal extent reduced by $\lambda(v)$ and a total two-way interaction cost enlarged by $\gamma(v)$. These are not independent insertions. They are paired consequences of the same propagation geometry.
 
@@ -618,7 +618,9 @@ Within the limited scope of the present paper, the main result is therefore that
 
 This paper has examined the part of the light-propagation framework that overlaps most directly with the familiar domain of special relativity. Within that restricted scope, the analysis recovers in form the standard contraction factor, the standard timing factor, and the standard one-dimensional Lorentz transformation, while also presenting signal transfer in staged form and briefly noting the structure of non-collinear composition through proper-velocity endpoint composition and a transport-induced rotational remainder. Taken together, these results show that the propagation-based construction remains consistent with the special-relativistic sector addressed here while deriving its familiar structures from different starting assumptions.
 
-That point is important, but it is also limited. The aim of the paper is not to argue that the broader construction should be identified with the Lorentz framework once this overlap has been shown. On the contrary, the Lorentz transformation appears here as one recovered structure inside a larger propagation-based organization. It is significant within the restricted regime treated in this paper, but it does not define the full scope, method, or intended development of the framework. The present analysis therefore establishes compatibility at a specific level, not reduction of the broader construction to the standard formalism.
+A useful consequence of this staged propagation treatment is the Michelson--Morley result. In the older longitudinal account, the round-trip expression $L/(c-v)+L/(c+v)$ together with longitudinal normalization is enough to remove the arm-time disparity, but by itself it does not yet address the absence of the directional beam divergence that would otherwise be expected for a moving apparatus. In the present framework, that remaining point is handled by the same staged signal structure developed here: propagation delay and the corresponding directional update are treated together rather than as unrelated corrections. The scalar aberration relation is therefore not an optional later add-on, but part of the observer-side reconstruction of the received signal state. On that basis, the Michelson--Morley outcome is not merely repaired after the fact. Within the present construction, a null result is the expected result of a co-moving apparatus, because both the two-way interaction cost and the received directional state are already organized by the same propagation-based structure.
+
+That point is important, but it is also limited. The aim of the paper is not to argue that the broader construction should be identified with the Lorentz framework once this overlap has been shown. On the contrary, the Lorentz transformation appears here as one recovered structure inside a larger propagation-and-transport organization. It is significant within the restricted regime treated in this paper, but it does not define the full scope, method, or intended development of the framework. The present analysis therefore establishes compatibility at a specific level, not reduction of the broader construction to the standard formalism.
 
 This is why the scope of the paper has been kept intentionally narrow. Its purpose is to establish the special-relativistic side of the program first: to show that contraction, timing, moving-frame mapping, a brief proper-velocity description of endpoint speed composition, the transport-induced rotational remainder associated with non-collinear composition, and the corresponding signal-transfer relations can be recovered in form from a common propagation-based starting point. That is a necessary step, because without it the broader framework would remain disconnected from the best-known relativistic results. But it is only a first step. The wider landscape to which this construction belongs is not developed here, and further work will be needed to show how that larger structure should be understood on its own terms.
 
@@ -642,7 +644,7 @@ $$
 
 The solved one-way propagation equation is written in the positive emission-to-observation form. The Past Light Cone interpretation is obtained relative to the observation event and therefore belongs naturally to the negative-side relation.
 
-A positive velocity $v>0$ denotes motion in the $+x$ direction relative to connection space. Unless otherwise stated, the moving-frame mapping is written in the standard passive sign convention of Eq. (6.9).
+A positive velocity $v>0$ denotes motion in the $+x$ direction relative to the transport structure. Unless otherwise stated, the moving-frame mapping is written in the standard passive sign convention of Eq. (6.9).
 
 Changing the sign of $v$, or switching between forward propagation and backward event reconstruction, reverses the signs of the mixed $x$-$t$ terms without changing the underlying geometry.
 
