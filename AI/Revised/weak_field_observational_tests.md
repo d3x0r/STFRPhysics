@@ -233,25 +233,47 @@ A numerical consistency check using a nine-body simulation of the inner solar sy
 
 ## 6. Light Deflection and the PPN \(\gamma\) Parameter
 
-### 6.1 Light deflection in the displacement geometry
+### 6.1 Light deflection from realized propagation cost
 
-In this framework, light propagates along straight paths through the transport structure at speed \(C\). The displacement field \(D(r,d)=\sqrt{r^2+d^2}/r\) maps those straight transport-level paths into curved trajectories in the coordinate description. All light passing through a displacement field is affected — including light from the displacing mass itself.
+The earlier straight-in-connection-space picture requires one correction. If a horizontal straight line in connection space is mapped back to displaced coordinates through \(D(r,d)=\sqrt{r^2+d^2}/r\), the result is a symmetric arch: the path bulges near closest approach but returns to the same asymptotic direction at infinity. The displacement mapping by itself therefore gives no net far-field deflection. What it captures is the spatial deformation of the medium, not yet the realized ray. The observable light path must instead be obtained from a stationary-cost principle.
 
-A ray from the surface of a mass star must traverse the star's own displacement field to reach a distant observer. Because the field compresses the transport radially and stretches it tangentially, limb rays are deflected inward toward the radial direction. The mass star therefore appears smaller than its physical surface: its apparent angular size is reduced by the displacement. For a surface at displaced coordinate radius \(R\) around a source with displacement scale \(d\), the apparent angular size is set by the undisplaced impact parameter \(\sqrt{R^2-d^2}\) rather than by \(R\) itself. When \(d\) is small compared to \(R\), the reduction is slight. When \(d\) approaches \(R\) — the regime of compact objects — the apparent disc can be substantially smaller than the physical surface.
-
-Background sources seen through the same displacement field are deflected in the opposite sense. A ray from a distant star passing the mass at impact parameter \(b\) in the undisplaced description is bent toward the axis, arriving at the observer from an angle displaced outward from the source's true position. The innermost lensed background image appears at the same angle as the apparent limb of the mass star — the two meet without a gap.
-
-For a background source at large impact parameter (\(b\gg d\)), the total deflection reduces to
+The relevant quantity for an actual light ray is the **realized propagation cost** through the displaced medium. In weak field, the cumulative displacement is
 
 \[
-\theta=\frac{2d^2}{b}=\frac{4GM}{bC^2},
+\Sigma(r)=\frac{d^2}{2r}=\frac{GM}{C^2 r}.
 \]
 
-using the mass-displacement relation \(d^2=2GM/C^2\). This is the standard general-relativistic result recovered as the far-field limit of the displacement geometry. For the Sun's limb (\(b=R_\odot\gg d_\odot\)), it yields \(1.75\) arcsec. Modern VLBI measurements confirm this to within \(0.05\%\).
+A purely timing-side treatment would assign an index \(n(r)=1+\Sigma(r)\) and recover only the Soldner/Newtonian half-deflection. In the present framework, however, the gravitational modification is Type G: both \(\varepsilon_0\) and \(\mu_0\) scale together. That produces two equal burdens along the path. First, the propagation rate is reduced by the local timing burden, giving a factor \((1+\Sigma)\). Second, the same displacement stretches the traversed transport medium, giving an equal spatial burden \((1+\Sigma)\). The realized cost per coordinate length is therefore
 
-The factor of \(4\) (rather than \(2\)) reflects two contributions of equal magnitude, each giving \(2GM/(bC^2)\). The displacement field affects the light path on both sides of the lens plane: the observer's own light cone is curved by the near-side displacement, and the source's light is curved by the far-side displacement. Both halves contribute because the displacement extends in all directions from the source, not only in the region nearest closest approach. The equality of the two contributions follows from the symmetric modification of \(\varepsilon_0\) and \(\mu_0\) by the displacement field, which is also the structural origin of \(\gamma=1\) (Section 6.2). A full analytic derivation of the factor of \(4\) from the displacement coordinate transform — properly accounting for how the observer measures angles through the near-side displacement — is a point of ongoing clarification within the framework.
+\[
+n_{\mathrm{eff}}(r)=(1+\Sigma(r))^2 \approx 1+2\Sigma(r)=1+\frac{d^2}{r}.
+\]
 
-For precise alignment of observer, mass, and background source, the displacement geometry produces an Einstein ring at angular radius \(\theta_E=\sqrt{4GM\,D_{ls}/(C^2\,D_l\,D_s)}\), where \(D_l\), \(D_s\), and \(D_{ls}\) are the observer-lens, observer-source, and lens-source distances. For offset sources, the ring breaks into arcs or split images — the same phenomenology as standard gravitational lensing, derived entirely from straight-line propagation through the displaced transport structure.
+Light deflection is then the Fermat/Huygens result for the path that minimizes
+
+\[
+\int n_{\mathrm{eff}}(r)\,ds,
+\]
+
+not the image of a straight coordinate remap. For a background source at large impact parameter \(b\gg d\),
+
+\[
+\theta=\int \frac{\partial n_{\mathrm{eff}}}{\partial b}\,dx=\frac{2d^2}{b}=\frac{4GM}{bC^2},
+\]
+
+using \(d^2=2GM/C^2\). This is the standard GR weak-field result. For the Sun's limb \((b=R_\odot)\), it yields \(1.75\) arcsec, in agreement with modern VLBI constraints.
+
+The factor of \(4\) is therefore most cleanly read as two separate factors of \(2\). One comes from the mass-displacement relation \(d^2=2GM/C^2\). The other comes from the realized cost itself: \(n_{\mathrm{eff}}=(1+\Sigma)^2\) contains one \((1+\Sigma)\) from the time cost and one \((1+\Sigma)\) from the space cost. This gives the same structural conclusion as the earlier symmetric \(\varepsilon_0/\mu_0\) argument, but now through a direct variational derivation rather than through the coordinate transform alone.
+
+This correction also changes the interpretation of self-lensing. Under the stationary-cost ray picture, limb rays from the mass star curve toward the mass rather than away from it, so the apparent disc is not reduced by the earlier CS-straight construction. The present weak-field paper does not attempt a full compact-object apparent-radius analysis, but the relevant optical statement is now clear: the realized ray is the least-action path in the displaced medium.
+
+For precise alignment of observer, mass, and background source, the same realized-cost optics produces the usual Einstein ring
+
+\[
+\theta_E=\sqrt{\frac{4GM\,D_{ls}}{C^2\,D_l\,D_s}},
+\]
+
+where \(D_l\), \(D_s\), and \(D_{ls}\) are the observer-lens, observer-source, and lens-source distances. For offset sources, the ring breaks into arcs or split images in the standard way. The phenomenology is therefore unchanged; what changes is the mechanism assigned to the realized ray.
 
 ### 6.2 The PPN \(\gamma\) parameter
 
