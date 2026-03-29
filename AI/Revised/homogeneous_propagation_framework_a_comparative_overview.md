@@ -271,21 +271,108 @@ The strongest present statement is therefore also the most disciplined one: the 
 
 The purpose here is clarification of the framework's present state. It does not supersede the technical derivations in the companion papers, but states how they should presently be read together.
 
-## Appendix A. Michelson-Morley, Transmission Aberration, and Why the Framework Is Not Simple Lorentzian Aether
+## Appendix A. Why a Null Interferometer Result Is Expected
 
-A likely objection to any framework with a preferred underlying transport structure is that it sounds like a return to Lorentzian aether. If that were all the present framework amounted to, then the obvious historical objection would follow immediately: simple emission through a preferred medium should generically expose absolute motion through Michelson-Morley-type optical tests. That objection matters and should be addressed directly.
+A common objection to any medium-based propagation picture is that a preferred propagation layer should have been directly visible in Michelson-Morley-type interferometer experiments. In the present framework, however, that expectation is misplaced. The null result is not contrary to the framework. It is what follows once the interferometer is treated as a moving material system built from the same single-speed medium whose propagation it is probing.
 
-The distinction advanced here is that the present framework does not treat optical propagation as a one-sided effect in which only the receiving frame contributes the relevant aberrational response. Instead, the broader propagation program treats directional effects as entering through both transmission and reception. In the present language, the emitted propagation direction is not independent of the state of the transmitting system, and the received direction is not independent of the state of the receiving system. That two-sided structure is what separates the framework from a naive Lorentzian-aether reading.
+The reason is that the interferometer is not composed of rigid objects and independently postulated clock behavior laid down in advance of the propagation analysis. Its arm geometry, internal signal directions, and realized timing all arise from the same propagation-based structure. Four elements belong together.
 
-The Michelson-Morley issue can be stated at a high level as follows. In a simple preferred-medium picture, one expects an arm aligned with the absolute-motion direction to incur a different optical cost from an arm transverse to it, producing a second-order fringe shift under rotation. Standard Lorentzian rescue arguments then rely on compensating contraction and timing effects to suppress the observable difference. The present framework proposes a different route. Because propagation direction is treated as conditioned by the transmitting structure as well as by the receiving structure, the optical path comparison is not the same as in a one-sided ballistic or one-sided medium model. The relevant directional normalization already enters at launch, not only at detection.
+First, the arm geometry of a moving apparatus is normalized longitudinally by the recovered contraction factor
 
-This matters even in the near-frame or small-separation case. If absolute motion is present, then a purely reception-only aberration picture still leaves an asymmetry in how the launched beam samples the longitudinal and transverse arms. By contrast, if transmission already carries the corresponding directional adjustment, then the outbound and return geometry are altered before the final reception event is considered. In that case the Michelson-Morley null result is no longer being explained by the same mechanism usually associated with simple Lorentzian aether.
+$$
+\lambda(\beta)=\sqrt{1-\beta^2},
+\qquad
+\beta=\frac{|\vec{v}|}{c}.
+$$
 
-The purpose of the present appendix is not to claim that the full Michelson-Morley derivation has been completed here in historical detail. Rather, it is to mark the exact conceptual difference that Section 3.1 depends on. The present framework is not merely saying that matter contracts in a preferred frame and therefore hides the aether. It is saying that the propagation map itself is different because both emission and reception are medium-conditioned processes. That is a materially different claim.
+If $\vec r$ is a frame-fixed arm offset and $\hat v$ is the drift direction, then
 
-Accordingly, the correct comparison is not between the present framework and a textbook caricature of aether theory, but between two different propagation models: one in which the optical effect is effectively one-sided, and one in which directional structure is built into both ends of the exchange. If the latter is the correct description, then Michelson-Morley no longer functions as a simple argument that any preferred underlying structure must reduce to the historically rejected form.
+$$
+\vec r=\vec r_\perp+\vec r_\parallel,
+\qquad
+\mathcal C(\vec r)=\vec r_\perp+\lambda\,\vec r_\parallel.
+$$
 
-For present purposes, that point is sufficient. The role of the appendix is to keep the reader from collapsing the framework into the phrase "Lorentzian aether" without noticing that the optical mechanism being proposed is different at the level of propagation itself.
+Thus the interferometer's optical elements are not placed at the same coordinate offsets they would have at rest. Their longitudinal separations are reduced by the same normalization already recovered from the two-way interaction-cost structure of moving material systems. [1]
+
+Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. In the planar form used here, let
+
+$$
+\Delta\vec x = \vec x-\vec x_O,
+\qquad
+c_\theta = \frac{\Delta\vec x\cdot\vec v}{\|\Delta\vec x\|\,\|\vec v\|},
+\qquad
+c_\times = \bigl(\Delta\vec x\times \vec v\bigr)_z.
+$$
+
+The signed aberrated angle may then be written
+
+$$
+\theta_{\rm ab} = -\operatorname{sgn}(c_\times)\,\arccos\!\left(\frac{c_\theta+\beta}{1+\beta c_\theta}\right).
+$$
+
+Here $c_\theta$ carries the cosine information from the local arm direction relative to the drift velocity, while $c_\times$ restores the side-of-line sign lost by the arccosine. Length contraction does not itself alter the aberration formula. Rather, contraction changes the apparatus geometry, while aberration changes the propagation direction needed to reach the moving optical element.
+
+Third, the ray-segment lengths are not imposed directly from the arm offsets. They are obtained from the solved propagation delay. Each leg is determined by the native one-way propagation condition
+
+$$
+\bigl\|\vec x_{\rm target}(t_{n+1})-\vec x_{\rm source}(t_n)\bigr\|=
+c\,(t_{n+1}-t_n).
+$$
+
+Operationally, each next event time is solved from the moving source and moving target geometry, and the realized segment length is then
+
+$$
+\ell_n = c\,(t_{n+1}-t_n).
+$$
+
+So the contracted arm offset specifies where the next optical element belongs in the moving device, but the actual leg length is fixed by the solved propagation delay. [1]
+
+Fourth, if the comparison is made in the apparatus's own realized time rather than coordinate propagation time, then the local clock interval is
+
+$$
+\Delta\tau = \lambda(\beta)\,\Delta t.
+$$
+
+These ingredients are enough to construct the interferometer path. Let the frame-fixed arm offsets from the splitter be $(0,\pm L)$ and $(\pm L,0)$. For each leg, the next optical element is represented by the contracted offset $\mathcal C(\vec r_{\rm target})$. The ray is launched along the corresponding aberrated direction $\hat e_{\rm leg}$, and after solving the propagation delay, the photon keyframe advances according to
+
+$$
+\vec K_{n+1} = \vec K_n+c\,(t_{n+1}-t_n)\,\hat e_{\rm leg}.
+$$
+
+The same rule is used for every leg of both arms.
+
+What matters for interference is the full two-way cost from splitter to mirror and back, not the one-way segment in isolation. If
+
+$$
+T_{\rm vert}^{(2)} = (t_2-t_1)+(t_3-t_2),
+\qquad
+T_{\rm horiz}^{(2)} = (t_2^{L}-t_1)+(t_3^{L}-t_2^{L}),
+$$
+
+then within this construction the recombined paths satisfy
+
+$$
+T_{\rm vert}^{(2)} = T_{\rm horiz}^{(2)}.
+$$
+
+That equality is the null result. It is not obtained by declaring the medium observationally inaccessible as an axiom. It is obtained because the moving interferometer, the light propagating within it, and the clock structure used to interpret it are all governed by one common propagation-based organization.
+
+If the comparison is instead made in the apparatus's own realized time, the conclusion is unchanged:
+
+$$
+\tau_{\rm vert}^{(2)} = \lambda\,T_{\rm vert}^{(2)},
+\qquad
+\tau_{\rm horiz}^{(2)} = \lambda\,T_{\rm horiz}^{(2)}.
+$$
+
+Since the coordinate two-way costs are equal, the local two-way costs are equal as well:
+
+$$
+\tau_{\rm vert}^{(2)} = \tau_{\rm horiz}^{(2)}.
+$$
+
+The interpretive point is therefore simple. In this framework, a null interferometer result is expected not because no propagation medium exists, but because the interferometer is itself constituted from the same single-speed medium. Its rods, clocks, and internal signal paths co-adjust to uniform motion through that layer. The null result is therefore not evidence against an underlying propagation medium; it is evidence that a medium-constituted optical device cannot use its own internal two-way optical structure to reveal its uniform motion through the medium. That is one concrete sense in which Lorentz-type observational structure is emergent here rather than primitive. [2]
 
 ## Appendix B. Circular-Orbit Integration as a Case Study
 
