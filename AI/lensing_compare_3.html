@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#0a0e14;color:#c5cdd9;padding:10px}
+h1{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#e8ecf1}
+.sub{font-size:11px;color:#6b7a8d;margin-bottom:8px}
+.cols{display:flex;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.cp{background:#12181f;border:1px solid #1e2a36;border-radius:6px;padding:8px 10px;flex:1;min-width:210px}
+.cp h3{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#7eb8da;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.r{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.r label{font-size:11px;color:#6b7a8d;width:105px;flex-shrink:0}
+.r input[type=range]{flex:1;accent-color:#3d8cb5;height:3px}
+.r .v{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8fa4b8;width:42px;text-align:right}
+.chk{display:flex;align-items:center;gap:4px;margin:2px 0;font-size:11px;color:#8fa4b8;cursor:pointer}
+.chk input{accent-color:#3d8cb5}
+canvas{display:block;width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid #1e2a36;background:#0d1117}
+.info{background:#12181f;border:1px solid #1e2a36;border-radius:6px;padding:8px 10px;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.5;color:#8fa4b8;white-space:pre-wrap}
+</style></head><body>
+<h1>Comparative Lensing Paths</h1>
+<div class="sub">Source → observer. Limb rays traced under both CS-straight and (1+Σ)² Fermat models.</div>
+<div class="cols">
+<div class="cp"><h3>Geometry</h3>
+<div class="r"><label>displacement d</label><input type="range" id="sl_d" min="0.02" max="1.2" step="0.005" value="0.660"><span class="v" id="vd"></span></div>
+<div class="r"><label>star radius</label><input type="range" id="sl_mR" min="0.02" max="1.5" step="0.01" value="0.19"><span class="v" id="vmR"></span></div>
+<div class="r"><label>observer dist</label><input type="range" id="sl_obs" min="2" max="15" step="0.1" value="6.2"><span class="v" id="vobs"></span></div>
+<div class="r"><label>source dist</label><input type="range" id="sl_src" min="1" max="15" step="0.1" value="3.4"><span class="v" id="vsrc"></span></div>
+<div class="r"><label>source offset Y</label><input type="range" id="sl_srcY" min="-2.5" max="2.5" step="0.01" value="1.42"><span class="v" id="vsrcY"></span></div>
+</div>
+<div class="cp"><h3>Show</h3>
+<label class="chk"><input type="checkbox" id="chk_stfr" checked> STFR v33 (CS straight)</label>
+<label class="chk"><input type="checkbox" id="chk_stfr_la" checked> STFR (1+Σ)² least-action</label>
+<label class="chk"><input type="checkbox" id="chk_gr"> GR full (same as (1+Σ)²)</label>
+<label class="chk"><input type="checkbox" id="chk_half"> Σ-only (half)</label>
+<label class="chk"><input type="checkbox" id="chk_flat" checked> Flat</label>
+<label class="chk"><input type="checkbox" id="chk_limb_cs" checked> Limb rays (CS straight)</label>
+<label class="chk"><input type="checkbox" id="chk_limb_la" checked> Limb rays ((1+Σ)² Fermat)</label>
+</div></div>
+<canvas id="cv"></canvas>
+<div class="info" id="info"></div>
+<script>
+var PI=Math.PI;
+function dp(x,y,d2){var r2=x*x+y*y;if(r2<1e-20)return[0,0];var f=Math.sqrt(1+d2/r2);return[x*f,y*f];}
+function udp(x,y,d2){var r2=x*x+y*y;if(r2<=d2)return null;var f=Math.sqrt(1-d2/r2);return[x*f,y*f];}
+
+function stfrTrace(obsX,d2,ang,N,tMax){
+  var u=udp(obsX,0,d2);if(!u)return null;
+  var vx=Math.cos(ang),vy=Math.sin(ang),dpts=[],cpts=[];
+  for(var i=0;i<=N;i++){var t=i/N*tMax;var cx=u[0]+t*vx,cy=u[1]+t*vy;
+    cpts.push([cx,cy]);dpts.push(dp(cx,cy,d2));}
+  return{d:dpts,c:cpts};
+}
+
+// Fermat ray from any starting point at given initial direction
+// factor=1: n=1+Σ, factor=2: n=1+2Σ=(1+Σ)²
+function fermatFrom(sx,sy,vx,vy,d2,xEnd,surfR,factor,maxSteps){
+  var x=sx,y=sy;
+  var pts=[[x,y]];
+  var dir=xEnd>sx?1:-1;
+  for(var s=0;s<(maxSteps||100000);s++){
+    var r=Math.sqrt(x*x+y*y);if(r<surfR*0.3)break;
+    var da=Math.min(0.012,Math.max(0.0004,r*0.01));
+    var r3=r*r*r;if(r3<1e-8)r3=1e-8;
+    vy+=-factor*d2*y/(2*r3)*da;
+    vx+=-factor*d2*x/(2*r3)*da; // also deflect x component toward mass
+    // renormalize direction (keep speed=1)
+    var vl=Math.sqrt(vx*vx+vy*vy);vx/=vl;vy/=vl;
+    x+=vx*da;y+=vy*da;pts.push([x,y]);
+    if(dir>0&&x>xEnd*1.05)break;
+    if(dir<0&&x<xEnd*1.05)break;
+  }
+  return pts;
+}
+
+// Fermat ray from observer heading toward source (mostly -x)
+function fermatFromObs(obsX,elev,d2,srcX,surfR,factor){
+  return fermatFrom(obsX,0,-Math.cos(elev),Math.sin(elev),d2,srcX,surfR,factor);
+}
+
+function crossY(pts,tx){
+  for(var j=1;j<pts.length;j++){if((pts[j-1][0]-tx)*(pts[j][0]-tx)<=0){
+    var f=(tx-pts[j-1][0])/(pts[j][0]-pts[j-1][0]);return pts[j-1][1]+f*(pts[j][1]-pts[j-1][1]);}}return null;}
+
+function findSTFR(obsX,d2,srcX,srcY,surfR,tMax){
+  var side=srcY>=0?1:-1;var best=null,bestD=1e10;
+  for(var i=0;i<=1500;i++){var a=PI-1.0+i/1500*2.0;
+    var tr=stfrTrace(obsX,d2,a,500,tMax);if(!tr)continue;
+    var ly=crossY(tr.d,0);if(ly===null||Math.abs(ly)<surfR*0.95||ly*side<0)continue;
+    var sy=crossY(tr.d,srcX);if(sy===null)continue;
+    if(Math.abs(sy-srcY)<bestD){bestD=Math.abs(sy-srcY);best=a;}}
+  if(!best)return null;
+  for(var it=0;it<5;it++){var w=2.0/1500;var lo=best-w*25,hi=best+w*25;
+    for(var i=0;i<=250;i++){var a=lo+i/250*(hi-lo);
+      var tr=stfrTrace(obsX,d2,a,500,tMax);if(!tr)continue;
+      var ly=crossY(tr.d,0);if(ly===null||Math.abs(ly)<surfR*0.95||ly*side<0)continue;
+      var sy=crossY(tr.d,srcX);if(sy===null)continue;
+      if(Math.abs(sy-srcY)<bestD){bestD=Math.abs(sy-srcY);best=a;}}}
+  return best;
+}
+
+function findFermat(obsX,d2,srcX,srcY,surfR,factor){
+  var side=srcY>=0?1:-1;var best=null,bestD=1e10;
+  for(var i=0;i<=1200;i++){var e=-0.3+i/1200*1.3;
+    var pts=fermatFromObs(obsX,e,d2,srcX,surfR,factor);
+    var ly=crossY(pts,0);if(ly===null||Math.abs(ly)<surfR*0.9||ly*side<0)continue;
+    var sy=crossY(pts,srcX);if(sy===null)continue;
+    if(Math.abs(sy-srcY)<bestD){bestD=Math.abs(sy-srcY);best=e;}}
+  if(!best)return null;
+  for(var it=0;it<5;it++){var w=1.3/1200;var lo=best-w*20,hi=best+w*20;
+    for(var i=0;i<=250;i++){var e=lo+i/250*(hi-lo);
+      var pts=fermatFromObs(obsX,e,d2,srcX,surfR,factor);
+      var ly=crossY(pts,0);if(ly===null||Math.abs(ly)<surfR*0.9||ly*side<0)continue;
+      var sy=crossY(pts,srcX);if(sy===null)continue;
+      if(Math.abs(sy-srcY)<bestD){bestD=Math.abs(sy-srcY);best=e;}}}
+  return best;
+}
+
+// Trace limb rays from mass surface to observer
+// mode='cs': straight in connection space (v33)
+// mode='fermat': Fermat with n=(1+Σ)² (factor=2)
+function traceLimbs(obsX,d2,surfR,n,mode){
+  var limbs=[];
+  for(var i=0;i<n;i++){
+    var phi=-PI/2+PI*i/(n-1);
+    var lx=surfR*Math.cos(phi),ly=surfR*Math.sin(phi);
+    if(lx<-0.05)continue;
+    
+    var pts,elev;
+    if(mode==='cs'){
+      var ul=udp(lx,ly,d2);if(!ul)continue;
+      var dx=obsX-ul[0],dy=-ul[1],len=Math.sqrt(dx*dx+dy*dy);if(len<1e-8)continue;
+      var vx=dx/len,vy=dy/len;pts=[];
+      for(var j=0;j<=200;j++){var t=j/200*len*1.1;pts.push(dp(ul[0]+t*vx,ul[1]+t*vy,d2));}
+    } else {
+      // Fermat from surface toward observer
+      var dx=obsX-lx,dy=-ly;
+      var len=Math.sqrt(dx*dx+dy*dy);
+      pts=fermatFrom(lx,ly,dx/len,dy/len,d2,obsX,surfR*0.8,2,80000);
+    }
+    
+    // find arrival elevation at observer
+    var foundElev=null;
+    for(var j=1;j<pts.length;j++){
+      if((pts[j-1][0]-obsX)*(pts[j][0]-obsX)<=0){
+        var ddx=pts[j][0]-pts[j-1][0],ddy=pts[j][1]-pts[j-1][1];
+        var dl=Math.sqrt(ddx*ddx+ddy*ddy);
+        if(dl>0) foundElev=Math.asin(Math.max(-1,Math.min(1,-ddy/dl)));
+        break;
+      }
+    }
+    if(foundElev===null&&pts.length>1){
+      // use last segment
+      var l1=pts[pts.length-1],l2=pts[pts.length-2];
+      var ddx=l1[0]-l2[0],ddy=l1[1]-l2[1],dl=Math.sqrt(ddx*ddx+ddy*ddy);
+      if(dl>0)foundElev=Math.asin(Math.max(-1,Math.min(1,-ddy/dl)));
+    }
+    limbs.push({pts:pts,elev:foundElev||0,key:i===0||i===n-1});
+  }
+  return limbs;
+}
+
+function drawP(g,pts,SX,SY,xLo,xHi,col,w,dash){
+  g.strokeStyle=col;g.lineWidth=w;if(dash)g.setLineDash(dash);
+  g.beginPath();var s=false;
+  for(var j=0;j<pts.length;j++){if(pts[j][0]<xLo||pts[j][0]>xHi)continue;
+    var px=SX(pts[j][0]),py=SY(pts[j][1]);
+    if(!s){g.moveTo(px,py);s=true;}else g.lineTo(px,py);}
+  if(s)g.stroke();if(dash)g.setLineDash([]);}
+
+function U(){
+  var d=+document.getElementById('sl_d').value,mR=+document.getElementById('sl_mR').value;
+  var obs=+document.getElementById('sl_obs').value,src=+document.getElementById('sl_src').value;
+  var srcY=+document.getElementById('sl_srcY').value;
+  document.getElementById('vd').textContent=d.toFixed(3);
+  document.getElementById('vmR').textContent=mR.toFixed(2);
+  document.getElementById('vobs').textContent=obs.toFixed(1);
+  document.getElementById('vsrc').textContent=src.toFixed(1);
+  document.getElementById('vsrcY').textContent=srcY.toFixed(2);
+  var d2=d*d,surfR=d+mR,srcX=-src,tMax=obs+src+3;
+  var appR=Math.sqrt(Math.max(surfR*surfR-d2,0.001));
+
+  var cv=document.getElementById('cv');
+  var rect=cv.getBoundingClientRect();
+  var dpr=window.devicePixelRatio||1;
+  var W=rect.width,H=rect.height;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  var g=cv.getContext('2d');g.scale(dpr,dpr);
+
+  var pad=W*0.04;
+  var xMin=srcX*1.15,xMax=obs*1.15;
+  var yAuto=Math.max(surfR*3,Math.abs(srcY)*1.8,1.5);
+  var scX=(W-2*pad)/(xMax-xMin),scY=(H-2*pad)/(yAuto*2);
+  var sc=Math.min(scX,scY);
+  var cxc=pad+(W-2*pad)/2,cyc=pad+(H-2*pad)/2;
+  var ox=cxc-(xMin+xMax)/2*sc;
+  var SX=function(x){return ox+x*sc;};
+  var SY=function(y){return cyc-y*sc;};
+
+  g.fillStyle='#0d1117';g.fillRect(0,0,W,H);
+  g.strokeStyle='rgba(255,255,255,0.025)';g.lineWidth=0.5;
+  for(var gx=Math.ceil(xMin);gx<=Math.floor(xMax);gx++){var px=SX(gx);if(px>pad&&px<W-pad){g.beginPath();g.moveTo(px,pad);g.lineTo(px,H-pad);g.stroke();}}
+  g.strokeStyle='rgba(255,255,255,0.04)';g.beginPath();g.moveTo(pad,SY(0));g.lineTo(W-pad,SY(0));g.stroke();
+
+  // mass surface
+  var mRpx=surfR*sc;
+  g.beginPath();g.arc(SX(0),SY(0),mRpx,0,PI*2);
+  g.fillStyle='rgba(224,112,48,0.07)';g.fill();
+  g.strokeStyle='rgba(224,112,48,0.4)';g.lineWidth=1.5;g.stroke();
+
+  // apparent limb (CS)
+  if(document.getElementById('chk_limb_cs').checked){
+    g.beginPath();g.arc(SX(0),SY(0),appR*sc,0,PI*2);
+    g.strokeStyle='rgba(224,112,48,0.15)';g.lineWidth=1;g.setLineDash([3,3]);g.stroke();g.setLineDash([]);
+  }
+
+  var physLimb=Math.atan2(surfR,obs);
+  var flatAng=Math.atan2(srcY,obs+src);
+
+  // CS limb rays
+  var csLimbs=[],csLimbMax=0;
+  if(document.getElementById('chk_limb_cs').checked){
+    csLimbs=traceLimbs(obs,d2,surfR,20,'cs');
+    var el=csLimbs.map(function(l){return l.elev;});
+    if(el.length)csLimbMax=Math.max.apply(null,el);
+    csLimbs.forEach(function(lr){
+      drawP(g,lr.pts,SX,SY,srcX*1.2,obs*1.02,lr.key?'rgba(210,70,30,0.45)':'rgba(210,70,30,0.06)',lr.key?1.2:0.4);
+    });
+  }
+
+  // Fermat limb rays
+  var laLimbs=[],laLimbMax=0;
+  if(document.getElementById('chk_limb_la').checked){
+    laLimbs=traceLimbs(obs,d2,surfR,20,'fermat');
+    var el=laLimbs.map(function(l){return l.elev;});
+    if(el.length)laLimbMax=Math.max.apply(null,el);
+    laLimbs.forEach(function(lr){
+      drawP(g,lr.pts,SX,SY,-surfR*0.5,obs*1.02,lr.key?'rgba(180,120,255,0.45)':'rgba(180,120,255,0.06)',lr.key?1.2:0.4);
+    });
+  }
+
+  // flat
+  if(document.getElementById('chk_flat').checked){
+    g.strokeStyle='rgba(93,190,122,0.45)';g.lineWidth=1.5;
+    g.beginPath();g.moveTo(SX(srcX),SY(srcY));g.lineTo(SX(obs),SY(0));g.stroke();
+  }
+
+  // STFR v33
+  var stfrElev=null;
+  if(document.getElementById('chk_stfr').checked){
+    var sa=findSTFR(obs,d2,srcX,srcY,surfR,tMax);
+    if(sa!==null){stfrElev=PI-sa;
+      drawP(g,stfrTrace(obs,d2,sa,800,tMax).d,SX,SY,srcX*1.1,obs*1.01,'rgba(96,160,224,0.7)',2);
+    }
+  }
+
+  // STFR (1+Σ)²
+  var laElev=null;
+  if(document.getElementById('chk_stfr_la').checked){
+    laElev=findFermat(obs,d2,srcX,srcY,surfR,2);
+    if(laElev!==null){
+      drawP(g,fermatFromObs(obs,laElev,d2,srcX,surfR,2),SX,SY,srcX*1.1,obs*1.01,'rgba(180,120,255,0.85)',2.5);
+    }
+  }
+
+  // GR (dashed, same math as (1+Σ)²)
+  var grElev=null;
+  if(document.getElementById('chk_gr').checked){
+    grElev=findFermat(obs,d2,srcX,srcY,surfR,2);
+    if(grElev!==null){
+      drawP(g,fermatFromObs(obs,grElev,d2,srcX,surfR,2),SX,SY,srcX*1.1,obs*1.01,'rgba(224,64,64,0.5)',1.5,[4,3]);
+    }
+  }
+
+  // Σ-only half
+  var halfElev=null;
+  if(document.getElementById('chk_half').checked){
+    halfElev=findFermat(obs,d2,srcX,srcY,surfR,1);
+    if(halfElev!==null){
+      drawP(g,fermatFromObs(obs,halfElev,d2,srcX,surfR,1),SX,SY,srcX*1.1,obs*1.01,'rgba(208,144,64,0.5)',1.5);
+    }
+  }
+
+  // markers
+  g.beginPath();g.arc(SX(obs),SY(0),5,0,PI*2);g.fillStyle='rgba(90,160,220,0.9)';g.fill();
+  g.beginPath();g.arc(SX(srcX),SY(srcY),5,0,PI*2);g.fillStyle='rgba(255,200,60,0.8)';g.fill();
+  g.strokeStyle='rgba(255,200,60,0.3)';g.lineWidth=1;g.stroke();
+
+  var fs=Math.max(9,W*0.013);
+  g.font=fs+'px IBM Plex Sans';
+  g.fillStyle='rgba(90,160,220,0.6)';g.fillText('observer',SX(obs)+8,SY(0)-6);
+  g.fillStyle='rgba(255,200,60,0.6)';g.fillText('source',SX(srcX)+8,SY(srcY)-8);
+
+  // ── OBSERVER INSET ──
+  var inW=W*0.26,inH=H*0.45;
+  var inX=W*0.015,inY=H-inH-H*0.015;
+  g.fillStyle='rgba(10,14,20,0.94)';g.fillRect(inX,inY,inW,inH);
+  g.strokeStyle='rgba(255,255,255,0.07)';g.lineWidth=1;g.strokeRect(inX,inY,inW,inH);
+  var ifs=Math.max(8,W*0.011);
+  g.fillStyle='rgba(255,255,255,0.2)';g.font=ifs+'px IBM Plex Mono';
+  g.fillText("observer's view",inX+inW*0.03,inY+ifs+3);
+
+  var inCX=inX+inW*0.4,inCY=inY+inH*0.5;
+  var allAng=[flatAng,physLimb];
+  if(stfrElev!==null)allAng.push(stfrElev);
+  if(laElev!==null)allAng.push(laElev);
+  if(halfElev!==null)allAng.push(halfElev);
+  if(csLimbMax>0)allAng.push(csLimbMax);
+  if(laLimbMax>0)allAng.push(laLimbMax);
+  var angMax=0.01;allAng.forEach(function(a){angMax=Math.max(angMax,Math.abs(a)*1.25);});
+  var angSc=(inH*0.38)/angMax;
+
+  g.strokeStyle='rgba(255,255,255,0.04)';g.lineWidth=0.5;
+  g.beginPath();g.moveTo(inX+inW*0.03,inCY);g.lineTo(inX+inW*0.97,inCY);g.stroke();
+
+  function mark(elev,col,lbl,side,thick){
+    if(elev===null||isNaN(elev))return;
+    var ay=inCY-elev*angSc;
+    g.fillStyle=col;g.beginPath();g.arc(inCX,ay,thick?4:2.5,0,PI*2);g.fill();
+    g.strokeStyle=col;g.lineWidth=thick?1:0.5;
+    g.beginPath();g.moveTo(inCX-inW*0.16,ay);g.lineTo(inCX+inW*0.16,ay);g.stroke();
+    g.font=(ifs*0.8)+'px IBM Plex Mono';
+    g.fillText(lbl+' '+(elev*180/PI).toFixed(2)+'°',side>0?inCX+inW*0.18:inX+inW*0.02,ay+ifs*0.3);
+  }
+
+  function drawArc(e1,e2,col,label,xOff){
+    if(e1===null||e2===null||isNaN(e1)||isNaN(e2))return;
+    var y1=inCY-e1*angSc,y2=inCY-e2*angSc,xp=inCX+xOff;
+    g.strokeStyle=col;g.lineWidth=1.5;
+    g.beginPath();g.moveTo(xp,y1);g.lineTo(xp,y2);g.stroke();
+    g.beginPath();g.moveTo(xp-3,y1);g.lineTo(xp+3,y1);g.stroke();
+    g.beginPath();g.moveTo(xp-3,y2);g.lineTo(xp+3,y2);g.stroke();
+    g.fillStyle=col;g.font=(ifs*0.75)+'px IBM Plex Mono';
+    g.fillText(label+' '+((e2-e1)*180/PI).toFixed(3)+'°',xp+6,(y1+y2)/2+ifs*0.3);
+  }
+
+  mark(physLimb,'rgba(224,112,48,0.4)','phys limb',1,false);
+  mark(flatAng,'rgba(93,190,122,0.5)','flat',-1,false);
+  if(csLimbMax>0)mark(csLimbMax,'rgba(210,70,30,0.5)','CS limb',-1,false);
+  if(laLimbMax>0)mark(laLimbMax,'rgba(180,120,255,0.5)','(1+Σ)² limb',1,false);
+  mark(stfrElev,'rgba(96,160,224,0.7)','v33 ray',-1,true);
+  mark(laElev,'rgba(180,120,255,0.8)','(1+Σ)² ray',1,true);
+  if(halfElev!==null)mark(halfElev,'rgba(208,144,64,0.5)','Σ-only',-1,false);
+
+  // deflection arcs
+  if(laElev!==null&&laLimbMax>0)drawArc(laLimbMax,laElev,'rgba(180,120,255,0.6)','δ(1+Σ)²',inW*0.32);
+  if(stfrElev!==null&&csLimbMax>0)drawArc(csLimbMax,stfrElev,'rgba(96,160,224,0.5)','δv33',-inW*0.28);
+
+  // ── INFO ──
+  var nfo='<strong>Arrival angles at observer</strong>\n';
+  nfo+='  Flat:             '+(flatAng*180/PI).toFixed(3)+'°\n';
+  nfo+='  Physical limb:    '+(physLimb*180/PI).toFixed(3)+'°\n';
+  if(csLimbMax>0)nfo+='  CS apparent limb:  '+(csLimbMax*180/PI).toFixed(3)+'°  (self-lenses smaller)\n';
+  if(laLimbMax>0)nfo+='  (1+Σ)² limb:      '+(laLimbMax*180/PI).toFixed(3)+'°  (Fermat bends limb outward)\n';
+  if(stfrElev!==null)nfo+='  v33 bg ray:       '+(stfrElev*180/PI).toFixed(3)+'°\n';
+  if(laElev!==null)nfo+='  (1+Σ)² bg ray:    '+(laElev*180/PI).toFixed(3)+'°\n';
+  if(halfElev!==null)nfo+='  Σ-only bg ray:    '+(halfElev*180/PI).toFixed(3)+'°\n';
+  nfo+='\n<strong>Deflections (star − limb)</strong>\n';
+  if(stfrElev!==null&&csLimbMax>0){
+    nfo+='  v33: bg − CS_limb     = '+((stfrElev-csLimbMax)*180/PI).toFixed(3)+'°\n';
+  }
+  if(laElev!==null&&laLimbMax>0){
+    nfo+='  (1+Σ)²: bg − Fermat_limb = '+((laElev-laLimbMax)*180/PI).toFixed(3)+'°\n';
+  }
+  if(laElev!==null&&csLimbMax>0){
+    nfo+='  (1+Σ)² bg − CS_limb  = '+((laElev-csLimbMax)*180/PI).toFixed(3)+'°  (mixed)\n';
+  }
+  nfo+='\nSelf-lensing gap: R='+surfR.toFixed(3)+' apparent(CS)='+appR.toFixed(3)+' Δ='+(surfR-appR).toFixed(4);
+  document.getElementById('info').innerHTML=nfo;
+}
+document.querySelectorAll('input').forEach(function(el){el.addEventListener('input',U);});
+window.addEventListener('resize',U);
+U();
+</script></body></html>
