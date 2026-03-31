@@ -1,5 +1,7 @@
 # Space-Time Field Reactor Physics
 
+[![DOI](https://zenodo.org/badge/270335361.svg)](https://doi.org/10.5281/zenodo.19326666)
+
 ## Fast Faraday Force Flux Field Reactor (FFFFFR?)
 
 Mostly this project is just about exploring the rotation space of log-quaternions.
