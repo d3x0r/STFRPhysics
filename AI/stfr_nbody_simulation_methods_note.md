@@ -1,18 +1,24 @@
-# N-Body Orbital Simulation: Three Methods for Perihelion Precession
+# N-Body Orbital Simulation: From Instantaneous Forces to Retarded Displacement Fields
 
-## Technical Note on the STFR 9-Body Simulation
+## Technical Note on the STFR Simulation Suite
 
 ---
 
 ## 1. Overview
 
-The simulation integrates a 9-body solar system (Sun + 8 planets) using RK4, with a clean 2-body shadow system for precision precession measurement via the Laplace–Runge–Lenz vector. Three gravity modes are implemented:
+Two simulations implement the displacement geometry of the Homogeneous Propagation Framework at different levels of physical fidelity.
 
-1. **Newton** — pure Newtonian gravity (baseline, no precession beyond planetary perturbation)
-2. **Σ Geodesic** — acceleration derived from the displaced transport geometry of the Homogeneous Propagation Framework
-3. **Schwarzschild** — the standard post-Newtonian effective force correction
+**9-Body Solar System** — integrates Sun + 8 planets using RK4, with a clean 2-body shadow system for precision precession measurement via the Laplace–Runge–Lenz vector. Three gravity modes:
 
-All three share the same Newtonian base; modes 2 and 3 add a post-Newtonian correction that is numerically identical but physically distinct in origin.
+1. **Newton** — pure Newtonian gravity (baseline)
+2. **Σ Geodesic** — acceleration from the displaced transport geometry (instantaneous)
+3. **Schwarzschild** — standard post-Newtonian effective force correction (for comparison)
+
+**3-Body Retarded Σ** — integrates three comparable-mass bodies with the full retarded displacement field, including iterative light-cone solving, velocity extrapolation (Liénard-Wiechert structure), local geometry amplification, and deformation tensor visualization. Three gravity modes:
+
+1. **Newton** — pure Newtonian
+2. **Instant Σ** — displacement geometry, instantaneous field evaluation
+3. **Retarded Σ** — displacement geometry, causal propagation at $c$ with velocity extrapolation
 
 ---
 
@@ -321,7 +327,120 @@ The numerical identity is a consistency check: the displacement framework's effe
 
 ---
 
-## 7. Code Reference
+## 7. Method D: Retarded Σ with Velocity Extrapolation (3-Body Simulation)
+
+### 7.1 Motivation
+
+Methods A and B treat the displacement field as instantaneous — $\Sigma$ at body $i$'s location is computed from the *current* position of source $j$. This is adequate for the solar system (light-crossing time of Mercury's orbit ~3 minutes vs. orbital period ~88 days), but it ignores the framework's own foundational claim: displacement propagates causally at $c$.
+
+The 3-body simulation implements the retarded displacement field directly, making the propagation physics explicit.
+
+### 7.2 The retarded displacement map
+
+The displacement field satisfies the wave equation:
+
+$$
+\frac{1}{c^2}\,\partial_t^2\Sigma - \nabla^2\Sigma = \frac{4\pi G}{c^2}\,\rho_{\mathrm{LC}}
+$$
+
+Its retarded solution for point sources is:
+
+$$
+\Sigma(\mathbf{x}, t) = \sum_k \frac{G\,m_k}{c^2\,|\mathbf{x} - \mathbf{x}_k(t_{\mathrm{ret},k})|}
+$$
+
+where $t_{\mathrm{ret},k}$ is the retarded time for source $k$, defined implicitly by the light-cone condition:
+
+$$
+|\mathbf{x} - \mathbf{x}_k(t_{\mathrm{ret},k})| = c\,(t - t_{\mathrm{ret},k})
+$$
+
+This is solved numerically by iterative fixed-point: starting from an initial guess $t_{\mathrm{ret}}^{(0)} = t - r_{\mathrm{inst}}/c$, iterate
+
+$$
+t_{\mathrm{ret}}^{(n+1)} = t - \frac{|\mathbf{x} - \mathbf{x}_k(t_{\mathrm{ret}}^{(n)})|}{c}
+$$
+
+until convergence (typically 3–5 iterations). Body positions between stored history samples are obtained by linear interpolation in a circular buffer.
+
+### 7.3 The aberration problem and velocity extrapolation
+
+Naively evaluating the force from the retarded position produces a force that points at where the source *was*, not where it *is*. For a source in uniform motion, this introduces a spurious tangential force component that drains orbital energy — the effect Laplace identified in the 1800s when arguing that gravity must propagate faster than light.
+
+The resolution is that the retarded field of a moving source includes velocity-dependent terms (the Liénard-Wiechert structure). To leading order, these terms cancel the aberration exactly: the effective force points not at the retarded position but at the **linearly extrapolated current position**:
+
+$$
+\mathbf{x}_{\mathrm{eff}} = \mathbf{x}_{\mathrm{ret}} + \mathbf{v}_{\mathrm{ret}}\,\Delta t
+$$
+
+where $\Delta t = t - t_{\mathrm{ret}}$ is the light travel time and $\mathbf{v}_{\mathrm{ret}}$ is the source velocity at the retarded time.
+
+For **uniform motion**, $\mathbf{x}_{\mathrm{eff}} = \mathbf{x}_{\mathrm{actual}}$ exactly — the aberration cancels completely and the retarded field is indistinguishable from the instantaneous field.
+
+For **accelerating motion** (curved orbits, close encounters), $\mathbf{x}_{\mathrm{eff}} \neq \mathbf{x}_{\mathrm{actual}}$. The residual
+
+$$
+\delta\mathbf{x} = \mathbf{x}_{\mathrm{actual}} - \mathbf{x}_{\mathrm{eff}} \approx \frac{1}{2}\,\mathbf{a}_{\mathrm{ret}}\,(\Delta t)^2
+$$
+
+is the acceleration-dependent piece of the retarded field. This residual is what carries energy away from the system — it is the radiation term. In the displacement framework, this is the source of longitudinal compression waves (gravitational radiation) and the breathing-mode channel.
+
+### 7.4 The three-mode hierarchy
+
+The 3-body simulation implements three modes that form a physical hierarchy:
+
+| Mode | Force direction | 1PN correction | Propagation | Radiation |
+|---|---|---|---|---|
+| **Newton** | Instantaneous position | None | Instantaneous | None |
+| **Instant Σ** | Instantaneous position | Yes: $-3GML^2/(c^2 r^5)$ | Instantaneous | None |
+| **Retarded Σ** | Velocity-extrapolated position | Yes | Causal at $c$ | Yes (residual) |
+
+The hierarchy captures three layers of physics:
+
+- **Newton → Instant Σ**: adds the displacement geometry (precession, time dilation, radial stretching)
+- **Instant Σ → Retarded Σ**: adds propagation physics (radiation, energy loss, memory)
+
+For smooth circular orbits, the three modes are nearly indistinguishable. They diverge during violent accelerations — close three-body encounters, ejections, captures — where the acceleration residual becomes significant and real energy is radiated.
+
+### 7.5 Local geometry amplification
+
+When the displacement field arrives from the retarded source, the local geometry at the field point modifies how the signal is received. The total $\Sigma$ at the field point sets the time-dilation factor, and the coordinate-time acceleration picks up an amplification:
+
+$$
+\vec{a}_{\mathrm{coord}} = (1 + 2\Sigma_{\mathrm{local}})\,\vec{a}_{\mathrm{bare}}
+$$
+
+where $\Sigma_{\mathrm{local}}$ is the total displacement from all other sources at the field body's location. This is the coordinate-time correction from the effective geometry's time-time component $f(r) = 1/(1+\Sigma)^2$.
+
+### 7.6 Deformation tensor visualization
+
+The displacement from multiple sources produces an anisotropic deformation of transport space. The deformation tensor at a field point is the sum:
+
+$$
+h_{ij} = \sum_k \Sigma_k\left(\delta_{ij} - 2\,\hat{r}_{k,i}\,\hat{r}_{k,j}\right)
+$$
+
+where $\hat{r}_k$ is the unit vector from source $k$ to the field point (using retarded or instantaneous positions as appropriate). For a single source this tensor is diagonal in the radial basis (radial compression, tangential stretch). For multiple sources at different angles, the sum produces a tensor whose principal axes are **skewed** — they don't point at any individual source.
+
+In 2D, the tensor is a $2\times 2$ symmetric matrix. Its eigenvalues give the stretch/compression magnitudes, and its eigenvectors give the principal axis directions. The simulation visualizes this as ellipses at grid points, with an orange tick along the major axis. The skewing of the principal axes directly shows the multi-source interference structure of the displacement field.
+
+The gradient field visualization decomposes the force into per-source contributions, shown in each body's color. A white arrow shows the resultant. Each body's own displacement field is excluded — a body does not feel its own $\Sigma$.
+
+### 7.7 What the retarded mode shows
+
+The simulation visually exposes several features of the retarded displacement field:
+
+- **Ghost markers**: Dashed circles show the raw retarded position (where the signal was emitted, faint) and the velocity-extrapolated effective position (where the force points, brighter). For smooth orbits these overlap with the actual body. During close encounters they visibly separate.
+
+- **Ghost–body separation**: The gap between the extrapolated position and the actual current position *is* the radiation content — the acceleration residual $\delta\mathbf{x}$. Larger separation means stronger radiation.
+
+- **Different choreographies**: In chaotic three-body encounters, the retarded mode produces qualitatively different exchange sequences than the instantaneous modes. The same initial conditions can lead to different ejection outcomes because the propagation delay during the close-interaction phase changes which body receives the energy boost.
+
+- **Memory**: The displacement landscape (visible in the Σ field heatmap) carries memory of past source positions. The field at a point reflects the superposition of retarded contributions from the entire past light cone, not just the current source configuration.
+
+---
+
+## 8. Code Reference
 
 ### Σ Geodesic acceleration (Cartesian 2D)
 
@@ -365,4 +484,34 @@ ax_planet -= aex * dx / r;
 ay_planet -= aex * dy / r;
 ```
 
-The two code blocks compute the same acceleration. The difference is in the comments.
+### Retarded Σ with velocity extrapolation
+
+```javascript
+// 1. Iterative light-cone solve for retarded time
+let tRet = t_now - r_instantaneous / c;
+for (let iter = 0; iter < 8; iter++) {
+    const p = posAt(k, tRet);             // interpolated history lookup
+    const dist = |p - fieldPoint|;
+    const tRetNew = t_now - dist / c;
+    if (|tRetNew - tRet| < 1e-8) break;
+    tRet = tRetNew;
+}
+
+// 2. Velocity extrapolation (Liénard-Wiechert leading order)
+const delay = t_now - tRet;
+const xEff = xRet + vxRet * delay;       // projected current position
+const yEff = yRet + vyRet * delay;
+
+// 3. Force from extrapolated position + local geometry amplification
+const sigmaLocal = totalSigmaAtFieldPoint;  // from all OTHER sources
+const ampFactor = 1 + 2 * sigmaLocal;       // time-dilation correction
+ax += ampFactor * G * mass / r³ * dx;       // toward extrapolated position
+ay += ampFactor * G * mass / r³ * dy;
+
+// 4. 1PN geodesic correction (same as instantaneous)
+const aGeo = 3 * G * mass * L² / (c² * r⁵);
+ax -= aGeo * dx;
+ay -= aGeo * dy;
+```
+
+The three code blocks compute the same leading-order physics. The retarded version adds propagation delay, velocity extrapolation, and local geometry amplification — capturing the radiation content that the instantaneous versions discard.
