@@ -133,10 +133,71 @@ A Rotation Vector may be converted to a rotation matrix by applying Rodrigues' f
 The framework also connects cleanly to the unit quaternions through the exponential map
 
 $$
-\exp(\mathbf{r}) = \left(\cos \frac{\lVert \mathbf{r} \rVert}{2},\; \sin \frac{\lVert \mathbf{r} \rVert}{2}\,\frac{\mathbf{r}}{\lVert \mathbf{r} \rVert}\right),
+\exp\!\left(\frac{\mathbf{r}}{2}\right) = \left(\cos \frac{\lVert \mathbf{r} \rVert}{2},\; \sin \frac{\lVert \mathbf{r} \rVert}{2}\,\frac{\mathbf{r}}{\lVert \mathbf{r} \rVert}\right),
 $$
 
-with inverse logarithm $\log(Q)=\mathbf{r}$. In this way the Rotation Vector serves as a logarithmic coordinate on $\mathrm{Spin}(3)$ while still living in the familiar vector space $\mathbb{R}^3$.
+so if one writes the quaternion in the standard axis-angle form
+
+$$
+Q = \left(\cos \frac{\theta}{2},\; \hat{\mathbf{n}}\,\sin \frac{\theta}{2}\right),
+$$
+
+then the corresponding Rotation Vector is
+
+$$
+\mathbf{r} = \theta\,\hat{\mathbf{n}}
+\qquad\text{and hence}\qquad
+\frac{\mathbf{r}}{2} = \log(Q).
+$$
+
+In this way the Rotation Vector serves as a logarithmic coordinate on $\mathrm{Spin}(3)$ while still living in the familiar vector space $\mathbb{R}^3$.
+
+### 2.2.1 The logarithm and the half-angle convention
+
+The half-angle convention should be stated explicitly, because it is one of the places where quaternion language most easily obscures the underlying rotation.
+
+For a unit quaternion written as
+
+$$
+Q=(w,\mathbf{v}) = \left(\cos\frac{\theta}{2},\;\hat{\mathbf{n}}\sin\frac{\theta}{2}\right),
+$$
+
+the logarithm returns the **half-angle algebra element**
+
+$$
+\log(Q) = \hat{\mathbf{n}}\,\frac{\theta}{2}.
+$$
+
+Accordingly, the full physical Rotation Vector is
+
+$$
+\mathbf{r}=2\log(Q)=\theta\,\hat{\mathbf{n}}.
+$$
+
+This is the cleanest way to separate the two roles:
+
+- the quaternion stores the finite rotation in half-angle form,
+- the logarithm recovers the half-angle algebra coordinate,
+- the Rotation Vector used throughout this monograph is the full axis-angle vector.
+
+Near identity, the axis is recovered from the normalized vector part of the quaternion and the angle from the scalar part. In explicit form,
+
+$$
+\theta = 2\arccos(w),
+\qquad
+\hat{\mathbf{n}} = \frac{\mathbf{v}}{\lVert \mathbf{v} \rVert},
+$$
+
+whenever $\mathbf{v}\neq \mathbf{0}$. A numerically robust equivalent uses
+
+$$
+\log(Q) = \hat{\mathbf{n}}\,\operatorname{atan2}(\lVert \mathbf{v} \rVert,w),
+$$
+
+since for a unit quaternion one has
+$\operatorname{atan2}(\lVert \mathbf{v} \rVert,w)=\theta/2$.
+
+This is the convention assumed throughout the later appendices whenever exp/log notation appears.
 
 ### 2.3 Principal and non-principal representatives
 
@@ -429,7 +490,22 @@ The framework also helps separate two situations that are often blurred in casua
 
 The framework does not eliminate all subtlety. Rotations remain non-commutative, branch-sensitive on inversion, and globally nonlinear. Its value is that the main subtleties remain tied to visible geometric features: axis agreement appears in dot products, non-commutativity appears in cross products, winding appears in branch choice and magnitude, and frame dependence appears in order of composition.
 
-## 9. Conclusion
+
+## 9. Public repository and demonstrations
+
+Public source material and interactive demonstrations associated with this monograph are available through the STFRPhysics project repository:
+
+**GitHub repository:** `https://github.com/d3x0r/stfrphysics`
+
+Two especially relevant interactive demonstrations for the present monograph are:
+
+- **Hopf Fibration demo:** `https://d3x0r.github.io/STFRPhysics/3d/index4.html`
+- **Covering Map Explorer:** `https://d3x0r.github.io/STFRPhysics/3d/indexSphereMap.html`
+
+These are included as practical companions to the text rather than as formal parts of the derivation.
+
+
+## 10. Conclusion
 
 This monograph has presented the Rotation Vector as a practical and mathematical representation of finite rotation in three dimensions.
 
@@ -603,9 +679,44 @@ $$
 \mathbf{d}_{\mathrm{roll}} = \phi\,\operatorname{Forward}(\mathbf{r}).
 $$
 
-The resulting orientation is then obtained by intrinsic or extrinsic composition, depending on whether the update is expressed in the moving frame or the ambient frame. In the language of Section 3.5, this is the distinction between body-frame and world-frame application.
+It is useful to package this in operator form. Let
+
+$$
+\mathcal{T}(\hat{\mathbf{u}},\phi) = \phi\,\hat{\mathbf{u}}
+$$
+
+denote the pure Rotation Vector representing a turn by angle $\phi$ about unit axis $\hat{\mathbf{u}}$.
+
+Let intrinsic (body-frame) composition be written as
+
+$$
+\mathcal{R}_{\mathrm{int}}(\mathbf{r},\mathbf{d}) = \mathbf{d} \circ \mathbf{r},
+$$
+
+and extrinsic (world-frame) composition as
+
+$$
+\mathcal{R}_{\mathrm{ext}}(\mathbf{r},\mathbf{d}) = \mathbf{r} \circ \mathbf{d}.
+$$
+
+Then the intrinsic local-axis updates may be written compactly as
+
+$$
+\operatorname{Yaw}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Up}(\mathbf{r}),\phi)\bigr),
+$$
+
+$$
+\operatorname{Pitch}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Right}(\mathbf{r}),\phi)\bigr),
+$$
+
+$$
+\operatorname{Roll}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Forward}(\mathbf{r}),\phi)\bigr).
+$$
+
+These definitions make explicit what the prose description already implies: recover the current local axis, form the pure turn about that axis, and then compose it with the current orientation in the appropriate order. If the update is instead expressed in the ambient frame, replace $\mathcal{R}_{\mathrm{int}}$ with $\mathcal{R}_{\mathrm{ext}}$.
 
 Twist alignments on the spherical mapping use the yaw construction.
+
 
 ### B.6 Why these operations matter
 
@@ -738,4 +849,182 @@ Each shell independently covers $\mathrm{SO}(3)$ once. The quaternion sign alter
 Sequential composition (Section 3.2) returns an angle in $[0, 2\pi)$ via the $\arccos$. It always projects the result into the principal shell. Shell information is lost unless tracked externally.
 
 Additive composition (Section 3.6) is unconstrained vector addition. The result can have any magnitude, including magnitudes beyond $2\pi$. Several simultaneous torques, roughly aligned and large enough, sum directly into a higher shell without passing through intermediate angles. The shell position then reflects the total angular impulse, not just the net orientation — a physically meaningful distinction related to stored rotational energy.
+
+
+
+## Appendix E. Quick Reference / Cheat Sheet
+
+This appendix is a compact working reference for the most commonly used expressions in the Rotation Vector framework. It is not a substitute for the main derivations above; it is meant as a one-page lookup sheet.
+
+### E.1 Core definitions
+
+A Rotation Vector is
+
+$$
+\mathbf{r}=\theta\,\hat{\mathbf{n}},
+\qquad
+\theta=\lVert \mathbf{r}\rVert,
+\qquad
+\hat{\mathbf{n}}=\frac{\mathbf{r}}{\lVert \mathbf{r}\rVert}.
+$$
+
+Identity rotation:
+
+$$
+\mathbf{0}.
+$$
+
+Inverse rotation:
+
+$$
+\mathbf{r}^{-1} = -\mathbf{r}.
+$$
+
+### E.2 Rodrigues action on a point
+
+For a point $\mathbf{x}$,
+
+$$
+R_{\mathbf{r}}(\mathbf{x}) = \cos\theta\,\mathbf{x} + \sin\theta\,(\hat{\mathbf{n}}\times\mathbf{x}) + (1-\cos\theta)(\hat{\mathbf{n}}\cdot\mathbf{x})\hat{\mathbf{n}}.
+(1-\cos\theta)(\hat{\mathbf{n}}\cdot\mathbf{x})\hat{\mathbf{n}}.
+$$
+
+### E.3 Quaternion map and logarithm
+
+Forward map:
+
+$$
+\exp\!\left(\frac{\mathbf{r}}{2}\right) = \left(\cos\frac{\theta}{2},\; \hat{\mathbf{n}}\sin\frac{\theta}{2}\right).
+$$
+
+Inverse map from a unit quaternion $Q=(w,\mathbf{v})$:
+
+$$
+\log(Q)=\hat{\mathbf{n}}\frac{\theta}{2},
+\qquad
+\theta=2\arccos(w),
+\qquad
+\hat{\mathbf{n}}=\frac{\mathbf{v}}{\lVert\mathbf{v}\rVert}.
+$$
+
+So the full Rotation Vector is
+
+$$
+\mathbf{r}=2\log(Q).
+$$
+
+### E.4 Small-angle approximations
+
+For small $\theta$,
+
+$$
+\sin\theta\approx\theta,
+\qquad
+\cos\theta\approx 1-\frac{\theta^2}{2},
+\qquad
+1-\cos\theta\approx \frac{\theta^2}{2}.
+$$
+
+Accordingly,
+
+$$
+R_{\mathbf{r}}(\mathbf{x})
+\approx
+\mathbf{x}+\mathbf{r}\times\mathbf{x}
+$$
+
+to first order.
+
+### E.5 Sequential composition reminder
+
+Sequential composition of finite rotations is **not** ordinary vector addition. Near the identity, however,
+
+$$
+\mathbf{r}_1\circ\mathbf{r}_2
+\approx
+\mathbf{r}_1+\mathbf{r}_2+\frac{1}{2}(\mathbf{r}_1\times\mathbf{r}_2)
+$$
+
+to second order (Baker–Campbell–Hausdorff / Lie bracket form).
+
+### E.6 Simultaneous torques or angular velocities
+
+If angular influences act simultaneously, use ordinary vector addition:
+
+$$
+\boldsymbol{\omega}_{\text{tot}} = \boldsymbol{\omega}_1+\boldsymbol{\omega}_2+\cdots
+$$
+
+and integrate afterward if a finite rotation is needed.
+
+### E.7 Basis-axis recovery
+
+With $s=\sin\theta$, $c=\cos\theta$, and $m=1-c$, the local basis axes are:
+
+$$
+\operatorname{Right}(\mathbf{r})=
+\begin{pmatrix}
+c+m\hat n_x^2\\
+s\hat n_z+m\hat n_x\hat n_y\\
+-s\hat n_y+m\hat n_x\hat n_z
+\end{pmatrix},
+$$
+
+$$
+\operatorname{Up}(\mathbf{r})=
+\begin{pmatrix}
+-s\hat n_z+m\hat n_y\hat n_x\\
+c+m\hat n_y^2\\
+s\hat n_x+m\hat n_y\hat n_z
+\end{pmatrix},
+$$
+
+$$
+\operatorname{Forward}(\mathbf{r})=
+\begin{pmatrix}
+s\hat n_y+m\hat n_z\hat n_x\\
+-s\hat n_x+m\hat n_z\hat n_y\\
+c+m\hat n_z^2
+\end{pmatrix}.
+$$
+
+### E.8 Practical helper summary
+
+The most useful practical helper operations are the basis extractors
+
+$$
+\operatorname{Forward}(\mathbf{r}), \qquad \operatorname{Right}(\mathbf{r}), \qquad \operatorname{Up}(\mathbf{r}),
+$$
+
+together with the pure-turn operator
+
+$$
+\mathcal{T}(\hat{\mathbf{u}},\phi) = \phi\,\hat{\mathbf{u}},
+$$
+
+and the intrinsic composition operator
+
+$$
+\mathcal{R}_{\mathrm{int}}(\mathbf{r},\mathbf{d}) = \mathbf{d} \circ \mathbf{r}.
+$$
+
+Then the local intrinsic updates are
+
+$$
+\operatorname{Yaw}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Up}(\mathbf{r}),\phi)\bigr),
+$$
+
+$$
+\operatorname{Pitch}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Right}(\mathbf{r}),\phi)\bigr),
+$$
+
+$$
+\operatorname{Roll}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Forward}(\mathbf{r}),\phi)\bigr).
+$$
+
+If a world-frame convention is desired instead, replace $\mathcal{R}_{\mathrm{int}}$ with
+
+$$
+\mathcal{R}_{\mathrm{ext}}(\mathbf{r},\mathbf{d}) = \mathbf{r} \circ \mathbf{d}.
+$$
 
