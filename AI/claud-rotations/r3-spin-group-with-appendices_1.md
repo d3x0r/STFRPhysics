@@ -1,4 +1,4 @@
-# The R3 Spin Group
+# The $\mathbb{R}^3$  Spin Group
 
 ## Rotation Vectors in Three-Dimensional Space
 
@@ -16,7 +16,7 @@ Three-dimensional rotations have three degrees of freedom, yet the standard repr
 
 The framework is constructive throughout. A Rotation Vector may be applied directly to points through Rodrigues' rotation formula, converted to a matrix when needed, or mapped to the unit quaternions through the exponential map. More importantly, rotations may be composed directly in Rotation Vector form, without treating quaternion or matrix conversion as the primary computational path. This yields a compact description of identity, inverse, relative rotation, sequential composition, and additive combination of simultaneous torques, while keeping the geometry visible.
 
-The presentation also clarifies the relation of this framework to the classical theory of rotations. Rotation Vectors are logarithmic coordinates of $\mathrm{Spin}(3)$ and therefore sit naturally in the Lie-algebraic description of rigid rotation, while still remaining accessible as ordinary vectors. The result is not a rejection of matrices or quaternions, but a re-centering of rotation theory around a representation that matches the axis-angle content of the motion itself.
+The presentation also clarifies the relation of this framework to the classical theory of rotations. Rotation Vectors are used here as the natural pure-rotation logarithmic coordinates of $\mathrm{Spin}(3)$ and therefore sit naturally in the Lie-algebraic description of rigid rotation, while still remaining accessible as ordinary vectors. The result is not a rejection of matrices or quaternions, but a re-centering of rotation theory around a representation that matches the axis-angle content of the motion itself.
 
 ## 1. Introduction
 
@@ -265,6 +265,42 @@ $$
 
 This is the main constructive result of the framework: direct composition in axis-angle variables, stated cleanly and then interpreted.
 
+
+### 3.2.1 Operator language and a minimal instruction map
+
+The closed-form composition law is easier to reuse if it is named once as an operator. Write
+
+$$
+\mathcal{R}(\mathbf{r}_2,\mathbf{r}_1) = \mathbf{r}_2 \circ \mathbf{r}_1
+$$
+
+to mean: apply the rotation $\mathbf{r}_1$ first, then apply the rotation $\mathbf{r}_2$. This is only a compact notation for the composition law already stated above; it introduces no new structure.
+
+With that notation, the basic operations of the framework may be read as a short instruction map:
+
+1. **Represent an orientation** by a Rotation Vector $\mathbf{r}$.
+2. **Apply a rotation to a point** by Rodrigues' action $R_{\mathbf{r}}(\mathbf{x})$.
+3. **Compose two realized rotations** by $\mathcal{R}(\mathbf{r}_2,\mathbf{r}_1)=\mathbf{r}_2 \circ \mathbf{r}_1$.
+4. **Add simultaneous angular influences** by ordinary vector addition, not by composition.
+5. **Build a pure turn about a chosen axis** by
+   $$
+   \mathcal{T}(\hat{\mathbf{u}},\phi) = \phi\,\hat{\mathbf{u}}.
+   $$
+
+This makes later practical formulas easier to read. For example, if a current orientation $\mathbf{r}$ is updated by a local turn $\mathbf{d}$ expressed in the moving frame, the update is simply
+
+$$
+\mathcal{R}(\mathbf{d},\mathbf{r}) = \mathbf{d} \circ \mathbf{r}.
+$$
+
+If instead the update is expressed in the ambient frame, the order is reversed:
+
+$$
+\mathcal{R}(\mathbf{r},\mathbf{d}) = \mathbf{r} \circ \mathbf{d}.
+$$
+
+The point of introducing this notation here is only to make the later local-axis update formulas and practical appendices read naturally from the main composition section.
+
 ### 3.3 How to read the formula
 
 The formula has a clear internal structure.
@@ -398,11 +434,42 @@ The Lie algebra $\mathfrak{so}(3)$ may be identified with three-dimensional vect
 
 This is the mathematical reason the cross-product term in the composition formula matters so much. It is not an arbitrary correction term and not a computational accident. It is the visible sign of the non-commutative algebra carried by finite rotations.
 
-### 6.3 Exponential map and finite rotation
+### 6.3 Why the log-quaternion language is justified
 
-A Rotation Vector may be interpreted as a logarithmic coordinate for a finite rotation. Exponentiating it gives the corresponding group element, whether one chooses to view that element as a unit quaternion, a rotation matrix, or another equivalent realization.
+The phrase *log-quaternion* is not used here as a loose metaphor. It is justified by the actual exponential/logarithmic structure of the unit quaternions.
 
-From this point of view, the Rotation Vector is not merely an informal axis-angle label. It is a coordinate on the group obtained from its tangent structure.
+A unit quaternion representing a rotation may be written in axis-angle form as
+
+$$
+Q = \left(\cos\frac{\theta}{2},\;\hat{\mathbf n}\sin\frac{\theta}{2}\right).
+$$
+
+Its logarithm, on a chosen branch, is the half-angle algebra element
+
+$$
+\log(Q)=\hat{\mathbf n}\,\frac{\theta}{2}.
+$$
+
+Accordingly, the full Rotation Vector used throughout this monograph is
+
+$$
+\mathbf r = 2\log(Q)=\theta\,\hat{\mathbf n}.
+$$
+
+This is the concrete reason the Rotation Vector deserves to be regarded as a logarithmic coordinate on $\mathrm{Spin}(3)$: the exponential map sends the axis-angle vector into the unit quaternions, and the logarithm recovers the corresponding axis-angle generator. The relation is structural, not merely suggestive.
+
+Several consequences follow immediately.
+
+First, composition in the group is nonlinear, but the logarithmic coordinate makes the infinitesimal and near-identity structure linear to first order. That is why simultaneous angular influences add as vectors while finite realized rotations compose noncommutatively.
+
+Second, winding and branch structure remain visible in the logarithmic coordinate. Distinct covered-space representatives may exponentiate to equivalent endpoint orientations. The logarithmic coordinate therefore retains information that the endpoint orientation alone does not.
+
+Third, powers and fractional continuation are naturally expressed in the logarithmic picture. A partial turn, an extrapolated continuation, or an interpolation step is represented by scaling the logarithmic coordinate before re-exponentiation.
+
+For the purposes of this monograph, however, only the **pure rotational** case is used. That is: only logarithms of **unit quaternions** are considered, so the logarithmic coordinate lives in the three-dimensional rotation subspace and has no additional scalar-amplitude part. Broader logarithmic quaternion constructions may exist, but they are outside the scope of the present work.
+
+So the precise claim of this monograph is not that every possible quaternion logarithm has been developed here. It is the narrower and stronger claim that the Rotation Vector framework is the natural pure-rotation logarithmic coordinate system of $\mathrm{Spin}(3)$.
+
 
 ### 6.4 Why composition is not ordinary addition
 
@@ -515,7 +582,11 @@ Its main contribution is not a claim of exclusivity, but of perspective. Matrice
 
 That explicitness is more than cosmetic. It helps separate sequential composition from simultaneous addition, clarifies the role of branch choice and winding, and keeps local frame updates and relative corrections close to the language in which they are naturally described.
 
-Some related ideas suggested by the broader project remain open, especially where interpolation across the covered space and other extensions are concerned. Even so, the central framework already stands independently: a constructive, geometrically legible way to describe and combine three-dimensional rotations without surrendering either mathematical seriousness or practical use.
+Within the scope of this monograph, the core framework is already definite: representation by Rotation Vectors, action on points, direct finite composition, inverse and relative constructions, basis recovery, and native continuation language for practical update and interpolation problems. What remains outside scope is not the rotation framework itself, but the broader project directions that use it as a tool: constrained inverse kinematics, control-law design, winding policies for specific applications, and any wider physical interpretation attached elsewhere in the project.
+
+The central framework therefore stands independently: a constructive, geometrically legible way to describe and combine three-dimensional rotations without surrendering either mathematical seriousness or practical use.
+
+In that sense, the Rotation Vector is not only an axis-angle convenience, but the natural pure-rotation logarithmic coordinate of the unit-quaternion covering structure.
 
 ## Appendix A. Usage and application notes
 
@@ -537,15 +608,63 @@ In the Rotation Vector framework, this is the relative Rotation Vector. One seek
 
 This quantity is useful because it says more than "these poses differ." It says how they differ, in the same axis-angle language used everywhere else in the framework.
 
-### A.3 Interpolation, branch choice, and SLERP
+### A.3 Native interpolation and continuation
 
-The standard language for rotational interpolation is SLERP. In quaternion form, SLERP selects a shortest-path interpolation on the covered sphere once a branch has been chosen.
+The standard language for rotational interpolation is SLERP. In quaternion form, SLERP selects a shortest-path interpolation between equivalent endpoint orientations once a branch has been chosen. That is appropriate when only the endpoint orientation in \(SO(3)\) matters. It is less appropriate when the represented covered-space path, winding, or ordered continuation matters.
 
-The Rotation Vector viewpoint adds two useful questions before interpolation begins. The first is branch selection: a final physical orientation may admit more than one representative in the covered Rotation Vector space, and the most useful target may be the one closest to the current state rather than the principal one.
+The Rotation Vector framework supports a distinct native interpolation law. The point is not merely to produce an equivalent endpoint orientation, but to preserve the path implied by the actual supplied representatives.
 
-The second is that the framework appears to support a distinct interpolation construction that is not SLERP. In the present formulation, the difference between the endpoint Rotation Vectors determines a rotation axis in the covering space. That axis is then extrinsically rotated into the source frame, and the interpolation angle is recovered from the cross-product relation of the endpoint vectors. This appears to provide a meaningful continuation outside the usual interpolation interval, where continuity in the covered space may matter more than reduction to principal-angle form.
+The construction is best read as **partial reapplication of the remaining relative rotation**. Given a current rotation \(q\), a target rotation \(p\), and a continuation parameter \(t\),
 
-SLERP remains the standard quaternion interpolation method on its usual interval. The Rotation Vector framework clarifies branch choice before interpolation, and it may also support a distinct interpolation method when extrapolation or continuity in the covered space matters.
+\[
+\Delta(q,p)=
+\text{the relative rotation taking \(q\) toward \(p\),}
+\]
+
+and the native interpolation is
+
+\[
+\operatorname{Interp}(q,p,t)=
+\mathcal{R}\!\bigl(q,\; t\,\Delta(q,p)\bigr).
+\]
+
+In words:
+
+1. remove the current rotation from the target to recover the remaining relative turn,
+2. recover the corresponding delta axis and delta angle,
+3. reapply only the fraction \(t\) of that remaining turn back onto the current state.
+
+This is not a shortest-arc reduction imposed after the fact. The path is determined by the actual Rotation Vectors \(q\) and \(p\) that are supplied. If the target is constructed as a long-path representative, that long path is what is interpolated.
+
+This gives the practical distinction from standard quaternion SLERP:
+
+- standard SLERP preserves an equivalent final orientation, but may replace the intended path by the shortest arc,
+- native Rotation Vector interpolation preserves the represented path implied by the supplied endpoint representatives.
+
+So the issue is not simply “same endpoint or different endpoint.” In the strict covered-space sense, the shortest-arc target and the long-path target are not the same represented endpoint, even when they correspond to the same physical orientation in \(SO(3)\). Standard SLERP is content to replace one by the other; the native interpolation is not.
+
+This matters directly for continuation outside the ordinary interpolation interval. The native law continues naturally for
+
+\[
+t<0,
+\qquad
+0<t<1,
+\qquad
+t>1,
+\]
+
+because it is a relative-rotation reapplication rule rather than only a shortest-arc endpoint blend. In practice:
+
+- \(t=0\) returns the current rotation \(q\),
+- \(t=1\) returns the supplied target \(p\),
+- \(0<t<1\) interpolates toward \(p\),
+- \(t>1\) extrapolates beyond \(p\),
+- \(t<0\) continues in the opposite direction.
+
+The merit of this construction is therefore conceptual as much as computational. It respects covered-space continuity, preserves intended winding, and supports ordered continuation. The cost is that it is not the single compact closed formula associated with textbook SLERP. It is a few more instructions: recover the remaining relative turn, then reapply the desired fraction. But those extra steps are precisely what make the path explicit instead of silently replacing it by a shortest equivalent arc.
+
+For that reason, the native interpolation law is better understood as a continuation or integration rule than as a mere substitute for quaternion SLERP. It belongs most naturally in problems where the represented path matters: winding-aware interpolation, controlled extrapolation, and iterative correction schemes built from partial relative-rotation updates.
+
 
 ### A.4 Application domains
 
@@ -849,182 +968,3 @@ Each shell independently covers $\mathrm{SO}(3)$ once. The quaternion sign alter
 Sequential composition (Section 3.2) returns an angle in $[0, 2\pi)$ via the $\arccos$. It always projects the result into the principal shell. Shell information is lost unless tracked externally.
 
 Additive composition (Section 3.6) is unconstrained vector addition. The result can have any magnitude, including magnitudes beyond $2\pi$. Several simultaneous torques, roughly aligned and large enough, sum directly into a higher shell without passing through intermediate angles. The shell position then reflects the total angular impulse, not just the net orientation — a physically meaningful distinction related to stored rotational energy.
-
-
-
-## Appendix E. Quick Reference / Cheat Sheet
-
-This appendix is a compact working reference for the most commonly used expressions in the Rotation Vector framework. It is not a substitute for the main derivations above; it is meant as a one-page lookup sheet.
-
-### E.1 Core definitions
-
-A Rotation Vector is
-
-$$
-\mathbf{r}=\theta\,\hat{\mathbf{n}},
-\qquad
-\theta=\lVert \mathbf{r}\rVert,
-\qquad
-\hat{\mathbf{n}}=\frac{\mathbf{r}}{\lVert \mathbf{r}\rVert}.
-$$
-
-Identity rotation:
-
-$$
-\mathbf{0}.
-$$
-
-Inverse rotation:
-
-$$
-\mathbf{r}^{-1} = -\mathbf{r}.
-$$
-
-### E.2 Rodrigues action on a point
-
-For a point $\mathbf{x}$,
-
-$$
-R_{\mathbf{r}}(\mathbf{x}) = \cos\theta\,\mathbf{x} + \sin\theta\,(\hat{\mathbf{n}}\times\mathbf{x}) + (1-\cos\theta)(\hat{\mathbf{n}}\cdot\mathbf{x})\hat{\mathbf{n}}.
-(1-\cos\theta)(\hat{\mathbf{n}}\cdot\mathbf{x})\hat{\mathbf{n}}.
-$$
-
-### E.3 Quaternion map and logarithm
-
-Forward map:
-
-$$
-\exp\!\left(\frac{\mathbf{r}}{2}\right) = \left(\cos\frac{\theta}{2},\; \hat{\mathbf{n}}\sin\frac{\theta}{2}\right).
-$$
-
-Inverse map from a unit quaternion $Q=(w,\mathbf{v})$:
-
-$$
-\log(Q)=\hat{\mathbf{n}}\frac{\theta}{2},
-\qquad
-\theta=2\arccos(w),
-\qquad
-\hat{\mathbf{n}}=\frac{\mathbf{v}}{\lVert\mathbf{v}\rVert}.
-$$
-
-So the full Rotation Vector is
-
-$$
-\mathbf{r}=2\log(Q).
-$$
-
-### E.4 Small-angle approximations
-
-For small $\theta$,
-
-$$
-\sin\theta\approx\theta,
-\qquad
-\cos\theta\approx 1-\frac{\theta^2}{2},
-\qquad
-1-\cos\theta\approx \frac{\theta^2}{2}.
-$$
-
-Accordingly,
-
-$$
-R_{\mathbf{r}}(\mathbf{x})
-\approx
-\mathbf{x}+\mathbf{r}\times\mathbf{x}
-$$
-
-to first order.
-
-### E.5 Sequential composition reminder
-
-Sequential composition of finite rotations is **not** ordinary vector addition. Near the identity, however,
-
-$$
-\mathbf{r}_1\circ\mathbf{r}_2
-\approx
-\mathbf{r}_1+\mathbf{r}_2+\frac{1}{2}(\mathbf{r}_1\times\mathbf{r}_2)
-$$
-
-to second order (Baker–Campbell–Hausdorff / Lie bracket form).
-
-### E.6 Simultaneous torques or angular velocities
-
-If angular influences act simultaneously, use ordinary vector addition:
-
-$$
-\boldsymbol{\omega}_{\text{tot}} = \boldsymbol{\omega}_1+\boldsymbol{\omega}_2+\cdots
-$$
-
-and integrate afterward if a finite rotation is needed.
-
-### E.7 Basis-axis recovery
-
-With $s=\sin\theta$, $c=\cos\theta$, and $m=1-c$, the local basis axes are:
-
-$$
-\operatorname{Right}(\mathbf{r})=
-\begin{pmatrix}
-c+m\hat n_x^2\\
-s\hat n_z+m\hat n_x\hat n_y\\
--s\hat n_y+m\hat n_x\hat n_z
-\end{pmatrix},
-$$
-
-$$
-\operatorname{Up}(\mathbf{r})=
-\begin{pmatrix}
--s\hat n_z+m\hat n_y\hat n_x\\
-c+m\hat n_y^2\\
-s\hat n_x+m\hat n_y\hat n_z
-\end{pmatrix},
-$$
-
-$$
-\operatorname{Forward}(\mathbf{r})=
-\begin{pmatrix}
-s\hat n_y+m\hat n_z\hat n_x\\
--s\hat n_x+m\hat n_z\hat n_y\\
-c+m\hat n_z^2
-\end{pmatrix}.
-$$
-
-### E.8 Practical helper summary
-
-The most useful practical helper operations are the basis extractors
-
-$$
-\operatorname{Forward}(\mathbf{r}), \qquad \operatorname{Right}(\mathbf{r}), \qquad \operatorname{Up}(\mathbf{r}),
-$$
-
-together with the pure-turn operator
-
-$$
-\mathcal{T}(\hat{\mathbf{u}},\phi) = \phi\,\hat{\mathbf{u}},
-$$
-
-and the intrinsic composition operator
-
-$$
-\mathcal{R}_{\mathrm{int}}(\mathbf{r},\mathbf{d}) = \mathbf{d} \circ \mathbf{r}.
-$$
-
-Then the local intrinsic updates are
-
-$$
-\operatorname{Yaw}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Up}(\mathbf{r}),\phi)\bigr),
-$$
-
-$$
-\operatorname{Pitch}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Right}(\mathbf{r}),\phi)\bigr),
-$$
-
-$$
-\operatorname{Roll}(\mathbf{r},\phi) = \mathcal{R}_{\mathrm{int}}\!\bigl(\mathbf{r},\mathcal{T}(\operatorname{Forward}(\mathbf{r}),\phi)\bigr).
-$$
-
-If a world-frame convention is desired instead, replace $\mathcal{R}_{\mathrm{int}}$ with
-
-$$
-\mathcal{R}_{\mathrm{ext}}(\mathbf{r},\mathbf{d}) = \mathbf{r} \circ \mathbf{d}.
-$$
-
