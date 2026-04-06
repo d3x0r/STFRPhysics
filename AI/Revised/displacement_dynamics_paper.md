@@ -504,60 +504,81 @@ The physical magnitude for solar-system measurements is again small: \(\sigma^2_
 
 The 2PN divergence between the displacement framework and general relativity is a genuine prediction, not a tunable parameter. It follows directly from the exact forms of the metric components, which are themselves determined by the framework's internal logic: \(f=1/(1+\Sigma)^2\) from the clock-rate relation, \(g=D^2\) from the radial deformation, and \(h=1\) from the coordinate anchoring of \(F\!\cdot\!H\). The prediction is that the Schwarzschild horizon is replaced by asymptotic time dilation, and the radial deformation is exactly linear in \(\sigma\). Both features produce specific second-order corrections that are currently below observational thresholds but are in principle testable.
 
-## Appendix D. Mass as Surface Area and the Displacement Composition Rule
+## Appendix D. Mass and the Displacement Composition Rule
 
-The relation \(d^2=2Gm/c^2\) has a direct geometric reading that determines how masses compose in the displacement framework.
+The relation \(d^2=2Gm/c^2\) is useful bookkeeping, but it is easy to over-read. The appearance of a squared radius does **not** mean that mass is fundamentally a surface area. In the present reading, source content begins as a volume-like occupancy, is reduced to a support radius by the usual cube-root law, and only then enters later weak-field relations through squared-radius forms. Appendix D rewrites the composition discussion with that sequence kept explicit.
 
-### D.1 Surface area is mass
+### D.1 Mass, occupancy, and the support radius
 
-The surface area of a displacement sphere of radius \(d\) is
-
-\[
-S=4\pi d^2=\frac{8\pi Gm}{c^2}.
-\]
-
-Surface area is exactly linear in mass. This is not a dimensional accident — it is the content of the relation \(d^2\propto m\). The displacement sphere's surface area is proportional to the mass that sources it, with the proportionality constant set by \(G\) and \(c\).
-
-An immediate consequence is that surface areas add linearly. For \(N\) displacement spheres with individual surface areas \(S_n=4\pi d_n^2\), the total surface area is \(N\,S_n\). The combined displacement parameter is \(d_{\mathrm{combined}}^2=N\,d_n^2\), and the combined mass is
+At the material side of the framework, mass is first associated with occupied support content. In bulk form that content is naturally volume-like: for nucleon count or gram-normalized occupancy one begins from a relation of the schematic form
 
 \[
-m_{\mathrm{combined}}=\frac{d_{\mathrm{combined}}^2\,c^2}{2G}=N\,m_n.
+V \sim \frac{4\pi}{3}R^3,
 \]
 
-Masses add exactly when surface areas add. This is why Newtonian gravity is linear in mass: the linearity is the surface-area composition of displacement spheres.
-
-### D.2 Binding energy as shared surface area
-
-When two displacement spheres overlap, the contact region reduces the total exposed surface area. The total surface area of the combined system is less than the sum of the individual surface areas by the area of the shared patch. Since mass is proportional to surface area, the mass deficit is proportional to the shared area:
+with the usual cube-root inversion giving a support radius. The source is therefore not primitive surface area. Rather, the geometric chain is
 
 \[
-\frac{\Delta m}{m}=\frac{\Delta S}{S}.
+\text{occupancy / mass} \;\longrightarrow\; \text{support radius} \;\longrightarrow\; \text{squared-radius bookkeeping in later laws}.
 \]
 
-The fractional mass deficit equals the fractional surface area deficit, one to one. No geometric correction factor is needed.
-
-For iron, the nuclear binding energy is approximately \(8.8\) MeV per nucleon out of \(939\) MeV rest mass, a fractional deficit of about \(0.94\%\). The implied surface area sharing is therefore also about \(0.94\%\) per nucleon. The corresponding contact patch radius is approximately \(20\%\) of the nucleon displacement radius — geometrically consistent with close-packed displacement spheres barely overlapping at their boundaries.
-
-### D.3 Volume addition and its consequences
-
-If displacement volumes were the additive quantity rather than surface areas, the composition rule would be \(d_{\mathrm{combined}}^3=N\,d_n^3\), giving \(d_{\mathrm{combined}}=N^{1/3}\,d_n\) and \(m_{\mathrm{combined}}=N^{2/3}\,m_n\). This produces massive overbinding — a \(74\%\) mass deficit for \(56\) nucleons, compared to the observed \(0.94\%\). Volume addition is therefore not the composition rule for displacement in the weak-overlap regime.
-
-However, volume becomes relevant in the strong-overlap regime. When two displacement spheres fully merge, the combined volume is the sum. The transition from surface-area-additive (weak overlap, small binding) to volume-additive (full merger, large binding) spans the range between nuclear physics and black hole coalescence.
-
-### D.4 Connection to black hole mergers
-
-The working notes record that LIGO merger remnant masses are best fit by \(M_A^n+M_B^n=M_C^n\) with \(n\approx 1.1\). In the displacement picture, the exponent \(n\) characterizes the composition rule:
+The displacement relation
 
 \[
-\begin{aligned}
-n=1&:\quad\text{surface areas add (exact mass additivity, no deficit)},\\
-n=\tfrac{2}{3}&:\quad\text{volumes add (maximum binding, }20.6\%\text{ deficit for equal masses)}.
-\end{aligned}
+d^2=\frac{2Gm}{c^2}
 \]
 
-The LIGO value \(n\approx 1.1\) is close to surface-area addition with a small correction. For equal-mass mergers, it gives a mass deficit of approximately \(6\%\) — the energy radiated as gravitational waves during the merger. The coalescence is mostly surface-area-additive, with a volume-interaction correction at the merger interface where the displacement spheres interpenetrate.
+belongs to that later stage. It says that once the source content has already been reduced to the displacement-side bookkeeping appropriate to the weak field, the resulting parameter enters through \(d^2\). That is a derived squared-radius form, not a statement that the source content itself is an area.
 
-The exponent \(n\) therefore encodes the degree of displacement-sphere interpenetration during the merger. A value near \(1\) means the spheres join with minimal volume sharing; a value near \(2/3\) would mean complete volumetric merger. The observed \(n\approx 1.1\) indicates that even in the extreme strong-field regime of black hole coalescence, the composition is predominantly surface-area-like.
+This distinction matters because the same algebraic trap appears repeatedly: a volume-like source is converted to a radius, the radius is squared in a later equation, and the resulting \(r^2\) or \(d^2\) term is then mistaken for the primitive ontology. The present framework does not adopt that reading. Mass remains volume-rooted occupancy even when later weak-field expressions are most compact in squared-radius form.
+
+### D.2 Weak-overlap composition and exposed-boundary deficit
+
+Once the source content has been mapped to support radii and displacement radii, one may ask how nearby sources compose. In the weak-overlap regime the useful geometric quantity is not "mass equals surface area," but the **exposed-boundary deficit** produced when two support/displacement regions overlap slightly.
+
+If two source regions are well separated, the combined system is almost exactly additive. When they overlap weakly, the total exposed boundary of the pair is reduced by the shared contact region. In the present appendix that reduced exposed boundary is used only as a **composition measure** for the weak-overlap correction. It is not identified with the primitive meaning of mass.
+
+In that limited sense one may write the fractional weak-overlap deficit schematically as
+
+\[
+\frac{\Delta m}{m} \sim \frac{\Delta B_{\rm exp}}{B_{\rm exp}},
+\]
+
+where \(B_{\rm exp}\) denotes the exposed boundary measure appropriate to the support/displacement mapping. The point of the comparison is not that mass is boundary. The point is that, after the source has already been reduced to a support radius and then to a displacement-side radius, the first small correction to exact additivity is controlled by the loss of exposed boundary in the mapped geometry.
+
+For iron, the nuclear binding energy is approximately \(8.8\) MeV per nucleon out of \(939\) MeV rest mass, a fractional deficit of about \(0.94\%\). In the present reading this means that the weak-overlap correction is small, as expected. The relevant conclusion is simply that nuclei sit in a near-additive regime with only a modest exposed-boundary deficit. That is fully compatible with volume-rooted source content and does not require identifying mass itself with area.
+
+### D.3 Strong overlap, merger, and why volume re-enters
+
+The weak-overlap composition rule should not be extrapolated carelessly into the strong-overlap regime. When two source regions barely overlap, the correction is governed by the exposed-boundary loss of the mapped support/displacement geometry. When they merge deeply, the combined occupied region becomes the more relevant geometric object.
+
+That is why the strong-overlap endpoint is different in character from the weak-overlap limit. At full merger, one is no longer dealing with a tiny contact patch on otherwise distinct source regions. One is dealing with a new combined occupied region whose total support content must be recomputed as a whole. In that regime the underlying volume-like origin of the source becomes visible again.
+
+So the intended hierarchy is:
+
+\[
+\text{weak overlap} \;\longrightarrow\; \text{near-additive composition with small exposed-boundary deficit},
+\]
+
+\[
+\text{strong overlap / merger} \;\longrightarrow\; \text{recombined occupied region with non-weak corrections}.
+\]
+
+This is not a contradiction. It is simply the statement that different geometric descriptions control different overlap regimes. The mistake would be to let the weak-overlap boundary bookkeeping rewrite the ontology of mass, or to let the full-merger volume picture rewrite the small-binding regime.
+
+### D.4 Black hole mergers and the composition law
+
+The same caution applies in the strong-field merger discussion. Phenomenological fits of the schematic form
+
+\[
+M_A^n+M_B^n=M_C^n
+\]
+
+may still be useful as summaries of how close the system lies to exact additivity, but the exponent should be read as a **composition-regime parameter**, not as a proof that mass itself is fundamentally area-like or volume-like. Values near the additive limit indicate modest net deficit; larger departures indicate deeper non-weak merger effects.
+
+In that sense black hole coalescence is the opposite of the weak-overlap nuclear case. The observed remnant deficit is no longer a tiny correction on top of near additivity; it is a genuinely strong merger event. But even there the same interpretive rule applies: the composition law tells us how the already-defined source content combines in a given regime. It does not tell us that mass has changed its underlying meaning.
+
+Accordingly, the present framework reads merger phenomenology as follows. Mass remains volume-rooted occupancy at the source side. Support radii provide the intermediate geometric scale. Squared-radius quantities such as \(d^2\) provide the convenient displacement-side bookkeeping. Weak-overlap deficits are governed by exposed-boundary loss; strong-overlap deficits require the geometry of the recombined occupied region. None of those downstream composition rules should be read as implying that mass itself is literally a surface area.
 
 ## Appendix E. Rotating-Source Effective Metric
 

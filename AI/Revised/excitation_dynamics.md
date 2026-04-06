@@ -1,14 +1,30 @@
 # The Homogeneous Propagation Framework: Excitation, Closure, and Material Response
 
+**James Buckeyne**  
+Independent Research  
+Fernandina Beach, FL 32034; United States  
+Email: d3ck0r@gmail.com  
+ORCID iD: 0009-0004-2865-6447
+
+**Zenodo DOI:** [placeholder — reserved DOI to be inserted before publication]
+
+*Companion papers:* *Homogeneous Light Propagation Framework*; *The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects*; *The Homogeneous Propagation Framework: Wigner Rotation from Noncollinear Composition*; *The Homogeneous Propagation Framework: Retardation, Cumulative Field Structure, and Rotating-Source Response*; *The Homogeneous Propagation Framework: Weak-Field Observational Tests*.
+
 ## Abstract
 
-This paper develops the excitation-side branch of the homogeneous propagation framework. The displacement layer fixes the effective transport geometry through cumulative displacement and transport deformation, but it does not by itself explain how localized matter excitations maintain closure, realize a preferred support scale, or respond differently to geometric displacement and material loading. The present paper treats a localized mass as a sustained excitation of the vacuum storage medium and develops the first field-based closure model on that displaced background. A minimal excitation field is written on the effective geometry, its eikonal limit yields a Hamilton--Jacobi relation with a distinct closure scale, and a slow-envelope limit separates displacement, closure, and material contributions in the effective excitation energy. A native closure/support functional is then introduced, with transport-side and storage-side costs treated separately. The storage-side term is refined into a continuous internal occupancy factor, and the overlap/composition problem is recast as a single geometric law for merging internal bubbles rather than as two separately postulated mechanisms. This gives a first explicit support law and a corresponding closure-scale shift that remain surface-led at weak overlap while transitioning smoothly toward the corrected strong-merger endpoint. The result is not yet a final substrate derivation, but it sharpens the excitation problem into a tractable three-branch structure: displacement geometry, excitation closure, and material constitutive response.
+This paper develops the excitation-side branch of the homogeneous propagation framework. The displacement layer fixes the effective transport geometry through cumulative displacement and transport deformation, but it does not by itself explain how localized matter excitations maintain closure, realize a preferred support scale, or respond differently to geometric displacement and material loading. The present paper therefore treats a localized mass as a sustained excitation of the vacuum storage medium and develops a first formal closure model on that displaced background.
+
+A minimal excitation field is written on the effective geometry, its eikonal limit yields a Hamilton--Jacobi relation with a distinct closure scale, and a slow-envelope limit separates displacement, closure, and material contributions in the effective excitation energy. A native closure/support functional is then introduced, with transport-side and storage-side costs treated separately. The storage-side term is refined into a continuous internal occupancy factor, and the overlap/composition problem is recast as a single geometric law for merging internal bubbles rather than as two separately postulated mechanisms. This gives a first explicit support law and a corresponding closure-scale shift that remain exposed-boundary-driven at weak overlap while transitioning smoothly toward the corrected strong-merger endpoint.
+
+The result is not yet a final substrate derivation of matter. Its purpose is narrower and more immediate: to sharpen the excitation problem into a tractable three-branch structure consisting of displacement geometry, excitation closure, and material constitutive response, and to show that those branches can already be written in one coherent paper-level formalism.
 
 ## 1. Introduction
 
 The displacement-side branch of the framework addresses how mass-energy deforms the transport-supporting vacuum structure and how that deformation propagates causally. What remains open is the excitation-side problem: if matter is a sustained localized excitation of the same medium, what fixes its closure, its support scale, and its response to displaced or materially loaded backgrounds?
 
 The current working picture is that a localized mass is a sustained LC-like excitation that persistently occupies vacuum storage. The open problem is therefore not only how displacement propagates, but how a localized excitation closes on itself, maintains support, shifts its realized cycling on a displaced background, and acquires both particle-like and wave-like behavior.
+
+This paper is intentionally limited in scope. It does not claim a final substrate derivation of the matter spectrum, charge structure, or complete microscopic constitutive law. Its narrower aim is to put the excitation branch into a stable formal shape: to show how a minimal field description, a support-selection law, and a first internal-occupancy/composition model can be stated together without collapsing excitation closure into either background displacement or material loading.
 
 This paper keeps three branches separate from the start:
 
@@ -18,17 +34,19 @@ This paper keeps three branches separate from the start:
 
 That three-way split is essential. Gravity/displacement, excitation closure, and material loading are related, but they are not the same effect written in different variables.
 
-## 2. Live constraints and corrections
+The strategy of the paper is correspondingly simple. Section 2 fixes the live constraints inherited from the earlier branches. Section 3 introduces the minimal field picture and its eikonal and slow-envelope reductions. Sections 4 through 7 then develop the paper's main new formal content: the closure/support functional, the occupancy refinement, the overlap-driven composition law, and the corresponding closure-scale shift. Section 8 returns to the material branch to keep it separate from pure displacement, and Sections 9 and 10 state the present status of the excitation program.
 
-Several corrections are already in force and must constrain the excitation-side development.
+## 2. Constraints inherited from the earlier branches
+
+Several corrections are already in force and must constrain the excitation-side development. They are worth stating explicitly at the front because they define what the present paper is and is not allowed to do.
 
 First, the spatial transport deformation and the cumulative timing burden are not the same object. The earlier shorthand \(g = D^2 = 1 + 2\Sigma\) should not be reused without qualification. The cumulative displacement \(\Sigma\) controls the timing-side burden, while the spatial deformation branch requires separate treatment.
 
-Second, the displacement-composition rule remains surface-area-like in the weak-overlap regime. Ordinary mass additivity and small binding are governed by exposed surface deficit, not by full volume addition.
+Second, the displacement-composition rule remains boundary-deficit-like in the weak-overlap regime. Ordinary mass additivity and small binding are governed by exposed-boundary deficit, not by full volume addition. This does not mean mass is surface area; the source content remains volume-like occupancy that enters later bookkeeping through a support radius and then through squared-radius terms.
 
 Third, the strong-merger endpoint for complete volume addition corresponds to exponent \(n = 3/2\), not the earlier inverted value. This correction matters directly when internal occupancy is modeled through overlap or merger analogies.
 
-These corrections do not invalidate the excitation-side program. They narrow it. The closure and occupancy model must preserve the weak-overlap surface rule, respect the corrected strong-merger endpoint, and avoid collapsing timing burden into spatial deformation.
+These corrections do not invalidate the excitation-side program. They narrow it. The closure and occupancy model must preserve the weak-overlap exposed-boundary rule, respect the corrected strong-merger endpoint, and avoid collapsing timing burden into spatial deformation.
 
 ## 3. Minimal excitation field on the displaced background
 
@@ -114,8 +132,7 @@ To first order around an isotropic vacuum background, it is enough to expand the
 M^{ij}_{\mathrm{eff}}(x) \approx \frac{\delta^{ij}}{m_0} + A^{ij}_{\Sigma}\,\Sigma + A^{ij}_e\,\chi_e + A^{ij}_m\,\chi_m,
 \]
 
-with symmetric coefficient tensors \(A^{ij}_{\Sigma}\), \(A^{ij}_e\), and \(A^{ij}_m\) describing directional transport-side dressing from displacement, electric-type material loading, and magnetic-type material loading. In practice these need not be equally free. The displacement contribution is constrained by the background geometry, the electric-type contribution is usually more tightly tied to positional or storage configuration, and the magnetic-type contribution is more naturally associated with directional or velocity-linked organization. In the isotropic weak-background limit these tensors reduce to scalar multiples of \(\delta^{ij}\), and the operator collapses to the familiar Schrödinger kinetic term \(-\tfrac{\hbar^2}{2m}
-abla^2\psi\). This makes the slow-envelope statement more than a list of terms: it is the first place where the separated Hamilton--Jacobi branches reappear as separated contributions inside a wave/particle equation.
+with symmetric coefficient tensors \(A^{ij}_{\Sigma}\), \(A^{ij}_e\), and \(A^{ij}_m\) describing directional transport-side dressing from displacement, electric-type material loading, and magnetic-type material loading. In practice these need not be equally free. The displacement contribution is constrained by the background geometry, the electric-type contribution is usually more tightly tied to positional or storage configuration, and the magnetic-type contribution is more naturally associated with directional or velocity-linked organization. In the isotropic weak-background limit these tensors reduce to scalar multiples of \(\delta^{ij}\), and the operator collapses to the familiar Schrödinger kinetic term \(-\tfrac{\hbar^2}{2m}\nabla^2\psi\). This makes the slow-envelope statement more than a list of terms: it is the first place where the separated Hamilton--Jacobi branches reappear as separated contributions inside a wave/particle equation.
 
 A compact way to summarize the same statement is
 
@@ -231,7 +248,7 @@ This section therefore establishes the minimum field-theoretic backbone needed f
 
 ## 4. Closure and support selection
 
-The largest unresolved excitation-side problem is support selection: what fixes the preferred support scale of a localized sustained excitation?
+The largest unresolved excitation-side problem is support selection: what fixes the preferred support scale of a localized sustained excitation? The earlier field-theoretic section established how a localized mode can be written on the displaced background. The next step is to state the independent closure condition that selects which localized support is actually maintained.
 
 A generic localization functional was used temporarily in earlier note work, but that form was not native enough to the present framework. The better starting point is a closure/support energy built directly from the transport/storage logic of the medium.
 
@@ -309,9 +326,25 @@ At the purely schematic level already developed, the qualitative result is:
 
 ## 5. Internal structured occupancy
 
-The large-\(a\) storage term should not be interpreted as empty geometric occupancy. It is better interpreted as an excitation-side closure/storage burden: the effective depth to which a sustained localized mode occupies the available closure capacity of the medium.
+The support functional already shows that a purely geometric storage-side count is too crude. The large-\(a\) storage term should not be interpreted as empty geometric occupancy. It is better interpreted as an excitation-side closure/storage burden: the effective depth to which a sustained localized mode occupies the available closure capacity of the medium.
 
-To avoid overcommitting to literal integer submode counts, replace the storage-side count by a continuous factor \(Q_{\mathrm{occ}}\). In the present draft \(Q_{\mathrm{occ}}\) is treated phenomenologically: it is not a new displacement source term and not a vacuum-energy-density variable, but a dimensionless effective closure/storage loading factor for the excitation. The closure functional becomes
+To avoid overcommitting to literal integer submode counts, replace the storage-side count by a continuous factor \(Q_{\mathrm{occ}}\). In the present paper \(Q_{\mathrm{occ}}\) is not a new displacement source term and not a vacuum-energy-density variable. It is a dimensionless effective closure/storage loading factor for the excitation. More sharply than in the earlier note-stage draft, however, it should not be read as a free placeholder with no physical target. Its natural physical role is to parametrize the collective dressing that separates an isolated closure scale from a bulk packed-matter support scale.
+
+That distinction is already suggested by the Route A picture. The isolated support scale sits near
+
+\[
+a_{\mathrm{iso}} \approx 0.75\,\mathrm{fm},
+\]
+
+while bulk nuclear matter is characterized by the familiar packing law
+
+\[
+R = r_0 A^{1/3},
+\]
+
+with \(r_0\) the per-nucleon bulk packing radius. In the present reading these are not competing radius definitions for the same state. They are two different support regimes: an isolated closure scale and a collective packed support scale. The purpose of \(Q_{\mathrm{occ}}\) is to carry, in dimensionless form, the closure/storage dressing that moves the preferred support from the isolated regime toward the bulk one.
+
+The closure functional therefore becomes
 
 \[
 E_{\mathrm{cl}}(a) = \frac{m c^2}{2} \left[ \alpha_{\mathrm{tr}}\left(\frac{\ell_C}{a}\right) + \alpha_{\mathrm{cyc}}\,Q_{\mathrm{occ}}\left(\frac{a}{\ell_C}\right) \right].
@@ -325,11 +358,95 @@ With this replacement, the preferred support law becomes
 a_* = \ell_C\sqrt{\frac{\alpha_{\mathrm{tr}}}{\alpha_{\mathrm{cyc}}\,Q_{\mathrm{occ}}}}.
 \]
 
-The remaining problem is therefore to give \(Q_{\mathrm{occ}}\) a sharper microscopic and geometric meaning. For now it should be read as a to-be-fitted effective loading factor rather than a derived substrate count.
+### 5.1 Isolated support, bulk support, and the role of \(Q_{\mathrm{occ}}\)
+
+The support law immediately shows how the occupancy channel should be read. If two environments share the same transport-side and cycle-side coefficients but differ in effective internal closure/storage burden, then
+
+\[
+\frac{a_{*,2}}{a_{*,1}} = \sqrt{\frac{Q_{\mathrm{occ},1}}{Q_{\mathrm{occ},2}}}.
+\]
+
+So \(Q_{\mathrm{occ}}\) does not simply count "more stuff present." It is an effective burden parameter inside the support law. Different geometric sharing or collective support can lower the effective burden even while the realized support radius grows. That is exactly the type of behavior later needed for merger and overlap.
+
+This gives a clean reading of the isolated-versus-bulk distinction. Let
+
+\[
+a_{\mathrm{iso}} < a_{\mathrm{bulk}} \approx r_0.
+\]
+
+Then the corresponding occupancy factors satisfy
+
+\[
+Q_{\mathrm{occ}}^{(\mathrm{bulk})}
+=
+Q_{\mathrm{occ}}^{(\mathrm{iso})}
+\left(\frac{a_{\mathrm{iso}}}{a_{\mathrm{bulk}}}\right)^2,
+\]
+
+up to whatever coefficient dressing separates the two environments. In other words, \(Q_{\mathrm{occ}}\) should be interpreted as the effective collective-dressing variable that bridges the isolated Route A support scale and the bulk packed-matter support scale. In the present paper this bridge is formalized, but not yet microscopically derived.
+
+### 5.2 \(r_0\), the per-gram displacement proxy, and the direction of explanation
+
+The occupancy interpretation becomes sharper once the bulk support scale is compared with the displacement-side mass mapping. The framework already uses
+
+\[
+d^2 = \frac{2GM}{c^2}
+\]
+
+as the mass-to-displacement relation in the weak-field branch. Independently, nuclear matter is characterized by a bulk support/packing scale \(r_0\). The numerically important observation is that the displacement scale attached to one gram,
+
+\[
+d_{\mathrm{mole}} \equiv \sqrt{\frac{2G\,(1\,\mathrm{g})}{c^2}},
+\]
+
+lies in the same range as the bulk nuclear packing/support radius.
+
+At the level of present evidence, however, both quantities are still empirical anchors rather than completed substrate derivations. The fitted nuclear support/packing radius \(r_0\) is inferred from nuclear-size phenomenology, while \(G\) is inferred from macroscopic weak-field gravity measurements. They do not enter with the same experimental precision: \(G\) is the sharper macroscopic conversion constant, while \(r_0\) is the more physically suggestive excitation-side scale. The point of comparing them is therefore not to claim that ordinary finite-nucleus fits have already measured \(r_0\) as precisely as \(G\), but to note that the framework can promote the bulk support scale to an exact displacement-equivalent proxy once the one-gram map is adopted.
+
+Writing that proxy as \(r_{0,\mathrm{eff}} \equiv d_{\mathrm{mole}}\), the weak-field identity may be inverted directly:
+
+\[
+G = 500\,r_{0,\mathrm{eff}}^2 c^2
+= 500\,\frac{r_{0,\mathrm{eff}}^2}{\mu_0\varepsilon_0}.
+\]
+
+A suggestive way to read the same relation is to make the vacuum storage pair explicit rather than writing only \(c\). Since
+\[
+c=\frac{1}{\sqrt{\mu_0\varepsilon_0}},
+\]
+one may define the upstream support-through-vacuum quantity
+\[
+\kappa_0 \equiv \frac{r_{0,\mathrm{eff}}}{\sqrt{\mu_0\varepsilon_0}},
+\]
+which is algebraically just \(r_{0,\mathrm{eff}}c\), but written to emphasize that the bulk support length is being measured against the vacuum propagation/storage factor. The present paper does not promote \(\kappa_0\) to a new formal constant. It is mentioned only as an interpretive guide: if the framework eventually derives the macroscopic weak-field bookkeeping from the excitation side, the more natural upstream object may be the support scale carried through the vacuum storage pair, with \(G\) appearing only after squaring and unit packaging.
+
+This should be read carefully. It does not mean that empirical nuclear-radius data alone have derived \(G\). It means that, once the framework identifies the bulk nuclear support/displacement normalization with the exact one-gram displacement proxy, the gravitational conversion constant becomes the SI bookkeeping factor that packages that normalization into kilogram-based weak-field observables.
+
+This does not by itself prove a substrate derivation. But it strongly suggests that the direction of explanation should not run from an already accepted macroscopic \(G\) downward into the excitation branch. The more natural long-term target is the opposite: derive the nuclear support scale first, identify its collective dressing law, and only then recover the weak-field mass-to-displacement map as the macroscopic bookkeeping expression of that support scale.
+
+Said differently, if the framework ever truly derives \(G\), it will likely do so through the support/displacement normalization set by the bulk nuclear scale rather than by starting with \(G\) as primitive. In that sense, \(G\) should be read here as the present high-precision SI conversion factor in the weak-field branch, while \(r_0\) is the more direct physical scale on the excitation side.
+
+The paper therefore keeps two chains conceptually distinct. On the excitation side,
+
+\[
+r_0 \;\longrightarrow\; \text{support scale} \;\longrightarrow\; \text{closure burden}.
+\]
+
+On the weak-field side,
+
+\[
+d^2 = \frac{2GM}{c^2}
+\;\longrightarrow\;
+\Sigma(R),\; \lambda(R),\; v_{\mathrm{esc}}.
+\]
+
+The present claim is not that these two chains have already been fully unified. It is that the observed numerical proximity between bulk \(r_0\) and the per-gram displacement proxy is strong enough to guide how \(Q_{\mathrm{occ}}\) should be interpreted. The occupancy channel is not an abstract fitting knob. It is the formal place where isolated support, bulk support, and eventual mass-to-displacement normalization can meet.
+
+The remaining problem is therefore to give \(Q_{\mathrm{occ}}\) a sharper microscopic and geometric meaning. For the present paper it should be read as an effective collective-dressing factor with a real physical target — the isolated-to-bulk support shift — rather than as a freely floating phenomenological scalar.
 
 ## 6. Geometric composition of internal occupancy
 
-The best current first model treats internal structured occupancy by analogy with two overlapping or merging bubbles. This is a composition model for internal structured burden, not a literal claim that matter is made of two classical geometric bubbles. Earlier note work split the effect into a weak-overlap shared-surface reduction and a separate enlargement term tied to ambient displacement. That was useful scaffolding, but the current view is that those may not be distinct mechanisms. They may be the same composition geometry described from two sides.
+Once \(Q_{\mathrm{occ}}\) is introduced, the next question is how it combines under overlap or merger. The best current first model treats internal structured occupancy by analogy with two overlapping or merging bubbles. This is a composition model for internal structured burden, not a literal claim that matter is made of two classical geometric bubbles. Earlier note work split the effect into a weak-overlap shared-boundary reduction and a separate enlargement term tied to ambient displacement. That was useful scaffolding, but the current view is that those may not be distinct mechanisms. They may be the same composition geometry described from two sides.
 
 The model is therefore simplified here into a single overlap-driven composition law.
 
@@ -347,7 +464,7 @@ with
 - \(u < 1\): overlap,
 - \(u \to 0\): strong merger / concentric limit.
 
-The weak-overlap regime should remain surface-led. The strong-merger endpoint should approach the corrected volume-addition result.
+The weak-overlap regime should remain exposed-boundary-driven. The strong-merger endpoint should approach the corrected volume-addition result. This is a composition rule for nearby support regions, not a claim that mass itself is fundamentally surface-based: the source content remains volume-like occupancy, and the boundary-deficit language only describes how the just-touching additive limit is corrected once overlap begins.
 
 ### 6.2 Effective composition exponent
 
@@ -363,7 +480,7 @@ This gives the correct limits:
 n_{\mathrm{eff}}(1) = 1, \qquad n_{\mathrm{eff}}(0) = \frac{3}{2}.
 \]
 
-So the model is surface-area-like at weak overlap and reaches the corrected full volumetric endpoint at complete merger.
+So the model is exposed-boundary-like at weak overlap and reaches the corrected full volumetric endpoint at complete merger.
 
 ### 6.3 Occupancy composition law
 
@@ -385,7 +502,7 @@ The endpoints are then
 Q_{\mathrm{occ}}(1)=2Q_0, \qquad Q_{\mathrm{occ}}(0)=2^{2/3}Q_0\approx 1.587\,Q_0.
 \]
 
-The strong-merger endpoint matches the corrected equal-input full-merger result. The combined occupancy burden is reduced below the surface-additive sum as the internal bubbles merge.
+The strong-merger endpoint matches the corrected equal-input full-merger result. The combined occupancy burden is reduced below the just-touching additive sum as the internal bubbles merge.
 
 ### 6.4 Support law under geometric composition
 
@@ -413,7 +530,7 @@ At full merger,
 a_*(0)=2^{1/6}a_{*,1}\approx 1.122\,a_{*,1}.
 \]
 
-So deeper overlap reduces the storage-side burden and relaxes the preferred support outward by about 12.2% relative to the surface-additive baseline.
+So deeper overlap reduces the storage-side burden and relaxes the preferred support outward by about 12.2% relative to the just-touching additive baseline.
 
 ### 6.5 Weak-overlap expansion
 
@@ -435,11 +552,11 @@ and therefore
 a_*(u) \approx a_{*,1}\left[1+\frac{\ln 2}{4}\epsilon\right].
 \]
 
-The leading correction is linear in \(1-u\), not quadratic. That is the expected qualitative behavior if the weak-overlap regime is controlled by shared surface area.
+The leading correction is linear in \(1-u\), not quadratic. That is the expected qualitative behavior if the weak-overlap regime is controlled by shared exposed-boundary deficit.
 
 ## 7. Closure-scale shift
 
-The same occupancy model can be fed back into the excitation Hamilton--Jacobi branch by taking the closure burden scale to vary with the square root of effective occupancy. This is the specific closure-side identification used in Section 3.4 to connect carrier-frequency shift to the support/occupancy model,
+The same occupancy model can now be fed back into the excitation Hamilton--Jacobi branch by taking the closure burden scale to vary with the square root of effective occupancy. This is the specific closure-side identification used in Section 3.4 to connect carrier-frequency shift to the support/occupancy model,
 
 \[
 \mu_{\mathrm{cl}}(u) \propto \sqrt{Q_{\mathrm{occ}}(u)}.
@@ -473,7 +590,7 @@ when the coefficient dressings are held fixed, which is exactly the occupancy-si
 
 ## 8. Material response and separation of branches
 
-A central point of the present paper is that material response should not be collapsed into the displacement branch. Materials change local storage ratios and impedance. In the present notation, the constitutive branch is carried schematically by
+The previous sections developed the excitation branch without allowing it to collapse into geometry. The complementary caution is that material response should not be collapsed into the displacement branch either. Materials change local storage ratios and impedance. In the present notation, the constitutive branch is carried schematically by
 
 \[
 \epsilon_r = 1 + \chi_e, \qquad \mu_r = 1 + \chi_m.
@@ -485,7 +602,7 @@ This distinction should remain intact in later work on refractive media, wave/pa
 
 ## 9. Status and open items
 
-The paper now has a stable excitation-side structure. The branch separation, field-based excitation picture, native closure/support functional, continuous occupancy refinement, and overlap-driven composition law are sufficient to support the present argument without further architectural change.
+The paper now has a stable excitation-side structure. At this stage the main question is no longer whether the branch has enough architecture to stand as a paper. It does. The remaining question is which unresolved items should be stated as live continuation rather than incorrectly promoted to solved status. The branch separation, field-based excitation picture, native closure/support functional, continuous occupancy refinement, and overlap-driven composition law are sufficient to support the present argument without further architectural change.
 
 The remaining work is narrower than the earlier note-stage version suggested. The main unresolved items are:
 
@@ -493,13 +610,27 @@ The remaining work is narrower than the earlier note-stage version suggested. Th
 2. a stronger derivation of the closure/phase functional beyond the current first STFR-native form,
 3. a constitutive closure linking the scalar support dressings \(t_{\bullet}, c_{\bullet}\) to the directional transport tensors \(A^{ij}_{\bullet}\).
 
-These are extensions of the current structure, not reasons to reopen it. The present draft is therefore best read as a first coherent excitation-side formulation whose remaining tasks are refinement and closure, rather than redefinition of the basic branch architecture.
+These are extensions of the current structure, not reasons to reopen it. The present draft is therefore best read as a first coherent excitation-side formulation whose remaining tasks are refinement and closure, rather than redefinition of the basic structure.
 
 ## 10. Conclusion
 
-The excitation-side branch of the homogeneous propagation framework can now be stated more sharply than before. The displacement layer fixes the effective background geometry, but it does not determine closure by itself. A sustained localized matter excitation requires its own field-based closure branch and its own support-selection logic. The material branch must also remain distinct, because constitutive loading changes local storage response rather than simply reproducing geometric displacement. Within that branch, electric-type and magnetic-type response are treated as propagation-limited constitutive analogs whose constraint structure differs, rather than as literal imported Maxwell primitives. When magnetic-type behavior is compared to spin or steering, the appropriate comparison for environmental forcing is the external-field regime, not the co-moving internal-thrust regime.
+The excitation-side branch of the homogeneous propagation framework can now be stated more sharply than before. The displacement layer fixes the effective background geometry, but it does not determine closure by itself. A sustained localized matter excitation requires its own field-based closure description and its own support-selection logic. The material sector must also remain distinct, because constitutive loading changes local storage response rather than simply reproducing geometric displacement. Within that branch, electric-type and magnetic-type response are treated as propagation-limited constitutive analogs whose constraint structure differs, rather than as literal imported Maxwell primitives. When magnetic-type behavior is compared to spin or steering, the appropriate comparison for environmental forcing is the external-field regime, not the co-moving internal-thrust regime.
 
-The present draft therefore develops a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is surface-led at weak overlap and approaches the corrected volumetric endpoint at strong merger.
+The present draft therefore develops a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. That occupancy channel is also given a sharper physical target: it is the formal bridge between the isolated support scale and the bulk packed-matter support scale near \(r_0\). Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is exposed-boundary-driven at weak overlap and approaches the corrected volumetric endpoint at strong merger.
 
-This is not yet the final closure theory of matter in the framework. But it turns the excitation problem into a more definite program: derive the microscopic excitation-side closure/storage burden from the substrate, refine the closure functional beyond the current first form, and determine whether support shift, closure-frequency shift, and effective localized-mode energy continue to move consistently under the same occupancy geometry. That is the current live continuation of the framework.
+This is not yet the final closure theory of matter in the framework. It does, however, convert the excitation problem from a loose placeholder into a defined formal program: derive the microscopic excitation-side closure/storage burden from the substrate, show how the isolated support scale is collectively dressed into the bulk scale near \(r_0\), recover the mass-to-displacement normalization from that support scale rather than treating \(G\) as primitive, refine the closure functional beyond the current first form, and determine whether support shift, closure-frequency shift, and effective localized-mode energy continue to move consistently under the same occupancy geometry. In that more modest but more disciplined sense, the paper functions as the first formal excitation-side branch of the series rather than as a final statement of matter theory.
 
+
+
+## References
+
+1. Buckeyne, James. *Homogeneous Light Propagation Framework*. Zenodo. doi:10.5281/zenodo.18997960.
+2. Buckeyne, James. *The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects*. Zenodo. doi:10.5281/zenodo.19079929.
+3. Buckeyne, James. *The Homogeneous Propagation Framework: Wigner Rotation from Noncollinear Composition*. Zenodo. doi:10.5281/zenodo.19155341.
+4. Buckeyne, James. *The Homogeneous Propagation Framework: Retardation, Cumulative Field Structure, and Rotating-Source Response*. Zenodo. doi:10.5281/zenodo.19155407.
+5. Buckeyne, James. *The Homogeneous Propagation Framework: Weak-Field Observational Tests*. Companion paper.
+6. Buckeyne, James. *The Homogeneous Propagation Framework: Philosophical Foundations and Postulate Structure*. Companion paper.
+7. Rodrigues, Olinde. “Des lois géométriques qui régissent les déplacements d'un système solide dans l'espace, et de la variation des coordonnées provenant de ces déplacements considérés indépendamment des causes qui peuvent les produire.” *Journal de Mathématiques Pures et Appliquées* 5 (1840): 380–440.
+8. de Broglie, Louis. *Recherches sur la théorie des quanta*. Paris, 1924.
+9. Schrödinger, Erwin. “An Undulatory Theory of the Mechanics of Atoms and Molecules.” *Physical Review* 28, no. 6 (1926): 1049–1070. doi:10.1103/PhysRev.28.1049.
+10. Hamilton, William Rowan. “On Quaternions; or on a New System of Imaginaries in Algebra.” *The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science* 25, no. 163 (1844): 489–495.
