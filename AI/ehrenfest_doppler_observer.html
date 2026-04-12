@@ -1,0 +1,377 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+#wrap{padding:0.5rem 0;font-family:var(--font-sans,sans-serif);color:var(--color-text-primary)}
+canvas{display:block;margin:0 auto}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;max-width:620px;margin:5px auto 0;padding:0 8px}
+.row{display:flex;align-items:center;gap:8px;margin:3px 0}
+.row label{font-size:11px;color:var(--color-text-secondary);width:132px;flex-shrink:0}
+.row input[type=range]{flex:1}
+.row .v{font-size:11px;font-weight:500;width:52px;text-align:right}
+.stats{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:4px 0;font-size:11px}
+.stat{background:var(--color-background-secondary);border-radius:6px;padding:3px 9px}
+.stat span{color:var(--color-text-secondary)}.stat b{font-weight:500}
+.leg{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;font-size:10px;color:var(--color-text-secondary);margin:3px 0}
+.li{display:flex;align-items:center;gap:4px}
+.ld{width:16px;height:3px;border-radius:2px}
+.note{text-align:center;font-size:10px;color:var(--color-text-tertiary);margin:2px 0}
+.dbar{display:flex;align-items:center;justify-content:center;gap:6px;margin:3px 0;font-size:10px;color:var(--color-text-secondary)}
+#dopplerbar{width:200px;height:10px;border-radius:5px}
+</style>
+<div id="wrap">
+<canvas id="c" width="620" height="400"></canvas>
+<div class="stats">
+  <div class="stat"><span>β: </span><b id="s-b">0.50</b></div>
+  <div class="stat"><span>γ: </span><b id="s-g">1.155</b></div>
+  <div class="stat"><span>obs pos: </span><b id="s-op">(0, 240) ls</b></div>
+  <div class="stat"><span>t_ret min: </span><b id="s-tn">0 ls</b></div>
+  <div class="stat"><span>t_ret max: </span><b id="s-tr">0 ls</b></div>
+  <div class="stat"><span>twist: </span><b id="s-tw">0.0°</b></div>
+</div>
+<div class="dbar">
+  <span>red (receding)</span>
+  <canvas id="dopplerbar" width="200" height="10"></canvas>
+  <span>(approaching) blue</span>
+</div>
+<div class="note">c=1 px/ls &nbsp;|&nbsp; D/r signed: negative = observer inside wheel &nbsp;|&nbsp; D=0 → at hub</div>
+<div class="cols">
+  <div>
+    <div class="row"><label>rim speed β</label><input type="range" id="sl-b" min="0.01" max="0.999" step="0.001" value="0.5"><span class="v" id="v-b">0.500</span></div>
+    <div class="row"><label>proper vel w/c</label><input type="range" id="sl-w" min="0.01" max="5" step="0.01" value="0.577"><span class="v" id="v-w">0.577</span></div>
+    <div class="row"><label>observer D/r</label><input type="range" id="sl-d" min="-0.95" max="10" step="0.05" value="3.0"><span class="v" id="v-d">3.00</span></div>
+    <div class="row"><label>observer offset X/r</label><input type="range" id="sl-ox" min="-3" max="3" step="0.05" value="0"><span class="v" id="v-ox">0.00</span></div>
+    <div class="row"><label>spokes N</label><input type="range" id="sl-n" min="3" max="32" step="1" value="12"><span class="v" id="v-n">12</span></div>
+  </div>
+  <div>
+    <div class="row"><label>spoke segments</label><input type="range" id="sl-ss" min="2" max="32" step="1" value="14"><span class="v" id="v-ss">14</span></div>
+    <div class="row"><label>rim segments</label><input type="range" id="sl-rs" min="6" max="128" step="1" value="64"><span class="v" id="v-rs">64</span></div>
+    <div class="row"><label>blur span</label><input type="range" id="sl-sp" min="1" max="60" step="1" value="8"><span class="v" id="v-sp">8</span></div>
+    <div class="row"><label>alpha decay</label><input type="range" id="sl-ad" min="0.3" max="5" step="0.1" value="2.0"><span class="v" id="v-ad">2.0</span></div>
+    <div class="row"><label>break factor</label><input type="range" id="sl-br" min="0.01" max="1" step="0.01" value="0.4"><span class="v" id="v-br">0.40</span></div>
+  </div>
+</div>
+<div class="cols" style="margin-top:1px">
+  <div>
+    <div class="row"><label>anim speed</label><input type="range" id="sl-as" min="0" max="1" step="0.005" value="0.15"><span class="v" id="v-as">0.150</span></div>
+    <div class="row"><label>wheel radius (ls)</label><input type="range" id="sl-r" min="30" max="130" step="1" value="80"><span class="v" id="v-r">80</span></div>
+  </div>
+  <div>
+    <div class="row"><label>LUT frames</label><input type="range" id="sl-lf" min="128" max="1024" step="128" value="512"><span class="v" id="v-lf">512</span></div>
+    <div class="row"><label>ghost rim</label><input type="range" id="sl-gr" min="0" max="1" step="1" value="1"><span class="v" id="v-gr">on</span></div>
+  </div>
+</div>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=620,H=400,CX=300,CY=175;
+const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=dark?'#c2c0b6':'#3d3d3a', mc=dark?'#555':'#aaa';
+
+let beta=0.5,N=12,SS=14,RS=64,Dratio=3.0,obsOffsetX=0;
+let blurSpan=8,alphaDecay=2.0,breakF=0.4,animSpd=0.15,R=80,LF=512,showGhost=true;
+let phase=0,last=null,needRebuild=true,LUT=null;
+
+function gam(b){return 1/Math.sqrt(Math.max(1e-12,1-b*b))}
+function betaFromProper(w){return w/Math.sqrt(1+w*w)}
+
+function dopplerFactor(phi_ret, r_loc, obsX, obsY){
+  const ex=CX+r_loc*Math.cos(phi_ret), ey=CY+r_loc*Math.sin(phi_ret);
+  const dx=obsX-ex, dy=obsY-ey;
+  const d=Math.sqrt(dx*dx+dy*dy);
+  if(d<0.001) return 1;
+  const rhat_x=dx/d, rhat_y=dy/d;
+  const omega=beta/R;
+  const vx=-omega*r_loc*Math.sin(phi_ret), vy=omega*r_loc*Math.cos(phi_ret);
+  const beta_r=(vx*rhat_x+vy*rhat_y); // already in units of c since c=1
+  const br=Math.max(-0.9999,Math.min(0.9999,beta_r));
+  return Math.sqrt((1+br)/(1-br));
+}
+
+function dopplerToRGB(f){
+  // f<1 receding (red), f>1 approaching (blue), f=1 white
+  // map log scale: log(f) in [-0.7, 0.7] roughly
+  const t=Math.max(-1,Math.min(1, Math.log(f)/0.7));
+  let r,g,b;
+  if(t>=0){// approaching: white->cyan->blue
+    r=Math.round(255*(1-t));
+    g=Math.round(255*(1-t*0.5));
+    b=255;
+  } else {// receding: white->yellow->red
+    r=255;
+    g=Math.round(255*(1+t*0.5));
+    b=Math.round(255*(1+t));
+  }
+  return `rgb(${Math.max(0,r)},${Math.max(0,g)},${Math.max(0,b)})`;
+}
+
+function dopplerToRGBA(f, alpha){
+  const t=Math.max(-1,Math.min(1,Math.log(f)/0.7));
+  let r,g,b;
+  if(t>=0){r=Math.round(255*(1-t));g=Math.round(255*(1-t*0.5));b=255;}
+  else{r=255;g=Math.round(255*(1+t*0.5));b=Math.round(255*(1+t));}
+  return `rgba(${Math.max(0,r)},${Math.max(0,g)},${Math.max(0,b)},${alpha.toFixed(3)})`;
+}
+
+function solveRetAngle(phi_now, r_local, omega, obsX, obsY){
+  if(r_local<0.001) return Math.sqrt((CX-obsX)**2+(CY-obsY)**2);
+  let tRet=0;
+  for(let i=0;i<24;i++){
+    const phi_e=phi_now-omega*tRet;
+    const ex=CX+r_local*Math.cos(phi_e), ey=CY+r_local*Math.sin(phi_e);
+    tRet=Math.sqrt((ex-obsX)**2+(ey-obsY)**2);
+  }
+  return tRet;
+}
+
+function buildLUT(){
+  const obsX=CX+obsOffsetX*R, obsY=CY+Dratio*R;
+  const omega=beta/R;
+  const lut={frames:LF,R,N,SS,RS,omega,beta,obsX,obsY,rim:[],spokes:[]};
+  for(let f=0;f<LF;f++){
+    const baseAng=(f/LF)*Math.PI*2;
+    const rimRow=[];
+    for(let i=0;i<RS;i++){
+      const phi_now=baseAng+(i+0.5)/RS*Math.PI*2;
+      const tRet=solveRetAngle(phi_now,R,omega,obsX,obsY);
+      const phi_ret=phi_now-omega*tRet;
+      const df=dopplerFactor(phi_ret,R,obsX,obsY);
+      rimRow.push({phi_now,phi_ret,tRet,df,
+        x_ret:CX+R*Math.cos(phi_ret),y_ret:CY+R*Math.sin(phi_ret)});
+    }
+    lut.rim.push(rimRow);
+    const spokeRow=[];
+    for(let i=0;i<N;i++){
+      const phi_spoke=baseAng+(i/N)*Math.PI*2;
+      const pts=[];
+      for(let s=0;s<=SS;s++){
+        const frac=s/SS, r_loc=frac*R;
+        const tRet=solveRetAngle(phi_spoke,r_loc,omega,obsX,obsY);
+        const phi_ret=phi_spoke-omega*tRet;
+        const df=r_loc>1?dopplerFactor(phi_ret,r_loc,obsX,obsY):1;
+        pts.push({
+          x_ret:CX+r_loc*Math.cos(phi_ret),y_ret:CY+r_loc*Math.sin(phi_ret),
+          x_now:CX+r_loc*Math.cos(phi_spoke),y_now:CY+r_loc*Math.sin(phi_spoke),
+          tRet,df
+        });
+      }
+      spokeRow.push(pts);
+    }
+    lut.spokes.push(spokeRow);
+  }
+  LUT=lut; needRebuild=false;
+}
+
+// draw doppler legend bar
+function drawDopplerBar(){
+  const bc=document.getElementById('dopplerbar');
+  const bx=bc.getContext('2d');
+  const bw=bc.width, bh=bc.height;
+  for(let i=0;i<bw;i++){
+    const t=(i/bw)*2-1; // -1=red, 0=white, 1=blue
+    const f=Math.exp(t*0.7);
+    bx.fillStyle=dopplerToRGB(f);
+    bx.fillRect(i,0,1,bh);
+  }
+}
+drawDopplerBar();
+
+function draw(ts){
+  if(last!==null){
+    const dt=Math.min((ts-last)/1000,0.05);
+    phase+=animSpd*dt*LF*beta;
+  }
+  last=ts;
+  if(needRebuild) buildLUT();
+  if(!LUT){requestAnimationFrame(draw);return;}
+
+  ctx.clearRect(0,0,W,H);
+  const obsX=LUT.obsX, obsY=LUT.obsY;
+  const g=gam(beta), contraction=1-1/g, broken=contraction>=breakF;
+  const halfSeg=Math.PI/RS, contractedHalf=halfSeg/g;
+  const fi0=((Math.floor(phase)%LF)+LF)%LF;
+  const inside=Dratio<1.0;
+
+  // wheel ghost circle
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+  ctx.strokeStyle=dark?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)';
+  ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.stroke(); ctx.setLineDash([]);
+
+  // if inside, shade wheel interior
+  if(inside){
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+    ctx.fillStyle=dark?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.03)';
+    ctx.fill();
+  }
+
+  // obs to center line
+  ctx.beginPath(); ctx.moveTo(obsX,obsY); ctx.lineTo(CX,CY);
+  ctx.strokeStyle='rgba(46,204,113,0.1)'; ctx.lineWidth=1;
+  ctx.setLineDash([3,8]); ctx.stroke(); ctx.setLineDash([]);
+
+  // ghost instantaneous
+  if(showGhost){
+    const row=LUT.rim[fi0];
+    for(let i=0;i<RS;i++){
+      const pt=row[i];
+      const a0=pt.phi_now-contractedHalf, a1=pt.phi_now+contractedHalf;
+      ctx.beginPath(); ctx.arc(CX,CY,R,a0,a1);
+      ctx.strokeStyle='rgba(180,180,180,0.12)'; ctx.lineWidth=4; ctx.stroke();
+    }
+    const srow=LUT.spokes[fi0];
+    for(let i=0;i<N;i++){
+      const pts=srow[i];
+      ctx.beginPath(); ctx.moveTo(pts[0].x_now,pts[0].y_now);
+      for(let s=1;s<=SS;s++) ctx.lineTo(pts[s].x_now,pts[s].y_now);
+      ctx.strokeStyle='rgba(180,180,180,0.1)'; ctx.lineWidth=1; ctx.stroke();
+    }
+  }
+
+  let twistMin=Infinity,twistMax=-Infinity,minTret=Infinity,maxTret=0;
+
+  // retarded rim — Doppler colored, motion blurred
+  for(let i=0;i<RS;i++){
+    const pt0=LUT.rim[fi0][i];
+    const baseColor=dopplerToRGB(pt0.df);
+    for(let s=0;s<blurSpan;s++){
+      const fi=((fi0-s)%LF+LF)%LF;
+      const pt=LUT.rim[fi][i];
+      const a0=pt.phi_ret-contractedHalf, a1=pt.phi_ret+contractedHalf;
+      const ageFrac=s/(blurSpan>1?blurSpan-1:1);
+      const alpha=Math.pow(1-ageFrac,alphaDecay)*(broken?0.7:0.95);
+      if(s===0){
+        ctx.beginPath(); ctx.arc(CX,CY,R,a0,a1);
+        ctx.strokeStyle=broken
+          ? `rgba(255,80,30,${alpha.toFixed(3)})`
+          : dopplerToRGBA(pt.df,alpha);
+        ctx.lineWidth=5; ctx.stroke();
+        const twist=pt.phi_now-pt.phi_ret;
+        if(twist<twistMin) twistMin=twist;
+        if(twist>twistMax) twistMax=twist;
+        if(pt.tRet<minTret) minTret=pt.tRet;
+        if(pt.tRet>maxTret) maxTret=pt.tRet;
+      } else {
+        ctx.beginPath(); ctx.arc(CX,CY,R,a0,a1);
+        ctx.strokeStyle=dopplerToRGBA(pt.df,alpha*0.6);
+        ctx.lineWidth=3; ctx.stroke();
+      }
+    }
+    if(broken){
+      const pt=LUT.rim[fi0][i];
+      const tx=Math.cos(pt.phi_ret+Math.PI/2),ty=Math.sin(pt.phi_ret+Math.PI/2);
+      const esc=28+(contraction-breakF)*160;
+      ctx.beginPath(); ctx.moveTo(pt.x_ret,pt.y_ret);
+      ctx.lineTo(pt.x_ret+tx*esc,pt.y_ret+ty*esc);
+      ctx.strokeStyle='rgba(255,80,30,0.4)'; ctx.lineWidth=1.5;
+      ctx.setLineDash([3,3]); ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
+
+  // retarded spokes — Doppler colored per segment, motion blurred
+  for(let i=0;i<N;i++){
+    for(let s=0;s<blurSpan;s++){
+      const fi=((fi0-s)%LF+LF)%LF;
+      const pts=LUT.spokes[fi][i];
+      const ageFrac=s/(blurSpan>1?blurSpan-1:1);
+      const baseAlpha=Math.pow(1-ageFrac,alphaDecay)*0.85;
+      // draw spoke segment by segment so each gets its own Doppler color
+      for(let p=0;p<SS;p++){
+        const p0=pts[p], p1=pts[p+1];
+        const df=(p0.df+p1.df)*0.5;
+        ctx.beginPath(); ctx.moveTo(p0.x_ret,p0.y_ret); ctx.lineTo(p1.x_ret,p1.y_ret);
+        ctx.strokeStyle=dopplerToRGBA(df,baseAlpha*(s===0?1:0.6));
+        ctx.lineWidth=s===0?1.8:1; ctx.stroke();
+      }
+    }
+  }
+
+  // hub
+  ctx.beginPath(); ctx.arc(CX,CY,5,0,Math.PI*2); ctx.fillStyle='#f39c12'; ctx.fill();
+
+  // observer — different icon if inside
+  if(inside){
+    ctx.beginPath(); ctx.arc(obsX,obsY,8,0,Math.PI*2);
+    ctx.strokeStyle='#2ecc71'; ctx.lineWidth=2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(obsX,obsY,3,0,Math.PI*2); ctx.fillStyle='#2ecc71'; ctx.fill();
+  } else {
+    ctx.beginPath(); ctx.arc(obsX,obsY,8,0,Math.PI*2); ctx.fillStyle='#2ecc71'; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(obsX,obsY-8); ctx.lineTo(obsX-6,obsY-17); ctx.lineTo(obsX+6,obsY-17);
+    ctx.closePath(); ctx.fillStyle='#2ecc71'; ctx.fill();
+  }
+  ctx.save(); ctx.font='10px sans-serif'; ctx.fillStyle=mc; ctx.textAlign='center';
+  const oxls=(obsOffsetX*R).toFixed(0), oyls=(Dratio*R).toFixed(0);
+  ctx.fillText((inside?'obs [inside]':'obs')+' ('+oxls+', '+oyls+') ls', obsX, obsY+(inside?22:22));
+  ctx.restore();
+
+  // offset indicator
+  if(Math.abs(obsOffsetX)>0.05){
+    ctx.beginPath(); ctx.moveTo(CX,obsY+4); ctx.lineTo(obsX,obsY+4);
+    ctx.strokeStyle='rgba(46,204,113,0.25)'; ctx.lineWidth=1;
+    ctx.setLineDash([2,3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.save(); ctx.font='9px sans-serif'; ctx.fillStyle='rgba(46,204,113,0.6)';
+    ctx.textAlign='center';
+    ctx.fillText((obsOffsetX>0?'+':'')+obsOffsetX.toFixed(2)+'r',(CX+obsX)/2,obsY+14);
+    ctx.restore();
+  }
+
+  // ruler
+  ctx.save(); ctx.strokeStyle=mc; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(12,H-18); ctx.lineTo(12+R,H-18);
+  ctx.moveTo(12,H-22); ctx.lineTo(12,H-14);
+  ctx.moveTo(12+R,H-22); ctx.lineTo(12+R,H-14);
+  ctx.stroke();
+  ctx.font='9px sans-serif'; ctx.fillStyle=mc; ctx.textAlign='center';
+  ctx.fillText(R+' ls',12+R/2,H-6);
+  ctx.restore();
+
+  // top info
+  ctx.save(); ctx.font='11px sans-serif'; ctx.fillStyle=tc; ctx.textAlign='left';
+  ctx.fillText('β='+beta.toFixed(3)+'  γ='+g.toFixed(3)+'  ω='+(beta/R).toFixed(5)+' rad/ls  '+(broken?'BROKEN':'intact')+(inside?' [inside]':''),8,16);
+  ctx.restore();
+
+  const twist=isFinite(twistMin)?(twistMax-twistMin)*180/Math.PI:0;
+  document.getElementById('s-b').textContent=beta.toFixed(3);
+  document.getElementById('s-g').textContent=g.toFixed(4);
+  document.getElementById('s-op').textContent='('+oxls+','+oyls+') ls';
+  document.getElementById('s-tn').textContent=isFinite(minTret)?minTret.toFixed(1)+' ls':'—';
+  document.getElementById('s-tr').textContent=maxTret.toFixed(1)+' ls';
+  document.getElementById('s-tw').textContent=twist.toFixed(2)+'°';
+
+  requestAnimationFrame(draw);
+}
+
+function sl(id,geom,cb){
+  document.getElementById(id).addEventListener('input',function(){cb(this.value);if(geom)needRebuild=true;});
+}
+function setBeta(b){
+  beta=Math.min(0.9999,Math.max(0.001,parseFloat(b)));
+  document.getElementById('v-b').textContent=beta.toFixed(3);
+  const w=Math.min(5,beta*gam(beta));
+  document.getElementById('sl-w').value=w.toFixed(3);
+  document.getElementById('v-w').textContent=w.toFixed(3);
+}
+function setProper(w){
+  beta=betaFromProper(parseFloat(w));
+  document.getElementById('sl-b').value=beta.toFixed(4);
+  document.getElementById('v-b').textContent=beta.toFixed(3);
+  document.getElementById('v-w').textContent=parseFloat(w).toFixed(3);
+}
+
+sl('sl-b',true,v=>setBeta(v));
+sl('sl-w',true,v=>setProper(v));
+sl('sl-d',true,v=>{Dratio=parseFloat(v);document.getElementById('v-d').textContent=parseFloat(v).toFixed(2);});
+sl('sl-ox',true,v=>{obsOffsetX=parseFloat(v);document.getElementById('v-ox').textContent=parseFloat(v).toFixed(2);});
+sl('sl-n',true,v=>{N=parseInt(v);document.getElementById('v-n').textContent=v;});
+sl('sl-ss',true,v=>{SS=parseInt(v);document.getElementById('v-ss').textContent=v;});
+sl('sl-rs',true,v=>{RS=parseInt(v);document.getElementById('v-rs').textContent=v;});
+sl('sl-sp',false,v=>{blurSpan=parseInt(v);document.getElementById('v-sp').textContent=v;});
+sl('sl-ad',false,v=>{alphaDecay=parseFloat(v);document.getElementById('v-ad').textContent=parseFloat(v).toFixed(1);});
+sl('sl-br',false,v=>{breakF=parseFloat(v);document.getElementById('v-br').textContent=parseFloat(v).toFixed(2);});
+sl('sl-as',false,v=>{animSpd=parseFloat(v);document.getElementById('v-as').textContent=parseFloat(v).toFixed(3);});
+sl('sl-r',true,v=>{R=parseInt(v);document.getElementById('v-r').textContent=v;});
+sl('sl-lf',true,v=>{LF=parseInt(v);document.getElementById('v-lf').textContent=v;});
+sl('sl-gr',false,v=>{showGhost=v==='1';document.getElementById('v-gr').textContent=showGhost?'on':'off';});
+
+buildLUT();
+requestAnimationFrame(draw);
+</script>
