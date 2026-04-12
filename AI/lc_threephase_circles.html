@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Phase LC Medium</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  :root {
+    --bg: #080a0f;
+    --cap-a: #e05050;
+    --cap-b: #4a9eff;
+    --cap-c: #50d090;
+    --mag-a: rgba(224,80,80,0.5);
+    --mag-b: rgba(74,158,255,0.5);
+    --mag-c: rgba(80,208,144,0.5);
+    --sum: #f0c040;
+    --text: #4a5a6a;
+    --panel: #0c0f18;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .sub {
+    font-size: 10px;
+    color: #2a3540;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+  canvas { display: block; width: 100%; max-width: 900px; }
+  .controls {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid #1e2a35;
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: #3a5060; color: #8090a0; }
+  .btn.on { border-color: #f0c04060; color: #f0c040; }
+  .speed-wrap {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; color: var(--text);
+  }
+  input[type=range] {
+    -webkit-appearance: none; width: 80px; height: 2px;
+    background: #1e2a35; outline: none; border-radius: 1px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 10px; height: 10px;
+    border-radius: 50%; background: #f0c040; cursor: pointer;
+  }
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center; margin-top: 10px;
+    font-size: 9px; letter-spacing: 0.1em; color: var(--text);
+  }
+  .li { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .ring { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid; background: transparent; }
+</style>
+</head>
+<body>
+<h1>3-Phase LC Vacuum Medium</h1>
+<div class="sub">capacitive cells (filled circles) · magnetic toroids (rings) · amplitude set by wave</div>
+
+<canvas id="waveCanvas" height="160"></canvas>
+<canvas id="circCanvas" height="260"></canvas>
+
+<div class="controls">
+  <button class="btn on" id="btnPlay" onclick="togglePlay()">▶ play</button>
+  <div class="speed-wrap">
+    speed
+    <input type="range" id="spd" min="0.1" max="3" step="0.05" value="0.6">
+    <span id="spdVal">0.6×</span>
+  </div>
+
+  <button class="btn on" id="btnWave" onclick="toggle('wave')">wave: on</button>
+  <button class="btn on" id="btnMag" onclick="toggle('mag')">magnetic: on</button>
+  <button class="btn on" id="btnSum" onclick="toggle('sum')">sum: on</button>
+  <button class="btn on" id="btnCursor" onclick="toggle('cursor')">cursor: on</button>
+</div>
+
+<div class="legend">
+  <div class="li"><div class="dot" style="background:#e05050"></div> phase A (ε₀)</div>
+  <div class="li"><div class="dot" style="background:#4a9eff"></div> phase B (ε₀)</div>
+  <div class="li"><div class="dot" style="background:#50d090"></div> phase C (ε₀)</div>
+  <div class="li"><div class="ring" style="border-color:#e05050"></div> mag A (μ₀)</div>
+  <div class="li"><div class="ring" style="border-color:#4a9eff"></div> mag B (μ₀)</div>
+  <div class="li"><div class="ring" style="border-color:#50d090"></div> mag C (μ₀)</div>
+</div>
+
+<script>
+const wc = document.getElementById('waveCanvas');
+const cc = document.getElementById('circCanvas');
+const wctx = wc.getContext('2d');
+const cctx = cc.getContext('2d');
+
+let T = 0, playing = false, speed = 0.6, lastTime = null, cursorFrac = 0;
+let show = { wave: true, mag: true, sum: true, cursor: true };
+
+const phases = [
+  { offset: 0,   cap: '#e05050', mag: 'rgba(224,80,80,0.6)',  magS: '#e05050' },
+  { offset: 4/3, cap: '#4a9eff', mag: 'rgba(74,158,255,0.6)', magS: '#4a9eff' },
+  { offset: 8/3, cap: '#50d090', mag: 'rgba(80,208,144,0.6)', magS: '#50d090' },
+];
+
+// cos² wave: capacitive
+function capVal(x, offset) {
+  const v = Math.cos((x + offset) * Math.PI / 2);
+  return v * v;
+}
+// magnetic: half period offset
+function magVal(x, offset) {
+  const v = Math.cos((x + offset - 1) * Math.PI / 2);
+  return v * v;
+}
+
+function resize() {
+  const mw = Math.min(900, window.innerWidth - 24);
+  const dpr = window.devicePixelRatio || 1;
+  for (const c of [wc, cc]) {
+    c.style.width = mw + 'px';
+  }
+  wc.width = mw * dpr; wc.height = 160 * dpr;
+  cc.width = mw * dpr; cc.height = 260 * dpr;
+}
+
+function drawWaves() {
+  const W = wc.width, H = wc.height;
+  const dpr = window.devicePixelRatio || 1;
+  wctx.clearRect(0, 0, W, H);
+
+  // background
+  wctx.fillStyle = '#0a0c12';
+  wctx.fillRect(0, 0, W, H);
+
+  const padX = 30 * dpr;
+  const plotW = W - padX * 2;
+  const midY = H * 0.55;
+  const scaleY = H * 0.38;
+  const xUnits = 8; // visible x units
+  const scaleX = plotW / xUnits;
+
+  // grid
+  wctx.strokeStyle = '#121820';
+  wctx.lineWidth = 1;
+  for (let g = 0; g <= xUnits; g++) {
+    wctx.beginPath();
+    wctx.moveTo(padX + g * scaleX, 0);
+    wctx.lineTo(padX + g * scaleX, H);
+    wctx.stroke();
+  }
+  wctx.beginPath();
+  wctx.strokeStyle = '#1a2530';
+  wctx.moveTo(0, midY); wctx.lineTo(W, midY); wctx.stroke();
+
+  const xStart = -T;
+  const steps = Math.ceil(plotW / 1.5);
+
+  // draw each phase wave
+  for (const ph of phases) {
+    // capacitive solid
+    wctx.beginPath();
+    wctx.strokeStyle = ph.cap;
+    wctx.lineWidth = 1.8 * dpr;
+    wctx.setLineDash([]);
+    for (let i = 0; i <= steps; i++) {
+      const wx = xStart + (i / steps) * xUnits;
+      const y = capVal(wx, ph.offset);
+      const px = padX + (i / steps) * plotW;
+      const py = midY - y * scaleY;
+      i === 0 ? wctx.moveTo(px, py) : wctx.lineTo(px, py);
+    }
+    wctx.stroke();
+
+    // magnetic dashed
+    if (show.mag) {
+      wctx.beginPath();
+      wctx.strokeStyle = ph.mag;
+      wctx.lineWidth = 1.2 * dpr;
+      wctx.setLineDash([5 * dpr, 4 * dpr]);
+      for (let i = 0; i <= steps; i++) {
+        const wx = xStart + (i / steps) * xUnits;
+        const y = magVal(wx, ph.offset);
+        const px = padX + (i / steps) * plotW;
+        const py = midY - y * scaleY;
+        i === 0 ? wctx.moveTo(px, py) : wctx.lineTo(px, py);
+      }
+      wctx.stroke();
+      wctx.setLineDash([]);
+    }
+  }
+
+  // sum line
+  if (show.sum) {
+    wctx.beginPath();
+    wctx.strokeStyle = '#f0c040';
+    wctx.lineWidth = 1.5 * dpr;
+    wctx.setLineDash([]);
+    for (let i = 0; i <= steps; i++) {
+      const wx = xStart + (i / steps) * xUnits;
+      const y = capVal(wx, 0) + capVal(wx, 4/3) + capVal(wx, 8/3);
+      const px = padX + (i / steps) * plotW;
+      const py = midY - y * scaleY;
+      i === 0 ? wctx.moveTo(px, py) : wctx.lineTo(px, py);
+    }
+    wctx.stroke();
+  }
+
+  // label
+  wctx.fillStyle = '#2a3a48';
+  wctx.font = `${9 * dpr}px Share Tech Mono, monospace`;
+  wctx.textAlign = 'left';
+  wctx.fillText('wave amplitude', padX, 12 * dpr);
+}
+
+function drawCircles() {
+  const W = cc.width, H = cc.height;
+  const dpr = window.devicePixelRatio || 1;
+  cctx.clearRect(0, 0, W, H);
+
+  cctx.fillStyle = '#080a0f';
+  cctx.fillRect(0, 0, W, H);
+
+  const padX = 30 * dpr;
+  const plotW = W - padX * 2;
+  const xUnits = 8;
+  const scaleX = plotW / xUnits;
+
+  // horizontal axis line
+  const axisY = H * 0.5;
+  cctx.strokeStyle = '#1a2530';
+  cctx.lineWidth = 1;
+  cctx.beginPath();
+  cctx.moveTo(padX, axisY);
+  cctx.lineTo(W - padX, axisY);
+  cctx.stroke();
+
+  // label
+  cctx.fillStyle = '#2a3a48';
+  cctx.font = `${9 * dpr}px Share Tech Mono, monospace`;
+  cctx.textAlign = 'left';
+  cctx.fillText('field geometry', padX, 12 * dpr);
+
+  const maxR = H * 0.36;
+  const xStart = -T;
+
+  // Circles at every 2/3 unit, cycling A→B→C
+  // Magnetic rings at every 2/3 unit offset by 1/3, cycling A→B→C
+  // Period of each cos² phase is 2, 3 phases staggered by 4/3
+  // So effective circle spacing = 2/3
+
+  const spacing = 1;
+  const halfSpacing = spacing / 2;
+  const nPos = Math.ceil(xUnits / spacing) + 4;
+
+  for (let i = -3; i <= nPos; i++) {
+    // capacitive circle position — integer spacing, phase assigned by i%3
+    const wxCap = xStart + i * spacing;
+    const screenX = padX + (wxCap - xStart) * scaleX;
+    if (screenX < padX - maxR || screenX > W - padX + maxR) continue;
+
+    // phase cycles A→B→C by position index — each slot owns one phase
+    const phIdx = ((i % 3) + 3) % 3;
+    const ph = phases[phIdx];
+    // read amplitude from THIS phase's wave at this x position
+    const v = capVal(wxCap, ph.offset);
+
+    if (v > 0.02) {
+      const r = v * maxR * 0.82;
+      const alpha = v * 0.55 + 0.05;
+      cctx.beginPath();
+      cctx.arc(screenX, axisY, r, 0, Math.PI * 2);
+      cctx.fillStyle = hexToRgba(ph.cap, alpha);
+      cctx.fill();
+      cctx.strokeStyle = hexToRgba(ph.cap, Math.min(1, alpha + 0.3));
+      cctx.lineWidth = 1 * dpr;
+      cctx.stroke();
+    }
+
+    // magnetic ring: owned by next phase in sequence
+    if (show.mag) {
+      const wxMag = wxCap - halfSpacing;
+      const screenXm = padX + (wxMag - xStart) * scaleX;
+      if (screenXm >= padX - maxR && screenXm <= W - padX + maxR) {
+        const mphIdx = ((phIdx + 1) % 3);
+        const mph = phases[mphIdx];
+        const m = magVal(wxMag, mph.offset);
+        if (m > 0.02) {
+          const rm = m * maxR * 0.82;
+          cctx.beginPath();
+          cctx.arc(screenXm, axisY, rm, 0, Math.PI * 2);
+          cctx.strokeStyle = hexToRgba(mph.magS, m * 0.8 + 0.1);
+          cctx.lineWidth = 2.5 * dpr;
+          cctx.stroke();
+          cctx.beginPath();
+          cctx.arc(screenXm, axisY, rm * 0.45, 0, Math.PI * 2);
+          cctx.strokeStyle = hexToRgba(mph.magS, m * 0.5 + 0.05);
+          cctx.lineWidth = 1.5 * dpr;
+          cctx.stroke();
+        }
+      }
+    }
+  }
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function drawCursor(ctx, W, H, cssH) {
+  const dpr = window.devicePixelRatio || 1;
+  const padX = 30 * dpr;
+  const plotW = W - padX * 2;
+  const xUnits = 8;
+  const scaleX = plotW / xUnits;
+  const xStart = -T;
+
+  // bars spaced 12 units apart (full 3-phase repeat), primary offset +2
+  const barSpacingFrac = 12 / xUnits;
+  const offsetFrac = 1/3;
+  const tFrac = T / (8/3);
+  // two bars, gap = 3/4
+  const gap = 3/4;
+  let bar1 = tFrac + 9/24;
+  let bar2 = tFrac - 9/24;
+  // bring both into range together
+  while (bar1 >= 1.0) { bar1 -= gap; bar2 -= gap; }
+  if (bar2 < 0) bar2 += gap;
+  const barPositions = [bar1, bar2];
+  for (let n = 0; n < barPositions.length; n++) {
+    let frac = barPositions[n];
+    const screenX = padX + frac * plotW;
+    if (screenX < padX || screenX > W - padX) continue;
+
+    ctx.save();
+    ctx.strokeStyle = 'rgba(240,192,64,0.55)';
+    ctx.lineWidth = 1.5 * dpr;
+    ctx.setLineDash([4 * dpr, 3 * dpr]);
+    ctx.beginPath();
+    ctx.moveTo(screenX, 0);
+    ctx.lineTo(screenX, H * dpr);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // label on first bar
+    if (n === 0) {
+      ctx.fillStyle = 'rgba(240,192,64,0.7)';
+      ctx.font = `${9 * dpr}px Share Tech Mono, monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('c', screenX, 18 * dpr);
+    }
+    ctx.restore();
+  }
+}
+
+function frame(ts) {
+  if (!lastTime) lastTime = ts;
+  const dt = (ts - lastTime) / 1000;
+  lastTime = ts;
+  if (playing) {
+    T += dt * speed * 0.5;
+    // derive cursor position directly from T so it's always locked to wave
+  }
+
+  if (show.wave) drawWaves();
+  else {
+    wctx.fillStyle = '#0a0c12';
+    wctx.fillRect(0, 0, wc.width, wc.height);
+  }
+  drawCircles();
+  if (show.cursor) {
+    drawCursor(wctx, wc.width, wc.height, 160);
+    drawCursor(cctx, cc.width, cc.height, 260);
+  }
+  requestAnimationFrame(frame);
+}
+
+function togglePlay() {
+  playing = !playing;
+  const btn = document.getElementById('btnPlay');
+  btn.textContent = playing ? '⏸ pause' : '▶ play';
+  if (playing) lastTime = null;
+}
+
+function toggle(key) {
+  show[key] = !show[key];
+  const btn = document.getElementById('btn' + key.charAt(0).toUpperCase() + key.slice(1));
+  btn.textContent = key + ': ' + (show[key] ? 'on' : 'off');
+  btn.classList.toggle('on', show[key]);
+}
+
+document.getElementById('spd').addEventListener('input', function() {
+  speed = parseFloat(this.value);
+  document.getElementById('spdVal').textContent = speed.toFixed(1) + '×';
+});
+
+window.addEventListener('resize', () => { resize(); });
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
