@@ -14,7 +14,7 @@ ORCID iD: 0009-0004-2865-6447
 
 This paper develops the excitation-side branch of the homogeneous propagation framework. The displacement layer fixes the effective transport geometry through cumulative displacement and transport deformation, but it does not by itself explain how localized matter excitations maintain closure, realize a preferred support scale, or respond differently to geometric displacement and material loading. The present paper therefore treats a localized mass as a sustained excitation of the vacuum storage medium and develops a first formal closure model on that displaced background.
 
-A minimal excitation field is written on the effective geometry, its eikonal limit yields a Hamilton--Jacobi relation with a distinct closure scale, and a slow-envelope limit separates displacement, closure, and material contributions in the effective excitation energy. A native closure/support functional is then introduced, with transport-side and storage-side costs treated separately. The storage-side term is refined into a continuous internal occupancy factor, and the overlap/composition problem is recast as a single geometric law for merging internal bubbles rather than as two separately postulated mechanisms. This gives a first explicit support law and a corresponding closure-scale shift that remain exposed-boundary-driven at weak overlap while transitioning smoothly toward the corrected strong-merger endpoint.
+A minimal excitation field is written on the effective geometry, its eikonal limit yields a Hamilton--Jacobi relation with a distinct closure scale, and a slow-envelope limit separates displacement, closure, and material contributions in the effective excitation energy. A native closure/support functional is then introduced, with transport-side and storage-side costs treated separately. The storage-side term is refined into a continuous internal occupancy factor, and the overlap/composition problem is recast as a single geometric law for merging internal bubbles rather than as two separately postulated mechanisms. This gives a first explicit support law and a corresponding closure-scale shift that remain surface-led at weak overlap while transitioning smoothly toward the corrected strong-merger endpoint.
 
 The result is not yet a final substrate derivation of matter. Its purpose is narrower and more immediate: to sharpen the excitation problem into a tractable three-branch structure consisting of displacement geometry, excitation closure, and material constitutive response, and to show that those branches can already be written in one coherent paper-level formalism.
 
@@ -23,6 +23,8 @@ The result is not yet a final substrate derivation of matter. Its purpose is nar
 The displacement-side branch of the framework addresses how mass-energy deforms the transport-supporting vacuum structure and how that deformation propagates causally. What remains open is the excitation-side problem: if matter is a sustained localized excitation of the same medium, what fixes its closure, its support scale, and its response to displaced or materially loaded backgrounds?
 
 The current working picture is that a localized mass is a sustained LC-like excitation that persistently occupies vacuum storage. The open problem is therefore not only how displacement propagates, but how a localized excitation closes on itself, maintains support, shifts its realized cycling on a displaced background, and acquires both particle-like and wave-like behavior.
+
+Earlier historically oriented reconsiderations of electrical engineering, especially Eric Dollard's treatment of dielectric and magnetic induction as more primitive than the usual packaged circuit quantities, helped shape the storage-first vocabulary used here. In particular, terms such as *reactance* and *susceptance* provide concise names for the magnetic-side and dielectric-side rate channels of exchange.
 
 This paper is intentionally limited in scope. It does not claim a final substrate derivation of the matter spectrum, charge structure, or complete microscopic constitutive law. Its narrower aim is to put the excitation branch into a stable formal shape: to show how a minimal field description, a support-selection law, and a first internal-occupancy/composition model can be stated together without collapsing excitation closure into either background displacement or material loading.
 
@@ -42,18 +44,18 @@ Several corrections are already in force and must constrain the excitation-side 
 
 First, the spatial transport deformation and the cumulative timing burden are not the same object. The earlier shorthand \(g = D^2 = 1 + 2\Sigma\) should not be reused without qualification. The cumulative displacement \(\Sigma\) controls the timing-side burden, while the spatial deformation branch requires separate treatment.
 
-Second, the displacement-composition rule remains boundary-deficit-like in the weak-overlap regime. Ordinary mass additivity and small binding are governed by exposed-boundary deficit, not by full volume addition. This does not mean mass is surface area; the source content remains volume-like occupancy that enters later bookkeeping through a support radius and then through squared-radius terms.
+Second, the displacement-composition rule remains surface-area-like in the weak-overlap regime. Ordinary mass additivity and small binding are governed by exposed surface deficit, not by full volume addition.
 
 Third, the strong-merger endpoint for complete volume addition corresponds to exponent \(n = 3/2\), not the earlier inverted value. This correction matters directly when internal occupancy is modeled through overlap or merger analogies.
 
-These corrections do not invalidate the excitation-side program. They narrow it. The closure and occupancy model must preserve the weak-overlap exposed-boundary rule, respect the corrected strong-merger endpoint, and avoid collapsing timing burden into spatial deformation.
+These corrections do not invalidate the excitation-side program. They narrow it. The closure and occupancy model must preserve the weak-overlap surface rule, respect the corrected strong-merger endpoint, and avoid collapsing timing burden into spatial deformation.
 
 ## 3. Minimal excitation field on the displaced background
 
 The first excitation-side step is to place a minimal excitation field on the effective background set by the displacement layer. A deliberately simple starting point is a scalar amplitude-phase field
 
 \[
-\Psi = A e^{i\phi},
+\Xi = A e^{i\phi},
 \]
 
 with the understanding that the field lives on the effective excitation geometry supplied by the displacement branch rather than on an undeformed background. At this stage the goal is not a final substrate derivation of matter structure. The goal is to put the excitation branch into field form so that closure, localization, and environmental response can be discussed in one language rather than through disconnected analogies.
@@ -61,7 +63,7 @@ with the understanding that the field lives on the effective excitation geometry
 A convenient schematic field equation is
 
 \[
-\mathcal{L}_{\mathrm{eff}}\Psi + \mu_{\mathrm{cl}}^2\Psi = 0,
+\mathcal{L}_{\mathrm{eff}}\Xi + \mu_{\mathrm{cl}}^2\Xi = 0,
 \]
 
 where \(\mathcal{L}_{\mathrm{eff}}\) is the displacement-dressed propagation operator and \(\mu_{\mathrm{cl}}\) is the excitation-side closure scale. This form is intentionally generic. It only encodes the separation already established in the checkpoint work: background displacement modifies propagation, closure enters as its own excitation-scale burden, and material loading can later dress the equation without being identified with pure geometric displacement.
@@ -71,7 +73,7 @@ where \(\mathcal{L}_{\mathrm{eff}}\) is the displacement-dressed propagation ope
 Write the phase as a rapidly varying action,
 
 \[
-\Psi = a(x)\,e^{iS(x)/\hbar_{\mathrm{eff}}},
+\Xi = a(x)\,e^{iS(x)/\hbar_{\mathrm{eff}}},
 \]
 
 with slowly varying envelope \(a(x)\). At leading order in the phase gradient, the field equation reduces to a Hamilton--Jacobi relation,
@@ -101,14 +103,22 @@ That distinction matters later for refractive media and for wave/particle struct
 To reach a wave/particle equation for a localized mode, separate the fast closure oscillation from the slow envelope by writing
 
 \[
-\Psi(x,t) = e^{-i\omega_{\mathrm{cl}} t}\,\psi(x,t),
+\Xi(x,t) = e^{-i\omega_{\mathrm{cl}} t}\,\xi(x,t),
 \]
 
 with \(\omega_{\mathrm{cl}}\) the dominant closure frequency and \(\psi\) slowly varying on that timescale. In a weak background and slow-motion limit, the second-order field equation reduces schematically to a first-order envelope equation of Schrödinger type,
 
 \[
-i\hbar_{\mathrm{eff}}\,\partial_t \psi = \left(T_{\mathrm{eff}} + V_{\mathrm{eff}}\right)\psi.
+i\hbar_{\mathrm{eff}}\,\partial_t \xi = \left(T_{\mathrm{eff}} + V_{\mathrm{eff}}\right)\xi.
 \]
+
+The dielectric and magnetic storage modes may also be discussed in rate form as **susceptance** and **reactance**. Here susceptance denotes the dielectric-side exchange rate, \(B = \varepsilon_0 f\), and reactance denotes the magnetic-side exchange rate, \(X = \mu_0 f\). Their product is \(XB = \varepsilon_0\mu_0 f^2 = f^2/c^2\), while their ratio fixes the vacuum balance point,
+
+\[
+Z_0 = \sqrt{\frac{X}{B}} = \sqrt{\frac{\mu_0}{\varepsilon_0}}.
+\]
+
+In this sense, susceptance and reactance are the dynamic rate expressions of the two vacuum storage modes.
 
 At this level the point is structural rather than exact. The leading effective potential separates into three pieces. One piece is set by cumulative displacement \(\Sigma\) and scales like \(m c^2\Sigma\), entering negatively in the effective energy. A second piece is a material scalar loading with scale \(\tfrac{m c^2}{2}(\chi_e + \chi_m)\), also entering negatively. The remainder appears through anisotropic corrections to the kinetic operator, reflecting the fact that displacement and constitutive loading need not dress all directions identically.
 
@@ -377,29 +387,52 @@ a_{\mathrm{iso}} < a_{\mathrm{bulk}} \approx r_0.
 Then the corresponding occupancy factors satisfy
 
 \[
-Q_{\mathrm{occ}}^{(\mathrm{bulk})}
-=
-Q_{\mathrm{occ}}^{(\mathrm{iso})}
-\left(\frac{a_{\mathrm{iso}}}{a_{\mathrm{bulk}}}\right)^2,
+Q_{\mathrm{occ}}^{(\mathrm{bulk})} = Q_{\mathrm{occ}}^{(\mathrm{iso})}\left(\frac{a_{\mathrm{iso}}}{a_{\mathrm{bulk}}}\right)^2,
 \]
 
 up to whatever coefficient dressing separates the two environments. In other words, \(Q_{\mathrm{occ}}\) should be interpreted as the effective collective-dressing variable that bridges the isolated Route A support scale and the bulk packed-matter support scale. In the present paper this bridge is formalized, but not yet microscopically derived.
 
 ### 5.2 \(r_0\), the per-gram displacement proxy, and the direction of explanation
 
-The occupancy interpretation becomes sharper once the bulk support scale is compared with the displacement-side mass mapping. The framework already uses
+The occupancy interpretation becomes sharper once the bulk support scale is compared with the displacement-side mass mapping. The framework already uses the weak-field mass-to-displacement map in a squared bookkeeping form, but for the present comparison the more useful source-side expression is the displacement itself:
 
 \[
-d^2 = \frac{2GM}{c^2}
+d = \sqrt{2}\,g\,\sqrt{M}/c^2
 \]
 
-as the mass-to-displacement relation in the weak-field branch. Independently, nuclear matter is characterized by a bulk support/packing scale \(r_0\). The numerically important observation is that the displacement scale attached to one gram,
+This keeps the source amplitude explicit rather than burying it inside the squared weak-field packaging. Independently, nuclear matter is characterized by a bulk support/packing scale \(r_0\). The numerically important observation is that the displacement scale attached to one gram,
 
 \[
 d_{\mathrm{mole}} \equiv \sqrt{\frac{2G\,(1\,\mathrm{g})}{c^2}},
 \]
 
-lies in the same range as the bulk nuclear packing/support radius.
+lies in the same range as the bulk nuclear packing/support radius. This comparison becomes sharper if the historical bulk coefficient is unpacked rather than left in its bundled form. A bulk-radius law
+
+\[
+R = r_0\,m^{1/3}
+\]
+
+already hides two distinct pieces: the sphere-volume normalization and the underlying support-volume coefficient per gram. Writing
+
+\[
+V = p_{\star}m = \frac{4\pi}{3}R^3
+\]
+
+gives
+
+\[
+r_0 = \left(\frac{3}{4\pi}p_{\star}\right)^{1/3} = \chi_{\mathrm{sph}}\,\ell_{\star},
+\]
+
+with
+
+\[
+\chi_{\mathrm{sph}} \equiv \left(\frac{3}{4\pi}\right)^{1/3},
+\qquad
+\ell_{\star} \equiv p_{\star}^{1/3}.
+\]
+
+In this form, \(r_0\) is no longer just a fitted historical radius parameter. It is seen as a bundled coefficient: \(\chi_{\mathrm{sph}}\) is the pure sphere-packing normalization, while \(\ell_{\star}\) is the linear support scalar that carries the physically suggestive excitation-side content. The cube root is therefore not mysterious; it is simply the inversion of volume scaling, while the physically interesting part is the support normalization hidden inside \(r_0\).
 
 At the level of present evidence, however, both quantities are still empirical anchors rather than completed substrate derivations. The fitted nuclear support/packing radius \(r_0\) is inferred from nuclear-size phenomenology, while \(G\) is inferred from macroscopic weak-field gravity measurements. They do not enter with the same experimental precision: \(G\) is the sharper macroscopic conversion constant, while \(r_0\) is the more physically suggestive excitation-side scale. The point of comparing them is therefore not to claim that ordinary finite-nucleus fits have already measured \(r_0\) as precisely as \(G\), but to note that the framework can promote the bulk support scale to an exact displacement-equivalent proxy once the one-gram map is adopted.
 
@@ -435,7 +468,7 @@ r_0 \;\longrightarrow\; \text{support scale} \;\longrightarrow\; \text{closure b
 On the weak-field side,
 
 \[
-d^2 = \frac{2GM}{c^2}
+d = \sqrt{2}\,g\,\sqrt{M}/c^2
 \;\longrightarrow\;
 \Sigma(R),\; \lambda(R),\; v_{\mathrm{esc}}.
 \]
@@ -446,7 +479,7 @@ The remaining problem is therefore to give \(Q_{\mathrm{occ}}\) a sharper micros
 
 ## 6. Geometric composition of internal occupancy
 
-Once \(Q_{\mathrm{occ}}\) is introduced, the next question is how it combines under overlap or merger. The best current first model treats internal structured occupancy by analogy with two overlapping or merging bubbles. This is a composition model for internal structured burden, not a literal claim that matter is made of two classical geometric bubbles. Earlier note work split the effect into a weak-overlap shared-boundary reduction and a separate enlargement term tied to ambient displacement. That was useful scaffolding, but the current view is that those may not be distinct mechanisms. They may be the same composition geometry described from two sides.
+Once \(Q_{\mathrm{occ}}\) is introduced, the next question is how it combines under overlap or merger. The best current first model treats internal structured occupancy by analogy with two overlapping or merging bubbles. This is a composition model for internal structured burden, not a literal claim that matter is made of two classical geometric bubbles. Earlier note work split the effect into a weak-overlap shared-surface reduction and a separate enlargement term tied to ambient displacement. That was useful scaffolding, but the current view is that those may not be distinct mechanisms. They may be the same composition geometry described from two sides.
 
 The model is therefore simplified here into a single overlap-driven composition law.
 
@@ -464,7 +497,7 @@ with
 - \(u < 1\): overlap,
 - \(u \to 0\): strong merger / concentric limit.
 
-The weak-overlap regime should remain exposed-boundary-driven. The strong-merger endpoint should approach the corrected volume-addition result. This is a composition rule for nearby support regions, not a claim that mass itself is fundamentally surface-based: the source content remains volume-like occupancy, and the boundary-deficit language only describes how the just-touching additive limit is corrected once overlap begins.
+The weak-overlap regime should remain surface-led. The strong-merger endpoint should approach the corrected volume-addition result.
 
 ### 6.2 Effective composition exponent
 
@@ -480,7 +513,7 @@ This gives the correct limits:
 n_{\mathrm{eff}}(1) = 1, \qquad n_{\mathrm{eff}}(0) = \frac{3}{2}.
 \]
 
-So the model is exposed-boundary-like at weak overlap and reaches the corrected full volumetric endpoint at complete merger.
+So the model is surface-area-like at weak overlap and reaches the corrected full volumetric endpoint at complete merger.
 
 ### 6.3 Occupancy composition law
 
@@ -502,7 +535,7 @@ The endpoints are then
 Q_{\mathrm{occ}}(1)=2Q_0, \qquad Q_{\mathrm{occ}}(0)=2^{2/3}Q_0\approx 1.587\,Q_0.
 \]
 
-The strong-merger endpoint matches the corrected equal-input full-merger result. The combined occupancy burden is reduced below the just-touching additive sum as the internal bubbles merge.
+The strong-merger endpoint matches the corrected equal-input full-merger result. The combined occupancy burden is reduced below the surface-additive sum as the internal bubbles merge.
 
 ### 6.4 Support law under geometric composition
 
@@ -530,7 +563,7 @@ At full merger,
 a_*(0)=2^{1/6}a_{*,1}\approx 1.122\,a_{*,1}.
 \]
 
-So deeper overlap reduces the storage-side burden and relaxes the preferred support outward by about 12.2% relative to the just-touching additive baseline.
+So deeper overlap reduces the storage-side burden and relaxes the preferred support outward by about 12.2% relative to the surface-additive baseline.
 
 ### 6.5 Weak-overlap expansion
 
@@ -552,7 +585,7 @@ and therefore
 a_*(u) \approx a_{*,1}\left[1+\frac{\ln 2}{4}\epsilon\right].
 \]
 
-The leading correction is linear in \(1-u\), not quadratic. That is the expected qualitative behavior if the weak-overlap regime is controlled by shared exposed-boundary deficit.
+The leading correction is linear in \(1-u\), not quadratic. That is the expected qualitative behavior if the weak-overlap regime is controlled by shared surface area.
 
 ## 7. Closure-scale shift
 
@@ -610,13 +643,15 @@ The remaining work is narrower than the earlier note-stage version suggested. Th
 2. a stronger derivation of the closure/phase functional beyond the current first STFR-native form,
 3. a constitutive closure linking the scalar support dressings \(t_{\bullet}, c_{\bullet}\) to the directional transport tensors \(A^{ij}_{\bullet}\).
 
+A further working hypothesis, useful enough to note but not yet developed into formal derivation, is that baryonic closure may involve more than one internal branch. In particular, the proton may be better pictured not as a single oscillator with three passive labels, but as a phase-locked three-branch closure system. On that picture, three distinct dielectric-magnetic exchange cycles persist together, each with its own phase, while the branches couple through their overlapping electric and magnetic structure. The stable proton would then be the collective closure of those three mutually coupled cycles rather than the isolated closure of any one branch. An \(SU(3)\)-type triplet structure is a useful symmetry breadcrumb for such a picture, but at the present stage it should be read only as structural guidance rather than as an established mechanism.
+
 These are extensions of the current structure, not reasons to reopen it. The present draft is therefore best read as a first coherent excitation-side formulation whose remaining tasks are refinement and closure, rather than redefinition of the basic structure.
 
 ## 10. Conclusion
 
 The excitation-side branch of the homogeneous propagation framework can now be stated more sharply than before. The displacement layer fixes the effective background geometry, but it does not determine closure by itself. A sustained localized matter excitation requires its own field-based closure description and its own support-selection logic. The material sector must also remain distinct, because constitutive loading changes local storage response rather than simply reproducing geometric displacement. Within that branch, electric-type and magnetic-type response are treated as propagation-limited constitutive analogs whose constraint structure differs, rather than as literal imported Maxwell primitives. When magnetic-type behavior is compared to spin or steering, the appropriate comparison for environmental forcing is the external-field regime, not the co-moving internal-thrust regime.
 
-The present draft therefore develops a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. That occupancy channel is also given a sharper physical target: it is the formal bridge between the isolated support scale and the bulk packed-matter support scale near \(r_0\). Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is exposed-boundary-driven at weak overlap and approaches the corrected volumetric endpoint at strong merger.
+The present draft therefore develops a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. That occupancy channel is also given a sharper physical target: it is the formal bridge between the isolated support scale and the bulk packed-matter support scale near \(r_0\). Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is surface-led at weak overlap and approaches the corrected volumetric endpoint at strong merger.
 
 This is not yet the final closure theory of matter in the framework. It does, however, convert the excitation problem from a loose placeholder into a defined formal program: derive the microscopic excitation-side closure/storage burden from the substrate, show how the isolated support scale is collectively dressed into the bulk scale near \(r_0\), recover the mass-to-displacement normalization from that support scale rather than treating \(G\) as primitive, refine the closure functional beyond the current first form, and determine whether support shift, closure-frequency shift, and effective localized-mode energy continue to move consistently under the same occupancy geometry. In that more modest but more disciplined sense, the paper functions as the first formal excitation-side branch of the series rather than as a final statement of matter theory.
 

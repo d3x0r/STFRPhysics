@@ -1,0 +1,363 @@
+
+<style>
+.row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--color-text-secondary);margin:3px 0}
+.row label{min-width:110px}
+.row span{min-width:60px;text-align:right;font-variant-numeric:tabular-nums;color:var(--color-text-primary);font-weight:500}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.panel{background:var(--color-background-secondary);border-radius:8px;padding:10px 14px}
+.stat{font-size:13px;margin:2px 0;color:var(--color-text-secondary)}
+.stat b{color:var(--color-text-primary);font-weight:500}
+</style>
+<canvas id="cv" style="width:100%;display:block;border-radius:8px"></canvas>
+<div class="panels">
+  <div class="panel">
+    <div class="row"><label>Inner Speed</label>
+      <input type="range" id="spd" min="-6" max="6" step="0.05" value="2" style="flex:1"
+        oninput="document.getElementById('spdV').textContent=parseFloat(this.value).toFixed(2)">
+      <span id="spdV">2.00</span></div>
+    <div class="row"><label>Cycles</label>
+      <input type="range" id="cyc" min="1" max="12" step="1" value="3" style="flex:1"
+        oninput="document.getElementById('cycV').textContent=this.value">
+      <span id="cycV">3</span></div>
+    <div class="row"><label>Steps/orbit</label>
+      <input type="range" id="res" min="32" max="4096" step="1" value="1024" style="flex:1"
+        oninput="document.getElementById('resV').textContent=this.value">
+      <span id="resV">1024</span></div>
+    <div class="row"><label>Show</label>
+      <select id="half" style="flex:1;font-size:13px">
+        <option value="full">Full (0→2π)</option>
+        <option value="top">Top (−π/2→π/2)</option>
+        <option value="bot">Bottom (π/2→3π/2)</option>
+      </select></div>
+    <div class="row"><label>Animate</label><input type="checkbox" id="anim" checked></div>
+  </div>
+  <div class="panel">
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">
+      <b style="color:var(--color-text-primary)">Acceleration</b> = (tip[i+1] − 2·tip[i] + tip[i−1]) / dt²<br>
+      Net force = ∑ accel · dt over full orbit<br>
+      Should converge to a fixed value as steps→∞
+    </div>
+    <div class="stat">∑ accel.x·dt : <b id="rx">—</b></div>
+    <div class="stat">∑ accel.y·dt : <b id="ry">—</b></div>
+    <div class="stat">∑ accel.z·dt : <b id="rz">—</b></div>
+    <div class="stat" style="margin-top:4px">net |impulse| : <b id="rf" style="color:var(--color-text-warning)">—</b></div>
+    <div class="stat">per cycle : <b id="rpc">—</b></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--color-text-secondary)">Convergence vs steps/orbit (gold = current)</div>
+    <canvas id="conv" style="width:100%;height:56px;margin-top:4px;border-radius:4px;display:block"></canvas>
+  </div>
+</div>
+<script>
+/* ── lnQuat exact port ── */
+function acos_safe(x){
+  const mod=(x,y)=>y*(x/y-Math.floor(x/y));
+  const pm=(x)=>mod(x+1,2)-1;
+  const tr=(x,y)=>x-mod(x,y);
+  return Math.acos(pm(x))-tr(x+1,2)*Math.PI/2;
+}
+function lnQ_make(){return{x:0,y:0,z:0,nx:0,ny:1,nz:0,theta:0,dirty:false};}
+function lnQ_update(q){
+  if(!q.dirty)return;q.dirty=false;
+  q.theta=Math.sqrt(q.x*q.x+q.y*q.y+q.z*q.z);
+  if(q.theta){q.nx=q.x/q.theta;q.ny=q.y/q.theta;q.nz=q.z/q.theta;}
+  else{q.nx=0;q.ny=1;q.nz=0;}
+}
+function finishRodrigues(q,ax,ay,az,th){
+  lnQ_update(q);
+  const AdotB=q.nx*ax+q.ny*ay+q.nz*az;
+  const xmy=(th-q.theta)/2,xpy=(th+q.theta)/2;
+  const cxmy=Math.cos(xmy),cxpy=Math.cos(xpy);
+  const cosCo2=(AdotB*(cxpy-cxmy)+cxmy+cxpy)/2;
+  let ang=acos_safe(cosCo2)*2;
+  if(ang){
+    const sxmy=Math.sin(xmy),sxpy=Math.sin(xpy);
+    const ss1=sxmy+sxpy,ss2=sxpy-sxmy,cc1=cxmy-cxpy;
+    const Cx=(ay*q.nz-az*q.ny)*cc1+ax*ss1+q.nx*ss2;
+    const Cy=(az*q.nx-ax*q.nz)*cc1+ay*ss1+q.ny*ss2;
+    const Cz=(ax*q.ny-ay*q.nx)*cc1+az*ss1+q.nz*ss2;
+    const Clx=1/Math.sqrt(Cx*Cx+Cy*Cy+Cz*Cz);
+    q.theta=ang;q.nx=Cx*Clx;q.ny=Cy*Clx;q.nz=Cz*Clx;
+    q.x=q.nx*ang;q.y=q.ny*ang;q.z=q.nz*ang;q.dirty=false;
+  } else {
+    q.theta+=th;q.x=q.nx*q.theta;q.y=q.ny*q.theta;q.z=q.nz*q.theta;q.dirty=false;
+  }
+}
+function lnQ_freeSpin(q,th,axis){
+  const len=Math.sqrt(axis.x*axis.x+axis.y*axis.y+axis.z*axis.z);
+  if(len)finishRodrigues(q,axis.x/len,axis.y/len,axis.z/len,th);
+}
+function lnQ_getBasis(q){
+  lnQ_update(q);
+  const nt=q.theta,s=Math.sin(nt),c1=Math.cos(nt),c=1-c1;
+  const qx=q.nx,qy=q.ny,qz=q.nz;
+  const cnx=c*qx,cny=c*qy,cnz=c*qz;
+  const xy=cnx*qy,yz=cny*qz,xz=cnz*qx;
+  const wx=s*qx,wy=s*qy,wz=s*qz;
+  const xx=cnx*qx,yy=cny*qy,zz=cnz*qz;
+  return{
+    right:{x:c1+xx,y:wz+xy,z:xz-wy},
+    up   :{x:xy-wz,y:c1+yy,z:wx+yz},
+    forward:{x:wy+xz,y:yz-wx,z:c1+zz}
+  };
+}
+
+// Tip position in sim-space at parameter t
+function tipAt(t,speed){
+  const q=lnQ_make();
+  lnQ_freeSpin(q,t*speed,{x:0,y:0,z:1});
+  const up=lnQ_getBasis(q).up;
+  const ox=Math.sin(t),oy=-Math.cos(t);
+  return{
+    x:up.x*2.92+ox*5,
+    y:up.y*2.92+oy*5,
+    z:up.z*2.92,
+    ox,oy,up
+  };
+}
+
+/* ── Core simulation ──
+   Force = mass × acceleration of tip
+   acceleration[i] = (tip[i+1] - 2*tip[i] + tip[i-1]) / dt²
+   Net impulse = ∑ acceleration[i] * dt  (= ∑ (second-diff) / dt)
+   This is the proper Riemann sum of acceleration over time.
+   With unit mass and orbit period = 2π (dt in radians), this gives
+   impulse in [sim-length / radian] units.
+*/
+function runSim(speed,cycles,stepsPerOrbit,halfMode,storePts){
+  const v={x:0,y:0,z:1};
+  const from=halfMode==='full'?0:halfMode==='top'?-Math.PI/2:Math.PI/2;
+  const to  =halfMode==='full'?2*Math.PI:halfMode==='top'?Math.PI/2:3*Math.PI/2;
+  const cycleLen=to-from;
+  const dt=2*Math.PI/stepsPerOrbit;
+  const totalSteps=Math.round(cycleLen*cycles/dt);
+
+  // Pre-compute tip positions (need i-1 and i+1 for centred difference)
+  // For efficiency, only keep a rolling window of 3
+  const tip_prev = tipAt(from-dt, speed);
+  const tip_cur  = tipAt(from,    speed);
+  // We'll advance tip_next each step
+
+  const sum={x:0,y:0,z:0};
+  const pts=storePts?[]:null;
+
+  let prev={...tip_prev};
+  let cur ={...tip_cur};
+
+  for(let i=0;i<totalSteps;i++){
+    const t=from+(i+1)*dt;
+    const next=tipAt(t,speed);
+
+    // Centred second difference / dt² = acceleration
+    const ax=(next.x-2*cur.x+prev.x)/(dt*dt);
+    const ay=(next.y-2*cur.y+prev.y)/(dt*dt);
+    const az=(next.z-2*cur.z+prev.z)/(dt*dt);
+
+    // Impulse contribution = accel * dt
+    sum.x+=ax*dt;
+    sum.y+=ay*dt;
+    sum.z+=az*dt;
+
+    if(storePts){
+      const tip_i=cur;  // this is tip[i]
+      pts.push({
+        t:from+i*dt,
+        ox:tip_i.ox, oy:tip_i.oy, up:tip_i.up,
+        this_v:{x:tip_i.x,y:tip_i.y,z:tip_i.z},
+        accel:{x:ax,y:ay,z:az}
+      });
+    }
+
+    prev=cur;
+    cur=next;
+  }
+  return{pts,sum,dt};
+}
+
+const CONV_RES=[32,64,128,256,512,1024,2048,4096];
+let convData=[];
+let convDirty=true;
+
+function updateConv(speed,cycles,halfMode){
+  convData=CONV_RES.map(res=>{
+    const{sum}=runSim(speed,cycles,res,halfMode,false);
+    return{res,mag:Math.sqrt(sum.x**2+sum.y**2+sum.z**2)};
+  });
+}
+
+['spd','cyc','half'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',()=>{convDirty=true;});
+  el.addEventListener('change',()=>{convDirty=true;});
+});
+
+/* ── Canvas ── */
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const cc=document.getElementById('conv');
+const cctx=cc.getContext('2d');
+let W,H,CX,CY;
+function resize(){
+  W=cv.parentElement.clientWidth;
+  H=Math.round(Math.min(W*0.62,430));
+  cv.width=W;cv.height=H;CX=W/2;CY=H/2;
+  cc.width=cc.offsetWidth||200;cc.height=56;
+}
+resize();
+window.addEventListener('resize',()=>{resize();});
+
+const ORBITR=()=>Math.min(W,H)*0.30;
+function s2c(sx,sy){const r=ORBITR()/5;return[CX+sx*r,CY-sy*r];}
+
+let phase=0;
+
+function drawConv(dark,curRes){
+  const cw=cc.width,ch=cc.height;
+  cctx.fillStyle=dark?'#111110':'#eeedea';
+  cctx.fillRect(0,0,cw,ch);
+  if(!convData.length)return;
+  const mags=convData.map(d=>d.mag);
+  const maxM=Math.max(...mags,1e-14);
+  const pad=4,labelH=12;
+  const drawH=ch-pad-labelH;
+  const bw=(cw-pad*2)/convData.length;
+  convData.forEach((d,i)=>{
+    const frac=d.mag/maxM;
+    const bh=Math.max(1,frac*drawH);
+    const x=pad+i*bw+1;
+    const y=pad+drawH-bh;
+    const isCur=d.res===curRes||(i<CONV_RES.length-1&&CONV_RES[i]<curRes&&CONV_RES[i+1]>curRes);
+    cctx.fillStyle=isCur
+      ?(dark?'rgba(252,222,90,0.95)':'rgba(160,100,0,0.9)')
+      :(dark?'rgba(74,222,128,0.55)':'rgba(22,163,74,0.45)');
+    cctx.fillRect(x,y,bw-2,bh);
+    cctx.fillStyle=dark?'rgba(180,178,160,0.7)':'rgba(60,58,50,0.7)';
+    cctx.font='8px sans-serif';
+    cctx.fillText(d.res>=1000?(d.res/1000)+'k':String(d.res),x,ch-1);
+  });
+  // convergence value label
+  const lastMag=mags[mags.length-1];
+  cctx.fillStyle=dark?'rgba(252,222,90,0.8)':'rgba(120,80,0,0.8)';
+  cctx.font='9px sans-serif';
+  cctx.fillText(`4096: ${lastMag.toExponential(2)}`,cw-80,pad+10);
+}
+
+function draw(){
+  const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const speed        =+document.getElementById('spd').value;
+  const cycles       =+document.getElementById('cyc').value;
+  const stepsPerOrbit=Math.round(+document.getElementById('res').value);
+  const halfMode     = document.getElementById('half').value;
+
+  ctx.fillStyle=dark?'#191917':'#f5f4f0';
+  ctx.fillRect(0,0,W,H);
+
+  const{pts,sum,dt}=runSim(speed,cycles,stepsPerOrbit,halfMode,true);
+  const R=ORBITR(),ppu=R/5;
+
+  // orbit circle
+  ctx.beginPath();ctx.arc(CX,CY,R,0,2*Math.PI);
+  ctx.strokeStyle=dark?'rgba(200,196,180,0.10)':'rgba(60,58,50,0.10)';
+  ctx.lineWidth=1.5;ctx.stroke();
+
+  // tip trail colored by cycle
+  if(pts&&pts.length>1){
+    const tstep=Math.max(1,Math.floor(pts.length/700));
+    for(let i=tstep;i<pts.length;i+=tstep){
+      const prev=pts[i-tstep],curr=pts[i];
+      if(!prev||!curr)continue;
+      const cycFrac=(curr.t/(2*Math.PI*cycles));
+      const hue=(cycFrac*360)%360;
+      // color by acceleration magnitude — brighter = higher accel
+      const amag=Math.sqrt(curr.accel.x**2+curr.accel.y**2+curr.accel.z**2);
+      const bright=Math.min(1,amag/20);
+      const[x0,y0]=s2c(prev.this_v.x,prev.this_v.y);
+      const[x1,y1]=s2c(curr.this_v.x,curr.this_v.y);
+      ctx.strokeStyle=`hsla(${hue},${40+bright*50}%,${dark?40+bright*30:30+bright*20}%,0.4)`;
+      ctx.lineWidth=1+bright;
+      ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();
+    }
+  }
+
+  // sampled arms + accel vectors
+  const vstep=Math.max(1,Math.floor((pts?pts.length:0)/72));
+  for(let i=0;i<(pts?pts.length:0);i+=vstep){
+    const p=pts[i];if(!p)continue;
+    const{t,ox,oy,up,this_v,accel}=p;
+    const hue=(((t/(2*Math.PI))%1)*280+20)%360;
+    const[px,py]=s2c(ox*5,oy*5);
+    const[tx,ty]=s2c(ox*5+up.x*2.92,oy*5+up.y*2.92);
+
+    // arm
+    ctx.strokeStyle=`hsla(${hue},50%,${dark?52:36}%,0.4)`;
+    ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(tx,ty);ctx.stroke();
+    ctx.fillStyle=`hsla(${hue},65%,${dark?60:40}%,0.45)`;
+    ctx.beginPath();ctx.arc(tx,ty,2,0,2*Math.PI);ctx.fill();
+
+    // acceleration vector at tip (red), scaled to be visible
+    const asc=ppu*0.08;
+    ctx.strokeStyle=`hsla(0,75%,${dark?62:45}%,0.5)`;
+    ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(tx,ty);
+    ctx.lineTo(tx+accel.x*asc,ty-accel.y*asc);ctx.stroke();
+  }
+
+  // net impulse arrow from centre
+  const smag=Math.sqrt(sum.x**2+sum.y**2+sum.z**2);
+  if(smag>1e-14){
+    const asc=ppu*400;
+    const ex=CX+sum.x*asc,ey=CY-sum.y*asc;
+    ctx.strokeStyle=dark?'rgba(255,255,255,0.92)':'rgba(20,20,12,0.9)';
+    ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(ex,ey);ctx.stroke();
+    const ang=Math.atan2(CY-ey,ex-CX);
+    ctx.fillStyle=dark?'rgba(255,255,255,0.92)':'rgba(20,20,12,0.9)';
+    ctx.beginPath();
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-10*Math.cos(ang-0.4),ey+10*Math.sin(ang-0.4));
+    ctx.lineTo(ex-10*Math.cos(ang+0.4),ey+10*Math.sin(ang+0.4));
+    ctx.closePath();ctx.fill();
+  }
+
+  // animated mass
+  if(document.getElementById('anim').checked){
+    const t=phase%(2*Math.PI);
+    const ox=Math.sin(t),oy=-Math.cos(t);
+    const q=lnQ_make();
+    lnQ_freeSpin(q,phase*speed,{x:0,y:0,z:1});
+    const up=lnQ_getBasis(q).up;
+    const[px,py]=s2c(ox*5,oy*5);
+    const[tx,ty]=s2c(ox*5+up.x*2.92,oy*5+up.y*2.92);
+    ctx.strokeStyle=dark?'#4ade80':'#16a34a';
+    ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(tx,ty);ctx.stroke();
+    ctx.fillStyle=dark?'rgba(210,210,210,0.85)':'rgba(50,50,50,0.8)';
+    ctx.beginPath();ctx.arc(px,py,5,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle=dark?'#FCDE5A':'#CA8A04';
+    ctx.beginPath();ctx.arc(tx,ty,12,0,2*Math.PI);ctx.fill();
+    ctx.strokeStyle=dark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.25)';
+    ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle=dark?'rgba(74,222,128,0.9)':'rgba(22,163,74,0.9)';
+    ctx.font='bold 11px sans-serif';
+    ctx.fillText(`arm: ${(phase*speed*180/Math.PI).toFixed(0)}°`,tx+15,ty-5);
+  }
+
+  ctx.font='11px sans-serif';
+  ctx.fillStyle=dark?'rgba(180,178,160,0.5)':'rgba(70,68,60,0.5)';
+  ctx.fillText('red = acceleration vector at tip · brighter trail = higher accel · white = net impulse',8,15);
+
+  document.getElementById('rx').textContent=sum.x.toExponential(4);
+  document.getElementById('ry').textContent=sum.y.toExponential(4);
+  document.getElementById('rz').textContent=sum.z.toExponential(4);
+  document.getElementById('rf').textContent=smag.toExponential(5);
+  document.getElementById('rpc').textContent=cycles>0?(smag/cycles).toExponential(5):'—';
+
+  if(convDirty){
+    convDirty=false;
+    updateConv(speed,cycles,halfMode);
+  }
+  drawConv(dark,stepsPerOrbit);
+}
+
+function loop(){
+  if(document.getElementById('anim').checked)phase+=0.022;
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>

@@ -13,5 +13,6 @@
 - weak_field_observational_tests.md
   - The Homogeneous Propagation Framework: Weak-Field Observational Tests
 
-- excitation_dynamics_final_polish.md
+- excitation_dynamics.md
   - The Homogeneous Propagation Framework: Excitation, Closure, and Material Response
+

@@ -102,7 +102,23 @@ However, the Rindler horizon depends on freezing the observer at a single event 
 
 In this framework, all time moves together regardless of how clocks count it. An observer near a black hole experiences extreme time dilation — events take much longer from their perspective — but they are never frozen at time zero. Their clock still ticks, slowly, and signals from behind can still arrive, slowly. There is no moment at which information is permanently inaccessible; there is only a region where the time dilation is so extreme that communication becomes arbitrarily slow.
 
-Since the Unruh effect depends on the Rindler horizon being real, and the Hawking radiation derivation depends on the same mathematical structure applied to a black hole, both predictions rest on a coordinate artifact. The framework predicts a different mechanism for black hole energy emission: polar jets driven by the spin of the black hole.
+Since the Unruh effect as standardly derived depends on the Rindler horizon being real, and the Hawking radiation derivation depends on the same mathematical structure applied to a black hole, both predictions rest on a coordinate artifact. The framework predicts a different mechanism for black hole energy emission: polar jets driven by the spin of the black hole.
+
+**However, the dismissal of the Rindler derivation does not imply the absence of acceleration-induced radiation.** The physical content of Unruh — that extreme acceleration produces radiation — survives on entirely different grounds within the LC retardation picture, and should not be thrown out with the horizon argument.
+
+The mechanism: an accelerating charge carries a retarded potential field that propagates outward from the charge's retarded position at $C$. Under moderate acceleration, this field continuously updates and the charge remains embedded in its own near-field. Under extreme acceleration, the charge's current position pulls ahead of where the retarded field has propagated — the charge outruns its own field update. The field and the charge become causally separated not by a geometric horizon but by the finite propagation speed of the LC medium itself.
+
+This shearing between the charge's current state and its trailing retarded field is radiation — this is the physical content of Larmor radiation, already present in the framework. What Unruh adds is the regime where the shearing is happening on the timescale of one LC cycle: the charge's own closure condition (the self-sustaining loop that constitutes the electron as a particle) begins to be disrupted. At that point, radiation is not merely emitted — the particle's identity is being continuously perturbed by its inability to maintain phase coherence with its own trailing field.
+
+The standard Unruh temperature $T = \hbar a / 2\pi c k_B$ is derived from the horizon geometry. An LC-retardation derivation would instead relate the radiation scale to $a$ relative to $mc^2/\hbar$ — the acceleration at which the LC cycling rate and the field-lag rate become comparable. Dimensionally these are the same quantity, but the physical picture is cleaner and requires no horizon.
+
+**Two related radiation effects should therefore be distinguished in this framework:**
+
+1. *Larmor radiation* — any accelerating charge radiates because its retarded field lags its current position, and the mismatch propagates outward as electromagnetic radiation. This is continuous and scales with $a^2$.
+
+2. *Unruh-like radiation* — at extreme acceleration ($a \sim mc^3/\hbar$), the lag between the charge's current state and its retarded field reaches one LC cycle period. The charge can no longer maintain closure against its own field. This produces radiation whose character reflects the disruption of the closure condition, not merely the continuous lag of Larmor radiation. The spectrum may be thermal by the same dimensional reasoning as the standard derivation, but the mechanism is the retarded field structure of the LC medium rather than a horizon.
+
+The summary table entry ("Hawking radiation: not predicted, horizon is coordinate artifact") remains correct for Hawking radiation specifically. But it should not be read as implying that acceleration produces no radiation — it does, through the retarded potential mechanism, independent of any horizon.
 
 ### The Displacement Picture of a Black Hole
 
@@ -591,7 +607,7 @@ For a single nucleon, $E_0 = m_n C^2 \approx 939$ MeV is the energy stored in di
 
 Two constraints on the displacement parameter $d$:
 
-- **From gravity (escape velocity consistency):** $\Sigma(r) = d^2/(2r) = GM/(C^2 r)$, giving $d^2 = 2GM/C^2$ as the weak-field source-scale matching. In the transport interpretation, this is a consistency relation tied to the local escape-velocity state rather than the primary definition of displacement.
+- **From gravity (escape velocity consistency):** $\Sigma(r) = d^2/(2r) = GM/(C^2 r)$, giving $d^2 = 2GM/C^2$ as the weak-field source-scale matching. In the transport interpretation, this is a consistency relation tied to the local escape-velocity state rather than the primary definition of displacement. *Weak-field only:* the equivalence between gravitational time dilation and kinematic time dilation at $v_{esc}$ holds only to first order in $\Sigma$. At the Schwarzschild radius, $v_{esc} = C$ and the kinematic $\gamma$ diverges, while the displacement time dilation gives the finite value $1/(1+\Sigma(r_s)) = 1/2$. The dimensionless quantity $\beta_{esc} = \sqrt{2\Sigma}$ is a weak-field mnemonic; all strong-field calculations use $\Sigma(r)$ and $D(r)$ directly.
 - **From merger volume conservation (approximate):** displacement volumes add, so $d^3 \propto M$, giving $d \propto M^{1/3}$
 
 These are inconsistent with the same $d$ unless the relationship between displacement geometry and gravitational effect involves an additional factor — which is where $G$ enters.

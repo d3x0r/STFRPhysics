@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moving Resonant Cavity — Ray Segments</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Teko:wght@300;400;500&display=swap');
+  :root {
+    --bg: #07090e;
+    --panel: #0c0f18;
+    --contracted: #50c878;
+    --corrected: #e04040;
+    --outgoing: #8040e0;
+    --return: #c090ff;
+    --signal: #f0c040;
+    --text: #4a5a6a;
+    --bright: #8090a8;
+    --border: #1a2535;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--bright);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+  }
+  h1 {
+    font-family: 'Teko', sans-serif;
+    font-weight: 300;
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bright);
+    margin-bottom: 2px;
+  }
+  .sub { font-size: 10px; color: var(--text); letter-spacing: 0.15em; margin-bottom: 16px; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 960px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px;
+  }
+  .panel-title { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text); margin-bottom: 6px; }
+  canvas { display: block; width: 100%; background: var(--bg); border-radius: 2px; }
+  .controls {
+    width: 100%; max-width: 960px; margin-top: 10px;
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 3px; padding: 10px 14px;
+  }
+  .ctrl { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text); }
+  .ctrl label { width: 70px; }
+  input[type=range] {
+    -webkit-appearance: none; height: 2px; background: #1e2a35; outline: none; border-radius: 1px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--signal); cursor: pointer;
+  }
+  .val { color: var(--signal); min-width: 42px; }
+  .legend {
+    width: 100%; max-width: 960px; margin-top: 8px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 9px; letter-spacing: 0.1em; color: var(--text);
+  }
+  .li { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 18px; height: 2px; border-radius: 1px; }
+  .stats {
+    width: 100%; max-width: 960px; margin-top: 8px;
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 6px;
+  }
+  .stat {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 3px; padding: 7px 10px;
+    font-size: 9px; color: var(--text);
+  }
+  .stat-val { font-size: 13px; color: var(--bright); margin-top: 2px; font-family: 'Teko', sans-serif; }
+</style>
+</head>
+<body>
+
+<h1>Moving Resonant Cavity</h1>
+<div class="sub">retarded signal paths · all return rays converge · round cavity preserved</div>
+
+<div class="layout">
+  <div class="panel">
+    <div class="panel-title">Lab frame — spatial (x,y) at time T</div>
+    <canvas id="cSpatial" height="340"></canvas>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Spacetime — ray segments (x,t)</div>
+    <canvas id="cSpacetime" height="340"></canvas>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="ctrl">
+    <label>velocity v/c</label>
+    <input type="range" id="velSlider" min="-0.95" max="0.95" step="0.01" value="0" style="width:130px">
+    <span class="val" id="velVal">0.00c</span>
+  </div>
+  <div class="ctrl">
+    <label>time T</label>
+    <input type="range" id="tSlider" min="0" max="5" step="0.01" value="0" style="width:130px">
+    <span class="val" id="tVal">0.00</span>
+  </div>
+  <div class="ctrl">
+    <label>radius R</label>
+    <input type="range" id="rSlider" min="0.2" max="0.9" step="0.01" value="0.5" style="width:100px">
+    <span class="val" id="rVal">0.50</span>
+  </div>
+  <div class="ctrl">
+    <label>rays N</label>
+    <input type="range" id="nSlider" min="6" max="36" step="6" value="12" style="width:80px">
+    <span class="val" id="nVal">12</span>
+  </div>
+  <div class="ctrl" style="margin-left:auto;">
+    <label>play</label>
+    <input type="range" id="playSlider" min="0" max="1" step="1" value="0" style="width:40px">
+    <span class="val" id="playVal">off</span>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="li"><div class="dot" style="background:var(--contracted)"></div> contracted boundary</div>
+  <div class="li"><div class="dot" style="background:var(--corrected)"></div> corrected round (ε₀μ₀ restored)</div>
+  <div class="li"><div class="dot" style="background:var(--outgoing)"></div> outgoing ray</div>
+  <div class="li"><div class="dot" style="background:var(--return)"></div> return ray</div>
+  <div class="li"><div class="dot" style="background:var(--signal); height:6px; width:6px; border-radius:50%"></div> signal at T</div>
+</div>
+
+<div class="stats">
+  <div class="stat">γ<div class="stat-val" id="sGamma">1.000</div></div>
+  <div class="stat">λ (contraction)<div class="stat-val" id="sLambda">1.000</div></div>
+  <div class="stat">round-trip t₀<div class="stat-val" id="sT0">1.000</div></div>
+  <div class="stat">round-trip tᵥ<div class="stat-val" id="sTv">1.000</div></div>
+  <div class="stat">tᵥ/t₀ = γ<div class="stat-val" id="sRatio">1.000</div></div>
+</div>
+
+<script>
+const cS = document.getElementById('cSpatial');
+const cST = document.getElementById('cSpacetime');
+const ctxS = cS.getContext('2d');
+const ctxST = cST.getContext('2d');
+
+let v = 0, T = 0, R = 0.5, N = 12, playing = false, lastTime = null;
+const C = 1.0;
+
+function TD(Vo, px, py) {
+  const PdotV = px * Vo;  // direction D=0, Vx=Vo, Vy=0
+  const PdotP = px * px + py * py;
+  const CC = C * C, VoVo = Vo * Vo;
+  const disc = PdotV * PdotV + (CC - VoVo) * PdotP;
+  if (disc < 0) return 0;
+  return (Math.sqrt(disc) + PdotV) / (CC - VoVo);
+}
+
+function lam(v) { return Math.sqrt(1 - v * v); }
+function gam(v) { return 1 / lam(v); }
+
+function computeOneTrip(cx0, cy0, t_start, angle) {
+  // Signal fired from (cx0,cy0) at t_start in direction angle
+  // Wall is at distance R from center in contracted frame
+  const la = lam(v);
+  const kx = R * la * Math.cos(angle);
+  const ky = R * Math.sin(angle);
+
+  // TD solves retarded time assuming source at origin at t=0
+  // Here source is at (cx0,cy0) at t_start — same formula applies
+  // since the cavity moves with center: wall offset from center is always (kx,ky)
+  const tau_out = TD(v, kx, ky);
+  const t1 = t_start + tau_out;
+  // wall world position at t1
+  const wx = cx0 + kx + v * tau_out;
+  const wy = cy0 + ky;
+
+  // return: signal travels from (wx,wy) at t1 back to moving center
+  // center at time t is at (v*t, 0) — but now offset by (cx0 - v*t_start)
+  // center_x(t) = cx0 + v*(t - t_start)
+  // solve: |(wx - (cx0 + v*(t_start+dt)), wy - cy0)| = c*dt
+  const ddx = wx - cx0 - v * tau_out; // = kx (wall offset from center at bounce)
+  const ddy = wy - cy0;               // = ky
+  const a2 = 1 - v * v;
+  const b2 = 2 * ddx * v;
+  const c2 = -(ddx * ddx + ddy * ddy);
+  const disc2 = b2 * b2 - 4 * a2 * c2;
+  const tau_ret = disc2 >= 0 ? (-b2 + Math.sqrt(disc2)) / (2 * a2) : 0;
+  const t2 = t1 + tau_ret;
+  const cx1 = cx0 + v * (t2 - t_start);
+  const cy1 = cy0; // y stays 0 (moving in x only)
+
+  return {
+    o_x0: cx0, o_y0: cy0, o_t0: t_start,
+    o_x1: wx,  o_y1: wy,  o_t1: t1,
+    r_x0: wx,  r_y0: wy,  r_t0: t1,
+    r_x1: cx1, r_y1: cy1, r_t1: t2,
+    angle: angle
+  };
+}
+
+function computeRays() {
+  const rays = [];
+  const maxT = T + 0.001; // only compute up to current T
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * 2 * Math.PI;
+    // first trip starts at origin t=0
+    let cx0 = 0, cy0 = 0, t_start = 0;
+    let safety = 0;
+    while (t_start < maxT && safety < 20) {
+      safety++;
+      const trip = computeOneTrip(cx0, cy0, t_start, a);
+      rays.push(trip);
+      // next trip starts where this one ends
+      cx0 = trip.r_x1;
+      cy0 = trip.r_y1;
+      t_start = trip.r_t1;
+    }
+  }
+  return rays;
+}
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const mw = Math.min(460, (window.innerWidth - 44) / 2);
+  for (const c of [cS, cST]) {
+    c.style.width = mw + 'px';
+    c.style.height = '340px';
+    c.width = mw * dpr;
+    c.height = 340 * dpr;
+  }
+}
+
+function drawSpatial(rays) {
+  const W = cS.width, H = cS.height;
+  const dpr = window.devicePixelRatio || 1;
+  // fixed scale centered on cavity - grid scrolls behind
+  const scale = H * 0.22;
+  const cx = W * 0.5, cy = H * 0.5;
+  const la = lam(v);
+
+  ctxS.fillStyle = '#07090e';
+  ctxS.fillRect(0, 0, W, H);
+
+  // grid
+  // scrolling grid - moves opposite to cavity motion
+  ctxS.strokeStyle = '#0d1220'; ctxS.lineWidth = 1;
+  const gridOffX = (v * T * scale) % (scale * 0.5);
+  for (let g = -10; g <= 10; g++) {
+    const gx = cx + g*scale*0.5 - gridOffX;
+    if (gx >= 0 && gx <= W) { ctxS.beginPath(); ctxS.moveTo(gx,0); ctxS.lineTo(gx,H); ctxS.stroke(); }
+  }
+  for (let g = -4; g <= 4; g += 0.5) {
+    ctxS.beginPath(); ctxS.moveTo(0,cy+g*scale); ctxS.lineTo(W,cy+g*scale); ctxS.stroke();
+  }
+  ctxS.strokeStyle = '#1a2535'; ctxS.lineWidth = 1.5;
+  ctxS.beginPath(); ctxS.moveTo(0,cy); ctxS.lineTo(W,cy); ctxS.stroke();
+  ctxS.beginPath(); ctxS.moveTo(cx,0); ctxS.lineTo(cx,H); ctxS.stroke();
+
+  const centX = cx; // cavity centered in frame
+
+  // contracted boundary (green)
+  ctxS.beginPath(); ctxS.strokeStyle = '#50c878'; ctxS.lineWidth = 1.2*dpr;
+  for (let i = 0; i <= 72; i++) {
+    const a = (i/72)*2*Math.PI;
+    const px = centX + R*la*Math.cos(a)*scale, py = cy + R*Math.sin(a)*scale;
+    i===0 ? ctxS.moveTo(px,py) : ctxS.lineTo(px,py);
+  }
+  ctxS.stroke();
+
+  // corrected round (red)
+  ctxS.beginPath(); ctxS.strokeStyle = '#e04040'; ctxS.lineWidth = 1.8*dpr;
+  for (let i = 0; i <= 72; i++) {
+    const a = (i/72)*2*Math.PI;
+    const px = centX + R*Math.cos(a)*scale, py = cy + R*Math.sin(a)*scale;
+    i===0 ? ctxS.moveTo(px,py) : ctxS.lineTo(px,py);
+  }
+  ctxS.stroke();
+
+  // signal positions at T
+  for (const ray of rays) {
+    let sx, sy, onReturn = false;
+    if (T <= ray.o_t1 && ray.o_t1 > 0 && T >= ray.o_t0) {
+      // outgoing: signal travels from cavity center toward wall
+      // in cavity frame, center is always at origin
+      const frac = (T - ray.o_t0) / (ray.o_t1 - ray.o_t0);
+      // position relative to cavity center
+      const wallRelX = ray.o_x1 - ray.o_x0 - v*(ray.o_t1 - ray.o_t0);
+      const wallRelY = ray.o_y1 - ray.o_y0;
+      sx = wallRelX * frac;
+      sy = wallRelY * frac;
+    } else if (T <= ray.r_t1 && T >= ray.r_t0) {
+      // return: relative to cavity center
+      const frac = (T - ray.r_t0) / (ray.r_t1 - ray.r_t0);
+      const wallRelX = ray.r_x0 - ray.o_x0 - v*(ray.r_t0 - ray.o_t0);
+      const wallRelY = ray.r_y0;
+      sx = wallRelX * (1 - frac);
+      sy = wallRelY * (1 - frac);
+      onReturn = true;
+    } else continue;
+
+    ctxS.beginPath();
+    ctxS.arc(cx + sx*scale, cy + sy*scale, 2.5*dpr, 0, Math.PI*2);
+    ctxS.fillStyle = onReturn ? '#c090ff' : '#8040e0';
+    ctxS.fill();
+  }
+
+  // center dot
+  ctxS.beginPath(); ctxS.arc(centX, cy, 4*dpr, 0, Math.PI*2);
+  ctxS.fillStyle = '#3a5070'; ctxS.fill();
+
+  ctxS.fillStyle = '#2a3848';
+  ctxS.font = `${9*dpr}px Share Tech Mono`;
+  ctxS.textAlign = 'left';
+  ctxS.fillText(`v=${v.toFixed(2)}c  T=${T.toFixed(2)}  γ=${gam(v).toFixed(3)}`, 8*dpr, 14*dpr);
+}
+
+function drawSpacetime(rays) {
+  const W = cST.width, H = cST.height;
+  const dpr = window.devicePixelRatio || 1;
+  const cx = W * 0.45, cy = H * 0.88;
+  const maxX = R * 4; // fixed x range
+  const maxTval = 5 * 2 * R; // 5 local round-trips
+  const scaleX = (W * 0.42) / maxX;
+  const scaleT = (H * 0.82) / maxTval;
+  const la = lam(v);
+
+  ctxST.fillStyle = '#07090e';
+  ctxST.fillRect(0, 0, W, H);
+
+  // grid
+  ctxST.strokeStyle = '#0d1220'; ctxST.lineWidth = 1;
+  for (let g = -4; g <= 4; g += 0.5) {
+    ctxST.beginPath(); ctxST.moveTo(cx+g*scaleX,0); ctxST.lineTo(cx+g*scaleX,H); ctxST.stroke();
+  }
+  for (let t = 0; t <= 8; t += 0.5) {
+    ctxST.beginPath(); ctxST.moveTo(0,cy-t*scaleT); ctxST.lineTo(W,cy-t*scaleT); ctxST.stroke();
+  }
+  ctxST.strokeStyle = '#1a2535'; ctxST.lineWidth = 1.5;
+  ctxST.beginPath(); ctxST.moveTo(0,cy); ctxST.lineTo(W,cy); ctxST.stroke();
+  ctxST.beginPath(); ctxST.moveTo(cx,0); ctxST.lineTo(cx,H); ctxST.stroke();
+
+  // light cone
+  ctxST.strokeStyle = 'rgba(240,192,64,0.1)';
+  ctxST.lineWidth = 1*dpr; ctxST.setLineDash([3*dpr,4*dpr]);
+  ctxST.beginPath(); ctxST.moveTo(cx,cy); ctxST.lineTo(cx+5*scaleX,cy-5*scaleT); ctxST.stroke();
+  ctxST.beginPath(); ctxST.moveTo(cx,cy); ctxST.lineTo(cx-5*scaleX,cy-5*scaleT); ctxST.stroke();
+  ctxST.setLineDash([]);
+
+  // center worldline
+  ctxST.strokeStyle = '#1e3040'; ctxST.lineWidth = 1.2*dpr;
+  ctxST.beginPath(); ctxST.moveTo(cx,cy); ctxST.lineTo(cx+v*5*scaleX,cy-5*scaleT); ctxST.stroke();
+
+  // t=0 contracted ring (green flat)
+  ctxST.beginPath(); ctxST.strokeStyle = 'rgba(80,200,120,0.5)'; ctxST.lineWidth = 1.2*dpr;
+  for (let i = 0; i <= 72; i++) {
+    const a = (i/72)*2*Math.PI;
+    const px = cx + R*la*Math.cos(a)*scaleX;
+    i===0 ? ctxST.moveTo(px,cy) : ctxST.lineTo(px,cy);
+  }
+  ctxST.stroke();
+
+  // t=0 corrected ring (red flat)
+  ctxST.beginPath(); ctxST.strokeStyle = 'rgba(224,64,64,0.6)'; ctxST.lineWidth = 1.8*dpr;
+  for (let i = 0; i <= 72; i++) {
+    const a = (i/72)*2*Math.PI;
+    const px = cx + R*Math.cos(a)*scaleX;
+    i===0 ? ctxST.moveTo(px,cy) : ctxST.lineTo(px,cy);
+  }
+  ctxST.stroke();
+
+  // Ray segments clipped to T
+  for (const ray of rays) {
+    if (ray.o_t0 > T) continue; // skip future rays
+    // outgoing segment — use actual start position, not origin
+    const ox0 = cx + ray.o_x0*scaleX, ot0 = cy - ray.o_t0*scaleT;
+    const ox1 = cx + ray.o_x1*scaleX, ot1 = cy - ray.o_t1*scaleT;
+    const fracOut = ray.o_t1 > ray.o_t0 ? Math.min(1, (T-ray.o_t0)/(ray.o_t1-ray.o_t0)) : 1;
+
+    ctxST.beginPath();
+    ctxST.strokeStyle = 'rgba(128,64,224,0.65)';
+    ctxST.lineWidth = 1.3*dpr;
+    ctxST.moveTo(ox0, ot0);
+    ctxST.lineTo(ox0 + (ox1-ox0)*fracOut, ot0 + (ot1-ot0)*fracOut); // outgoing
+    ctxST.stroke();
+
+    // bounce point dot
+    if (T >= ray.o_t1) {
+      ctxST.beginPath();
+      ctxST.arc(ox1, ot1, 2.5*dpr, 0, Math.PI*2);
+      ctxST.fillStyle = '#50c878';
+      ctxST.fill();
+
+      // return segment
+      const rx0 = cx + ray.r_x0*scaleX, rt0 = cy - ray.r_t0*scaleT;
+      const rx1 = cx + ray.r_x1*scaleX, rt1 = cy - ray.r_t1*scaleT;
+      const fracRet = ray.r_t1 > ray.r_t0 ? Math.min(1, (T-ray.r_t0)/(ray.r_t1-ray.r_t0)) : 1;
+
+      ctxST.beginPath();
+      ctxST.strokeStyle = 'rgba(192,144,255,0.65)';
+      ctxST.lineWidth = 1.3*dpr;
+      ctxST.moveTo(rx0, rt0);
+      ctxST.lineTo(rx0 + (rx1-rx0)*fracRet, rt0 + (rt1-rt0)*fracRet);
+      ctxST.stroke();
+    }
+  }
+
+  // current time line
+  ctxST.strokeStyle = 'rgba(240,192,64,0.25)';
+  ctxST.lineWidth = 1*dpr; ctxST.setLineDash([4*dpr,3*dpr]);
+  ctxST.beginPath(); ctxST.moveTo(0,cy-T*scaleT); ctxST.lineTo(W,cy-T*scaleT); ctxST.stroke();
+  ctxST.setLineDash([]);
+
+  ctxST.fillStyle = '#2a3848';
+  ctxST.font = `${9*dpr}px Share Tech Mono`;
+  ctxST.textAlign = 'left';
+  ctxST.fillText('t↑', cx+4*dpr, 12*dpr);
+  ctxST.textAlign = 'right';
+  ctxST.fillText('x→', W-4*dpr, cy-4*dpr);
+}
+
+function updateStats(rays) {
+  const la = lam(v), ga = gam(v);
+  const t0 = 2*R/C;
+  // find first completed trip (t_start=0)
+  const firstTrip = rays.find(r => r.o_t0 === 0 && r.angle === 0);
+  const tv = firstTrip ? firstTrip.r_t1 : t0;
+  document.getElementById('sGamma').textContent = ga.toFixed(4);
+  document.getElementById('sLambda').textContent = la.toFixed(4);
+  document.getElementById('sT0').textContent = t0.toFixed(4);
+  document.getElementById('sTv').textContent = tv.toFixed(4);
+  document.getElementById('sRatio').textContent = (tv/t0).toFixed(4);
+}
+
+function draw() {
+  const rays = computeRays();
+  drawSpatial(rays);
+  drawSpacetime(rays);
+  updateStats(rays);
+}
+
+function frame(ts) {
+  if (playing) {
+    if (!lastTime) lastTime = ts;
+    const dt = (ts-lastTime)/1000; lastTime = ts;
+    const rays = computeRays();
+    const maxT = 5.0; // fixed max T
+    T = (T + dt*0.5) % maxT;
+    document.getElementById('tSlider').value = T;
+    document.getElementById('tVal').textContent = T.toFixed(2);
+    draw();
+  }
+  requestAnimationFrame(frame);
+}
+
+document.getElementById('velSlider').addEventListener('input', function() {
+  v = parseFloat(this.value);
+  document.getElementById('velVal').textContent = v.toFixed(2)+'c';
+  draw();
+});
+document.getElementById('tSlider').addEventListener('input', function() {
+  T = parseFloat(this.value);
+  document.getElementById('tVal').textContent = T.toFixed(2);
+  draw();
+});
+document.getElementById('rSlider').addEventListener('input', function() {
+  R = parseFloat(this.value);
+  document.getElementById('rVal').textContent = R.toFixed(2);
+  draw();
+});
+document.getElementById('nSlider').addEventListener('input', function() {
+  N = parseInt(this.value);
+  document.getElementById('nVal').textContent = N;
+  draw();
+});
+document.getElementById('playSlider').addEventListener('input', function() {
+  playing = parseInt(this.value)===1;
+  document.getElementById('playVal').textContent = playing ? 'on' : 'off';
+  if (playing) lastTime = null;
+});
+
+window.addEventListener('resize', () => { resize(); draw(); });
+resize();
+draw();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
