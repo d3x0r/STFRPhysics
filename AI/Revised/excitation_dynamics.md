@@ -16,13 +16,13 @@ This paper develops the excitation-side branch of the homogeneous propagation fr
 
 A minimal excitation field is written on the effective geometry, its eikonal limit yields a Hamilton--Jacobi relation with a distinct closure scale, and a slow-envelope limit separates displacement, closure, and material contributions in the effective excitation energy. A native closure/support functional is then introduced, with transport-side and storage-side costs treated separately. The storage-side term is refined into a continuous internal occupancy factor, and the overlap/composition problem is recast as a single geometric law for merging internal bubbles rather than as two separately postulated mechanisms. This gives a first explicit support law and a corresponding closure-scale shift that remain surface-led at weak overlap while transitioning smoothly toward the corrected strong-merger endpoint.
 
-The result is not yet a final substrate derivation of matter. Its purpose is narrower and more immediate: to sharpen the excitation problem into a tractable three-branch structure consisting of displacement geometry, excitation closure, and material constitutive response, and to show that those branches can already be written in one coherent paper-level formalism.
+The result is not yet a final substrate derivation of matter. Its purpose is narrower and more immediate: to establish the excitation branch in tractable three-branch form—displacement geometry, excitation closure, and material constitutive response—and to show that those branches can already be written in one coherent paper-level formalism.
 
 ## 1. Introduction
 
-The displacement-side branch of the framework addresses how mass-energy deforms the transport-supporting vacuum structure and how that deformation propagates causally. What remains open is the excitation-side problem: if matter is a sustained localized excitation of the same medium, what fixes its closure, its support scale, and its response to displaced or materially loaded backgrounds?
+The displacement-side branch of the framework addresses how mass-energy deforms the transport-supporting vacuum structure and how that deformation propagates causally. The present paper takes up the companion excitation-side branch: if matter is a sustained localized excitation of the same medium, what formal structure fixes its closure, its support scale, and its response to displaced or materially loaded backgrounds?
 
-The current working picture is that a localized mass is a sustained LC-like excitation that persistently occupies vacuum storage. The open problem is therefore not only how displacement propagates, but how a localized excitation closes on itself, maintains support, shifts its realized cycling on a displaced background, and acquires both particle-like and wave-like behavior.
+The current working picture is that a localized mass is a sustained LC-like excitation that persistently occupies vacuum storage. The task here is therefore to state that branch in formal terms: how a localized excitation closes on itself, maintains support, shifts its realized cycling on a displaced background, and acquires both particle-like and wave-like behavior.
 
 Earlier historically oriented reconsiderations of electrical engineering, especially Eric Dollard's treatment of dielectric and magnetic induction as more primitive than the usual packaged circuit quantities, helped shape the storage-first vocabulary used here. In particular, terms such as *reactance* and *susceptance* provide concise names for the magnetic-side and dielectric-side rate channels of exchange.
 
@@ -258,13 +258,13 @@ This section therefore establishes the minimum field-theoretic backbone needed f
 
 ## 4. Closure and support selection
 
-The largest unresolved excitation-side problem is support selection: what fixes the preferred support scale of a localized sustained excitation? The earlier field-theoretic section established how a localized mode can be written on the displaced background. The next step is to state the independent closure condition that selects which localized support is actually maintained.
+A central excitation-side task is support selection: what fixes the preferred support scale of a localized sustained excitation? The earlier field-theoretic section established how a localized mode can be written on the displaced background. The next step is to state the independent closure condition that selects which localized support is actually maintained.
 
 A generic localization functional was used temporarily in earlier note work, but that form was not native enough to the present framework. The better starting point is a closure/support energy built directly from the transport/storage logic of the medium.
 
 This deserves to be stated plainly: background geometry alone does not fix support. The displacement field can modify propagation cost, timing, and anisotropy, but a sustained localized mode must still satisfy an independent closure condition. The support problem is therefore not just a geometric one. It is the problem of balancing transport-side phase closure against storage-side cycle burden for a self-maintaining excitation.
 
-### 4.1 STFR-native closure functional
+### 4.1 Framework-native closure functional
 
 The working closure/support energy is
 
@@ -473,7 +473,7 @@ d = \sqrt{2}\,g\,\sqrt{M}/c^2
 \Sigma(R),\; \lambda(R),\; v_{\mathrm{esc}}.
 \]
 
-The present claim is not that these two chains have already been fully unified. It is that the observed numerical proximity between bulk \(r_0\) and the per-gram displacement proxy is strong enough to guide how \(Q_{\mathrm{occ}}\) should be interpreted. The occupancy channel is not an abstract fitting knob. It is the formal place where isolated support, bulk support, and eventual mass-to-displacement normalization can meet.
+The present claim is not that these two chains have already been fully unified. It is that the observed numerical proximity between bulk \(r_0\) and the per-gram displacement proxy is strong enough to guide how \(Q_{\mathrm{occ}}\) should be interpreted. The occupancy channel is not an abstract fitting knob. In the present reading it corresponds to the effective nucleon-scale closure/storage burden: the collective dressing that carries isolated support into bulk packed nucleon support near $r_0$. It is the formal place where isolated support, bulk support, and eventual mass-to-displacement normalization can meet.
 
 The remaining problem is therefore to give \(Q_{\mathrm{occ}}\) a sharper microscopic and geometric meaning. For the present paper it should be read as an effective collective-dressing factor with a real physical target — the isolated-to-bulk support shift — rather than as a freely floating phenomenological scalar.
 
@@ -633,27 +633,27 @@ At the excitation level, these loadings affect the response of the localized mod
 
 This distinction should remain intact in later work on refractive media, wave/particle structure, and the relation between excitation support and environmental material dressing.
 
-## 9. Status and open items
+## 9. What this paper establishes and what remains downstream
 
-The paper now has a stable excitation-side structure. At this stage the main question is no longer whether the branch has enough architecture to stand as a paper. It does. The remaining question is which unresolved items should be stated as live continuation rather than incorrectly promoted to solved status. The branch separation, field-based excitation picture, native closure/support functional, continuous occupancy refinement, and overlap-driven composition law are sufficient to support the present argument without further architectural change.
+The paper now has a stable excitation-side structure. The branch separation, field-based excitation picture, native closure/support functional, continuous occupancy refinement, and overlap-driven composition law are sufficient to support the present argument without further architectural change. What remains is not architectural repair, but downstream reduction and refinement.
 
-The remaining work is narrower than the earlier note-stage version suggested. The main unresolved items are:
+The remaining work is narrower than the earlier note-stage version suggested. The main downstream items are:
 
 1. a sharper microscopic definition of the excitation-side closure/storage burden term \(Q_{\mathrm{occ}}\),
-2. a stronger derivation of the closure/phase functional beyond the current first STFR-native form,
+2. a stronger derivation of the closure/phase functional beyond the current first framework-native form,
 3. a constitutive closure linking the scalar support dressings \(t_{\bullet}, c_{\bullet}\) to the directional transport tensors \(A^{ij}_{\bullet}\).
 
 A further working hypothesis, useful enough to note but not yet developed into formal derivation, is that baryonic closure may involve more than one internal branch. In particular, the proton may be better pictured not as a single oscillator with three passive labels, but as a phase-locked three-branch closure system. On that picture, three distinct dielectric-magnetic exchange cycles persist together, each with its own phase, while the branches couple through their overlapping electric and magnetic structure. The stable proton would then be the collective closure of those three mutually coupled cycles rather than the isolated closure of any one branch. An \(SU(3)\)-type triplet structure is a useful symmetry breadcrumb for such a picture, but at the present stage it should be read only as structural guidance rather than as an established mechanism.
 
-These are extensions of the current structure, not reasons to reopen it. The present draft is therefore best read as a first coherent excitation-side formulation whose remaining tasks are refinement and closure, rather than redefinition of the basic structure.
+These are extensions of the current structure, not reasons to reopen it. The present draft is therefore best read as a coherent first excitation-side formulation whose remaining tasks are reduction and refinement rather than redefinition of the basic structure.
 
 ## 10. Conclusion
 
 The excitation-side branch of the homogeneous propagation framework can now be stated more sharply than before. The displacement layer fixes the effective background geometry, but it does not determine closure by itself. A sustained localized matter excitation requires its own field-based closure description and its own support-selection logic. The material sector must also remain distinct, because constitutive loading changes local storage response rather than simply reproducing geometric displacement. Within that branch, electric-type and magnetic-type response are treated as propagation-limited constitutive analogs whose constraint structure differs, rather than as literal imported Maxwell primitives. When magnetic-type behavior is compared to spin or steering, the appropriate comparison for environmental forcing is the external-field regime, not the co-moving internal-thrust regime.
 
-The present draft therefore develops a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. That occupancy channel is also given a sharper physical target: it is the formal bridge between the isolated support scale and the bulk packed-matter support scale near \(r_0\). Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is surface-led at weak overlap and approaches the corrected volumetric endpoint at strong merger.
+The present draft therefore establishes a first coherent excitation-side structure. A minimal field is placed on the displaced background. Its eikonal limit yields a Hamilton--Jacobi relation with a separate closure scale. A slow-envelope limit reveals the displacement, closure, and material branches directly in the effective excitation energy. A native closure/support functional then gives a preferred support scale, and a continuous occupancy refinement replaces an empty geometric storage count by an effective excitation-side closure/storage burden. That occupancy channel is also given a sharper physical target: it is the formal bridge between the isolated support scale and the bulk packed-matter support scale near \(r_0\). Finally, the overlap problem is rewritten as a single composition law of two merging bubbles that is surface-led at weak overlap and approaches the corrected volumetric endpoint at strong merger.
 
-This is not yet the final closure theory of matter in the framework. It does, however, convert the excitation problem from a loose placeholder into a defined formal program: derive the microscopic excitation-side closure/storage burden from the substrate, show how the isolated support scale is collectively dressed into the bulk scale near \(r_0\), recover the mass-to-displacement normalization from that support scale rather than treating \(G\) as primitive, refine the closure functional beyond the current first form, and determine whether support shift, closure-frequency shift, and effective localized-mode energy continue to move consistently under the same occupancy geometry. In that more modest but more disciplined sense, the paper functions as the first formal excitation-side branch of the series rather than as a final statement of matter theory.
+This is not yet the final closure theory of matter in the framework. It does, however, convert the excitation problem from a loose placeholder into a defined formal program: derive the microscopic excitation-side closure/storage burden from the substrate, show how the isolated support scale is collectively dressed into the bulk scale near \(r_0\), recover the mass-to-displacement normalization from that support scale rather than treating \(G\) as primitive, refine the closure functional beyond the current first form, and determine whether support shift, closure-frequency shift, and effective localized-mode energy continue to move consistently under the same occupancy geometry. In that more disciplined sense, the paper functions as the formal excitation-side branch of the series at the level presently required, rather than as a final statement of matter theory.
 
 
 

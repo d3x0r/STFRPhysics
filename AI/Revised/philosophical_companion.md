@@ -61,7 +61,7 @@ From this postulate, the paper recovers the static equilibrium geometry $D(r,d)$
 
 The excitation dynamics paper begins to address this. If a localized excitation occupies vacuum storage — if it loads the capacitive and inductive modes of the medium at a specific location — then it must affect the transport structure by its presence. The excitation is not a passive rider on an unperturbed background. It is a region where the storage capacity is actively engaged, and that engagement changes the effective geometry that other excitations see.
 
-The question is whether the specific form of the displacement — the $D(r,d)$ geometry, the sourcing relation $\Sigma = GM/(c^2 r)$, the causal propagation at $c$ — can be derived from the excitation's storage-loading properties rather than postulated independently. The excitation paper's closure functional and occupancy model are the first steps in that direction, but the derivation is not yet complete. This remains the deepest open question in the framework's postulate structure.
+The question is whether the specific form of the displacement — the $D(r,d)$ geometry, the sourcing relation $\Sigma = GM/(c^2 r)$, and the causal propagation at $c$ — can be derived from the excitation's storage-loading properties rather than postulated independently. The excitation paper now gives that downstream program a more explicit formal shape through a closure functional, support law, and occupancy channel. What remains is not the existence of that branch, but the deeper reduction of the sourcing relation itself. In that sense this is best read as the deepest remaining reduction step in the framework's postulate structure, rather than as an absence of formal architecture.
 
 ### 2.6 What remains
 
@@ -218,19 +218,19 @@ These distinctions matter because they prevent different observables from being 
 
 ## 5. What remains open
 
-### 5.1 The closure problem
+### 5.1 Closure and excitation support
 
-The deepest open question is what permits the vacuum medium to support sustained localized excitations at all. A continuous, isotropic LC medium supports propagating waves straightforwardly — that is what electromagnetic radiation is. But it is not obvious that the same medium supports standing modes that maintain their identity, closure, and localization indefinitely.
+The remaining question is not whether the framework has a formal excitation branch, but how far that branch can be reduced. A continuous, isotropic LC medium supports propagating waves straightforwardly — that is what electromagnetic radiation is. The harder question is what permits the same medium to support sustained localized excitations that maintain identity, closure, and localization.
 
-The excitation dynamics paper introduces a closure functional that balances transport-side phase cost against storage-side cycling burden, yielding a preferred support near the Compton wavelength. But that functional is postulated in its current form, not derived from the substrate. The physical mechanism of closure — what prevents the excitation from dispersing — is the central unsolved problem.
+The excitation dynamics paper now introduces a closure functional, support law, and occupancy channel that together give this branch a defined formal role. What is still missing is the deeper substrate derivation of why those structures arise and what exact mechanism prevents the excitation from dispersing. The unresolved issue is therefore microscopic reduction, not absence of an excitation-side architecture.
 
 ### 5.2 The mass spectrum
 
-Even if closure is understood in principle, the question of why specific closure scales exist — why the electron, muon, proton, and other particles have the masses they do — is entirely open. The framework's hierarchy of constants ($\varepsilon_0$, $\mu_0$ → $c$, $Z_0$; closure → $h$; displacement → $G$) provides a structural account of how the constants relate, but it does not yet predict their values or the particle spectrum.
+Even if closure is given a formal support law, the question of why specific closure scales exist — why the electron, muon, proton, and other particles have the masses they do — remains downstream. The framework's hierarchy of constants ($\varepsilon_0$, $\mu_0$ → $c$, $Z_0$; closure → $h$; displacement → $G$) provides a structural account of how the constants relate, but it does not yet predict their values or the particle spectrum.
 
 ### 5.3 Charge and spin
 
-The LC medium has two storage modes, and the framework interprets the electric/magnetic duality as the capacitive/inductive phases of one cycling process. But the quantization of electric charge, the existence of half-integer spin, and the detailed structure of the Standard Model gauge group are not yet addressed. The R3 spin-group monograph in this series develops the rotation-vector framework that provides some of the mathematical scaffolding, but the physical derivation of charge quantization from the medium's topology remains a future task.
+The LC medium has two storage modes, and the framework interprets the electric/magnetic duality as the capacitive/inductive phases of one cycling process. But the quantization of electric charge, the existence of half-integer spin, and the detailed structure of the Standard Model gauge group remain downstream. The R3 spin-group monograph in this series develops the rotation-vector framework that provides some of the mathematical scaffolding, but the physical derivation of charge quantization from the medium's topology remains a future task.
 
 ### 5.4 The cosmological question
 
@@ -241,7 +241,7 @@ The framework's account of gravity as displacement rather than curvature has imp
 
 The homogeneous propagation framework carries a distinctive philosophical position. The vacuum is a real medium with measurable storage properties. Everything else — propagation, kinematics, matter, gravity, quantization — is what that medium does. Lorentz invariance is not a fundamental symmetry of spacetime but the self-consistent measurement structure of instruments constituted by the medium. Time has a global structure that is obscured but not negated by the clock-field offsets of moving observers. Gravity is a displacement of the transport structure, not a curvature of a dynamical manifold. And the framework's own postulate structure is not static: as the theory develops, assumptions that were initially primitive are absorbed into consequences of deeper substrate commitments, so that the irreducible presuppositions progressively shrink toward a minimal ontological core.
 
-What remains is harder than what has been done. Closure, the mass spectrum, charge quantization, and cosmology are open. But the framework defines those problems in specific enough terms — as questions about the vacuum medium's support for localized excitations, its topology, and its large-scale displacement structure — that they are tractable research questions rather than philosophical mysteries.
+What remains is harder than what has been done, but it is not all of one kind. The kinematic and weak-field displacement branches are already developed enough to stand in their present scope. The main downstream reductions now concern excitation closure at the substrate level, the particle spectrum, charge quantization, and cosmology. Those problems are still open, but the framework defines them in specific enough terms — as questions about the vacuum medium's support for localized excitations, its topology, and its large-scale displacement structure — that they are tractable research questions rather than philosophical mysteries.
 
 ---
 
