@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voronoi 3D</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060810; font-family:'Courier New',monospace; overflow:hidden; width:100vw; height:100vh; }
+canvas { display:block; }
+#ui {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:center; gap:10px; padding:8px 14px;
+  background:rgba(6,8,16,.85); border-bottom:1px solid #1a2030;
+  backdrop-filter:blur(4px);
+}
+#ui h1 { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#4af; font-weight:normal; margin-right:4px; }
+label { font-size:10px; color:#556; letter-spacing:.05em; }
+input[type=range] { -webkit-appearance:none; width:70px; height:3px; background:#1e2535; border-radius:2px; outline:none; cursor:pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:10px; height:10px; border-radius:50%; background:#4af; cursor:pointer; }
+button { background:#0d1220; border:1px solid #1e2a3a; color:#4af; font-family:'Courier New',monospace; font-size:10px; letter-spacing:.08em; padding:3px 9px; cursor:pointer; text-transform:uppercase; }
+button:hover { background:#1a2540; border-color:#4af; }
+#info { position:absolute; bottom:8px; left:10px; font-size:10px; color:#2a4060; letter-spacing:.06em; }
+#stats { margin-left:auto; font-size:10px; color:#2a4060; }
+</style>
+</head>
+<body>
+<div id="ui">
+  <h1>Voronoi 3D</h1>
+  <label>N <span id="nLbl">32</span></label>
+  <input type="range" id="nSl" min="4" max="80" value="32">
+  <button id="btnRegen">Regenerate</button>
+  <span id="stats"></span>
+</div>
+<div id="info">Drag to orbit · Scroll to zoom · Click node to select</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+'use strict';
+
+// ── Maths ─────────────────────────────────────────────────────────────────────
+const V3 = (x=0,y=0,z=0) => new THREE.Vector3(x,y,z);
+
+// Sutherland-Hodgman clip of convex polygon against a half-space.
+// plane: { o: Vector3, n: Vector3 }  keep side where (p-o)·n <= 0
+function clipPolygonByPlane(poly, plane){
+  if(poly.length < 3) return [];
+  const out = [];
+  const {o,n} = plane;
+  const sd = p => p.clone().sub(o).dot(n);
+
+  for(let i=0;i<poly.length;i++){
+    const a = poly[i], b = poly[(i+1)%poly.length];
+    const da = sd(a), db = sd(b);
+    if(da <= 0) out.push(a.clone());            // a inside
+    if((da < 0 && db > 0)||(da > 0 && db < 0)){// edge crosses
+      const t = da/(da-db);
+      out.push(a.clone().lerp(b,t));
+    }
+  }
+  return out;
+}
+
+// Clip convex polygon by sphere of radius R centered at origin.
+// Approximate: clip each edge by sphere surface — keep inside.
+// Uses Sutherland-Hodgman edge clipping against sphere.
+function clipPolygonBySphere(poly, R){
+  if(poly.length < 3) return [];
+  const R2 = R*R;
+  const out = [];
+  for(let i=0;i<poly.length;i++){
+    const a = poly[i], b = poly[(i+1)%poly.length];
+    const da = a.lengthSq() - R2;
+    const db = b.lengthSq() - R2;
+    if(da <= 0) out.push(a.clone());
+    if((da < 0 && db > 0)||(da > 0 && db < 0)){
+      // ray-sphere: |a + t*(b-a)|² = R²
+      const d = b.clone().sub(a);
+      const A = d.lengthSq();
+      const B = 2*a.dot(d);
+      const C = a.lengthSq()-R2;
+      const disc = B*B - 4*A*C;
+      if(disc >= 0){
+        const t = (-B - Math.sqrt(disc))/(2*A);
+        const t2= (-B + Math.sqrt(disc))/(2*A);
+        const tt = (t>=0&&t<=1)?t:(t2>=0&&t2<=1?t2:-1);
+        if(tt>=0) out.push(a.clone().lerp(b,tt));
+      }
+    }
+  }
+  return out;
+}
+
+// Build a large convex polygon on a plane (as starting polygon for clipping).
+// plane normal n, origin o. Returns polygon in world space.
+function makeDisk(o, n, R){
+  // Find two orthogonal axes in the plane
+  const u = Math.abs(n.x) < 0.9 ? V3(1,0,0) : V3(0,1,0);
+  u.crossVectors(u,n).normalize();
+  const v = new THREE.Vector3().crossVectors(n,u).normalize();
+  const poly = [];
+  const segs = 24;
+  for(let i=0;i<segs;i++){
+    const a = (i/segs)*Math.PI*2;
+    poly.push(o.clone()
+      .addScaledVector(u, Math.cos(a)*R)
+      .addScaledVector(v, Math.sin(a)*R));
+  }
+  return poly;
+}
+
+// Triangulate a convex polygon (fan from centroid)
+function triangulate(poly){
+  if(poly.length < 3) return [];
+  const tris = [];
+  const c = new THREE.Vector3();
+  poly.forEach(p=>c.add(p));
+  c.multiplyScalar(1/poly.length);
+  for(let i=0;i<poly.length;i++){
+    tris.push(c.clone(), poly[i].clone(), poly[(i+1)%poly.length].clone());
+  }
+  return tris;
+}
+
+// ── Voronoi cell builder ───────────────────────────────────────────────────────
+// For each neighbor, build a bisector plane, then clip a disk on that plane
+// by all other bisector planes + sphere. If polygon survives → it's a cell face.
+function buildCell(site, neighbors, R){
+  const faces = []; // each face: { poly, normal, bisectorOrigin }
+  const diskR = R * 2.2; // big enough to cover sphere
+
+  // Build bisector planes for all neighbors
+  const planes = neighbors.map(nb=>{
+    const o = site.clone().lerp(nb, 0.5);
+    const n = nb.clone().sub(site).normalize();
+    return {o, n};
+  });
+
+  planes.forEach((plane, pi)=>{
+    // Start with a large disk on this bisector plane
+    let poly = makeDisk(plane.o, plane.n, diskR);
+
+    // Clip by all other bisector half-planes: keep where (p-o)·n <= 0
+    // (site is on the <= 0 side of each neighbor's bisector)
+    for(let ki=0;ki<planes.length;ki++){
+      if(ki===pi) continue;
+      poly = clipPolygonByPlane(poly, planes[ki]);
+      if(poly.length < 3) break;
+    }
+    if(poly.length < 3) return;
+
+    // Clip by sphere boundary
+    poly = clipPolygonBySphere(poly, R);
+    if(poly.length < 3) return;
+
+    faces.push({ poly, normal: plane.n.clone(), origin: plane.o.clone() });
+  });
+
+  return faces;
+}
+
+// ── Three.js setup ────────────────────────────────────────────────────────────
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x060810);
+document.body.appendChild(renderer.domElement);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.01, 1000);
+camera.position.set(0,0,4.5);
+
+// Ambient + directional light for the opaque selected cell
+scene.add(new THREE.AmbientLight(0x334466, 1.2));
+const dlight = new THREE.DirectionalLight(0x88aaff, 1.0);
+dlight.position.set(3,5,4);
+scene.add(dlight);
+
+// ── Orbit controls (inline, no import needed) ─────────────────────────────────
+let orbiting=false, lastMX=0, lastMY=0;
+let theta=0, phi=Math.PI/2, radius=4.5;
+function updateCamera(){
+  camera.position.set(
+    radius*Math.sin(phi)*Math.sin(theta),
+    radius*Math.cos(phi),
+    radius*Math.sin(phi)*Math.cos(theta)
+  );
+  camera.lookAt(0,0,0);
+}
+updateCamera();
+
+renderer.domElement.addEventListener('mousedown',e=>{ orbiting=true; lastMX=e.clientX; lastMY=e.clientY; });
+renderer.domElement.addEventListener('mouseup',  ()=>orbiting=false);
+renderer.domElement.addEventListener('mousemove',e=>{
+  if(!orbiting) return;
+  theta -= (e.clientX-lastMX)*0.005;
+  phi    = Math.max(.05, Math.min(Math.PI-.05, phi+(e.clientY-lastMY)*0.005));
+  lastMX=e.clientX; lastMY=e.clientY;
+  updateCamera();
+});
+renderer.domElement.addEventListener('wheel',e=>{
+  radius = Math.max(1.5, Math.min(20, radius*(e.deltaY>0?1.1:0.9)));
+  updateCamera(); e.preventDefault();
+},{passive:false});
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const SPHERE_R = 1.5;
+let nodes=[], selected=-1;
+let cellGroup=null, nodeGroup=null;
+
+// Raycaster for click selection
+const raycaster = new THREE.Raycaster();
+const mouse2    = new THREE.Vector2();
+
+// ── Octree — spatial index for initial K-nearest query ────────────────────────
+// Simple recursive axis-aligned octree. Stores point indices.
+// Query: collect all points within radius r; if fewer than K, caller doubles r.
+class OctreeNode {
+  constructor(cx,cy,cz, half){
+    this.cx=cx; this.cy=cy; this.cz=cz; // center
+    this.half=half;                       // half-extent
+    this.items=[];   // {idx, x,y,z} for leaf
+    this.children=null; // 8 children when split
+    this.MAX=8;
+  }
+
+  insert(idx,x,y,z){
+    if(this.children){
+      this._child(x,y,z).insert(idx,x,y,z);
+    } else {
+      this.items.push({idx,x,y,z});
+      if(this.items.length > this.MAX && this.half > 0.01){
+        this._split();
+      }
+    }
+  }
+
+  _split(){
+    const h=this.half*0.5;
+    this.children=[];
+    for(let i=0;i<8;i++){
+      const ox=this.cx+(i&1?h:-h);
+      const oy=this.cy+(i&2?h:-h);
+      const oz=this.cz+(i&4?h:-h);
+      this.children.push(new OctreeNode(ox,oy,oz,h));
+    }
+    this.items.forEach(it=>this._child(it.x,it.y,it.z).insert(it.idx,it.x,it.y,it.z));
+    this.items=[];
+  }
+
+  _child(x,y,z){
+    return this.children[(x>this.cx?1:0)|(y>this.cy?2:0)|(z>this.cz?4:0)];
+  }
+
+  // Collect indices of all points within radius r of (qx,qy,qz)
+  query(qx,qy,qz,r,out){
+    // AABB vs sphere cull
+    const dx=Math.max(0,Math.abs(qx-this.cx)-this.half);
+    const dy=Math.max(0,Math.abs(qy-this.cy)-this.half);
+    const dz=Math.max(0,Math.abs(qz-this.cz)-this.half);
+    if(dx*dx+dy*dy+dz*dz > r*r) return;
+    if(this.children){
+      this.children.forEach(c=>c.query(qx,qy,qz,r,out));
+    } else {
+      const r2=r*r;
+      this.items.forEach(it=>{
+        const ex=it.x-qx, ey=it.y-qy, ez=it.z-qz;
+        if(ex*ex+ey*ey+ez*ez <= r2) out.push(it.idx);
+      });
+    }
+  }
+}
+
+class Octree {
+  constructor(half=4){
+    this.root=new OctreeNode(0,0,0,half);
+  }
+  insert(idx,x,y,z){ this.root.insert(idx,x,y,z); }
+  // Return up to K nearest indices (excluding selfIdx), expanding radius until found
+  kNearest(x,y,z,K,selfIdx,allNodes){
+    let r = 0.5;
+    let candidates=[];
+    while(candidates.length < K+1 && r < 20){
+      candidates=[];
+      this.root.query(x,y,z,r,candidates);
+      r*=2;
+    }
+    // Sort by actual distance, exclude self, take K
+    return candidates
+      .filter(i=>i!==selfIdx)
+      .map(i=>({ i, d2: allNodes[i].distanceToSquared(allNodes[selfIdx]) }))
+      .sort((a,b)=>a.d2-b.d2)
+      .slice(0,K)
+      .map(x=>x.i);
+  }
+}
+
+// ── Cell — wraps faces + stores true neighbor list after clipping ──────────────
+class Cell {
+  constructor(nodeIdx){
+    this.nodeIdx   = nodeIdx;
+    this.neighbors = []; // indices into nodes[], populated after buildCell
+    this.faces     = []; // {poly, neighborIdx}
+  }
+}
+
+// ── Materials ─────────────────────────────────────────────────────────────────
+function faceMaterial(hue, sel){
+  return new THREE.MeshPhongMaterial({
+    color: new THREE.Color().setHSL(hue,0.55, sel?0.35:0.18),
+    emissive: new THREE.Color().setHSL(hue,0.4, sel?0.08:0.0),
+    transparent: true,
+    opacity: sel ? 0.85 : 0.18,
+    side: THREE.DoubleSide,
+    depthWrite: sel,
+  });
+}
+
+function edgeMaterial(hue, sel){
+  return new THREE.LineBasicMaterial({
+    color: new THREE.Color().setHSL(hue, 0.7, sel?0.7:0.45),
+    transparent:true, opacity: sel?0.95:0.35,
+  });
+}
+
+// ── Build scene geometry ───────────────────────────────────────────────────────
+let cells = []; // Cell[] — persists after buildScene, carries neighbor lists
+
+function buildScene(){
+  if(cellGroup) scene.remove(cellGroup);
+  if(nodeGroup) scene.remove(nodeGroup);
+  cellGroup = new THREE.Group();
+  nodeGroup = new THREE.Group();
+
+  const K = Math.min(nodes.length-1, Math.max(20, Math.ceil(nodes.length * 0.35)));
+
+  // 1. Build octree from all nodes
+  const oct = new Octree(SPHERE_R * 2);
+  nodes.forEach((n,i) => oct.insert(i, n.x, n.y, n.z));
+
+  // 2. For each node, get K candidates from octree, build cell, record true neighbors
+  cells = nodes.map((site,i) => new Cell(i));
+
+  let totalFaces=0;
+
+  nodes.forEach((site,i)=>{
+    const isSel = i===selected;
+    const h = (i*137.508/360)%1;
+    const cell = cells[i];
+
+    // Octree K-nearest — fast candidate set
+    const neighborIdxs = oct.kNearest(site.x, site.y, site.z, K, i, nodes);
+    const neighborPts  = neighborIdxs.map(j=>nodes[j]);
+
+    // Build bisector planes
+    const planes = neighborPts.map((nb,pi)=>({
+      o: site.clone().lerp(nb, 0.5),
+      n: nb.clone().sub(site).normalize(),
+      neighborIdx: neighborIdxs[pi],
+    }));
+
+    // For each plane, clip disk → surviving face = true Voronoi face
+    planes.forEach((plane, pi)=>{
+      let poly = makeDisk(plane.o, plane.n, SPHERE_R*2.2);
+      for(let ki=0;ki<planes.length;ki++){
+        if(ki===pi) continue;
+        poly = clipPolygonByPlane(poly, planes[ki]);
+        if(poly.length < 3) break;
+      }
+      if(poly.length < 3) return; // clipped away — not a true neighbor
+      poly = clipPolygonBySphere(poly, SPHERE_R);
+      if(poly.length < 3) return;
+
+      // This face survived → record as true neighbor
+      cell.faces.push({ poly, neighborIdx: plane.neighborIdx });
+      if(!cell.neighbors.includes(plane.neighborIdx))
+        cell.neighbors.push(plane.neighborIdx);
+
+      totalFaces++;
+
+      // Face mesh
+      const tris = triangulate(poly);
+      const pos  = new Float32Array(tris.length*3);
+      tris.forEach((v,ti)=>{ pos[ti*3]=v.x; pos[ti*3+1]=v.y; pos[ti*3+2]=v.z; });
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+      geo.computeVertexNormals();
+      cellGroup.add(new THREE.Mesh(geo, faceMaterial(h,isSel)));
+
+      // Edge loop
+      const ep = [...poly, poly[0]];
+      const ea = new Float32Array(ep.length*3);
+      ep.forEach((v,ti)=>{ ea[ti*3]=v.x; ea[ti*3+1]=v.y; ea[ti*3+2]=v.z; });
+      const eGeo = new THREE.BufferGeometry();
+      eGeo.setAttribute('position', new THREE.BufferAttribute(ea,3));
+      cellGroup.add(new THREE.LineLoop(eGeo, edgeMaterial(h,isSel)));
+    });
+
+    // Node sphere
+    const sg  = new THREE.SphereGeometry(isSel?0.045:0.028, 8, 8);
+    const sm  = new THREE.MeshBasicMaterial({ color: isSel?0xffcc44:0x44aaff });
+    const mesh= new THREE.Mesh(sg,sm);
+    mesh.position.copy(site);
+    mesh.userData.nodeIdx = i;
+    nodeGroup.add(mesh);
+  });
+
+  // Sphere wireframe hint
+  const sGeo = new THREE.SphereGeometry(SPHERE_R,24,16);
+  const sWire= new THREE.WireframeGeometry(sGeo);
+  cellGroup.add(new THREE.LineSegments(sWire,
+    new THREE.LineBasicMaterial({color:0x1a2a40,transparent:true,opacity:0.25})));
+
+  scene.add(cellGroup);
+  scene.add(nodeGroup);
+
+  const selInfo = selected>=0 && cells[selected]
+    ? `  sel:${selected} neighbors:[${cells[selected].neighbors.join(',')}]` : '';
+  document.getElementById('stats').textContent =
+    `nodes:${nodes.length}  candidates:${K}  faces:${totalFaces}${selInfo}`;
+}
+
+// ── Generate nodes on sphere surface ──────────────────────────────────────────
+function generate(n){
+  nodes=[];
+  const inner = SPHERE_R * 0.85; // keep well inside so all cells are bounded
+  for(let i=0;i<n;i++){
+    // Uniform random inside sphere volume:
+    // r = inner * cbrt(random) gives uniform radial distribution
+    const r   = inner * Math.cbrt(Math.random());
+    const cosT= Math.random()*2-1;
+    const sinT= Math.sqrt(1-cosT*cosT);
+    const phi = Math.random()*Math.PI*2;
+    nodes.push(V3(r*sinT*Math.cos(phi), r*cosT, r*sinT*Math.sin(phi)));
+  }
+  selected=-1;
+  buildScene();
+}
+
+// ── Click selection ───────────────────────────────────────────────────────────
+renderer.domElement.addEventListener('click', e=>{
+  if(Math.abs(e.clientX-lastMX)>4 || Math.abs(e.clientY-lastMY)>4) return; // was orbit drag
+  mouse2.set((e.clientX/innerWidth)*2-1, -(e.clientY/innerHeight)*2+1);
+  raycaster.setFromCamera(mouse2, camera);
+  const hits = raycaster.intersectObjects(nodeGroup.children);
+  if(hits.length){
+    selected = hits[0].object.userData.nodeIdx;
+  } else {
+    selected = -1;
+  }
+  buildScene();
+});
+
+// ── Controls ──────────────────────────────────────────────────────────────────
+const nSl=document.getElementById('nSl'), nLbl=document.getElementById('nLbl');
+nSl.addEventListener('input',()=>{ nLbl.textContent=nSl.value; });
+document.getElementById('btnRegen').addEventListener('click',()=>generate(+nSl.value));
+
+window.addEventListener('resize',()=>{
+  renderer.setSize(innerWidth,innerHeight);
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+// ── Render loop ───────────────────────────────────────────────────────────────
+(function loop(){ requestAnimationFrame(loop); renderer.render(scene,camera); })();
+
+generate(+nSl.value);
+</script>
+</body>
+</html>

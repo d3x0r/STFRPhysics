@@ -28,8 +28,6 @@ button:hover { background:#1a2540; border-color:#4af; }
   <h1>Voronoi 3D</h1>
   <label>N <span id="nLbl">32</span></label>
   <input type="range" id="nSl" min="4" max="80" value="32">
-  <label>K <span id="kLbl">10</span></label>
-  <input type="range" id="kSl" min="4" max="20" value="10" style="width:55px">
   <button id="btnRegen">Regenerate</button>
   <span id="stats"></span>
 </div>
@@ -333,7 +331,7 @@ function buildScene(){
   cellGroup = new THREE.Group();
   nodeGroup = new THREE.Group();
 
-  const K = +document.getElementById('kSl').value;
+  const K = Math.min(nodes.length-1, Math.max(20, Math.ceil(nodes.length * 0.35)));
 
   // 1. Build octree from all nodes
   const oct = new Octree(SPHERE_R * 2);
@@ -415,11 +413,10 @@ function buildScene(){
   scene.add(cellGroup);
   scene.add(nodeGroup);
 
-  // Stats — show neighbor count for selected cell
   const selInfo = selected>=0 && cells[selected]
     ? `  sel:${selected} neighbors:[${cells[selected].neighbors.join(',')}]` : '';
   document.getElementById('stats').textContent =
-    `nodes:${nodes.length}  faces:${totalFaces}${selInfo}`;
+    `nodes:${nodes.length}  candidates:${K}  faces:${totalFaces}${selInfo}`;
 }
 
 // ── Generate nodes on sphere surface ──────────────────────────────────────────
@@ -455,9 +452,7 @@ renderer.domElement.addEventListener('click', e=>{
 
 // ── Controls ──────────────────────────────────────────────────────────────────
 const nSl=document.getElementById('nSl'), nLbl=document.getElementById('nLbl');
-const kSl=document.getElementById('kSl'), kLbl=document.getElementById('kLbl');
 nSl.addEventListener('input',()=>{ nLbl.textContent=nSl.value; });
-kSl.addEventListener('input',()=>{ kLbl.textContent=kSl.value; buildScene(); });
 document.getElementById('btnRegen').addEventListener('click',()=>generate(+nSl.value));
 
 window.addEventListener('resize',()=>{

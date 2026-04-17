@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voronoi 3D — Library Test</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#060810; font-family:'Courier New',monospace; overflow:hidden; width:100vw; height:100vh; }
+canvas { display:block; }
+
+#ui {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:center; gap:10px; padding:8px 14px; flex-wrap:wrap;
+  background:rgba(6,8,16,.88); border-bottom:1px solid #1a2030;
+  backdrop-filter:blur(4px);
+}
+#ui h1 { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#4af; font-weight:normal; margin-right:4px; }
+
+label  { font-size:10px; color:#556; letter-spacing:.05em; }
+input[type=range] {
+  -webkit-appearance:none; width:70px; height:3px;
+  background:#1e2535; border-radius:2px; outline:none; cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:10px; height:10px;
+  border-radius:50%; background:#4af; cursor:pointer;
+}
+button {
+  background:#0d1220; border:1px solid #1e2a3a; color:#4af;
+  font-family:'Courier New',monospace; font-size:10px; letter-spacing:.08em;
+  padding:3px 9px; cursor:pointer; text-transform:uppercase;
+}
+button:hover       { background:#1a2540; border-color:#4af; }
+button.active      { background:#1a3050; border-color:#6cf; color:#6cf; }
+button.warn        { border-color:#f84; color:#f84; }
+button.warn:hover  { background:#2a1a00; }
+button.warn.active { background:#2a1800; border-color:#fa4; color:#fa4; }
+
+#stats   { margin-left:auto; font-size:10px; color:#2ad0c0; letter-spacing:.06em; }
+#info    { position:absolute; bottom:8px; left:10px; font-size:10px; color:#2a4060; letter-spacing:.06em; }
+#selinfo { position:absolute; bottom:24px; left:10px; font-size:10px; color:#4a7090; letter-spacing:.05em; }
+</style>
+</head>
+<body>
+
+<div id="ui">
+  <h1>Voronoi 3D</h1>
+
+  <label>N <span id="nLbl">32</span></label>
+  <input type="range" id="nSl" min="4" max="80" value="32">
+
+  <button id="btnRegen">Regenerate</button>
+
+  <label style="margin-left:6px">Bound:</label>
+  <button id="btnSphere" class="active">Sphere</button>
+  <button id="btnAABB">AABB</button>
+
+  <button id="btnAnimate" class="warn" style="margin-left:6px">Animate</button>
+
+  <span id="stats"></span>
+</div>
+
+<div id="selinfo"></div>
+<div id="info">Drag to orbit · Scroll to zoom · Click node to select</div>
+
+<!-- Import map: resolves bare "three" specifier to the npm ES module build. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "../node_modules/three/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
