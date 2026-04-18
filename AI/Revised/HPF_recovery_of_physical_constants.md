@@ -18,9 +18,9 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-The prior papers in this series establish the propagation framework, the displacement geometry of gravitation, and the weak-field observational tests. The present paper works in the opposite direction: starting from the classical constants G, h, e, and the SI unit system, it asks what upstream structure those constants already bundle. The answer in each case involves the same two quantities — the vacuum storage pair ε₀, μ₀ and the nuclear support radius r₀ — appearing in different combinations depending on which aspect of the medium is being measured. The factorizations are structural audits, not new derivations of the constants from first principles. Several additional corrective results are developed: the proper-velocity reframing of black hole infall, gravitational lensing as differential phase accumulation rather than wavefront deflection, the elimination of the photon sphere on observational grounds. Together these establish a consistent upstream picture in which ε₀, μ₀, and r₀ are the primitive layer from which the classical constants, the SI units, and the weak-field gravitational geometry all descend.
+The prior papers in this series establish the propagation framework, the displacement geometry of gravitation, and the weak-field observational tests. The present paper works in the opposite direction: starting from the classical constants G, h, e, and the SI unit system, it asks what upstream structure those constants already bundle. The answer in each case involves the same two quantities — the vacuum storage pair ε₀, μ₀ and the nuclear support radius r₀ — appearing in different combinations depending on which aspect of the medium is being measured. The factorizations are structural audits, not new derivations of the constants from first principles. The resulting picture is that ε₀, μ₀, and r₀ form the primitive layer from which the classical constants, the SI units, and the framework's weak-field geometric scales can be read.
 
-**Keywords:** physical constants, vacuum primitives, upstream factorization, nuclear support scale, gravitational constant, Planck's constant, electron charge, natural units, proper velocity, gravitational lensing, photon sphere
+**Keywords:** physical constants, vacuum primitives, upstream factorization, nuclear support scale, gravitational constant, Planck's constant, electron charge, natural units
 
 ---
 
@@ -28,11 +28,17 @@ The prior papers in this series establish the propagation framework, the displac
 
 The homogeneous propagation framework begins from the vacuum as a physical medium. Its two storage properties — electric permittivity ε₀ (F/m) and magnetic permeability μ₀ (H/m) — are the framework's primitive quantities. Their product sets the propagation speed, c = 1/√(ε₀μ₀), as the wave speed of the medium rather than a postulated spacetime constant. Their ratio sets the vacuum impedance, Z₀ = √(μ₀/ε₀) = 376.73 Ω, as the natural balance point between the two storage modes. The prior papers in this series develop the kinematic, transport, and gravitational consequences of this starting point, recovering the standard weak-field observational results from a displacement ontology rather than spacetime curvature.
 
-The present paper asks a different question. The classical physical constants — the gravitational constant G, Planck's constant h, the electron charge e — are presented in standard treatments as independent empirical inputs. Each carries its own units, its own measurement history, its own dimensional combination of mass, length, and time. That combination is not accidental: each constant encodes a specific physical relationship, and those relationships, once the SI unit system is unpacked, reveal the same upstream structure. G encodes how much displacement one unit of mass-energy produces in the transport structure. h encodes the minimum phase-space area for a stable LC closure in the vacuum medium. e encodes the capacitive loading of one proton-scale support volume on the electric side of the medium. In each case the packaging is downstream of ε₀, μ₀, and a third quantity: the nuclear support radius r₀ ≈ 1.22 fm, the per-nucleon packing scale of nuclear matter.
+The present paper asks a different question. The classical physical constants — the gravitational constant G, Planck's constant h, and the electron charge e — are usually presented as independent empirical inputs. Here they are treated instead as downstream packaging of the same upstream ingredients. G tracks how much displacement one unit of mass-energy produces in the transport structure, h tracks the minimum phase-space area of stable LC closure, and e tracks the electric-side loading of one proton-scale support volume. In each case the packaging leads back to ε₀, μ₀, and the nuclear support radius r₀ ≈ 1.22 fm.
 
-The factorizations developed here are not derivations in the sense of recovering the numerical values of the constants from ε₀ and μ₀ alone. They are structural audits — demonstrations that when the constants are expressed in terms of ε₀, μ₀, r₀, and the SI unit conventions (gram versus kilogram, the meter as an arbitrary human length scale), the classical packaging dissolves into a small set of geometric and medium factors. The residuals that cannot yet be derived — the precise value of r₀ from the medium geometry alone, the mass spectrum, the quantization of charge — are identified explicitly as the remaining open problems.
+**The convergence claim.** The point is not merely that G, h, and e can be rewritten in terms of other measured quantities. The point is that they all reduce onto the *same small basis* — ε₀, μ₀, r₀, and a chosen length unit — in combinations that suggest a common geometric origin in the vacuum medium. If the constants were genuinely independent, their decompositions would be expected to point to different scales and different substructure. Instead they repeatedly return to the same support scale and the same vacuum pair.
 
-Several corrective results accompany the factorization program. The framework's account of proper velocity — which has no upper bound, with photons carrying infinite proper velocity rather than a coordinate speed $c$ — clarifies the black hole infall picture: the infalling observer runs out of proper time in milliseconds during the final approach, while the outside observer receives a time-stretched but finite record of those last milliseconds. Neither observer experiences anything frozen or infinite. The standard narrative has this backwards. Gravitational lensing is developed as differential phase accumulation through displaced medium rather than wavefront deflection — a distinction proved by the observed preservation of polarization through lensing events, which rules out genuine path curvature. The photon sphere is eliminated as a consequence: it requires circular null geodesics, which require wavefront bending, which polarization preservation rules out. The paper is organized as follows. Section 1 develops the upstream unit hierarchy: the vacuum storage pair as primitives, the downstream emergence of seconds and kilograms, and the natural length scale. Section 2 covers gravity and mass together — G, r₀, the kilogram, the shell theorem, and the equivalence principle are all facets of the same displacement picture. Section 3 recovers Planck's constant from LC closure. Section 4 recovers the electron charge and develops the r₀³ kernel common to charge, mass, and action. Section 5 covers geometric and structural notes including the role of π and the safe claims. Section 6 is a discussion of how the classical formulas were already proper-velocity expressions. Appendix B contains corrective notes on proper velocity and black hole infall, gravitational lensing as phase accumulation, and the resolution of the Larmor radiation paradox. An appendix collects anchor numerical values.
+The meter is treated here as a chosen convention rather than a primitive ingredient. Once a length scale is fixed, the remaining free inputs are ε₀, μ₀, and r₀. The one open question that cannot yet be closed is why r₀ has the value it does. That unresolved step is shared with the deeper nuclear and excitation-side program, not introduced by this paper.
+
+The factorizations developed here are structural audits rather than full first-principles derivations. They show how the classical constants dissolve into a smaller set of geometric and medium factors once the SI packaging is unpacked. The residual open problems are likewise explicit: the value of r₀ from the medium geometry alone, the mass spectrum, and charge quantization.
+
+A short interpretive note on proper and coordinate quantities is retained because it clarifies why the constant factorizations are not written as relativistic correction terms. That note is framing rather than dependency: the constants argument stands without any strong-field extension.
+
+The paper is organized as follows. Section 1 develops the upstream unit hierarchy: the vacuum storage pair as primitives, the downstream emergence of seconds and kilograms, and the natural length scale. Section 2 covers gravity and mass together — G, r₀, the kilogram, the shell theorem, and the equivalence principle are all facets of the same displacement picture. Section 3 recovers Planck's constant from LC closure. Section 4 recovers the electron charge and develops the r₀³ kernel common to charge, mass, and action. Section 5 covers geometric and structural notes including the role of π and the safe claims. Section 6 briefly comments on proper and coordinate quantities as an interpretive frame for the earlier sections. Appendix A collects anchor numerical values. Appendix B gives a short note on the Larmor-radiation bookkeeping issue in the same medium picture.
 
 Throughout, the distinction between structural audit and completed derivation is maintained. The factorizations show that the classical constants are not independent — they share a common upstream structure built from ε₀, μ₀, and r₀. They do not yet show why r₀ has the value it does, or why the mass spectrum is discrete, or why charge is quantized. Those questions are now sharply posed in terms of the medium geometry, which is a stronger position than treating them as unexplained empirical facts. But sharply posed is not yet answered, and the paper does not claim otherwise.
 
@@ -325,17 +331,9 @@ The cleanest chain: support scale $r_{0,\mathrm{eff}}$ → vacuum-carried amplit
 
 ### 2.5 Material-dependent displacement: $g_{\text{material}}$
 
-The per-source factor $g$ is not necessarily a universal constant per unit mass — in principle it could depend on nuclear composition, proton-to-neutron ratios, packing geometry, and binding energy. Different materials have different nuclear structures and therefore potentially different displacement amplitudes per unit mass.
+In principle the per-source factor $g$ could depend on nuclear composition, proton-to-neutron ratios, packing geometry, and binding energy. Different materials have different nuclear structures and therefore potentially different displacement amplitudes per unit mass.
 
-However, the framework's own stability selection rule (section 2.8) provides a strong argument that this material dependence cancels exactly for any persistent excitation. The medium only sustains excitations for which the displacement a body sources equals the displacement it resists — meaning $g_{\text{grav}} = g_{\text{inertia}}$ is enforced by the medium's self-consistency condition, not assumed as a postulate. Any composition-dependent variation in $g_{\text{material}}$ would affect both the sourcing and the resistance equally, leaving their ratio identically 1.
-
-This makes the MICROSCOPE result not a constraint on the framework but an **expected** outcome. MICROSCOPE measured:
-
-$$\eta(\text{Ti},\,\text{Pt}) = [-1.5 \pm 2.3_\text{stat} \pm 1.5_\text{syst}] \times 10^{-15}$$
-
-The framework predicts $\eta = 0$ exactly — not approximately, not subject to composition corrections, but exactly, because the selection rule enforces it for any stable excitation regardless of what it is made of. A nonzero result would require an excitation that sources more displacement than it resists, which the medium does not sustain. MICROSCOPE is measuring the ratio that stability already requires to be 1.
-
-For smaller bodies where $\Sigma$ is tiny, both the gravitational coupling and the inertial resistance scale with the same $r_0^3$ per nucleon. Their ratio is 1 by construction at every scale. The equivalence principle is not a coincidence to be tested — it is the self-consistency condition for existence.
+For the purposes of the present paper, however, that possibility is not pushed into a detailed phenomenology. The role of section 2 is narrower: to identify the common upstream structure carried by the gravitational packaging itself. Questions of composition dependence, null tests of equivalence, and material-specific departures are downstream matters that belong to the excitation and measurement side of the framework rather than to the constant audit developed here.
 
 ---
 
@@ -456,7 +454,7 @@ This is nonzero inside — there is a force directed toward the center, proporti
 
 ### 2.7.4 The displacement composition picture
 
-Each nucleon contributes $r_0^3$ of support volume (Appendix B.5). The total displacement field of a body is the sum of individual nucleon contributions:
+Each nucleon contributes $r_0^3$ of support volume. The total displacement field of a body is the sum of individual nucleon contributions:
 
 $$\Sigma(r) = \sum_i \frac{G\,m_i}{c^2\,|\mathbf{r} - \mathbf{r}_i|}$$
 
@@ -502,45 +500,18 @@ $$
 
 This is a self-consistency condition. VA = 1 (section 8.5) enforces the internal transport/storage balance; this gravitational/inertial equality enforces the external sourcing/resistance balance. Together they constrain allowed $(f, r_0, A)$ triples to a discrete set — the mass spectrum is not continuous. Unstable particles fail the balance and decay until they reach a configuration that satisfies both conditions.
 
-### 2.8.3 What MICROSCOPE actually constrains
+### 2.8.3 Scope note
 
-$$
-\eta(\text{Ti},\,\text{Pt}) = [-1.5 \pm 2.3_\text{stat} \pm 1.5_\text{syst}] \times 10^{-15}
-$$
-
-In this framework the null result is **expected**: the selection rule enforces $g_\text{grav}/g_\text{inertia} = 1$ for any persistent excitation regardless of composition. The experiment probes the *ratio* of the two couplings, not whether $g_{\text{material}}$ itself varies. The framework predicts $\eta = 0$.
-
-Additional systematics noted:
-
-- **Nesting and displacement composition**: the inner Pt mass sees the Earth's field dressed by the Ti shell. $\Sigma_{\text{shell}} \sim 1.6\times10^{-12}$, small but formally present.
-- **Electrostatic suspension**: asymmetric electrode geometry with different dielectric properties of Pt and Ti could produce a material-dependent coupling at the nN scale — not claimed as an actual systematic but open.
-- **Orbital clock mismatch**: Pt and Ti Compton frequencies differ by $\approx 4\times$. Over one orbital period ($\approx 5900$ s), accumulated phase difference $\sim 10^4$ rad. Whether this feeds back into the effective inertial response at $10^{-15}$ is open.
-
-### 2.8.4 The nuclear radius measurement problem
-
-Charge radius measurements (electron scattering, isotope shifts, muonic X-rays) measure the **charge (proton) radius**, not the **matter (proton + neutron) radius**. For MICROSCOPE: Pt-195 has $N/Z \approx 1.50$ with neutron skin $\sim 0.15$–$0.20$ fm; Ti-48 has $N/Z \approx 1.18$ with neutron skin $\sim 0.05$ fm. The effective per-nucleon matter radius differs from the charge-radius-derived value, with corrections pushing in opposite directions (reducing the naive charge-radius difference from $\approx 6.5\%$ to $\approx 4.9\%$).
-
-Additionally, charge radii measured from ions may systematically underestimate the effective $r_0$ in neutral bulk matter, since the electron cloud's outward electrostatic pressure on the nucleus is absent in stripped ions.
-
-### 2.8.5 Binding energy as a competing effect
-
-$$
-B/A(\text{Pt-195}) \approx 7.83\,\text{MeV/nucleon}, \qquad B/A(\text{Ti-48}) \approx 8.72\,\text{MeV/nucleon}
-$$
-
-A difference of $\approx 11\%$. The binding energy effect **opposes** the charge-radius ordering, producing a partial cancellation of the naive $\eta$ estimate. Whether this cancellation is accidental or structural is open.
-
-### 2.8.6 The matter-wave alternative
-
-Matter-wave interferometry uses an independent mass scale — the Compton frequency $f_C = mc^2/h$ — rather than gravitational or electromagnetic calibration. Current tests (Rb$^{87}$/K$^{41}$, Sr/Rb) reach $\eta \sim 10^{-7}$ to $10^{-9}$. Future space-based missions (STE-QUEST, AEDGE) targeting $10^{-17}$ would probe clock-to-trajectory mismatches, a genuinely different observable from the Eötvös ratio.
-
----
-
+The selection rule above is the framework's conceptual account of why gravitational sourcing and inertial response track one another for persistent excitations. In the present paper that claim is left at the structural level. Detailed confrontation with precision equivalence-principle experiments, material-dependent systematics, and matter-wave implementations would require a separate measurement-focused treatment and is therefore not developed here.
 
 ---
 
 
 ## 3. Recovery of Planck's Constant
+
+The gravity-side factorization shows how a classical coupling constant can be unfolded back into medium and support-scale ingredients. The next question is whether the same can be done for the quantum side. Here the aim is not to reproduce the full historical derivation of Planck's constant, nor to claim that quantization has been reduced to vacuum storage alone. The aim is narrower: to show that once closure is treated as a property of a self-sustaining LC excitation, the units and scale of $h$ stop looking like an alien input and begin to look like the action bookkeeping of one completed support cycle.
+
+That shift in viewpoint matters. In standard packaging, $h$ is introduced as the universal quantum of action and then used to relate energy, frequency, and phase-space area. In the present upstream reading, one asks instead what sort of medium-level closure condition would force a localized excitation to carry one fixed action per cycle. The answer proposed here is that stable closure fixes a specific relation between extent, cycling, and enclosed phase-space orbit. On that reading, $h$ is not the starting point of the closure argument but the integrated measure of a successful one.
 
 ### 3.1 Closure quantization and the VA = 1 condition
 
@@ -550,7 +521,7 @@ $$
 \frac{\ell f}{c} = 1 \quad \Rightarrow \quad \ell = \frac{c}{f} = \lambda_C
 $$
 
-This is the Compton wavelength relation — not imposed from outside but falling out of what it means to close.
+This is the Compton wavelength relation — not imposed from outside but falling out of what it means to close. A closed excitation cannot choose its size and its cycling independently: one full cycle has to fit one full support traverse. The closure length is therefore not an optional geometrical label but part of the stability condition itself.
 
 The apparent power (VA) of such an excitation:
 
@@ -559,6 +530,8 @@ E \cdot I = \varepsilon_0\mu_0 \cdot \ell^2 \cdot f^2 = \frac{\ell^2 f^2}{c^2} =
 $$
 
 Dimensionless and equal to 1 for every closed excitation, regardless of which particle.
+
+The importance of this condition is conceptual as much as algebraic. It says that closure fixes not only a frequency-length relation but also a normalized storage-exchange level. Once the excitation is truly self-sustaining, its electric-side and magnetic-side exchange no longer float freely; they sit at the unit closure condition. Different particles may differ in support geometry and frequency, but not in the basic fact that a stable closure must exactly balance its own cycling.
 
 ### VA as the second derivative of action
 
@@ -572,6 +545,8 @@ The physical reading of this hierarchy:
 
 At VA = 1 the acceleration of action is exactly balanced: one full quantum of $h$ accumulates per cycle, neither more nor less. The cycling is at constant "velocity" in action space. A perturbation away from VA = 1 means the action is accelerating or decelerating per cycle — an unstable configuration the medium does not sustain.
 
+This is the narrative bridge between the storage language of Section 1 and the quantum constant language used later. The proposal is not that action is mysteriously imported into the medium from outside, but that once the medium supports a balanced closure, action is the natural integrated quantity that closure leaves behind over one cycle. VA is the local rate statement; $h$ is the cycle-complete bookkeeping statement.
+
 ### The resonant string and the unit pluck
 
 A resonant string can vibrate at any amplitude — the frequency is set by geometry, the amplitude by how hard it is plucked. But if the pluck itself is quantized, only certain amplitudes are stable.
@@ -581,6 +556,8 @@ The pluck that initiates a vacuum excitation is not arbitrary — it is one quan
 The minimum stable excitation of the vacuum medium is therefore the one that sustains itself on exactly one such pluck — one $h$ per cycle, VA = 1. This is not an external constraint imposed on the medium; it is what the medium naturally supports given that the initiating event is always one quantum of angular momentum. Higher stable states are integer multiples — the harmonic spectrum of the string — which maps to the structure of particle generations and excited states.
 
 The proton and electron both satisfy VA = 1 at one $h$ per cycle, but at very different frequencies — different string lengths, same pluck. The mass ratio $m_p/m_e \approx 1836$ is the ratio of their closure frequencies, which is the inverse ratio of their closure lengths. The pluck is universal; the geometry is not.
+
+This analogy should be read as interpretive scaffolding rather than as the derivation itself. Its purpose is to make clear what is supposed to be universal and what is allowed to vary. The universal part is the unit closure condition and the one-action-per-cycle bookkeeping. The variable part is the support geometry that selects the realized frequency and therefore the realized rest mass.
 
 #### What this means for the mass spectrum
 
@@ -602,9 +579,13 @@ $$
 
 A pure ratio of lengths: the natural length unit of the medium to the closure length of the excitation.
 
+That is the core structural claim of this subsection. Once closure is written in medium variables, the units of $h$ no longer look exceptional. They read as exactly what one would expect from a completed action cycle carried by a length-bearing storage medium.
+
 ---
 
 ### 3.2 Derivation of $h$ from LC closure
+
+The previous subsection gives the qualitative closure picture. This subsection states the more concrete audit: what numerical combination of vacuum storage and support geometry reproduces the observed scale of $h$?
 
 $h$ emerges from the requirement that a sustained localized LC excitation must leave zero net residue in the infinite homogeneous vacuum after one complete cycle.
 
@@ -628,22 +609,30 @@ $$
 
 Using $r_0 \approx 1.2\times10^{-15}$ m reproduces $h \approx 6.626\times10^{-34}$ J·s.
 
-Both $h$ and $G$ now emerge from the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. No external quantum constant is inserted.
+The point of the expression is not merely that it gives the right order of magnitude. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
+
+Both $h$ and $G$ now emerge from the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. No external quantum constant is inserted. What remains open is not whether the factorization can be written, but why the support scale and closure amplitude take the values they do.
 
 ---
 
 
 ## 4. Recovery of the Electron Charge
 
+If Section 3 addresses the cycling side of the medium, charge forces the opposite emphasis. Charge is not primarily about closure frequency or phase-space orbit. It is about static occupancy on the electric side of the vacuum pair. That makes the charge factorization both simpler and more delicate: simpler because no magnetic-side cycling is required at the first step, and more delicate because the missing ingredient is no longer a frequency but the internal field amplitude of the excitation.
+
+The strategy of this section is therefore parallel to the earlier ones but not identical. First isolate the electric-side storage factor. Then show how the proton support geometry supplies a natural capacitance. Then identify the remaining gap explicitly: not a missing geometric kernel, but the internal voltage set by the excitation's own closure.
+
 ### 4.1 Vacuum pair first, classical constants second
 
 Introducing complementary vacuum factors $z_u$ (magnetic side) and $z_e$ (electric side):
 
 $$
-z_u z_e = \sqrt{\mu_0\varepsilon_0}, \qquad c = \frac{1}{z_u z_e}.
+ z_u z_e = \sqrt{\mu_0\varepsilon_0}, \qquad c = \frac{1}{z_u z_e}.
 $$
 
 $\mu_0$ and $\varepsilon_0$ are packaged descendants of the more primitive pair $(z_u, z_e)$.
+
+This is useful here because it separates the two sides of the medium before they are repackaged into the more familiar constants. On the gravity and action sides, both branches remain active. For charge, the electric-side factor is the relevant one at leading order. Writing the vacuum pair this way makes that asymmetry legible instead of hiding it inside the final SI expressions.
 
 ---
 
@@ -657,7 +646,11 @@ $$
 
 formally identifying $1/(4\pi\varepsilon_0) = z_e^2$. The two-body law is the product of two identical per-source amplitudes — the same structure as $G = g^2$.
 
+That parallel matters because it shows that the paper is not arbitrarily treating gravity as composite while leaving electromagnetism untouched. At the level of the two-body law, both interactions admit the same formal reading: an interaction strength built from two identical per-source amplitudes. The difference is not in the symmetry of the source pairing, but in what kind of medium quantity each source amplitude represents.
+
 An important contrast with gravity: **charge contains no $c$, no $\mu_0$**. The Coulomb constant $k_e = 1/(4\pi\varepsilon_0)$ is purely electric-side storage — no propagation speed, no magnetic component. This is because charge is *static* storage occupancy, not a cycling rate. Gravity couples to energy (which is storage cycling — F·H per unit time), so $c$ appears naturally in $G$. Charge couples only to the capacitive side of the medium.
+
+That distinction is one of the cleanest conceptual results in the paper. It explains why the charge factorization should not be expected to look like a smaller copy of the $h$ factorization. Charge belongs to the storage side before the cycle starts. Action belongs to the completed cycle. Their common geometry may be the same, but the medium aspect being counted is different.
 
 ---
 
@@ -665,15 +658,21 @@ An important contrast with gravity: **charge contains no $c$, no $\mu_0$**. The 
 
 The proton is the primitive charge. It has a support radius $r_0$, and that radius defines a natural volume of vacuum medium. All three of the main excitation quantities — charge, mass, and action — have $r_0^3$ as their common kernel. They differ only in which aspect of the medium is being counted.
 
+This is the section's main unifying move. Rather than treating charge, mass, and action as three unrelated observables that happen to share a radius somewhere in their formulas, the proposal is that one proton-scale support volume is being read three different ways. That does not eliminate the differences among them; it explains where those differences live.
+
 #### Charge: the electric-side loading of one support volume
 
-Define $A_v = 1\,\text{m}^{-1}$ as a bookkeeping scalar — value 1, carrying the unit needed to turn the linear density $\varepsilon_0$ (F/m) into a pure capacitance over a volume:
+ε₀ characterizes how the vacuum medium stores electric energy *per unit length of extent* — it is a linear density, F/m, not a volumetric one. This is not an arbitrary SI convention but a reflection of how electric storage capacity actually scales with geometry in the medium: a capacitor's capacitance scales with plate area divided by separation, which is a length ratio, so the fundamental medium property that governs it is linear.
+
+This has a direct consequence when extracting a natural capacitance from a finite support volume. The support volume $r_0^3$ is a volume, but ε₀ is a linear density. To project the linear density onto the volume geometry of a spherical support of radius $r_0$, exactly one inverse-length factor must be absorbed — the factor that converts the linear extent $\ell$ over which ε₀ is defined into the appropriate projection onto the support volume. For a spherical geometry, this factor is $1/r_0$, or equivalently $A_v = 1\,\text{m}^{-1}$ as a dimensionless-valued but unit-carrying scalar:
 
 $$
 C_{\text{nat}} = \varepsilon_0 \cdot A_v \cdot r_0^3 = \frac{\text{F}}{\text{m}} \cdot \frac{1}{\text{m}} \cdot \text{m}^3 = \text{F}
 $$
 
-This is **pure Farads** — the natural capacitance of one support volume. No $c$, no $\mu_0$, no cycling. The charge at unit voltage is then:
+This is **pure Farads** — the natural capacitance of one support volume. No $c$, no $\mu_0$, no cycling. $A_v$ is not a new physical constant and not a dimensional patch — it is the expected consequence of ε₀'s character as a linear medium property being projected onto a three-dimensional support geometry. The same factor appears implicitly whenever a capacitance is computed from a spatial geometry: it is the $1/d$ in a parallel-plate capacitor, the $1/r$ in a spherical capacitor. Here it is made explicit because the support geometry is the proton itself.
+
+The charge at unit voltage is then:
 
 $$
 e \sim C_{\text{nat}} \times 1\,\text{V} = \varepsilon_0\, A_v\, r_0^3 \times 1\,\text{V} \quad [\text{Coulombs}]
@@ -681,9 +680,9 @@ $$
 
 Numerically: $C_{\text{nat}} = 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}$.
 
-The gap between this and $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, which is the rest energy of the proton expressed as a potential across one electron charge.
+The gap between this and $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, the rest energy of the proton expressed as a potential across one electron charge. Deriving this internal voltage from the closure geometry is the remaining open step for the charge factorization.
 
-*Note:* $A_v$ is not a new physical constant. It is the bookkeeping acknowledgment that $\varepsilon_0$ is a linear density (F/m) and the volume normalization requires one factor of 1/m to be absorbed. Like the $4\pi$ in Coulomb's law and the 500 in $G$, it is packaging, not physics.
+This is the point at which the charge section becomes sharply posed rather than fully closed. The support volume and the electric-side capacitance are already in hand. What is still missing is the dynamical closure statement that fixes the realized internal field amplitude. In other words: the geometric container is identified, but the excitation-level filling rule is not yet fully derived.
 
 #### Mass: the total F·H loading of one support volume
 
@@ -691,7 +690,7 @@ $$
 m_p \sim \frac{\text{F}\cdot\text{H}}{\text{m}} \cdot r_0^2 \quad\text{(from section 9: }1\,\text{kg} \sim \text{F}\cdot\text{H/m)}
 $$
 
-The proton mass is the F·H loading — both storage modes together — of its support geometry.
+The proton mass is the F·H loading — both storage modes together — of its support geometry. Here the same support structure is being read not as pure electric occupancy but as total persistent loading of both medium branches.
 
 #### Action: the closure cycling of one support volume
 
@@ -709,24 +708,30 @@ $h$ is $r_0^3$ (the kernel volume) times a cycling rate factor $r_0/(\varepsilon
 | $m_p$ | $\sim \text{F}\cdot\text{H/m} \times r_0^2$ | Both modes, persistent loading |
 | $h$ | $\sim r_0^3 \times r_0/(\varepsilon_0\mu_0)^{3/2}$ | Both modes, one closure cycle |
 
-The common factor is $r_0^3$. The distinctions are: which storage mode (electric only vs both), and static vs cycling.
+The common factor is $r_0^3$. The distinctions are: which storage mode (electric only vs both), and static vs cycling. That is why the three quantities can share a kernel without collapsing into the same observable.
 
 ---
 
 
 ## 5. Geometric Notes and Summary
 
+The previous two sections carry most of the paper's substance. This final technical section is therefore not meant to introduce another major mechanism. Its role is to gather the recurring geometric motifs into one place and state, as plainly as possible, what the paper has and has not established.
+
+In particular, two things need to be kept distinct. First, similar constants can inherit similar geometric factors for different reasons; shared symbols do not automatically imply shared physics. Second, the paper's strongest claims are structural rather than absolute: it identifies a common upstream basis and several repeated kernels, but it does not yet derive every excitation-scale multiplier from substrate theory alone.
+
 ### 5.1 The role of $\pi$: two different appearances
 
 - **Gravity side**: $\pi$ enters through sphere-volume inversion — $V = \frac{4\pi}{3}R^3$ gives $(3/4\pi)^{1/3}$ in $r_0$. It is a **volume** normalization.
 - **Coulomb side**: $4\pi$ comes from spherical flux spreading — surface area $A = 4\pi r^2$. It is a **surface-flux** normalization.
 
-The two appearances should not be conflated.
+The two appearances should not be conflated. This is a small point algebraically, but it matters interpretively because the paper repeatedly moves between support volume, flux spreading, and closure area. The same symbol shows up in all three environments, but it is not doing the same job each time.
 
 ---
 
 
 ### 5.2 Summary and safe claims
+
+What, then, is the most that can safely be said at the end of the audit? The answer is not that the classical constants have been reduced all the way to first principles. The answer is that several constants usually treated as independent can be unfolded onto the same medium pair and the same support scale, with the remaining gaps now localized rather than hidden.
 
 #### The structural chain
 
@@ -755,6 +760,8 @@ $$
 1\,\text{s} = \sqrt{\text{F}\cdot\text{H}}, \qquad 1\,\text{kg} \sim \frac{\text{F}\cdot\text{H}}{\text{m}}, \qquad r_0 = 1 \text{ (natural length)}
 $$
 
+Taken together, these expressions are the paper's central output. They do not say that everything has been derived. They say that the apparent diversity of the packaged constants is at least partly downstream of a much smaller upstream basis.
+
 #### What would be needed to go further
 
 1. A substrate-level derivation of the isolated support scale.
@@ -764,22 +771,17 @@ $$
 5. A clearer substrate-level interpretation of $z_e$, $z_u$, and $A_v$.
 6. Derivation of the internal voltage $V_{\rm int}$ from the proton closure geometry — this would close the charge derivation.
 
+Those are not minor bookkeeping tasks. They are the actual frontier left by the present paper. But stating them explicitly is part of the point: once the constants have been unpacked this way, the remaining unknowns are narrower, more specific, and more physically interpretable than the original presentation in which $G$, $h$, and $e$ simply appear as separate primitives.
+
 ---
 
+## 6. Discussion: Proper and Coordinate Quantities
 
-## 6. Discussion: The Classical Formulas Were Already Proper
+Every physical measurement is made with material rods, clocks, and oscillatory processes. In that sense, experimentally anchored formulas are tied first to realized measurements, while coordinate descriptions are later theoretical organizations of those measurements. Here that point is only interpretive: the constant factorizations of sections 2–4 are written in terms of medium properties and support scales, so they need not be cast as relativistic correction formulas laid on top of an otherwise complete Newtonian packaging.
 
-Every measurement ever made is a proper measurement. Every clock that has ever ticked is a physical process running in proper time. Every velocity ever recorded was measured with such clocks. Every force ever felt by an accelerometer was proper acceleration. There is no instrument that measures coordinate time, coordinate velocity, or coordinate acceleration — those quantities are theoretical constructs, useful for calculation, but never directly observed.
+This does **not** require a wholesale re-reading of classical mechanics in proper-velocity language. The narrower point is simply that the quantities isolated here — $r_0$, $\varepsilon_0$, $\mu_0$, the closure scale, and the support volume — are upstream bookkeeping objects. They belong to the medium description prior to whichever coordinate language is later used for kinematics.
 
-This has a consequence that runs through the entire paper. Newton derived his formulas from experiment at terrestrial velocities, where $v/c \sim 10^{-5}$ and the difference between proper and coordinate quantities is of order $10^{-10}$ — far below any classical measurement threshold. He wrote down formulas that work. He could not have known, and did not need to know, that they were proper-velocity formulas. The distinction was unmeasurable. The formulas are therefore already in proper-velocity space, not because Newton put them there deliberately, but because all measurements are.
-
-The escape velocity formula $w_{esc} = \sqrt{2GM/r}$ is the clearest example. At Earth's surface it gives $\sim 11.2$ km/s — proper and coordinate velocity agree to ten decimal places, and the formula works. Extended to relativistic regimes, it continues to give the proper escape velocity. At the Schwarzschild radius $r_s = 2GM/c^2$ it gives $w_{esc} = c$ — not coordinate $c$, but proper $c$, which corresponds to a photon. Inside $r_s$ it gives $w_{esc} > c$, meaning escape requires more than a photon's proper velocity, which no massive excitation can provide. This is a physically meaningful, coordinate-independent statement derived from a Newtonian formula that never needed relativistic correction — because it was never a coordinate formula.
-
-The same applies throughout this paper. The factorizations of $G$, $h$, and $e$ in sections 2–4 work cleanly without relativistic corrections because they are already operating in proper-velocity space. The gram-normalization of $G$ in section 2.3, the LC closure derivation of $h$ in section 3.2, the capacitive loading picture of $e$ in section 4 — none of these require a relativistic amendment, because the underlying quantities ($r_0$, $\varepsilon_0$, $\mu_0$) are medium properties that exist prior to any kinematic description.
-
-The contrast with $E = mc^2$ is instructive. That formula is explicitly relativistic — Einstein derived it from the relativistic framework. The $c$ in it is the wave speed of the medium, $1/\sqrt{\varepsilon_0\mu_0}$, which corresponds to infinite proper velocity. It is not a kinematic velocity at all. Rest energy $mc^2$ is "how much energy you would get if you converted mass entirely to photon-mode propagation of the medium" — the infinite-proper-velocity end of the spectrum, not a speed limit. The formula is relativistic not because it corrects Newton but because it operates at a regime Newton never reached.
-
-What is standardly called "relativistic correction to Newtonian mechanics" is therefore better understood as a *coordinate correction* — a restatement of proper-velocity formulas in coordinate terms that breaks down near $v = c$ in coordinate language, even though the proper formulas remain valid throughout. The physics does not break down. The coordinate description of the physics breaks down. Section 7 applies this distinction to three specific cases where the coordinate description has produced standard narratives that the proper-velocity picture corrects.
+Read in that limited way, the discussion prevents category mistakes. The paper's claim is not that the constants have been rederived by a new relativistic mechanics, but that once the classical constants are unpacked into vacuum-storage and support-scale components, a common upstream structure becomes visible.
 
 ---
 
@@ -844,313 +846,3 @@ The internal voltage implied by the proton rest energy: $V_{\rm int} = m_p c^2 /
 
 
 ---
-
-
-## Appendix B: Corrective Notes
-
-### B.1 Proper time, proper velocity, and the black hole infall narrative
-
-*This section develops the proper-velocity reframing of black hole physics and identifies where the standard narrative has the physics backwards.*
-
----
-
-### B.1.1 The measurement problem with coordinate time
-
-Coordinate time is never measured. Every physical clock — atomic, mechanical, biological — is a process running in proper time. Every velocity measurement uses those clocks. Every accelerometer measures proper acceleration. The entire body of classical mechanics that has been tested and confirmed is therefore already written in proper quantities, even when the variables were called coordinate quantities because the distinction was not yet understood.
-
-At terrestrial velocities, $v/c \sim 10^{-5}$, the difference between proper and coordinate velocity is $\sim 10^{-10}$ — far below any classical measurement threshold. Newton wrote formulas that work, not knowing they were proper-time formulas all along. The escape velocity formula:
-
-$$w_{esc} = \sqrt{\frac{2GM}{r}}$$
-
-is a proper velocity formula. It gives the proper velocity required to escape from radius $r$. At Earth's surface, $w_{esc} \approx 11.2$ km/s — far below $c$, so proper and coordinate velocity agree to ten decimal places. The formula is not wrong; it is misapplied when extended to relativistic regimes under the assumption that $w$ means coordinate velocity.
-
----
-
-### B.1.2 Proper velocity has no upper bound
-
-The proper velocity is $w = \gamma v$, where $\gamma = \sqrt{1 + w^2/c^2}$. There is no ceiling. A photon has infinite proper velocity — it traverses any coordinate distance in zero proper time, making the ratio formally $\infty$. A massive particle can have any finite proper velocity, with $\gamma$ growing without bound.
-
-The coordinate form $\gamma = 1/\sqrt{1 - v^2/c^2}$ looks like it has a singularity at $v = c$, but this is a coordinate artifact of using coordinate velocity as the primary variable. In proper velocity $w$, the same function is $\gamma = \sqrt{1 + w^2/c^2}$ — smooth, monotone, no singularity anywhere.
-
-This matters for black holes because the standard "escape velocity equals $c$" statement is about **coordinate** $c$. In proper terms:
-
-$$w_{esc}(r) = \sqrt{\frac{2GM}{r}}$$
-
-This equals $c$ at $r = 2GM/c^2 = r_s$ — the Schwarzschild radius. But $w = c$ is not a wall; it is one point on a smooth curve. The formula continues to larger $w$ for smaller $r$:
-
-| $r/r_s$ | $w_{esc}$ |
-|---|---|
-| $10^9$ (Earth orbit scale) | $\sim 4\times10^{-5}c$ |
-| $3$ (neutron star surface) | $\sim 0.58c$ |
-| $1.5$ (photon sphere) | $\sqrt{2}c \approx 1.41c$ |
-| $1.01$ | $\sim 10c$ |
-| $1 + 10^{-46}$ | $\sim 10^{23}c$ |
-| $1$ (Schwarzschild radius) | $\infty$ |
-
-The horizon is where proper escape velocity reaches infinity — requiring a photon ($w \to \infty$) to just barely escape. This is a physically meaningful statement, not a coordinate artifact.
-
----
-
-### B.1.3 Freefall does not feel acceleration
-
-A critical correction to the naive "maximum survivable acceleration" framing: in freefall, everything accelerates together. There is no proper acceleration — an accelerometer in freefall reads zero. The only physically felt quantity near a black hole (for a small enough observer) is tidal force — the gradient of the gravitational field across a finite body size. For a sufficiently large black hole, tidal forces at the horizon are negligible. There is no wall, no jolt, no felt threshold at $r_s$.
-
-The relevant limit for a freefalling observer is not acceleration tolerance but the **proper time budget remaining** — how many seconds of experienced time are left before reaching $r = 0$.
-
----
-
-### B.1.4 The proper time crunch — numerics
-
-For a stellar-mass black hole ($M = 10 M_\odot$, $r_s \approx 30$ km), consider a freefalling observer starting from rest at $r_0 = 1$ light-second $\approx 3\times10^8$ m from the center.
-
-The proper escape velocity at that distance:
-
-$$w_0 = \sqrt{\frac{2GM}{r_0}} = \sqrt{\frac{2 \times 6.67\times10^{-11} \times 2\times10^{31}}{3\times10^8}} \approx 3\times10^6\,\text{m/s} \approx 0.01c$$
-
-At this distance $\gamma \approx 1.00005$ — barely any time dilation. The coordinate infall time from here:
-
-$$t_{coord} \sim \sqrt{\frac{r_0^3}{2GM}} \approx \sqrt{\frac{(3\times10^8)^3}{2.67\times10^{21}}} \approx 100\,\text{s}$$
-
-So far, unremarkable. But as the observer falls inward, $w$ grows rapidly and proper time compresses. The total proper time for the entire infall from $r_0$ to the singularity is:
-
-$$\tau_{total} = \frac{\pi}{2}\sqrt{\frac{r_0^3}{2GM}} \approx \frac{\pi}{2} \times 100 \approx 157\,\text{s}$$
-
-This is the total proper time budget from 1 light-second out to $r = 0$. The distribution of that budget is highly nonuniform — most of it is spent in the slow early phase. By the time the observer reaches $r = 10 r_s = 300$ km, the remaining proper time is:
-
-$$\tau_{remaining}(10 r_s) \approx \frac{\pi}{2}\sqrt{\frac{(10 r_s)^3}{2GM}} \approx \frac{\pi}{2}\sqrt{\frac{(3\times10^5)^3}{2.67\times10^{21}}} \approx 0.27\,\text{s}$$
-
-At $r = 2r_s = 60$ km (just outside the horizon):
-
-$$\tau_{remaining}(2 r_s) \approx \frac{\pi}{2}\sqrt{\frac{(2 r_s)^3}{2GM}} \approx \frac{\pi}{2}\sqrt{\frac{(6\times10^4)^3}{2.67\times10^{21}}} \approx 0.024\,\text{s}$$
-
-At $r = 1.01 r_s$:
-
-$$\tau_{remaining}(1.01 r_s) \approx \frac{\pi}{2}\sqrt{\frac{(1.01 r_s)^3}{2GM}} \approx 0.0024\,\text{s} \approx 2.4\,\text{ms}$$
-
-So the observer has about 2.4 milliseconds of proper time remaining when they are 1% of a Schwarzschild radius outside the horizon — at this point $w_{esc} \approx 10c$. A human neural reaction time is $\sim 150$ ms. The thought "I should take a picture" would require more proper time than remains in the entire subsequent trajectory.
-
-The standard narrative has this exactly backwards. It says the outside observer sees the infaller freeze, while the infaller experiences nothing special. In proper terms: the infaller is the one who runs out of time. The outside observer's coordinate time runs indefinitely.
-
----
-
-### B.1.5 What the outside observer actually sees
-
-The infaller's last few milliseconds of proper-time emission are real physical events — real photons emitted, real processes occurring. Those photons must climb out through the displaced transport structure, and each successive emission event is closer to the horizon, requiring a longer and longer climb. The redshift grows exponentially:
-
-$$\nu_{obs} \approx \nu_{emit} \cdot e^{-t_{obs}/\tau_{decay}}$$
-
-where $\tau_{decay} \sim 4GM/c^3$ for a Schwarzschild black hole ($\approx 2\times10^{-4}$ s for $10 M_\odot$).
-
-So the outside observer receives:
-- A genuine physical record of the infaller's last few milliseconds of existence
-- Stretched exponentially in coordinate time by the displaced transport structure
-- Fading to infrared and then radio as the redshift grows without bound
-- Asymptotically dimming — no sharp cutoff, but a definite exponential fade
-
-This is not an illusion or a coordinate artifact. The photons genuinely take longer to climb out because there is more displaced medium to traverse — the transport structure is doing real physical work on each photon. The smearing is the displacement field's fingerprint on the infaller's final emissions.
-
-The corrected picture is therefore:
-
-**The outside observer sees a real but time-stretched replay of the infaller's last few milliseconds, smeared over a long coordinate time by the transport structure, exponentially fading to undetectability. The infaller experiences those milliseconds normally, with no felt threshold at the horizon, simply running out of proper time before they could react.**
-
-Neither observer sees the other "freeze forever." The infaller runs out of proper time. The infaller's final photons fade exponentially as seen from outside. Both processes are finite, physical, and consistent.
-
----
-
-### B.1.6 The Newtonian escape velocity formulas are not wrong
-
-The orbital and escape velocity formulas used in astrophysics — circular orbit speed $v_c = \sqrt{GM/r}$, escape speed $v_{esc} = \sqrt{2GM/r}$, Kepler's third law — are all derived from Newtonian mechanics without relativistic correction. They appear in general relativistic treatments of black holes with the implicit assumption that they carry a coordinate interpretation.
-
-But as argued in section 14.1, these formulas are already proper-velocity expressions at the scales where they were derived and tested. The relativistic correction is not needed because the formula was never a coordinate formula to begin with — it was always a proper measurement, identified as coordinate only because the distinction was unmeasurable at terrestrial scales.
-
-The retrocorrection is not that these formulas are wrong. It is that their domain of validity is proper velocity, and extending them to extreme regimes (strong fields, relativistic speeds) must be done in proper terms, not coordinate terms. The Schwarzschild radius as "where escape velocity equals $c$" is a proper statement — $w_{esc} = c$ — not a coordinate statement. And $w = c$ is not the maximum; it is just one value on the proper velocity curve, corresponding to photons.
-
-The horizon is where proper escape velocity becomes infinite — requiring infinite proper velocity, which only photons have — and this is a physically meaningful, coordinate-independent statement about the geometry of the displaced transport structure.
-
-
-
-
-### B.2 Gravitational lensing as differential phase accumulation, not wavefront deflection
-
-*This section corrects the standard description of gravitational lensing and eliminates the photon sphere as a physical object. The argument rests on an observed property of gravitational lensing that is incompatible with genuine wavefront bending.*
-
----
-
-### B.2.1 Polarization is preserved through gravitational lensing
-
-The key observational fact:
-
-> "Like wavelength, polarization is an intrinsic property of the photon, which is not altered by gravitational potentials. The path of the photon will be deflected and the image of a source formed by an ensemble of photons will be distorted due to differential bending, yet the polarization of the source remains intact."
-
-Polarization is the orientation of the $E$ and $B$ fields of the electromagnetic wave — it is tied to the propagation direction by the transversality condition $\vec{E} \perp \vec{B} \perp \hat{k}$. If the wavefront genuinely bent — if the propagation direction physically rotated — the polarization vector would rotate with it. A wave that travels a curved path carries its polarization along that curve; the polarization at arrival would be rotated relative to emission by the total turning angle.
-
-Gravitational lensing produces no such rotation. Polarization is preserved to the limits of measurement, through lensing events that produce angular deflections of arcseconds, Einstein rings, and multiple images.
-
-This is a direct observational proof that **the wavefront does not bend**. The propagation direction does not rotate. The polarization arrives aligned with the source because the wave traveled straight.
-
----
-
-### B.2.2 What actually happens: differential phase accumulation
-
-In the STFR displacement framework, the mechanism is immediate. The displacement field $\Sigma(r) = GM/(c^2 r)$ means there is more medium — more $\varepsilon_0\mu_0$ per coordinate length — closer to the mass. The wave propagates at $c$ through all of it. $c$ is the wave speed of the medium, $1/\sqrt{\varepsilon_0\mu_0}$, everywhere and always.
-
-A plane wave passing a mass at impact parameter $b$ has different parts of its wavefront traversing different amounts of medium:
-
-- The near side (closer to the mass) traverses more $\varepsilon_0\mu_0$ per coordinate length
-- The far side traverses less
-- Both sides travel at $c$ through their respective local medium
-
-The result is a **phase difference** across the wavefront — not a rotation of the propagation direction, but a differential advance of phase. This phase difference, when the wave reaches a distant observer, produces an apparent angular shift of the source: the observer infers a different arrival direction from the phase gradient across their aperture.
-
-The polarization is untouched because the propagation direction is untouched. The wave traveled straight through the displaced medium. What changed is the accumulated phase on each side, not the direction of travel.
-
-This is exactly analogous to a graded-index optical medium — a glass lens with a smooth refractive index gradient. Light through such a lens does not bend in the sense of changing propagation direction abruptly; it accumulates differential phase across the wavefront, and the apparent direction of the source shifts. Polarization is preserved through graded-index optics for the same reason.
-
----
-
-### B.2.3 The Eddington deflection from straight-line propagation
-
-The apparent deflection angle for a source at large impact parameter $b \gg d$ (where $d^2 = 2GM/c^2$ is the displacement scale) is:
-
-$$\theta = \frac{2d^2}{b} = \frac{4GM}{bc^2}$$
-
-This is the standard general-relativistic result, recovered here entirely from straight-line propagation through the displacement geometry — no geodesic curvature, no bending of paths, no principle of least action applied to photon trajectories.
-
-The factor of 4 (rather than the Newtonian factor of 2) comes from two equal contributions:
-
-- The **near-side displacement**: the wave accumulates extra phase on the near side as it approaches the mass, equivalent to $2GM/(bc^2)$
-- The **far-side displacement**: the wave accumulates extra phase again as it recedes, another $2GM/(bc^2)$
-
-The Newtonian calculation gets half the answer because it treats light as a massive particle traveling at coordinate $c$ and computes a gravitational deflection force. This misses both the proper nature of $c$ (which is infinite proper velocity, not a coordinate speed subject to gravitational force) and the symmetric contribution from both sides of the lens plane.
-
-The displacement field scales $\varepsilon_0$ and $\mu_0$ together by the same factor $\sigma(r) = D(r,d)$, preserving $Z_0 = \sqrt{\mu_0/\varepsilon_0}$ and therefore preserving $c$ locally. This symmetric scaling is also what produces $\gamma = 1$ for lensing (no birefringence, no chromatic aberration in vacuum lensing) — both storage modes are equally displaced, so the impedance ratio is unchanged, and all wavelengths are deflected identically.
-
----
-
-### B.2.4 The photon has infinite proper velocity — it cannot be deflected by gravity
-
-$c$ is the wave speed of the medium. A photon traveling at $c$ has:
-
-$$w = \frac{c}{\sqrt{1 - c^2/c^2}} = \infty$$
-
-Infinite proper velocity. A photon is not a particle being accelerated by gravity in any Newtonian or post-Newtonian sense. It is the propagation of the medium itself — a disturbance in the $\varepsilon_0\mu_0$ field traveling at the medium's own wave speed.
-
-You cannot apply a gravitational force to the medium's own propagation. The displacement field changes the amount of medium per coordinate length, which changes the accumulated phase of propagating waves, which produces apparent angular shifts. But the wave itself travels straight, at $c$, with infinite proper velocity, undeflected.
-
-The Newtonian lensing calculation (giving $2GM/bc^2$, half the correct answer) treats light as a slow massive particle at coordinate speed $c$ and computes $F = GMm/r^2$ on it. This is wrong in two ways: the photon has no mass to be pulled on, and $c$ is infinite proper velocity, not a coordinate speed subject to gravitational force. The Newtonian calculation gets any nonzero answer only because the phase accumulation it approximates accidentally captures half of the correct result.
-
----
-
-### B.2.5 The photon sphere does not exist
-
-The photon sphere at $r = 3GM/c^2$ in the Schwarzschild geometry is derived from the null geodesic equations — the condition that a null path curves back on itself in a circle. It requires genuine wavefront bending: the propagation direction must continuously rotate to maintain a circular orbit.
-
-Since the wavefront does not bend — polarization preservation proves this — there can be no circular photon orbits. The displacement field can produce differential phase accumulation, which appears as deflection in coordinate terms, but it cannot continuously redirect a straight-traveling wave into a circle.
-
-In a graded-index optical medium, there are no stable circular light orbits. Light entering a spherically symmetric graded-index medium curves inward then outward, accumulating differential phase, and exits. The path in coordinate space is curved; the propagation direction in the local medium frame is straight throughout.
-
-The photon sphere is a prediction of geodesic optics — treating light as following curved spacetime geodesics. It is not a prediction of displacement-medium optics, where light travels straight through a non-uniform medium. The two frameworks give the same answer for weak-field deflection (both give $4GM/bc^2$) but differ on strong-field predictions: the photon sphere, the light ring, and the associated shadow structure of black hole images.
-
-The observed black hole shadow (EHT images of M87* and Sgr A*) is consistent with STFR displacement geometry without requiring a photon sphere — the shadow boundary in the displacement picture is set by the impact parameter $b = d\sqrt{3}$ (for $b \gg d$ this gives the same angular scale as the photon sphere), but the physical mechanism is differential phase accumulation and the apparent edge of the displacement region, not circular null geodesics.
-
-*This remains an open distinguishing prediction: if the photon sphere does not exist, the detailed structure of the black hole shadow — particularly any ring-like features attributed to photon sphere lensing — should differ from geodesic predictions in ways detectable by future higher-resolution VLBI.*
-
----
-
-### B.2.6 Summary
-
-| | Standard GR | STFR displacement |
-|---|---|---|
-| Mechanism | Geodesic curvature of spacetime | Differential phase through displaced medium |
-| Wavefront | Bends | Straight — polarization preserved |
-| Deflection angle | $4GM/bc^2$ | $4GM/bc^2$ — same result |
-| Factor of 4 origin | Two contributions from geodesic curvature | Near-side + far-side phase accumulation |
-| Newtonian factor of 2 | Missing spatial curvature | Missing far-side phase contribution |
-| Photon sphere | Exists at $r = 3GM/c^2$ | Does not exist |
-| Birefringence | None — $Z_0$ preserved | None — $\varepsilon_0, \mu_0$ scale together |
-| Chromatic aberration | None in vacuum | None — $c$ same for all wavelengths |
-
-The observational proof is polarization preservation. A bending wavefront would rotate the polarization. The polarization does not rotate. Therefore the wavefront does not bend. Therefore the mechanism is differential phase accumulation through displaced medium, not geodesic curvature.
-
----
-
-### B.3 Larmor radiation, freefall, and the equivalence principle paradox
-
-*This section resolves a long-standing conceptual problem in classical electrodynamics using the displacement framework's account of retarded field propagation.*
-
----
-
-### B.3.1 The paradox
-
-Larmor radiation is well established experimentally. Synchrotron radiation from electrons in circular accelerators and bremsstrahlung from decelerating charges in matter are both Larmor radiation — a charge undergoing proper acceleration emits electromagnetic radiation at a rate proportional to $a^2$. This is measured, unambiguous, and well characterized.
-
-The equivalence principle creates a problem. If a charge accelerated by an electromagnetic field radiates, and gravitational acceleration is locally equivalent to electromagnetic acceleration, then a charge in freefall in a gravitational field should also radiate. But a freely falling charge is in a local inertial frame — it feels no proper acceleration, no force, nothing to distinguish its situation from floating in empty space. A charge floating in empty space does not radiate. The two conclusions contradict.
-
-Standard resolution attempts are unsatisfying:
-
-- *"It radiates for outside observers but not for the falling observer"* — radiation carries energy. Energy loss is not observer-dependent. Either the charge loses energy or it does not.
-- *"The equivalence principle only holds locally, and radiation is non-local"* — true, but this is a dodge rather than a derivation.
-- *Unruh effect* — an accelerating observer sees thermal radiation that an inertial observer does not. But this is a quantum vacuum effect and does not cleanly resolve the classical Larmor question.
-
-The paradox is genuine and unresolved in standard treatments.
-
----
-
-### B.3.2 The displacement framework resolution
-
-In the STFR displacement picture, the physical mechanism of Larmor radiation is the **mismatch between a charge's current position and the center of its retarded electromagnetic field**.
-
-The electromagnetic field of a charge at position $\mathbf{x}_{charge}(t)$ propagates outward from the charge's retarded position — the position at the retarded time $t_r = t - |\mathbf{x} - \mathbf{x}_{charge}(t_r)|/c$. Under moderate motion, the retarded field continuously updates and the field remains approximately centered on the charge. Under acceleration, the charge's current position pulls ahead of where the retarded update has propagated — there is a lag between where the charge is and where the field thinks it is. This shearing between current position and retarded field center is the radiation.
-
-**Proper acceleration** — being pushed through the medium by an external force — creates this mismatch. The charge moves through the medium while the medium stays put. The retarded field propagates through undisturbed medium and finds the charge has moved ahead of where it propagated from. Mismatch, shearing, radiation.
-
-**Freefall** is different in a precise geometric sense. In freefall, the charge is not being pushed through the medium. The displacement field $\Sigma(r)$ of the gravitational source modifies the propagation geometry of the electromagnetic field at every point in the region. The charge follows the displaced transport structure; the electromagnetic retarded field propagates through the same displaced transport structure. Both the charge's trajectory and the electromagnetic propagation geometry are shaped by the same $\Sigma(r)$.
-
-The result is that the retarded field center, computed through the actual displaced propagation geometry, moves with the charge. The charge is always at the center of its own retarded field as computed through the medium it is actually falling through. The mismatch is identically zero. No radiation.
-
----
-
-### B.3.3 The gradient cancellation
-
-The precise statement is geometric. Larmor radiation occurs when the charge's current position differs from the center of its retarded field. In displaced medium, "center of the retarded field" must be computed by tracing the retarded propagation through the actual displacement geometry — not through flat space.
-
-In freefall, the charge follows a geodesic of the displacement geometry. The electromagnetic field propagates along the same geodesic structure — the displaced $\varepsilon_0(r)$ and $\mu_0(r)$ that shape the gravitational displacement also shape the electromagnetic propagation speed and direction at every point. So the gradient of the charge's trajectory through the displacement field and the gradient acting on the electromagnetic propagation are the same gradient — both are $\nabla\Sigma(r)$.
-
-These gradients combine to give zero net mismatch. Formally: the charge is displaced from its flat-space trajectory by $\nabla\Sigma$ per unit time; the retarded field center is displaced from its flat-space propagation center by the same $\nabla\Sigma$ per unit time. The difference — which is what produces radiation — is identically zero.
-
-This is the geometric content of the equivalence principle in the displacement picture. It is not merely that freefall *feels like* inertial motion. The electromagnetic field propagation literally uses the same geometry the charge is falling through. The field cannot distinguish a charge in a gravity well from a charge in flat space, because both the charge and the field are subject to the same displacement geometry. The gradients cancel exactly, the mismatch is zero, and there is no radiation.
-
----
-
-### B.3.4 Why electromagnetically accelerated charges do radiate
-
-An electromagnetically accelerated charge follows a **non-geodesic** path through the displacement geometry. The electromagnetic force pushes the charge off the natural trajectory — the path it would follow if only the gravitational displacement were acting. The retarded electromagnetic field of the charge, propagating along the geodesic structure of the medium, no longer centers on the charge because the charge has been pushed sideways from that structure.
-
-The mismatch between the charge's non-geodesic position and the geodesic propagation of its own field is the radiation. This is Larmor radiation, now understood as a geometric statement: radiation is the signature of deviation from geodesic motion through the displacement medium.
-
-This unifies two statements that appear separate in standard treatments:
-
-1. Charges in geodesic motion (freefall) do not radiate.
-2. Charges in non-geodesic motion (proper acceleration) do radiate.
-
-Both follow from the same mechanism: the mismatch between the charge's position and the center of its retarded field, computed through the actual displacement geometry of the medium.
-
----
-
-### B.3.5 Connection to Larmor radiation rate and Unruh
-
-The standard Larmor formula gives radiated power as:
-
-$$P = \frac{e^2 a^2}{6\pi\varepsilon_0 c^3}$$
-
-where $a$ is the **proper** acceleration. In the displacement picture this is the rate at which the mismatch between the charge's current position and its retarded field center grows — proportional to $a^2$ because both the position lag and the field-shearing rate scale with $a$.
-
-The Unruh effect — that an accelerating observer sees thermal radiation from the vacuum — is a quantum analog of the same mechanism. At extreme proper acceleration $a \sim mc^3/\hbar$, the lag between the charge's current state and its retarded field reaches one LC cycle period. The charge can no longer maintain closure against its own field, and the disruption of the closure condition produces radiation whose character reflects the breakdown of the excitation's self-consistency — a different regime from the classical Larmor radiation but driven by the same underlying mismatch mechanism.
-
-The equivalence principle paradox therefore has a clean resolution in the displacement framework:
-
-- **Freefall = geodesic motion = zero mismatch = no radiation** — the gradients of trajectory and propagation geometry are identical, they cancel, no shearing occurs
-- **Proper acceleration = non-geodesic motion = nonzero mismatch = Larmor radiation** — the charge is pushed off the geodesic, the field propagates along the geodesic, the difference grows at rate $\propto a$, radiation results
-- **Extreme proper acceleration = closure disruption = Unruh-like radiation** — the mismatch reaches one LC cycle, the excitation's self-consistency breaks down
-
-The paradox dissolves because the equivalence principle is exactly correct in the displacement picture: freefall is genuinely inertial in the only sense that matters for radiation — the charge moves with the medium, and its field propagates through the same medium, so no mismatch arises.

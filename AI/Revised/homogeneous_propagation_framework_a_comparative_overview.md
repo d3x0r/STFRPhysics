@@ -8,7 +8,7 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework’s present status—what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
+This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. The framework is therefore not SR or GR restated in ontology or derivational order, but it still overlaps the tested kinematic and weak-field observational record within its present scope. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework’s present status—what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
 
 **Keywords:** homogeneous propagation, emergent Lorentz structure, displacement framework, weak-field gravity, ontology, theory status, open dynamics
 
@@ -18,7 +18,7 @@ A recurring problem for alternative frameworks is that they are often sorted too
 
 The aim is not to enlarge those claims, but to place them more exactly.
 
-On one side, the kinematic papers recover the standard contraction factor, the timing factor, and the one-dimensional Lorentz transformation in form. The weak-field displacement papers recover the Newtonian limit, the standard weak-field perihelion structure, the logarithmic Shapiro delay, light deflection with the usual coefficient, and a weak-field route toward frame-drag behavior. It is therefore reasonable to ask whether the framework is simply special and general relativity written in different language.
+On one side, the kinematic papers recover the standard contraction factor, the timing factor, and the one-dimensional Lorentz transformation in form. The weak-field displacement papers recover the Newtonian limit, the standard weak-field perihelion structure, the logarithmic Shapiro delay, light deflection with the usual coefficient, and a weak-field route toward frame-drag behavior. It is therefore reasonable to ask whether the framework is simply special and general relativity written in different language. That question cannot be answered at the level of category labels alone, because the framework's claim is not merely that it is different from SR/GR, but that it still overlaps the tested kinematic and weak-field observational record while assigning those results a different physical basis.
 
 On the other side, the framework also makes claims that are not standard. It treats the vacuum as a physically structured medium with storage properties, treats Lorentz structure as emergent rather than primitive, and treats gravity as displacement of the transport-supporting structure rather than curvature of spacetime itself. Those are not cosmetic differences. They are differences in what the theory says the world is.
 
@@ -38,7 +38,7 @@ The aim is to make that status precise. It does not attempt to re-derive every t
 
 The most concise statement of the framework's present status is the following:
 
-> This framework presently recovers large parts of the special-relativistic kinematic structure and the general-relativistic weak-field observational structure, but it does so from a different ontology and derivational order, and it does not yet constitute a final closed theory.
+> This framework presently recovers large parts of the special-relativistic kinematic structure and the general-relativistic weak-field observational structure, but it does so from a different ontology and derivational order, and it does not yet constitute a final closed theory. Its overlap with the tested kinematic and weak-field record is therefore real without making it identical to SR or GR.
 
 That sentence states the central position.
 
@@ -110,7 +110,7 @@ The point is therefore not that the framework rejects special-relativistic kinem
 
 > The framework reproduces major special-relativistic kinematic relations while assigning them a different derivational order and a different ontological interpretation.
 
-The framework therefore is not simply SR restated, but a distinct account that recovers major SR-like kinematic relations from a different physical basis.
+The framework therefore is not simply SR restated, but a distinct account that overlaps the tested kinematic record from a different physical basis.
 
 ## 5. Why This Is Not Simply General Relativity
 
@@ -140,7 +140,7 @@ The point can therefore be stated as follows:
 
 > The framework reproduces substantial weak-field gravitational structure associated with GR, but it does not identify gravity with curved spacetime in the orthodox sense and it does not yet possess a fully closed gravitational field theory of comparable formal completeness.
 
-The framework therefore is not simply GR restated, but a distinct account that recovers substantial GR-like weak-field structure from a different physical basis.
+The framework therefore is not simply GR restated, but a distinct account that overlaps the tested weak-field observational record from a different physical basis.
 
 ## 6. The Importance of Distinguishing Recovery from Reduction
 
@@ -161,7 +161,7 @@ This distinction matters both rhetorically and technically. Overstating the case
 
 ## 7. What Remains Open
 
-The framework is not unfinished in any trivial sense. The open items are not merely cosmetic or pedagogical. They concern foundational closure.
+The framework is not unfinished in any trivial sense. Naming the remaining open work should not obscure the fact that the recovered kinematic and weak-field sectors already overlap the tested record within the framework's present scope.  The open items are not merely cosmetic or pedagogical. They concern foundational closure.
 
 ### 7.1 The displacement sourcing relation remains foundational
 
@@ -197,11 +197,11 @@ It can claim that the homogeneous propagation program recovers the familiar cont
 
 ### 8.2 Second claim: recovered weak-field gravitational structure
 
-It can claim that the displacement program recovers the standard weak-field observational structure across several major tests, including timing, delay, orbital precession, and lensing.
+It can claim that the displacement program recovers the standard weak-field observational structure across several major tests, including timing, delay, orbital precession, and lensing. That overlap should be stated as overlap with the tested record, not as identity of ontology or causal assignment with GR.
 
 ### 8.3 Third claim: distinct ontology
 
-It can claim that these results arise within a framework whose ontology differs from orthodox relativity: a structured vacuum / transport medium, emergent rather than primitive Lorentz structure, and gravity as displacement rather than as fundamental spacetime curvature.
+It can claim that these results arise within a framework whose ontology differs from orthodox relativity: a structured vacuum / transport medium, emergent rather than primitive Lorentz structure, and gravity as displacement rather than as fundamental spacetime curvature. The point is not merely that the framework is not SR/GR, but that this ontological difference still leaves real overlap with the observed kinematic and weak-field benchmarks in the domains already treated.
 
 ### 8.4 Fourth claim: incompleteness is acknowledged
 
@@ -271,108 +271,21 @@ The strongest present statement is therefore also the most disciplined one: the 
 
 The purpose here is clarification of the framework's present state. It does not supersede the technical derivations in the companion papers, but states how they should presently be read together.
 
-## Appendix A. Why a Null Interferometer Result Is Expected
+## Appendix A. Michelson-Morley, Transmission Aberration, and Why the Framework Is Not Simple Lorentzian Aether
 
-A common objection to any medium-based propagation picture is that a preferred propagation layer should have been directly visible in Michelson-Morley-type interferometer experiments. In the present framework, however, that expectation is misplaced. The null result is not contrary to the framework. It is what follows once the interferometer is treated as a moving material system built from the same single-speed medium whose propagation it is probing.
+A likely objection to any framework with a preferred underlying transport structure is that it sounds like a return to Lorentzian aether. If that were all the present framework amounted to, then the obvious historical objection would follow immediately: simple emission through a preferred medium should generically expose absolute motion through Michelson-Morley-type optical tests. That objection matters and should be addressed directly.
 
-The reason is that the interferometer is not composed of rigid objects and independently postulated clock behavior laid down in advance of the propagation analysis. Its arm geometry, internal signal directions, and realized timing all arise from the same propagation-based structure. Four elements belong together.
+The distinction advanced here is that the present framework does not treat optical propagation as a one-sided effect in which only the receiving frame contributes the relevant aberrational response. Instead, the broader propagation program treats directional effects as entering through both transmission and reception. In the present language, the emitted propagation direction is not independent of the state of the transmitting system, and the received direction is not independent of the state of the receiving system. That two-sided structure is what separates the framework from a naive Lorentzian-aether reading.
 
-First, the arm geometry of a moving apparatus is normalized longitudinally by the recovered contraction factor
+The Michelson-Morley issue can be stated at a high level as follows. In a simple preferred-medium picture, one expects an arm aligned with the absolute-motion direction to incur a different optical cost from an arm transverse to it, producing a second-order fringe shift under rotation. Standard Lorentzian rescue arguments then rely on compensating contraction and timing effects to suppress the observable difference. The present framework proposes a different route. Because propagation direction is treated as conditioned by the transmitting structure as well as by the receiving structure, the optical path comparison is not the same as in a one-sided ballistic or one-sided medium model. The relevant directional normalization already enters at launch, not only at detection.
 
-$$
-\lambda(\beta)=\sqrt{1-\beta^2},
-\qquad
-\beta=\frac{|\vec{v}|}{c}.
-$$
+This matters even in the near-frame or small-separation case. If absolute motion is present, then a purely reception-only aberration picture still leaves an asymmetry in how the launched beam samples the longitudinal and transverse arms. By contrast, if transmission already carries the corresponding directional adjustment, then the outbound and return geometry are altered before the final reception event is considered. In that case the Michelson-Morley null result is no longer being explained by the same mechanism usually associated with simple Lorentzian aether.
 
-If $\vec r$ is a frame-fixed arm offset and $\hat v$ is the drift direction, then
+The purpose of the present appendix is not to claim that the full Michelson-Morley derivation has been completed here in historical detail. Rather, it is to mark the exact conceptual difference that Section 3.1 depends on. The present framework is not merely saying that matter contracts in a preferred frame and therefore hides the aether. It is saying that the propagation map itself is different because both emission and reception are medium-conditioned processes. That is a materially different claim.
 
-$$
-\vec r=\vec r_\perp+\vec r_\parallel,
-\qquad
-\mathcal C(\vec r)=\vec r_\perp+\lambda\,\vec r_\parallel.
-$$
+Accordingly, the correct comparison is not between the present framework and a textbook caricature of aether theory, but between two different propagation models: one in which the optical effect is effectively one-sided, and one in which directional structure is built into both ends of the exchange. If the latter is the correct description, then Michelson-Morley no longer functions as a simple argument that any preferred underlying structure must reduce to the historically rejected form.
 
-Thus the interferometer's optical elements are not placed at the same coordinate offsets they would have at rest. Their longitudinal separations are reduced by the same normalization already recovered from the two-way interaction-cost structure of moving material systems. [1]
-
-Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. In the planar form used here, let
-
-$$
-\Delta\vec x = \vec x-\vec x_O,
-\qquad
-c_\theta = \frac{\Delta\vec x\cdot\vec v}{\|\Delta\vec x\|\,\|\vec v\|},
-\qquad
-c_\times = \bigl(\Delta\vec x\times \vec v\bigr)_z.
-$$
-
-The signed aberrated angle may then be written
-
-$$
-\theta_{\rm ab} = -\operatorname{sgn}(c_\times)\,\arccos\!\left(\frac{c_\theta+\beta}{1+\beta c_\theta}\right).
-$$
-
-Here $c_\theta$ carries the cosine information from the local arm direction relative to the drift velocity, while $c_\times$ restores the side-of-line sign lost by the arccosine. Length contraction does not itself alter the aberration formula. Rather, contraction changes the apparatus geometry, while aberration changes the propagation direction needed to reach the moving optical element.
-
-Third, the ray-segment lengths are not imposed directly from the arm offsets. They are obtained from the solved propagation delay. Each leg is determined by the native one-way propagation condition
-
-$$
-\bigl\|\vec x_{\rm target}(t_{n+1})-\vec x_{\rm source}(t_n)\bigr\|=
-c\,(t_{n+1}-t_n).
-$$
-
-Operationally, each next event time is solved from the moving source and moving target geometry, and the realized segment length is then
-
-$$
-\ell_n = c\,(t_{n+1}-t_n).
-$$
-
-So the contracted arm offset specifies where the next optical element belongs in the moving device, but the actual leg length is fixed by the solved propagation delay. [1]
-
-Fourth, if the comparison is made in the apparatus's own realized time rather than coordinate propagation time, then the local clock interval is
-
-$$
-\Delta\tau = \lambda(\beta)\,\Delta t.
-$$
-
-These ingredients are enough to construct the interferometer path. Let the frame-fixed arm offsets from the splitter be $(0,\pm L)$ and $(\pm L,0)$. For each leg, the next optical element is represented by the contracted offset $\mathcal C(\vec r_{\rm target})$. The ray is launched along the corresponding aberrated direction $\hat e_{\rm leg}$, and after solving the propagation delay, the photon keyframe advances according to
-
-$$
-\vec K_{n+1} = \vec K_n+c\,(t_{n+1}-t_n)\,\hat e_{\rm leg}.
-$$
-
-The same rule is used for every leg of both arms.
-
-What matters for interference is the full two-way cost from splitter to mirror and back, not the one-way segment in isolation. If
-
-$$
-T_{\rm vert}^{(2)} = (t_2-t_1)+(t_3-t_2),
-\qquad
-T_{\rm horiz}^{(2)} = (t_2^{L}-t_1)+(t_3^{L}-t_2^{L}),
-$$
-
-then within this construction the recombined paths satisfy
-
-$$
-T_{\rm vert}^{(2)} = T_{\rm horiz}^{(2)}.
-$$
-
-That equality is the null result. It is not obtained by declaring the medium observationally inaccessible as an axiom. It is obtained because the moving interferometer, the light propagating within it, and the clock structure used to interpret it are all governed by one common propagation-based organization.
-
-If the comparison is instead made in the apparatus's own realized time, the conclusion is unchanged:
-
-$$
-\tau_{\rm vert}^{(2)} = \lambda\,T_{\rm vert}^{(2)},
-\qquad
-\tau_{\rm horiz}^{(2)} = \lambda\,T_{\rm horiz}^{(2)}.
-$$
-
-Since the coordinate two-way costs are equal, the local two-way costs are equal as well:
-
-$$
-\tau_{\rm vert}^{(2)} = \tau_{\rm horiz}^{(2)}.
-$$
-
-The interpretive point is therefore simple. In this framework, a null interferometer result is expected not because no propagation medium exists, but because the interferometer is itself constituted from the same single-speed medium. Its rods, clocks, and internal signal paths co-adjust to uniform motion through that layer. The null result is therefore not evidence against an underlying propagation medium; it is evidence that a medium-constituted optical device cannot use its own internal two-way optical structure to reveal its uniform motion through the medium. That is one concrete sense in which Lorentz-type observational structure is emergent here rather than primitive. [2]
+For present purposes, that point is sufficient. The role of the appendix is to keep the reader from collapsing the framework into the phrase "Lorentzian aether" without noticing that the optical mechanism being proposed is different at the level of propagation itself.
 
 ## Appendix B. Circular-Orbit Integration as a Case Study
 
