@@ -1,7 +1,7 @@
 - homogeneous_light_propagation_framework.md
   - The Homogeneous Light Propagation Framework
 
-- homogeneous_propagation_transport_local_geometry_displacement.md
+- homogeneous_propagation_transport_foundational_overview.md
   - The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement
 
 - wigner_rotation_from_noncollinear_composition.md
@@ -13,6 +13,5 @@
 - weak_field_observational_tests.md
   - The Homogeneous Propagation Framework: Weak-Field Observational Tests
 
-- excitation_dynamics.md
+- excitation_dynamics_final_polish.md
   - The Homogeneous Propagation Framework: Excitation, Closure, and Material Response
-

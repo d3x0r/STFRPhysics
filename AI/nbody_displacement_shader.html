@@ -1,0 +1,367 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+canvas{display:block;width:100%;height:80vh;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:#000;cursor:crosshair}
+#controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.ctl{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.ctl label{white-space:nowrap}
+.ctl input[type=range]{width:80px}
+#stats{font-size:11px;color:var(--color-text-secondary);display:flex;gap:14px;margin-top:4px}
+select,button{font-size:11px;padding:3px 8px;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer}
+select:hover,button:hover{background:var(--color-background-tertiary)}
+.sep{width:0.5px;height:18px;background:var(--color-border-tertiary);margin:0 2px}
+</style>
+
+<canvas id="c"></canvas>
+<div id="controls">
+  <div class="ctl"><label>Bodies</label><input type="range" id="nBodies" min="2" max="64" value="32" step="1"><span id="nBodiesV">32</span></div>
+  <div class="ctl"><label>d scale</label><input type="range" id="dScale" min="0.02" max="0.25" value="0.12" step="0.005"><span id="dScaleV">0.120</span></div>
+  <div class="ctl"><label>Speed</label><input type="range" id="speed" min="0" max="3" value="1" step="0.05"><span id="speedV">1.0</span></div>
+  <div class="sep"></div>
+  <div class="ctl"><label>Field</label>
+    <select id="mode">
+      <option value="0">Σ gravity</option>
+      <option value="1">Displacement D</option>
+      <option value="2">Metaball iso</option>
+      <option value="3">Vector flow</option>
+      <option value="4">None (grid only)</option>
+    </select>
+  </div>
+  <div class="ctl"><label>Flow</label>
+    <select id="flowAlt">
+      <option value="0">Normal</option>
+      <option value="1">Alternating</option>
+    </select>
+  </div>
+  <div class="ctl"><label>Layout</label>
+    <select id="layout">
+      <option value="0">Random orbital</option>
+      <option value="1">Square grid</option>
+      <option value="2">Packed circles</option>
+      <option value="3" selected>Spiral galaxy</option>
+    </select>
+  </div>
+  <div class="sep"></div>
+  <div class="ctl"><label><input type="checkbox" id="chkGrid"> Displaced grid</label></div>
+  <div class="ctl"><label>Grid lines</label><input type="range" id="gridRes" min="4" max="32" value="12" step="1"><span id="gridResV">12</span></div>
+  <div class="sep"></div>
+  <button id="btnRand">Randomize</button>
+  <button id="btnPause">Pause</button>
+</div>
+<div id="stats">
+  <span id="fps">fps: –</span>
+  <span id="bodyCount">bodies: 32</span>
+  <span id="gpuNote">WebGL2 · scroll to zoom</span>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2');
+
+const MAX_BODIES = 64;
+let N=32, dScale=0.12, simSpeed=1.0, paused=false, mode=0, layoutMode=3, showGrid=false, gridRes=12, flowAlt=0;
+let zoom=1.0;
+
+const vert = `#version 300 es
+in vec2 a;
+void main(){ gl_Position = vec4(a,0,1); }`;
+
+const frag = `#version 300 es
+precision highp float;
+uniform vec2 uRes;
+uniform int uN;
+uniform vec2 uPos[${MAX_BODIES}];
+uniform float uD2[${MAX_BODIES}];
+uniform float uSign[${MAX_BODIES}];
+uniform int uMode;
+uniform int uShowGrid;
+uniform float uGridRes;
+uniform float uZoom;
+uniform int uFlowAlt;
+out vec4 fragColor;
+
+vec3 palette(float t){
+  vec3 a=vec3(0.5,0.5,0.5),b=vec3(0.5,0.5,0.5),c=vec3(1,1,1),d=vec3(0.0,0.33,0.67);
+  return a+b*cos(6.28318*(c*t+d));
+}
+
+vec2 applyDisp(vec2 p, vec2 bodyPos, float d2){
+  vec2 r=p-bodyPos;
+  float r2=dot(r,r);
+  float D=sqrt(1.0+d2/max(r2,0.0001));
+  return p+r*(D-1.0);
+}
+
+vec2 composeDisp(vec2 uv){
+  float dist2[${MAX_BODIES}];
+  bool used[${MAX_BODIES}];
+  for(int i=0;i<${MAX_BODIES};i++){
+    vec2 r=uv-uPos[i];
+    dist2[i]=dot(r,r);
+    used[i]=false;
+  }
+  vec2 p=uv;
+  for(int pass=0;pass<${MAX_BODIES};pass++){
+    if(pass>=uN) break;
+    int best=-1; float bestD=-1.0;
+    for(int i=0;i<${MAX_BODIES};i++){
+      if(i>=uN) break;
+      if(!used[i]&&dist2[i]>bestD){ bestD=dist2[i]; best=i; }
+    }
+    if(best<0) break;
+    used[best]=true;
+    p=applyDisp(p,uPos[best],uD2[best]);
+  }
+  return p;
+}
+
+vec2 undisplacePoint(vec2 screen){
+  vec2 u=screen;
+  for(int iter=0;iter<8;iter++) u=u+(screen-composeDisp(u));
+  return u;
+}
+
+float gridLine(vec2 uv){
+  float eps=0.008;
+  vec2 uc=undisplacePoint(uv);
+  vec2 ucx=undisplacePoint(uv+vec2(eps,0));
+  vec2 ucy=undisplacePoint(uv+vec2(0,eps));
+  float g=uGridRes;
+  float cx=fract(uc.x*g+0.5)-0.5, cy=fract(uc.y*g+0.5)-0.5;
+  float Jxx=(ucx.x-uc.x)/eps*g, Jyx=(ucx.y-uc.y)/eps*g;
+  float Jxy=(ucy.x-uc.x)/eps*g, Jyy=(ucy.y-uc.y)/eps*g;
+  float sx=length(vec2(Jxx,Jyx));
+  float sy=length(vec2(Jxy,Jyy));
+  float hw=0.056;
+  float lx=smoothstep(hw*max(sx,0.1), 0.0, abs(cx));
+  float ly=smoothstep(hw*max(sy,0.1), 0.0, abs(cy));
+  return max(lx,ly);
+}
+
+float hash(vec2 p){ p=fract(p*vec2(127.1,311.7)); p+=dot(p,p+19.19); return fract(p.x*p.y); }
+float noise(vec2 p){
+  vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f);
+  return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y);
+}
+
+void main(){
+  vec2 uv=(gl_FragCoord.xy/uRes)*2.0-1.0;
+  uv.x*=uRes.x/uRes.y;
+  uv/=uZoom;
+
+  float sigma=0.0, meta=0.0;
+  vec2 grad=vec2(0);
+  for(int i=0;i<${MAX_BODIES};i++){
+    if(i>=uN) break;
+    vec2 r=uv-uPos[i]; float r2=dot(r,r); float d2=uD2[i];
+    float invR=1.0/max(sqrt(r2),0.001);
+    float s=uFlowAlt==1 ? uSign[i] : 1.0;
+    sigma+=sqrt(d2)*invR;
+    meta+=d2/max(r2,0.0001);
+    grad+=s*(-normalize(r)*sqrt(d2)*invR*invR);
+  }
+
+  vec2 composed=composeDisp(uv);
+  float compMag=length(composed-uv);
+  vec3 col=vec3(0.04,0.04,0.07);
+
+  if(uMode==0){
+    float v=sigma*0.4, band=fract(v*8.0);
+    col=palette(v)*(0.7+0.3*smoothstep(0.0,0.06,band)*(1.0-smoothstep(0.94,1.0,band)));
+    col*=0.85+0.15*sin(v*25.0);
+  } else if(uMode==1){
+    col=palette(compMag*0.5);
+  } else if(uMode==2){
+    float thresh=1.8, edge=smoothstep(thresh-0.05,thresh+0.05,meta);
+    float inner=smoothstep(thresh+0.05,thresh*3.0,meta);
+    col=mix(vec3(0.03,0.05,0.12),mix(vec3(0.15,0.6,1.0),vec3(1.0,0.95,0.8),inner),edge);
+  } else if(uMode==3){
+    float mag=length(grad);
+    vec2 ngrad=mag>0.0001?grad/mag:vec2(0);
+    float angle=atan(ngrad.y,ngrad.x);
+    float hue=fract(angle/6.28318+sigma*0.55+noise(uv*2.5)*0.08);
+    float bright=1.0-exp(-mag*1.4);
+    vec2 perp=vec2(-ngrad.y,ngrad.x);
+    float scale=clamp(0.06/max(mag,0.01),0.008,0.1);
+    float tex=0.0;
+    for(int s=0;s<6;s++){
+      float tt=(float(s)/5.0-0.5)*2.0;
+      tex+=noise((uv+perp*tt*scale*3.0)*14.0);
+    }
+    col=palette(hue)*bright*(0.55+0.45*tex/6.0);
+    col+=0.07*smoothstep(0.0,0.08,fract(sigma*6.0))*smoothstep(1.0,0.92,fract(sigma*6.0))*vec3(0.8,0.9,1.0);
+  }
+
+  if(uShowGrid==1) col=mix(col,vec3(0.5,0.85,1.0),gridLine(uv)*0.85);
+
+  for(int i=0;i<${MAX_BODIES};i++){
+    if(i>=uN) break;
+    vec2 r=uv-uPos[i]; float lr=length(r);
+    col=mix(col,vec3(1.0,0.97,0.85),smoothstep(0.022,0.010,lr)*0.95);
+    col+=vec3(0.45,0.65,1.0)*smoothstep(0.048,0.022,lr)*(1.0-smoothstep(0.022,0.010,lr))*0.28;
+  }
+  fragColor=vec4(col,1.0);
+}`;
+
+function compile(type,src){
+  const s=gl.createShader(type);
+  gl.shaderSource(s,src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog=gl.createProgram();
+gl.attachShader(prog,compile(gl.VERTEX_SHADER,vert));
+gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,frag));
+gl.linkProgram(prog); gl.useProgram(prog);
+
+const buf=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+const aLoc=gl.getAttribLocation(prog,'a');
+gl.enableVertexAttribArray(aLoc);
+gl.vertexAttribPointer(aLoc,2,gl.FLOAT,false,0,0);
+
+const uRes=gl.getUniformLocation(prog,'uRes');
+const uN_u=gl.getUniformLocation(prog,'uN');
+const uPos=gl.getUniformLocation(prog,'uPos');
+const uD2=gl.getUniformLocation(prog,'uD2');
+const uSign=gl.getUniformLocation(prog,'uSign');
+const uMode_u=gl.getUniformLocation(prog,'uMode');
+const uShowGrid_u=gl.getUniformLocation(prog,'uShowGrid');
+const uGridRes_u=gl.getUniformLocation(prog,'uGridRes');
+const uZoom_u=gl.getUniformLocation(prog,'uZoom');
+const uFlowAlt_u=gl.getUniformLocation(prog,'uFlowAlt');
+
+const RING_SPACING=0.28;
+let bodies=[], formationPts=[], galaxyOmegas=[], galaxyAngles=[];
+let signArr=new Float32Array(MAX_BODIES);
+
+function buildFormation(layout){
+  formationPts=[];
+  if(layout===1){
+    const side=Math.ceil(Math.sqrt(N)), rows=Math.ceil(N/side), span=0.75;
+    for(let i=0;i<N;i++){
+      const col=i%side, row=Math.floor(i/side);
+      formationPts.push([side>1?(col/(side-1)-0.5)*span*2:0, rows>1?(row/(rows-1)-0.5)*span*2:0]);
+    }
+  } else if(layout===2){
+    const pts=[[0,0]];
+    for(let r=1;r<=10;r++) for(let k=0;k<6*r;k++){
+      const a=k/(6*r)*Math.PI*2;
+      pts.push([Math.cos(a)*r*RING_SPACING, Math.sin(a)*r*RING_SPACING]);
+    }
+    for(let i=0;i<N;i++) formationPts.push(pts[i]||[0,0]);
+  } else if(layout===3){
+    const b=0.30, r0=0.22;
+    const nCore=Math.max(1,Math.floor(N*0.1)), nArm=Math.floor((N-nCore)/2);
+    for(let i=0;i<nCore;i++){
+      const a=Math.random()*Math.PI*2, r=Math.random()*0.06;
+      formationPts.push([Math.cos(a)*r, Math.sin(a)*r]);
+    }
+    for(let arm=0;arm<2;arm++){
+      const armOffset=arm*Math.PI;
+      for(let i=0;i<nArm;i++){
+        const t=i/Math.max(nArm-1,1), theta=0.2+t*3.8;
+        const r=r0*Math.exp(b*(theta-0.2));
+        const scatter=(Math.random()-0.5)*0.06;
+        formationPts.push([Math.cos(theta+armOffset+scatter)*r, Math.sin(theta+armOffset+scatter)*r]);
+      }
+    }
+    while(formationPts.length<N){
+      const a=Math.random()*Math.PI*2, r=0.05+Math.random()*0.15;
+      formationPts.push([Math.cos(a)*r, Math.sin(a)*r]);
+    }
+  }
+}
+
+function mkBodies(layout){
+  bodies=[]; galaxyOmegas=[]; galaxyAngles=[];
+  buildFormation(layout);
+  for(let i=0;i<MAX_BODIES;i++) signArr[i]=(i%2===0)?1.0:-1.0;
+  if(layout===0){
+    for(let i=0;i<MAX_BODIES;i++){
+      const angle=Math.random()*Math.PI*2, radius=0.25+Math.random()*0.85;
+      bodies.push({x:Math.cos(angle)*radius,y:Math.sin(angle)*radius,angle,radius,
+        orbSpeed:(0.3+Math.random()*0.7)*(Math.random()<0.5?1:-1),
+        d2:(0.1+Math.random()*0.45)*dScale*dScale});
+    }
+  } else if(layout===1||layout===2){
+    for(let i=0;i<MAX_BODIES;i++){
+      const fp=formationPts[i]||[0,0];
+      bodies.push({x:fp[0],y:fp[1],d2:(0.1+Math.random()*0.45)*dScale*dScale});
+    }
+  } else if(layout===3){
+    for(let i=0;i<MAX_BODIES;i++){
+      const fp=formationPts[i]||[0,0];
+      const r=Math.sqrt(fp[0]*fp[0]+fp[1]*fp[1])||0.001;
+      galaxyOmegas.push(-0.12/Math.pow(r,0.55)); // negative = clockwise
+      galaxyAngles.push(Math.atan2(fp[1],fp[0]));
+      bodies.push({x:fp[0],y:fp[1],radius:r,d2:(0.06+Math.random()*0.2)*dScale*dScale});
+    }
+  }
+}
+
+let groupAngle=0, orbitAngle=0;
+mkBodies(layoutMode);
+
+function resizeCanvas(){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const rect=canvas.getBoundingClientRect();
+  const W=Math.round(rect.width*dpr), H=Math.round(rect.height*dpr);
+  if(canvas.width!==W||canvas.height!==H){ canvas.width=W; canvas.height=H; gl.viewport(0,0,W,H); }
+}
+
+canvas.addEventListener('wheel',function(e){
+  e.preventDefault();
+  zoom*=Math.pow(0.999,e.deltaY);
+  zoom=Math.max(0.1,Math.min(10,zoom));
+},{passive:false});
+
+let lastT=0, frameCount=0, fpsT=0;
+function frame(t){
+  requestAnimationFrame(frame);
+  const dt=Math.min((t-lastT)/1000,0.05)*simSpeed;
+  lastT=t; frameCount++;
+  if(t-fpsT>600){
+    document.getElementById('fps').textContent='fps: '+Math.round(frameCount*1000/(t-fpsT));
+    frameCount=0; fpsT=t;
+  }
+  resizeCanvas();
+  if(!paused){
+    if(layoutMode===0){ for(let i=0;i<N;i++){ bodies[i].angle+=bodies[i].orbSpeed*dt; bodies[i].x=Math.cos(bodies[i].angle)*bodies[i].radius; bodies[i].y=Math.sin(bodies[i].angle)*bodies[i].radius; }}
+    else if(layoutMode===1){ groupAngle+=0.25*dt; const ca=Math.cos(groupAngle),sa=Math.sin(groupAngle); for(let i=0;i<N;i++){ const fx=formationPts[i][0],fy=formationPts[i][1]; bodies[i].x=fx*ca-fy*sa; bodies[i].y=fx*sa+fy*ca; }}
+    else if(layoutMode===2){ orbitAngle+=0.3*dt; const ox=Math.cos(orbitAngle)*RING_SPACING,oy=Math.sin(orbitAngle)*RING_SPACING; for(let i=0;i<N;i++){ bodies[i].x=formationPts[i][0]+ox; bodies[i].y=formationPts[i][1]+oy; }}
+    else if(layoutMode===3){ for(let i=0;i<N;i++){ galaxyAngles[i]+=galaxyOmegas[i]*dt; bodies[i].x=Math.cos(galaxyAngles[i])*bodies[i].radius; bodies[i].y=Math.sin(galaxyAngles[i])*bodies[i].radius; }}
+  }
+  const posArr=new Float32Array(MAX_BODIES*2), d2Arr=new Float32Array(MAX_BODIES);
+  for(let i=0;i<MAX_BODIES;i++){ posArr[i*2]=bodies[i].x; posArr[i*2+1]=bodies[i].y; d2Arr[i]=bodies[i].d2; }
+  gl.uniform2f(uRes,canvas.width,canvas.height);
+  gl.uniform1i(uN_u,N); gl.uniform2fv(uPos,posArr); gl.uniform1fv(uD2,d2Arr);
+  gl.uniform1fv(uSign,signArr);
+  gl.uniform1i(uMode_u,mode); gl.uniform1i(uShowGrid_u,showGrid?1:0);
+  gl.uniform1f(uGridRes_u,gridRes); gl.uniform1f(uZoom_u,zoom);
+  gl.uniform1i(uFlowAlt_u,flowAlt);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+document.getElementById('nBodies').addEventListener('input',function(){ N=parseInt(this.value); document.getElementById('nBodiesV').textContent=N; document.getElementById('bodyCount').textContent='bodies: '+N; mkBodies(layoutMode); });
+document.getElementById('dScale').addEventListener('input',function(){ dScale=parseFloat(this.value); document.getElementById('dScaleV').textContent=dScale.toFixed(3); for(let i=0;i<MAX_BODIES;i++) bodies[i].d2=(0.1+Math.random()*0.45)*dScale*dScale; });
+document.getElementById('speed').addEventListener('input',function(){ simSpeed=parseFloat(this.value); document.getElementById('speedV').textContent=simSpeed.toFixed(1); });
+document.getElementById('mode').addEventListener('change',function(){ mode=parseInt(this.value); });
+document.getElementById('flowAlt').addEventListener('change',function(){ flowAlt=parseInt(this.value); });
+document.getElementById('layout').addEventListener('change',function(){ layoutMode=parseInt(this.value); groupAngle=0; orbitAngle=0; mkBodies(layoutMode); });
+document.getElementById('chkGrid').addEventListener('change',function(){ showGrid=this.checked; });
+document.getElementById('gridRes').addEventListener('input',function(){ gridRes=parseInt(this.value); document.getElementById('gridResV').textContent=gridRes; });
+document.getElementById('btnRand').addEventListener('click',()=>{ groupAngle=0; orbitAngle=0; mkBodies(layoutMode); });
+document.getElementById('btnPause').addEventListener('click',function(){ paused=!paused; this.textContent=paused?'Resume':'Pause'; });
+canvas.addEventListener('dblclick',function(e){
+  const rect=canvas.getBoundingClientRect(), aspect=canvas.width/canvas.height;
+  const x=((e.clientX-rect.left)/rect.width*2-1)*aspect/zoom;
+  const y=-((e.clientY-rect.top)/rect.height*2-1)/zoom;
+  const i=N%MAX_BODIES, r=Math.sqrt(x*x+y*y)||0.01;
+  bodies[i]={x,y,angle:Math.atan2(y,x),radius:r,orbSpeed:0.4*(Math.random()<0.5?1:-1),d2:(0.15+Math.random()*0.35)*dScale*dScale};
+  if(N<MAX_BODIES){N++;document.getElementById('nBodies').value=N;}
+  document.getElementById('nBodiesV').textContent=N; document.getElementById('bodyCount').textContent='bodies: '+N;
+});
+requestAnimationFrame(frame);
+</script>

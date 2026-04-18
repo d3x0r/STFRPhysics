@@ -1,4 +1,6 @@
-# The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects
+# The Homogeneous Propagation Framework: Foundational Overview
+## Transport structure, local geometry, and the vocabulary of the remaining series
+
 
 **James Buckeyne**  
 Independent Research  
@@ -15,6 +17,8 @@ The homogeneous propagation framework isolated a narrow result: a constant-speed
 **Keywords:** homogeneous propagation, transport structure, local geometry, realized duration, displacement defects, vacuum storage field, gravitation
 
 ## 1. Introduction
+
+The first paper in this series develops the homogeneous propagation structure and recovers the familiar kinematic relations associated with that regime. The present paper has a different role. It does not alter those derivations, but supplies a more explicit account of the supporting structure presupposed there, stabilizes the framework’s working definitions, and clarifies how the later papers extend the same program into transport, displacement, weak-field consequences, and excitation closure. It is therefore best read as the foundational overview for the remainder of the series.
 
 The homogeneous propagation framework was intentionally narrow. Its purpose was to ask what follows if signal transfer is governed by a constant-speed propagation condition, and to show that a familiar special-relativistic structure can be recovered in form from that starting point. That narrowing allowed the propagation result to stand on its own terms, but it also left open a natural question: what kind of spatial description makes that construction meaningful?
 
