@@ -28,6 +28,8 @@ Earlier historically oriented reconsiderations of electrical engineering, especi
 
 This paper is intentionally limited in scope. It does not claim a final substrate derivation of the matter spectrum, charge structure, or complete microscopic constitutive law. Its narrower aim is to put the excitation branch into a stable formal shape: to show how a minimal field description, a support-selection law, and a first internal-occupancy/composition model can be stated together without collapsing excitation closure into either background displacement or material loading.
 
+More specifically, this is also the natural place to state the bridge from isolated closure to gram-native bulk support bookkeeping. The later constants paper may package that bridge into one-gram and SI weak-field normalizations, but the support-to-bulk transition itself belongs here on the excitation side.
+
 This paper keeps three branches separate from the start:
 
 1. **Displacement / geometric branch.** This branch is carried by the cumulative displacement and transport deformation, schematically \(\Sigma(x,t)\) and \(D(x,t)\), and determines the effective transport geometry.
@@ -406,7 +408,7 @@ This keeps the source amplitude explicit rather than burying it inside the squar
 d_{\mathrm{mole}} \equiv \sqrt{\frac{2G\,(1\,\mathrm{g})}{c^2}},
 \]
 
-lies in the same range as the bulk nuclear packing/support radius. This comparison becomes sharper if the historical bulk coefficient is unpacked rather than left in its bundled form. A bulk-radius law
+lies in the same range as the bulk nuclear packing/support radius. In that sense, \(d_{\mathrm{mole}}\) is not just another convenient symbol: it is the gram-native bulk support proxy, the one-gram displacement-equivalent scale against which the excitation-side support bridge can later be packaged into weak-field gravitational bookkeeping. This comparison becomes sharper if the historical bulk coefficient is unpacked rather than left in its bundled form. A bulk-radius law
 
 \[
 R = r_0\,m^{1/3}

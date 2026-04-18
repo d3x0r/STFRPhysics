@@ -34,6 +34,8 @@ The present paper asks a different question. The classical physical constants �
 
 The meter is treated here as a chosen convention rather than a primitive ingredient. Once a length scale is fixed, the remaining free inputs are ε₀, μ₀, and r₀. The one open question that cannot yet be closed is why r₀ has the value it does. That unresolved step is shared with the deeper nuclear and excitation-side program, not introduced by this paper.
 
+A second scope note is worth making explicit. The support bridge itself is not first introduced here. In the companion excitation paper, the isolated-to-bulk support shift is already carried by the occupancy/support channel and by the one-gram displacement proxy $d_{\mathrm{mole}}$. The role of the present constants paper is narrower: to show how that already-motivated support normalization is repackaged into the familiar constant forms once gram-native bookkeeping and SI conventions are made explicit.
+
 The factorizations developed here are structural audits rather than full first-principles derivations. They show how the classical constants dissolve into a smaller set of geometric and medium factors once the SI packaging is unpacked. The residual open problems are likewise explicit: the value of r₀ from the medium geometry alone, the mass spectrum, and charge quantization.
 
 A short interpretive note on proper and coordinate quantities is retained because it clarifies why the constant factorizations are not written as relativistic correction terms. That note is framing rather than dependency: the constants argument stands without any strong-field extension.
@@ -310,6 +312,14 @@ G = 500\,r_{0,\mathrm{eff}}^2 c^2 = \frac{500\,r_{0,\mathrm{eff}}^2}{\mu_0\varep
 $$
 
 The factor 500 = 1000/2: the 1000 is the kg→g conversion (the framework is gram-native; see section 0.6), the 2 is the kinematic $\frac{1}{2}at^2$ factor.
+
+This is the place where the visible SI wrapper should be read carefully. The substantive bridge is the gram-native one-gram support proxy $d_{\mathrm{mole}} \equiv r_{0,\mathrm{eff}}$, already motivated on the excitation side as the bulk-support normalization. The factor 500 is not the primary claim; it is the downstream SI packaging of the chain
+
+$$
+\text{support scale} \;\longrightarrow\; d_{\mathrm{mole}} \;\longrightarrow\; g=\kappa_0 \;\longrightarrow\; G_{\mathrm g}=g^2/2 \;\longrightarrow\; G.
+$$
+
+In that reading, the kg-based 500 is the final wrapper, not the first appearance of the underlying support law.
 
 At gram normalization:
 
