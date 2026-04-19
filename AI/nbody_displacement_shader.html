@@ -49,7 +49,7 @@ button.active{background:#3a5080;border-color:#5a8fd4;color:#c0d8ff}
   <div class="ctl"><label><input type="checkbox" id="chkGrid"> Grid</label></div>
   <div class="ctl"><label>Lines</label><input type="range" id="gridRes" min="4" max="32" value="12" step="1"><span id="gridResV">12</span></div>
   <div class="sep"></div>
-  <button id="btnInstant">Instant c</button>
+  <button id="btnInstant" class="active">Instant c ✓</button>
   <button id="btnRand">Randomize</button>
   <button id="btnFixed">Fixed size</button>
   <button id="btnPause">Pause</button>
@@ -57,7 +57,7 @@ button.active{background:#3a5080;border-color:#5a8fd4;color:#c0d8ff}
 <div id="stats">
   <span id="fps">fps: –</span>
   <span id="bodyCount">bodies: 16</span>
-  <span id="gpuNote">WebGL2 · scroll=zoom · retarded potentials</span>
+  <span id="gpuNote">WebGL2 · O(N) pending-closest composition</span>
 </div>
 <script>
 const canvas = document.getElementById('c');
@@ -116,7 +116,8 @@ const FRAG_SRC=[
 "uniform int   uHistCol;",
 "uniform float uHistTimes[512];",
 "uniform sampler2D uHist;",
-"uniform int   uInstant;",   // 1 = use current pos, 0 = retarded
+"uniform int   uInstant;",
+"",
 "vec2 retardedPos(int bi, float tRet){",
 "  for(int k=0;k<512;k++){",
 "    int col=int(mod(float(uHistCol-k+512),512.0));",
@@ -131,44 +132,60 @@ const FRAG_SRC=[
 "  }",
 "  return texelFetch(uHist,ivec2(int(mod(float(uHistCol+1),512.0)),bi),0).rg;",
 "}",
+"",
 "vec2 bodyPos(int i, vec2 uv){",
 "  if(uInstant==1) return uPosNow[i];",
 "  float dxy=length(uv-uPosNow[i]);",
 "  float r3d=sqrt(dxy*dxy+uBodyZ[i]*uBodyZ[i]);",
 "  return retardedPos(i, uSimTime-r3d/uC);",
 "}",
+"",
 "vec3 palette(float t){ return vec3(0.5)+vec3(0.5)*cos(6.28318*(vec3(1.0)*t+vec3(0.0,0.33,0.67))); }",
+"",
 "vec2 applyDisp3D(vec2 p, vec2 bp, float bz, float d2){",
 "  vec2 dxy=p-bp;",
 "  float r2_3d=dot(dxy,dxy)+bz*bz;",
 "  if(r2_3d<0.00001) return p;",
-"  float D=sqrt(1.0+d2/r2_3d);",
 "  float rxy=length(dxy);",
 "  if(rxy<0.0001) return p;",
+"  float D=sqrt(1.0+d2/r2_3d);",
 "  float cosTheta=rxy/sqrt(r2_3d);",
 "  return p+dxy*(D-1.0)*cosTheta;",
 "}",
+"",
+/* Pending-closest composition: one pass, O(N).
+   Keep a pending (closest-so-far) body. For each new body:
+     if closer than pending -> apply pending, save new as pending
+     else -> apply new body immediately
+   After loop -> apply pending last. */
 "vec2 composeDisp(vec2 uv){",
-"  vec2  rpos[64]; float dist2[64]; bool used[64];",
-"  for(int i=0;i<64;i++){",
-"    if(i<uN){",
-"      rpos[i]=bodyPos(i,uv);",
-"      vec2 dxy=uv-rpos[i];",
-"      dist2[i]=dot(dxy,dxy)+uBodyZ[i]*uBodyZ[i];",
-"    } else { rpos[i]=vec2(0); dist2[i]=1e9; }",
-"    used[i]=false;",
-"  }",
 "  vec2 p=uv;",
-"  for(int pass=0;pass<64;pass++){",
-"    if(pass>=uN) break;",
-"    int best=-1; float bestD=-1.0;",
-"    for(int i=0;i<64;i++){ if(i>=uN)break; if(!used[i]&&dist2[i]>bestD){bestD=dist2[i];best=i;} }",
-"    if(best<0) break; used[best]=true;",
-"    p=applyDisp3D(p,rpos[best],uBodyZ[best],uD2[best]);",
+"  bool  hasPending=false;",
+"  vec2  pendPos=vec2(0);",
+"  float pendZ=0.0;",
+"  float pendD2=0.0;",
+"  float pendDist=1e9;",   // 3D dist² to pending body
+"  for(int i=0;i<64;i++){",
+"    if(i>=uN) break;",
+"    vec2  bp=bodyPos(i,uv);",
+"    float bz=uBodyZ[i];",
+"    vec2  dxy=uv-bp;",
+"    float d3sq=dot(dxy,dxy)+bz*bz;",   // 3D distance² from field point to body
+"    if(!hasPending){",
+"      pendPos=bp; pendZ=bz; pendD2=uD2[i]; pendDist=d3sq; hasPending=true;",
+"    } else if(d3sq < pendDist){",
+"      p=applyDisp3D(p,pendPos,pendZ,pendD2);",  // apply old pending (farther)
+"      pendPos=bp; pendZ=bz; pendD2=uD2[i]; pendDist=d3sq;",  // save new closer
+"    } else {",
+"      p=applyDisp3D(p,bp,bz,uD2[i]);",  // apply this one (farther than pending)
+"    }",
 "  }",
+"  if(hasPending) p=applyDisp3D(p,pendPos,pendZ,pendD2);",  // closest applied last
 "  return p;",
 "}",
+"",
 "vec2 undisplace(vec2 s){ vec2 u=s; for(int i=0;i<6;i++) u=u+(s-composeDisp(u)); return u; }",
+"",
 "float gridLine(vec2 uv){",
 "  float eps=0.008, g=uGridRes;",
 "  vec2 uc=undisplace(uv), ucx=undisplace(uv+vec2(eps,0.0)), ucy=undisplace(uv+vec2(0.0,eps));",
@@ -178,8 +195,10 @@ const FRAG_SRC=[
 "  float hw=0.01875;",
 "  return max(smoothstep(hw*max(sx,0.1),0.0,abs(cx)),smoothstep(hw*max(sy,0.1),0.0,abs(cy)));",
 "}",
+"",
 "float hash(vec2 p){ p=fract(p*vec2(127.1,311.7)); p+=dot(p,p+19.19); return fract(p.x*p.y); }",
 "float noise(vec2 p){ vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f); return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y); }",
+"",
 "void main(){",
 "  vec2 uv=(gl_FragCoord.xy/uRes)*2.0-1.0;",
 "  uv.x*=uRes.x/uRes.y; uv/=uZoom;",
@@ -261,7 +280,7 @@ let bodies=[],formationPts=[],galaxyOmegas=[],galaxyAngles=[];
 let signArr=new Float32Array(MAX_B);
 
 function fibonacciSphere(n,R){
-  const pts=[]; const golden=(1+Math.sqrt(5))/2;
+  const pts=[], golden=(1+Math.sqrt(5))/2;
   for(let i=0;i<n;i++){
     const theta=Math.acos(1-2*(i+0.5)/n), phi=2*Math.PI*i/golden;
     pts.push({x:Math.sin(theta)*Math.cos(phi)*R, y:Math.sin(theta)*Math.sin(phi)*R, z:Math.cos(theta)*R});
@@ -305,7 +324,6 @@ function mkBodies(layout){
   bodyZ.fill(0);
   buildFormation(layout);
   for(let i=0;i<MAX_B;i++) signArr[i]=(i%2===0)?1.0:-1.0;
-
   for(let i=0;i<MAX_B;i++){
     const fp=formationPts[i%Math.max(formationPts.length,1)]||[0,0,0];
     const d2=fixedSize?dScale*dScale*0.2:(0.1+Math.random()*0.45)*dScale*dScale;
@@ -330,7 +348,6 @@ function mkBodies(layout){
       bodyZ[i]=fp[2];
     }
   }
-
   simTime=0.0; histCol=0;
   for(let f=0;f<HIST_W;f++) histTimes[f]=-(HIST_W-f)*0.016;
   const fill=new Float32Array(HIST_W*MAX_B*2);
@@ -342,10 +359,6 @@ function mkBodies(layout){
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RG32F,HIST_W,MAX_B,0,gl.RG,gl.FLOAT,fill);
   histCol=HIST_W-1;
 }
-
-// set instant on by default, update button state
-const btnInstant=document.getElementById('btnInstant');
-btnInstant.classList.add('active'); btnInstant.textContent='Instant c ✓';
 
 let groupAngle=0,orbitAngle=0;
 mkBodies(layoutMode);
@@ -404,21 +417,13 @@ document.getElementById('mode').addEventListener('change',function(){ mode=parse
 document.getElementById('flowAlt').addEventListener('change',function(){ flowAlt=parseInt(this.value); });
 document.getElementById('layout').addEventListener('change',function(){
   layoutMode=parseInt(this.value); groupAngle=0; orbitAngle=0; mkBodies(layoutMode);
-  // auto-enable instant for shell sphere, it makes no sense with retardation
-  if(layoutMode===5 && !instantC){ instantC=true; btnInstant.classList.add('active'); btnInstant.textContent='Instant c ✓'; }
+  if(layoutMode===5&&!instantC){ instantC=true; document.getElementById('btnInstant').classList.add('active'); document.getElementById('btnInstant').textContent='Instant c ✓'; }
 });
 document.getElementById('chkGrid').addEventListener('change',function(){ showGrid=this.checked; });
 document.getElementById('gridRes').addEventListener('input',function(){ gridRes=parseInt(this.value); document.getElementById('gridResV').textContent=gridRes; });
-btnInstant.addEventListener('click',function(){
-  instantC=!instantC; this.classList.toggle('active',instantC);
-  this.textContent=instantC?'Instant c ✓':'Instant c';
-});
+document.getElementById('btnInstant').addEventListener('click',function(){ instantC=!instantC; this.classList.toggle('active',instantC); this.textContent=instantC?'Instant c ✓':'Instant c'; });
 document.getElementById('btnRand').addEventListener('click',()=>{ groupAngle=0; orbitAngle=0; mkBodies(layoutMode); });
-document.getElementById('btnFixed').addEventListener('click',function(){
-  fixedSize=!fixedSize; this.classList.toggle('active',fixedSize);
-  this.textContent=fixedSize?'Fixed size ✓':'Fixed size';
-  for(let i=0;i<MAX_B;i++) bodies[i].d2=fixedSize?dScale*dScale*0.2:(0.1+Math.random()*0.45)*dScale*dScale;
-});
+document.getElementById('btnFixed').addEventListener('click',function(){ fixedSize=!fixedSize; this.classList.toggle('active',fixedSize); this.textContent=fixedSize?'Fixed size ✓':'Fixed size'; for(let i=0;i<MAX_B;i++) bodies[i].d2=fixedSize?dScale*dScale*0.2:(0.1+Math.random()*0.45)*dScale*dScale; });
 document.getElementById('btnPause').addEventListener('click',function(){ paused=!paused; this.textContent=paused?'Resume':'Pause'; });
 canvas.addEventListener('dblclick',function(e){
   const rect=canvas.getBoundingClientRect(),aspect=canvas.width/canvas.height;
