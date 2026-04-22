@@ -781,7 +781,7 @@ Taken together, these expressions are the paper's central output. They do not sa
 5. A clearer substrate-level interpretation of $z_e$, $z_u$, and $A_v$.
 6. Derivation of the internal voltage $V_{\rm int}$ from the proton closure geometry — this would close the charge derivation.
 
-Those are not minor bookkeeping tasks. They are the actual frontier left by the present paper. But stating them explicitly is part of the point: once the constants have been unpacked this way, the remaining unknowns are narrower, more specific, and more physically interpretable than the original presentation in which $G$, $h$, and $e$ simply appear as separate primitives.
+Those are not minor bookkeeping tasks. They are the actual frontier left by the present paper. But stating them explicitly is part of the point: once the constants have been unpacked this way, the remaining unknowns are narrower, more specific, and more physically interpretable than the original presentation in which $G$, $h$, and $e$ simply appear as separate primitives. Read technically, the present paper is a structural audit rather than a final derivation; read philosophically, it sharpens the question of what assumptions remain irreducible once the propagation, displacement, and excitation branches are taken together. That broader postulate-level reading is developed in the philosophical companion.
 
 ---
 

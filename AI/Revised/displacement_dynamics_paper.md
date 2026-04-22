@@ -4,15 +4,17 @@
 
 *Companion papers:* *The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects* (DOI: 10.5281/zenodo.19079929); *The Homogeneous Propagation Framework: Weak-Field Observational Tests* (companion paper)
 
-This paper develops the dynamical law for the displacement layer of the homogeneous propagation framework. Starting from the postulate that mass-energy sources a displacement of the transport-supporting structure, with changes propagating causally at speed \(c\), the retarded displacement map is written as the primary causal statement. Its local wave-equation equivalent and the resulting effective coordinate geometry recover the standard weak-field orbit structure, including perihelion precession, Shapiro delay, and light deflection, as integrated results. The rotating-source vector response is developed to the observed weak-field Gravity Probe B frame-drag scale. Although the framework is not general relativity in ontology or causal assignment, it still overlaps the tested weak-field observational record within the paper's present scope. The paper therefore closes the displacement-layer dynamics at the level required for current weak-field phenomenology. The sourcing relation remains foundational at this stage, while its deeper reduction to the excitation-side closure structure and the fuller nonlinear continuation of the same displacement framework are left as downstream tasks.
+This paper develops the next dynamical step of the displacement framework. The starting point is the postulate that mass-energy sources a displacement of the transport-supporting structure, and that changes in that displacement propagate causally at the medium speed \(c\). In the stationary spherically symmetric limit, that postulate yields the equilibrium displacement geometry \(D(r,d)=\sqrt{r^2+d^2}/r\), the cumulative displacement field \(\Sigma(r)\), and the correct weak-field Newtonian limit. What has been lacking is the dynamical law that propagates this displacement away from equilibrium. This paper develops that law at the correct level: the equation belongs to the displacement layer of the framework, not to the full microphysics of matter.
+
+The main dynamical claim is that the retarded displacement map is the primary expression of the causal structure. The field at a point depends on retarded source configuration rather than instantaneous source position, and the retarded integral for the cumulative displacement \(\Sigma(\mathbf{x},t)\) has a local wave-equation equivalent propagating at the medium speed \(c\). The displacement defines an effective coordinate-level geometry whose structure is fixed by the framework's own internal logic: the vacuum storage capacity is anchored to the coordinate grid, while transport is displaced relative to that grid. The resulting line element modifies the time and radial components while leaving the angular sector Euclidean, and its weak-field orbit equation recovers the standard perihelion precession. That scalar sector is sufficient for the stationary weak-field timing structure, but rotating sources require an additional vector response. The first non-spherical application is then the rotating-source frame-drag response, whose current Earth-corrected Gravity Probe B estimate lies near the observed weak-field signal. The result does not yet derive the deeper sourcing relation from substrate microphysics, but it does define a coherent dynamical program: a two-layer coupled structure, a causal retarded displacement map with its wave-equation equivalent, an effective coordinate geometry recovering the correct orbit structure, and a rotating-source vector extension.
 
 ## 1. Foundational Postulate and Scope
 
-This framework begins from a single physical postulate: **mass-energy sources a displacement of the transport-supporting structure, and changes in that displacement propagate causally at the medium speed \(c\).** In the layered picture already developed in the companion transport/local-geometry paper, this is a statement about the propagation-supporting stage itself. The transport structure carries the propagation condition, and mass insertion into that structure appears observationally as gravity, lensing, and time-dilation effects.
+This framework begins from a single physical postulate: **mass-energy sources a displacement of the transport-supporting structure, and changes in that displacement propagate causally at the medium speed \(c\).** In the layered picture already developed in the companion transport/local-geometry paper, this is a statement about the geometry of the propagation-supporting stage itself, not about an additional force law acting within ordinary matter dynamics. The transport structure is the layer that carries the propagation condition, and when mass inserts volume into that layer, the resulting change in geometry appears observationally as gravity, lensing, time dilation, and related weak-field effects.
 
-The framework therefore adopts the coupled relation **mass tells space how to displace, and displaced space tells mass how to move.** Gravity is identified with displacement of the transport-supporting spatial network rather than with a conventional force internal to matter dynamics. This is not general relativity restated in different language, but within the weak-field domain developed here it still overlaps the tested observational record.
+A useful structural comparison may be made with Wheeler’s familiar summary of general relativity: *matter tells spacetime how to curve, and spacetime tells matter how to move.* The present framework adopts an intentionally similar division of roles, but with a different ontology. Here the relation is instead: **mass tells space how to displace, and displaced space tells mass how to move.** The similarity is only at the level of coupling structure. In both cases, one sector describes how sources modify the stage, while another describes motion within the modified stage. In this framework, however, gravity is not identified with curvature of spacetime itself. It is identified with displacement of the transport-supporting spatial network.
 
-This leads to two coupled dynamical layers. The first contains the ordinary dynamics of excitations, matter, and interactions evolving within the transport structure. The second contains the displacement of the transport structure itself. The present paper develops the displacement-layer equation and its consequences for moving and rotating sources.
+This viewpoint leads naturally to two coupled dynamical layers. The first contains the ordinary dynamics of excitations, matter, and interactions evolving within the transport structure. The second contains the displacement of the transport structure itself. These layers are coupled, but not collapsed into a single equation. Mass sources displacement, and the resulting displacement modifies the effective geometry through which motion proceeds. Gravity is therefore not treated here as a conventional force internal to transport-structure dynamics, but as a modification of the stage on which those dynamics unfold. The two-layer architecture also clarifies the role of the present paper: the equation to be developed belongs to the displacement layer, not to the full microphysics of matter.
 
 For a stationary isolated source, the equilibrium form of that displacement is described by
 
@@ -21,6 +23,8 @@ D(r,d)=\frac{\sqrt{r^2+d^2}}{r},
 \]
 
 with \(d\) the displacement scale associated with the source. In the existing development, this form is not introduced as an arbitrary ansatz. It follows from the geometric requirement that when a volume \(\frac{4}{3}\pi d^3\) is inserted into the spherically symmetric transport structure, each shell originally at radius \(r\) is displaced outward to \(r'=\sqrt{r^2+d^2}\), so that the static displacement factor is simply the ratio \(r'/r\). The postulate is therefore physical, while the static form is geometric.
+
+Stated another way, the primitive statement is the fixed central defect, not the final algebraic shape of \(D\). The surrounding exterior medium is the original transport-supporting structure pushed outward shell by shell. The Pythagorean form enters because each original shell is relocated relative to the same central defect scale \(d\), and \(D(r,d)\) is the resulting shell-relocation ratio in the displaced chart. Read in that order, the function is not a guessed potential or a convenient fitting profile, but the compact expression of the static relocation geometry.
 
 The weak-field structure is then governed not merely by the local deviation \(D-1\), but by the cumulative displacement
 
@@ -36,7 +40,9 @@ whose weak-field limit gives
 
 This quantity carries the required \(1/r\) behavior, governs clock-rate and propagation effects, and yields Newtonian acceleration through its gradient. In that sense, the existing static development already supplies a definite hierarchy: local displacement, cumulative displacement, and the associated acceleration structure.
 
-The remaining task at this layer is the dynamical law. The sourcing relation remains foundational at this stage, and the aim of the present paper is to write the field equation for which the static equilibrium form \(D(r,d)\) is the stationary solution, then develop the consequences of causal displacement for stationary, moving, and rotating sources. Reduction of the sourcing postulate to the excitation-side closure structure is left as a downstream connection to the companion excitation paper. Retardation is therefore not an added correction but part of the structure from the outset.
+What remains to be developed is the dynamical law. At present, this framework does not derive from deeper substrate microphysics why mass has the role of sourcing displacement. That sourcing relation therefore remains a foundational postulate. The task of the present paper is to formulate the field equation from which the static equilibrium form \(D(r,d)\) emerges as the stationary solution, and to develop the consequences of causal displacement for moving and rotating sources.
+
+The paper therefore does not claim to reduce gravity all the way to a deeper microscopic explanation of why mass displaces the transport structure. Its more limited aim is to formulate the displacement problem at the correct layer and to develop the consequences of that postulate in a causal setting. Once displacement is taken to be physical, and once changes in it are limited by the same propagation speed \(c\) that governs the underlying medium, retardation is no longer an added correction. It is part of the basic structure from the outset. The causal evolution of displacement is therefore the natural setting for Mercury-scale retardation effects, rotating-source response, and frame dragging.
 
 ## 2. Static Equilibrium Geometry and the Cumulative Field
 
@@ -120,13 +126,19 @@ g=c^2\frac{d\Sigma}{dr}=c^2\frac{d^2}{2r^2}=\frac{GM}{r^2}.
 
 Thus Newtonian gravity appears not as a separate postulate, but as the acceleration associated with the gradient of accumulated displacement once the static source scale is tied to mass through \(d^2=2GM/c^2\).
 
-The static hierarchy already fixes the weak-field structure used in the present paper. The next step is therefore to state the causal displacement law at the displacement layer itself.
+## 3. The Open Dynamics Problem
+
+The static displacement geometry developed in the previous section is already constrained enough to recover the weak-field hierarchy, the cumulative displacement \(\Sigma(r)\), and the Newtonian limit. What it does not yet provide is the dynamical law from which that geometry follows. The function \(D(r,d)\) describes the equilibrium displacement around a stationary source, but it is not yet derived as a solution of a field equation, action principle, or evolution law. The task for the remainder of this paper is to formulate that dynamical equation at the correct level: not as a replacement for the full microphysics of matter, but as the law governing the displacement layer specifically.
+
+That task should be stated at the correct level. The displacement equation is not intended to replace the whole microphysics of matter, nor to absorb all of ordinary matter dynamics into a single gravitational master equation. One layer contains the ordinary dynamics of matter and interactions within the transport structure. The other contains the displacement of the transport structure itself. These layers are coupled, but they are governed by different equations. The displacement equation only needs to know where masses are and how they move; it does not need to encode the internal structure of each source body. In that sense, the field equation belongs specifically to the displacement layer.
+
+Gravity is not being treated here as a force internal to the transport structure. It is the transport structure itself being displaced. The task is therefore to propagate information about that displacement causally through the medium, not to reformulate all non-gravitational physics. Once this is stated clearly, the target of the field equation becomes narrower and cleaner: it must describe how mass-sourced displacement is communicated through the transport structure at the medium speed \(c\). Sections 4 and 5 develop that equation through the retarded displacement map and its local wave-equation equivalent.
 
 ## 3. Retarded Displacement Map
 
-Once changes in displacement propagate at speed \(c\), the natural dynamical construction is retarded rather than instantaneous. The field at a point depends on the source configuration whose influence has had time to reach that point through the medium.
+Once displacement is treated as a physical modification of the transport-supporting network, and once changes in that displacement are taken to propagate at speed \(c\), the natural dynamical construction is retarded rather than instantaneous. The field at a point cannot depend on the source as it is “now” in a coordinate bookkeeping sense, but only on the source configuration whose influence has had time to propagate through the medium. In that sense, the displacement problem is causal from the outset: the geometry at a field point is determined by the past state of the source, evaluated on the relevant propagation cone.
 
-The fundamental statement is therefore integral rather than differential: given source trajectories, the displacement at a field point is obtained by summing retarded source contributions. Any later PDE is a local representation of that causal rule.
+This suggests that the most fundamental statement of the dynamics is not differential but integral. Given a collection of masses with known trajectories, the displacement at each field point is constructed by summing source contributions evaluated at retarded time. In plain terms: given where masses are and how they are moving, evaluate the displacement at each field point by summing retarded contributions from all sources, each propagating at \(c\), using the source position at the retarded time. The importance of this statement is that it defines the dynamical problem directly in physical terms. The field is whatever results from propagation-limited sourcing through the medium; a PDE, if introduced later, is only a local representation of that more basic causal rule.
 
 For a single source, this means the displacement field at spacetime point \((\mathbf{x},t)\) is determined by the source position \(\mathbf{x}_s(t_r)\) at retarded time \(t_r\), where \(t_r\) satisfies
 
@@ -140,13 +152,15 @@ The field therefore depends on the delayed source-to-field separation rather tha
 
 For many sources, the full field is obtained by combining retarded contributions according to the multi-source composition rule of the framework. In the weak and well-separated regime this may be approximated by a direct sum over retarded source terms. In the fuller displacement picture, however, the contributions are not strictly additive: local space may already be displaced by distant sources before the nearer source acts, so ordering remains relevant. One is not superposing independent forces in empty space, but composing deformations of a medium already modified by other sources.
 
-In the static case, the cumulative displacement \(\Sigma(r)\) governs clock-rate and propagation effects while the local geometry \(D(r,d)\) governs spatial deformation. Once the source is time-dependent, those same quantities become retarded fields. Mercury precession, Shapiro delay, and the rotating-source problem therefore enter the same causal framework.
+This causal picture explains why several previously separate weak-field effects can be treated within a common dynamical language. In the static case, the cumulative displacement \(\Sigma(r)\) governs clock-rate and propagation effects, while the local geometry \(D(r,d)\) governs spatial deformation. Once the source is time-dependent, those same quantities become retarded fields. Mercury precession can then be read as a consequence of finite-speed response on an accelerated orbit; Shapiro delay remains the integrated clock-rate effect of the cumulative displacement along the signal path; and the rotating-source problem becomes a retarded field problem rather than a purely static geometric one.
+
+For that reason, the retarded map should be treated here as the conceptual heart of the dynamics paper. It states what gravity is at the displacement layer: not an instantaneous action, and not a force law internal to matter dynamics, but a propagation-limited modification of the transport stage sourced by the past state of matter.
 
 ## 4. Two-Layer Coupled Structure and the Coordinate-Level Effective Geometry
 
-The retarded displacement map gives the physical rule. The present section writes its explicit integral form, then derives the effective coordinate-level geometry whose weak-field orbit structure reproduces the standard perihelion precession.
+The retarded displacement map gives the physical rule: mass-sourced displacement propagates through the transport-supporting medium at speed \(c\), and the field at any point is determined by the retarded source configuration rather than by instantaneous source position. The present section develops two further steps. First, the retarded map is given an explicit integral form whose static limit recovers the established cumulative displacement. Second, the displacement is shown to define an effective coordinate-level geometry whose weak-field orbit structure reproduces the standard perihelion precession.
 
-### 4.1 Two coupled layers
+### 5.1 Two coupled layers
 
 The dynamics of this framework are organized as two coupled layers rather than a single master equation.
 
@@ -162,11 +176,11 @@ The same decoupling extends to test excitations on a static background. A planet
 
 The layers re-couple when comparable-mass sources move and accelerate in each other's displacement fields. A compact binary system, where each body's displacement significantly affects the other's trajectory and the trajectories in turn modify the displacement, requires the full retarded integral with both layers evolving together. That strong-coupling regime is the frontier beyond the present paper.
 
-### 4.2 The displacement layer: retarded integral form
+### 5.2 The displacement layer: retarded integral form
 
-The natural variable for the displacement layer is the cumulative displacement \(\Sigma(\mathbf{x},t)\) rather than the local displacement factor \(D\): \(D-1\) carries the local \(1/r^2\) field-strength structure, while \(\Sigma\) carries the accumulated \(1/r\) structure that governs clock-rate, propagation, and weak-field dynamics.
+The natural variable for the displacement layer is the cumulative displacement \(\Sigma(\mathbf{x},t)\) rather than the local displacement factor \(D\). The reason is the same one already seen in the static theory: \(D-1\) carries the local \(1/r^2\) field-strength structure, while \(\Sigma\) carries the accumulated \(1/r\) structure that governs clock-rate, propagation, and weak-field dynamics.
 
-The retarded map of Section 3, written as an explicit integral, gives
+The retarded map of Section 4, written as an explicit integral, gives
 
 \[
 \Sigma(\mathbf{x},t)=\frac{G}{c^2}\int\frac{\rho_{\mathrm{LC}}(\mathbf{x}',t_r)}{|\mathbf{x}-\mathbf{x}'|}\,d^3x',
@@ -196,13 +210,13 @@ For the static point-source solution, this reduces immediately to the equilibriu
 
 The displacement field does not have independent oscillatory dynamics in the way that a free wave does. It tracks the retarded source distribution. Outgoing displacement disturbances — the framework's gravitational waves — are the retarded response to accelerating matter, not free oscillations of the displacement field itself. The wave-equation form encodes the same causal retardation as the integral; the two descriptions are complementary.
 
-### 4.3 The excitation layer: effective coordinate geometry
+### 5.3 The excitation layer: effective coordinate geometry
 
 The second step is to determine what geometry the first-layer excitations see when propagating through a displacement background. The key constraint comes from the vacuum storage structure. The storage capacity \(F\!\cdot\!H=\varepsilon_0\mu_0\) is attached to the coordinate grid (Appendix A). Displacement moves the transport structure relative to that grid, but it does not move the grid itself.
 
 In the displaced transport structure, a unit cell at radius \(r\) is compressed radially by \(1/D\) and stretched tangentially by \(D\). A physical meter — realized within transport as a sustained LC excitation — co-deforms with the transport. The physical meter is not identical to the transport structure; it is an observable realized within it. When transport is displaced, the rod's realized properties change accordingly: radially, the physical meter spans fewer coordinate meters; tangentially, it spans more.
 
-The coordinate-level description follows from which quantities belong to coordinates and which belong to transport.
+The question is how this deformation appears in the coordinate-level description that governs the effective dynamics. The answer is set by which quantities belong to coordinates and which belong to transport.
 
 **Temporal component.** The 3D oscillation that constitutes a clock cycle traverses a net volume of \(F\!\cdot\!H\) that scales as \(D\) relative to the undisplaced case (the product of radial compression \(1/D\) and tangential stretch \(D\) in two directions). A complete cycle therefore encounters more total storage, and the clock runs slower. The realized clock rate relative to coordinate time is \(1/(1+\Sigma)\), giving an effective time-time component
 
@@ -238,9 +252,9 @@ ds^2\approx -(1-\sigma)\,c^2\,dt^2+(1+\sigma)\,dr^2+r^2\,d\Omega^2,
 
 which is the standard weak-field form to leading order in \(\sigma\).
 
-### 4.4 Recovery of the weak-field orbit structure
+### 5.4 Recovery of the weak-field orbit structure
 
-The effective geometry of the preceding subsection follows from the framework's own internal logic: storage capacity is attached to the coordinate grid, displacement deforms transport relative to that grid, and the physical meter co-deforms with transport. Agreement with the standard weak-field Schwarzschild form at leading order is therefore a consistency check rather than an input.
+The effective geometry of the preceding subsection is not merely a rewriting of known results. It is derived from the displacement framework's own internal logic: the storage capacity is on the coordinate grid, the displacement deforms transport relative to that grid, and the physical meter co-deforms with transport. The fact that the resulting line element agrees with the standard weak-field Schwarzschild form at leading order is a consistency check, not a circular input.
 
 The orbit equation for a test excitation on this background may be derived by standard methods. In the weak-field expansion, the orbit equation takes the form
 
@@ -258,7 +272,7 @@ The three contributions previously identified for Mercury precession — retarda
 
 The same effective geometry also supports the Shapiro delay as a pure clock-rate effect and the geodetic precession applied to the GPB orbit [7]. In each case, the coordinate-level description carries the full physics. Local clock rates, rod lengths, and other realized-geometry observables may be recovered from the coordinate description whenever needed, but the dynamics are most cleanly posed in coordinate terms.
 
-## 5. Rotating Sources and the Vector Response
+## 6. Rotating Sources and the Vector Response
 
 The preceding sections establish the scalar displacement sector: mass-sourced displacement is causal, propagation-limited, and in the stationary spherically symmetric limit is captured by the equilibrium geometry \(D(r,d)\) or, more naturally for dynamics, by the cumulative field \(\Sigma(\mathbf{x},t)\). That scalar sector is sufficient for the static point-source problem and for the first weak-field timing and propagation effects. It is not sufficient for the first genuinely non-spherical source class: rotating bodies. The rotating-source problem requires the causal displacement framework to develop a corresponding vector response.
 
@@ -274,7 +288,7 @@ where \(\omega\) is the source spin, \(\rho\) is the probe radius, and \(\theta\
 
 This vector channel should be introduced carefully. The paper does not need to claim that the full rotating-source field equation has already been derived in closed substrate form. What can be said more cleanly is that the retarded displacement map, once applied to a spinning source, naturally generates a vector response whose stable observational content lies in the spin-odd azimuthal sector. The scalar cumulative field remains the correct object for the stationary weak-field timing structure, while the rotating-source response requires the corresponding vector extension of the same causal architecture.
 
-## 6. Gravity Probe B and the Frame-Drag Estimate
+## 7. Gravity Probe B and the Frame-Drag Estimate
 
 The rotating-source vector response becomes physically meaningful only when it is tied to an observable. In this framework, the natural first test case is Gravity Probe B. The role of the present section is therefore not to introduce a new phenomenological domain, but to extract the first concrete weak-field observable from the rotating-source displacement field developed in the previous section.
 
@@ -298,49 +312,53 @@ On that route, the thin-shell estimate for the GPB frame-drag signal is about \(
 
 yields an Earth-corrected prediction of about \(40.9\) milliarcsec/yr. This is close to the GPB measured frame-drag value of \(39.2\) milliarcsec/yr. In the logic of the present paper, that agreement is not yet presented as a final closed derivation from the deeper substrate, but it is strong evidence that the rotating-source displacement field is carrying the right weak-field structure.
 
-## 7. What This Paper Establishes and What Remains Downstream
+## 8. Status, Scope, and Remaining Derivational Frontier
 
-The preceding sections establish the displacement branch at the level used in this paper. They fix the static equilibrium geometry for mass-sourced displacement, the cumulative field \(\Sigma\) with the required weak-field \(1/r\) structure, the causal retarded map for propagating displacement, the effective coordinate geometry underlying the weak-field orbit structure, and the rotating-source vector response needed for frame dragging.
+The preceding sections establish a definite intermediate result. This framework already supplies a static equilibrium geometry for mass-sourced displacement, a cumulative field \(\Sigma\) with the required \(1/r\) weak-field structure, and a causal retarded interpretation in which displacement changes propagate at the medium speed \(c\). The two-layer coupled structure then provides the dynamical organization: the displacement layer tracks the retarded source distribution through a wave equation at speed \(c\), while the excitation layer evolves within the effective coordinate geometry set by that displacement. The coordinate-level line element — with its time dilation from \(\Sigma\), radial modification from \(D^2\), and unmodified angular sector — recovers the correct weak-field orbit structure, including the standard perihelion precession. The rotating-source analysis identifies a spin-odd azimuthal vector response as the natural home of frame dragging.
 
-This is enough to state clearly what the paper establishes. It formulates the causal law for the displacement layer itself and shows that, once that layer is written at the correct level, the familiar weak-field structure follows from it. The target has therefore been narrower than a total reformulation of matter dynamics and broader than a merely static geometric note: the present paper establishes the displacement-layer geometry, its causal propagation law, and the effective weak-field consequences used throughout the analysis.
+At the same time, the limits of the present result should be stated plainly. The foundational postulate remains exactly that: mass inserts volume into the transport structure, and changes in that displacement propagate causally. What has not yet been derived is the deeper microphysical reason that mass has this sourcing role. The framework therefore remains explicit about where it is postulating and where it is deriving. The geometry of \(D(r,d)\), the cumulative displacement \(\Sigma(r)\), and the weak-field hierarchy are derived once the postulate is granted; the postulate itself is not yet reduced to a deeper mechanism.
 
-The limits of the present result should still be stated plainly, but they belong here rather than in the middle of the derivation. The foundational sourcing claim remains a postulate: mass inserts volume into the transport structure, and changes in that displacement propagate causally. What is not yet reduced is the deeper substrate reason that mass has this sourcing role. Once that postulate is granted, however, the geometry of \(D(r,d)\), the cumulative displacement \(\Sigma(r)\), the retarded map, and the weak-field hierarchy are derived within the branch developed here.
+The two-layer structure and the retarded integral for \(\Sigma(\mathbf{x},t)\) represent a step beyond the purely static geometric development. The retarded map is the more fundamental statement: source information propagates outward at \(c\), and the field at a point depends on the retarded source configuration. The wave equation is its local differential equivalent. Together they fix the propagation speed to \(c\) (the only speed the medium supports) and tie the source term directly to the LC energy density of matter. The effective coordinate geometry derived from the displacement then recovers the weak-field tests without requiring separately motivated correction terms.
 
-The two-layer structure and the retarded integral for \(\Sigma(\mathbf{x},t)\) carry the paper beyond the purely static geometric development. The retarded map is the more fundamental statement: source information propagates outward at \(c\), and the field at a point depends on the retarded source configuration. The wave equation is its local differential equivalent. Together they fix the propagation speed to \(c\) and tie the source term directly to the LC energy density of matter. The effective coordinate geometry derived from the displacement then recovers the weak-field tests without requiring separately motivated correction terms.
+The rotating-source case sharpens this point. The scalar cumulative field is sufficient for the stationary weak-field timing sector, but it is not sufficient for rotating bodies. There the vector sector provides the rotating-source response within the displacement-layer dynamics, with form following from the kinematics of retarded potentials. In the present treatment, the stable observable channel is the spin-odd azimuthal component of the retarded field. That is enough to support a coherent GPB calculation, while the deeper open derivation remains the excitation-level origin of displacement itself.
 
-The rotating-source case sharpens this point. The scalar cumulative field is sufficient for the stationary weak-field timing sector, but it is not sufficient for rotating bodies. There the vector sector provides the rotating-source response within the displacement-layer dynamics, with form following from the kinematics of retarded potentials. In the present treatment, the stable observable channel is the spin-odd azimuthal component of the retarded field. That is enough to support a coherent GPB calculation at the level used here.
-
-What this paper establishes is a coherent displacement-layer program: a retarded causal map, its wave-equation equivalent, an effective coordinate geometry that recovers the weak-field tests as integrated results, and a rotating-source vector sector developed to the observed weak-field Gravity Probe B frame-drag scale. What remains downstream is not a repair to that displacement-layer structure, nor the invention of a separate strong-field mechanism. The same displacement structure is intended to apply in both weak and extreme regimes; the body of the present paper develops the perturbative weak-field treatment, while Appendix B records the corresponding strong-displacement and nonlinear-response notes. The downstream tasks are to reduce the sourcing relation more deeply, derive the nonlinear medium-response coefficients more explicitly, and place the scalar and rotating-source sectors inside one fully explicit field-law formulation. Those continuations lie beyond the present paper's required scope and serve as the natural points of contact with the excitation-side program.
+The remaining derivational frontier can now be stated more precisely than before. The principal next step is to derive the displacement sourcing relation from deeper substrate structure rather than leave it primitive. A further extension would be to derive the nonlinear medium-response coefficients and to place the scalar and rotating-source responses within one fully explicit field-law formulation. These are continuations beyond the present displacement-layer development, whose static geometry, retarded map, weak-field orbit structure, and rotating-source response have already been developed at the level used in this paper.
 
 Beyond the weak-field orbital tests, the two-layer structure also implies gravitational radiation from accelerating sources. The displacement deformation is not merely a scalar but carries a tensor structure reflecting the anisotropy of the transport deformation (radial compression, tangential stretch). For a compact binary, the time-varying tensorial pattern radiates at the quadrupole level. The scalar wave equation for the cumulative displacement \(\Sigma\) gives one sixth of the general-relativity power; the full symmetric deformation tensor has six independent components, each radiating with equal power due to the isotropy of the vacuum impedance; and the total power therefore matches the GR quadrupole formula exactly [7]. For circular orbits this reproduces the Hulse-Taylor inspiral rate. For eccentric orbits, the oscillating trace provides an additional breathing-mode channel absent in general relativity, potentially modifying the eccentricity enhancement function \(f(e)\).
 
-### 7.1 Self-consistency of the two-layer loop
-
-The remaining remarks in this section indicate how these results may eventually connect to the broader excitation-side program.
+### 8.1 Self-consistency of the two-layer loop
 
 The two-layer structure raises a natural self-consistency question. The displacement layer sources \(\Sigma\) from the energy density of LC excitations. The excitation layer evolves within the effective geometry set by that displacement. For the loop to close, the energy distribution of a source at rest in its own displacement field must be consistent with the \(\Sigma\) it generates.
 
-In the static case, this loop closes straightforwardly. A point mass with energy \(mc^2\) sources a cumulative displacement \(\Sigma(r)=GM/(c^2r)\) through the Poisson equation. The resulting effective geometry is the coordinate-level line element of Section 4.3. A stationary source sitting at the origin of that geometry is at rest in the displacement it creates — there is no further feedback at this order. The static displacement is the equilibrium configuration, and the effective geometry is self-consistent.
+In the static case, this loop closes straightforwardly. A point mass with energy \(mc^2\) sources a cumulative displacement \(\Sigma(r)=GM/(c^2r)\) through the Poisson equation. The resulting effective geometry is the coordinate-level line element of Section 5.3. A stationary source sitting at the origin of that geometry is at rest in the displacement it creates — there is no further feedback at this order. The static displacement is the equilibrium configuration, and the effective geometry is self-consistent.
 
 The remainder of this subsection and the next sketch how the self-consistency loop might close at a deeper level. These remarks identify where the connections must eventually be made, but the derivations themselves are not completed in this paper.
 
-### 7.2 Hierarchy of constants
+The deeper question is what determines the source energy \(mc^2\) itself. In this framework, matter is a sustained LC excitation of the vacuum medium. Such an excitation cycles between the capacitive (\(\varepsilon_0\)) and inductive (\(\mu_0\)) storage modes at a definite frequency. The resonant frequency of a vacuum region of spatial extent \(\ell\) is \(f\sim c/\ell\), set entirely by the medium properties. A sustained excitation — one that persists rather than dispersing — must satisfy a closure condition: after one complete LC cycle, the excitation must return to its starting configuration. This topological closure quantizes the action per cycle, and that quantum is Planck's constant \(h\). The energy of the excitation is then \(E=hf\), and its spatial extent is the Compton wavelength \(\ell_C=h/(mc)\).
+
+The same LC substrate also determines the de Broglie wavelength of a moving excitation. A particle at rest has a spatially uniform internal phase. When the excitation moves at velocity \(v\) through the transport medium, the simultaneity slope \(v/c^2\) per unit length — already derived in the homogeneous propagation framework — converts that uniform phase into a spatial phase gradient. The wavelength of that gradient is
+
+\[
+\lambda_{\mathrm{dB}}=\frac{c^2}{v\,f_0}=\frac{h}{mv}=\frac{h}{p},
+\]
+
+where \(f_0=mc^2/h\) is the rest-frame cycling frequency. The de Broglie relation is therefore not an independent postulate. It is the spatial phase structure of an LC resonance viewed through the simultaneity tilt of the propagation framework.
+
+### 8.2 Hierarchy of constants
 
 The framework's constant structure then has a natural hierarchy. The medium properties \(\varepsilon_0\) and \(\mu_0\) give the propagation speed \(c\) and the vacuum impedance \(Z_0\). The closure condition on sustained LC resonances gives the quantum of action \(h\). The gravitational constant \(G\) is the bridge between the excitation layer and the displacement layer: it determines how much displacement one unit of LC energy produces. The relationship \(d^2=2Gm/c^2\) connects the displacement scale of a source to its mass, and the per-nucleon form \(G=d_n^3c^2/m_n\) (times a geometric factor) suggests that \(G\) is derivable if the nucleon's displacement radius \(d_n\) can be determined from the LC resonance structure of the nucleon itself.
 
 The self-consistency of the full loop — medium properties determine resonance structure, resonance structure determines source energy, source energy determines displacement, displacement modifies the medium geometry, and the modified geometry supports the resonance — is not yet derived in this paper. But the two-layer structure developed here defines each link and identifies where the remaining derivations must connect.
 
-## 8. Conclusion
+## 9. Conclusion
 
-This framework treats gravity as a causal displacement of the transport-supporting spatial network. Starting from the postulate that mass-energy sources that displacement, and that changes in it propagate at speed \(c\), the static equilibrium geometry \(D(r,d)\) and the cumulative field \(\Sigma(r)\) recover the weak-field hierarchy and Newtonian limit.
+This framework treats gravity as a causal displacement of the transport-supporting spatial network rather than as a force internal to ordinary matter dynamics. Starting from the postulate that mass-energy sources that displacement, and that changes in it propagate at speed \(c\), the static equilibrium geometry \(D(r,d)\) and the cumulative field \(\Sigma(r)\) recover the required weak-field hierarchy and Newtonian limit.
 
-The dynamical problem is organized as two coupled layers. The displacement layer tracks the retarded energy distribution of matter through the medium at speed \(c\), with the retarded integral as the fundamental statement and the wave equation as its local differential equivalent. The excitation layer evolves within the effective coordinate geometry set by that displacement. The resulting coordinate-level line element modifies the time and radial components while leaving the angular sector Euclidean, and its weak-field orbit equation recovers the standard perihelion precession.
+The dynamical problem is organized as two coupled layers. The displacement layer tracks the retarded energy distribution of matter through the medium at speed \(c\), with the retarded integral as the fundamental statement and the wave equation as its local differential equivalent. The excitation layer contains the ordinary dynamics of matter and fields evolving within the effective coordinate geometry set by the displacement. That geometry is determined by the framework's own internal logic: the vacuum storage capacity \(F\!\cdot\!H\) is anchored to the coordinate grid, the displacement deforms transport relative to that grid, and the physical meter co-deforms with transport. The resulting coordinate-level line element modifies the time component and the radial component while leaving the angular sector Euclidean, and its weak-field orbit equation recovers the standard perihelion precession as a single integrated geometric result.
 
-For rotating sources, the relevant response is not exhausted by the symmetric cumulative field alone, but requires a spin-odd azimuthal vector channel. In the present treatment, that channel yields a Gravity Probe B frame-drag estimate of about \(40.9\) mas/yr after polar-orbit projection and Earth moment-of-inertia correction, close to the observed \(39.2\) mas/yr.
+This same causal architecture extends beyond the stationary scalar sector. For rotating sources, the relevant response is not exhausted by the symmetric cumulative field alone, but requires a spin-odd azimuthal vector channel. In the present treatment, that channel yields a Gravity Probe B frame-drag estimate of about \(40.9\) mas/yr after polar-orbit projection and Earth moment-of-inertia correction, close to the observed \(39.2\) mas/yr.
 
-This paper establishes the displacement branch at the level used throughout the framework. It formulates the causal retarded map for the displacement layer, derives the effective coordinate geometry whose weak-field orbit equation recovers the standard perihelion precession, and develops the rotating-source vector response to the point where it reaches the observed Gravity Probe B frame-drag scale. The framework is not general relativity in ontology or causal assignment, but within the present weak-field domain it still overlaps the tested observational record. With these elements in place, the current weak-field observational tests are accounted for within the displacement-layer dynamics.
-
-The deeper task remains to reduce the mass-to-displacement sourcing relation to the excitation-side closure structure and to develop the fuller nonlinear continuation of the same displacement framework. The present paper therefore closes the displacement-layer dynamics at the level required for weak-field phenomenology while marking the natural downstream connection to the excitation-side program.
+The result is not yet a final substrate derivation. What it does provide is a coherent dynamical program: a two-layer coupled structure, a causal retarded displacement map with its local wave-equation equivalent, an effective coordinate geometry whose weak-field orbit equation gives the correct precession, and a rotating-source vector sector that reaches the observed weak-field frame-drag scale. The present paper closes the displacement-side weak-field structure but does not complete the excitation-side closure problem; that companion branch is taken up explicitly in *The Homogeneous Propagation Framework: Excitation, Closure, and Material Response*, where the support, occupancy, and material-response terms are developed on the displaced background fixed here. The remaining derivational frontier is now sharply defined: derive the displacement sourcing relation from the deeper substrate and place the scalar and rotating-source responses within one fully explicit field-law formulation.
 
 ## Appendix A. Vacuum Storage, Propagation Units, and Meters per Storage Capacity
 
@@ -358,7 +376,7 @@ This point is used repeatedly in the appendices that follow. It underlies the in
 
 ## Appendix B. Nonlinear Displacement and the Strong-Field Regime
 
-The wave equation for \(\Sigma\) developed in Section 4.2 is linear: the propagation speed is \(c\), the source term is the LC energy density, and the superposition of solutions from multiple sources is additive. This linearity is valid in the weak field, where \(\Sigma\ll 1\) and the displacement is a small perturbation of the transport structure. The present appendix identifies where that linearity breaks down and what replaces it.
+The wave equation for \(\Sigma\) developed in Section 5.2 is linear: the propagation speed is \(c\), the source term is the LC energy density, and the superposition of solutions from multiple sources is additive. This linearity is valid in the weak field, where \(\Sigma\ll 1\) and the displacement is a small perturbation of the transport structure. The present appendix identifies where that linearity breaks down and what replaces it.
 
 ### B.1 Displacement-dependent stiffness
 
@@ -392,9 +410,9 @@ The preceding discussion suggests that the full displacement dynamics takes the 
 \frac{1}{c^2_{\mathrm{eff}}(\Sigma)}\,\partial_t^2\Sigma-\nabla\!\cdot\!\bigl[\alpha(\Sigma)\,\nabla\Sigma\bigr]=\frac{4\pi G}{c^2}\,\rho_{\mathrm{LC}},
 \]
 
-where \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) encode the displacement-dependent stiffness of the medium. In the weak field, \(c_{\mathrm{eff}}\to c\) and \(\alpha\to 1\), recovering the linear wave equation of Section 4.2. In the strong field, the coefficients deviate, and the equation admits solutions that differ qualitatively from the linear case.
+where \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) encode the displacement-dependent stiffness of the medium. In the weak field, \(c_{\mathrm{eff}}\to c\) and \(\alpha\to 1\), recovering the linear wave equation of Section 5.2. In the strong field, the coefficients deviate, and the equation admits solutions that differ qualitatively from the linear case.
 
-The functional forms of \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) are not yet derived from the LC substrate. Determining them is part of the remaining derivational frontier identified in Section 7: the full field law must emerge from the medium properties rather than be assumed. What can be said is that the nonlinear structure is required on physical grounds — a medium that has already been deformed responds differently to further deformation — and that its weak-field limit must reproduce the linear wave equation that successfully recovers all current observational tests.
+The functional forms of \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) are not yet derived from the LC substrate. Determining them is part of the remaining derivational frontier identified in Section 8: the full field law must emerge from the medium properties rather than be assumed. What can be said is that the nonlinear structure is required on physical grounds — a medium that has already been deformed responds differently to further deformation — and that its weak-field limit must reproduce the linear wave equation that successfully recovers all current observational tests.
 
 ### B.5 Source-sphere enlargement and binding energy
 
@@ -408,7 +426,7 @@ The source-sphere enlargement and the volume merging act in opposite directions.
 
 ## Appendix C. Second Post-Newtonian Predictions
 
-The effective coordinate geometry of Section 4.3 matches the Schwarzschild metric at first post-Newtonian (1PN) order. At second order the two diverge, producing specific predictions that differ from general relativity. This appendix records those differences and estimates their physical magnitude.
+The effective coordinate geometry of Section 5.3 matches the Schwarzschild metric at first post-Newtonian (1PN) order. At second order the two diverge, producing specific predictions that differ from general relativity. This appendix records those differences and estimates their physical magnitude.
 
 ### C.1 Metric expansions
 
@@ -545,11 +563,11 @@ The exponent \(n\) therefore encodes the degree of displacement-sphere interpene
 
 ## Appendix E. Rotating-Source Effective Metric
 
-The static effective geometry of Section 4.3 describes a non-rotating source. This appendix extends that geometry to slowly rotating sources by developing the vector sector of the retarded displacement integral.
+The static effective geometry of Section 5.3 describes a non-rotating source. This appendix extends that geometry to slowly rotating sources by developing the vector sector of the retarded displacement integral.
 
 ### E.1 The retarded vector integral
 
-Just as the scalar cumulative displacement \(\Sigma\) is sourced by the retarded mass density, the vector displacement is sourced by the retarded mass current. By direct analogy with Section 4.2, the vector component of the displacement field is
+Just as the scalar cumulative displacement \(\Sigma\) is sourced by the retarded mass density, the vector displacement is sourced by the retarded mass current. By direct analogy with Section 5.2, the vector component of the displacement field is
 
 \[
 A_i(\mathbf{x},t)=\frac{G}{c^3}\int\frac{\rho_{\mathrm{LC}}(\mathbf{x}',t_r)\,v_i(\mathbf{x}',t_r)}{|\mathbf{x}-\mathbf{x}'|}\,d^3x',
@@ -563,11 +581,11 @@ For a slowly rotating source with angular momentum \(J=I\omega\), the leading mu
 A_\phi\sim\frac{GJ\sin^2\!\theta}{c^3\,r}.
 \]
 
-This is the gravitomagnetic vector potential. Its curl gives the gravitomagnetic field, which is the transport twist developed in Sections 5 and 6.
+This is the gravitomagnetic vector potential. Its curl gives the gravitomagnetic field, which is the transport twist developed in Sections 6 and 7.
 
 ### E.2 The slow-rotation effective metric
 
-The vector displacement enters the effective coordinate metric as a cross term between the time coordinate and the azimuthal angle. Combined with the scalar sector from Section 4.3, the full slow-rotation effective metric is
+The vector displacement enters the effective coordinate metric as a cross term between the time coordinate and the azimuthal angle. Combined with the scalar sector from Section 5.3, the full slow-rotation effective metric is
 
 \[
 ds^2=-\frac{c^2}{(1+\Sigma)^2}\,dt^2+D^2\,dr^2+r^2\bigl(d\theta^2+\sin^2\!\theta\,d\phi^2\bigr)+\frac{4GJ\sin^2\!\theta}{c^2\,r}\,dt\,d\phi.
@@ -575,7 +593,7 @@ ds^2=-\frac{c^2}{(1+\Sigma)^2}\,dt^2+D^2\,dr^2+r^2\bigl(d\theta^2+\sin^2\!\theta
 
 The scalar sector (\(f\), \(g\), \(h=1\)) is unchanged by the rotation at leading order. The rotation enters only through the cross term \(g_{t\phi}\), which is linear in \(J\), odd under reversal of spin, and vanishes on the rotation axis (\(\theta=0,\pi\)).
 
-This is the same structure as the slow-rotation limit of the Kerr metric in Boyer-Lindquist coordinates. At leading order in both \(\Sigma\) and \(J\), the two metrics agree term by term. The scalar sector matches at 1PN (as established in Section 4.4 and Appendix C), and the vector sector matches at the leading gravitomagnetic order.
+This is the same structure as the slow-rotation limit of the Kerr metric in Boyer-Lindquist coordinates. At leading order in both \(\Sigma\) and \(J\), the two metrics agree term by term. The scalar sector matches at 1PN (as established in Section 5.4 and Appendix C), and the vector sector matches at the leading gravitomagnetic order.
 
 ### E.3 Frame-drag angular velocity and gyroscope precession
 

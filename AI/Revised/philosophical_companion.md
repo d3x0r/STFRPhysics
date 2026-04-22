@@ -10,7 +10,7 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-The homogeneous propagation framework recovers the standard kinematic and gravitational structures of modern physics from a propagation-first starting point. The technical papers develop the mathematics; this companion addresses the conceptual and philosophical content that those papers leave implicit. Three themes are developed. First, the framework's postulate structure is not static: later papers consume the assumptions of earlier ones, so that the set of irreducible presuppositions shrinks as the framework matures. This progression is traced explicitly. Second, the emergent status of Lorentz invariance — why instruments made of a single-speed medium cannot detect their own motion through it — is developed as a sustained narrative rather than a single-paragraph remark. Third, the framework's positions on several contested questions in the philosophy of physics — the existence of a preferred frame, the nature of time, the ontological status of spacetime geometry, and the explanatory direction from substrate to symmetry — are stated plainly rather than left scattered across technical derivations.
+The homogeneous propagation framework recovers the standard kinematic and gravitational structures of modern physics from a propagation-first starting point. The technical papers develop the mathematics; this companion addresses the conceptual and philosophical content that those papers leave implicit. Three themes are developed. First, the framework's postulate structure is not static: later papers consume the assumptions of earlier ones, so that the set of irreducible presuppositions shrinks as the framework matures. This progression is traced explicitly. Second, the emergent status of Lorentz invariance — why instruments made of a single-speed medium cannot detect their own motion through it — is developed as a sustained narrative rather than a single-paragraph remark. Third, the framework's positions on several contested questions in the philosophy of physics — the existence of a preferred frame, the nature of time, the ontological status of spacetime geometry, and the explanatory direction from substrate to symmetry — are stated plainly rather than left scattered across technical derivations. These positions are organized into two tiers: the ontological commitments the framework makes about what exists, and the consequences that follow from those commitments, including a no-invisible-hands corollary requiring that every apparent action at a distance reduce to a local imbalance in the mediating medium.
 
 ## 1. Introduction
 
@@ -184,9 +184,15 @@ If the fish tries to measure the current, it gets zero — because its ruler has
 The analogy is imperfect in an important way: a fish is not made of water, so in principle a fish could carry a non-hydrodynamic instrument (a sealed vacuum chamber, a gyroscope) that responds differently to the current than the water does. In this framework, there is no such escape. There is no medium other than the vacuum LC medium available to us. Every medium we have access to — air, water, crystal lattices, plasma — is itself an excitation pattern of the vacuum medium. There is no material from which to build an instrument that is not already constituted by the thing it would need to detect. The confinement is total, not approximate.
 
 
-## 5. Ontological commitments
+## 5. Ontological commitments and their consequences
 
-### 5.1 Neo-Lorentzian realism
+The framework is not ontologically neutral. It takes specific positions on what exists, what those things do, and what follows from that. This section states those positions plainly, organized into two tiers: the commitments the framework makes about the nature of the world, and the consequences that flow from them. The commitments are prior; the consequences inherit their force from the commitments rather than standing independently.
+
+### 5.1 Commitments
+
+Three foundational claims define what the framework asserts exists. Each is an ontological stance — a position on what is real rather than what is merely useful — and each departs from the standard picture in a specific and deliberate way. Together they constitute the substrate from which the consequences in 5.2 then follow.
+
+#### 5.1.1 Neo-Lorentzian realism
 
 The framework is neo-Lorentzian in its ontology. There exists a preferred frame — coordinate space — which carries the vacuum storage field and its associated propagation structure. This frame is not one inertial frame among equals; it is the frame in which the medium's storage properties are homogeneous and isotropic.
 
@@ -194,7 +200,7 @@ The reason this preferred frame is undetectable is not that it doesn't exist, bu
 
 This position is empirically indistinguishable from Einstein's relativity for all experiments conducted with medium-constituted instruments. The distinction is philosophical: it concerns the explanation of invariance, not its predictions. The framework predicts that Lorentz invariance holds exactly at all scales where the medium can be treated as continuous. It also predicts, as a matter of principle, that if the medium has discrete or structured microphysics at some scale, the continuum approximation could fail there, and Lorentz invariance with it. Whether that scale is physically accessible is a separate question.
 
-### 5.2 Presentism and the global now
+#### 5.1.2 Presentism and the global now
 
 The framework includes a coordinate-space reference clock that ticks at a constant rate, faster than any physical clock. All physical clocks tick slower because they are LC excitations whose cycling cost is at least as large as the rest-frame cost, and any motion through the medium adds to it.
 
@@ -204,19 +210,33 @@ This is a strong claim, and it should not be understated. Standard special relat
 
 The framework does not claim that coordinate time is directly measurable. It claims that coordinate time is real and that physical clocks are imperfect (systematically slowed) images of it.
 
-### 5.3 Gravity as displacement, not curvature
+#### 5.1.3 Gravity as displacement, not curvature
 
 General relativity identifies gravity with the curvature of spacetime. The present framework identifies gravity with the displacement of the transport-supporting spatial structure. The structural analogy is close: in both cases, one sector describes how sources modify the stage, and another describes how motion proceeds on the modified stage. In Wheeler's summary: matter tells spacetime how to curve, and curved spacetime tells matter how to move. The present framework's version: mass tells space how to displace, and displaced space tells mass how to move.
 
 The key difference is that displacement is a deformation of a pre-existing flat structure, not a curvature of a dynamical manifold. The coordinate grid remains flat; the transport structure is shoved relative to it. The resulting effective geometry is what excitations see when they propagate through the displaced transport, and it reproduces the standard weak-field observational predictions. But the underlying ontology is different: there is a flat background, and gravity is a medium effect upon it.
 
-### 5.4 Symmetries as consequences, not axioms
+### 5.2 Consequences
+
+Given the commitments of 5.1, certain positions follow — not as additional assumptions but as things that must be true if the medium is real, local, and the sole substrate of physical phenomena. These consequences do philosophical work in both directions: they entail positive claims about how interactions operate, and they provide rejection criteria for mechanisms that cannot meet the locality requirement.
+
+#### 5.2.1 Symmetries as consequences, not axioms
 
 Standard modern physics tends to begin from symmetries — Lorentz invariance, gauge invariance, diffeomorphism invariance — and derive dynamics from the requirement that the laws respect those symmetries. The present framework inverts that explanatory direction. It begins from a substrate with specific properties and derives the symmetries as emergent features of instruments made from that substrate.
 
 This inversion has a concrete consequence: the derived symmetries have a domain of validity. They hold wherever the medium can be treated as continuous, homogeneous, and isotropic. They need not hold at scales where the medium's microphysics matters, or in regimes where the displacement is so extreme that the transport structure can no longer be treated perturbatively. The symmetries are robust and exact within their domain, but they are not axioms that constrain every possible physical situation.
 
-### 5.5 Same weak-field numbers, different causal assignment
+#### 5.2.2 No invisible hands
+
+Every apparent attraction, force, or action at a distance must reduce to a local imbalance in the mediating medium. There are no invisible hands — only gradients seeking equilibrium through a substrate that is always present.
+
+This is not an additional postulate but a corollary of the commitments in 5.1. If the vacuum medium is real and all physical phenomena are what that medium does, then every apparent interaction between separated bodies must trace to something local: a displacement gradient, a storage imbalance between the capacitive and inductive modes, a propagation-speed differential. What looks like attraction is always the medium locally equilibrating an asymmetry. Gravity is the medium responding to a displacement imbalance. The electric force is the medium responding to a voltage imbalance — an asymmetry in the capacitive storage mode ($\varepsilon_0$, susceptance). The magnetic force responds to a current imbalance — an asymmetry in the inductive storage mode ($\mu_0$, reactance). In each case the apparent reach across distance is the medium doing local bookkeeping, not a force transmitted by nothing through nothing.
+
+"Pulling" is never primitive. The hand is never invisible because the medium is always there.
+
+The corollary does negative work as well as positive. Any proposed mechanism that cannot identify the specific local imbalance being equilibrated has not explained the phenomenon — it has renamed it. Newton was honest about this gap; he could describe gravity's behavior precisely while acknowledging he had no mechanism for it. The framework closes that gap by construction: the displacement is present, the gradient is local, and the excitation follows the gradient because propagation through a displaced medium is cheaper in one direction than the other. No reach. No pull. No invisible hand.
+
+#### 5.2.3 Same weak-field numbers, different causal assignment
 
 A recurring misunderstanding is that if the framework reproduces the weak-field numerical predictions of general relativity, then it must be merely general relativity in different words. That does not follow. Agreement on the leading weak-field values does not by itself fix the causal assignment within the calculation. The framework matches the standard observables in several places while assigning them to different physical structures.
 

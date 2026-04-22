@@ -243,7 +243,7 @@ The relevant quantity for an actual light ray is the **realized propagation cost
 \Sigma(r)=\frac{d^2}{2r}=\frac{GM}{C^2 r}.
 \]
 
-A purely timing-side treatment would assign an index \(n(r)=1+\Sigma(r)\) and recover only the Soldner/Newtonian half-deflection. In the present framework, however, the gravitational modification is Type G: both \(\varepsilon_0\) and \(\mu_0\) scale together. That produces two equal burdens along the path. First, the propagation rate is reduced by the local timing burden, giving a factor \((1+\Sigma)\). Second, the same displacement stretches the traversed transport medium, giving an equal spatial burden \((1+\Sigma)\). The realized cost per coordinate length is therefore
+A purely timing-side treatment would assign an index \(n(r)=1+\Sigma(r)\) and recover only the Soldner/Newtonian half-deflection. In the present framework, however, the gravitational modification scales both \(\varepsilon_0\) and \(\mu_0\) together. That produces two equal burdens along the path. First, the propagation rate is reduced by the local timing burden, giving a factor \((1+\Sigma)\). Second, the same displacement stretches the traversed transport medium, giving an equal spatial burden \((1+\Sigma)\). The realized cost per coordinate length is therefore
 
 \[
 n_{\mathrm{eff}}(r)=(1+\Sigma(r))^2 \approx 1+2\Sigma(r)=1+\frac{d^2}{r}.
@@ -279,7 +279,7 @@ where \(D_l\), \(D_s\), and \(D_{ls}\) are the observer-lens, observer-source, a
 
 The parameterized post-Newtonian parameter \(\gamma\) measures the degree to which spatial geometry is deformed per unit mass. It enters three observational predictions: light deflection is proportional to \((1+\gamma)/2\), the Shapiro delay is proportional to \((1+\gamma)/2\), and perihelion precession depends on \((2+2\gamma-\beta)/3\). In general relativity, \(\gamma=1\) exactly.
 
-In this framework, \(\gamma=1\) is not a fitted value but a structural consequence of how displacement modifies the vacuum storage medium. The displacement field scales both \(\varepsilon_0\) and \(\mu_0\) by the same factor — what the companion dynamics paper calls a Type G (gravitational) modification. This symmetric scaling leaves the vacuum impedance \(Z_0=\sqrt{\mu_0/\varepsilon_0}\) unchanged while modifying the propagation speed and storage density equally in all directions. The equal treatment of the two storage modes is what produces \(\gamma=1\): there is no mechanism within the framework for spatial deformation to differ from temporal deformation at leading post-Newtonian order.
+In this framework, \(\gamma=1\) is not a fitted value but a structural consequence of how displacement modifies the vacuum storage medium. The displacement field scales both \(\varepsilon_0\) and \(\mu_0\) by the same factor. This symmetric scaling leaves the vacuum impedance \(Z_0=\sqrt{\mu_0/\varepsilon_0}\) unchanged while modifying the propagation speed and storage density equally in all directions. The equal treatment of the two storage modes is what produces \(\gamma=1\): there is no mechanism within the framework for spatial deformation to differ from temporal deformation at leading post-Newtonian order.
 
 The best current constraint on \(\gamma\) comes from the Cassini spacecraft's superior conjunction in 2003. The measurement tracked the two-way coherent frequency shift of a radio signal passing near the Sun, extracting the time-varying Shapiro delay as the impact parameter changed over several days. The result was \(\gamma-1=(2.1\pm2.3)\times10^{-5}\), consistent with \(\gamma=1\).
 
