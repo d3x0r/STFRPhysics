@@ -617,11 +617,11 @@ $$
 \boxed{h \approx \frac{\pi}{2}\, r_0\, m_p\, c^3 \approx \frac{\pi}{2}\, \frac{r_0^4}{(\varepsilon_0\mu_0)^{3/2}}}
 $$
 
-Using $r_0 \approx 1.2\times10^{-15}$ m reproduces $h \approx 6.626\times10^{-34}$ J·s.
+Using $r_0 \approx 1.2\times10^{-15}$ m places the estimate numerically near the observed value of $h$ (about $6.626\times10^{-34}$ J·s).
 
-The point of the expression is not merely that it gives the right order of magnitude. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
+The point of the expression is not merely that it lands in the right ballpark. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
 
-Both $h$ and $G$ now emerge from the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. No external quantum constant is inserted. What remains open is not whether the factorization can be written, but why the support scale and closure amplitude take the values they do.
+Both $h$ and $G$ can now be written against the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. The remaining open question is not whether that factorization can be written, but why the support scale and closure amplitude take the values they do.
 
 ---
 
@@ -685,12 +685,12 @@ This is **pure Farads** — the natural capacitance of one support volume. No $c
 The charge at unit voltage is then:
 
 $$
-e \sim C_{\text{nat}} \times 1\,\text{V} = \varepsilon_0\, A_v\, r_0^3 \times 1\,\text{V} \quad [\text{Coulombs}]
+e_{\rm est} \sim C_{\text{nat}} \times 1\,\text{V} = \varepsilon_0\, A_v\, r_0^3 \times 1\,\text{V} \quad [\text{Coulombs}]
 $$
 
-Numerically: $C_{\text{nat}} = 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}$.
+Numerically this places the estimate in the same broad ballpark as the observed charge, but still far from a closed derivation. The support capacitance comes out as $C_{\text{nat}} = 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}$.
 
-The gap between this and $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, the rest energy of the proton expressed as a potential across one electron charge. Deriving this internal voltage from the closure geometry is the remaining open step for the charge factorization.
+The remaining gap between that estimate and the observed $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, the rest energy of the proton expressed as a potential across one electron charge. Deriving this internal voltage from the closure geometry is the remaining open step for the charge factorization.
 
 This is the point at which the charge section becomes sharply posed rather than fully closed. The support volume and the electric-side capacitance are already in hand. What is still missing is the dynamical closure statement that fixes the realized internal field amplitude. In other words: the geometric container is identified, but the excitation-level filling rule is not yet fully derived.
 

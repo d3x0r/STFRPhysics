@@ -204,11 +204,11 @@ This position is empirically indistinguishable from Einstein's relativity for al
 
 The framework includes a coordinate-space reference clock that ticks at a constant rate, faster than any physical clock. All physical clocks tick slower because they are LC excitations whose cycling cost is at least as large as the rest-frame cost, and any motion through the medium adds to it.
 
-This structure supports a form of presentism. The universe exists as a spatial manifold of states at each coordinate-time moment. Events that are spatially separated but coordinate-simultaneous are genuinely simultaneous — they co-exist in the same state of the manifold. The relativity of simultaneity, in this reading, is not an ontological fact about time but an observational consequence of clock-field offsets induced by motion through the medium.
+This structure supports a form of presentism. The universe exists as a spatial manifold of states at each coordinate-time moment. Events that are spatially separated yet share the same coordinate-time value are, in this reading, genuinely simultaneous: they belong to the same global state of the manifold. The relativity of simultaneity is therefore not taken as an ontological fact about time itself, but as an observational consequence of motion-dependent clock-field offsets within the medium.
 
 This is a strong claim, and it should not be understated. Standard special relativity treats the relativity of simultaneity as a discovery about the nature of time itself — there is no objective "now" that extends across space. The block universe follows: past, present, and future all exist equally, and the distinction between them is observer-dependent. The present framework denies this. It says the distinction between past and future is real, that the global now is a feature of the coordinate-time structure, and that the appearance of relative simultaneity is an artifact of how medium-constituted clocks synchronize.
 
-The framework does not claim that coordinate time is directly measurable. It claims that coordinate time is real and that physical clocks are imperfect (systematically slowed) images of it.
+This is an ontological claim about the framework's underlying time structure, not a claim that coordinate time is directly readable from ordinary physical clocks. Physical clocks are medium-constituted processes and therefore systematically slowed images of the deeper coordinate-time ordering.
 
 #### 5.1.3 Gravity as displacement, not curvature
 
@@ -222,19 +222,17 @@ Given the commitments of 5.1, certain positions follow — not as additional ass
 
 #### 5.2.1 Symmetries as consequences, not axioms
 
-Standard modern physics tends to begin from symmetries — Lorentz invariance, gauge invariance, diffeomorphism invariance — and derive dynamics from the requirement that the laws respect those symmetries. The present framework inverts that explanatory direction. It begins from a substrate with specific properties and derives the symmetries as emergent features of instruments made from that substrate.
+Standard modern physics tends to begin from symmetries — Lorentz invariance, gauge invariance, diffeomorphism invariance — and derive dynamics from the requirement that the laws respect those symmetries. The present framework reverses that explanatory order. It begins from a substrate with definite properties and asks what measurement structure and dynamical regularities follow for observers and instruments constituted by that substrate.
 
-This inversion has a concrete consequence: the derived symmetries have a domain of validity. They hold wherever the medium can be treated as continuous, homogeneous, and isotropic. They need not hold at scales where the medium's microphysics matters, or in regimes where the displacement is so extreme that the transport structure can no longer be treated perturbatively. The symmetries are robust and exact within their domain, but they are not axioms that constrain every possible physical situation.
+On this reading, Lorentz symmetry is not a primitive demand placed on the theory in advance. It is an emergent observational structure recovered from the behavior of medium-constituted rods, clocks, and signals. The point is not that symmetry is approximate or dispensable, but that within this framework it is explained rather than postulated.
 
 #### 5.2.2 No invisible hands
 
-Every apparent attraction, force, or action at a distance must reduce to a local imbalance in the mediating medium. There are no invisible hands — only gradients seeking equilibrium through a substrate that is always present.
+Every apparent attraction, force, or action at a distance must reduce to a local imbalance in the mediating medium. There are no invisible hands.
 
-This is not an additional postulate but a corollary of the commitments in 5.1. If the vacuum medium is real and all physical phenomena are what that medium does, then every apparent interaction between separated bodies must trace to something local: a displacement gradient, a storage imbalance between the capacitive and inductive modes, a propagation-speed differential. What looks like attraction is always the medium locally equilibrating an asymmetry. Gravity is the medium responding to a displacement imbalance. The electric force is the medium responding to a voltage imbalance — an asymmetry in the capacitive storage mode ($\varepsilon_0$, susceptance). The magnetic force responds to a current imbalance — an asymmetry in the inductive storage mode ($\mu_0$, reactance). In each case the apparent reach across distance is the medium doing local bookkeeping, not a force transmitted by nothing through nothing.
+This is not an additional postulate but a corollary of the commitments in 5.1. If the vacuum medium is real and all physical phenomena are what that medium does, then every apparent interaction between separated bodies must trace to something local: a displacement gradient, a storage asymmetry, or a propagation-cost differential. What looks like attraction is always the local response of the medium to an imbalance, not a primitive reach across emptiness.
 
-"Pulling" is never primitive. The hand is never invisible because the medium is always there.
-
-The corollary does negative work as well as positive. Any proposed mechanism that cannot identify the specific local imbalance being equilibrated has not explained the phenomenon — it has renamed it. Newton was honest about this gap; he could describe gravity's behavior precisely while acknowledging he had no mechanism for it. The framework closes that gap by construction: the displacement is present, the gradient is local, and the excitation follows the gradient because propagation through a displaced medium is cheaper in one direction than the other. No reach. No pull. No invisible hand.
+The corollary does negative work as well as positive. Any proposed mechanism that cannot identify the specific local imbalance being equilibrated has not explained the phenomenon — it has redescribed it. Newton was honest about this gap; he could describe gravity's behavior precisely while acknowledging he had no mechanism for it. The framework closes that gap by construction: the displacement is present, the gradient is local, and the excitation follows the gradient because propagation through a displaced medium is cheaper in one direction than the other. No reach. No pull. No invisible hand.
 
 #### 5.2.3 Same weak-field numbers, different causal assignment
 
