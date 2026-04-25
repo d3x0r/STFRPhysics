@@ -193,7 +193,7 @@ function getCurrentAngles(dt){
   return{ry:baseRotY*Math.PI/180+rad*Math.cos(orbitAngle),rx:baseTiltX*Math.PI/180+rad*Math.sin(orbitAngle)};
 }
 
-const C_SPEED=1.8;
+const C_SPEED=0.5;
 let photonPos=0,lastTime=null;
 let segs=buildAll(dVal);
 
