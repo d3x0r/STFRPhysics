@@ -1,0 +1,274 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#1e1e1e;}
+#root{background:#1e1e1e;padding:0.5rem 0 0.75rem;display:flex;flex-direction:column;gap:0;}
+canvas{display:block;width:100%;}
+.ctrl{display:flex;align-items:center;gap:10px;margin:4px 0;font-size:13px;color:#aaa;}
+.ctrl label{min-width:150px;color:#aaa;}
+.ctrl input[type=range]{flex:1;}
+.ctrl span{min-width:48px;text-align:right;font-size:13px;font-weight:500;color:#eee;}
+.panel{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
+.info-box{background:#2a2a2a;border:0.5px solid #444;border-radius:var(--border-radius-md);padding:9px 13px;font-size:12px;color:#aaa;min-width:150px;flex:1;}
+.info-box strong{display:block;font-size:13px;font-weight:500;margin-bottom:3px;}
+.info-box .sub{font-size:11px;color:#777;margin-top:2px;}
+.tick-bar{height:7px;border-radius:4px;background:#444;margin-top:5px;overflow:hidden;}
+.tick-fill{height:100%;border-radius:4px;}
+.orbit-row{display:flex;align-items:center;gap:12px;margin:6px 0;padding:7px 10px;background:#2a2a2a;border:0.5px solid #444;border-radius:var(--border-radius-md);flex-wrap:wrap;}
+.orbit-row label{font-size:13px;color:#aaa;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.toggle-track{position:relative;width:32px;height:18px;background:#444;border-radius:9px;transition:background .2s;display:inline-block;flex-shrink:0;}
+.toggle-track:has(input:checked){background:#1D9E75;}
+#orbit-toggle:checked+span{transform:translateX(14px);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none;}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+</style>
+<h2 class="sr-only">3D displacement grid with camera orbit and three clocks showing time dilation.</h2>
+
+<div id="root">
+  <canvas id="cv" style="border-radius:var(--border-radius-md);border:0.5px solid #444;background:#1e1e1e;"></canvas>
+  <div style="padding:4px 0;margin-top:6px;">
+    <div class="ctrl"><label>Displacement d (mass)</label><input type="range" id="sl-d" min="0" max="3" step="0.02" value="0.6"><span id="lbl-d">0.60</span></div>
+    <div class="ctrl"><label>Clock position r</label><input type="range" id="sl-r" min="1" max="5" step="0.05" value="1.5"><span id="lbl-r">1.50</span></div>
+    <div class="ctrl"><label>Rotation Y</label><input type="range" id="sl-rot" min="0" max="360" value="75" step="1"><span id="lbl-rot">75°</span></div>
+    <div class="ctrl"><label>Tilt X</label><input type="range" id="sl-tilt" min="-30" max="75" value="-5" step="1"><span id="lbl-tilt">-5°</span></div>
+    <div class="orbit-row">
+      <label><span class="toggle-track"><input type="checkbox" id="orbit-toggle" checked style="position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0;"><span class="toggle-thumb"></span></span>Orbit camera</label>
+      <div class="ctrl" style="flex:1;margin:0;"><label style="min-width:100px;">Orbit radius</label><input type="range" id="sl-orbit" min="1" max="30" step="0.5" value="5"><span id="lbl-orbit">5°</span></div>
+      <div class="ctrl" style="flex:1;margin:0;"><label style="min-width:80px;">Orbit speed</label><input type="range" id="sl-speed" min="0.05" max="2.0" step="0.05" value="1.0"><span id="lbl-speed">1.00×</span></div>
+    </div>
+  </div>
+  <div class="panel" style="padding-bottom:4px;">
+    <div class="info-box">
+      <strong style="color:#378ADD;">Blue — coordinate clock</strong>
+      <div>Undilated reference. One tick = one photon round-trip at c.</div>
+      <div class="sub">Height H. Flat coordinate time — what a clock reads far from all mass.</div>
+      <div class="tick-bar"><div class="tick-fill" id="fill-c" style="background:#378ADD;width:50%;"></div></div>
+    </div>
+    <div class="info-box">
+      <strong style="color:#1D9E75;">Green — 3× dilated reference</strong>
+      <div>Same photon speed c, clock is 3× taller. One tick takes 3× as long.</div>
+      <div class="sub">Fixed visual ruler — shows what 3:1 time dilation looks like.</div>
+      <div class="tick-bar"><div class="tick-fill" id="fill-g" style="background:#1D9E75;width:50%;"></div></div>
+    </div>
+    <div class="info-box">
+      <strong style="color:#D85A30;">Orange — displaced clock</strong>
+      <div>At grid point r, inside the displacement field. Clock stretched by 1+Σ(r).</div>
+      <div class="sub" id="txt-rate2">Photon travels further per tick — real gravitational time dilation.</div>
+      <div class="tick-bar"><div class="tick-fill" id="fill-d" style="background:#D85A30;width:50%;"></div></div>
+    </div>
+    <div class="info-box">
+      <strong style="color:#eee;">Field at r</strong>
+      <div id="txt-sigma" style="margin-top:3px;"></div>
+      <div id="txt-Dv" style="margin-top:3px;"></div>
+      <div id="txt-cr" style="margin-top:3px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),BG='#1e1e1e';
+let W=660,H=430;
+function resizeCanvas(){
+  const dpr=window.devicePixelRatio||1,cssW=cv.parentElement.clientWidth,cssH=cssW*(430/660);
+  cv.width=Math.round(cssW*dpr);cv.height=Math.round(cssH*dpr);
+  cv.style.width=cssW+'px';cv.style.height=cssH+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);W=cssW;H=cssH;
+}
+resizeCanvas();
+const ro=new ResizeObserver(()=>{resizeCanvas();segs=buildAll(dVal);});
+ro.observe(cv.parentElement);
+
+const OBOX=0.25,GRID_N=5,SUB=10,HB=0.18;
+let dVal=0.6,rSlider=1.5,baseRotY=75,baseTiltX=-5;
+let orbitOn=true,orbitRadius=5,orbitSpeed=1.0,orbitAngle=0;
+
+function D_factor(r,d){if(r<1e-9)return 1;return Math.sqrt(r*r+d*d)/r;}
+function Sigma(r,d){if(r<1e-9)return 0;return(d*d)/(2*r);}
+function clockRate(r,d){return 1/(1+Sigma(r,d));}
+function dp(x,y,z,d){const r=Math.sqrt(x*x+y*y+z*z);if(r<1e-9)return[0,0,0];const f=D_factor(r,d);return[x*f,y*f,z*f];}
+function tColor(r_mid,d){return Math.min(Math.max((D_factor(r_mid,d)-1)*1.2,0),1);}
+
+function rawSeg(segs,ax,ay,az,bx,by,bz,d){
+  const r_mid=Math.sqrt(((ax+bx)/2)**2+((ay+by)/2)**2+((az+bz)/2)**2);
+  segs.push({a:dp(ax,ay,az,d),b:dp(bx,by,bz,d),t:tColor(r_mid,d)});
+}
+function curveSeg(segs,x0,y0,z0,x1,y1,z1,N,d){
+  for(let s=0;s<N;s++){
+    const ta=s/N,tb=(s+1)/N;
+    rawSeg(segs,x0+ta*(x1-x0),y0+ta*(y1-y0),z0+ta*(z1-z0),
+                x0+tb*(x1-x0),y0+tb*(y1-y0),z0+tb*(z1-z0),d);
+  }
+}
+
+// Blue→red with 50% alpha on the red end
+function lerpColor(t){
+  const r=Math.round(55+t*165),g=Math.round(138-t*98),b=Math.round(221-t*181);
+  // alpha: 1.0 at t=0 (blue/undisplaced), 0.5 at t=1 (red/max displaced)
+  const a=(1.0 - t*0.5).toFixed(2);
+  return`rgba(${r},${g},${b},${a})`;
+}
+
+function buildAll(d){
+  const segs=[];
+  const s=OBOX;
+  function be(x0,y0,z0,x1,y1,z1){curveSeg(segs,x0,y0,z0,x1,y1,z1,SUB,d);}
+  // origin box outer 12 edges
+  be(-s,-s,-s,s,-s,-s);be(s,-s,-s,s,-s,s);be(s,-s,s,-s,-s,s);be(-s,-s,s,-s,-s,-s);
+  be(-s,s,-s,s,s,-s);be(s,s,-s,s,s,s);be(s,s,s,-s,s,s);be(-s,s,s,-s,s,-s);
+  be(-s,-s,-s,-s,s,-s);be(s,-s,-s,s,s,-s);be(s,-s,s,s,s,s);be(-s,-s,s,-s,s,s);
+  // face seam edges
+  be(s,-s,0,s,s,0);be(s,0,-s,s,0,s);
+  be(-s,-s,0,-s,s,0);be(-s,0,-s,-s,0,s);
+  be(0,s,-s,0,s,s);be(-s,s,0,s,s,0);
+  be(0,-s,-s,0,-s,s);be(-s,-s,0,s,-s,0);
+  be(-s,0,s,s,0,s);be(0,-s,s,0,s,s);
+  be(-s,0,-s,s,0,-s);be(0,-s,-s,0,s,-s);
+
+  const innerV=[-1,0,1];
+  function innerLine(x0,y0,z0,x1,y1,z1){
+    const onX=(Math.abs(y0)<1e-9&&Math.abs(z0)<1e-9&&Math.abs(y1)<1e-9&&Math.abs(z1)<1e-9);
+    const onY=(Math.abs(x0)<1e-9&&Math.abs(z0)<1e-9&&Math.abs(x1)<1e-9&&Math.abs(z1)<1e-9);
+    const onZ=(Math.abs(x0)<1e-9&&Math.abs(y0)<1e-9&&Math.abs(x1)<1e-9&&Math.abs(y1)<1e-9);
+    if(onX){const lo=Math.min(x0,x1),hi=Math.max(x0,x1);if(hi<=-OBOX||lo>=OBOX)curveSeg(segs,x0,0,0,x1,0,0,SUB,d);else if(lo<-OBOX)curveSeg(segs,lo,0,0,-OBOX,0,0,SUB,d);else if(hi>OBOX)curveSeg(segs,OBOX,0,0,hi,0,0,SUB,d);return;}
+    if(onY){const lo=Math.min(y0,y1),hi=Math.max(y0,y1);if(hi<=-OBOX||lo>=OBOX)curveSeg(segs,0,y0,0,0,y1,0,SUB,d);else if(lo<-OBOX)curveSeg(segs,0,lo,0,0,-OBOX,0,SUB,d);else if(hi>OBOX)curveSeg(segs,0,OBOX,0,0,hi,0,SUB,d);return;}
+    if(onZ){const lo=Math.min(z0,z1),hi=Math.max(z0,z1);if(hi<=-OBOX||lo>=OBOX)curveSeg(segs,0,0,z0,0,0,z1,SUB,d);else if(lo<-OBOX)curveSeg(segs,0,0,lo,0,0,-OBOX,SUB,d);else if(hi>OBOX)curveSeg(segs,0,0,OBOX,0,0,hi,SUB,d);return;}
+    curveSeg(segs,x0,y0,z0,x1,y1,z1,SUB,d);
+  }
+  for(const iy of innerV)for(const iz of innerV)for(const ix of[-1,0])innerLine(ix,iy,iz,ix+1,iy,iz);
+  for(const ix of innerV)for(const iz of innerV)for(const iy of[-1,0])innerLine(ix,iy,iz,ix,iy+1,iz);
+  for(const ix of innerV)for(const iy of innerV)for(const iz of[-1,0])innerLine(ix,iy,iz,ix,iy,iz+1);
+
+  function outerSeg(ax,ay,az,bx,by,bz){rawSeg(segs,ax,ay,az,bx,by,bz,d);}
+  for(let iy=-GRID_N;iy<=GRID_N;iy++)for(let iz=-GRID_N;iz<=GRID_N;iz++){if(Math.abs(iy)<=1&&Math.abs(iz)<=1)continue;for(let ix=-GRID_N;ix<GRID_N;ix++)outerSeg(ix,iy,iz,ix+1,iy,iz);}
+  for(let ix=-GRID_N;ix<=GRID_N;ix++)for(let iz=-GRID_N;iz<=GRID_N;iz++){if(Math.abs(ix)<=1&&Math.abs(iz)<=1)continue;for(let iy=-GRID_N;iy<GRID_N;iy++)outerSeg(ix,iy,iz,ix,iy+1,iz);}
+  for(let ix=-GRID_N;ix<=GRID_N;ix++)for(let iy=-GRID_N;iy<=GRID_N;iy++){if(Math.abs(ix)<=1&&Math.abs(iy)<=1)continue;for(let iz=-GRID_N;iz<GRID_N;iz++)outerSeg(ix,iy,iz,ix,iy,iz+1);}
+  for(const iy of innerV)for(let iz=-GRID_N;iz<=GRID_N;iz++){if(Math.abs(iz)<=1)continue;for(let ix=-GRID_N;ix<GRID_N;ix++)outerSeg(ix,iy,iz,ix+1,iy,iz);}
+  for(let iy=-GRID_N;iy<=GRID_N;iy++)for(const iz of innerV){if(Math.abs(iy)<=1)continue;for(let ix=-GRID_N;ix<GRID_N;ix++)outerSeg(ix,iy,iz,ix+1,iy,iz);}
+  for(const ix of innerV)for(let iz=-GRID_N;iz<=GRID_N;iz++){if(Math.abs(iz)<=1)continue;for(let iy=-GRID_N;iy<GRID_N;iy++)outerSeg(ix,iy,iz,ix,iy+1,iz);}
+  for(let ix=-GRID_N;ix<=GRID_N;ix++)for(const iz of innerV){if(Math.abs(ix)<=1)continue;for(let iy=-GRID_N;iy<GRID_N;iy++)outerSeg(ix,iy,iz,ix,iy+1,iz);}
+  for(const ix of innerV)for(let iy=-GRID_N;iy<=GRID_N;iy++){if(Math.abs(iy)<=1)continue;for(let iz=-GRID_N;iz<GRID_N;iz++)outerSeg(ix,iy,iz,ix,iy,iz+1);}
+  for(let ix=-GRID_N;ix<=GRID_N;ix++)for(const iy of innerV){if(Math.abs(ix)<=1)continue;for(let iz=-GRID_N;iz<GRID_N;iz++)outerSeg(ix,iy,iz,ix,iy,iz+1);}
+  return segs;
+}
+
+function makeTransform(ry,rx){
+  const cry=Math.cos(ry),sry=Math.sin(ry),crx=Math.cos(rx),srx=Math.sin(rx);
+  const FOCAL=W*0.636,SCALE=W*0.0697;
+  return function(x,y,z){
+    let x1=x*cry+z*sry,y1=y,z1=-x*sry+z*cry;
+    let x2=x1,y2=y1*crx-z1*srx,z2=y1*srx+z1*crx;
+    const depth=FOCAL+z2*SCALE;
+    return{px:W/2+(x2*SCALE*FOCAL)/depth,py:H/2-(y2*SCALE*FOCAL)/depth,depth};
+  };
+}
+
+function drawClockBox(proj,wx,wy,wz,hw,hh,hd,col){
+  const c=[[wx-hw,wy-hh,wz-hd],[wx+hw,wy-hh,wz-hd],[wx+hw,wy+hh,wz-hd],[wx-hw,wy+hh,wz-hd],
+           [wx-hw,wy-hh,wz+hd],[wx+hw,wy-hh,wz+hd],[wx+hw,wy+hh,wz+hd],[wx-hw,wy+hh,wz+hd]]
+    .map(p=>proj(p[0],p[1],p[2]));
+  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.globalAlpha=0.9;
+  for(const[i,j]of[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]]){
+    ctx.beginPath();ctx.moveTo(c[i].px,c[i].py);ctx.lineTo(c[j].px,c[j].py);ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+function drawPhoton(proj,wx,wy,wz,col){
+  const p=proj(wx,wy,wz);
+  ctx.beginPath();ctx.arc(p.px,p.py,4.5,0,Math.PI*2);ctx.fillStyle=col;ctx.globalAlpha=1;ctx.fill();
+  ctx.beginPath();ctx.arc(p.px,p.py,7.5,0,Math.PI*2);ctx.fillStyle=col;ctx.globalAlpha=0.25;ctx.fill();
+  ctx.globalAlpha=1;
+}
+
+function updateReadouts(){
+  const r=rSlider,sig=Sigma(r,dVal),Dv=D_factor(r,dVal),cr=clockRate(r,dVal);
+  document.getElementById('txt-sigma').textContent=`Σ = d²/2r = ${sig.toFixed(3)}`;
+  document.getElementById('txt-Dv').textContent=`D(r,d) = ${Dv.toFixed(3)}`;
+  document.getElementById('txt-cr').textContent=`clock rate = ${cr.toFixed(4)}`;
+  document.getElementById('txt-rate2').textContent=`Photon travels further per tick — rate = ${cr.toFixed(4)}, dilated ${((1-cr)*100).toFixed(2)}%`;
+}
+function getCurrentAngles(dt){
+  if(!orbitOn)return{ry:baseRotY*Math.PI/180,rx:baseTiltX*Math.PI/180};
+  orbitAngle+=orbitSpeed*dt*Math.PI*2*0.1;
+  const rad=orbitRadius*Math.PI/180;
+  return{ry:baseRotY*Math.PI/180+rad*Math.cos(orbitAngle),rx:baseTiltX*Math.PI/180+rad*Math.sin(orbitAngle)};
+}
+
+const C_SPEED=1.8;
+let photonPos=0,lastTime=null;
+let segs=buildAll(dVal);
+
+function draw(ts){
+  requestAnimationFrame(draw);
+  if(!lastTime)lastTime=ts;
+  const dt=Math.min((ts-lastTime)/1000,0.05);
+  lastTime=ts;
+  photonPos+=C_SPEED*dt;
+  ctx.fillStyle=BG;ctx.fillRect(0,0,W,H);
+
+  const{ry,rx}=getCurrentAngles(dt);
+  const proj=makeTransform(ry,rx);
+  if(orbitOn){
+    document.getElementById('lbl-rot').textContent=(((ry*180/Math.PI)%360+360)%360).toFixed(1)+'°';
+    document.getElementById('lbl-tilt').textContent=(rx*180/Math.PI).toFixed(1)+'°';
+  }
+
+  // Grid — lerpColor now returns rgba with alpha on the red end
+  const projected=segs.map(s=>{
+    const mx=(s.a[0]+s.b[0])/2,my=(s.a[1]+s.b[1])/2,mz=(s.a[2]+s.b[2])/2;
+    return{pa:proj(s.a[0],s.a[1],s.a[2]),pb:proj(s.b[0],s.b[1],s.b[2]),depth:proj(mx,my,mz).depth,t:s.t};
+  });
+  projected.sort((a,b)=>b.depth-a.depth);
+  ctx.globalAlpha=1;
+  for(const s of projected){
+    ctx.beginPath();ctx.moveTo(s.pa.px,s.pa.py);ctx.lineTo(s.pb.px,s.pb.py);
+    // alpha is baked into lerpColor rgba, but we still modulate line weight
+    ctx.strokeStyle=lerpColor(s.t);
+    ctx.globalAlpha=0.6;
+    ctx.lineWidth=0.7+s.t*1.7;
+    ctx.stroke();
+  }
+
+  // Origin dot
+  const op=proj(0,0,0);
+  ctx.beginPath();ctx.arc(op.px,op.py,5,0,Math.PI*2);
+  ctx.fillStyle='#cc3333';ctx.globalAlpha=0.95;ctx.fill();ctx.globalAlpha=1;
+
+  // Clocks — simple wireframe + photon, no faces
+  const Dv=D_factor(rSlider,dVal),cx_world=rSlider*Dv;
+  const cr=clockRate(rSlider,dVal),stretchDisp=Math.min(1/cr,8.0);
+  const halfH_blue=HB,halfH_green=HB*3,halfH_disp=HB*stretchDisp;
+  function bounceY(h){const f=(photonPos/h)%2;return f<1?-h+f*2*h:h-(f-1)*2*h;}
+  function barFrac(h){const f=(photonPos/h)%2;return f<1?f:2-f;}
+  document.getElementById('fill-c').style.width=(barFrac(halfH_blue)*100).toFixed(1)+'%';
+  document.getElementById('fill-g').style.width=(barFrac(halfH_green)*100).toFixed(1)+'%';
+  document.getElementById('fill-d').style.width=(barFrac(halfH_disp)*100).toFixed(1)+'%';
+
+  const clocks=[
+    {z:0.55, halfH:halfH_blue,  col:'#378ADD',photonCol:'#FCDE5A'},
+    {z:0.0,  halfH:halfH_green, col:'#1D9E75',photonCol:'#9FE1CB'},
+    {z:-0.55,halfH:halfH_disp,  col:'#D85A30',photonCol:'#FFEE88'},
+  ];
+  clocks.map(ck=>({...ck,depth:proj(cx_world,0,ck.z).depth}))
+    .sort((a,b)=>b.depth-a.depth)
+    .forEach(ck=>{
+      drawClockBox(proj,cx_world,0,ck.z,HB,ck.halfH,HB,ck.col);
+      drawPhoton(proj,cx_world,bounceY(ck.halfH),ck.z,ck.photonCol);
+    });
+
+  ctx.font=`${Math.round(W*0.0167)}px sans-serif`;
+  ctx.fillStyle='#cccccc';ctx.globalAlpha=0.9;
+  ctx.fillText('blue = coord (undilated) · green = 3× dilation reference · orange = displaced clock at r · dot = photon at c',10,H-10);
+  ctx.globalAlpha=1;
+}
+
+document.getElementById('sl-d').addEventListener('input',function(){dVal=+this.value;document.getElementById('lbl-d').textContent=dVal.toFixed(2);segs=buildAll(dVal);updateReadouts();});
+document.getElementById('sl-r').addEventListener('input',function(){rSlider=+this.value;document.getElementById('lbl-r').textContent=rSlider.toFixed(2);updateReadouts();});
+document.getElementById('sl-rot').addEventListener('input',function(){baseRotY=+this.value;document.getElementById('lbl-rot').textContent=baseRotY+'°';});
+document.getElementById('sl-tilt').addEventListener('input',function(){baseTiltX=+this.value;document.getElementById('lbl-tilt').textContent=baseTiltX+'°';});
+document.getElementById('orbit-toggle').addEventListener('change',function(){orbitOn=this.checked;orbitAngle=0;});
+document.getElementById('sl-orbit').addEventListener('input',function(){orbitRadius=+this.value;document.getElementById('lbl-orbit').textContent=orbitRadius+'°';});
+document.getElementById('sl-speed').addEventListener('input',function(){orbitSpeed=+this.value;document.getElementById('lbl-speed').textContent=orbitSpeed.toFixed(2)+'×';});
+
+updateReadouts();
+requestAnimationFrame(draw);
+</script>
