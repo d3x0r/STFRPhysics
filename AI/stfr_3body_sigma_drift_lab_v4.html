@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STFR 3-Body — Retarded Σ Displacement v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+  :root{--bg:#050810;--panel:#0a0f1e;--border:#1a2340;
+    --accent:#3af0c0;--accent2:#f0823a;--accent3:#8a3af0;
+    --text:#c8d8f0;--dim:#4a5878;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;
+    height:100vh;display:grid;
+    grid-template-rows:44px 1fr 28px;
+    grid-template-columns:1fr 260px;
+    grid-template-areas:"hdr hdr" "cv pnl" "st st";
+    overflow:hidden;}
+  header{grid-area:hdr;background:var(--panel);border-bottom:1px solid var(--border);
+    padding:0 16px;display:flex;align-items:center;gap:14px;}
+  header h1{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;
+    color:var(--accent);letter-spacing:.06em;}
+  .sub{font-size:.55rem;color:var(--dim);letter-spacing:.08em;}
+  .ctrls{margin-left:auto;display:flex;gap:7px;align-items:center;}
+  .sp{display:flex;align-items:center;gap:5px;font-size:.58rem;color:var(--dim);}
+  .sp input{width:60px;accent-color:var(--accent);}
+  button{background:transparent;border:1px solid var(--accent);color:var(--accent);
+    font-family:'Space Mono',monospace;font-size:.6rem;padding:3px 10px;
+    cursor:pointer;letter-spacing:.03em;transition:all .15s;}
+  button:hover,button.on{background:var(--accent);color:var(--bg);}
+  button.dim{border-color:var(--border);color:var(--dim);}
+  button.dim:hover{border-color:var(--accent);color:var(--accent);background:transparent;}
+  #cv{grid-area:cv;position:relative;overflow:hidden;}
+  canvas{width:100%;height:100%;display:block;}
+  .pnl{grid-area:pnl;background:var(--panel);border-left:1px solid var(--border);
+    overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px;}
+  .sec h3{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:700;
+    color:var(--accent);letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--border);}
+  .row{display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:3px;font-size:.57rem;}
+  .row .lbl{color:var(--dim);}
+  .row .val{font-weight:700;}
+  .hi{color:var(--accent);}
+  .modes{display:flex;gap:4px;flex-wrap:wrap;}
+  .modes button{font-size:.52rem;padding:2px 7px;}
+  .presets{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+  .presets button{font-size:.5rem;padding:2px 6px;}
+  #st{grid-area:st;background:var(--panel);border-top:1px solid var(--border);
+    padding:0 16px;font-size:.55rem;color:var(--dim);display:flex;
+    align-items:center;gap:20px;}
+  #st span{color:var(--text);}
+  .note{font-size:.5rem;color:var(--dim);line-height:1.4;margin-top:4px;}
+  .tabs{display:flex;gap:4px;margin-bottom:4px;}
+  .tabs button{flex:1;font-size:.52rem;padding:3px 4px;}
+  .tabpane{display:none;}
+  .tabpane.on{display:flex;flex-direction:column;gap:10px;}
+  .minirow{display:grid;grid-template-columns:76px 1fr 40px;gap:5px;align-items:center;margin-bottom:4px;font-size:.52rem;}
+  .minirow label{color:var(--dim);}
+  .minirow input{width:100%;accent-color:var(--accent);}
+  .minirow .val{text-align:right;font-weight:700;color:var(--text);}
+  .diagbar{height:4px;background:var(--border);border-radius:3px;overflow:hidden;margin:2px 0 6px;}
+  .diagfill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent));width:0%;}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>STFR 3-BODY v2</h1>
+    <div class="sub">RK4 · RETARDED Σ GEODESIC · DEFORMATION FIELD</div>
+  </div>
+  <div class="ctrls">
+    <div class="sp"><span>SPEED</span>
+      <input type="range" id="spdSlider" min="1" max="300" value="80">
+      <span id="spdLbl">×80</span></div>
+    <div class="sp"><span>SCALE</span>
+      <input type="range" id="scaleSlider" min="1" max="100" value="50">
+      <span id="scaleLbl">x</span>
+    </div>
+    <button id="btnPause" class="on">PAUSE</button>
+    <button id="btnReset" class="dim">RESET</button>
+    <button id="btnFollow" class="on">FOLLOW</button>
+  </div>
+</header>
+
+<div id="cv"><canvas id="c"></canvas></div>
+
+<div class="pnl">
+  <div class="sec">
+    <h3>Gravity Mode</h3>
+    <div class="modes">
+      <button class="on" data-mode="retarded">PROJ RET Σ</button>
+      <button class="dim" data-mode="rawret">RAW RET Σ</button>
+      <button class="dim" data-mode="instant">INSTANT Σ</button>
+      <button class="dim" data-mode="newton">NEWTON</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3>Visualization</h3>
+    <div class="modes">
+      <button class="on" data-viz="field">Σ FIELD</button>
+      <button class="dim" data-viz="ellipses">ELLIPSES</button>
+      <button class="dim" data-viz="gradient">∇Σ FLOW</button>
+      <button class="dim" data-viz="none">NONE</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <span class="lbl">Field intensity</span>
+      <input type="range" id="fieldBright" min="1" max="200" value="60" style="width:80px;accent-color:var(--accent);">
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3>Light Speed (sim units)</h3>
+    <div class="row">
+      <span class="lbl">c =</span>
+      <input type="range" id="cSlider" min="5" max="200" value="40" style="width:100px;accent-color:var(--accent2);">
+      <span class="val" id="cVal">40</span>
+    </div>
+    <div class="note">Lower c exaggerates retardation. Raise for physical accuracy.</div>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-tab="binaryTab">BINARY LAB</button>
+    <button class="dim" data-tab="threeTab">3-BODY</button>
+  </div>
+
+  <div id="binaryTab" class="tabpane on">
+    <div class="sec">
+      <h3>Binary Lab</h3>
+      <div class="minirow"><label>Mass A</label><input type="range" id="binM1" min="0.1" max="20" step="0.1" value="1"><span class="val" id="binM1v">1.0</span></div>
+      <div class="minirow"><label>Mass B</label><input type="range" id="binM2" min="0.1" max="20" step="0.1" value="1"><span class="val" id="binM2v">1.0</span></div>
+      <div class="minirow"><label>a</label><input type="range" id="binA" min="0.2" max="8" step="0.05" value="1.2"><span class="val" id="binAv">1.20</span></div>
+      <div class="minirow"><label>ecc e</label><input type="range" id="binE" min="0" max="0.9" step="0.01" value="0.45"><span class="val" id="binEv">0.45</span></div>
+      <div class="minirow"><label>phase f</label><input type="range" id="binF" min="0" max="360" step="1" value="0"><span class="val" id="binFv">0°</span></div>
+      <div class="minirow"><label>angle ω</label><input type="range" id="binW" min="0" max="360" step="1" value="0"><span class="val" id="binWv">0°</span></div>
+      <div class="modes" style="margin-top:5px">
+        <button data-binpreset="circ">CIRC</button>
+        <button data-binpreset="ecc">ECC</button>
+        <button data-binpreset="ht">HULSE-ish</button>
+        <button data-binpreset="emri">10:1</button>
+      </div>
+      <div class="modes" style="margin-top:5px">
+        <button id="btnApplyBinary" class="on">APPLY BINARY</button>
+        <button id="btnAddThird" class="dim">+ THIRD</button>
+      </div>
+      <div class="note">Units are simulator units. Read masses/distances roughly as solar masses and AU if desired; the binary setup uses exact two-body ellipse initial conditions.</div>
+    </div>
+    <div class="sec">
+      <h3>Breathing Diagnostic</h3>
+      <div class="row"><span class="lbl">r separation</span><span class="val" id="binR">—</span></div>
+      <div class="row"><span class="lbl">μr² trace</span><span class="val hi" id="binQ">—</span></div>
+      <div class="diagbar"><div class="diagfill" id="qBar"></div></div>
+      <div class="row"><span class="lbl">radial speed ṙ</span><span class="val" id="binRdot">—</span></div>
+      <div class="row"><span class="lbl">trace rate dQ/dt</span><span class="val" id="binPulse">—</span></div>
+      <div class="row"><span class="lbl">trace accel d2Q/dt2</span><span class="val" id="binQ2">—</span></div>
+      <div class="row"><span class="lbl">trace jerk d3Q/dt3</span><span class="val hi" id="binQ3">—</span></div>
+      <div class="row"><span class="lbl">breath power proxy</span><span class="val" id="binBPow">—</span></div>
+      <div class="row"><span class="lbl">STF power proxy</span><span class="val" id="binSTFPow">—</span></div>
+      <div class="row"><span class="lbl">breath/STF ratio</span><span class="val hi" id="binBRatio">—</span></div>
+      <div class="row"><span class="lbl">completed avg ratio</span><span class="val" id="binBAvg">—</span></div>
+      <div class="row"><span class="lbl">completed peak ratio</span><span class="val" id="binBPeak">—</span></div>
+      <div class="row"><span class="lbl">completed ecc e</span><span class="val" id="binEMeas">—</span></div>
+      <div class="row"><span class="lbl">completed r min/max</span><span class="val" id="binRMinMax">—</span></div>
+      <div class="row"><span class="lbl">current window ecc</span><span class="val" id="binCurE">—</span></div>
+      <div class="row"><span class="lbl">current r min/max</span><span class="val" id="binCurRMinMax">—</span></div>
+      <div class="row"><span class="lbl">expected r min/max</span><span class="val" id="binRExpected">—</span></div>
+      <div class="row"><span class="lbl">STF motion proxy</span><span class="val" id="binSTF">—</span></div>
+    </div>
+
+    <div class="sec">
+      <h3>Eccentricity Sweep</h3>
+      <div class="modes" style="margin-bottom:5px">
+        <button id="btnESweep" class="dim">RUN e SWEEP</button>
+      </div>
+      <div class="note">One-orbit Kepler estimate using current masses and a. Compares trace third-derivative power to STF third-derivative power; this is a source-motion proxy, not a calibrated emitted-power law.</div>
+      <div id="eSweepOut" style="font-size:.52rem;line-height:1.45;margin-top:5px;color:var(--text)">—</div>
+    </div>
+  </div>
+
+  <div id="threeTab" class="tabpane">
+    <div class="sec">
+      <h3>Presets</h3>
+      <div class="presets">
+        <button data-preset="figure8">FIGURE-8</button>
+        <button data-preset="lagrange">LAGRANGE</button>
+        <button data-preset="hier">HIERARCHY</button>
+        <button data-preset="sling">SLINGSHOT</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="sec">
+    <h3>Drift Lab</h3>
+    <div class="modes" style="margin-bottom:5px">
+      <button id="btnGeom" class="on">GEOM ON</button>
+      <button id="btnDriftBase" class="dim">SET DRIFT BASE</button>
+      <button id="btnReverseVel" class="dim">REVERSE v</button>
+      <button id="btnResetHist" class="dim">RESET HISTORY</button>
+    </div>
+    <div class="row"><span class="lbl">velocity projection beta</span><input type="range" id="retVelBias" min="0" max="1.25" step="0.01" value="1" style="width:95px;accent-color:var(--accent2);"><span class="val" id="retVelBiasVal">1.00</span></div>
+    <div class="row"><span class="lbl">accel residual alpha</span><input type="range" id="retAccelBias" min="-1" max="1" step="0.02" value="0" style="width:95px;accent-color:var(--accent3);"><span class="val" id="retAccelBiasVal">0.00</span></div>
+    <div class="modes" style="margin-bottom:5px">
+      <button id="btnRetRaw" class="dim">RAW b0</button>
+      <button id="btnRetProj" class="dim">PROJ b1</button>
+      <button id="btnRetHalf" class="dim">+1/2 a</button>
+      <button id="btnRetNegHalf" class="dim">-1/2 a</button>
+    </div>
+    <div class="row"><span class="lbl">E drift/orbit</span><span class="val" id="driftEOrbit">—</span></div>
+    <div class="row"><span class="lbl">L drift/orbit</span><span class="val" id="driftLOrbit">—</span></div>
+    <div class="row"><span class="lbl">E roll min/max</span><span class="val" id="driftERollMinMax">—</span></div>
+    <div class="row"><span class="lbl">E roll mid +/- half</span><span class="val" id="driftERollMid">—</span></div>
+    <div class="row"><span class="lbl">L roll min/max</span><span class="val" id="driftLRollMinMax">—</span></div>
+    <div class="row"><span class="lbl">L roll mid +/- half</span><span class="val" id="driftLRollMid">—</span></div>
+    <div class="row"><span class="lbl">roll window</span><span class="val" id="driftRollWindow">—</span></div>
+    <div class="row"><span class="lbl">local E slope</span><span class="val" id="driftELocal">—</span></div>
+    <div class="row"><span class="lbl">local L slope</span><span class="val" id="driftLLocal">—</span></div>
+    <div class="row"><span class="lbl">CM drift</span><span class="val" id="driftCM">—</span></div>
+    <div class="row"><span class="lbl">binary a / e</span><span class="val" id="driftAE">—</span></div>
+    <div class="row"><span class="lbl">binary period</span><span class="val" id="driftPeriod">—</span></div>
+    <div class="row"><span class="lbl">completed fit μ</span><span class="val" id="driftMuFit">—</span></div>
+    <div class="row"><span class="lbl">μ fit / requested</span><span class="val" id="driftMuRatio">—</span></div>
+    <div class="row"><span class="lbl">baseline age</span><span class="val" id="driftAge">—</span></div>
+    <div class="note">Use NEWTON / INSTANT / RAW RET / PROJ RET with geometry on/off. beta blends raw retarded to velocity-projected source position. alpha adds 0.5*alpha*a*dt^2 from history-estimated source acceleration; try +/-0.5 to test half-frame bias. Reverse v intentionally keeps history unless reset.</div>
+  </div>
+
+  <div class="sec">
+    <h3>Runtime</h3>
+    <div class="row"><span class="lbl">frame gap avg/max</span><span class="val" id="rtFrameGap">—</span></div>
+    <div class="row"><span class="lbl">steps/frame avg/last</span><span class="val" id="rtStepsFrame">—</span></div>
+    <div class="row"><span class="lbl">stutter count</span><span class="val" id="rtStutters">—</span></div>
+    <div class="note">Flags browser stalls/render hiccups separately from physics. A stutter is any frame gap above 80 ms.</div>
+  </div>
+
+  <div class="sec">
+    <h3>Body Data</h3>
+    <div id="bodyInfo"></div>
+  </div>
+
+  <div class="sec">
+    <h3>Retardation</h3>
+    <div class="row"><span class="lbl">Max light delay</span><span class="val" id="maxDelay">—</span></div>
+    <div class="row"><span class="lbl">History buffer</span><span class="val" id="histLen">—</span></div>
+    <div class="row"><span class="lbl">ΔΣ (ret−inst)</span><span class="val hi" id="dSigma">—</span></div>
+  </div>
+
+  <div class="sec">
+    <h3>Integrator</h3>
+    <div class="row"><span class="lbl">Method</span><span class="val">RK4</span></div>
+    <div class="row"><span class="lbl">dt</span><span class="val" id="dtVal">—</span></div>
+    <div class="row"><span class="lbl">ΔE/E₀</span><span class="val" id="dE">—</span></div>
+  </div>
+
+  <div class="sec">
+    <h3>Physics</h3>
+    <div class="note">
+      <b style="color:var(--accent)">RETARDED Σ</b>: The displacement field
+      Σ(x,t) satisfies a wave equation at speed c. Each body's contribution
+      is evaluated at the retarded position — where light-cone intersection
+      places it. The field carries memory: the gradient at any point reflects
+      where sources <em>were</em>, not where they are.<br><br>
+      The retarded position is found by iterative fixed-point solve:
+      find t_ret such that |x_source(t_ret) − x_field| = c·(t − t_ret).
+    </div>
+  </div>
+</div>
+
+<div id="st">
+  <div>T: <span id="st0">—</span></div>
+  <div>Steps: <span id="st1">—</span></div>
+  <div>ΔE: <span id="st2">—</span></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// UNITS: G=1, masses~1, distances~1
+// ═══════════════════════════════════════════════════════════════
+const G_=1;
+let C_=40;
+const C2=()=>C_*C_;
+let retVelBias=1.0;      // beta: 0=raw retarded, 1=velocity-projected
+let retAccelBias=0.0;    // alpha: add 0.5*alpha*a_ret*delay^2
+
+let mode='retarded';
+let viz='field';
+let useGeomCorrection=true;
+let driftBase=null;
+let driftRoll=[];
+const DRIFT_ROLL_ORBITS=20;
+let rtLastFrameMs=null, rtFrameGapSum=0, rtFrameGapN=0, rtFrameGapMax=0, rtStutterCount=0, rtStepsSum=0, rtStepsN=0, rtLastSteps=0;
+let running=true;
+let simTime=0, steps=0, E0=null;
+let speedMult=80;
+let viewScale=5;
+let fieldBright=60;
+
+const COLORS=['#3af0c0','#f0823a','#8a3af0'];
+const NAMES=['A','B','C'];
+let bodies=[];
+
+// ═══════════════════════════════════════════════════════════════
+// HISTORY: circular buffer with interpolation
+// ═══════════════════════════════════════════════════════════════
+const HIST_MAX=40000;
+let hist_t=new Float64Array(HIST_MAX);    // timestamps
+let hist_x=[];  // hist_x[body][slot] = x
+let hist_y=[];
+let hist_vx=[]; // velocity for extrapolation
+let hist_vy=[];
+let hist_head=0, hist_count=0;
+
+function initHistory(nBodies){
+  hist_x=[]; hist_y=[]; hist_vx=[]; hist_vy=[];
+  for(let i=0;i<nBodies;i++){
+    hist_x.push(new Float64Array(HIST_MAX));
+    hist_y.push(new Float64Array(HIST_MAX));
+    hist_vx.push(new Float64Array(HIST_MAX));
+    hist_vy.push(new Float64Array(HIST_MAX));
+  }
+  hist_head=0; hist_count=0;
+}
+
+function pushHistory(t, bods){
+  const idx=hist_head%HIST_MAX;
+  hist_t[idx]=t;
+  for(let i=0;i<bods.length;i++){
+    hist_x[i][idx]=bods[i].x;
+    hist_y[i][idx]=bods[i].y;
+    hist_vx[i][idx]=bods[i].vx;
+    hist_vy[i][idx]=bods[i].vy;
+  }
+  hist_head++;
+  if(hist_count<HIST_MAX) hist_count++;
+}
+
+// Get position and velocity of body k at time t by linear interpolation
+function posAt(k, t){
+  if(hist_count<2) return null;
+
+  const start=(hist_head-hist_count+HIST_MAX)%HIST_MAX;
+  const end=(hist_head-1+HIST_MAX)%HIST_MAX;
+  const t_earliest=hist_t[start];
+  const t_latest=hist_t[end];
+
+  if(t<=t_earliest) return {x:hist_x[k][start], y:hist_y[k][start],
+    vx:hist_vx[k][start], vy:hist_vy[k][start]};
+  if(t>=t_latest) return {x:hist_x[k][end], y:hist_y[k][end],
+    vx:hist_vx[k][end], vy:hist_vy[k][end]};
+
+  // Binary search for the interval containing t
+  let lo=0, hi=hist_count-1;
+  while(lo<hi-1){
+    const mid=(lo+hi)>>1;
+    const idx=(start+mid)%HIST_MAX;
+    if(hist_t[idx]<t) lo=mid; else hi=mid;
+  }
+
+  const i0=(start+lo)%HIST_MAX;
+  const i1=(start+hi)%HIST_MAX;
+  const t0=hist_t[i0], t1=hist_t[i1];
+  const frac=(t1>t0)?(t-t0)/(t1-t0):0;
+
+  return {
+    x:  hist_x[k][i0]*(1-frac) + hist_x[k][i1]*frac,
+    y:  hist_y[k][i0]*(1-frac) + hist_y[k][i1]*frac,
+    vx: hist_vx[k][i0]*(1-frac) + hist_vx[k][i1]*frac,
+    vy: hist_vy[k][i0]*(1-frac) + hist_vy[k][i1]*frac,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RETARDED POSITION: iterative light-cone solve + velocity extrapolation
+// ═══════════════════════════════════════════════════════════════
+// Find t_ret such that |pos_k(t_ret) - (px,py)| = c*(t_now - t_ret)
+// Then extrapolate forward using v(t_ret) to get the effective position.
+//
+// The retarded field of a moving source doesn't point at the retarded
+// position — it points at the linearly extrapolated "projected current
+// position": x_eff = x_ret + v_ret * delay. For uniform motion this
+// is exact (field points at where the source IS now). For accelerating
+// motion the residual x_actual - x_eff is the radiation term.
+//
+// This is the Liénard-Wiechert equivalent for the displacement field.
+function retardedPos(k, px, py, t_now){
+  if(hist_count<10) return {x:bodies[k].x, y:bodies[k].y, vx:0, vy:0, delay:0, extrap:false};
+
+  // Initial guess: use instantaneous distance
+  const dx0=bodies[k].x-px, dy0=bodies[k].y-py;
+  const r0=Math.sqrt(dx0*dx0+dy0*dy0);
+  let tRet=t_now - r0/C_;
+
+  // Iterate (typically converges in 3-5 steps)
+  let pFinal=null;
+  for(let iter=0;iter<8;iter++){
+    const p=posAt(k, tRet);
+    if(!p) break;
+    pFinal=p;
+    const dx=p.x-px, dy=p.y-py;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const tRetNew=t_now - dist/C_;
+    if(Math.abs(tRetNew-tRet)<1e-8) {tRet=tRetNew; break;}
+    tRet=tRetNew;
+  }
+
+  if(!pFinal) return {x:bodies[k].x, y:bodies[k].y, vx:0, vy:0, delay:0, extrap:false};
+
+  const delay=t_now-tRet;
+
+  // Refresh the final interpolated state at the converged retarded time.
+  pFinal = posAt(k, tRet) || pFinal;
+
+  // Velocity projection and optional second-order acceleration residual.
+  // beta=0 gives raw retarded position. beta=1 gives the existing
+  // Lienard-Wiechert-like velocity projection x_ret + v_ret*delay.
+  // alpha adds 0.5*alpha*a_ret*delay^2, estimated from history velocities.
+  let axRet=0, ayRet=0;
+  if(Math.abs(retAccelBias)>1e-12 && hist_count>6){
+    const h=Math.max(dt*3, 1e-5);
+    const pm=posAt(k, tRet-h);
+    const pp=posAt(k, tRet+h);
+    if(pm && pp && (2*h)>0){
+      axRet=(pp.vx-pm.vx)/(2*h);
+      ayRet=(pp.vy-pm.vy)/(2*h);
+    }
+  }
+
+  const xEff = pFinal.x + retVelBias*pFinal.vx*delay + 0.5*retAccelBias*axRet*delay*delay;
+  const yEff = pFinal.y + retVelBias*pFinal.vy*delay + 0.5*retAccelBias*ayRet*delay*delay;
+
+  return {
+    x: xEff,
+    y: yEff,
+    // Also return raw retarded position for ghost visualization
+    xRet: pFinal.x,
+    yRet: pFinal.y,
+    vx: pFinal.vx,
+    vy: pFinal.vy,
+    ax: axRet,
+    ay: ayRet,
+    beta: retVelBias,
+    alpha: retAccelBias,
+    delay: delay,
+    extrap: true
+  };
+}
+
+
+function isRetardedMode(){
+  return (mode==='retarded' || mode==='rawret') && hist_count>20;
+}
+
+function sourceForMode(k, px, py, t){
+  if(isRetardedMode()){
+    const ret=retardedPos(k,px,py,t);
+    if(mode==='rawret' && ret.xRet!==undefined) return {x:ret.xRet,y:ret.yRet,delay:ret.delay,raw:true,ret};
+    return {x:ret.x,y:ret.y,delay:ret.delay,raw:false,ret};
+  }
+  return {x:bodies[k].x,y:bodies[k].y,delay:0,raw:false,ret:null};
+}
+
+function reseedHistoryAtCurrent(){
+  initHistory(bodies.length);
+  const maxSep=10;
+  const seedDt=dt;
+  const lightCrossTime=maxSep/C_;
+  const seedSteps=Math.min(2000, Math.ceil(lightCrossTime/seedDt)*2);
+  for(let s=seedSteps;s>=0;s--) pushHistory(simTime-s*seedDt,bodies);
+}
+
+function totalAngularMomentum(){
+  let L=0;
+  for(const b of bodies) L += b.mass*(b.x*b.vy-b.y*b.vx);
+  return L;
+}
+
+function centerOfMass(){
+  let mt=0,x=0,y=0,vx=0,vy=0;
+  for(const b of bodies){mt+=b.mass;x+=b.mass*b.x;y+=b.mass*b.y;vx+=b.mass*b.vx;vy+=b.mass*b.vy;}
+  if(mt<=0)return {x:0,y:0,vx:0,vy:0};
+  return {x:x/mt,y:y/mt,vx:vx/mt,vy:vy/mt};
+}
+
+function binaryElements(){
+  if(bodies.length<2)return null;
+  const A=bodies[0],B=bodies[1];
+  const dx=B.x-A.x,dy=B.y-A.y,dvx=B.vx-A.vx,dvy=B.vy-A.vy;
+  const r=Math.sqrt(dx*dx+dy*dy+1e-12);
+  const v2=dvx*dvx+dvy*dvy;
+  const muG=G_*(A.mass+B.mass);
+  const eps=0.5*v2-muG/r;
+  const h=dx*dvy-dy*dvx;
+  let a=null,e=null,period=null;
+  if(eps<0){
+    a=-muG/(2*eps);
+    e=Math.sqrt(Math.max(0,1+2*eps*h*h/(muG*muG)));
+    period=2*Math.PI*Math.sqrt(Math.max(0,a*a*a/muG));
+  }
+  return {r,a,e,period,eps,h};
+}
+
+function setDriftBaseline(){
+  driftBase={t:simTime,E:energy(),L:totalAngularMomentum(),cm:centerOfMass(),be:binaryElements()};
+  driftRoll=[];
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════════════════════════
+function preset_figure8(){
+  // Chenciner-Montgomery figure-8 (equal masses, G=1)
+  // Exact ICs from the discovery paper
+  const vx3=0.93240737, vy3=0.86473146;
+  bodies=[
+    {name:'A',mass:1,x:-0.97000436,y:0.24308753,vx:vx3/2,vy:vy3/2,r:5},
+    {name:'B',mass:1,x:0.97000436,y:-0.24308753,vx:vx3/2,vy:vy3/2,r:5},
+    {name:'C',mass:1,x:0,y:0,vx:-vx3,vy:-vy3,r:5},
+  ];
+  C_=80; viewScale=2.5;
+}
+
+function preset_lagrange(){
+  // Equal masses on equilateral triangle vertices, circular orbit
+  // For 3 equal masses m on a triangle with side a:
+  // Each mass feels force from 2 others, each at distance a
+  // F = 2 * G m² / a² * cos(30°) = G m² √3 / a²  (net toward center)
+  // Distance from center R = a/√3
+  // Centripetal: m ω² R = G m² √3 / a²
+  // ω² = G m √3 / (R a²) = G m √3 · √3 / (a³) = 3Gm/a³
+  // v = ωR = √(3Gm/a³) · a/√3 = √(Gm/a)
+  const m=1, a=2.0;
+  const R=a/Math.sqrt(3);
+  const v=Math.sqrt(G_*m/a);
+  const ang=[Math.PI/6, Math.PI/6+2*Math.PI/3, Math.PI/6+4*Math.PI/3];
+  bodies=ang.map((th,i)=>({
+    name:NAMES[i], mass:m,
+    x: R*Math.cos(th),
+    y: R*Math.sin(th),
+    vx: -v*Math.sin(th),
+    vy:  v*Math.cos(th),
+    r:5
+  }));
+  C_=40; viewScale=3.5;
+}
+
+function preset_hier(){
+  // Tight binary + distant third body
+  // Inner binary: two unit masses at separation 1, circular orbit
+  // v_inner = sqrt(G*m/(4*sep)) for reduced mass; for equal mass circular:
+  // v = sqrt(G*M_other / (2*sep))  where sep is the separation
+  const sep=0.8;
+  const vi=Math.sqrt(G_*1/(2*sep));  // each orbits their common CM
+  bodies=[
+    {name:'A',mass:1, x:-sep/2, y:0, vx:0, vy:-vi, r:5},
+    {name:'B',mass:1, x: sep/2, y:0, vx:0, vy: vi, r:5},
+    {name:'C',mass:0.5, x:5, y:0, vx:0, vy:Math.sqrt(G_*2.5/5), r:4},
+  ];
+  C_=25; viewScale=8;
+}
+
+function preset_sling(){
+  const sep=0.6;
+  const vi=Math.sqrt(G_*1.5/(2*sep));
+  bodies=[
+    {name:'A',mass:1.5, x:-sep/2, y:0, vx:0, vy:-vi, r:6},
+    {name:'B',mass:1.5, x: sep/2, y:0, vx:0, vy: vi, r:6},
+    {name:'C',mass:0.3, x:8, y:1.5, vx:-1.1, vy:-0.1, r:4},
+  ];
+  C_=30; viewScale=12;
+}
+
+
+// BINARY LAB: exact two-body ellipse initial conditions
+let binaryConfig={m1:1,m2:1,a:1.2,e:0.45,f:0,w:0,third:false};
+let qTraceHist=[];
+let stfTraceHist=[];
+let orbitWindow=[];
+let lastOrbitStats=null;
+let lastRdotForOrbit=null;
+const QHIST_MAX=96;
+const ORBIT_SAMPLE_MAX=5000;
+function setSlider(id,val){const el=document.getElementById(id); if(el) el.value=val;}
+function updateBinaryLabels(){
+  const ids=[['binM1','binM1v',1],['binM2','binM2v',1],['binA','binAv',2],['binE','binEv',2]];
+  for(const [id,out,fix] of ids){const el=document.getElementById(id),o=document.getElementById(out); if(el&&o)o.textContent=(+el.value).toFixed(fix);}
+  const f=document.getElementById('binF'),fv=document.getElementById('binFv'),w=document.getElementById('binW'),wv=document.getElementById('binWv');
+  if(f&&fv)fv.textContent=(+f.value).toFixed(0)+'°'; if(w&&wv)wv.textContent=(+w.value).toFixed(0)+'°';
+}
+function readBinaryControls(){
+  const deg=Math.PI/180;
+  binaryConfig.m1=+document.getElementById('binM1').value; binaryConfig.m2=+document.getElementById('binM2').value;
+  binaryConfig.a=+document.getElementById('binA').value; binaryConfig.e=+document.getElementById('binE').value;
+  binaryConfig.f=+document.getElementById('binF').value*deg; binaryConfig.w=+document.getElementById('binW').value*deg;
+}
+function expectedBinaryRMinMax(){
+  const a=Number(binaryConfig.a), e=Number(binaryConfig.e);
+  if(!Number.isFinite(a)||!Number.isFinite(e)) return null;
+  return {rMin:a*(1-e), rMax:a*(1+e)};
+}
+function solveKeplerE(M,e){
+  let E=M + e*Math.sin(M)/(1-Math.sin(M+e)+Math.sin(M));
+  if(!Number.isFinite(E)) E=M;
+  for(let i=0;i<8;i++){
+    const f=E-e*Math.sin(E)-M;
+    const fp=1-e*Math.cos(E);
+    E-=f/Math.max(1e-12,fp);
+  }
+  return E;
+}
+function meanSquareThirdDerivative(vals,dt){
+  const n=vals.length;
+  if(n<8)return null;
+  let sum=0;
+  for(let i=0;i<n;i++){
+    const im2=(i-2+n)%n, im1=(i-1+n)%n, ip1=(i+1)%n, ip2=(i+2)%n;
+    const j=(vals[ip2]-2*vals[ip1]+2*vals[im1]-vals[im2])/(2*dt*dt*dt);
+    if(Number.isFinite(j))sum+=j*j;
+  }
+  return sum/n;
+}
+function keplerProxyRatio(eVal){
+  const m1=Number(binaryConfig.m1), m2=Number(binaryConfig.m2), a=Number(binaryConfig.a);
+  if(!(m1>0&&m2>0&&a>0))return null;
+  const mt=m1+m2, mu=m1*m2/mt, nMean=Math.sqrt(G_*mt/(a*a*a));
+  const period=2*Math.PI/nMean;
+  const N=720, dt=period/N;
+  const q=[],xx=[],xy=[],yy=[];
+  const ee=Math.max(0,Math.min(0.92,eVal));
+  const bfac=Math.sqrt(Math.max(0,1-ee*ee));
+  for(let k=0;k<N;k++){
+    const M=2*Math.PI*k/N;
+    const E=solveKeplerE(M,ee);
+    const x=a*(Math.cos(E)-ee);
+    const y=a*bfac*Math.sin(E);
+    const r2=x*x+y*y;
+    q.push(mu*r2);
+    xx.push(mu*(x*x-0.5*r2));
+    xy.push(mu*x*y);
+    yy.push(mu*(y*y-0.5*r2));
+  }
+  const pTrace=meanSquareThirdDerivative(q,dt);
+  const pSTF=meanSquareThirdDerivative(xx,dt)+meanSquareThirdDerivative(xy,dt)+meanSquareThirdDerivative(yy,dt);
+  return {e:ee,trace:pTrace,stf:pSTF,ratio:pTrace/Math.max(1e-18,pSTF)};
+}
+function runESweep(){
+  readBinaryControls();
+  const custom=Number(binaryConfig.e);
+  const es=[0,0.2,0.45,0.6,0.8];
+  if(es.every(e=>Math.abs(e-custom)>0.005))es.splice(3,0,custom);
+  const rows=es.map(e=>keplerProxyRatio(e)).filter(Boolean);
+  const out=document.getElementById('eSweepOut');
+  if(!out)return;
+  let html='<div style="display:grid;grid-template-columns:34px 68px 68px 54px;gap:3px;color:var(--dim)"><b>e</b><b>trace</b><b>STF</b><b>ratio</b>';
+  for(const r of rows){
+    html += `<span style="color:var(--text)">${r.e.toFixed(2)}</span><span>${r.trace.toExponential(2)}</span><span>${r.stf.toExponential(2)}</span><span style="color:var(--accent)">${r.ratio.toFixed(3)}</span>`;
+  }
+  html+='</div>';
+  out.innerHTML=html;
+}
+function applyBinaryPreset(kind){
+  const cfg={circ:{m1:1,m2:1,a:1.2,e:0,f:0,w:0},ecc:{m1:1,m2:1,a:1.2,e:0.55,f:0,w:0},ht:{m1:1.44,m2:1.39,a:1.4,e:0.617,f:0,w:0},emri:{m1:10,m2:1,a:2.8,e:0.55,f:180,w:25}}[kind];
+  if(!cfg)return; setSlider('binM1',cfg.m1);setSlider('binM2',cfg.m2);setSlider('binA',cfg.a);setSlider('binE',cfg.e);setSlider('binF',cfg.f);setSlider('binW',cfg.w);
+  updateBinaryLabels(); readBinaryControls();
+}
+function preset_binary(){
+  const c=binaryConfig; const m1=Math.max(.001,c.m1),m2=Math.max(.001,c.m2),mt=m1+m2;
+  const a=Math.max(.05,c.a),e=Math.min(.95,Math.max(0,c.e)),f=c.f||0,w=c.w||0;
+  const p=a*(1-e*e), r=p/(1+e*Math.cos(f)), muG=G_*mt, h=Math.sqrt(muG*p);
+  const vr=(muG/h)*e*Math.sin(f), vt=(muG/h)*(1+e*Math.cos(f));
+  const cf=Math.cos(f),sf=Math.sin(f); let rx=r*cf,ry=r*sf,vx=vr*cf-vt*sf,vy=vr*sf+vt*cf;
+  const cw=Math.cos(w),sw=Math.sin(w); function rot(x,y){return{x:cw*x-sw*y,y:sw*x+cw*y};}
+  let rr=rot(rx,ry),vv=rot(vx,vy); rx=rr.x;ry=rr.y;vx=vv.x;vy=vv.y;
+  bodies=[{name:'A',mass:m1,x:-m2/mt*rx,y:-m2/mt*ry,vx:-m2/mt*vx,vy:-m2/mt*vy,r:Math.max(4,Math.min(9,4+Math.log10(m1+1)*4))},{name:'B',mass:m2,x:m1/mt*rx,y:m1/mt*ry,vx:m1/mt*vx,vy:m1/mt*vy,r:Math.max(4,Math.min(9,4+Math.log10(m2+1)*4))}];
+  if(c.third){const rt=Math.max(4.5,a*4.5),m3=.2*Math.sqrt(mt),v3=Math.sqrt(G_*mt/rt); bodies.push({name:'C',mass:m3,x:rt,y:0,vx:0,vy:v3,r:4});}
+  const ratio=Math.max(m1,m2)/Math.max(0.001,Math.min(m1,m2));
+  C_=Math.max(45,Math.min(160,55+10*Math.sqrt(ratio)+20/Math.sqrt(a)));
+  viewScale=Math.max(3.0,a*(c.third?6.5:3.3)*(ratio>5?1.25:1));
+  qTraceHist=[]; stfTraceHist=[]; orbitWindow=[]; lastOrbitStats=null; lastRdotForOrbit=null; updateScaleLabel();
+}
+function binaryMetrics(){
+  if(bodies.length<2)return null; const A=bodies[0],B=bodies[1],dx=B.x-A.x,dy=B.y-A.y,dvx=B.vx-A.vx,dvy=B.vy-A.vy;
+  const r2=dx*dx+dy*dy, r=Math.sqrt(r2+1e-12),mt=A.mass+B.mass,mu=A.mass*B.mass/mt,q=mu*r2;
+  const rdot=(dx*dvx+dy*dvy)/r,v2=dvx*dvx+dvy*dvy,vt2=Math.max(0,v2-rdot*rdot);
+  const halfR2=0.5*r2;
+  const stf={xx:mu*(dx*dx-halfR2),xy:mu*dx*dy,yy:mu*(dy*dy-halfR2)};
+  return {r,mu,q,rdot,pulse:2*mu*r*rdot,stfMotion:mu*r*r*Math.sqrt(vt2)/(r+1e-9),stf};
+}
+function scalarDerivativeStats(hist, key){
+  const n=hist.length;
+  if(n<4)return {d2:null,d3:null,pow:null};
+  const a=hist[n-4],b=hist[n-3],c=hist[n-2],d=hist[n-1];
+  const d1a=(b[key]-a[key])/Math.max(1e-12,b.t-a.t);
+  const d1b=(c[key]-b[key])/Math.max(1e-12,c.t-b.t);
+  const d1c=(d[key]-c[key])/Math.max(1e-12,d.t-c.t);
+  const d2a=2*(d1b-d1a)/Math.max(1e-12,c.t-a.t);
+  const d2b=2*(d1c-d1b)/Math.max(1e-12,d.t-b.t);
+  const d3=(d2b-d2a)/Math.max(1e-12,(d.t-a.t)/2);
+  let sum=0,count=0;
+  for(let i=3;i<n;i++){
+    const p0=hist[i-3],p1=hist[i-2],p2=hist[i-1],p3=hist[i];
+    const e1=(p1[key]-p0[key])/Math.max(1e-12,p1.t-p0.t);
+    const e2=(p2[key]-p1[key])/Math.max(1e-12,p2.t-p1.t);
+    const e3=(p3[key]-p2[key])/Math.max(1e-12,p3.t-p2.t);
+    const a2=2*(e2-e1)/Math.max(1e-12,p2.t-p0.t);
+    const b2=2*(e3-e2)/Math.max(1e-12,p3.t-p1.t);
+    const j=(b2-a2)/Math.max(1e-12,(p3.t-p0.t)/2);
+    if(Number.isFinite(j)){sum+=j*j;count++;}
+  }
+  return {d2:d2b,d3:d3,pow:count?sum/count:null};
+}
+function traceDerivatives(){
+  return scalarDerivativeStats(qTraceHist,'q');
+}
+function stfDerivativeStats(){
+  const n=stfTraceHist.length;
+  if(n<4)return {pow:null};
+  const comps=['xx','xy','yy'];
+  let total=0, used=0;
+  for(const comp of comps){
+    const stats=scalarDerivativeStats(stfTraceHist,comp);
+    if(stats.pow!==null && Number.isFinite(stats.pow)){total+=stats.pow; used++;}
+  }
+  return {pow:used?total:null};
+}
+function computeOrbitStats(samples){
+  if(!samples || samples.length<8)return null;
+  let rMin=Infinity,rMax=0,sumRatio=0,countRatio=0,peakRatio=0;
+  for(const sample of samples){
+    if(Number.isFinite(sample.r)){rMin=Math.min(rMin,sample.r);rMax=Math.max(rMax,sample.r);}
+    if(Number.isFinite(sample.ratio)){sumRatio+=sample.ratio;countRatio++;peakRatio=Math.max(peakRatio,sample.ratio);}
+  }
+  if(!Number.isFinite(rMin)||rMax<=0)return null;
+  const eMeas=(rMax+rMin)>0?(rMax-rMin)/(rMax+rMin):0;
+  const aFit=0.5*(rMin+rMax);
+  const duration=(samples.length>=2)?(samples[samples.length-1].t-samples[0].t):null;
+  return {rMin,rMax,eMeas,aFit,duration,avgRatio:countRatio?sumRatio/countRatio:null,peakRatio:countRatio?peakRatio:null,n:samples.length};
+}
+function updateOrbitWindow(bm, ratio){
+  if(!bm)return;
+  const sample={t:simTime,r:bm.r,rdot:bm.rdot,ratio:Number.isFinite(ratio)?ratio:null};
+  if(lastRdotForOrbit!==null && lastRdotForOrbit<0 && bm.rdot>=0 && orbitWindow.length>20){
+    const completed=computeOrbitStats(orbitWindow);
+    if(completed)lastOrbitStats=completed;
+    orbitWindow=[];
+  }
+  orbitWindow.push(sample);
+  if(orbitWindow.length>ORBIT_SAMPLE_MAX)orbitWindow.shift();
+  lastRdotForOrbit=bm.rdot;
+}
+function getDisplayedOrbitStats(){
+  return computeOrbitStats(orbitWindow) || lastOrbitStats;
+}
+
+let currentPreset=preset_figure8;
+
+function initBodies(presetFn){
+  presetFn = presetFn || preset_figure8;
+  presetFn();
+
+  // CM frame
+  let mx=0,my=0,mvx=0,mvy=0,mt=0;
+  for(const b of bodies){mt+=b.mass;mx+=b.mass*b.x;my+=b.mass*b.y;mvx+=b.mass*b.vx;mvy+=b.mass*b.vy;}
+  for(const b of bodies){b.x-=mx/mt;b.y-=my/mt;b.vx-=mvx/mt;b.vy-=mvy/mt;}
+
+  simTime=0; steps=0; E0=null; driftBase=null; driftRoll=[];
+  qTraceHist=[]; stfTraceHist=[]; orbitWindow=[]; lastOrbitStats=null; lastRdotForOrbit=null;
+  trails=bodies.map(()=>[]);
+  initHistory(bodies.length);
+  const cVal=document.getElementById('cVal'); if(cVal)cVal.textContent=C_.toFixed(0);
+  const cSlider=document.getElementById('cSlider'); if(cSlider)cSlider.value=Math.max(+cSlider.min,Math.min(+cSlider.max,C_));
+
+  // Seed history buffer: assume bodies were at rest at current positions
+  // for the past light-crossing time, then run a short pre-integration
+  // to fill the buffer with physically reasonable past states
+  const maxSep=10; // generous
+  const lightCrossTime=maxSep/C_;
+  const seedDt=dt;
+  const seedSteps=Math.min(2000, Math.ceil(lightCrossTime/seedDt)*2);
+
+  // Run backward in time (negative dt) to seed history
+  // Crude: just use current positions for past (bodies approximately stationary
+  // over light-crossing time for solar-system-like configs)
+  for(let s=seedSteps;s>=0;s--){
+    const t_past = -s*seedDt;
+    pushHistory(t_past, bodies);
+  }
+  simTime=0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHYSICS
+// ═══════════════════════════════════════════════════════════════
+let dt=0.0004;
+
+function getSourcePos(k, fi_x, fi_y, t){
+  // Get the position of source k as seen from field point (fi_x, fi_y)
+  // according to the current mode
+  if((mode==='retarded' || mode==='rawret') && hist_count>20){
+    const ret=retardedPos(k, fi_x, fi_y, t);
+    return ret;
+  } else {
+    return {x:bodies[k].x, y:bodies[k].y, delay:0};
+  }
+}
+
+function accel(state, t){
+  const n=state.length;
+  const ax=new Float64Array(n), ay=new Float64Array(n);
+  const SOFT=0.0001; // softening squared
+
+  for(let i=0;i<n;i++){
+    for(let j=0;j<n;j++){
+      if(i===j) continue;
+
+      let sx, sy, delay=0;
+      if((mode==='retarded' || mode==='rawret') && hist_count>20){
+        const ret=retardedPos(j, state[i].x, state[i].y, t);
+        if(mode==='rawret' && ret.xRet!==undefined){sx=ret.xRet; sy=ret.yRet;}
+        else {sx=ret.x; sy=ret.y;}
+        delay=ret.delay;
+      } else {
+        sx=state[j].x; sy=state[j].y;
+      }
+
+      const dx=sx-state[i].x, dy=sy-state[i].y;
+      const r2=dx*dx+dy*dy+SOFT;
+      const r=Math.sqrt(r2), r3=r2*r;
+
+      // In the framework, the displacement signal arrives from the
+      // retarded position, but the local geometry at the field point
+      // modifies how that signal is received. The total Σ at the
+      // field point sets the time dilation factor 1/(1+Σ_total).
+      // The coordinate-time acceleration is amplified by (1+Σ_total)²
+      // relative to the proper-time acceleration, because
+      // a_coord = a_proper · (dt_proper/dt_coord)² ≈ a_proper · (1+2Σ)
+      // In the weak field this is ≈ 1 + 2Σ_local.
+      let ampFactor=1;
+      if((mode==='retarded' || mode==='rawret') && delay>0){
+        // Compute total Σ at the field point from all OTHER sources
+        let sigLocal=0;
+        for(let k=0;k<n;k++){
+          if(k===i) continue;
+          const ddx=state[k].x-state[i].x, ddy=state[k].y-state[i].y;
+          const rr=Math.sqrt(ddx*ddx+ddy*ddy+SOFT);
+          sigLocal += G_*state[k].mass/(C2()*rr);
+        }
+        // Amplification: coordinate acceleration includes the
+        // time-dilation factor from the displaced geometry
+        // f(r) = 1/(1+Σ)² → the effective force picks up (1+2Σ)
+        ampFactor = 1 + 2*sigLocal;
+      }
+
+      // Newtonian: −GM/r² r̂, amplified by local geometry
+      ax[i] += ampFactor * G_*state[j].mass/r3 * dx;
+      ay[i] += ampFactor * G_*state[j].mass/r3 * dy;
+
+      // 1PN displacement geometry correction
+      if(mode!=='newton' && useGeomCorrection){
+        const dvx=(state[j].vx||0)-(state[i].vx||0);
+        const dvy=(state[j].vy||0)-(state[i].vy||0);
+        const L=dx*dvy-dy*dvx;
+        const L2=L*L;
+        const r5=r2*r2*r;
+        const aGeo=3*G_*state[j].mass*L2/(C2()*r5);
+        ax[i] -= aGeo*dx;
+        ay[i] -= aGeo*dy;
+      }
+    }
+  }
+  return {ax,ay};
+}
+
+let trails=[[],[],[]];
+const TLEN=1200;
+
+function rk4step(dt_){
+  const n=bodies.length;
+  const s0=bodies.map(b=>({...b}));
+  function k(s,t_){
+    const{ax,ay}=accel(s,t_);
+    return s.map((b,i)=>({dx:b.vx,dy:b.vy,dvx:ax[i],dvy:ay[i]}));
+  }
+  const t0=simTime;
+  const k1=k(s0,t0);
+  const s1=s0.map((b,i)=>({...b,x:b.x+.5*dt_*k1[i].dx,y:b.y+.5*dt_*k1[i].dy,
+    vx:b.vx+.5*dt_*k1[i].dvx,vy:b.vy+.5*dt_*k1[i].dvy}));
+  const k2=k(s1,t0+.5*dt_);
+  const s2=s0.map((b,i)=>({...b,x:b.x+.5*dt_*k2[i].dx,y:b.y+.5*dt_*k2[i].dy,
+    vx:b.vx+.5*dt_*k2[i].dvx,vy:b.vy+.5*dt_*k2[i].dvy}));
+  const k3=k(s2,t0+.5*dt_);
+  const s3=s0.map((b,i)=>({...b,x:b.x+dt_*k3[i].dx,y:b.y+dt_*k3[i].dy,
+    vx:b.vx+dt_*k3[i].dvx,vy:b.vy+dt_*k3[i].dvy}));
+  const k4=k(s3,t0+dt_);
+  for(let i=0;i<n;i++){
+    bodies[i].x +=dt_/6*(k1[i].dx +2*k2[i].dx +2*k3[i].dx +k4[i].dx);
+    bodies[i].y +=dt_/6*(k1[i].dy +2*k2[i].dy +2*k3[i].dy +k4[i].dy);
+    bodies[i].vx+=dt_/6*(k1[i].dvx+2*k2[i].dvx+2*k3[i].dvx+k4[i].dvx);
+    bodies[i].vy+=dt_/6*(k1[i].dvy+2*k2[i].dvy+2*k3[i].dvy+k4[i].dvy);
+  }
+}
+
+function energy(){
+  let E=0;
+  for(let i=0;i<bodies.length;i++){
+    E+=.5*bodies[i].mass*(bodies[i].vx**2+bodies[i].vy**2);
+    for(let j=i+1;j<bodies.length;j++){
+      const dx=bodies[j].x-bodies[i].x,dy=bodies[j].y-bodies[i].y;
+      E-=G_*bodies[i].mass*bodies[j].mass/Math.sqrt(dx*dx+dy*dy+0.001);
+    }
+  }
+  return E;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FIELD COMPUTATION
+// ═══════════════════════════════════════════════════════════════
+function sigmaAt(px,py){
+  let sig=0;
+  const useRet=isRetardedMode();
+  for(let k=0;k<bodies.length;k++){
+    let sx,sy;
+    if(useRet){
+      const sp=sourceForMode(k,px,py,simTime);
+      sx=sp.x;sy=sp.y;
+    } else {
+      sx=bodies[k].x;sy=bodies[k].y;
+    }
+    const dx=px-sx, dy=py-sy;
+    const r=Math.sqrt(dx*dx+dy*dy+0.01);
+    sig += G_*bodies[k].mass/(C2()*r);
+  }
+  return sig;
+}
+
+function deformAt(px,py){
+  let h00=0,h01=0,h11=0;
+  const useRet=isRetardedMode();
+  for(let k=0;k<bodies.length;k++){
+    let sx,sy;
+    if(useRet){
+      const sp=sourceForMode(k,px,py,simTime);
+      sx=sp.x;sy=sp.y;
+    } else {sx=bodies[k].x;sy=bodies[k].y;}
+    const dx=px-sx, dy=py-sy;
+    const r2=dx*dx+dy*dy+0.01;
+    const r=Math.sqrt(r2);
+    const sig=G_*bodies[k].mass/(C2()*r);
+    const rx=dx/r, ry=dy/r;
+    h00 += sig*(1 - 2*rx*rx);
+    h01 += sig*(  - 2*rx*ry);
+    h11 += sig*(1 - 2*ry*ry);
+  }
+  const tr=h00+h11, det=h00*h11-h01*h01;
+  const disc=Math.sqrt(Math.max(0, tr*tr/4-det));
+  const e1=tr/2+disc, e2=tr/2-disc;
+  let angle=0;
+  if(Math.abs(h01)>1e-12) angle=Math.atan2(e1-h00, h01);
+  else if(h00>=h11) angle=0; else angle=Math.PI/2;
+  return {e1,e2,angle};
+}
+
+function gradSigmaAt(px,py){
+  let gx=0,gy=0;
+  const useRet=isRetardedMode();
+  for(let k=0;k<bodies.length;k++){
+    let sx,sy;
+    if(useRet){
+      const sp=sourceForMode(k,px,py,simTime);
+      sx=sp.x;sy=sp.y;
+    } else {sx=bodies[k].x;sy=bodies[k].y;}
+    const dx=px-sx, dy=py-sy;
+    const r2=dx*dx+dy*dy+0.01;
+    const r=Math.sqrt(r2);
+    const fac=G_*bodies[k].mass/(C2()*r2*r);
+    gx -= fac*dx;
+    gy -= fac*dy;
+  }
+  return {gx,gy};
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+let followCOM=true;
+let manualCenter={x:0,y:0};
+function currentViewCenter(){
+  if(followCOM && bodies.length){
+    let mx=0,my=0,mt=0;
+    for(const b of bodies){mt+=b.mass;mx+=b.mass*b.x;my+=b.mass*b.y;}
+    if(mt>0)return {x:mx/mt,y:my/mt};
+  }
+  return manualCenter;
+}
+function updateScaleLabel(){const el=document.getElementById('scaleLbl'); if(el)el.textContent=viewScale.toFixed(1);}
+
+function w2c(x,y){
+  const W=canvas.width, H=canvas.height;
+  const s=Math.min(W,H)/(2*viewScale);
+  const vc=currentViewCenter();
+  return [W/2+(x-vc.x)*s, H/2-(y-vc.y)*s];
+}
+function c2w(cx,cy){
+  const W=canvas.width, H=canvas.height;
+  const s=Math.min(W,H)/(2*viewScale);
+  const vc=currentViewCenter();
+  return [vc.x+(cx-W/2)/s, vc.y+(H/2-cy)/s];
+}
+
+function drawField(W,H){
+  const step=10;
+  for(let px=0;px<W;px+=step){
+    for(let py=0;py<H;py+=step){
+      const[wx,wy]=c2w(px+step/2,py+step/2);
+      const sig=sigmaAt(wx,wy);
+      const v=Math.min(1, sig*fieldBright*500);
+      if(v<0.003) continue;
+      let rr=0,gg=0,bb=0,tw=0;
+      for(let k=0;k<bodies.length;k++){
+        const bx=bodies[k].x, by=bodies[k].y;
+        const dx=wx-bx,dy=wy-by;
+        const r=Math.sqrt(dx*dx+dy*dy+0.01);
+        const w=bodies[k].mass/(r*r);
+        const col=COLORS[k];
+        const cr=parseInt(col.slice(1,3),16);
+        const cg=parseInt(col.slice(3,5),16);
+        const cb=parseInt(col.slice(5,7),16);
+        rr+=cr*w;gg+=cg*w;bb+=cb*w;tw+=w;
+      }
+      if(tw>0){rr/=tw;gg/=tw;bb/=tw;}
+      ctx.fillStyle=`rgba(${rr|0},${gg|0},${bb|0},${v*0.55})`;
+      ctx.fillRect(px,py,step,step);
+    }
+  }
+}
+
+function drawEllipses(W,H){
+  const step=45;
+  const baseSize=step*0.28;
+  for(let px=step;px<W;px+=step){
+    for(let py=step;py<H;py+=step){
+      const[wx,wy]=c2w(px,py);
+      const d=deformAt(wx,wy);
+      const scale=3000;
+      const a=baseSize*(1+d.e1*scale);
+      const b=baseSize*(1+d.e2*scale);
+      if(a<1&&b<1) continue;
+      ctx.save();
+      ctx.translate(px,py);
+      ctx.rotate(-d.angle);
+      ctx.strokeStyle='rgba(58,240,192,0.22)';
+      ctx.lineWidth=0.7;
+      ctx.beginPath();
+      ctx.ellipse(0,0,Math.max(1,Math.abs(a)),Math.max(1,Math.abs(b)),0,0,2*Math.PI);
+      ctx.stroke();
+      ctx.strokeStyle='rgba(240,130,58,0.3)';
+      ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(-Math.abs(a)*0.5,0);ctx.lineTo(Math.abs(a)*0.5,0);ctx.stroke();
+      ctx.restore();
+    }
+  }
+}
+
+// Corrected gradient helper — self-excluded, points toward retarded sources
+function gradSigmaAtForBody(i, px, py, useRetarded) {
+  let gx = 0, gy = 0;
+  for (let k = 0; k < bodies.length; k++) {
+    if (k === i) continue;   // important: each body does NOT feel its own displacement
+
+    let sx, sy;
+    if (useRetarded && hist_count > 20) {
+      const sp = sourceForMode(k, px, py, simTime);
+      sx = sp.x;
+      sy = sp.y;
+    } else {
+      sx = bodies[k].x;
+      sy = bodies[k].y;
+    }
+
+    const dx = px - sx;   // vector FROM source TO field point
+    const dy = py - sy;
+    const r2 = dx*dx + dy*dy + 0.01;
+    const r = Math.sqrt(r2);
+    const fac = G_ * bodies[k].mass / (C_*C_ * r2 * r);
+
+    // Gradient of Σ points TOWARD the source (negative sign)
+    gx -= fac * dx;
+    gy -= fac * dy;
+  }
+  return {gx, gy};
+}
+
+function drawGradient(W, H) {
+  const step = 35;
+  const useRet = (mode === 'retarded' || mode === 'rawret');
+  const forwardBias = (mode === 'retarded') ? 0.45 : 0.0;   // tune this (0.0 = pure retarded, 0.45 = good forward tilt)
+
+  for (let px = step; px < W; px += step) {
+    for (let py = step; py < H; py += step) {
+      const [wx, wy] = c2w(px, py);
+
+      let totalGx = 0, totalGy = 0;
+
+      // Per-body colored arrows
+      for (let i = 0; i < bodies.length; i++) {
+        let g = gradSigmaAtForBody(i, wx, wy, useRet);
+        let mag = Math.sqrt(g.gx * g.gx + g.gy * g.gy);
+        if (mag < 1e-8) continue;
+
+        // Forward bias for retarded mode (makes arrows tilt ahead)
+        if (useRet && forwardBias > 0) {
+          const gInst = gradSigmaAtForBody(i, wx, wy, false);
+          g.gx = (1 - forwardBias) * g.gx + forwardBias * gInst.gx;
+          g.gy = (1 - forwardBias) * g.gy + forwardBias * gInst.gy;
+          mag = Math.sqrt(g.gx * g.gx + g.gy * g.gy);
+        }
+
+        const accelScale = 145000;
+        const len = Math.min(step * 0.72, mag * accelScale);
+        const ex = px + (g.gx / mag) * len;
+        const ey = py - (g.gy / mag) * len;
+
+        ctx.strokeStyle = COLORS[i] + 'dd';
+        ctx.lineWidth = 1.65;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        // arrowhead
+        const ang = Math.atan2(ey - py, ex - px);
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 4.8 * Math.cos(ang - 0.45), ey - 4.8 * Math.sin(ang - 0.45));
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 4.8 * Math.cos(ang + 0.45), ey - 4.8 * Math.sin(ang + 0.45));
+        ctx.stroke();
+
+        totalGx += g.gx;
+        totalGy += g.gy;
+      }
+
+      // White net arrow (faint)
+      const netMag = Math.sqrt(totalGx * totalGx + totalGy * totalGy);
+      if (netMag > 1e-8) {
+        const netScale = 105000;
+        const netLen = Math.min(step * 0.82, netMag * netScale);
+        const ex = px + (totalGx / netMag) * netLen;
+        const ey = py - (totalGy / netMag) * netLen;
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.40)';
+        ctx.lineWidth = 2.1;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        const ang = Math.atan2(ey - py, ex - px);
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 5.5 * Math.cos(ang - 0.4), ey - 5.5 * Math.sin(ang - 0.4));
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - 5.5 * Math.cos(ang + 0.4), ey - 5.5 * Math.sin(ang + 0.4));
+        ctx.stroke();
+      }
+    }
+  }
+}
+let starField=null;
+function draw(){
+  const W=canvas.width=canvas.offsetWidth;
+  const H=canvas.height=canvas.offsetHeight;
+  ctx.fillStyle='#050810';ctx.fillRect(0,0,W,H);
+
+  if(!starField||starField.length<1){
+    starField=[];
+    for(let i=0;i<150;i++) starField.push([(i*7919+3)%W,(i*6271+17)%H,0.08+0.35*((i*31)%100)/100]);
+  }
+  for(const[sx,sy,a] of starField){ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fillRect(sx,sy,.8,.8);}
+
+  if(viz==='field') drawField(W,H);
+  if(viz==='ellipses') drawEllipses(W,H);
+  if(viz==='gradient') drawGradient(W,H);
+
+  // Trails
+  for(let i=0;i<bodies.length;i++){
+    const tr=trails[i];
+    if(tr.length<2) continue;
+    ctx.beginPath();
+    const[x0,y0]=w2c(tr[0].x,tr[0].y);
+    ctx.moveTo(x0,y0);
+    for(let j=1;j<tr.length;j++){
+      const[xj,yj]=w2c(tr[j].x,tr[j].y);
+      ctx.lineTo(xj,yj);
+    }
+    ctx.strokeStyle=COLORS[i]+'44';ctx.lineWidth=1.2;ctx.stroke();
+  }
+
+  // Binary breathing trace: barycenter pulse follows mu*r^2 variation.
+  const bm=binaryMetrics();
+  if(bm && bodies.length>=2){
+    const A=bodies[0],B=bodies[1],mt=A.mass+B.mass;
+    const bx=(A.mass*A.x+B.mass*B.x)/mt, by=(A.mass*A.y+B.mass*B.y)/mt;
+    const[pcx,pcy]=w2c(bx,by);
+    let qMin=bm.q,qMax=bm.q; for(const qh of qTraceHist){const q=qh.q??qh; qMin=Math.min(qMin,q);qMax=Math.max(qMax,q);}
+    const qNorm=(qMax>qMin)?(bm.q-qMin)/(qMax-qMin):0.5; const pulseR=10+22*qNorm;
+    ctx.strokeStyle=`rgba(255,255,255,${0.10+0.28*qNorm})`; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(pcx,pcy,pulseR,0,2*Math.PI);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.45)';ctx.font='8px Space Mono';ctx.fillText('μr²',pcx+pulseR+3,pcy+3);
+  }
+
+  // Retarded ghosts and extrapolated positions
+  if((mode==='retarded' || mode==='rawret') && hist_count>20){
+    for(let i=0;i<bodies.length;i++){
+      const obs=(i+1)%bodies.length;
+      const ret=retardedPos(i,bodies[obs].x,bodies[obs].y,simTime);
+
+      // Retarded position ghost (where signal was emitted)
+      if(ret.extrap && ret.xRet!==undefined){
+        const[rx,ry]=w2c(ret.xRet,ret.yRet);
+        ctx.strokeStyle=COLORS[i]+'30';
+        ctx.lineWidth=0.8;
+        ctx.setLineDash([2,4]);
+        ctx.beginPath();ctx.arc(rx,ry,(bodies[i].r||5)+1,0,2*Math.PI);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Extrapolated effective position (where force points)
+      const[gx,gy]=w2c(ret.x,ret.y);
+      ctx.strokeStyle=COLORS[i]+'55';
+      ctx.lineWidth=1;
+      ctx.setLineDash([3,2]);
+      ctx.beginPath();ctx.arc(gx,gy,(bodies[i].r||5)+2,0,2*Math.PI);ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Line from extrapolated to actual current position
+      const[bx,by]=w2c(bodies[i].x,bodies[i].y);
+      ctx.strokeStyle=COLORS[i]+'18';
+      ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(bx,by);ctx.stroke();
+    }
+  }
+
+  // Bodies
+  for(let i=0;i<bodies.length;i++){
+    const[cx,cy]=w2c(bodies[i].x,bodies[i].y);
+    const rr=bodies[i].r||5;
+    const col=COLORS[i];
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rr*3.5);
+    g.addColorStop(0,col+'66');g.addColorStop(1,col+'00');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,rr*3.5,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(cx,cy,rr,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='rgba(200,216,240,.65)';ctx.font='bold 9px Space Mono';
+    ctx.fillText(bodies[i].name,cx+rr+3,cy+3);
+  }
+
+  // HUD
+  ctx.fillStyle='rgba(10,15,30,.85)';ctx.fillRect(8,8,210,24);
+  ctx.strokeStyle='#1a2340';ctx.strokeRect(8,8,210,24);
+  ctx.fillStyle='#3af0c0';ctx.font='bold 8px Space Mono';
+  ctx.fillText(`MODE: ${mode.toUpperCase()}  VIZ: ${viz.toUpperCase()}  c=${C_.toFixed(0)}`,14,22);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PANEL
+// ═══════════════════════════════════════════════════════════════
+function updatePanel(){
+  document.getElementById('st0').textContent=simTime.toFixed(2);
+  document.getElementById('st1').textContent=steps.toLocaleString();
+  document.getElementById('dtVal').textContent=dt.toExponential(1);
+
+  const E=energy();
+  if(E0===null && steps>50) E0=E;
+  if(E0!==null){
+    const dE=(E-E0)/Math.abs(E0);
+    document.getElementById('dE').textContent=dE.toExponential(2);
+    document.getElementById('st2').textContent=dE.toExponential(2);
+  }
+
+  const info=document.getElementById('bodyInfo');
+  info.innerHTML='';
+  for(let i=0;i<bodies.length;i++){
+    const b=bodies[i];
+    const v=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
+    info.innerHTML+=`<div style="font-size:.54rem;margin-bottom:3px;color:${COLORS[i]}">
+      <b>${b.name}</b> m=${b.mass.toFixed(2)}
+      (${b.x.toFixed(2)},${b.y.toFixed(2)})
+      v=${v.toFixed(3)}</div>`;
+  }
+
+  if((mode==='retarded' || mode==='rawret') && hist_count>20){
+    let maxD=0, maxDS=0;
+    for(let i=0;i<bodies.length;i++){
+      for(let j=0;j<bodies.length;j++){
+        if(i===j) continue;
+        const ret=retardedPos(j,bodies[i].x,bodies[i].y,simTime);
+        maxD=Math.max(maxD, ret.delay);
+        const dx1=bodies[i].x-ret.x, dy1=bodies[i].y-ret.y;
+        const r1=Math.sqrt(dx1*dx1+dy1*dy1+0.01);
+        const sig1=G_*bodies[j].mass/(C2()*r1);
+        const dx2=bodies[i].x-bodies[j].x, dy2=bodies[i].y-bodies[j].y;
+        const r2=Math.sqrt(dx2*dx2+dy2*dy2+0.01);
+        const sig2=G_*bodies[j].mass/(C2()*r2);
+        maxDS=Math.max(maxDS, Math.abs(sig1-sig2));
+      }
+    }
+    document.getElementById('maxDelay').textContent=maxD.toFixed(4);
+    document.getElementById('dSigma').textContent=maxDS.toExponential(2);
+  } else {
+    document.getElementById('maxDelay').textContent='—';
+    document.getElementById('dSigma').textContent='—';
+  }
+  const bm=binaryMetrics();
+  if(bm){
+    const set=(id,val)=>{const el=document.getElementById(id); if(el)el.textContent=val;};
+    const td=traceDerivatives();
+    set('binR',bm.r.toFixed(4)); set('binQ',bm.q.toFixed(4)); set('binRdot',bm.rdot.toFixed(4));
+    set('binPulse',bm.pulse.toExponential(2));
+    set('binQ2',td.d2===null?'—':td.d2.toExponential(2));
+    set('binQ3',td.d3===null?'—':td.d3.toExponential(2));
+    const sd=stfDerivativeStats();
+    const ratio=(td.pow!==null && sd.pow!==null)?td.pow/Math.max(1e-18,sd.pow):null;
+    set('binBPow',td.pow===null?'—':td.pow.toExponential(2));
+    set('binSTFPow',sd.pow===null?'—':sd.pow.toExponential(2));
+    set('binBRatio',ratio===null?'—':ratio.toFixed(3));
+    const completed=lastOrbitStats;
+    const currentWindow=computeOrbitStats(orbitWindow);
+    set('binBAvg',(!completed||completed.avgRatio===null)?'—':completed.avgRatio.toFixed(3));
+    set('binBPeak',(!completed||completed.peakRatio===null)?'—':completed.peakRatio.toFixed(3));
+    set('binEMeas',(!completed)?'—':completed.eMeas.toFixed(3));
+    set('binRMinMax',(!completed)?'—':completed.rMin.toFixed(3)+' / '+completed.rMax.toFixed(3));
+    set('binCurE',(!currentWindow)?'—':currentWindow.eMeas.toFixed(3));
+    set('binCurRMinMax',(!currentWindow)?'—':currentWindow.rMin.toFixed(3)+' / '+currentWindow.rMax.toFixed(3));
+    const er=expectedBinaryRMinMax();
+    set('binRExpected',(!er)?'—':er.rMin.toFixed(3)+' / '+er.rMax.toFixed(3));
+    set('binSTF',bm.stfMotion.toExponential(2));
+    let qMin=bm.q,qMax=bm.q; for(const qh of qTraceHist){const q=qh.q??qh; qMin=Math.min(qMin,q);qMax=Math.max(qMax,q);}
+    const pct=(qMax>qMin)?100*(bm.q-qMin)/(qMax-qMin):50; const bar=document.getElementById('qBar'); if(bar)bar.style.width=pct.toFixed(1)+'%';
+  }
+
+  updateDriftPanel();
+  updateRuntimePanel();
+  document.getElementById('histLen').textContent=hist_count;
+}
+
+
+function fmtExp(x){
+  if(!Number.isFinite(x)) return '—';
+  return x.toExponential(2);
+}
+
+function rollingStats(rows, key){
+  if(!rows || rows.length<2) return null;
+  let min=Infinity, max=-Infinity, sum=0, n=0;
+  for(const r of rows){
+    const v=r[key];
+    if(!Number.isFinite(v)) continue;
+    min=Math.min(min,v); max=Math.max(max,v); sum+=v; n++;
+  }
+  if(n<2) return null;
+  const mid=0.5*(min+max);
+  const half=0.5*(max-min);
+  const mean=sum/n;
+  return {min,max,mid,half,mean,n};
+}
+
+function rollingSlope(rows, key){
+  if(!rows || rows.length<3) return null;
+  const a=rows[0], b=rows[rows.length-1];
+  const dt=b.orbits-a.orbits;
+  if(!(dt>0)) return null;
+  const v0=a[key], v1=b[key];
+  if(!Number.isFinite(v0)||!Number.isFinite(v1)) return null;
+  // Change in displayed drift/orbit per orbit across the rolling window.
+  // Near zero means the cumulative offset has settled rather than leaking steadily.
+  return (v1-v0)/dt;
+}
+
+function completedMuFit(){
+  if(!lastOrbitStats || !(lastOrbitStats.duration>0) || !(lastOrbitStats.aFit>0) || bodies.length<2) return null;
+  const muFit=4*Math.PI*Math.PI*Math.pow(lastOrbitStats.aFit,3)/(lastOrbitStats.duration*lastOrbitStats.duration);
+  const muReq=G_*(bodies[0].mass+bodies[1].mass);
+  return {muFit,muReq,ratio:muFit/Math.max(1e-18,muReq),period:lastOrbitStats.duration,a:lastOrbitStats.aFit,e:lastOrbitStats.eMeas};
+}
+
+function resetRuntimeStats(){
+  rtLastFrameMs=null; rtFrameGapSum=0; rtFrameGapN=0; rtFrameGapMax=0; rtStutterCount=0; rtStepsSum=0; rtStepsN=0; rtLastSteps=0;
+}
+
+function updateDriftPanel(){
+  const set=(id,val)=>{const el=document.getElementById(id); if(el)el.textContent=val;};
+  const be=binaryElements();
+  if(be && be.a!==null){
+    set('driftAE',be.a.toFixed(4)+' / '+be.e.toFixed(4));
+    set('driftPeriod',be.period.toFixed(4));
+  } else {set('driftAE','—'); set('driftPeriod','—');}
+  if(!driftBase){
+    for(const id of ['driftEOrbit','driftLOrbit','driftERollMinMax','driftERollMid','driftLRollMinMax','driftLRollMid','driftRollWindow','driftELocal','driftLLocal','driftCM','driftMuFit','driftMuRatio','driftAge']) set(id,'—');
+    return;
+  }
+  const age=simTime-driftBase.t;
+  const period=(be && be.period)?be.period:1;
+  const orbits=Math.max(1e-9,age/period);
+  const E=energy(), L=totalAngularMomentum(), cm=centerOfMass();
+  const dE=(E-driftBase.E)/Math.max(1e-12,Math.abs(driftBase.E));
+  const dL=(L-driftBase.L)/Math.max(1e-12,Math.abs(driftBase.L));
+  const dcm=Math.sqrt((cm.x-driftBase.cm.x)**2+(cm.y-driftBase.cm.y)**2);
+  const ePer=dE/orbits;
+  const lPer=dL/orbits;
+  set('driftEOrbit',fmtExp(ePer));
+  set('driftLOrbit',fmtExp(lPer));
+  set('driftCM',dcm.toExponential(2));
+  set('driftAge',age.toFixed(3)+' t / '+orbits.toFixed(2)+' orb');
+
+  // Rolling band of the displayed cumulative drift/orbit value. This is not a new
+  // physical observable; it exposes the short-window jitter/noise band so that a
+  // +/- few e-6 wander does not look like a resolved secular trend.
+  if(orbits>0.25 && Number.isFinite(ePer) && Number.isFinite(lPer)){
+    const last=driftRoll[driftRoll.length-1];
+    if(!last || Math.abs(last.orbits-orbits)>0.02){
+      driftRoll.push({orbits,t:simTime,e:ePer,l:lPer});
+    }
+    const minOrb=orbits-DRIFT_ROLL_ORBITS;
+    while(driftRoll.length && driftRoll[0].orbits<minOrb) driftRoll.shift();
+    while(driftRoll.length>2000) driftRoll.shift();
+  }
+
+  const es=rollingStats(driftRoll,'e');
+  const ls=rollingStats(driftRoll,'l');
+  if(es){
+    set('driftERollMinMax',fmtExp(es.min)+' / '+fmtExp(es.max));
+    set('driftERollMid',fmtExp(es.mid)+' +/- '+fmtExp(es.half));
+  } else {set('driftERollMinMax','—'); set('driftERollMid','—');}
+  if(ls){
+    set('driftLRollMinMax',fmtExp(ls.min)+' / '+fmtExp(ls.max));
+    set('driftLRollMid',fmtExp(ls.mid)+' +/- '+fmtExp(ls.half));
+  } else {set('driftLRollMinMax','—'); set('driftLRollMid','—');}
+  if(driftRoll.length>=2){
+    const span=driftRoll[driftRoll.length-1].orbits-driftRoll[0].orbits;
+    set('driftRollWindow',span.toFixed(2)+' orb / '+driftRoll.length+' samples');
+  } else set('driftRollWindow','—');
+  const eSlope=rollingSlope(driftRoll,'e');
+  const lSlope=rollingSlope(driftRoll,'l');
+  set('driftELocal',eSlope===null?'—':fmtExp(eSlope));
+  set('driftLLocal',lSlope===null?'—':fmtExp(lSlope));
+  const mf=completedMuFit();
+  set('driftMuFit',mf?mf.muFit.toFixed(4):'—');
+  set('driftMuRatio',mf?mf.ratio.toFixed(4):'—');
+}
+
+function updateRuntimePanel(){
+  const set=(id,val)=>{const el=document.getElementById(id); if(el)el.textContent=val;};
+  const avgGap=rtFrameGapN?rtFrameGapSum/rtFrameGapN:0;
+  const avgSteps=rtStepsN?rtStepsSum/rtStepsN:0;
+  set('rtFrameGap',rtFrameGapN?(avgGap.toFixed(1)+' / '+rtFrameGapMax.toFixed(1)+' ms'):'—');
+  set('rtStepsFrame',rtStepsN?(avgSteps.toFixed(1)+' / '+rtLastSteps):'—');
+  set('rtStutters',String(rtStutterCount));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN LOOP
+// ═══════════════════════════════════════════════════════════════
+let raf=null;
+
+function loop(){
+  if(!running) return;
+  const frameNow=performance.now();
+  if(rtLastFrameMs!==null){
+    const gap=frameNow-rtLastFrameMs;
+    rtFrameGapSum+=gap; rtFrameGapN++; rtFrameGapMax=Math.max(rtFrameGapMax,gap);
+    if(gap>80) rtStutterCount++;
+  }
+  rtLastFrameMs=frameNow;
+  const t0=frameNow;
+  let s=0;
+  const budget=14;
+  while(performance.now()-t0<budget && s<speedMult*2){
+    rk4step(dt);
+    simTime+=dt; steps++; s++;
+    if(steps%3===0) pushHistory(simTime, bodies);
+    if(steps%5===0){
+      for(let i=0;i<bodies.length;i++){
+        trails[i].push({x:bodies[i].x,y:bodies[i].y});
+        if(trails[i].length>TLEN) trails[i].shift();
+      }
+    }
+  }
+  rtLastSteps=s; rtStepsSum+=s; rtStepsN++;
+
+  if(steps%5===0){
+    const bm=binaryMetrics();
+    if(bm){
+      qTraceHist.push({t:simTime,q:bm.q});
+      stfTraceHist.push({t:simTime,xx:bm.stf.xx,xy:bm.stf.xy,yy:bm.stf.yy});
+      if(qTraceHist.length>QHIST_MAX)qTraceHist.shift();
+      if(stfTraceHist.length>QHIST_MAX)stfTraceHist.shift();
+      const td=traceDerivatives();
+      const sd=stfDerivativeStats();
+      const ratio=(td.pow!==null && sd.pow!==null)?td.pow/Math.max(1e-18,sd.pow):null;
+      updateOrbitWindow(bm, ratio);
+    }
+  }
+  draw();
+  if(steps%50===0) updatePanel();
+  raf=requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('btnPause').onclick=function(){
+  running=!running;
+  this.textContent=running?'PAUSE':'PLAY';
+  this.classList.toggle('on',running);
+  if(running) raf=requestAnimationFrame(loop);
+};
+
+document.getElementById('btnReset').onclick=()=>{
+  running=false;cancelAnimationFrame(raf);
+  initBodies(currentPreset);
+  document.getElementById('btnPause').textContent='PAUSE';
+  document.getElementById('btnPause').classList.add('on');
+  running=true;raf=requestAnimationFrame(loop);
+};
+
+
+document.querySelectorAll('[data-tab]').forEach(btn=>{btn.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('on',b===btn);b.classList.toggle('dim',b!==btn);});document.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('on',p.id===btn.dataset.tab));};});
+document.querySelectorAll('#binaryTab input').forEach(el=>{el.oninput=()=>updateBinaryLabels();});
+document.querySelectorAll('[data-binpreset]').forEach(btn=>{btn.onclick=()=>applyBinaryPreset(btn.dataset.binpreset);});
+function restartWith(fn){running=false;cancelAnimationFrame(raf);currentPreset=fn;initBodies(currentPreset);document.getElementById('btnPause').textContent='PAUSE';document.getElementById('btnPause').classList.add('on');running=true;raf=requestAnimationFrame(loop);}
+const applyBtn=document.getElementById('btnApplyBinary'); if(applyBtn)applyBtn.onclick=()=>{readBinaryControls();restartWith(preset_binary);};
+const thirdBtn=document.getElementById('btnAddThird'); if(thirdBtn)thirdBtn.onclick=()=>{binaryConfig.third=!binaryConfig.third;thirdBtn.classList.toggle('on',binaryConfig.third);thirdBtn.classList.toggle('dim',!binaryConfig.third);thirdBtn.textContent=binaryConfig.third?'THIRD ON':'+ THIRD';readBinaryControls();restartWith(preset_binary);};
+const sweepBtn=document.getElementById('btnESweep'); if(sweepBtn)sweepBtn.onclick=()=>runESweep();
+
+const geomBtn=document.getElementById('btnGeom'); if(geomBtn)geomBtn.onclick=()=>{useGeomCorrection=!useGeomCorrection;geomBtn.classList.toggle('on',useGeomCorrection);geomBtn.classList.toggle('dim',!useGeomCorrection);geomBtn.textContent=useGeomCorrection?'GEOM ON':'GEOM OFF';};
+const driftBaseBtn=document.getElementById('btnDriftBase'); if(driftBaseBtn)driftBaseBtn.onclick=()=>setDriftBaseline();
+const revBtn=document.getElementById('btnReverseVel'); if(revBtn)revBtn.onclick=()=>{for(const b of bodies){b.vx=-b.vx;b.vy=-b.vy;} setDriftBaseline();};
+const resetHistBtn=document.getElementById('btnResetHist'); if(resetHistBtn)resetHistBtn.onclick=()=>{reseedHistoryAtCurrent(); setDriftBaseline();};
+
+document.querySelectorAll('[data-preset]').forEach(btn=>{
+  btn.onclick=()=>{
+    const presets={figure8:preset_figure8,lagrange:preset_lagrange,
+      hier:preset_hier,sling:preset_sling};
+    currentPreset=presets[btn.dataset.preset]||preset_figure8;
+    restartWith(currentPreset);
+  };
+});
+
+document.querySelectorAll('[data-mode]').forEach(btn=>{
+  btn.onclick=()=>{
+    mode=btn.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(b=>{
+      b.classList.toggle('on',b===btn);b.classList.toggle('dim',b!==btn);
+    });
+  };
+});
+
+document.querySelectorAll('[data-viz]').forEach(btn=>{
+  btn.onclick=()=>{
+    viz=btn.dataset.viz;
+    document.querySelectorAll('[data-viz]').forEach(b=>{
+      b.classList.toggle('on',b===btn);b.classList.toggle('dim',b!==btn);
+    });
+  };
+});
+
+document.getElementById('spdSlider').oninput=function(){
+  speedMult=+this.value;
+  document.getElementById('spdLbl').textContent='×'+speedMult;
+};
+
+document.getElementById('scaleSlider').oninput=function(){
+  viewScale=0.5+this.value/100*15;
+  trails=bodies.map(()=>[]); starField=null; updateScaleLabel();
+};
+const followBtn=document.getElementById('btnFollow'); if(followBtn)followBtn.onclick=function(){
+  followCOM=!followCOM; this.classList.toggle('on',followCOM); this.classList.toggle('dim',!followCOM); this.textContent=followCOM?'FOLLOW':'FIXED';
+};
+canvas.addEventListener('wheel',function(ev){
+  ev.preventDefault();
+  const factor=ev.deltaY<0?0.88:1.14;
+  viewScale=Math.max(0.15,Math.min(80,viewScale*factor));
+  const sl=document.getElementById('scaleSlider'); if(sl){sl.value=Math.max(+sl.min,Math.min(+sl.max,((viewScale-0.5)/15)*100));}
+  trails=bodies.map(()=>[]); starField=null; updateScaleLabel();
+},{passive:false});
+
+document.getElementById('fieldBright').oninput=function(){
+  fieldBright=+this.value;
+};
+
+document.getElementById('cSlider').oninput=function(){
+  C_=+this.value;
+  document.getElementById('cVal').textContent=C_.toFixed(0);
+};
+
+
+document.getElementById('retVelBias').oninput=function(){
+  retVelBias=+this.value;
+  document.getElementById('retVelBiasVal').textContent=retVelBias.toFixed(2);
+};
+document.getElementById('retAccelBias').oninput=function(){
+  retAccelBias=+this.value;
+  document.getElementById('retAccelBiasVal').textContent=retAccelBias.toFixed(2);
+};
+function setRetBias(beta,alpha){
+  retVelBias=beta; retAccelBias=alpha;
+  document.getElementById('retVelBias').value=beta;
+  document.getElementById('retAccelBias').value=alpha;
+  document.getElementById('retVelBiasVal').textContent=retVelBias.toFixed(2);
+  document.getElementById('retAccelBiasVal').textContent=retAccelBias.toFixed(2);
+}
+document.getElementById('btnRetRaw').onclick=()=>setRetBias(0,0);
+document.getElementById('btnRetProj').onclick=()=>setRetBias(1,0);
+document.getElementById('btnRetHalf').onclick=()=>setRetBias(1,0.5);
+document.getElementById('btnRetNegHalf').onclick=()=>setRetBias(1,-0.5);
+
+// ═══════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════
+updateBinaryLabels();
+updateScaleLabel();
+readBinaryControls();
+currentPreset=preset_binary;
+initBodies(preset_binary);
+raf=requestAnimationFrame(loop);
+</script>
+</body>
+</html>
