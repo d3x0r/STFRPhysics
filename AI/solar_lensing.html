@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Gravitational Lensing</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080e1a; color: #94a3b8; font-family: 'Courier New', Courier, monospace; min-height: 100vh; padding: 2rem 1.5rem; }
+  h1 { font-size: 15px; font-weight: 400; color: #e2e8f0; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem; }
+  .subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 1.5rem; letter-spacing: 0.05em; }
+  .controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: #94a3b8; }
+  .controls label { display: flex; align-items: center; gap: 6px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 3px; background: #1e3a5f; border-radius: 2px; outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #64748b; cursor: pointer; border: 1px solid #94a3b8; }
+  input[type=range]::-webkit-slider-thumb:hover { background: #94a3b8; }
+  input[type=checkbox] { accent-color: #64748b; cursor: pointer; }
+  canvas { display: block; width: 100%; cursor: crosshair; border: 0.5px solid #1e3a5f; border-radius: 4px; }
+  .info { font-size: 11px; color: #94a3b8; margin-top: 8px; min-height: 18px; letter-spacing: 0.03em; }
+  .legend { display: flex; gap: 16px; margin-top: 10px; font-size: 11px; color: #94a3b8; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .val { color: #cbd5e1; font-weight: bold; }
+  footer { margin-top: 2rem; font-size: 10px; color: #94a3b8; letter-spacing: 0.05em; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<h1>Solar Gravitational Lensing</h1>
+<p class="subtitle">Displacement framework (&beta; = v<sub>esc</sub>/c) vs GR (4GM/c&sup2;b) &nbsp;&middot;&nbsp; real solar constants &nbsp;&middot;&nbsp; shift exaggerated</p>
+
+<div class="controls">
+  <label>stars/R&#9737; <input type="range" id="density" min="1" max="8" step="1" value="4" style="width:55px"> <span class="val" id="densityVal">4</span></label>
+  <label>window <input type="range" id="window" min="1" max="5" step="0.5" value="4" style="width:55px"> <span class="val" id="windowVal">4</span> R&#9737;</label>
+  <label>exaggerate <input type="range" id="exag" min="50" max="2000" step="50" value="600" style="width:65px"> <span class="val" id="exagVal">600</span>&times;</label>
+  <label><input type="checkbox" id="showLines" checked> lines</label>
+  <label><input type="checkbox" id="showGR" checked> GR limb</label>
+</div>
+
+<canvas id="c" height="400"></canvas>
+<div class="info" id="info">hover a star for details</div>
+
+<div class="legend">
+  <span><svg width="14" height="14"><rect x="0" y="2" width="14" height="10" fill="#f59e0b" opacity="0.85" rx="1"/></svg> apparent limb</span>
+  <span><svg width="14" height="14"><rect x="0" y="2" width="14" height="10" fill="#fde68a" opacity="0.3" rx="1"/></svg> true disk (&beta;)</span>
+  <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,3"/></svg> GR true limb</span>
+  <span><svg width="14" height="14"><circle cx="7" cy="7" r="3" fill="#60a5fa" opacity="0.8"/></svg> true position</span>
+  <span><svg width="14" height="14"><circle cx="7" cy="7" r="3.5" fill="#f8fafc"/></svg> apparent (&beta; formula)</span>
+  <span><svg width="24" height="8"><line x1="0" y1="4" x2="24" y2="4" stroke="#34d399" stroke-width="1" stroke-dasharray="3,2"/></svg> shift &times;N</span>
+</div>
+
+<footer>
+  G = 6.67430&times;10<sup>-11</sup> &nbsp;&middot;&nbsp;
+  M&#9737; = 1.989&times;10<sup>30</sup> kg &nbsp;&middot;&nbsp;
+  R&#9737; = 695,700 km &nbsp;&middot;&nbsp;
+  1 AU = 149,597,870.7 km<br>
+  &beta; = v<sub>esc</sub>/c = 0.002059 at surface &nbsp;&middot;&nbsp;
+  Displacement limb deflection = 1.977&quot; &nbsp;&middot;&nbsp;
+  GR limb deflection = 1.752&quot; &nbsp;&middot;&nbsp;
+  Sobral 1919: 1.98 &plusmn; 0.12&quot; &nbsp;&middot;&nbsp;
+  Modern: 1.752 &plusmn; 0.05&quot;
+</footer>
+
+<script>
+const G = 6.67430e-11, C = 299792458, M_sun = 1.989e30;
+const R_sun = 695700000, L_sun = 149597870700;
+const R_sun_as = (R_sun / L_sun) * (180 / Math.PI) * 3600;
+
+// GR deflection: 4GM/c^2b
+function defl_GR(abs_as) {
+  if (abs_as <= 0) return 0;
+  const b_m = (abs_as / 3600 * Math.PI / 180) * L_sun;
+  return (4 * G * M_sun / (C * C * b_m)) * (180 / Math.PI) * 3600;
+}
+
+// Beta (displacement) deflection: same 1/b shape, scaled to beta limb value
+const V_e = Math.sqrt(2 * G * M_sun / R_sun);
+const beta = V_e / C;
+const defl_beta_limb = Math.asin(beta * R_sun / L_sun) * 360 * 3600 / (2 * Math.PI);
+const defl_GR_limb = defl_GR(R_sun_as);
+const betaScale = defl_beta_limb / defl_GR_limb; // ~1.1284
+
+function defl_beta(abs_as) {
+  return defl_GR(abs_as) * betaScale;
+}
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let starData = [];
+
+function draw() {
+  const density   = parseInt(document.getElementById('density').value);
+  const windowR   = parseFloat(document.getElementById('window').value);
+  const exag      = parseFloat(document.getElementById('exag').value);
+  const showLines = document.getElementById('showLines').checked;
+  const showGR    = document.getElementById('showGR').checked;
+
+  const W = canvas.offsetWidth;
+  const H = 400;
+  canvas.width = W;
+  canvas.height = H;
+
+  const trueY     = H * 0.25;
+  const apparentY = H * 0.75;
+  const midY      = H * 0.50;
+  const rowH = 26;
+
+  const windowAs = windowR * R_sun_as;
+  const scale = W / windowAs;
+  function toX(off) { return off * scale; }
+
+  // beta true limb shift in pixels
+  const betaLimbPx = defl_beta_limb * scale * exag;
+  // GR true limb shift in pixels
+  const grLimbPx   = defl_GR_limb   * scale * exag;
+
+  ctx.fillStyle = '#080e1a';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#0d1b2e';
+  ctx.fillRect(0, trueY - rowH, W, rowH * 2);
+  ctx.fillStyle = '#0a1220';
+  ctx.fillRect(0, apparentY - rowH, W, rowH * 2);
+
+  // beta true disk shading (up to beta limb)
+  ctx.fillStyle = '#fde68a15';
+  ctx.fillRect(0, trueY - rowH, betaLimbPx, rowH * 2);
+  ctx.fillRect(0, apparentY - rowH, betaLimbPx, rowH * 2);
+
+  // row labels
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px monospace';
+  ctx.fillText('true positions', 8, trueY - rowH + 13);
+  ctx.fillText('apparent positions (shift \xD7' + exag + ', \u03B2 formula)', 8, apparentY - rowH + 13);
+
+  // grid
+  ctx.setLineDash([2, 4]);
+  ctx.strokeStyle = '#1e3a5f';
+  ctx.lineWidth = 0.5;
+  for (let r = 0; r <= windowR; r += 0.5) {
+    const x = toX(r * R_sun_as);
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    if (r === Math.floor(r)) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px monospace';
+      ctx.fillText('+' + r + 'R\u2609', x + 2, H - 4);
+    }
+  }
+  ctx.setLineDash([]);
+
+  // apparent limb (x=0)
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(1, 0); ctx.lineTo(1, H); ctx.stroke();
+  ctx.fillStyle = '#fbbf2414';
+  ctx.fillRect(0, 0, 3, H);
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = '10px monospace';
+  ctx.fillText('\u2600 apparent limb', 4, 14);
+
+  // GR true limb (purple dashed)
+  if (showGR) {
+    ctx.strokeStyle = '#a78bfa90';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(grLimbPx, 0); ctx.lineTo(grLimbPx, H); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#a78bfa';
+    ctx.font = '10px monospace';
+    ctx.fillText('GR limb (' + defl_GR_limb.toFixed(3) + '")', grLimbPx + 3, 28);
+  }
+
+  // Beta true limb (pale yellow dashed)
+  ctx.strokeStyle = '#fde68a90';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(betaLimbPx, 0); ctx.lineTo(betaLimbPx, H); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#fde68a';
+  ctx.font = '10px monospace';
+  ctx.fillText('\u03B2 limb (' + defl_beta_limb.toFixed(3) + '")', betaLimbPx + 3, 14);
+
+  // Stars
+  starData = [];
+  const spacingAs = R_sun_as / density;
+  for (let trueOff = spacingAs * 0.5; trueOff <= windowAs + spacingAs; trueOff += spacingAs) {
+    const absTrue = R_sun_as + trueOff;
+    const d_b = defl_beta(absTrue);
+    const d_gr = defl_GR(absTrue);
+    const trueX = toX(trueOff);
+    const appX  = trueX + (d_b * scale * exag);
+    if (trueX > W + 10) continue;
+    starData.push({ trueOff, trueX, appX, d_b, d_gr, absTrue });
+  }
+
+  if (showLines) {
+    starData.forEach(s => {
+      const x0 = s.trueX, x1 = Math.min(s.appX, W - 1);
+      if (x1 - x0 < 0.5) return;
+      ctx.strokeStyle = '#34d39968';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 2]);
+      ctx.beginPath();
+      ctx.moveTo(x0, trueY + 5);
+      ctx.bezierCurveTo(x0, midY, x1, midY, x1, apparentY - 5);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (x1 - x0 > 14) {
+        ctx.fillStyle = '#34d399dd';
+        ctx.font = '9px monospace';
+        ctx.fillText(s.d_b.toFixed(2) + '"', x0 + (x1 - x0) * 0.3, midY + 4);
+      }
+    });
+  }
+
+  starData.forEach(s => {
+    if (s.trueX >= 0 && s.trueX <= W) {
+      ctx.beginPath(); ctx.arc(s.trueX, trueY, 3, 0, Math.PI*2);
+      ctx.fillStyle = '#60a5facc'; ctx.fill();
+    }
+    const ax = Math.min(s.appX, W - 2);
+    if (ax >= 0 && ax <= W) {
+      ctx.beginPath(); ctx.arc(ax, apparentY, 3.5, 0, Math.PI*2);
+      ctx.fillStyle = '#f1f5f9'; ctx.fill();
+    }
+  });
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px monospace';
+  ctx.fillText(
+    '1px=' + (1/scale).toFixed(1) + '" \u2022 \u03B2=' + beta.toFixed(5) + ' \u2022 \u03B2-limb=' + defl_beta_limb.toFixed(3) + '" \u2022 GR-limb=' + defl_GR_limb.toFixed(3) + '" \u2022 @2R\u2609: \u03B2=' + defl_beta(2*R_sun_as).toFixed(3) + '" GR=' + defl_GR(2*R_sun_as).toFixed(3) + '"',
+    6, H - 4
+  );
+}
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  let closest = null, minD = 14;
+  starData.forEach(s => { const d = Math.abs(mx - s.trueX); if (d < minD) { minD = d; closest = s; } });
+  document.getElementById('info').textContent = closest
+    ? 'true: +' + closest.trueOff.toFixed(0) + '" (' + (closest.trueOff/R_sun_as).toFixed(2) + 'R\u2609)  \u03B2-defl: ' + closest.d_b.toFixed(3) + '"  GR-defl: ' + closest.d_gr.toFixed(3) + '"  px shift: ' + (closest.appX - closest.trueX).toFixed(1) + 'px'
+    : 'hover a star for details';
+});
+
+document.getElementById('density').addEventListener('input', e => { document.getElementById('densityVal').textContent = e.target.value; draw(); });
+document.getElementById('window').addEventListener('input', e => { document.getElementById('windowVal').textContent = e.target.value; draw(); });
+document.getElementById('exag').addEventListener('input', e => { document.getElementById('exagVal').textContent = e.target.value; draw(); });
+document.getElementById('showLines').addEventListener('change', draw);
+document.getElementById('showGR').addEventListener('change', draw);
+window.addEventListener('resize', draw);
+draw();
+</script>
+</body>
+</html>
