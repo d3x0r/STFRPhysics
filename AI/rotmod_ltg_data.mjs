@@ -1,81 +1,6 @@
 // Auto-generated from Rotmod_LTG-main.zip. Columns: r kpc, vObs km/s, errV, vGas, vDisk, vBul, sbDisk, sbBul.
 
-function m31Sb(r) {
-  const n = 2.2;
-  const Re = 1.0;
-  const Rd = 5.3;
-  const bn = 2 * n - 1 / 3; // adequate for a visual/morphology prior
-  const sbBul = Math.exp(-bn * (Math.pow(Math.max(r, 1e-6) / Re, 1 / n) - 1));
-  const sbDisk = Math.exp(-r / Rd);
-  return { sbDisk, sbBul };
-}
 
-export const M31_PRESET = {
-  M31: {
-    // Conservative starting shape: compact bulge, broad disk, long halo/edge shelf.
-    rho0: 5.4,
-    rho1: 1.39,
-    rho2: 0.8,
-    rho3: 0.54,
-    rho4: 0.25,
-    r1: 0.018,
-    r2: 0.072,
-    r3: 0.416,
-    r4: 1.314,
-    r5: 1.69,
-    amp: 1116,
-    eps: 0.002,
-    support: 0.027,
-	rMax: 83,
-   
-  },
-};
-
-const raw = [
-  // component, r, errR, v, errV, modelV
-  ['Bulge', 0.22, 0.10, 163.24, 15.61, 175.78],
-  ['Bulge', 0.65, 0.19, 210.95, 18.56, 220.61],
-  ['Disk', 1.86, 0.02, 223.80, 10.72, 223.43],
-  ['Disk', 3.19, 0.02, 226.79, 7.96, 220.33],
-  ['Disk', 4.23, 0.02, 213.74, 8.17, 221.38],
-  ['Disk', 5.32, 0.02, 212.54, 7.55, 223.04],
-  ['Disk', 6.27, 0.02, 221.94, 7.20, 224.04],
-  ['Disk', 7.20, 0.02, 223.30, 8.49, 224.43],
-  ['Disk', 8.20, 0.02, 225.97, 9.28, 224.28],
-  ['Disk', 9.14, 0.02, 226.63, 9.07, 223.75],
-  ['Disk', 9.93, 0.02, 223.45, 10.29, 223.10],
-  ['Disk', 10.62, 0.01, 221.25, 10.24, 222.44],
-  ['Disk', 11.25, 0.01, 221.17, 11.16, 221.79],
-  ['Disk', 11.83, 0.01, 213.58, 9.75, 221.17],
-  ['Disk', 12.48, 0.01, 215.04, 12.67, 220.44],
-  ['Disk', 13.37, 0.02, 215.12, 12.82, 219.48],
-  ['Disk', 14.29, 0.02, 217.92, 13.52, 218.48],
-  ['Disk', 15.20, 0.02, 215.97, 13.09, 217.54],
-  ['Disk', 16.08, 0.02, 223.22, 13.07, 216.67],
-  ['Disk', 17.21, 0.02, 213.32, 13.44, 215.61],
-  ['Disk', 18.31, 0.03, 213.85, 15.37, 214.64],
-  ['Disk', 19.38, 0.03, 199.73, 15.19, 213.76],
-  ['Halo', 8.88, 1.08, 233.09, 32.40, 223.92],
-  ['Halo', 11.55, 0.77, 217.54, 35.26, 221.46],
-  ['Halo', 13.55, 0.57, 230.53, 35.63, 219.28],
-  ['Halo', 15.25, 0.54, 212.91, 36.60, 217.49],
-  ['Halo', 16.91, 0.62, 212.36, 36.67, 215.88],
-  ['Halo', 18.68, 0.54, 204.64, 38.10, 214.33],
-  ['Halo', 20.41, 0.54, 220.27, 37.18, 212.98],
-  ['Halo', 22.26, 0.62, 213.35, 37.17, 211.68],
-  ['Halo', 24.12, 0.67, 219.28, 36.73, 210.51],
-  ['Halo', 26.26, 0.76, 217.99, 35.88, 209.29],
-  ['Halo', 28.63, 0.87, 222.84, 38.16, 208.08],
-  ['Halo', 31.23, 0.88, 204.28, 37.89, 206.88],
-  ['Halo', 34.28, 1.19, 210.33, 38.76, 205.58],
-  ['Halo', 39.56, 2.21, 221.84, 36.68, 203.53],
-  ['Halo', 46.21, 2.42, 185.33, 38.68, 201.19],
-  ['Halo', 52.08, 1.63, 182.05, 38.15, 199.23],
-  ['Halo', 54.85, 1.67, 196.28, 38.81, 198.33],
-  ['Halo', 67.26, 14.95, 202.02, 40.67, 194.47],
-  ['Halo', 98.74, 17.19, 192.59, 42.23, 185.55],
-  ['Halo', 123.56, 11.60, 168.53, 41.34, 179.31],
-];
 
 export const ROTMOD_GALAXIES = [{"name":"CamB","preset":{"rho0":1,"rho1":0.5721,"rho2":0.3066,"r1":0.2579,"r2":0.5155,"r3":0.9975,"rMax":1.79,"brightnessRms":0.0783},"rows":[{"r":0.16,"vObs":1.99,"errV":1.5,"vGas":1.86,"vDisk":3.75,"vBul":0,"sbDisk":30.32,"sbBul":0},{"r":0.41,"vObs":4.84,"errV":1.5,"vGas":4.24,"vDisk":9.47,"vBul":0,"sbDisk":23.77,"sbBul":0},{"r":0.57,"vObs":6.79,"errV":1.5,"vGas":5.61,"vDisk":11.76,"vBul":0,"sbDisk":15.87,"sbBul":0},{"r":0.73,"vObs":8.87,"errV":1.5,"vGas":6.77,"vDisk":13.72,"vBul":0,"sbDisk":12.4,"sbBul":0},{"r":0.9,"vObs":10.9,"errV":1.5,"vGas":7.77,"vDisk":14.8,"vBul":0,"sbDisk":9.63,"sbBul":0},{"r":1.06,"vObs":12.9,"errV":1.5,"vGas":8.44,"vDisk":15.24,"vBul":0,"sbDisk":5.86,"sbBul":0},{"r":1.22,"vObs":14.7,"errV":1.5,"vGas":8.64,"vDisk":15.11,"vBul":0,"sbDisk":5.19,"sbBul":0},{"r":1.47,"vObs":16.8,"errV":1.5,"vGas":8.08,"vDisk":15.9,"vBul":0,"sbDisk":3.02,"sbBul":0},{"r":1.79,"vObs":20.1,"errV":1.5,"vGas":6.91,"vDisk":14.91,"vBul":0,"sbDisk":0.88,"sbBul":0}]}
 ,{"name":"D512-2","preset":{"rho0":1,"rho1":0.5384,"rho2":0.2413,"r1":0.3873,"r2":0.6333,"r3":1,"rMax":3.83,"brightnessRms":0.1608},"rows":[{"r":0.96,"vObs":22.9,"errV":2.71,"vGas":4.08,"vDisk":14.85,"vBul":0,"sbDisk":16.45,"sbBul":0},{"r":1.92,"vObs":33.5,"errV":2.71,"vGas":6.24,"vDisk":21.2,"vBul":0,"sbDisk":7.4,"sbBul":0},{"r":2.88,"vObs":37.2,"errV":4.19,"vGas":7.45,"vDisk":20.56,"vBul":0,"sbDisk":2.72,"sbBul":0},{"r":3.83,"vObs":35.9,"errV":5.98,"vGas":8.09,"vDisk":20.08,"vBul":0,"sbDisk":1.79,"sbBul":0}]}
@@ -96,10 +21,85 @@ export const ROTMOD_GALAXIES = [{"name":"CamB","preset":{"rho0":1,"rho1":0.5721,
   distanceMpc: 0.785,
   source: 'Zhang et al. 2024 Table 2 rotation curve; Courteau et al. 2011 analytic brightness prior',
   notes: 'Not a SPARC rotmod record. vGas/vDisk/vBul are unavailable; sbDisk/sbBul are analytic morphology priors, not measured SPARC SB columns.',
-  preset: M31_PRESET.M31,
-  rows: raw.map(([component, r, errR, vObs, errV, modelV]) => {
-    const { sbDisk, sbBul } = m31Sb(r);
-    return { r, vObs, errV, vGas: 0, vDisk: 0, vBul: 0, sbDisk, sbBul, component, errR, modelV };
-  }),
+  preset: {
+    // Conservative starting shape: compact bulge, broad disk, long halo/edge shelf.
+    rho0: 5.4,
+    rho1: 1.39,
+    rho2: 0.8,
+    rho3: 0.54,
+    rho4: 0.25,
+    r1: 0.018,
+    r2: 0.072,
+    r3: 0.416,
+    r4: 1.314,
+    r5: 1.69,
+    amp: 1116,
+    eps: 0.002,
+    support: 0.027,
+	rMax: 83,
+   
+  },
+  rows: [{"r":0.22,"vObs":163.24,"errV":15.61,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.9593402849187354,"sbBul":7.563474157995619,"component":"Bulge","errR":0.1,"modelV":175.78},{"r":0.65,"vObs":210.95,"errV":18.56,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.8845807195693165,"sbBul":2.060983101622304,"component":"Bulge","errR":0.19,"modelV":220.61},{"r":1.86,"vObs":223.8,"errV":10.72,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.7040236031204303,"sbBul":0.2657322665260607,"component":"Disk","errR":0.02,"modelV":223.43},{"r":3.19,"vObs":226.79,"errV":7.96,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.5477771187077228,"sbBul":0.059393338892670185,"component":"Disk","errR":0.02,"modelV":220.33},{"r":4.23,"vObs":213.74,"errV":8.17,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.4501775549211705,"sbBul":0.023132312839731793,"component":"Disk","errR":0.02,"modelV":221.38},{"r":5.32,"vObs":212.54,"errV":7.55,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.36649383286467896,"sbBul":0.0097849635176123,"component":"Disk","errR":0.02,"modelV":223.04},{"r":6.27,"vObs":221.94,"errV":7.2,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.3063525034674884,"sbBul":0.004986445187853225,"component":"Disk","errR":0.02,"modelV":224.04},{"r":7.2,"vObs":223.3,"errV":8.49,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.2570484819810266,"sbBul":0.0027153222484067934,"component":"Disk","errR":0.02,"modelV":224.43},{"r":8.2,"vObs":225.97,"errV":9.28,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.2128495264916967,"sbBul":0.0014790928281802201,"component":"Disk","errR":0.02,"modelV":224.28},{"r":9.14,"vObs":226.63,"errV":9.07,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.1782571154900338,"sbBul":0.0008661283037101673,"component":"Disk","errR":0.02,"modelV":223.75},{"r":9.93,"vObs":223.45,"errV":10.29,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.15357213220896312,"sbBul":0.000565147726288908,"component":"Disk","errR":0.02,"modelV":223.1},{"r":10.62,"vObs":221.25,"errV":10.24,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.13482554642703812,"sbBul":0.0003950894005516189,"component":"Disk","errR":0.01,"modelV":222.44},{"r":11.25,"vObs":221.17,"errV":11.16,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.11971498222856011,"sbBul":0.00028806638218537684,"component":"Disk","errR":0.01,"modelV":221.79},{"r":11.83,"vObs":213.58,"errV":9.75,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.10730548935597295,"sbBul":0.00021718937081405363,"component":"Disk","errR":0.01,"modelV":221.17},{"r":12.48,"vObs":215.04,"errV":12.67,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.09492036698824419,"sbBul":0.0001596681144750796,"component":"Disk","errR":0.01,"modelV":220.44},{"r":13.37,"vObs":215.12,"errV":12.82,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.08024735239860416,"sbBul":0.00010623741683978959,"component":"Disk","errR":0.02,"modelV":219.48},{"r":14.29,"vObs":217.92,"errV":13.52,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.06745959755199507,"sbBul":0.0000707951055945705,"component":"Disk","errR":0.02,"modelV":218.48},{"r":15.2,"vObs":215.97,"errV":13.09,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.05681672579946416,"sbBul":0.00004804367042369173,"component":"Disk","errR":0.02,"modelV":217.54},{"r":16.08,"vObs":223.22,"errV":13.07,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.048124577571347686,"sbBul":0.000033417453105038416,"component":"Disk","errR":0.02,"modelV":216.67},{"r":17.21,"vObs":213.32,"errV":13.44,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.03888410159245904,"sbBul":0.0000212947150808392,"component":"Disk","errR":0.02,"modelV":215.61},{"r":18.31,"vObs":213.85,"errV":15.37,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.03159624542439627,"sbBul":0.000013944107934971135,"component":"Disk","errR":0.03,"modelV":214.64},{"r":19.38,"vObs":199.73,"errV":15.19,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.02582005473790896,"sbBul":0.000009358820970111687,"component":"Disk","errR":0.03,"modelV":213.76},{"r":8.88,"vObs":233.09,"errV":32.4,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.1872198474017826,"sbBul":0.0010011699795853236,"component":"Halo","errR":1.08,"modelV":223.92},{"r":11.55,"vObs":217.54,"errV":35.26,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.11312687720539716,"sbBul":0.0002486744540688288,"component":"Halo","errR":0.77,"modelV":221.46},{"r":13.55,"vObs":230.53,"errV":35.63,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.0775677311800632,"sbBul":0.00009801224844861836,"component":"Halo","errR":0.57,"modelV":219.28},{"r":15.25,"vObs":212.91,"errV":36.6,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.056283239354464124,"sbBul":0.00004704859918552028,"component":"Halo","errR":0.54,"modelV":217.49},{"r":16.91,"vObs":212.36,"errV":36.67,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.04114857270092376,"sbBul":0.000023962216989104282,"component":"Halo","errR":0.62,"modelV":215.88},{"r":18.68,"vObs":204.64,"errV":38.1,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.029465703008089542,"sbBul":0.000012131100257227351,"component":"Halo","errR":0.54,"modelV":214.33},{"r":20.41,"vObs":220.27,"errV":37.18,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.02125967068178982,"sbBul":0.000006447422146721255,"component":"Halo","errR":0.54,"modelV":212.98},{"r":22.26,"vObs":213.35,"errV":37.17,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.014995576820477703,"sbBul":0.000003384815200108813,"component":"Halo","errR":0.62,"modelV":211.68},{"r":24.12,"vObs":219.28,"errV":36.73,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.010557240024021919,"sbBul":0.0000018225944221462297,"component":"Halo","errR":0.67,"modelV":210.51},{"r":26.26,"vObs":217.99,"errV":35.88,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.007050075301634626,"sbBul":9.225986414018132e-7,"component":"Halo","errR":0.76,"modelV":209.29},{"r":28.63,"vObs":222.84,"errV":38.16,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.004508067126205578,"sbBul":4.492785149396731e-7,"component":"Halo","errR":0.87,"modelV":208.08},{"r":31.23,"vObs":204.28,"errV":37.89,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.002760198089726014,"sbBul":2.1160297320579994e-7,"component":"Halo","errR":0.88,"modelV":206.88},{"r":34.28,"vObs":210.33,"errV":38.76,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.0015524444461084838,"sbBul":9.127104884303012e-8,"component":"Halo","errR":1.19,"modelV":205.58},{"r":39.56,"vObs":221.84,"errV":36.68,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.000573271607822044,"sbBul":2.332646505176109e-8,"component":"Halo","errR":2.21,"modelV":203.53},{"r":46.21,"vObs":185.33,"errV":38.68,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.00016347214901900228,"sbBul":4.787208392418266e-9,"component":"Halo","errR":2.42,"modelV":201.19},{"r":52.08,"vObs":182.05,"errV":38.15,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.00005400601685644434,"sbBul":1.3081688220866863e-9,"component":"Halo","errR":1.63,"modelV":199.23},{"r":54.85,"vObs":196.28,"errV":38.81,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.000032022985896050494,"sbBul":7.291837174624816e-10,"component":"Halo","errR":1.67,"modelV":198.33},{"r":67.26,"vObs":202.02,"errV":40.67,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":0.0000030800459639312214,"sbBul":6.36274289625395e-11,"component":"Halo","errR":14.95,"modelV":194.47},{"r":98.74,"vObs":192.59,"errV":42.23,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":8.10983204018284e-9,"sbBul":3.332953827608316e-13,"component":"Halo","errR":17.19,"modelV":185.55},{"r":123.56,"vObs":168.53,"errV":41.34,"vGas":0,"vDisk":0,"vBul":0,"sbDisk":7.502441311415406e-11,"sbBul":9.874260917182065e-15,"component":"Halo","errR":11.6,"modelV":179.31}],
 }
+,  {
+  name: 'MilkyWay',
+  preset: {
+
+    rho0: 6,
+    rho1: 4.13,
+    rho2: 3.010,
+    rho3: 1.540,
+    rho4: 0.53,
+    r1: 0.042,
+    r2: 0.054,
+    r3: 0.244,
+    r4: 0.949,
+    r5: 1.098,
+    amp: 313,
+    eps: 0.011,
+    support: 0.00,
+
+    rMax: 26.0,   // kpc — last reliable Gaia DR3 point
+    rSun: 8.178,  // kpc — solar galactocentric radius
+    vSun: 229,    // km/s — local circular speed
+    // Known baryonic mass components (for amp calibration):
+    // Stellar disk:    ~4.0e10 Msun (McMillan 2017)
+    // Bulge:           ~0.9e10 Msun
+    // Gas disk (HI+H2):~1.0e10 Msun
+    // Total baryonic:  ~6.0e10 Msun (conservative)
+    // Total dynamical: ~2.06e11 Msun (Jiao+2023)
+    mBaryon_Msun: 6.0e10,
+    mDyn_Msun:    2.06e11,
+  },
+  // columns: r(kpc), Vobs(km/s), errV(km/s)
+  // Sources blended: inner (Eilers/Mróz), middle (Wang+2023), outer (Jiao+2023)
+  rows: [
+    // ── inner region: Eilers+2019 / Mróz+2019 ──────────────────
+    { r:  4.0, vObs: 230, errV:  8, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 1.00, sbBul: 0.60 },
+    { r:  5.0, vObs: 232, errV:  6, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.92, sbBul: 0.40 },
+    { r:  6.0, vObs: 229, errV:  5, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.82, sbBul: 0.22 },
+    { r:  7.0, vObs: 228, errV:  4, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.72, sbBul: 0.10 },
+    { r:  8.0, vObs: 229, errV:  4, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.62, sbBul: 0.04 },
+    // ── R_sun = 8.178 kpc, V = 229 km/s (GRAVITY 2019) ─────────
+    { r:  8.5, vObs: 229, errV:  3, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.58, sbBul: 0.03 },
+    { r:  9.0, vObs: 228, errV:  3, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.52, sbBul: 0.02 },
+    { r: 10.0, vObs: 227, errV:  4, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.44, sbBul: 0.01 },
+    { r: 11.0, vObs: 226, errV:  4, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.37, sbBul: 0.00 },
+    { r: 12.0, vObs: 225, errV:  5, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.30, sbBul: 0.00 },
+    // ── middle: Wang+2023 / Jiao+2023 ───────────────────────────
+    { r: 13.0, vObs: 224, errV:  5, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.24, sbBul: 0.00 },
+    { r: 14.0, vObs: 222, errV:  6, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.19, sbBul: 0.00 },
+    { r: 15.0, vObs: 220, errV:  6, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.15, sbBul: 0.00 },
+    { r: 16.0, vObs: 218, errV:  7, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.11, sbBul: 0.00 },
+    { r: 17.0, vObs: 215, errV:  7, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.085,sbBul: 0.00 },
+    { r: 18.0, vObs: 213, errV:  8, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.063,sbBul: 0.00 },
+    { r: 19.0, vObs: 210, errV:  8, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.046,sbBul: 0.00 },
+    // ── outer / Keplerian decline: Jiao+2023 ────────────────────
+    { r: 20.5, vObs: 206, errV: 10, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.030,sbBul: 0.00 },
+    { r: 22.0, vObs: 200, errV: 11, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.018,sbBul: 0.00 },
+    { r: 24.0, vObs: 192, errV: 12, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.009,sbBul: 0.00 },
+    { r: 26.0, vObs: 183, errV: 14, vGas: 0, vDisk: 0, vBul: 0, sbDisk: 0.004,sbBul: 0.00 },
+  ]
+}
+
 ];
