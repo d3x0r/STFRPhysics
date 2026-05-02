@@ -4,189 +4,407 @@
 
 ---
 
-## The Two Working Branches
+## 1. The Two Branches
 
-### GR / least-action through displaced medium
+### 1.1 GR / least-action through the displaced medium
 
-The weak-field observational tests paper derives the full deflection via the stationary-cost principle. The realized propagation cost per coordinate length is
+The weak-field observational tests paper derives the standard light-deflection coefficient by a stationary-cost principle. The realized propagation cost per coordinate length is
 
 $$
-n_{\mathrm{eff}}(r) = (1+\Sigma)^2 \approx 1 + 2\Sigma = 1 + \frac{d^2}{r}
+n_{\mathrm{eff}}(r)=(1+\Sigma)^2\approx 1+2\Sigma=1+\frac{d^2}{r},
 $$
 
 where one factor of $(1+\Sigma)$ comes from the time burden and one from the spatial stretch of the displaced medium. Minimizing the path integral gives
 
 $$
-\theta_{\mathrm{GR}} = \frac{4GM}{c^2 b}
+\theta_{\mathrm{GR}}(b)=\frac{4GM}{c^2 b}.
 $$
 
-At the solar limb ($b = R_\odot = 695{,}700$ km):
+At the solar limb, using $b=R_\odot=695{,}700\,\mathrm{km}$,
 
 $$
-\theta_{\mathrm{GR}} = 1.752''
+\theta_{\mathrm{GR}}(R_\odot)\approx 1.752''.
 $$
 
-This is confirmed by modern VLBI to $1.752 \pm 0.05''$.
+This is the conservative, observation-safe branch. It matches the ordinary exposed-limb GR coefficient and modern eclipse/VLBI-style reductions.
+
+### 1.2 Displacement-framework surface / β branch
+
+A more direct surface estimate uses the escape-velocity beta at the solar surface as the fractional transport stretch:
+
+$$
+\beta_\odot=\frac{v_{\mathrm{esc}}}{c}
+=\frac{\sqrt{2GM_\odot/R_\odot}}{c}
+\approx 0.002059.
+$$
+
+This number is not an adjustable fit parameter. For a spherical source with known mass and radius, there is only one escape-velocity beta and therefore one associated surface expansion scale:
+
+$$
+\Delta R_\beta=\beta_\odot R_\odot.
+$$
+
+For the Sun this is about $0.002R_\odot$, or about **2 mm per meter** of radial surface scale. Projected at Earth, this corresponds to
+
+$$
+\beta_\odot\,\theta_{\odot,\mathrm{radius}}
+\approx 0.002059\times 960''
+\approx 1.98''.
+$$
+
+Equivalently, the surface estimate gives
+
+$$
+\theta_\beta(R_\odot)\approx 1.977''.
+$$
+
+In this interpretation, the β branch is not primarily a free alternative amplitude. It says that the Sun has a definite transport/displacement surface or tangent-horizon scale fixed by the escape velocity. The open question is how that fixed β-surface edge maps onto the first clean observable lensed image outside the occulting/photospheric boundary.
+
+### 1.3 Same falloff, different edge assignment
+
+For the simplified comparison used in this note, both branches are treated as having the same $1/b$ falloff:
+
+$$
+\theta_\beta(b)=\theta_\beta(R_\odot)\frac{R_\odot}{b},
+\qquad
+\theta_{\mathrm{GR}}(b)=\theta_{\mathrm{GR}}(R_\odot)\frac{R_\odot}{b}.
+$$
+
+The ratio is therefore fixed:
+
+$$
+\frac{\theta_\beta}{\theta_{\mathrm{GR}}}
+=\frac{1.977}{1.752}
+\approx 1.128.
+$$
+
+The number $1.128R_\odot$ is a **diagnostic radius**, not a claim that the Sun is physically twelve percent larger. It is simply the impact parameter at which the β curve falls to the canonical GR exposed-limb number:
+
+$$
+\theta_\beta(1.128R_\odot)=1.752''.
+$$
+
+The physical β surface expansion is instead the much smaller scale $\beta R_\odot\approx0.002R_\odot$. These two radii must not be collapsed into one claim.
+
+Thus the more precise interpretive statement is:
+
+> The β branch may be an edge-assignment difference rather than a different far-field law. GR conventionally reports the exposed optical deflection coefficient at the photospheric impact radius. The β branch assigns a stronger value to the displacement/tangent boundary and asks where that branch becomes observationally accessible once occultation, hidden-source mapping, glare, and clean centroiding are imposed.
 
 ---
 
-### Displacement Framework Surface / Horizon Prediction (β formula)
+## 2. The Straight-Line Geodesic and Its Relation to GR
 
-A more direct surface estimate uses the escape velocity beta at the solar surface as the fractional space stretch:
+### 2.1 Why the surface β formula over-predicts
 
-$$
-\beta = \frac{v_{\mathrm{esc}}}{c} = \frac{\sqrt{2GM/R_\odot}}{c} \approx 0.002059
-$$
+The β surface formula computes the angle using the **Earth→sun** geometry: it takes the displacement at $R_\odot$ and projects it through the straight-line distance $L_\odot$. This is a surface-only, single-point estimate — it does not integrate over the ray path.
 
-The deflection angle at the limb from this stretch, projected through the geometry:
+The correct picture is **sun→Earth**: a ray from a distant star enters nearly flat space, passes through increasingly displaced space as it approaches the sun, reaches maximum displacement $\Sigma(R_\odot) = GM/c^2 R_\odot$ at closest approach, then propagates back outward through the weakening $1/r$ field to Earth. The field at 1 AU is:
 
 $$
-\theta_\beta = \arcsin\!\left(\beta \cdot \frac{R_\odot}{L_\odot}\right) \cdot \frac{360 \times 3600}{2\pi}
+\frac{\Sigma(L_\odot)}{\Sigma(R_\odot)} = \frac{R_\odot}{L_\odot} \approx \frac{1}{215}
 $$
 
-where $L_\odot = 1\,\mathrm{AU}$ is the Earth-Sun distance. This gives:
+so space at Earth is essentially flat and the outbound leg gradually straightens the ray.
+
+### 2.2 The path integral recovers GR exactly
+
+For a straight-line geodesic through displaced space — not a least-action path, simply a straight line in displaced coordinates — the transverse deflection integrates as:
 
 $$
-\theta_\beta = 1.977''
+\theta = \int_{-\infty}^{+\infty} \nabla_\perp\, n_{\mathrm{eff}}\, dz
+= 2\int_{-\infty}^{+\infty} \frac{b\cdot GM/c^2}{(b^2+z^2)^{3/2}}\,dz
+= \frac{4GM}{c^2 b}
 $$
 
-The ratio to the GR value is $\theta_\beta / \theta_{\mathrm{GR}} \approx 1.128$.
+**This is exactly the GR result.** Numerically verified: integrating the spatial stretch alone gives the Newtonian 0.876''; including both the spatial and time-burden factors $(1+\Sigma)^2$ gives 1.752'' = GR exactly.
 
-Both predictions follow the same $1/b$ falloff in this first comparison — they differ only in the limb amplitude. At any impact parameter $b$:
+The β surface formula over-predicts because:
+1. It uses only the **spatial stretch at the surface**, missing the equal time-burden contribution
+2. It uses Earth-frame geometry rather than integrating the full path through the $1/r$ field
+3. The outbound leg ($R_\odot \to L_\odot$) partially straightens the ray as $\Sigma(r)$ weakens — this is automatically included in the path integral but absent from the surface estimate
+
+The 12.8% excess is therefore the difference between a surface-only single-factor estimate and the completed two-factor displaced-geodesic ray trace. This statement is not the least-action branch. It is the direct ray-trace result through the displaced transport geometry. The least-action derivation remains a separate conservative route to the same weak-field coefficient.
+
+### 2.3 The coordinate picture
+
+| | GR | Displacement Framework |
+|---|---|---|
+| Geometry | Curved spacetime, least-action | Displaced flat space, straight-line geodesic |
+| Singularity | $r=0$ → infinite density | Finite displaced volume, no singularity |
+| Interior | Coordinate artifact | Real displaced space pushed outward by finite mass |
+| Path | Geodesic in curved coords | Straight line through stretched metric |
+| Observable at Earth | 1.752'' | 1.752'' (full path integral) |
+
+GR's power is in mapping observed (displaced) space onto flat coordinates. It works precisely for predictions but does not track where the displaced volume went — the singularity at $r=0$ is an artifact of compressing real displaced space into a coordinate point. The displacement framework keeps that space explicit: a finite mass displaces a finite volume, pushed outward, and the ray travels straight through it.
+
+### 2.4 Where the β branch fits
+
+The β surface value (1.977'') is the displacement at the physical surface projected to Earth assuming flat space on both sides — analogous to Snell's law at a sharp interface. It correctly describes the maximum displacement encountered by the ray. The full path integral then accounts for how that displacement is distributed along the entire path, recovering the lower GR value.
+
+The β branch is therefore not a failed prediction. It is the **surface horizon scale** — the displacement at closest approach — while the completed displaced-geodesic ray trace gives the **integrated path deflection** as observed from Earth. The 12.8% difference is the ratio of the peak surface scale to the completed observed value.
+
+### 2.5 Surface-to-observer scalar compression
+
+The 12.8% beta/GR difference should not be read as a permanent excess in the final observed image field. It appears when the surface/tangent scale
 
 $$
-\theta_\beta(b) = \theta_{\mathrm{GR}}(b) \times 1.128
+\theta_\beta(R_\odot)\approx1.977''
 $$
 
-This should not be read as two simple predictions for the same visible star at the same observational surface. The least-action/GR branch describes the clean exposed-limb deflection ordinarily extracted from measurable exterior star images. The β branch is a surface/horizon estimate: it describes the displacement scale at the occulting edge, where a remote background source can still be geometrically behind the visible solar disk while its bent image is projected outside the disk.
+is compared directly with the completed weak-field observed coefficient
+
+$$
+\theta_{\mathrm{obs}}(R_\odot)=1.752''.
+$$
+
+In the direct displaced-geodesic reading, the beta value is the closest-approach or surface-coordinate scale. The information then propagates outward from the Sun through the decreasing displacement map toward the observer. To first order, that outward map acts like a nearly scalar compression of the solar-centered lensed field:
+
+$$
+\theta_{\mathrm{obs}}(b)\simeq k\,\theta_\beta(b),
+\qquad
+k=\frac{1.752}{1.977}\simeq0.887.
+$$
+
+Equivalently,
+
+$$
+\frac{1}{k}\simeq1.128.
+$$
+
+This is the same ratio that appears in the diagnostic row $b\simeq1.128R_\odot$. It is not a claim that the physical solar radius is wrong by 12.8%. It is the ratio between a surface/tangent displacement estimate and the completed Earth-observed angular displacement. If the compression is approximately scalar, the relative $1/b$ structure is preserved while the beta surface curve collapses onto the observed GR/ray-trace curve:
+
+$$
+k\,\frac{1.977''}{b/R_\odot}\simeq\frac{1.752''}{b/R_\odot}.
+$$
+
+This is why ordinary exposed-star reductions should recover the GR coefficient even if the beta surface scale remains meaningful as the local horizon/edge diagnostic at closest approach.
 
 ---
 
-## Behind-the-Sun Sources Are Part of the Signal
+## 3. Hidden-to-Visible Source Mapping
 
-A gravitational-lensing simulation must not remove all sources whose unlensed positions fall behind the visible solar disk. That filter would erase the phenomenon under test. One of the strong points of solar-limb lensing is that it makes background objects visible even when their geometric source positions are at or behind the occulting edge.
+A gravitational-lensing simulation must not remove all sources whose unlensed positions fall behind the visible solar disk. That filtering would erase the phenomenon under test. One of the strong points of solar-limb lensing is that it makes background objects visible even when their geometric source positions are at or behind the occulting edge.
 
-The useful simulation therefore contains several classes of fixed source points:
+The refined interpretation should distinguish at least three surfaces:
 
-- points clearly behind the visible disk,
-- points inside the apparent limb but close enough to be lensed outward,
-- half-emergent or tangent-clearance points,
-- points just outside the limb,
-- and exterior comparison points where ordinary exposed-limb astrometry is unambiguous.
+1. **True solar photospheric radius** — the physical radius used in the analytic solar-limb formula.
+2. **Occulting/visible boundary** — during a total eclipse this may be the Moon's edge rather than the Sun's edge.
+3. **First clean exposed astrometric image** — the first lensed image far enough outside the glare/corona/occulting boundary to be measured.
 
-In this reading, the familiar $1.752''$ value can appear as the first clean exterior image position even when the underlying displacement/horizon scale is closer to $1.977''$. The β value is then not discarded as a failed exposed-star prediction; it is interpreted as the buried edge or horizon scale from which the first clean visible image is projected.
+In this reading, the familiar $1.752''$ value can appear as the first clean exterior image position even if the buried/tangent β surface scale is closer to $1.977''$. The β value is then not discarded as a failed exposed-star prediction; it is interpreted as the hidden edge or horizon scale from which the first clean visible image is projected.
+
+A useful visual analogy is a remote Sun half-risen over a horizon. The edge condition is not an orthographic, infinitely sharp circle. The source must clear the opacity boundary, the bent ray must clear the tangent, and the final image must land far enough outside the solar limb to be measured against glare, corona, plate blur, and reduction error.
+
+### 3.1 The unseen inner curve
+
+The first source that becomes visible just past the apparent solar edge is a limiting case. Its observed offset from the apparent limb can be essentially zero even though its unlensed source position belongs to the hidden/tangent zone. The strongest compression and edge-mapping ambiguity therefore live inside the innermost part of the curve.
+
+Ordinary eclipse observations do not sample that inner curve well. The most useful measured stars are normally already outside the limb by at least one solar radius, and often much farther. In Bruns 2017, most stars were beyond $2.4R_\odot$, with only two close-in stars around $1.5$--$1.6R_\odot$. The region most likely to distinguish a beta-edge interpretation from the exposed GR/ray-trace coefficient is therefore mostly unseen and must be inferred from farther-out exposed images.
 
 ---
 
-## The Convergence Problem
+## 4. The Inserted Starfield
 
-The two predictions differ by $\sim 0.22''$ at the limb. However, the first *measurable* star position during a solar eclipse is typically $\sim 0.25\,R_\odot$ past the apparent limb. At that position:
+Lensing around the solar limb *reveals* stars that would otherwise be hidden:
 
-| Position | $b/R_\odot$ | $\theta_\beta$ | $\theta_{\mathrm{GR}}$ | $\theta_\beta/\theta_{\mathrm{GR}}$ | $\theta_\beta/1.752''$ |
+- Without lensing: stars between the apparent limb and the true physical limb are blocked
+- With lensing: their light grazes the physical limb and bends into view, appearing just outside the apparent limb
+- Roughly $\theta_\beta \approx 2''$ worth of previously hidden sky is injected into the visible starfield
+
+This injected angular content must be accommodated by the visible starfield — stars just outside the limb are pushed outward to make room. The measured deflection of any individual star is therefore a combination of its own geometric bending plus its share of the redistribution of the newly visible angular wedge.
+
+The same $1/r$ field that acts on stellar images also acts on the injected stars as they propagate from the limb to Earth — pulling them back inward. The net effect, integrated over the full path, converges to the GR prediction. The β surface excess nearly cancels on propagation, leaving the observed 1.752''.
+
+---
+
+## 5. Numerical Ray Trace Verification
+
+To verify the path integral result without any appeal to GR, a ray was traced directly through the STFR displaced metric. The ray starts at $z = -5\,\mathrm{AU}$, $x = b$ (impact parameter), with zero initial transverse velocity. At each step $dz$:
+
+$$
+\frac{d^2x}{dz^2} = \nabla_\perp\, n_{\mathrm{eff}} = 2\,\frac{d\Sigma}{dx} = -\frac{2GM}{c^2}\frac{x}{r^3}
+$$
+
+The ray is stepped forward and its final transverse displacement at $z = +1\,\mathrm{AU}$ is converted to an angle. No GR formula is assumed — the ray bends only because the displaced metric has a transverse gradient.
+
+Results ($N = 300{,}000$ steps, $z \in [-5\,\mathrm{AU},\, +1\,\mathrm{AU}]$):
+
+| $b/R_\odot$ | Ray trace | GR formula | ratio |
+|---:|---:|---:|---:|
+| 1.000 | 1.7517'' | 1.7517'' | 1.000006 |
+| 1.128 | 1.5529'' | 1.5529'' | 1.000007 |
+| 1.250 | 1.4014'' | 1.4014'' | 1.000007 |
+| 1.500 | 1.1678'' | 1.1678'' | 1.000009 |
+| 2.000 | 0.8759'' | 0.8759'' | 1.000014 |
+| 3.000 | 0.5839'' | 0.5839'' | 1.000028 |
+| 5.000 | 0.3504'' | 0.3503'' | 1.000076 |
+
+The ray trace matches GR to 5 significant figures at every impact parameter. The residual ~0.001% grows slightly at larger $b$ due to the fixed step count and is purely numerical. The bending in the STFR displaced metric is not approximately equal to GR — it **is** GR, traced from first principles without assuming the GR formula.
+
+---
+
+## 6. Deflection Table
+
+The STFR direct geodesic ray trace (path integral through displaced transport, including both spatial and time-burden factors) gives the **same observed deflection as GR** at every impact parameter. This is not the least-action derivation; it is the completed ray-trace result. The least-action route remains a separate derivation that lands on the same weak-field coefficient.
+
+The β surface column is a *different physical quantity*: the displacement field strength at closest approach, projected to Earth assuming flat space on both sides. It is the peak displacement the ray encounters, not the integrated path deflection that arrives at Earth.
+
+| Position | $b/R_\odot$ | STFR ray trace | GR formula | $\beta$-surface (peak) | $\Sigma(b)$ |
 |---|---:|---:|---:|---:|---:|
-| Limb ($b = R_\odot$) | 1.000 | 1.977'' | 1.752'' | 1.128 | 1.128 |
-| +0.128 R☉ ($b \approx 1.128R_\odot$; $\theta_\beta = 1.752''$) | 1.128 | 1.752'' | 1.553'' | 1.128 | 1.000 |
-| +0.25 R☉ | 1.250 | 1.581'' | 1.401'' | 1.128 | 0.902 |
-| +0.50 R☉ | 1.500 | 1.318'' | 1.168'' | 1.128 | 0.752 |
-| +1.00 R☉ | 2.000 | 0.988'' | 0.876'' | 1.128 | 0.564 |
-| +2.00 R☉ | 3.000 | 0.659'' | 0.584'' | 1.128 | 0.376 |
-| +4.00 R☉ | 5.000 | 0.395'' | 0.350'' | 1.128 | 0.225 |
+| Limb ($b=R_\odot$) | 1.000 | **1.7517''** | 1.7517'' | 1.977'' | $2.12\times10^{-6}$ |
+| $+0.128R_\odot$ | 1.128 | **1.5529''** | 1.5529'' | 1.752'' | $1.88\times10^{-6}$ |
+| $+0.25R_\odot$ | 1.250 | **1.4014''** | 1.4014'' | 1.581'' | $1.70\times10^{-6}$ |
+| $+0.50R_\odot$ | 1.500 | **1.1678''** | 1.1678'' | 1.318'' | $1.41\times10^{-6}$ |
+| $+1.00R_\odot$ | 2.000 | **0.8759''** | 0.8759'' | 0.988'' | $1.06\times10^{-6}$ |
+| $+2.00R_\odot$ | 3.000 | **0.5839''** | 0.5839'' | 0.659'' | $7.08\times10^{-7}$ |
+| $+4.00R_\odot$ | 5.000 | **0.3504''** | 0.3503'' | 0.395'' | $4.25\times10^{-7}$ |
 
-The ratio $\theta_\beta/\theta_{\mathrm{GR}}$ remains fixed at $1.128$ in this simplified comparison because both branches are being treated with the same $1/b$ falloff. The final column instead compares the β value at each radius to the canonical exposed-limb value $1.752''$. The row at $b \approx 1.128R_\odot$ is useful because it marks the impact radius where the β branch gives the familiar $1.752''$ exposed-limb number. In that same row the least-action/GR branch gives $1.553''$, so this is not an equality point between the two curves; it is the radius at which the β curve reaches the canonical exposed value. The first measurable star at $+0.25\,R_\odot$ shows $1.58''$ ($\beta$) vs $1.40''$ (GR) — a difference of only $0.18''$, which is within Eddington's error bars.
-
----
-
-## The Unresolvable / Horizon Zone
-
-The apparent limb, where the photosphere becomes optically opaque, and the true deflecting-edge or tangent-horizon condition are separated by the deflection itself. In the β framework this zone spans $\sim 1.977''$; in the GR/least-action branch it spans $\sim 1.752''$.
-
-Any source or image appearing within this zone is ambiguous:
-
-- it may be a source physically *behind* the Sun whose light grazes past the occulting edge and is bent into view,
-- it may be a source whose center is still behind the visible disk while its lensed image has cleared the limb,
-- it may be a star whose unlensed position happens to sit near the apparent limb,
-- or it may be a partially emerged/tangent-clearance case whose visibility depends on the exact photospheric, atmospheric, and instrumental boundary.
-
-The simulation interpretation is therefore a hidden-to-visible mapping, not a simple outside-limb displacement map. The β branch assigns a larger displacement scale to the occulted horizon; the least-action/GR branch gives the clean exposed coefficient. Those can coincide operationally if the first barely visible exterior image lies near the GR value while the buried horizon scale remains closer to the β value.
-
-This is also why a direct visual interpretation such as "the remote Sun is half-risen over the horizon" is useful. The edge condition is not an orthographic, infinitely sharp circle. The source must clear the opacity boundary, the bent ray must clear the tangent, and the final image must land far enough outside the solar limb to be measured against glare, corona, plate blur, and reduction error.
-
-There is therefore a large extrapolation hidden inside the word *edge*. The β-to-GR offset corresponds to about $0.128R_\odot$ in the simple $1/b$ comparison, roughly one eighth of the solar radius. That number should **not** be read as a proposed error in the physical solar radius. The solar mass, Earth-Sun distance, and broad photospheric radius are much too well constrained to absorb the full β/GR amplitude difference. The row at $b \approx 1.128R_\odot$ is instead a diagnostic radius: it shows where the β branch falls to the canonical GR limb value under a shared $1/b$ falloff.
-
-The plausible observational ambiguity is more local and procedural. In a central eclipse the Moon can be larger than the Sun in apparent angular radius and can hide the true photospheric edge altogether. The observed dark disk is then the lunar occulting edge, not necessarily the solar edge. If the Moon is oversized and offset toward the relevant background-star side, it can remove precisely the innermost rays that would most strongly distinguish the β branch from the least-action/GR branch. That does not need to mimic a simple $0.128R_\odot$ radius shift; it only needs to determine which near-limb source/image pairs are actually available for extrapolation.
-
-The Moon is also not just an occulting mask. It is a weak foreground lens. At a grazing lunar impact parameter its ordinary gravitational contribution is about $0.00738''$. This is small compared with the solar limb deflection, but it is not identically zero: it is about $0.42\%$ of $1.752''$ and about $3.3\%$ of the $0.225''$ β/GR limb-amplitude difference. In most eclipse reductions this term is much smaller than the solar signal and historical plate errors, but it belongs in a complete near-limb model because the same lunar edge that determines visibility also contributes a small local deflection.
-
-The radius question is therefore not “is the Sun secretly twelve percent larger or smaller?” but “which center, edge, and impact parameter were used when the exposed plate positions were reduced?” A uniform plate-scale factor would mostly be solved away by differential astrometry. A directionally correlated center, radius, occultation, or star-selection bias near the smallest impact parameters is more relevant, because the fitted deflection depends on
-
-$$
-b_i = \lVert \vec{x}_i-\vec{x}_\odot \rVert
-$$
-
-and the signal is radial and nonlinear in $1/b_i$. Any claim about the solar tangent/horizon position has to be projected from the exposed star images, the lunar radius, the solar radius, and the alignment geometry rather than read directly off a visible solar boundary.
+The β surface column exceeds the observed deflection by a fixed factor of 1.128 at every row — it is the ratio of the peak displacement to the path-averaged displacement. The $b\approx1.128R_\odot$ row marks where the β surface value *equals* the GR/STFR limb deflection of 1.752'', which is useful as a diagnostic radius for the edge-assignment question.
 
 ---
 
+## 7. Edge Geometry, Lunar Occultation, and Radius Audit
 
-## The 1919 Observations
+The solar mass, Earth-Sun distance, and broad photospheric radius are not plausible weak links for a twelve-percent amplitude difference. The modern values are much too constrained for that. The exact solar radius and photospheric edge definition have real subtleties, but not at the $0.128R_\odot$ scale.
+
+The radius question is therefore not "is the Sun secretly twelve percent larger?" It is:
+
+> Which center, edge, and impact parameter were used when the exposed plate positions were reduced?
+
+A uniform plate-scale factor would mostly be solved away by differential astrometry. A directionally correlated center, radius, occultation, or star-selection bias near the smallest impact parameters is more relevant because the fitted deflection depends on
+
+$$
+b_i=\lVert \vec{x}_i-\vec{x}_\odot\rVert.
+$$
+
+In a central total eclipse, the Moon can be larger than the Sun in apparent angular radius and may hide the true photospheric edge. The observed dark disk is then the lunar occulting edge, not the solar edge. For the 1919 eclipse, approximate semidiameters give a lunar radius about $5.5\%$ larger than the solar radius; for the 2027 Luxor eclipse, the lunar radius is expected to be about $6\%$ larger. This does not reach the $1.128R_\odot$ diagnostic radius, but it can determine which near-limb source/image pairs are actually available for extrapolation.
+
+The Moon is also a weak foreground lens. At a grazing lunar impact parameter its ordinary gravitational contribution is about
+
+$$
+0.00738''.
+$$
+
+This is small compared with the solar limb deflection, about $0.42\%$ of $1.752''$, and about $3.3\%$ of the $0.225''$ β/GR limb-amplitude difference. It cannot explain the difference by itself, but if the goal is to split hairs at the sub-arcsecond level, it belongs in a complete near-limb model because the same lunar edge that determines visibility also contributes a small deflection.
+
+---
+
+## 8. Bruns 2017 Eclipse Measurement and Reduction Sensitivity
+
+Donald Bruns' 2017 eclipse experiment is highly relevant because it used modern amateur/pro-am equipment, calibration fields on both sides of the Sun during totality, catalog star positions, optical-distortion calibration, and independent centroiding pipelines. The reported weighted result was
+
+$$
+L=1.752'',
+$$
+
+with about $3.4\%$ uncertainty, consistent with the GR/direct-ray-trace exposed coefficient.
+
+However, the paper also exposes exactly the reduction-sensitive effects relevant to this note:
+
+- The Danjon representation, which weights closer-in stars more strongly, gives slope $1.031$, corresponding to
+
+$$
+L\approx1.805''.
+$$
+
+- The eclipse images required subtraction of a blurred coronal background because the corona brightness gradient appeared to skew some centroid positions by up to $0.1''$.
+
+- Most measured stars were farther than $2.4R_\odot$ from the Sun. Only two special short-exposure stars were close-in, at about $1.5$–$1.6R_\odot$.
+
+Using the simple comparison
+
+$$
+\theta_{\mathrm{GR}}(b)=\frac{1.751''}{b/R_\odot},
+\qquad
+\theta_\beta(b)=\frac{1.977''}{b/R_\odot},
+$$
+
+the two close-in stars are especially informative:
+
+| Star | $b/R_\odot$ | GR | β | Measured MDL | Measured AST |
+|---:|---:|---:|---:|---:|---:|
+| 19 | 1.513 | 1.157'' | 1.307'' | 1.285'' | 1.339'' |
+| 20 | 1.603 | 1.092'' | 1.233'' | 1.081'' | 1.107'' |
+
+Star 19 sits closer to the β branch; star 20 sits closer to the GR branch. These two stars carry disproportionate near-limb leverage, but they are also the most vulnerable to coronal background, short exposure, and centroiding systematics.
+
+A simple full-table scalar fit of the Bruns published distance/deflection values does not prefer $L=1.977''$. Forcing $L=1.977''$ raises the RMS residual compared with a free or GR-like fit. The aggregate data remain GR-compatible. The narrower point is that the branch-discriminating content lives near the limb, and the near-limb content of the 2017 dataset is sparse and reduction-sensitive.
+
+The 2017 data therefore do not overturn the GR/direct-ray-trace exposed coefficient. They do show why a targeted β-edge audit should use raw frames and a modeled hidden-to-visible source map rather than only the headline $L=1.752''$.
+
+---
+
+## 9. Historical 1919 Observations
 
 | Expedition | Result | Notes |
-|---|---|---|
-| Sobral, Brazil (4-inch lens) | $1.98 \pm 0.12''$ | Best plates; matches $\theta_\beta$ exactly |
-| Sobral (astrographic lens) | $0.93''$ | Excluded — mirror distortion |
-| Príncipe, West Africa (Eddington) | $1.61 \pm 0.30''$ | Cloud interference; wide error bar |
-| Modern (2017 repeat, VLBI) | $1.752 \pm 0.05''$ | Confirms GR prediction |
+|---|---:|---|
+| Sobral, Brazil, 4-inch lens | $1.98\pm0.12''$ | Best 1919 plates; numerically matches $\theta_\beta$ |
+| Sobral astrographic lens | $0.93''$ | Excluded — mirror/plate-scale distortion |
+| Príncipe, West Africa | $1.61\pm0.30''$ | Cloud interference; wide error bar |
 
-The Sobral 4-inch result of $1.98 \pm 0.12''$ is consistent with $\theta_\beta = 1.977''$ and *inconsistent* with $\theta_{\mathrm{GR}} = 1.752''$ at $1.9\sigma$. However it is also consistent with GR at $1.9\sigma$ given the error bars.
-
-The modern exposed-limb result confirms the GR/least-action coefficient when the data are reduced as an ordinary exterior-star deflection measurement. It does not by itself settle whether the β value represents a separate occulted-edge/horizon scale, because that interpretation requires a hidden-to-visible source map rather than a direct comparison of two exposed-star coefficients.
+The 1919 data were strong enough to rule out the Newtonian half-deflection at roughly $0.875''$, which was the central historical goal. They were not designed to distinguish a nearby β-edge/horizon interpretation from the GR/direct-ray-trace exposed coefficient.
 
 ---
 
-## Systematic Concerns in 1919 Measurements
+## 10. Data Prospects
 
-Several systematic effects complicate interpretation of the 1919 plates:
+Most hobby eclipse imagery is not astrometric. It is optimized for the corona, HDR composites, visual drama, or short-exposure prominences. Useful data require raw or linearly calibrated frames, accurate timing, observer ephemeris, calibration fields, distortion characterization, and Gaia-referenced plate solutions.
 
-1. **Plate scale differences** — eclipse and comparison plates taken at different times, temperatures, and optical configurations introduce scale errors.
+STEREO/SECCHI, SOHO/LASCO, Proba-3, and related heliospheric/coronagraph instruments may contain background star information, but they are not primarily near-limb sub-arcsecond astrometric instruments. Background subtraction and occulting optics may remove or distort the stars needed for this test.
 
-2. **Atmospheric/chromospheric refraction** — plasma in the chromosphere adds a small positive deflection bias not corrected in early analyses.
+A better future target is a purpose-built 2027 total-eclipse campaign near Luxor/Egypt, with:
 
-3. **Star selection** — only stars clearly outside the solar disk are usable. Stars within $\sim 2''$ of the limb (the unresolvable zone) are ambiguous.
+- raw monochrome CCD/CMOS frames during totality,
+- multiple exposure lengths,
+- calibration fields before/during/after totality,
+- accurate site coordinates and timing,
+- Gaia plate solutions,
+- explicit lunar occulting geometry,
+- lunar deflection included,
+- coronal-gradient centroid bias modeled,
+- and fits compared under GR/direct-ray-trace, least-action, β-edge, and hidden-to-visible source mappings.
 
-4. **Which stars were measured** — Eddington's usable stars were not at the limb itself but distributed over several solar radii, where both frameworks agree more closely.
+The useful public pitch is not "GR is wrong." It is:
 
-5. **Lunar occultation geometry** — in a central total eclipse the Moon may cover more than the visible solar disk, hiding the photospheric edge that would otherwise define the tangent boundary. This does not by itself explain the full β/GR amplitude difference, but it can control which near-limb rays survive into the measured plate solution.
-
-6. **Solar-center and impact-parameter placement** — the relevant fitted quantity is the Sun-centered impact parameter $b_i$, not merely a global plate scale. A coherent scale error is largely removable; a center/edge/selection bias concentrated near the smallest $b_i$ values can skew the inferred $1/b$ coefficient.
-
-7. **Lunar gravitational deflection** — the Moon contributes a small additional lensing term, about $0.00738''$ for a grazing lunar ray. This is too small to account for the β/GR difference by itself, but it is coupled to the same lunar-edge geometry that selects which near-limb rays are visible.
-
-The net effect is that 1919 data could not distinguish between $\theta_\beta$ and $\theta_{\mathrm{GR}}$ — both were within error bars, and both ruled out the Newtonian half-deflection ($0.875''$), which was the primary goal.
-
----
-
-## Status
-
-- The β surface/horizon formula and the GR/least-action exposed-limb coefficient are both observationally safe in the present interpretation because they are not assigned to the same observational surface.
-- The β formula agrees with the best 1919 plate (Sobral 4-inch), but that historical agreement should be treated as suggestive rather than decisive.
-- Modern exposed-limb reductions confirm the GR/least-action coefficient near $1.752''$.
-- The β branch is retained as a horizon-scale interpretation: it applies to buried, tangent, half-emergent, or behind-the-Sun source positions that may lens into the first clean visible exterior image.
-- The discrepancy is concentrated near the occulting boundary, where source position, image position, lunar occultation, lunar deflection, photospheric opacity, corona/glare, tangent clearance, fitted solar center, and plate reduction are inseparable.
-- The $1.128R_\odot$ row is a diagnostic radius, not a claim that the true solar radius is uncertain at the twelve-percent level.
-- The decisive test is not merely a higher-precision repetition of the ordinary exposed-star coefficient. It is a modeled hidden-to-visible mapping of sources inside and just outside the apparent limb, with lunar occultation geometry, atmospheric refraction, plate solution, fitted solar-center placement, corona/glare, and solar-edge opacity explicitly included.
+> Can a modern pro-am eclipse astrometry campaign distinguish near-limb solar-deflection models at the $0.1''$–$0.2''$ level once hidden-source mapping, lunar occultation, Moon lensing, and coronal centroid bias are modeled explicitly?
 
 ---
 
-## Constants Used
+## 11. Present Status
+
+- Once the **full displaced-geodesic ray trace** is used, there is no separate STFR prediction for the ordinary weak-field exposed solar-deflection coefficient. The observable is
+
+$$
+\theta_{\mathrm{obs}}(b)=\frac{4GM}{c^2b},
+$$
+
+so the solar-limb value is $1.752''$ at $b=R_\odot$.
+
+- This no-difference result is specifically the **geodesic ray-trace/path-integral result through displaced transport**, not the surface beta estimate and not the least-action derivation. The least-action route remains a separate observation-safe derivation of the same weak-field coefficient.
+
+- The beta surface value, $1.977''$, is retained as a **closest-approach surface/horizon scale** fixed by $\beta_\odot=v_{\mathrm{esc}}/c$. It is not a competing final exposed-star prediction.
+
+- The apparent 12.8% excess is the ratio between the closest-approach beta surface scale and the completed Earth-observed field. In the surface-to-observer map this can be represented as an approximate scalar compression, $k\simeq0.887$, that maps the beta surface curve onto the observed GR/ray-trace curve while preserving the $1/b$ structure.
+
+- The physical beta surface expansion is about $0.002R_\odot$ or $1.98''$ projected at Earth. The $1.128R_\odot$ row is only a diagnostic radius where the beta surface curve reaches the canonical exposed-limb value under the shared $1/b$ falloff.
+
+- The decisive observational question is therefore not whether the ordinary solar deflection differs from GR in weak field. It does not, once the full ray trace is used. The remaining question is how the hidden-source/tangent-edge region maps into the first clean exposed images, especially because the strongest inner compression is mostly unobserved.
+
+- Historical eclipse data ruled out Newtonian half-deflection but were not designed for this distinction. Bruns 2017 is GR-compatible in the aggregate, but its near-limb leverage comes mostly from two stars and reduction details at the $0.1''$ scale.
+
+- A targeted test should model hidden-to-visible source positions, true solar radius, lunar occulting radius, lunar deflection, fitted solar-center placement, corona/glare, atmospheric refraction, optical distortion, and centroid bias simultaneously.
+
+---
+
+## 12. Constants Used
 
 | Quantity | Value |
-|---|---|
-| $G$ | $6.67430 \times 10^{-11}$ m³ kg⁻¹ s⁻² |
-| $c$ | $299{,}792{,}458$ m/s |
-| $M_\odot$ | $1.989 \times 10^{30}$ kg |
-| $R_\odot$ | $695{,}700$ km |
-| $1\,\mathrm{AU}$ | $149{,}597{,}870.7$ km |
-| $\beta = v_{\mathrm{esc}}/c$ at surface | $0.002059$ |
-| $\theta_\beta$ at limb | $1.977''$ |
-| $\theta_{\mathrm{GR}}$ at limb | $1.752''$ |
-| Lunar grazing deflection | $0.00738''$ |
+|---|---:|
+| $G$ | $6.67430\times10^{-11}\,\mathrm{m^3\,kg^{-1}\,s^{-2}}$ |
+| $c$ | $299{,}792{,}458\,\mathrm{m/s}$ |
+| $M_\odot$ | $1.989\times10^{30}\,\mathrm{kg}$ |
+| $R_\odot$ | $695{,}700\,\mathrm{km}$ |
+| $1\,\mathrm{AU}$ | $149{,}597{,}870.7\,\mathrm{km}$ |
+| $\beta_\odot=v_{\mathrm{esc}}/c$ | $0.002059$ |
+| $\theta_\beta(R_\odot)$ | $1.977''$ |
+| $\theta_{\mathrm{GR}}(R_\odot)$ | $1.752''$ |
