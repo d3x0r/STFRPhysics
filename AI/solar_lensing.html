@@ -24,48 +24,45 @@
 </style>
 </head>
 <body>
-<h1>Solar Gravitational Lensing</h1>
+<h1>Solar Gravitational Lensing — Three-Stage Path</h1>
 <p class="subtitle">
-  Full geodesic through displaced space = GR = 4GM/c&sup2;b &nbsp;&middot;&nbsp;
-  Surface &beta; estimate = arcsin(&beta;&middot;R/L) &nbsp;&middot;&nbsp;
-  straight-line geodesic recovers GR exactly
+  Star&rarr;Sun: full &beta; surface deflection (1.977&quot;) &nbsp;&middot;&nbsp;
+  Sun&rarr;Earth: outbound path pulls back 12.8% &nbsp;&middot;&nbsp;
+  Net observed: GR = 4GM/c&sup2;b (1.752&quot;)
 </p>
 <div class="controls">
   <label>stars/R&#9737; <input type="range" id="density" min="1" max="8" step="1" value="4" style="width:55px"> <span class="val" id="densityVal">4</span></label>
   <label>window <input type="range" id="window" min="1" max="5" step="0.5" value="4" style="width:55px"> <span class="val" id="windowVal">4</span> R&#9737;</label>
   <label>exaggerate <input type="range" id="exag" min="50" max="700" step="25" value="400" style="width:65px"> <span class="val" id="exagVal">400</span>&times;</label>
   <label><input type="checkbox" id="showLines" checked> lines</label>
-  <label><input type="checkbox" id="showBeta" checked> &beta; surface limb</label>
 </div>
-<canvas id="c" height="420"></canvas>
+<canvas id="c" height="560"></canvas>
 <div class="info" id="info">hover a star for details</div>
 <div class="legend">
   <span><svg width="14" height="14"><rect x="0" y="2" width="14" height="10" fill="#f59e0b" opacity="0.85" rx="1"/></svg> apparent limb</span>
-  <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#34d399" stroke-width="2"/></svg> GR / full geodesic limb (1.752")</span>
-  <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#fde68a" stroke-width="1.5" stroke-dasharray="4,3"/></svg> &beta; surface estimate (1.977")</span>
+  <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#fde68a" stroke-width="1.5" stroke-dasharray="4,3"/></svg> &beta; limb at sun (1.977&quot;)</span>
+  <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#34d399" stroke-width="2"/></svg> GR limb at Earth (1.752&quot;)</span>
   <span><svg width="14" height="14"><circle cx="7" cy="7" r="3" fill="#60a5fa" opacity="0.8"/></svg> true position</span>
-  <span><svg width="14" height="14"><circle cx="7" cy="7" r="3.5" fill="#f8fafc"/></svg> apparent (GR/geodesic)</span>
+  <span><svg width="14" height="14"><circle cx="7" cy="7" r="3" fill="#fb923c" opacity="0.9"/></svg> at sun (&beta; shift)</span>
+  <span><svg width="14" height="14"><circle cx="7" cy="7" r="3.5" fill="#f8fafc"/></svg> observed at Earth (GR)</span>
 </div>
 <footer>
-  <b>Full straight-line geodesic through displaced space:</b>
-  &theta; = &int; &nabla;&perp; n<sub>eff</sub> dz = 4GM/c&sup2;b = 1.752&quot; at limb &nbsp;&mdash;&nbsp; identical to GR<br>
-  <b>Surface &beta; estimate (surface only, not full path):</b>
-  &theta;&beta; = arcsin(&beta;&middot;R&#9737;/L&#9737;) = 1.977&quot; &nbsp;&mdash;&nbsp; 12.8% excess, missing outbound path correction<br>
-  Sobral 1919: 1.98&plusmn;0.12&quot; &nbsp;&middot;&nbsp; Príncipe 1919: 1.61&plusmn;0.30&quot; &nbsp;&middot;&nbsp; Modern VLBI: 1.752&plusmn;0.05&quot;
+  <b>Star &rarr; Sun:</b> ray bends by full &beta; surface amount = 1.977&quot; at limb &nbsp;&mdash;&nbsp; displacement at closest approach<br>
+  <b>Sun &rarr; Earth:</b> outbound path through weakening 1/r field pulls back 12.8% &nbsp;&mdash;&nbsp; integrated correction<br>
+  <b>Net at Earth:</b> 4GM/c&sup2;b = 1.752&quot; &nbsp;&mdash;&nbsp; confirmed by ray trace and VLBI &nbsp;&middot;&nbsp;
+  Sobral 1919: 1.98&plusmn;0.12&quot; &nbsp;&middot;&nbsp; Modern VLBI: 1.752&plusmn;0.05&quot;
 </footer>
 <script>
 const G = 6.67430e-11, C = 299792458, M_sun = 1.989e30;
 const R_sun = 695700000, L_sun = 149597870700;
 const R_sun_as = (R_sun / L_sun) * (180 / Math.PI) * 3600;
 
-// Full geodesic / GR deflection: 4GM/c^2b
 function defl_GR(abs_as) {
   if (abs_as <= 0) return 0;
   const b_m = (abs_as / 3600 * Math.PI / 180) * L_sun;
   return (4 * G * M_sun / (C * C * b_m)) * (180 / Math.PI) * 3600;
 }
 
-// Surface beta estimate (surface only)
 const V_e = Math.sqrt(2 * G * M_sun / R_sun);
 const beta = V_e / C;
 const defl_beta_limb = Math.asin(beta * R_sun / L_sun) * 360 * 3600 / (2 * Math.PI);
@@ -82,44 +79,52 @@ function draw() {
   const windowR   = parseFloat(document.getElementById('window').value);
   const exag      = parseFloat(document.getElementById('exag').value);
   const showLines = document.getElementById('showLines').checked;
-  const showBeta  = document.getElementById('showBeta').checked;
 
   const W = canvas.offsetWidth;
-  const H = 420;
+  const H = 560;
   canvas.width = W; canvas.height = H;
 
-  const trueY = H * 0.24, apparentY = H * 0.76, midY = H * 0.5, rowH = 26;
+  // Three rows
+  const rowH    = 24;
+  const trueY   = H * 0.18;   // row 1: true positions
+  const sunY    = H * 0.50;   // row 2: at-sun (beta shift)
+  const earthY  = H * 0.82;   // row 3: at-earth (GR shift)
+  const mid1    = (trueY + sunY) / 2;
+  const mid2    = (sunY + earthY) / 2;
+
   const windowAs = windowR * R_sun_as;
   const scale = W / windowAs;
   function toX(off) { return off * scale; }
 
-  // Limb markers: appX = trueX(0) + defl * scale * exag = defl * scale * exag
   const grLimbPx   = defl_GR_limb   * scale * exag;
   const betaLimbPx = defl_beta_limb * scale * exag;
 
   // background
   ctx.fillStyle = '#080e1a'; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = '#0d1b2e'; ctx.fillRect(0, trueY - rowH, W, rowH * 2);
-  ctx.fillStyle = '#0a1220'; ctx.fillRect(0, apparentY - rowH, W, rowH * 2);
+  ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, sunY  - rowH, W, rowH * 2);
+  ctx.fillStyle = '#0a1220'; ctx.fillRect(0, earthY- rowH, W, rowH * 2);
 
-  // unresolvable zone shading: apparent limb (x=0) to GR limb
+  // zone shadings
+  // GR zone (apparent limb to GR limb) — green tint
   ctx.fillStyle = '#34d39910';
-  ctx.fillRect(0, trueY - rowH,     Math.min(grLimbPx, W), rowH * 2);
-  ctx.fillRect(0, apparentY - rowH, Math.min(grLimbPx, W), rowH * 2);
-  // beta excess zone: GR limb to beta limb
-  if (showBeta) {
-    ctx.fillStyle = '#fde68a08';
-    const w = Math.min(betaLimbPx, W) - Math.min(grLimbPx, W);
-    if (w > 0) {
-      ctx.fillRect(Math.min(grLimbPx, W), trueY - rowH,     w, rowH * 2);
-      ctx.fillRect(Math.min(grLimbPx, W), apparentY - rowH, w, rowH * 2);
-    }
+  [trueY, sunY, earthY].forEach(y => {
+    ctx.fillRect(0, y - rowH, Math.min(grLimbPx, W), rowH * 2);
+  });
+  // beta excess zone (GR limb to beta limb) — yellow tint
+  ctx.fillStyle = '#fde68a08';
+  const bw = Math.min(betaLimbPx, W) - Math.min(grLimbPx, W);
+  if (bw > 0) {
+    [trueY, sunY, earthY].forEach(y => {
+      ctx.fillRect(Math.min(grLimbPx, W), y - rowH, bw, rowH * 2);
+    });
   }
 
   // row labels
   ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace';
-  ctx.fillText('true positions', 8, trueY - rowH + 13);
-  ctx.fillText('apparent positions  (full geodesic = GR,  shift \xD7' + exag + ')', 8, apparentY - rowH + 13);
+  ctx.fillText('1. true positions (star positions in flat space)', 8, trueY - rowH + 13);
+  ctx.fillText('2. at sun  (\u03B2 surface shift \xD7' + exag + ') — star\u2192sun leg, max deflection', 8, sunY - rowH + 13);
+  ctx.fillText('3. observed at Earth  (GR shift \xD7' + exag + ') — sun\u2192earth leg pulls back 12.8%', 8, earthY - rowH + 13);
 
   // grid
   ctx.setLineDash([2, 4]); ctx.strokeStyle = '#1e3a5f'; ctx.lineWidth = 0.5;
@@ -133,81 +138,115 @@ function draw() {
   }
   ctx.setLineDash([]);
 
-  // apparent limb at x=0
+  // apparent limb (x=0) across full height
   ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.moveTo(1, 0); ctx.lineTo(1, H); ctx.stroke();
   ctx.fillStyle = '#fbbf2414'; ctx.fillRect(0, 0, 3, H);
   ctx.fillStyle = '#f59e0b'; ctx.font = '10px monospace';
-  ctx.fillText('\u2600 apparent', 4, 14);
+  ctx.fillText('\u2600', 4, 14);
 
-  // beta surface limb (dashed yellow) — surface estimate only
-  if (showBeta && betaLimbPx <= W) {
-    ctx.strokeStyle = '#fde68a70'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  // beta limb line (dashed yellow)
+  if (betaLimbPx <= W) {
+    ctx.strokeStyle = '#fde68a80'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
     ctx.beginPath(); ctx.moveTo(betaLimbPx, 0); ctx.lineTo(betaLimbPx, H); ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = '#fde68a'; ctx.font = '10px monospace';
-    ctx.fillText('\u03B2 surface ' + defl_beta_limb.toFixed(3) + '"', betaLimbPx + 3, 14);
+    ctx.fillText('\u03B2 ' + defl_beta_limb.toFixed(3) + '"', betaLimbPx + 3, 14);
+    // limb curve: true->sun
     if (showLines) {
-      ctx.strokeStyle = '#fde68a30'; ctx.lineWidth = 1; ctx.setLineDash([3,2]);
+      ctx.strokeStyle = '#fde68a35'; ctx.lineWidth = 1; ctx.setLineDash([3,2]);
       ctx.beginPath();
       ctx.moveTo(0, trueY + 5);
-      ctx.bezierCurveTo(0, midY, betaLimbPx, midY, betaLimbPx, apparentY - 5);
+      ctx.bezierCurveTo(0, mid1, betaLimbPx, mid1, betaLimbPx, sunY - 5);
       ctx.stroke(); ctx.setLineDash([]);
     }
   }
 
-  // GR / full geodesic limb (solid green) — primary prediction
+  // GR limb line (solid green)
   if (grLimbPx <= W) {
     ctx.strokeStyle = '#34d399cc'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(grLimbPx, 0); ctx.lineTo(grLimbPx, H); ctx.stroke();
     ctx.fillStyle = '#34d399'; ctx.font = '10px monospace';
-    ctx.fillText('GR/geodesic ' + defl_GR_limb.toFixed(3) + '"', grLimbPx + 3, showBeta ? 28 : 14);
+    ctx.fillText('GR ' + defl_GR_limb.toFixed(3) + '"', grLimbPx + 3, 28);
+    // limb curve: sun->earth
     if (showLines) {
-      ctx.strokeStyle = '#34d39940'; ctx.lineWidth = 1; ctx.setLineDash([3,2]);
+      ctx.strokeStyle = '#34d39935'; ctx.lineWidth = 1; ctx.setLineDash([3,2]);
       ctx.beginPath();
-      ctx.moveTo(0, trueY + 5);
-      ctx.bezierCurveTo(0, midY, grLimbPx, midY, grLimbPx, apparentY - 5);
+      ctx.moveTo(betaLimbPx, sunY + 5);
+      ctx.bezierCurveTo(betaLimbPx, mid2, grLimbPx, mid2, grLimbPx, earthY - 5);
       ctx.stroke(); ctx.setLineDash([]);
     }
   }
 
-  // stars — apparent position uses full GR/geodesic deflection
+  // stars
   starData = [];
   const spacingAs = R_sun_as / density;
   for (let trueOff = spacingAs * 0.5; trueOff <= windowAs + spacingAs; trueOff += spacingAs) {
     const absTrue = R_sun_as + trueOff;
     const d_gr   = defl_GR(absTrue);
     const d_beta = defl_beta(absTrue);
-    const tX = toX(trueOff);
-    const aX = tX + d_gr * scale * exag;   // apparent = GR/full geodesic
+    const tX  = toX(trueOff);
+    const sunX = tX + d_beta * scale * exag;   // at sun: beta shift
+    const eX  = tX + d_gr   * scale * exag;   // at earth: GR shift
     if (tX > W + 10) continue;
-    starData.push({ trueOff, tX, aX, d_gr, d_beta });
+    starData.push({ trueOff, tX, sunX, eX, d_gr, d_beta, absTrue });
   }
 
+  // lines: true -> sun -> earth
   if (showLines) {
     starData.forEach(s => {
-      const x0 = s.tX, x1 = Math.min(s.aX, W - 1);
-      if (x0 < 0 || x1 - x0 < 0.5) return;
-      ctx.strokeStyle = '#34d39950'; ctx.lineWidth = 1; ctx.setLineDash([3, 2]);
-      ctx.beginPath();
-      ctx.moveTo(x0, trueY + 5);
-      ctx.bezierCurveTo(x0, midY, x1, midY, x1, apparentY - 5);
-      ctx.stroke(); ctx.setLineDash([]);
-      if (x1 - x0 > 14) {
-        ctx.fillStyle = '#34d399cc'; ctx.font = '9px monospace';
-        ctx.fillText(s.d_gr.toFixed(2) + '"', x0 + (x1-x0)*0.3, midY + 4);
+      const t = s.tX;
+      const sn = Math.min(s.sunX, W - 1);
+      const e  = Math.min(s.eX,   W - 1);
+      if (t < 0) return;
+
+      // true -> sun (orange)
+      if (sn - t > 0.5) {
+        ctx.strokeStyle = '#fb923c50'; ctx.lineWidth = 1; ctx.setLineDash([3, 2]);
+        ctx.beginPath();
+        ctx.moveTo(t, trueY + 5);
+        ctx.bezierCurveTo(t, mid1, sn, mid1, sn, sunY - 5);
+        ctx.stroke();
+        if (sn - t > 14) {
+          ctx.fillStyle = '#fb923ccc'; ctx.font = '9px monospace';
+          ctx.fillText(s.d_beta.toFixed(2) + '"', t + (sn-t)*0.3, mid1 + 4);
+        }
       }
+
+      // sun -> earth (green, pulls back inward)
+      if (sn >= 0 && e >= 0) {
+        ctx.strokeStyle = '#34d39950'; ctx.lineWidth = 1; ctx.setLineDash([3, 2]);
+        ctx.beginPath();
+        ctx.moveTo(sn, sunY + 5);
+        ctx.bezierCurveTo(sn, mid2, e, mid2, e, earthY - 5);
+        ctx.stroke();
+        if (Math.abs(sn - e) > 10) {
+          ctx.fillStyle = '#34d399cc'; ctx.font = '9px monospace';
+          const lbl = '\u2212' + (s.d_beta - s.d_gr).toFixed(2) + '"';
+          ctx.fillText(lbl, Math.min(sn,e) + Math.abs(sn-e)*0.2, mid2 + 4);
+        }
+      }
+      ctx.setLineDash([]);
     });
   }
 
+  // dots
   starData.forEach(s => {
+    // row 1: true (blue)
     if (s.tX >= 0 && s.tX <= W) {
       ctx.beginPath(); ctx.arc(s.tX, trueY, 3, 0, Math.PI*2);
       ctx.fillStyle = '#60a5facc'; ctx.fill();
     }
-    const ax = Math.min(s.aX, W - 2);
-    if (ax >= 0 && ax <= W) {
-      ctx.beginPath(); ctx.arc(ax, apparentY, 3.5, 0, Math.PI*2);
+    // row 2: at sun (orange)
+    const sx = Math.min(s.sunX, W-2);
+    if (sx >= 0 && sx <= W) {
+      ctx.beginPath(); ctx.arc(sx, sunY, 3, 0, Math.PI*2);
+      ctx.fillStyle = '#fb923ccc'; ctx.fill();
+    }
+    // row 3: at earth (white)
+    const ex = Math.min(s.eX, W-2);
+    if (ex >= 0 && ex <= W) {
+      ctx.beginPath(); ctx.arc(ex, earthY, 3.5, 0, Math.PI*2);
       ctx.fillStyle = '#f1f5f9'; ctx.fill();
     }
   });
@@ -215,10 +254,10 @@ function draw() {
   ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace';
   ctx.fillText(
     '1px=' + (1/scale).toFixed(1) + '" \u2022 \u03B2=' + beta.toFixed(5) +
-    ' \u2022 GR/geodesic limb=' + defl_GR_limb.toFixed(3) + '"' +
-    ' \u2022 \u03B2-surface=' + defl_beta_limb.toFixed(3) + '"' +
-    ' \u2022 @2R\u2609=' + defl_GR(2*R_sun_as).toFixed(3) + '"' +
-    ' \u2022 @4R\u2609=' + defl_GR(4*R_sun_as).toFixed(3) + '"',
+    ' \u2022 \u03B2-limb=' + defl_beta_limb.toFixed(3) + '"' +
+    ' \u2022 GR-limb=' + defl_GR_limb.toFixed(3) + '"' +
+    ' \u2022 ratio=' + (defl_beta_limb/defl_GR_limb).toFixed(4) +
+    ' \u2022 @2R\u2609: \u03B2=' + defl_beta(2*R_sun_as).toFixed(3) + '" GR=' + defl_GR(2*R_sun_as).toFixed(3) + '"',
     6, H - 4
   );
 }
@@ -229,10 +268,11 @@ canvas.addEventListener('mousemove', e => {
   let closest = null, minD = 14;
   starData.forEach(s => { const d = Math.abs(mx - s.tX); if (d < minD) { minD = d; closest = s; } });
   document.getElementById('info').textContent = closest
-    ? 'true: +' + closest.trueOff.toFixed(0) + '" from limb  (' + ((R_sun_as + closest.trueOff)/R_sun_as).toFixed(2) +
-      'R\u2609 from center)  GR/geodesic=' + closest.d_gr.toFixed(3) +
-      '"  \u03B2-surface=' + closest.d_beta.toFixed(3) +
-      '"  px shift=' + (closest.aX - closest.tX).toFixed(1) + 'px'
+    ? 'true: +' + closest.trueOff.toFixed(0) + '" (' + ((R_sun_as+closest.trueOff)/R_sun_as).toFixed(2) + 'R\u2609)' +
+      '  \u03B2 at sun=' + closest.d_beta.toFixed(3) + '"' +
+      '  GR at Earth=' + closest.d_gr.toFixed(3) + '"' +
+      '  pullback=' + (closest.d_beta - closest.d_gr).toFixed(3) + '"' +
+      '  (' + ((1 - closest.d_gr/closest.d_beta)*100).toFixed(1) + '%)'
     : 'hover a star for details';
 });
 
@@ -240,7 +280,6 @@ document.getElementById('density').addEventListener('input', e => { document.get
 document.getElementById('window').addEventListener('input', e => { document.getElementById('windowVal').textContent = e.target.value; draw(); });
 document.getElementById('exag').addEventListener('input', e => { document.getElementById('exagVal').textContent = e.target.value; draw(); });
 document.getElementById('showLines').addEventListener('change', draw);
-document.getElementById('showBeta').addEventListener('change', draw);
 window.addEventListener('resize', draw);
 draw();
 </script>
