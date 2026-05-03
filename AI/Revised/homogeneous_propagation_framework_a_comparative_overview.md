@@ -8,7 +8,7 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. The framework is therefore not SR or GR restated in ontology or derivational order, but it still overlaps the tested kinematic and weak-field observational record within its present scope. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework’s present status—what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
+This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. The framework is therefore not SR or GR restated in ontology or derivational order, but it still overlaps the tested kinematic and weak-field observational record within its present scope. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, intra-nuclear displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework’s present status—what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
 
 **Keywords:** homogeneous propagation, emergent Lorentz structure, displacement framework, weak-field gravity, ontology, theory status, open dynamics
 
@@ -22,7 +22,7 @@ On one side, the kinematic papers recover the standard contraction factor, the t
 
 On the other side, the framework also makes claims that are not standard. It treats the vacuum as a physically structured medium with storage properties, treats Lorentz structure as emergent rather than primitive, and treats gravity as displacement of the transport-supporting structure rather than curvature of spacetime itself. Those are not cosmetic differences. They are differences in what the theory says the world is.
 
-At the same time, the framework is not complete. The displacement sourcing relation is still foundational at the present stage, the full microphysical closure is not finished, and the strong-field and fully coupled dynamical sectors remain open.
+At the same time, the framework is not complete. The displacement-sourcing relation is still foundational at the present stage: the papers currently treat nuclear-scale excitation dynamics as the source-side bridge rather than deriving that bridge from a finished substrate microphysics. The full microphysical closure is not finished, and the strong-field and fully coupled dynamical sectors remain open.
 
 The clearest reading lies between two familiar simplifications. The framework is not merely SR/GR in different words. But neither is it yet a final replacement theory with every further sector closed and derived.
 
@@ -42,7 +42,7 @@ The most concise statement of the framework's present status is the following:
 
 That sentence states the central position.
 
-Three points matter. First, the familiar structures are recovered rather than simply assumed from the start. Second, the physical interpretation assigned to those structures is not the orthodox one. Third, the framework's remaining openness lies mainly in further sectors, especially those tied to matter structure and displacement sourcing, rather than in the recovered kinematic and weak-field results themselves.
+Three points matter. First, the familiar structures are recovered rather than simply assumed from the start. Second, the physical interpretation assigned to those structures is not the orthodox one. Third, the framework's remaining openness lies mainly in further sectors, especially those tied to matter structure and intra-nuclear displacement sourcing, rather than in the recovered kinematic and weak-field results themselves.
 
 Those three points organize the discussion that follows.
 
@@ -58,7 +58,7 @@ The framework also extends this recovery program into signal transfer. Doppler s
 
 ### 3.2 Weak-field gravitational structure
 
-The displacement program then extends the framework beyond the homogeneous regime. Here the starting postulate is that mass-energy displaces the transport-supporting structure and that changes in this displacement propagate causally at the medium speed. In the static spherical case, this yields the equilibrium displacement geometry, the cumulative displacement field, and the Newtonian limit.
+The displacement program then extends the framework beyond the homogeneous regime. Here the working postulate should be read in its narrower source-side form: intra-nuclear action -- the internal dynamics of nuclear-scale excitation structure -- sources displacement of the transport-supporting structure, while the scalar mass-energy assigned to matter is the downstream bulk measure of that sourcing capacity. Changes in this displacement propagate causally at the medium speed. In the static spherical case, this yields the equilibrium displacement geometry, the cumulative displacement field, and the Newtonian limit.
 
 From that weak-field structure, the framework develops or recovers the following familiar results:
 
@@ -122,7 +122,7 @@ This framework does not identify gravity that way.
 
 ### 5.2 The program identifies gravity with displacement of transport structure
 
-In the displacement papers, gravity is treated as displacement of the transport-supporting spatial structure. The framework's own preferred summary is not 'matter tells spacetime how to curve,' but rather 'mass tells space how to displace, and displaced space tells mass how to move.' That is a different ontology, even where the resulting weak-field coordinate-level structure overlaps standard GR.
+In the displacement papers, gravity is treated as displacement of the transport-supporting spatial structure. The framework's older shorthand was not 'matter tells spacetime how to curve,' but rather 'mass tells space how to displace, and displaced space tells mass how to move.' The sharper source-side version is narrower: nuclear-scale excitation dynamics tell transport-supporting space how to displace, and displaced transport tells matter how to move. That is a different ontology, even where the resulting weak-field coordinate-level structure overlaps standard GR.
 
 The framework does develop an effective coordinate geometry. But this effective geometry is downstream of the displacement picture; it is not the primitive ontological object. On the present reading, geometry here is descriptive of the displaced state, not the fundamental thing being displaced. The time and radial components are modified by the displacement field, while the angular sector remains Euclidean in the present weak-field construction. That is not merely a restatement of GR's geometrical foundation.
 
@@ -132,7 +132,7 @@ It should also be stated carefully that weak-field agreement with standard tests
 
 ### 5.4 The field-equation status is different
 
-A second difference is that the framework has not yet reached the same formal status as GR in its field-equation sector. GR has a closed tensorial field law. This framework instead has a displacement-sourcing postulate, a retarded displacement map, a wave-equation equivalent for the cumulative displacement, and a provisional rotating-source vector extension. That is a serious dynamical program, but it is not yet a finished analog of Einstein's field equations derived from a deeper action principle or substrate-complete microphysics.
+A second difference is that the framework has not yet reached the same formal status as GR in its field-equation sector. GR has a closed tensorial field law. This framework instead has an intra-nuclear displacement-sourcing postulate, a retarded displacement map, a wave-equation equivalent for the cumulative displacement, and a provisional rotating-source vector extension. That is a serious dynamical program, but it is not yet a finished analog of Einstein's field equations derived from a deeper action principle or substrate-complete microphysics.
 
 ### 5.5 The present conclusion about GR
 
@@ -165,15 +165,17 @@ The framework is not unfinished in any trivial sense. Naming the remaining open 
 
 ### 7.1 The displacement sourcing relation remains foundational
 
-At present, the statement that mass-energy sources displacement of the transport-supporting structure remains foundational in the sense that it is not yet reduced to a deeper excitation-level or nuclear-scale account internal to the broader program. Within the recovered kinematic and weak-field gravitational domain, the framework is already operationally closed enough to produce the main derived results. The open question is not whether that sector functions, but whether the sourcing relation can be derived from a deeper matter theory rather than retained as a primitive bridge.
+At present, the framework should not be summarized merely as "mass-energy sources displacement." That phrase is useful as a bulk shorthand, but it makes mass sound like an unexplained primitive. The more precise source-side statement is that intra-nuclear action -- the internal dynamics of nuclear-scale excitation structure -- sources displacement of the transport-supporting structure. The scalar mass-energy assigned to matter is then the downstream bulk bookkeeping of that sourcing capacity.
+
+This sourcing relation remains foundational in the sense that it has not yet been reduced to a complete excitation-level or nuclear-scale account internal to the broader program. Within the recovered kinematic and weak-field gravitational domain, the framework is already operationally closed enough to produce the main derived results. The open question is not whether that sector functions, but whether intra-nuclear displacement sourcing can be derived from a deeper matter theory rather than retained as a primitive bridge.
 
 This is the most important incompleteness to state plainly.
 
 ### 7.2 The full microphysical closure is not complete
 
-The broader program aims to ground matter, propagation, and gravity in a common medium picture. But the derivation from substrate to stable excitation to mass-loading to displacement is not yet fully closed. The excitation-layer work points in that direction, but the chain is not complete enough to claim that the displacement source sector has been wholly derived from deeper first principles internal to the framework.
+The broader program aims to ground matter, propagation, and gravity in a common medium picture. But the derivation from substrate to stable excitation to intra-nuclear action to bulk mass-loading to displacement is not yet fully closed. The excitation-layer work points in that direction, but the chain is not complete enough to claim that the displacement source sector has been wholly derived from deeper first principles internal to the framework.
 
-That distinction matters. This paper should not imply that the recovered SR/GR-level structure is somehow still waiting to be closed on its own terms. Rather, the open work begins when the framework attempts to unify that recovered structure with a deeper account of matter, excitation, and nuclear-scale behavior.
+That distinction matters. This paper should not imply that the recovered SR/GR-level structure is somehow still waiting to be closed on its own terms. Rather, the open work begins when the framework attempts to unify that recovered structure with a deeper account of matter, excitation, intra-nuclear action, and nuclear-scale behavior.
 
 ### 7.3 Strong-field and fully coupled regimes remain frontier problems
 
@@ -205,7 +207,7 @@ It can claim that these results arise within a framework whose ontology differs 
 
 ### 8.4 Fourth claim: incompleteness is acknowledged
 
-It can claim that the framework is not yet a closed final theory in the broader unificatory sense. The recovered SR/GR-level kinematic and weak-field sectors are already sufficiently closed to support the present derivations. What remains postulated, provisional, or under development are the deeper matter-sourcing and excitation-level sectors needed if the framework is to absorb nuclear theory and related structure into the same program.
+It can claim that the framework is not yet a closed final theory in the broader unificatory sense. The recovered SR/GR-level kinematic and weak-field sectors are already sufficiently closed to support the present derivations. What remains postulated, provisional, or under development are the deeper intra-nuclear sourcing and excitation-level sectors needed if the framework is to absorb nuclear theory and related structure into the same program.
 
 ### 8.5 Fifth claim: the value of the program lies in explanatory reorganization
 
@@ -245,7 +247,7 @@ For clarity, the framework may be summarized in the following comparative form.
 | Gravity | Curvature of spacetime | Displacement of the transport-supporting structure |
 | Weak-field observables | Consequences of metric curvature | Consequences of cumulative displacement and effective geometry |
 | Ontology | No preferred medium required | Preferred transport-supporting structure permitted |
-| Formal closure | Established closed theories within their own stated domains | Closed across the recovered SR/GR kinematic and weak-field domains; open mainly where the framework is extended into deeper matter structure, displacement sourcing, and nuclear / excitation-level theory |
+| Formal closure | Established closed theories within their own stated domains | Closed across the recovered SR/GR kinematic and weak-field domains; open mainly where the framework is extended into deeper matter structure, intra-nuclear displacement sourcing, and nuclear / excitation-level theory |
 
 The table is not meant as a proof. It is a compact statement of the present difference in explanatory order and status.
 
@@ -257,7 +259,7 @@ First, it tells readers what sort of work they are reading. They are not being a
 
 Second, it protects the stronger technical papers from being judged by a distorted standard. A paper that recovers kinematic form from a new starting point should not be criticized for not also being a full gravitational microphysical theory. A weak-field gravity paper should not be criticized for not yet closing the excitation ontology. Distinct tasks belong to distinct papers.
 
-Third, it gives the program a cleaner research trajectory. The next work is not 'prove everything all at once.' It is to close the specific remaining gaps: derive displacement sourcing more deeply, strengthen the rotating-source sector, and extend the coupled dynamics beyond the current weak-field domain.
+Third, it gives the program a cleaner research trajectory. The next work is not 'prove everything all at once.' It is to close the specific remaining gaps: derive intra-nuclear displacement sourcing more deeply, strengthen the rotating-source sector, and extend the coupled dynamics beyond the current weak-field domain.
 
 ## 12. Conclusion
 

@@ -12,9 +12,9 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-The homogeneous propagation framework isolated a narrow result: a constant-speed propagation condition is sufficient to recover a familiar special-relativistic structure in form. The present paper develops the descriptive setting relevant to that result. It treats one underlying domain through several charted roles: a reference coordinate chart, a vacuum storage field and its associated chart, a transport structure governing admissible propagation, and a local geometry realized by material systems. In the homogeneous regime, the storage chart is identified with the coordinate chart, transport remains undeformed, and realized duration scales from coordinate duration through the factor $\lambda$. The paper then turns to local departure from homogeneity, described here through displacement defects in the transport-supporting structure. At the chart level, these appear when transport is displaced from storage, with local geometry following the admissible displaced transport. Time enters through a relation between coordinate duration and realized duration rather than through a parallel hierarchy of temporal charts. The purpose of the paper is foundational: to define the descriptive roles clearly enough that later papers on displacement and gravitation can proceed with stable terminology.
+The homogeneous propagation framework isolated a narrow result: a constant-speed propagation condition is sufficient to recover a familiar special-relativistic structure in form. The present paper develops the descriptive setting relevant to that result. It treats one underlying domain through several charted roles: a reference coordinate chart, a vacuum storage field and its associated chart, a transport structure governing admissible propagation, and a local geometry realized by material systems. In the homogeneous regime, the storage chart is identified with the coordinate chart, transport remains undeformed, and realized duration scales from coordinate duration through the factor $\lambda$. The paper then turns to local departure from homogeneity, described here through displacement defects in the transport-supporting structure. At the chart level, these appear when transport is displaced from storage, with local geometry following the admissible displaced transport. The displacement-sourcing language is also fixed here: in its microscopic reading, displacement is sourced by intra-nuclear action, meaning the internal dynamics of nuclear-scale excitation structure, while mass-energy remains the macroscopic bookkeeping by which that sourcing is described in bulk. Time enters through a relation between coordinate duration and realized duration rather than through a parallel hierarchy of temporal charts. The purpose of the paper is foundational: to define the descriptive roles clearly enough that later papers on displacement and gravitation can proceed with stable terminology.
 
-**Keywords:** homogeneous propagation, transport structure, local geometry, realized duration, displacement defects, vacuum storage field, gravitation
+**Keywords:** homogeneous propagation, transport structure, local geometry, realized duration, displacement defects, vacuum storage field, intra-nuclear action, displacement sourcing, gravitation
 
 ## 1. Introduction
 
@@ -27,6 +27,8 @@ The present paper develops that setting. The framework uses one underlying domai
 This matters because the propagation framework is stated at the transport level, while measurement is realized locally. Positions may be described in several charts as descriptions of the same underlying point, and the physically relevant content lies in the transforms between those descriptions. In the homogeneous limit, the storage chart is identified with the coordinate chart. A local departure from that homogeneous alignment appears when the transport chart is displaced from storage, and local geometry follows the admissible transport. Time enters through a scaling relation between coordinate duration and realized duration, expressed by the factor $\lambda$, with both durations understood relative to a chosen reference event.
 
 This paper is foundational rather than dynamical. Its aim is to establish a stable descriptive vocabulary for the portion of the framework used here. The immediate goal is to clarify how one underlying space supports several distinct roles, how propagation and measurement are related within that setting, and how this layered description prepares the ground for later papers on displacement and gravitation.
+
+A further vocabulary point is fixed here because it recurs throughout the remaining papers. The framework often uses the shorthand that mass-energy sources displacement. That remains acceptable at the macroscopic and bookkeeping level, but it should not be read as the deepest source-side statement. The narrower foundational statement is that **intra-nuclear action** — the internal dynamics of nuclear-scale excitation structure — sources displacement of the transport-supporting structure. In ordinary prose this may also be called nuclear dynamics. On this reading, mass is the bulk measure of displacement-sourcing capacity, not an opaque primitive that explains the sourcing by itself.
 
 ## 2. One Underlying Domain, Several Physical Roles
 
@@ -118,6 +120,12 @@ $$
 $$
 
 Both durations are understood relative to a chosen reference event. Realized duration is the duration over which local physical processes unfold within the realized local description. Accordingly, the factor $\lambda$ scales the duration assigned to those processes relative to the coordinate description.
+
+### 3.10 Displacement sourcing
+
+The **displacement-sourcing relation** names the source-side connection between matter structure and transport displacement. In the broad macroscopic shorthand, mass-energy sources displacement. In the more precise microscopic vocabulary used by the later excitation and constants papers, displacement is sourced by **intra-nuclear action**: the internal dynamics of nuclear-scale excitation structure.
+
+This distinction is terminological but important. “Mass” is the bulk scalar bookkeeping of a source's displacement-sourcing capacity. It is not, by itself, the deeper mechanism. The open microphysical problem is therefore not simply why mass causes gravity, but why nuclear-scale excitation dynamics have the role of sourcing displacement in the transport-supporting structure.
 
 ## 4. Chart Relations on a Common Point Set
 
@@ -217,7 +225,7 @@ The homogeneous regime is the setting in which storage aligns with the coordinat
 
 Section 5 treated the homogeneous regime. The present section turns to local departure from that alignment. In the vocabulary adopted here, gravitation appears as a displacement defect in the transport-supporting structure: transport is displaced from storage, and local geometry follows the admissible displaced transport.
 
-The detailed mechanism by which such displacement defects arise, and the extent to which transport is excluded, retained, or stretched locally, is deferred to later work.
+The source-side language should be read with the distinction introduced above. At the macroscopic level, later papers may say that mass-energy sources displacement. At the more specific foundational level, the intended source-side statement is that intra-nuclear action — nuclear-scale excitation dynamics — sources the displacement whose bulk measure is recorded as mass-energy. The detailed mechanism by which such displacement defects arise, and the extent to which transport is excluded, retained, or stretched locally, is deferred to later work.
 
 ### 6.1 Gravitation as transport displacement
 
@@ -227,7 +235,7 @@ $$
 X_{\mathrm{transport}}\neq X_{\mathrm{storage}}.
 $$
 
-Observable structure then follows from the changed admissible transport relations.
+Observable structure then follows from the changed admissible transport relations. The present paper does not close the excitation-side derivation of the source relation. It fixes the vocabulary needed for that later closure: displacement is sourced by intra-nuclear action in the microscopic reading, while mass-energy is the bulk variable used to write the same relation in weak-field and observational calculations.
 
 ### 6.2 Local geometry follows transport
 
@@ -270,9 +278,9 @@ This vocabulary lets later papers describe lensing, perihelion behavior, and rel
 
 This paper establishes descriptive vocabulary for the portion of the framework relevant to propagation, local realization, displacement, and gravitation.
 
-It introduces one underlying domain together with several charted roles: coordinate, storage, transport, and local realization. It defines the relation between coordinate duration and realized duration through the factor $\lambda$. It also identifies gravitational structure, descriptively, with displacement of transport from storage.
+It introduces one underlying domain together with several charted roles: coordinate, storage, transport, and local realization. It defines the relation between coordinate duration and realized duration through the factor $\lambda$. It also identifies gravitational structure, descriptively, with displacement of transport from storage, and fixes the displacement-sourcing vocabulary used by the later papers: intra-nuclear action is the microscopic source-side term, while mass-energy is the macroscopic bookkeeping term.
 
-The paper does not attempt the governing field equation for displacement, a full treatment of non-collinear transport, or a complete account of lensing, perihelion, or strong-field structure. Those belong to companion papers on homogeneous noncollinear composition and on retarded cumulative displacement with rotating-source response [2,3].
+Companion papers provide fuller treatments of homogeneous noncollinear composition, retarded cumulative displacement, rotating-source response, lensing, perihelion behavior, and related weak-field structure [2,3].
 
 This division of labor is deliberate. The purpose here is to stabilize language and notation before later developments build on them.
 
@@ -284,7 +292,7 @@ In the homogeneous limit, the storage chart is identified with the coordinate ch
 
 Time enters through a relation between coordinate duration and realized duration, expressed by the scaling factor $\lambda$. This is sufficient for the homogeneous result and carries naturally into displaced cases.
 
-The task of this paper has been foundational. It defines the descriptive roles clearly enough that later papers can build on them with stable terminology for space, transport, local geometry, and realized duration. With that vocabulary in place, later work on displacement and gravitation can proceed more cleanly.
+The task of this paper has been foundational. It defines the descriptive roles clearly enough that later papers can build on them with stable terminology for space, transport, local geometry, realized duration, and displacement sourcing. With that vocabulary in place, later work on displacement and gravitation can proceed more cleanly: macroscopic calculations may continue to use mass-energy as the bulk source variable, while the deeper source-side claim remains assigned to intra-nuclear action and the nuclear dynamics of excitation structure.
 
 ## References
 
