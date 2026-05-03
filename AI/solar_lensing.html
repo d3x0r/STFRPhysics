@@ -209,7 +209,7 @@ function draw() {
         ctx.stroke();
         if (sn - t > 14) {
           ctx.fillStyle = '#fb923ccc'; ctx.font = '9px monospace';
-          ctx.fillText(s.d_beta.toFixed(2) + '"', t + (sn-t)*0.3, mid1 + 4);
+          ctx.fillText('\u03B2 ' + s.d_beta.toFixed(3) + '"', t + (sn-t)*0.25, mid1 + 4);
         }
       }
 
@@ -222,8 +222,9 @@ function draw() {
         ctx.stroke();
         if (Math.abs(sn - e) > 10) {
           ctx.fillStyle = '#34d399cc'; ctx.font = '9px monospace';
-          const lbl = '\u2212' + (s.d_beta - s.d_gr).toFixed(2) + '"';
-          ctx.fillText(lbl, Math.min(sn,e) + Math.abs(sn-e)*0.2, mid2 + 4);
+          const lx = Math.min(sn, e) + Math.abs(sn - e) * 0.05;
+          ctx.fillText('\u2212' + (s.d_beta - s.d_gr).toFixed(3) + '"', lx, mid2 - 3);
+          ctx.fillText('\u2192 ' + s.d_gr.toFixed(3) + '"',             lx, mid2 + 8);
         }
       }
       ctx.setLineDash([]);
