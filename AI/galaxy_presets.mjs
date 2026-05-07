@@ -18,8 +18,62 @@ export const PRESET_ORDER = [
   'DDO168','DDO161','ESO116-G012',
 ];
 
+/*
+
+NGC2403
+Piecewise linear occupation profile
+Core peak rho0
+
+1.000
+Core rim rho1
+
+0.960
+Inner disk rho2
+
+0.650
+Outer disk rho3
+
+0.490
+Edge shelf rho4
+
+0.240
+Core end r1
+
+0.032
+Transition end r2
+
+0.076
+Flat shelf starts r3
+
+0.332
+Edge shelf end r4
+
+1.052
+Outer cutoff r5
+
+1.242
+Velocity controls
+Framework amp
+
+920.0
+Smoothing eps
+
+0.014
+Disk support
+
+0.027
+R max
+20.87 kpc
+Framework RMS
+4.5 km/s
+Newton rho RMS
+*/
+
+
 export const GALAXY_PRESETS = {
-  "MilkyWay": {rho0:6, rho1:4.13, rho2:3.01, rho3:1.54, rho4:0.53, r1:0.042, r2:0.054, r3:0.244, r4:0.949, r5:1.098, amp:313, eps:0.011, support:0.027, rMax:26},
+  "MilkyWay": {rho0:3.810, rho1:3.640, rho2:2.150, rho3:1.430, rho4:0.420, r1:0.088, r2:0.114, r3:0.322, r4:1.128, r5:1.138, amp:313, eps:0.011, support:0.027, rMax:14},
+//  "MilkyWay": {rho0:12.810, rho1:9.640, rho2:6.150, rho3:3.020, rho4:0.660, r1:0.088, r2:0.114, r3:0.322, r4:1.046, r5:1.126, amp:100, eps:0.011, support:0.027, rMax:26},
+  //"MilkyWay": {rho0:6, rho1:4.13, rho2:3.01, rho3:1.54, rho4:0.53, r1:0.042, r2:0.054, r3:0.244, r4:0.949, r5:1.098, amp:313, eps:0.011, support:0.027, rMax:26},
   "M31": {rho0:5.4, rho1:1.39, rho2:0.8, rho3:0.54, rho4:0.25, r1:0.018, r2:0.072, r3:0.416, r4:1.314, r5:1.69, amp:1116, eps:0.002, support:0.027, rMax:83},
 'D512-2':{"rho0":0.14396460889565402,"rho1":0.4495351443602311,"rho2":0.815978196763895,"rho3":0.6838225165225215,"rho4":0.2094302280349183,"r1":0.05262829423169942,"r2":0.06462829423169943,"r3":0.10006979425789325,"r4":1.3379956126750836,"r5":1.4442753257562384,"eps":0.021,"support":0.027,"amp":207.0247388730442},
 'D564-8':{"rho0":0.5404849555789636,"rho1":0.07129526392851793,"rho2":0.5202925765062959,"rho3":0.46050196177867153,"rho4":0.25379119544794604,"r1":0.02,"r2":0.07292360374064401,"r3":0.09827224159635176,"r4":1.1932650864290653,"r5":1.2822118362512174,"eps":0.021,"support":0.027,"amp":220.85181141468274},

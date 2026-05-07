@@ -50,6 +50,9 @@
       <div class="metric"><b>Newton rho RMS</b><span id="mNrms"></span></div>
       <div class="metric"><b>Newton rho amp</b><span id="mNamp"></span></div>
       <div class="metric"><b>Brightness RMS</b><span id="mBrms"></span></div>
+      <div class="metric"><b>Total mass (M☉)</b><span id="mTotalMass"></span></div>
+      <div class="metric"><b>Σ at r½ (M☉/pc²)</b><span id="mSigmaHalf"></span></div>
+      <div class="metric"><b>M_enc at r½ (M☉)</b><span id="mEncHalf"></span></div>
     </div>
     <p class="small" style="margin-top:10px">The pale dashed Newton curve treats the same occupation profile as an ordinary enclosed-mass proxy and fits only its amplitude; this is a comparison curve, not the framework-gradient result. The radii are structurally constrained: <code>r1/r2</code> control the leading rise, <code>r3</code> is kept near the center to define the start of the broad flat shelf, <code>r4</code> is kept near the visible-edge shelf, and <code>r5</code> is allowed to reach or slightly exceed the brightness edge while remaining beyond <code>r4</code>. Rho is an occupied-support envelope, not brightness itself.</p>
   </div>
@@ -148,7 +151,53 @@ function expandPreset(base){
 }
 function setFromPreset(g){G=g; P=expandPreset(g.preset); enforceStructure(); invalidateField(); if(USER_PRESETS[G.name]){fwAmp=USER_PRESETS[G.name].amp; newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8));} else fitVelocity(); syncControls(); drawAll();}
 function syncControls(){enforceStructure(); for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support']){if(P[k]!=null)$(k).value=P[k];} $('amp').value=fwAmp; updateLabels();}
-function updateLabels(){for(const k of ids){const v=+$(k).value; const el=$(k+'v'); if(el) el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));} $('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-'; $('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-'; $('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-'; $('mNamp').textContent=G?newtonAmp.toFixed(1):'-'; $('mBrms').textContent=G?brightnessRms().toFixed(3):'-'; $('status').textContent=G?`${G.name}: ${G.rows.length} samples`:'';}
+// G_astro: kpc (km/s)^2 / Msun
+const G_ASTRO = 4.301e-6;
+function mEncNorm(xMax, N=1000){
+  let m=0;
+  for(let i=0;i<N;i++){const rr=(i+.5)/N*xMax; m+=rho(rr)*rr*(xMax/N);}
+  return 2*Math.PI*m;
+}
+function totalMass_Msun(){
+  if(!G) return 0;
+  return newtonAmp*newtonAmp * mEncNorm(1.0) * G.preset.rMax / G_ASTRO;
+}
+function enclosedMass_Msun(x){
+  if(!G) return 0;
+  return newtonAmp*newtonAmp * mEncNorm(x) * G.preset.rMax / G_ASTRO;
+}
+function surfaceDensity_Msun_pc2(x){
+  if(!G) return 0;
+  // Sigma(r) = newtonAmp^2 / (G_ASTRO * rMax_kpc) * rho(x)  [Msun/kpc^2]
+  // divide by 1e6 for Msun/pc^2
+  return newtonAmp*newtonAmp / (G_ASTRO * G.preset.rMax) * rho(x) / 1e6;
+}
+function fmtMass(m){
+  if(m>=1e11) return (m/1e11).toFixed(2)+'×10¹¹';
+  if(m>=1e10) return (m/1e10).toFixed(2)+'×10¹⁰';
+  if(m>=1e9)  return (m/1e9).toFixed(2)+'×10⁹';
+  if(m>=1e6)  return (m/1e6).toFixed(2)+'×10⁶';
+  return m.toExponential(2);
+}
+function updateLabels(){
+  for(const k of ids){const v=+$(k).value; const el=$(k+'v'); if(el) el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));}
+  $('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-';
+  $('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-';
+  $('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-';
+  $('mNamp').textContent=G?newtonAmp.toFixed(1):'-';
+  $('mBrms').textContent=G?brightnessRms().toFixed(3):'-';
+  $('status').textContent=G?`${G.name}: ${G.rows.length} samples`:'';
+  if(G){
+    const xHalf = 0.5;
+    $('mTotalMass').textContent = fmtMass(totalMass_Msun())+' M☉';
+    $('mSigmaHalf').textContent = surfaceDensity_Msun_pc2(xHalf).toFixed(1)+' M☉/pc²';
+    $('mEncHalf').textContent = fmtMass(enclosedMass_Msun(xHalf))+' M☉';
+  } else {
+    $('mTotalMass').textContent='-';
+    $('mSigmaHalf').textContent='-';
+    $('mEncHalf').textContent='-';
+  }
+}
 function fitVelocity(){invalidateField(); fwAmp=fitScale(shapeFW); newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8)); $('amp').value=fwAmp;}
 function onSlider(){for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support'])P[k]=+$(k).value; fwAmp=+$('amp').value; enforceStructure(); for(const k of ['r1','r2','r3','r4','r5'])$(k).value=P[k]; invalidateField(); updateLabels(); drawAll();}
 function points(n,fn,xmax=1.28){const a=[]; for(let i=0;i<n;i++){const x=(i/(n-1))*xmax; a.push([x,fn(x)]);} return a;}
@@ -158,7 +207,72 @@ function dots(ctx,arr,sx,sy,color,r=3){ctx.fillStyle=color;for(const [x,y] of ar
 function canvasSize(c){const dpr=Math.min(devicePixelRatio||1,2), rect=c.getBoundingClientRect(); c.width=Math.round(rect.width*dpr); c.height=Math.round(rect.height*dpr); const ctx=c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return [ctx,rect.width,rect.height];}
 function drawRot(){const [ctx,W,H]=canvasSize($('rot')); const xs=G.rows.map(r=>r.r/G.preset.rMax), yobs=G.rows.map(r=>r.vObs); const ymax=Math.max(...yobs, fwAmp*Math.max(...points(100,shapeFW,Math.max(1.55,P.r5*1.08)).map(p=>p[1])), newtonAmp*Math.max(...points(100,shapeN,Math.max(1.55,P.r5*1.08)).map(p=>p[1])), 1)*1.14; const [sx,sy]=drawAxes(ctx,W,H,34,Math.max(1.55,P.r5*1.08),ymax,'r/Rmax','km/s');
   const fw=points(95,x=>fwAmp*shapeFW(x),Math.max(1.55,P.r5*1.08)); const nw=points(95,x=>newtonAmp*shapeN(x),Math.max(1.55,P.r5*1.08)); poly(ctx,nw,sx,sy,'#9aa6b2',1.5,[5,4]); poly(ctx,fw,sx,sy,'#2b77d4',2.4); ctx.strokeStyle='#8791a0'; ctx.lineWidth=1; for(const r of G.rows){const x=r.r/G.preset.rMax;ctx.beginPath();ctx.moveTo(sx(x),sy(r.vObs-r.errV));ctx.lineTo(sx(x),sy(r.vObs+r.errV));ctx.stroke();} dots(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vObs]),sx,sy,'#15171a',2.5); legend(ctx,W, ['observed','framework','Newton rho mass'], ['#15171a','#2b77d4','#9aa6b2']);}
-function drawProf(){const [ctx,W,H]=canvasSize($('prof')); const bs=G.rows.map(r=>Math.max(0,r.sbDisk+r.sbBul)), bMax=Math.max(...bs,1); const ymax=Math.max(1,Math.max(P.rho0,P.rho1,P.rho2,P.rho3,P.rho4)*1.1); const [sx,sy]=drawAxes(ctx,W,H,28,Math.max(1.55,P.r5*1.08),ymax,'r/Rmax','norm'); poly(ctx,points(180,rho,Math.max(1.55,P.r5*1.08)),sx,sy,'#d43f2b',2.2); dots(ctx,G.rows.map((r,i)=>[r.r/G.preset.rMax,bs[i]/bMax]),sx,sy,'#30343a',2.3); legend(ctx,W,['brightness','rho profile'],['#30343a','#d43f2b']);}
+function drawProf(){
+  const [ctx,W,H]=canvasSize($('prof'));
+  const bs=G.rows.map(r=>Math.max(0,r.sbDisk+r.sbBul)), bMax=Math.max(...bs,1);
+  const xmax=Math.max(1.55,P.r5*1.08);
+  const pad=28, rpad=52; // extra right padding for mass axis
+  const ymax=Math.max(1,Math.max(P.rho0,P.rho1,P.rho2,P.rho3,P.rho4)*1.1);
+
+  // draw axes (left side: rho/norm)
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#d7dce5'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-rpad,H-pad); ctx.lineTo(W-rpad,pad); ctx.stroke();
+  ctx.fillStyle='#687080'; ctx.font='11px system-ui';
+  ctx.fillText('r/Rmax',W-rpad-40,H-8);
+  ctx.save(); ctx.translate(12,pad+50); ctx.rotate(-Math.PI/2); ctx.fillText('norm',0,0); ctx.restore();
+
+  const sx = x => pad + x/xmax*(W-pad-rpad);
+  const sy = y => H-pad - y/ymax*(H-2*pad);
+
+  // mass density scale: Sigma [Msun/pc^2] = newtonAmp^2/(G_ASTRO*rMax)*rho/1e6
+  const sigmaPerRho = newtonAmp*newtonAmp / (G_ASTRO * G.preset.rMax) / 1e6;
+  const sigmaMax = ymax * sigmaPerRho;
+  // right axis
+  ctx.strokeStyle='#d7dce5'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(W-rpad+2,H-pad); ctx.lineTo(W-rpad+2,pad); ctx.stroke();
+  ctx.fillStyle='#9b6b10'; ctx.font='10px system-ui';
+  // tick marks on right axis + horizontal grid lines across plot
+  const nTicks=4;
+  for(let i=0;i<=nTicks;i++){
+    const frac=i/nTicks;
+    const yPx=H-pad-frac*(H-2*pad);
+    const val=(frac*sigmaMax);
+    // grid line across full plot width
+    ctx.beginPath(); ctx.moveTo(pad,yPx); ctx.lineTo(W-rpad+2,yPx);
+    ctx.strokeStyle='rgba(155,107,16,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    // tick
+    ctx.beginPath(); ctx.moveTo(W-rpad+2,yPx); ctx.lineTo(W-rpad+7,yPx);
+    ctx.strokeStyle='#ccc'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillText(val>=1000?(val/1000).toFixed(0)+'k':val.toFixed(0), W-rpad+9, yPx+4);
+  }
+  ctx.save(); ctx.translate(W-10,pad+55); ctx.rotate(Math.PI/2); ctx.fillStyle='#9b6b10'; ctx.font='10px system-ui'; ctx.fillText('M☉/pc²',0,0); ctx.restore();
+
+  // brightness dots
+  dots(ctx,G.rows.map((r,i)=>[r.r/G.preset.rMax,bs[i]/bMax]),sx,sy,'#30343a',2.3);
+
+  // rho profile (left scale)
+  poly(ctx,points(180,rho,xmax),sx,sy,'#d43f2b',2.2);
+
+  // mass density curve (same shape, right scale — drawn using left sy since scales aligned by construction)
+  // Sigma(x) = rho(x)*sigmaPerRho, plotted on left axis as rho(x) — they're the same curve
+  // Instead draw as a filled area so it's visually distinct
+  const massPts = points(180, x => rho(x), xmax);
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(sx(massPts[0][0]), sy(0));
+  massPts.forEach(([x,y]) => ctx.lineTo(sx(x), sy(y)));
+  ctx.lineTo(sx(massPts[massPts.length-1][0]), sy(0));
+  ctx.closePath();
+  ctx.fillStyle='rgba(155,107,16,0.10)';
+  ctx.fill();
+  ctx.restore();
+
+  ctx.setLineDash([]);
+
+  legend(ctx,W-rpad+rpad,['brightness','ρ profile','Σ(r)'],['#30343a','#d43f2b','rgba(155,107,16,0.5)']);
+}
 function drawComp(){const [ctx,W,H]=canvasSize($('comp')); const ymax=Math.max(...G.rows.flatMap(r=>[r.vGas,r.vDisk,r.vBul]),1)*1.15; const [sx,sy]=drawAxes(ctx,W,H,28,1.05,ymax,'r/Rmax','km/s'); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vGas]),sx,sy,'#238636',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vDisk]),sx,sy,'#c05b00',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vBul]),sx,sy,'#6f42c1',1.8); legend(ctx,W,['gas','disk','bulge'],['#238636','#c05b00','#6f42c1']);}
 function legend(ctx,W,names,colors){ctx.font='11px system-ui'; let x=W-12; for(let i=names.length-1;i>=0;i--){const w=ctx.measureText(names[i]).width+22; x-=w; ctx.fillStyle=colors[i]; ctx.fillRect(x,10,14,3); ctx.fillStyle='#555d68'; ctx.fillText(names[i],x+18,14);}}
 function drawAll(){if(!G)return; drawRot(); drawProf(); drawComp(); updateLabels();}
