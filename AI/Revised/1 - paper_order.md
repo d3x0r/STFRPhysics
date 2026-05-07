@@ -6,17 +6,11 @@
 
 - [homogeneous_propagation_transport_foundational_overview.md](homogeneous_propagation_transport_foundational_overview.md)
   - The Homogeneous Propagation Framework: Foundational Overview
-
-- [homogeneous_light_propagation_framework.md](homogeneous_light_propagation_framework.md)
-  - The Homogeneous Light Propagation Framework
-  - https://zenodo.org/records/18997960
-
-- [homogeneous_propagation_transport_foundational_overview.md](homogeneous_propagation_transport_foundational_overview.md)
-  - The Homogeneous Propagation Framework: Foundational Overview
   - https://zenodo.org/records/19702909
 
 - [wigner_rotation_from_noncollinear_composition.md](wigner_rotation_from_noncollinear_composition.md)
   - Wigner Rotation from Noncollinear Composition
+  - https:///zenodo.org/records/19155340
 
 - [displacement_dynamics_paper.md](displacement_dynamics_paper.md)
   - The Homogeneous Propagation Framework: Displacement Dynamics
