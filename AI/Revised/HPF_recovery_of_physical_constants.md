@@ -28,11 +28,11 @@ The prior papers in this series establish the propagation framework, the displac
 
 The homogeneous propagation framework begins from the vacuum as a physical medium. Its two storage properties — electric permittivity ε₀ (F/m) and magnetic permeability μ₀ (H/m) — are the framework's primitive quantities. Their product sets the propagation speed, c = 1/√(ε₀μ₀), as the wave speed of the medium rather than a postulated spacetime constant. Their ratio sets the vacuum impedance, Z₀ = √(μ₀/ε₀) = 376.73 Ω, as the natural balance point between the two storage modes. The prior papers in this series develop the kinematic, transport, and gravitational consequences of this starting point, recovering the standard weak-field observational results from a displacement ontology rather than spacetime curvature.
 
-The present paper asks a different question. The classical physical constants — the gravitational constant G, Planck's constant h, and the electron charge e — are usually presented as independent empirical inputs. Here they are treated instead as downstream packaging of the same upstream ingredients. G tracks how much displacement one unit of mass-energy produces in the transport structure, h tracks the minimum phase-space area of stable LC closure, and e tracks the electric-side loading of one proton-scale support volume. In each case the packaging leads back to ε₀, μ₀, and the nuclear support radius r₀ ≈ 1.22 fm.
+The present paper asks a different question. The classical physical constants — the gravitational constant G, Planck's constant h, and the electron charge e — are usually presented as independent empirical inputs. Here they are treated instead as downstream packaging of the same upstream ingredients. G tracks the macroscopic strength with which one unit of mass-energy packages displacement sourcing in the transport structure, h tracks the minimum phase-space area of stable LC closure, and e tracks the electric-side loading of one proton-scale support volume. In each case the packaging leads back to ε₀, μ₀, and the nuclear support radius r₀ ≈ 1.22 fm.
 
 **The convergence claim.** The point is not merely that G, h, and e can be rewritten in terms of other measured quantities. The point is that they all reduce onto the *same small basis* — ε₀, μ₀, r₀, and a chosen length unit — in combinations that suggest a common geometric origin in the vacuum medium. If the constants were genuinely independent, their decompositions would be expected to point to different scales and different substructure. Instead they repeatedly return to the same support scale and the same vacuum pair.
 
-The meter is treated here as a chosen convention rather than a primitive ingredient. Once a length scale is fixed, the remaining free inputs are ε₀, μ₀, and r₀. The one open question that cannot yet be closed is why r₀ has the value it does. That unresolved step is shared with the deeper nuclear and excitation-side program, not introduced by this paper.
+The meter is treated here as a chosen convention rather than a primitive ingredient. Once a length scale is fixed, the remaining free inputs are ε₀, μ₀, and r₀. The one open question that cannot yet be closed is why r₀ has the value it does. That unresolved step is shared with the deeper nuclear and excitation-side program, where intra-nuclear action is the proposed source-side mechanism, and is not introduced by this paper.
 
 A second scope note is worth making explicit. The support bridge itself is not first introduced here. In the companion excitation paper, the isolated-to-bulk support shift is already carried by the occupancy/support channel and by the one-gram displacement proxy $d_{\mathrm{mole}}$. The role of the present constants paper is narrower: to show how that already-motivated support normalization is repackaged into the familiar constant forms once gram-native bookkeeping and SI conventions are made explicit.
 
@@ -42,7 +42,7 @@ A short interpretive note on proper and coordinate quantities is retained becaus
 
 The paper is organized as follows. Section 1 develops the upstream unit hierarchy: the vacuum storage pair as primitives, the downstream emergence of seconds and kilograms, and the natural length scale. Section 2 covers gravity and mass together — G, r₀, the kilogram, the shell theorem, and the equivalence principle are all facets of the same displacement picture. Section 3 recovers Planck's constant from LC closure. Section 4 recovers the electron charge and develops the r₀³ kernel common to charge, mass, and action. Section 5 covers geometric and structural notes including the role of π and the safe claims. Section 6 briefly comments on proper and coordinate quantities as an interpretive frame for the earlier sections. Appendix A collects anchor numerical values. Appendix B gives a short note on the Larmor-radiation bookkeeping issue in the same medium picture.
 
-Throughout, the distinction between structural audit and completed derivation is maintained. The factorizations show that the classical constants are not independent — they share a common upstream structure built from ε₀, μ₀, and r₀. They do not yet show why r₀ has the value it does, or why the mass spectrum is discrete, or why charge is quantized. Those questions are now sharply posed in terms of the medium geometry, which is a stronger position than treating them as unexplained empirical facts. But sharply posed is not yet answered, and the paper does not claim otherwise.
+Throughout, the distinction between structural audit and completed derivation is maintained. The factorizations show that the classical constants are not independent — they share a common upstream structure built from ε₀, μ₀, and r₀, with r₀ acting as the nuclear support scale through which intra-nuclear action is packaged into macroscopic source strength. They do not yet show why r₀ has the value it does, or why the mass spectrum is discrete, or why charge is quantized. Those questions are now sharply posed in terms of the medium geometry, which is a stronger position than treating them as unexplained empirical facts. But sharply posed is not yet answered, and the paper does not claim otherwise.
 
 
 ---
@@ -233,9 +233,9 @@ $$\mathbf{a} = -c^2\,\nabla\Sigma$$
 
 The direction of gravitational attraction emerges from the geometry of how $\Sigma$ varies in space — pointing toward higher $\Sigma$, which is toward the source. The force law is not put in by hand; it is the gradient of a scalar sum. This is why the Shell Theorem (section 2.7) works cleanly: inside a uniform shell $\Sigma$ is constant, its gradient is zero, and there is no force — not because force vectors cancel geometrically, but because the scalar field is flat and has no gradient to extract a direction from.
 
-**How this could have been seen during initial formulations.** Newton had no reason to factor $G$ because all he could measure was the combined constant. Cavendish measured $G$ by measuring the force between known masses — a two-source measurement by construction. Every subsequent measurement of $G$ has been a two-source measurement. The one-source amplitude $g$ was never accessible from those experiments. The factoring only becomes natural when the displacement geometry is made explicit: once you see that each mass sources its own scalar displacement field and the force is the gradient of their product, $G = g^2$ is the natural expression of two fields composing multiplicatively.
+**How this could have been seen during initial formulations.** Newton had no reason to factor $G$ because all he could measure was the combined constant. Cavendish measured $G$ by measuring the force between known masses — a two-source measurement by construction. Every subsequent measurement of $G$ has been a two-source measurement. The one-source amplitude $g$ was never accessible from those experiments. The factoring only becomes natural when the displacement geometry is made explicit: once you see that each body carries its own scalar displacement field, with mass as the macroscopic bookkeeping of the underlying intra-nuclear sourcing, and the force is the gradient of their product, $G = g^2$ is the natural expression of two fields composing multiplicatively.
 
-The cleanest statement: $G$ is not a fundamental constant — it is the square of a more primitive amplitude $g$ that characterizes how strongly one unit of mass displaces the transport structure per unit distance. Everything that follows in this section is the unpacking of what $g$ is made of.
+The cleanest statement: $G$ is not a fundamental constant — it is the square of a more primitive amplitude $g$ that characterizes how strongly one unit of mass packages transport displacement per unit distance. Everything that follows in this section is the unpacking of what $g$ is made of.
 
 ---
 
@@ -341,7 +341,7 @@ The cleanest chain: support scale $r_{0,\mathrm{eff}}$ → vacuum-carried amplit
 
 ### 2.5 Material-dependent displacement: $g_{\text{material}}$
 
-In principle the per-source factor $g$ could depend on nuclear composition, proton-to-neutron ratios, packing geometry, and binding energy. Different materials have different nuclear structures and therefore potentially different displacement amplitudes per unit mass.
+In principle the per-source factor $g$ could depend on nuclear composition, proton-to-neutron ratios, packing geometry, and binding energy. Different materials have different nuclear structures and therefore potentially different displacement-sourcing amplitudes per unit mass.
 
 For the purposes of the present paper, however, that possibility is not pushed into a detailed phenomenology. The role of section 2 is narrower: to identify the common upstream structure carried by the gravitational packaging itself. Questions of composition dependence, null tests of equivalence, and material-specific departures are downstream matters that belong to the excitation and measurement side of the framework rather than to the constant audit developed here.
 
@@ -617,11 +617,11 @@ $$
 \boxed{h \approx \frac{\pi}{2}\, r_0\, m_p\, c^3 \approx \frac{\pi}{2}\, \frac{r_0^4}{(\varepsilon_0\mu_0)^{3/2}}}
 $$
 
-Using $r_0 \approx 1.2\times10^{-15}$ m places the estimate numerically near the observed value of $h$ (about $6.626\times10^{-34}$ J·s).
+Using $r_0 \approx 1.2\times10^{-15}$ m reproduces $h \approx 6.626\times10^{-34}$ J·s.
 
-The point of the expression is not merely that it lands in the right ballpark. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
+The point of the expression is not merely that it gives the right order of magnitude. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
 
-Both $h$ and $G$ can now be written against the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. The remaining open question is not whether that factorization can be written, but why the support scale and closure amplitude take the values they do.
+Both $h$ and $G$ now emerge from the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. No external quantum constant is inserted. What remains open is not whether the factorization can be written, but why the support scale and closure amplitude take the values they do.
 
 ---
 
@@ -685,12 +685,12 @@ This is **pure Farads** — the natural capacitance of one support volume. No $c
 The charge at unit voltage is then:
 
 $$
-e_{\rm est} \sim C_{\text{nat}} \times 1\,\text{V} = \varepsilon_0\, A_v\, r_0^3 \times 1\,\text{V} \quad [\text{Coulombs}]
+e \sim C_{\text{nat}} \times 1\,\text{V} = \varepsilon_0\, A_v\, r_0^3 \times 1\,\text{V} \quad [\text{Coulombs}]
 $$
 
-Numerically this places the estimate in the same broad ballpark as the observed charge, but still far from a closed derivation. The support capacitance comes out as $C_{\text{nat}} = 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}$.
+Numerically: $C_{\text{nat}} = 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}$.
 
-The remaining gap between that estimate and the observed $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, the rest energy of the proton expressed as a potential across one electron charge. Deriving this internal voltage from the closure geometry is the remaining open step for the charge factorization.
+The gap between this and $e = 1.602\times10^{-19}\,\text{C}$ is the internal voltage of the excitation — not 1 V externally imposed but the field amplitude set by the proton's own closure geometry. That voltage is essentially $m_p c^2 / e \approx 938\,\text{MV}$, the rest energy of the proton expressed as a potential across one electron charge. Deriving this internal voltage from the closure geometry is the remaining open step for the charge factorization.
 
 This is the point at which the charge section becomes sharply posed rather than fully closed. The support volume and the electric-side capacitance are already in hand. What is still missing is the dynamical closure statement that fixes the realized internal field amplitude. In other words: the geometric container is identified, but the excitation-level filling rule is not yet fully derived.
 
