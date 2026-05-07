@@ -233,39 +233,39 @@ A numerical consistency check using a nine-body simulation of the inner solar sy
 
 ## 6. Light Deflection and the PPN \(\gamma\) Parameter
 
-### 6.1 Light deflection from realized propagation cost
+### 6.1 Light deflection as a geodesic of displaced transport
 
-The earlier straight-in-connection-space picture requires one correction. If a horizontal straight line in connection space is mapped back to displaced coordinates through \(D(r,d)=\sqrt{r^2+d^2}/r\), the result is a symmetric arch: the path bulges near closest approach but returns to the same asymptotic direction at infinity. The displacement mapping by itself therefore gives no net far-field deflection. What it captures is the spatial deformation of the medium, not yet the realized ray. The observable light path must instead be obtained from a stationary-cost principle.
+The native optical statement in this framework is not that light first follows a Euclidean straight line and is then bent by an external force, nor that a separate least-action rule is imposed on top of the displacement picture. A light ray follows the straight available path of the **displaced transport space** itself. In coordinate descriptions that keep the storage chart as the reference, that native transport geodesic appears as a curved ray.
 
-The relevant quantity for an actual light ray is the **realized propagation cost** through the displaced medium. In weak field, the cumulative displacement is
+Several calculational pictures can be compared, but they should not be assigned equal conceptual status. A simple connection-space remap captures only part of the spatial deformation. If a horizontal straight line in connection space is mapped back to displaced coordinates through \(D(r,d)=\sqrt{r^2+d^2}/r\), the result is a symmetric arch: the path bulges near closest approach but returns to the same asymptotic direction at infinity. That construction is useful as a diagnostic of the displacement mapping, but by itself it gives no net far-field deflection.
+
+A timing-only index picture is also incomplete. It assigns \(n(r)=1+\Sigma(r)\) and recovers only the Soldner/Newtonian half-deflection. The full weak-field ray must include both burdens carried by displaced transport: the timing burden and the spatial transport burden.
+
+In weak field, the cumulative displacement is
 
 \[
-\Sigma(r)=\frac{d^2}{2r}=\frac{GM}{C^2 r}.
+\Sigma(r)=rac{d^2}{2r}=rac{GM}{C^2 r}.
 \]
 
-A purely timing-side treatment would assign an index \(n(r)=1+\Sigma(r)\) and recover only the Soldner/Newtonian half-deflection. In the present framework, however, the gravitational modification scales both \(\varepsilon_0\) and \(\mu_0\) together. That produces two equal burdens along the path. First, the propagation rate is reduced by the local timing burden, giving a factor \((1+\Sigma)\). Second, the same displacement stretches the traversed transport medium, giving an equal spatial burden \((1+\Sigma)\). The realized cost per coordinate length is therefore
+Because displacement modifies the transport-supporting vacuum storage symmetrically, the coordinate expression of the native transport geodesic can be written using the effective propagation cost
 
 \[
-n_{\mathrm{eff}}(r)=(1+\Sigma(r))^2 \approx 1+2\Sigma(r)=1+\frac{d^2}{r}.
+n_{\mathrm{eff}}(r)=(1+\Sigma(r))^2 pprox 1+2\Sigma(r)=1+rac{d^2}{r}.
 \]
 
-Light deflection is then the Fermat/Huygens result for the path that minimizes
+This stationary-cost form is therefore best read as the coordinate-level representation of the same native statement: light follows the straight geodesic through displaced transport space. It is not a separate mechanism replacing the geodesic picture. For a background source at large impact parameter \(b\gg d\), the equivalent weak-field calculation gives
 
 \[
-\int n_{\mathrm{eff}}(r)\,ds,
-\]
-
-not the image of a straight coordinate remap. For a background source at large impact parameter \(b\gg d\),
-
-\[
-\theta=\int \frac{\partial n_{\mathrm{eff}}}{\partial b}\,dx=\frac{2d^2}{b}=\frac{4GM}{bC^2},
+	heta=\int rac{\partial n_{\mathrm{eff}}}{\partial b}\,dx=rac{2d^2}{b}=rac{4GM}{bC^2},
 \]
 
 using \(d^2=2GM/C^2\). This is the standard GR weak-field result. For the Sun's limb \((b=R_\odot)\), it yields \(1.75\) arcsec, in agreement with modern VLBI constraints.
 
-The factor of \(4\) is therefore most cleanly read as two separate factors of \(2\). One comes from the mass-displacement relation \(d^2=2GM/C^2\). The other comes from the realized cost itself: \(n_{\mathrm{eff}}=(1+\Sigma)^2\) contains one \((1+\Sigma)\) from the time cost and one \((1+\Sigma)\) from the space cost. This gives the same structural conclusion as the earlier symmetric \(\varepsilon_0/\mu_0\) argument, but now through a direct variational derivation rather than through the coordinate transform alone.
+The factor of \(4\) is therefore most cleanly read as two separate factors of \(2\). One comes from the macroscopic displacement bookkeeping relation \(d^2=2GM/C^2\). The other comes from the transport-geodesic cost itself: \(n_{\mathrm{eff}}=(1+\Sigma)^2\) contains one \((1+\Sigma)\) from timing and one \((1+\Sigma)\) from spatial transport. This gives the same structural conclusion as the symmetric \(arepsilon_0/\mu_0\) argument, but now with the variational expression demoted to a coordinate representation of the native geodesic through displaced transport.
 
-This correction also changes the interpretation of self-lensing. Under the stationary-cost ray picture, limb rays from the mass star curve toward the mass rather than away from it, so the apparent disc is not reduced by the earlier CS-straight construction. The present weak-field paper does not attempt a full compact-object apparent-radius analysis, but the relevant optical statement is now clear: the realized ray is the least-action path in the displaced medium.
+The practical difference among the older calculational pictures is small in the far field. The connection-space remap, timing-only index, surface-\(eta\) estimate, and full transport-geodesic expression all approach the same qualitative \(1/b\) behavior away from the limb, and their numerical separation rapidly becomes observationally small compared with early eclipse uncertainties. The native method, however, is the full transport-geodesic construction, not the surface estimate and not the connection-space remap alone.
+
+This reframing also changes the interpretation of self-lensing. Limb rays from a mass star follow geodesics of the displaced transport structure; in coordinate projection they curve toward the mass rather than away from it. The apparent disc is therefore not reduced by the earlier CS-straight construction. A full compact-object apparent-radius analysis belongs to a separate treatment, but the optical statement needed here is now clear: the realized ray is the displaced-transport geodesic, whose weak-field coordinate expression is equivalently written through the effective cost \(n_{\mathrm{eff}}=(1+\Sigma)^2\).
 
 For precise alignment of observer, mass, and background source, the same realized-cost optics produces the usual Einstein ring
 
