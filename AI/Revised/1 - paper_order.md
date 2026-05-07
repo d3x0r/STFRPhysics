@@ -14,11 +14,14 @@
 
 - [displacement_dynamics_paper.md](displacement_dynamics_paper.md)
   - The Homogeneous Propagation Framework: Displacement Dynamics
-  - https://zenodo.org/records/19413962
+  - https://zenodo.org/records/20075441
+  - (previous) https://zenodo.org/records/19413962
 
 - [weak_field_observational_tests.md](weak_field_observational_tests.md)
   - The Homogeneous Propagation Framework: Weak-Field Observational Tests
-  - https://zenodo.org/uploads/19194493
+
+  - https://zenodo.org/uploads/20075467
+  - (previous)https://zenodo.org/uploads/19194493
 
 - [hommogenous_propagation_framework_a_comparative_overview.md](hommogenous_propagation_framework_a_comparative_overview.md)
   - How this isn't Sr or GR
