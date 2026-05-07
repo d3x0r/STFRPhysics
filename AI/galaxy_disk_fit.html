@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>STFR galaxy disk constrained profile fit</title>
 <style>
-*{box-sizing:border-box}body{margin:0;padding:10px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:13px;background:#f6f7f9;color:#15171a}.wrap{display:grid;grid-template-columns:minmax(380px,1.25fr) minmax(320px,.75fr);gap:10px}.panel{background:#fff;border:1px solid #d9dde5;border-radius:9px;padding:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}h1{font-size:16px;margin:0 0 6px}h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a7280;margin:0 0 8px}.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.row{display:flex;align-items:center;gap:7px;margin:5px 0}.row label{width:118px;color:#525a66;font-size:12px}.row input[type=range]{flex:1;accent-color:#2b77d4}.row span{width:58px;text-align:right;font-variant-numeric:tabular-nums;font-size:12px}.small{font-size:11px;color:#6a7280;line-height:1.4}select,button{font:inherit;font-size:12px;padding:4px 7px;border:1px solid #cdd3dc;border-radius:6px;background:#fff}button{cursor:pointer}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}canvas{display:block;width:100%;background:#fff;border:1px solid #e0e4ea;border-radius:7px}.plot{height:295px}.prof{height:150px}.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.metric{background:#f6f7f9;border:1px solid #e0e4ea;border-radius:7px;padding:6px}.metric b{display:block;font-size:11px;color:#5b6370}.metric span{font-variant-numeric:tabular-nums}@media(max-width:780px){.wrap,.grid2{grid-template-columns:1fr}.row label{width:105px}}
+*{box-sizing:border-box}body{margin:0;padding:10px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:13px;background:#f6f7f9;color:#15171a}.wrap{display:grid;grid-template-columns:minmax(380px,1.25fr) minmax(320px,.75fr);gap:10px}.panel{background:#fff;border:1px solid #d9dde5;border-radius:9px;padding:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}h1{font-size:16px;margin:0 0 6px}h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a7280;margin:0 0 8px}.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.row{display:flex;align-items:center;gap:7px;margin:5px 0}.row label{width:118px;color:#525a66;font-size:12px}.row input[type=range]{flex:1;accent-color:#2b77d4}.row span{width:140px;text-align:right;font-variant-numeric:tabular-nums;font-size:12px}.small{font-size:11px;color:#6a7280;line-height:1.4}select,button{font:inherit;font-size:12px;padding:4px 7px;border:1px solid #cdd3dc;border-radius:6px;background:#fff}button{cursor:pointer}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}canvas{display:block;width:100%;background:#fff;border:1px solid #e0e4ea;border-radius:7px}.plot{height:295px}.prof{height:150px}.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.metric{background:#f6f7f9;border:1px solid #e0e4ea;border-radius:7px;padding:6px}.metric b{display:block;font-size:11px;color:#5b6370}.metric span{font-variant-numeric:tabular-nums}@media(max-width:780px){.wrap,.grid2{grid-template-columns:1fr}.row label{width:105px}}
 </style>
 </head>
 <body>
@@ -180,7 +180,17 @@ function fmtMass(m){
   return m.toExponential(2);
 }
 function updateLabels(){
-  for(const k of ids){const v=+$(k).value; const el=$(k+'v'); if(el) el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));}
+  const sigmaPerRho = G ? newtonAmp*newtonAmp / (G_ASTRO * G.preset.rMax) / 1e6 : 0;
+  for(const k of ids){
+    const v=+$(k).value; const el=$(k+'v');
+    if(!el) continue;
+    if(k.startsWith('rho') && G){
+      const s = v * sigmaPerRho;
+      el.textContent = v.toFixed(3)+' ('+( s>=1000?(s/1000).toFixed(1)+'k':s.toFixed(0) )+' M☉/pc²)';
+    } else {
+      el.textContent = k==='amp' ? v.toFixed(1) : v.toFixed(3);
+    }
+  }
   $('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-';
   $('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-';
   $('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-';
