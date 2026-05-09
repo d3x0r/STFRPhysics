@@ -30,8 +30,8 @@ body {
 #main { display: flex; flex: 1; min-height: 0; }
 
 #sidebar {
-  width: 220px;
-  min-width: 180px;
+  width: 340px;
+  min-width: 340px;
   background: #080c18;
   border-right: 0.5px solid #1a2540;
   overflow-y: auto;
@@ -142,7 +142,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <input type="range" id="str" min="0.1" max="8" step="0.1" value="1" oninput="sv(this,'sv0');go()">
         <span class="val" id="sv0">1.0</span></div>
       <div class="row"><label>displ. exag ×</label>
-        <input type="range" id="exag" min="1" max="5000" step="1" value="1" oninput="sv(this,'exagv');go()">
+        <input type="range" id="exag" min="1" max="5000" step="1" value="500" oninput="sv(this,'exagv');go()">
         <span class="val" id="exagv">1</span></div>
     </div>
 
@@ -165,6 +165,16 @@ canvas { display: block; width: 100%; height: 100%; }
         <input type="checkbox" id="chkM" checked onchange="go()"></div>
       <div class="row"><label>caustic overlay</label>
         <input type="checkbox" id="chkCaus" onchange="go()"></div>
+      <div class="row"><label>radial displacement</label>
+        <input type="checkbox" id="chkIso" onchange="go()" checked></div>
+      <div class="row"><label>iso-displacement κ</label>
+        <input type="checkbox" id="chkKappaIso" onchange="go()" checked></div>
+      <div class="row"><label>iso resolution</label>
+        <input type="range" id="isoRes" min="50" max="600" step="50" value="300" oninput="sv(this,'isoResv');go()">
+        <span class="val" id="isoResv">300</span></div>
+      <div class="row"><label>iso scale</label>
+        <input type="range" id="isoScl" min="0.1" max="20" step="0.1" value="3" oninput="sv(this,'isoSclv');go()">
+        <span class="val" id="isoSclv">3.0</span></div>
     </div>
 
     <div class="panel">
@@ -786,27 +796,302 @@ function draw() {
     for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
   }
 
-  /* Caustic overlay: pixel-level magnification map */
+  /* Caustic overlay: critical curves via marching squares on convergence field
+     κ = (1/2) div(α) — computed from deflection gradient directly */
   if (showCaus && masses.length > 0) {
-    const cstep = 10;
-    for (let py = 0; py < ph; py += cstep) {
-      for (let px = 0; px < pw; px += cstep) {
-        const [ax0, ay0] = invGnomonic(px - OX, py - OY, scale);
-        const [ax1, ay1] = invGnomonic(px - OX + cstep, py - OY, scale);
-        const [ax2, ay2] = invGnomonic(px - OX, py - OY + cstep, scale);
-        const [bx0, by0] = trueFromApparent(ax0, ay0, prof, str);
-        const [bx1, by1] = trueFromApparent(ax1, ay1, prof, str);
-        const [bx2, by2] = trueFromApparent(ax2, ay2, prof, str);
-        /* Jacobian det */
-        const J11 = (bx1 - bx0) / cstep, J12 = (by1 - by0) / cstep;
-        const J21 = (bx2 - bx0) / cstep, J22 = (by2 - by0) / cstep;
-        const det = J11 * J22 - J12 * J21;
-        if (det < 0.3 && det > -3) {
-          const t = Math.min(1, 0.8 / (Math.abs(det) + 0.05));
-          cx.fillStyle = `rgba(100,40,220,${t * 0.28})`;
-          cx.fillRect(px, py, cstep, cstep);
+    const CS = 120;
+    const csW = CS, csH = Math.round(CS * ph / pw);
+    const detField = new Float32Array(csW * csH);
+    const dLon = fovDeg * 2 / (csW-1);
+    const dLat = fovDeg * 2 / (csH-1);
+    const eps = dLon * 2.0;  /* larger eps for stable numerical gradient */
+
+    const getDefl = (lon, lat) => {
+      let ddx = 0, ddy = 0;
+      let ni = -1, ns = Infinity;
+      for (let mi = 0; mi < masses.length; mi++) {
+        const dx = lon-masses[mi].ax, dy = lat-masses[mi].ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s < ns) { ns = s; ni = mi; }
+      }
+      for (let mi = 0; mi < masses.length; mi++) {
+        if (mi === ni) continue;
+        const m = masses[mi];
+        const dx = lon-m.ax, dy = lat-m.ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s < 1e-8) return [ddx,ddy];
+        const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+        ddx += a*(dx/s); ddy += a*(dy/s);
+      }
+      if (ni >= 0) {
+        const m = masses[ni];
+        const dx = lon-m.ax, dy = lat-m.ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s > 1e-8) {
+          const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          ddx += a*(dx/s); ddy += a*(dy/s);
         }
       }
+      return [ddx, ddy];
+    };
+
+    for (let iy = 0; iy < csH; iy++) {
+      for (let ix = 0; ix < csW; ix++) {
+        const lon = panLon + (ix/(csW-1) - 0.5) * 2 * fovDeg;
+        const lat = panLat + (iy/(csH-1) - 0.5) * 2 * fovDeg;
+        /* Numerical Jacobian of lens mapping: identity minus deflection gradient */
+        const [d00x,d00y] = getDefl(lon, lat);
+        const [d10x,d10y] = getDefl(lon+eps, lat);
+        const [d01x,d01y] = getDefl(lon, lat+eps);
+        /* A = I - dα/dθ */
+        const A11 = 1 - (d10x-d00x)/eps;
+        const A12 =   - (d01x-d00x)/eps;
+        const A21 =   - (d10y-d00y)/eps;
+        const A22 = 1 - (d01y-d00y)/eps;
+        detField[iy*csW+ix] = A11*A22 - A12*A21;
+      }
+    }
+
+    /* Debug: show det field min/max */
+    let detMin = Infinity, detMax = -Infinity, nNeg = 0, nPos = 0;
+    for (let i = 0; i < detField.length; i++) {
+      if (detField[i] < detMin) detMin = detField[i];
+      if (detField[i] > detMax) detMax = detField[i];
+      if (detField[i] < 0) nNeg++; else nPos++;
+    }
+    cx.fillStyle = 'rgba(200,100,255,0.9)';
+    cx.font = `${Math.round(10*dpr)}px monospace`;
+    cx.fillText(`caustic det: min=${detMin.toFixed(4)} max=${detMax.toFixed(4)} neg=${nNeg} pos=${nPos}`, 6*dpr, ph - 32*dpr);
+
+    const cellPxW2 = pw/(csW-1), cellPxH2 = ph/(csH-1);
+    const zc = (va,vb,a,b) => (va>0)===(vb>0) ? null : a+(b-a)*va/(va-vb);
+    cx.strokeStyle = 'rgba(200,100,255,0.9)';
+    cx.lineWidth = 1.5 * dpr;
+    cx.beginPath();
+    for (let iy = 0; iy < csH-1; iy++) {
+      for (let ix = 0; ix < csW-1; ix++) {
+        const v00=detField[ iy   *csW+ ix  ];
+        const v10=detField[ iy   *csW+(ix+1)];
+        const v01=detField[(iy+1)*csW+ ix  ];
+        const v11=detField[(iy+1)*csW+(ix+1)];
+        const s00=v00>0, s10=v10>0, s01=v01>0, s11=v11>0;
+        if (s00===s10 && s00===s01 && s00===s11) continue;
+        const x0=ix*cellPxW2, x1=(ix+1)*cellPxW2;
+        const y0=iy*cellPxH2, y1=(iy+1)*cellPxH2;
+        const tT=zc(v00,v10,x0,x1), tR=zc(v10,v11,y0,y1);
+        const tB=zc(v01,v11,x0,x1), tL=zc(v00,v01,y0,y1);
+        const T = tT!==null ? [tT,y0] : null;
+        const R = tR!==null ? [x1,tR] : null;
+        const B = tB!==null ? [tB,y1] : null;
+        const L = tL!==null ? [x0,tL] : null;
+        const pts = [T,R,B,L].filter(p=>p);
+        if (pts.length >= 2) {
+          cx.moveTo(pts[0][0],pts[0][1]);
+          cx.lineTo(pts[1][0],pts[1][1]);
+        }
+      }
+    }
+    cx.stroke();
+  }
+
+  /* Iso-displacement: concentric circles in angle-space, displaced by lensing */
+  const showIso = document.getElementById('chkIso').checked;
+  if (showIso && masses.length > 0) {
+    /* Circle radii: log-spaced from small to large in degrees */
+    const nCircles = 10;
+    const nPts = 180;  /* points per circle */
+    const minR = gspDeg * 0.5;
+    const maxR = fovDeg * 0.9;
+
+    cx.lineWidth = 1.0 * dpr;
+
+    for (let ci = 0; ci < nCircles; ci++) {
+      const t = ci / (nCircles - 1);
+      const r = minR * Math.pow(maxR / minR, t);  /* log spacing */
+
+      cx.beginPath();
+      let firstPt = true;
+
+      for (let pi = 0; pi <= nPts; pi++) {
+        const angle = (pi / nPts) * 2 * Math.PI;
+        /* Point on circle in angle-space, centred on pan centre */
+        const lon = panLon + r * Math.cos(angle);
+        const lat = panLat + r * Math.sin(angle);
+
+        /* Apply lensed displacement — nearest-last, physical (no exag) */
+        let appLon = lon, appLat = lat;
+        let nearestIdx4 = -1, nearestSep4 = Infinity;
+        for (let mi = 0; mi < masses.length; mi++) {
+          const dx = lon - masses[mi].ax, dy = lat - masses[mi].ay;
+          const sep = Math.sqrt(dx*dx + dy*dy);
+          if (sep < nearestSep4) { nearestSep4 = sep; nearestIdx4 = mi; }
+        }
+        for (let mi = 0; mi < masses.length; mi++) {
+          if (mi === nearestIdx4) continue;
+          const m = masses[mi];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg < 1e-8) continue;
+          const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+          const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+          appLon += visual_deg*(dx/sep_deg);
+          appLat += visual_deg*(dy/sep_deg);
+        }
+        if (nearestIdx4 >= 0) {
+          const m = masses[nearestIdx4];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg > 1e-8) {
+            const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+            const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+            const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+            appLon += visual_deg*(dx/sep_deg);
+            appLat += visual_deg*(dy/sep_deg);
+          }
+        }
+
+        const g = gnom(appLon, appLat);
+        if (!g) { firstPt = true; continue; }
+        const [px2, py2] = g;
+        if (firstPt) { cx.moveTo(px2, py2); firstPt = false; }
+        else cx.lineTo(px2, py2);
+      }
+
+      /* White, fading slightly for outer rings */
+      const alpha2 = 0.65 - t * 0.25;
+      cx.strokeStyle = `rgba(255,255,255,${alpha2.toFixed(2)})`;
+      cx.stroke();
+    }
+  }
+
+  /* Iso-displacement κ contours — marching squares in angle space */
+  const showKappaIso = document.getElementById('chkKappaIso').checked;
+  if (showKappaIso && masses.length > 0) {
+    /* Bbox from true mass positions */
+    let mMinLon=Infinity, mMaxLon=-Infinity, mMinLat=Infinity, mMaxLat=-Infinity;
+    let maxMass = 0;
+    for (const m of masses) {
+      if (m.ax<mMinLon) mMinLon=m.ax; if (m.ax>mMaxLon) mMaxLon=m.ax;
+      if (m.ay<mMinLat) mMinLat=m.ay; if (m.ay>mMaxLat) mMaxLat=m.ay;
+      if (m.mass > maxMass) maxMass = m.mass;
+    }
+    const M_kg_max = maxMass * 1e11 * Msun;
+    const tE_min = Math.sqrt(4*G*M_kg_max*D_LS/(C*C*D_L*D_S)) * 180/Math.PI;
+    const mSpan = Math.max(mMaxLon-mMinLon, mMaxLat-mMinLat, tE_min * 20, 0.05);
+    const bpad = mSpan * 0.5;
+    const sMinLon = mMinLon-bpad, sMaxLon = mMaxLon+bpad;
+    const sMinLat = mMinLat-bpad, sMaxLat = mMaxLat+bpad;
+    const sSpanX = sMaxLon-sMinLon, sSpanY = sMaxLat-sMinLat;
+    /* Mass barycentre — field sampled here, gnom projects relative to panLon/panLat */
+    const cLon = (sMinLon + sMaxLon) * 0.5;
+    const cLat = (sMinLat + sMaxLat) * 0.5;
+
+    const ISO_MAX = parseInt(document.getElementById('isoRes').value);
+    const isoW2 = ISO_MAX;
+    const isoH2 = Math.round(ISO_MAX * ph / pw);
+    const field2 = new Float32Array(isoW2 * isoH2);
+
+    for (let iy = 0; iy < isoH2; iy++) {
+      for (let ix = 0; ix < isoW2; ix++) {
+        /* True position in bbox */
+        const lon0 = cLon + (ix/(isoW2-1) - 0.5) * sSpanX;
+        const lat0 = cLat + (iy/(isoH2-1) - 0.5) * sSpanY;
+
+        /* Apply exag deflection — same as grid drawing — to get apparent position */
+        let appLon = lon0, appLat = lat0;
+        let ni = -1, ns = Infinity;
+        for (let mi = 0; mi < masses.length; mi++) {
+          const dx = lon0 - masses[mi].ax, dy = lat0 - masses[mi].ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s < ns) { ns = s; ni = mi; }
+        }
+        for (let mi = 0; mi < masses.length; mi++) {
+          if (mi === ni) continue;
+          const m = masses[mi];
+          const dx = lon0 - m.ax, dy = lat0 - m.ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s < 1e-8) continue;
+          const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          appLon += a*(dx/s); appLat += a*(dy/s);
+        }
+        if (ni >= 0) {
+          const m = masses[ni];
+          const dx = lon0 - m.ax, dy = lat0 - m.ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s > 1e-8) {
+            const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+            appLon += a*(dx/s); appLat += a*(dy/s);
+          }
+        }
+        field2[iy*isoW2+ix] = Math.sqrt((appLon-lon0)**2+(appLat-lat0)**2)*3600;
+      }
+    }
+
+    let maxF = 0;
+    for (let i = 0; i < field2.length; i++) if (field2[i] > maxF) maxF = field2[i];
+
+    if (maxF > 0) {
+      const minF = maxF * 0.005;
+      const nLev = 24;
+      const levels2 = [];
+      for (let i = 0; i < nLev; i++) {
+        const t = 1 - Math.pow(i/(nLev-1), 0.5);  /* high displacement first = inner */
+        levels2.push(minF * Math.pow(maxF/minF, t));
+      }
+
+      /* Marching squares — contour positions project directly via gnom */
+      const lp = (a,b,va,vb,lev) => Math.abs(vb-va)<1e-12 ? a : a+(b-a)*(lev-va)/(vb-va);
+      const isoScl = parseFloat(document.getElementById('isoScl').value);
+      const ep = (ax,ay,bx,by,va,vb,lev) => {
+        const t2 = Math.abs(vb-va)<1e-12 ? 0.5 : (lev-va)/(vb-va);
+        const fx = ax+(bx-ax)*t2, fy = ay+(by-ay)*t2;
+        const lon = cLon + (fx/(isoW2-1) - 0.5) * sSpanX;
+        const lat = cLat + (fy/(isoH2-1) - 0.5) * sSpanY;
+        const g = gnom(lon, lat);
+        if (!g) return null;
+        const gc = gnom(cLon, cLat);
+        const ox = gc ? gc[0] : OX, oy = gc ? gc[1] : OY;
+        return [ox + (g[0]-ox)*isoScl, oy + (g[1]-oy)*isoScl];
+      };
+
+      for (let li = 0; li < nLev; li++) {
+        const level = levels2[li];
+        const t = li/(nLev-1);
+        const br = Math.round(180 + 75*(1-t));
+        cx.strokeStyle = `rgba(${br},${br},0,${0.8-t*0.3})`;
+        cx.lineWidth = 1.0 * dpr;
+        cx.beginPath();
+
+        for (let iy = 0; iy < isoH2-1; iy++) {
+          for (let ix = 0; ix < isoW2-1; ix++) {
+            const v00=field2[ iy   *isoW2+ ix  ], v10=field2[ iy   *isoW2+(ix+1)];
+            const v01=field2[(iy+1)*isoW2+ ix  ], v11=field2[(iy+1)*isoW2+(ix+1)];
+            const c=((v00>=level)?8:0)|((v10>=level)?4:0)|((v11>=level)?2:0)|((v01>=level)?1:0);
+            if (c===0||c===15) continue;
+            const T=ep(ix,iy,ix+1,iy,v00,v10,level);
+            const R=ep(ix+1,iy,ix+1,iy+1,v10,v11,level);
+            const B=ep(ix,iy+1,ix+1,iy+1,v01,v11,level);
+            const L=ep(ix,iy,ix,iy+1,v00,v01,level);
+            const segs={1:[L,B],2:[B,R],3:[L,R],4:[T,R],6:[T,B],7:[T,L],
+                        8:[T,L],9:[T,B],11:[T,R],12:[L,R],13:[B,R],14:[L,B]};
+            let seg=segs[c];
+            if(c===5)  seg=(v00+v11>=v10+v01)?[T,R,null,L,B]:[T,L,null,R,B];
+            if(c===10) seg=(v00+v11>=v10+v01)?[T,L,null,R,B]:[T,R,null,L,B];
+            if(!seg) continue;
+            for(let si=0;si<seg.length;si+=2){
+              if(!seg[si]||!seg[si+1]) continue;
+              if(!seg[si][0]||!seg[si+1][0]) continue;
+              cx.moveTo(seg[si][0],seg[si][1]);
+              cx.lineTo(seg[si+1][0],seg[si+1][1]);
+            }
+          }
+        }
+        cx.stroke();
+      }
+      cx.fillStyle='rgba(255,255,0,0.7)';
+      cx.font=`${Math.round(9*dpr)}px monospace`;
+      cx.fillText(`iso-κ peak=${maxF.toFixed(2)}″`, 6*dpr, ph-6*dpr);
     }
   }
 
@@ -816,7 +1101,7 @@ function draw() {
       const g = gnomExag(m.ax, m.ay, selfIdx);
       if (!g) return;
       const [mx, my] = g;
-      const r = (3 + Math.sqrt(m.mass) * 2.5) * dpr;
+      const r = (3 + Math.log10(Math.max(m.mass, 0.1) + 1) * 8) * dpr;
       const col = TYPE_COL[m.type];
 
       /* Einstein radius ring */
@@ -923,7 +1208,6 @@ cv.addEventListener('mousedown', e => {
 
 cv.addEventListener('mousemove', e => {
   if (dragging) {
-    /* Convert pixel delta to angular delta at current scale */
     const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
     const halfFovRad = (fovDeg / 2) * Math.PI / 180;
     const rect = cv.getBoundingClientRect();
@@ -932,7 +1216,16 @@ cv.addEventListener('mousemove', e => {
     const dyPx = (e.clientY - dragStartY) * cv.height / rect.height;
     panLon = dragPanLon0 - (dxPx / scale) * 180 / Math.PI;
     panLat = dragPanLat0 + (dyPx / scale) * 180 / Math.PI;
-    go();
+    /* Skip iso redraw during pan drag for performance */
+    const isoOn = document.getElementById('chkKappaIso').checked;
+    if (isoOn) {
+      /* Temporarily hide iso, redraw fast, restore on mouseup */
+      document.getElementById('chkKappaIso').checked = false;
+      go();
+      document.getElementById('chkKappaIso').checked = true;
+    } else {
+      go();
+    }
     return;
   }
   const [ax, ay] = pixToAngle(e.clientX, e.clientY);
@@ -1018,11 +1311,15 @@ function preset(name) {
     document.getElementById('sv0').textContent = '2.0';
     document.getElementById('gsp').value = 300;
     document.getElementById('gv').textContent = '5′';
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
   } else if (name === 'binary') {
     masses = [
       { ax: -3, ay: 0, mass: 40, type: 'bary' },
       { ax:  3, ay: 0, mass: 40, type: 'bary' }
     ];
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
   } else if (name === 'bullet') {
     /* Bullet cluster masses rescaled to ×10¹¹ M☉ units:
        dark halos ~9e13 M☉ = 900, gas clumps ~2e13 = 200 */
@@ -1049,6 +1346,8 @@ function preset(name) {
     document.getElementById('sv1').textContent = '8';
     document.getElementById('gsp').value = 120;
     document.getElementById('gv').textContent = '2′';
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
   } else if (name === 'abell2029') {
     /* Abell 2029: rich regular cluster at z=0.078
        ~350 member galaxies, cD galaxy IC 1101 at centre (~10¹³ M☉),
