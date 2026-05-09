@@ -979,9 +979,11 @@ function draw() {
     const M_kg_max = maxMass * 1e11 * Msun;
     const tE_min = Math.sqrt(4*G*M_kg_max*D_LS/(C*C*D_L*D_S)) * 180/Math.PI;
     const mSpan = Math.max(mMaxLon-mMinLon, mMaxLat-mMinLat, tE_min * 20, 0.05);
-    const bpad = mSpan * 0.5;
-    const sMinLon = mMinLon-bpad, sMaxLon = mMaxLon+bpad;
-    const sMinLat = mMinLat-bpad, sMaxLat = mMaxLat+bpad;
+    const bpad = mSpan * 2.5;
+    const sMinLon = Math.max(mMinLon-bpad, panLon-fovDeg);
+    const sMaxLon = Math.min(mMaxLon+bpad, panLon+fovDeg);
+    const sMinLat = Math.max(mMinLat-bpad, panLat-fovDeg);
+    const sMaxLat = Math.min(mMaxLat+bpad, panLat+fovDeg);
     const sSpanX = sMaxLon-sMinLon, sSpanY = sMaxLat-sMinLat;
     /* Mass barycentre — field sampled here, gnom projects relative to panLon/panLat */
     const cLon = (sMinLon + sMaxLon) * 0.5;
