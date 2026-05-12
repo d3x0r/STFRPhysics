@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" font-family="sans-serif" font-size="12">
+<style>
+  .ax { stroke: #333; stroke-width: 1; fill: none; }
+  .grid { stroke: #ddd; stroke-width: 0.5; }
+  .lbl { fill: #333; }
+  .title { fill: #111; font-size: 17px; font-weight: 600; }
+  .subtitle { fill: #555; font-size: 12px; }
+  .bar-low { fill: #2a72c4; }
+  .bar-high { fill: #c47a2a; }
+  .ref { stroke: #b00; stroke-width: 1.4; stroke-dasharray: 4,3; fill: none; }
+  .reflbl { fill: #b00; font-size: 11px; font-weight: 600; }
+</style>
+<text x="360.0" y="26" text-anchor="middle" class="title">Framework fit quality across 177 galaxies (SPARC + Milky Way + M31)</text>
+<text x="360.0" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS (RMS / mean V_obs) per galaxy, no dark-matter halo</text>
+<line x1="70" y1="400.0" x2="690" y2="400.0" class="grid"/>
+<text x="64" y="404.0" text-anchor="end" class="lbl">0</text>
+<line x1="70" y1="342.04545454545456" x2="690" y2="342.04545454545456" class="grid"/>
+<text x="64" y="346.04545454545456" text-anchor="end" class="lbl">12</text>
+<line x1="70" y1="279.2613636363636" x2="690" y2="279.2613636363636" class="grid"/>
+<text x="64" y="283.2613636363636" text-anchor="end" class="lbl">25</text>
+<line x1="70" y1="216.47727272727275" x2="690" y2="216.47727272727275" class="grid"/>
+<text x="64" y="220.47727272727275" text-anchor="end" class="lbl">38</text>
+<line x1="70" y1="153.69318181818184" x2="690" y2="153.69318181818184" class="grid"/>
+<text x="64" y="157.69318181818184" text-anchor="end" class="lbl">51</text>
+<line x1="70" y1="90.90909090909092" x2="690" y2="90.90909090909092" class="grid"/>
+<text x="64" y="94.90909090909092" text-anchor="end" class="lbl">64</text>
+<line x1="70.0" y1="60" x2="70.0" y2="400" class="grid"/>
+<text x="70.0" y="416" text-anchor="middle" class="lbl">0%</text>
+<line x1="173.33333333333331" y1="60" x2="173.33333333333331" y2="400" class="grid"/>
+<text x="173.33333333333331" y="416" text-anchor="middle" class="lbl">5%</text>
+<line x1="276.66666666666663" y1="60" x2="276.66666666666663" y2="400" class="grid"/>
+<text x="276.66666666666663" y="416" text-anchor="middle" class="lbl">10%</text>
+<line x1="380.0" y1="60" x2="380.0" y2="400" class="grid"/>
+<text x="380.0" y="416" text-anchor="middle" class="lbl">15%</text>
+<line x1="483.3333333333333" y1="60" x2="483.3333333333333" y2="400" class="grid"/>
+<text x="483.3333333333333" y="416" text-anchor="middle" class="lbl">20%</text>
+<line x1="586.6666666666667" y1="60" x2="586.6666666666667" y2="400" class="grid"/>
+<text x="586.6666666666667" y="416" text-anchor="middle" class="lbl">25%</text>
+<line x1="690.0" y1="60" x2="690.0" y2="400" class="grid"/>
+<text x="690.0" y="416" text-anchor="middle" class="lbl">30%</text>
+<text x="380.0" y="448" text-anchor="middle" class="lbl">relative RMS (RMS / &lt;V_obs&gt;)</text>
+<text x="18" y="230.0" text-anchor="middle" class="lbl" transform="rotate(-90, 18, 230.0)">number of galaxies</text>
+<rect x="71.0" y="313.0681818181818" width="18.666666666666668" height="86.93181818181819" class="bar-low"/>
+<rect x="91.66666666666667" y="100.56818181818181" width="18.666666666666668" height="299.4318181818182" class="bar-low"/>
+<rect x="91.66666666666667" y="90.9090909090909" width="18.666666666666668" height="9.659090909090908" class="bar-high"/>
+<rect x="112.33333333333334" y="240.62500000000003" width="18.666666666666668" height="159.37499999999997" class="bar-low"/>
+<rect x="112.33333333333334" y="226.13636363636365" width="18.666666666666668" height="14.488636363636363" class="bar-high"/>
+<rect x="133.0" y="332.3863636363636" width="18.666666666666668" height="67.61363636363636" class="bar-low"/>
+<rect x="133.0" y="298.57954545454544" width="18.666666666666668" height="33.80681818181818" class="bar-high"/>
+<rect x="153.66666666666669" y="371.02272727272725" width="18.666666666666668" height="28.977272727272727" class="bar-low"/>
+<rect x="153.66666666666669" y="351.70454545454544" width="18.666666666666668" height="19.318181818181817" class="bar-high"/>
+<rect x="174.33333333333334" y="375.85227272727275" width="18.666666666666668" height="24.14772727272727" class="bar-low"/>
+<rect x="174.33333333333334" y="346.875" width="18.666666666666668" height="28.977272727272727" class="bar-high"/>
+<rect x="195.0" y="390.34090909090907" width="18.666666666666668" height="9.659090909090908" class="bar-low"/>
+<rect x="195.0" y="385.5113636363636" width="18.666666666666668" height="4.829545454545454" class="bar-high"/>
+<rect x="215.66666666666669" y="395.17045454545456" width="18.666666666666668" height="4.829545454545454" class="bar-low"/>
+<rect x="215.66666666666669" y="385.5113636363636" width="18.666666666666668" height="9.659090909090908" class="bar-high"/>
+<rect x="236.33333333333334" y="385.5113636363636" width="18.666666666666668" height="14.488636363636363" class="bar-high"/>
+<rect x="257.0" y="390.34090909090907" width="18.666666666666668" height="9.659090909090908" class="bar-high"/>
+<rect x="319.0" y="395.17045454545456" width="18.666666666666668" height="4.829545454545454" class="bar-high"/>
+<rect x="339.6666666666667" y="395.17045454545456" width="18.666666666666668" height="4.829545454545454" class="bar-low"/>
+<rect x="339.6666666666667" y="390.3409090909091" width="18.666666666666668" height="4.829545454545454" class="bar-high"/>
+<rect x="401.6666666666667" y="390.34090909090907" width="18.666666666666668" height="9.659090909090908" class="bar-high"/>
+<rect x="422.33333333333337" y="395.17045454545456" width="18.666666666666668" height="4.829545454545454" class="bar-high"/>
+<line x1="113.14194117727672" y1="60" x2="113.14194117727672" y2="400" class="ref"/>
+<text x="118.14194117727672" y="72" class="reflbl">median = 2.1%</text>
+<rect x="70" y="60" width="620" height="340" class="ax"/>
+<rect x="490" y="72" width="12" height="12" class="bar-low"/>
+<text x="508" y="82" class="lbl">amp ≤ 500 (n=142)</text>
+<rect x="490" y="90" width="12" height="12" class="bar-high"/>
+<text x="508" y="100" class="lbl">amp &gt; 500 (n=35)</text>
+<text x="82" y="82" class="lbl">N = 177 galaxies</text>
+<text x="82" y="100" class="lbl">&lt;5%:  149/177 (84%)</text>
+<text x="82" y="116" class="lbl">&lt;10%: 171/177 (97%)</text>
+<text x="82" y="132" class="lbl">&lt;20%: 177/177 (100%)</text>
+</svg>

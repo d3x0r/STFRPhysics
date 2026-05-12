@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Galaxy rotation curve fits</title>
+<style>
+body { font-family: sans-serif; max-width: 99vw; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #222; }
+h1 { font-size: 22px; }
+.summary { background: white; padding: 14px 18px; border-radius: 6px; margin-bottom: 20px; }
+.summary p { margin: 6px 0; }
+.controls { background: white; padding: 12px 18px; border-radius: 6px; margin-bottom: 20px; position: sticky; top: 0; z-index: 10; }
+.controls label { margin-right: 18px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); gap: 16px; }
+.tile { background: white; border-radius: 6px; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.tile h3 { margin: 4px 0; font-size: 14px; display: flex; justify-content: space-between; align-items: baseline; }
+.tile h3 .rel { font-weight: normal; font-family: monospace; }
+.tile.good h3 .rel { color: #0a7a30; }
+.tile.fair h3 .rel { color: #b08000; }
+.tile.poor h3 .rel { color: #b03030; }
+.tile object { width: 100%; height: auto; display: block; }
+.tile .flag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; margin-left: 6px; background: #ddd; color: #555; }
+.tile .flag.high { background: #f8d39a; color: #7a4400; }
+.hidden { display: none; }
+</style></head><body>
+<h1>Galaxy rotation curve fits — 177 galaxies (SPARC + Milky Way + M31)</h1>
+<div class="summary">
+<p><strong>Median relative RMS:</strong> 2.09% &nbsp; &nbsp; <strong>&lt;5%:</strong> 149/177 (84%) &nbsp; &nbsp; <strong>&lt;10%:</strong> 171/177 (97%) &nbsp; &nbsp; <strong>&lt;20%:</strong> 177/177 (100%)</p>
+<p>All fits use the displacement framework with no dark-matter halo. The "high-amp" flag (amp &gt; 500, 35 galaxies) marks fits the author identified as less reliable.</p>
+<p>Each plot shows the rotation curve (left axis, velocity in km/s) and the mass profile (right axis, normalized to peak): ρ(r) solid red is the raw piecewise-linear occupancy from the gradient-control sliders, Σ(r) dashed red is the smoothed cumulative displacement field that drives the velocity response.</p>
+</div>
+<div class="controls">
+<label>Sort: <select id="sortby">
+<option value="rms">by RMS (best to worst)</option>
+<option value="rms_rev">by RMS (worst to best)</option>
+<option value="name">by name</option>
+<option value="mass">by total mass (heaviest first)</option>
+<option value="vmax">by V_max (biggest first)</option>
+</select></label>
+<label>Filter: <select id="filter">
+<option value="all">all</option>
+<option value="excellent">excellent (&lt;5%)</option>
+<option value="good">good (5–10%)</option>
+<option value="fair">fair (10–20%)</option>
+<option value="poor">poor (&gt;20%)</option>
+<option value="highamp">high-amp flagged</option>
+</select></label>
+<span id="count" style="color:#666"></span>
+</div>
+<div class="grid" id="grid">
+<div class="tile good" data-name="F561-1" data-rel="0.00384" data-vmax="50" data-mass="7.697e+09" data-highamp="0"><h3>F561-1 <span class="rel">0.38%</span></h3><object data="F561-1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05750" data-rel="0.00550" data-vmax="79" data-mass="3.454e+10" data-highamp="0"><h3>UGC05750 <span class="rel">0.55%</span></h3><object data="UGC05750.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06930" data-rel="0.00596" data-vmax="109" data-mass="5.780e+10" data-highamp="0"><h3>UGC06930 <span class="rel">0.60%</span></h3><object data="UGC06930.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3953" data-rel="0.00618" data-vmax="224" data-mass="2.058e+11" data-highamp="0"><h3>NGC3953 <span class="rel">0.62%</span></h3><object data="NGC3953.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F574-1" data-rel="0.00646" data-vmax="100" data-mass="3.518e+10" data-highamp="0"><h3>F574-1 <span class="rel">0.65%</span></h3><object data="F574-1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="D512-2" data-rel="0.00657" data-vmax="37" data-mass="0.000e+00" data-highamp="0"><h3>D512-2 <span class="rel">0.66%</span></h3><object data="D512-2.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC08286" data-rel="0.00671" data-vmax="84" data-mass="1.596e+10" data-highamp="0"><h3>UGC08286 <span class="rel">0.67%</span></h3><object data="UGC08286.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4138" data-rel="0.00706" data-vmax="195" data-mass="1.632e+11" data-highamp="0"><h3>NGC4138 <span class="rel">0.71%</span></h3><object data="NGC4138.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F563-V2" data-rel="0.00716" data-vmax="118" data-mass="3.983e+10" data-highamp="0"><h3>F563-V2 <span class="rel">0.72%</span></h3><object data="F563-V2.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0247" data-rel="0.00717" data-vmax="108" data-mass="4.120e+10" data-highamp="0"><h3>NGC0247 <span class="rel">0.72%</span></h3><object data="NGC0247.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3949" data-rel="0.00896" data-vmax="169" data-mass="5.368e+10" data-highamp="0"><h3>NGC3949 <span class="rel">0.90%</span></h3><object data="NGC3949.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4088" data-rel="0.00902" data-vmax="182" data-mass="1.817e+11" data-highamp="0"><h3>NGC4088 <span class="rel">0.90%</span></h3><object data="NGC4088.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06973" data-rel="0.00911" data-vmax="180" data-mass="7.081e+10" data-highamp="0"><h3>UGC06973 <span class="rel">0.91%</span></h3><object data="UGC06973.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="ESO444-G084" data-rel="0.00913" data-vmax="63" data-mass="4.405e+09" data-highamp="0"><h3>ESO444-G084 <span class="rel">0.91%</span></h3><object data="ESO444-G084.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC04325" data-rel="0.00915" data-vmax="93" data-mass="1.305e+10" data-highamp="0"><h3>UGC04325 <span class="rel">0.92%</span></h3><object data="UGC04325.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F568-V1" data-rel="0.00927" data-vmax="118" data-mass="7.925e+10" data-highamp="0"><h3>F568-V1 <span class="rel">0.93%</span></h3><object data="F568-V1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06923" data-rel="0.00940" data-vmax="81" data-mass="8.533e+09" data-highamp="0"><h3>UGC06923 <span class="rel">0.94%</span></h3><object data="UGC06923.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07151" data-rel="0.00958" data-vmax="76" data-mass="8.975e+09" data-highamp="0"><h3>UGC07151 <span class="rel">0.96%</span></h3><object data="UGC07151.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05716" data-rel="0.01009" data-vmax="75" data-mass="1.860e+10" data-highamp="0"><h3>UGC05716 <span class="rel">1.01%</span></h3><object data="UGC05716.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07690" data-rel="0.01040" data-vmax="61" data-mass="4.098e+09" data-highamp="0"><h3>UGC07690 <span class="rel">1.04%</span></h3><object data="UGC07690.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06917" data-rel="0.01052" data-vmax="111" data-mass="3.058e+10" data-highamp="0"><h3>UGC06917 <span class="rel">1.05%</span></h3><object data="UGC06917.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4217" data-rel="0.01080" data-vmax="191" data-mass="1.641e+11" data-highamp="0"><h3>NGC4217 <span class="rel">1.08%</span></h3><object data="NGC4217.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC12732" data-rel="0.01104" data-vmax="98" data-mass="3.340e+10" data-highamp="0"><h3>UGC12732 <span class="rel">1.10%</span></h3><object data="UGC12732.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F571-V1" data-rel="0.01122" data-vmax="84" data-mass="2.542e+10" data-highamp="0"><h3>F571-V1 <span class="rel">1.12%</span></h3><object data="F571-V1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC01230" data-rel="0.01189" data-vmax="113" data-mass="1.286e+11" data-highamp="0"><h3>UGC01230 <span class="rel">1.19%</span></h3><object data="UGC01230.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0055" data-rel="0.01211" data-vmax="87" data-mass="2.529e+10" data-highamp="0"><h3>NGC0055 <span class="rel">1.21%</span></h3><object data="NGC0055.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="DDO170" data-rel="0.01217" data-vmax="62" data-mass="1.261e+10" data-highamp="0"><h3>DDO170 <span class="rel">1.22%</span></h3><object data="DDO170.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07261" data-rel="0.01236" data-vmax="76" data-mass="9.916e+09" data-highamp="0"><h3>UGC07261 <span class="rel">1.24%</span></h3><object data="UGC07261.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07399" data-rel="0.01249" data-vmax="106" data-mass="1.732e+10" data-highamp="0"><h3>UGC07399 <span class="rel">1.25%</span></h3><object data="UGC07399.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC02259" data-rel="0.01259" data-vmax="90" data-mass="1.780e+10" data-highamp="0"><h3>UGC02259 <span class="rel">1.26%</span></h3><object data="UGC02259.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC10310" data-rel="0.01266" data-vmax="73" data-mass="1.059e+10" data-highamp="0"><h3>UGC10310 <span class="rel">1.27%</span></h3><object data="UGC10310.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06983" data-rel="0.01325" data-vmax="113" data-mass="5.517e+10" data-highamp="0"><h3>UGC06983 <span class="rel">1.33%</span></h3><object data="UGC06983.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06399" data-rel="0.01327" data-vmax="88" data-mass="1.437e+10" data-highamp="0"><h3>UGC06399 <span class="rel">1.33%</span></h3><object data="UGC06399.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4183" data-rel="0.01346" data-vmax="115" data-mass="7.784e+10" data-highamp="0"><h3>NGC4183 <span class="rel">1.35%</span></h3><object data="NGC4183.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0100" data-rel="0.01348" data-vmax="91" data-mass="1.988e+10" data-highamp="0"><h3>NGC0100 <span class="rel">1.35%</span></h3><object data="NGC0100.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC04499" data-rel="0.01349" data-vmax="74" data-mass="1.136e+10" data-highamp="0"><h3>UGC04499 <span class="rel">1.35%</span></h3><object data="UGC04499.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07125" data-rel="0.01395" data-vmax="66" data-mass="2.242e+10" data-highamp="0"><h3>UGC07125 <span class="rel">1.40%</span></h3><object data="UGC07125.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGCA442" data-rel="0.01403" data-vmax="58" data-mass="4.838e+09" data-highamp="0"><h3>UGCA442 <span class="rel">1.40%</span></h3><object data="UGCA442.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC00731" data-rel="0.01403" data-vmax="74" data-mass="1.616e+10" data-highamp="0"><h3>UGC00731 <span class="rel">1.40%</span></h3><object data="UGC00731.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07232" data-rel="0.01404" data-vmax="44" data-mass="2.757e+08" data-highamp="0"><h3>UGC07232 <span class="rel">1.40%</span></h3><object data="UGC07232.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05999" data-rel="0.01409" data-vmax="100" data-mass="3.669e+10" data-highamp="0"><h3>UGC05999 <span class="rel">1.41%</span></h3><object data="UGC05999.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="PGC51017" data-rel="0.01410" data-vmax="20" data-mass="3.977e+08" data-highamp="0"><h3>PGC51017 <span class="rel">1.41%</span></h3><object data="PGC51017.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3972" data-rel="0.01441" data-vmax="134" data-mass="3.562e+10" data-highamp="0"><h3>NGC3972 <span class="rel">1.44%</span></h3><object data="NGC3972.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4100" data-rel="0.01460" data-vmax="195" data-mass="2.149e+11" data-highamp="0"><h3>NGC4100 <span class="rel">1.46%</span></h3><object data="NGC4100.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC12632" data-rel="0.01474" data-vmax="73" data-mass="1.499e+10" data-highamp="0"><h3>UGC12632 <span class="rel">1.47%</span></h3><object data="UGC12632.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0891" data-rel="0.01476" data-vmax="234" data-mass="2.252e+11" data-highamp="0"><h3>NGC0891 <span class="rel">1.48%</span></h3><object data="NGC0891.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC00891" data-rel="0.01482" data-vmax="64" data-mass="6.664e+09" data-highamp="0"><h3>UGC00891 <span class="rel">1.48%</span></h3><object data="UGC00891.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4559" data-rel="0.01486" data-vmax="124" data-mass="8.594e+10" data-highamp="0"><h3>NGC4559 <span class="rel">1.49%</span></h3><object data="NGC4559.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06446" data-rel="0.01504" data-vmax="85" data-mass="1.998e+10" data-highamp="0"><h3>UGC06446 <span class="rel">1.50%</span></h3><object data="UGC06446.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC02023" data-rel="0.01510" data-vmax="59" data-mass="2.070e+09" data-highamp="0"><h3>UGC02023 <span class="rel">1.51%</span></h3><object data="UGC02023.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F574-2" data-rel="0.01510" data-vmax="40" data-mass="3.398e+09" data-highamp="0"><h3>F574-2 <span class="rel">1.51%</span></h3><object data="F574-2.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC02487" data-rel="0.01526" data-vmax="383" data-mass="2.751e+12" data-highamp="1"><h3>UGC02487<span class="flag high">amp&gt;500</span> <span class="rel">1.53%</span></h3><object data="UGC02487.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="D631-7" data-rel="0.01532" data-vmax="58" data-mass="5.204e+09" data-highamp="0"><h3>D631-7 <span class="rel">1.53%</span></h3><object data="D631-7.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06628" data-rel="0.01538" data-vmax="42" data-mass="3.864e+09" data-highamp="0"><h3>UGC06628 <span class="rel">1.54%</span></h3><object data="UGC06628.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07323" data-rel="0.01541" data-vmax="86" data-mass="8.644e+09" data-highamp="0"><h3>UGC07323 <span class="rel">1.54%</span></h3><object data="UGC07323.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC1003" data-rel="0.01546" data-vmax="115" data-mass="1.022e+11" data-highamp="0"><h3>NGC1003 <span class="rel">1.55%</span></h3><object data="NGC1003.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC00634" data-rel="0.01549" data-vmax="108" data-mass="7.185e+10" data-highamp="0"><h3>UGC00634 <span class="rel">1.55%</span></h3><object data="UGC00634.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC08490" data-rel="0.01587" data-vmax="80" data-mass="1.869e+10" data-highamp="0"><h3>UGC08490 <span class="rel">1.59%</span></h3><object data="UGC08490.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07524" data-rel="0.01624" data-vmax="84" data-mass="1.608e+10" data-highamp="0"><h3>UGC07524 <span class="rel">1.62%</span></h3><object data="UGC07524.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC00128" data-rel="0.01628" data-vmax="134" data-mass="2.681e+11" data-highamp="0"><h3>UGC00128 <span class="rel">1.63%</span></h3><object data="UGC00128.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="DDO154" data-rel="0.01666" data-vmax="48" data-mass="3.226e+09" data-highamp="0"><h3>DDO154 <span class="rel">1.67%</span></h3><object data="DDO154.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="DDO168" data-rel="0.01672" data-vmax="55" data-mass="2.656e+09" data-highamp="0"><h3>DDO168 <span class="rel">1.67%</span></h3><object data="DDO168.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4051" data-rel="0.01713" data-vmax="161" data-mass="8.156e+10" data-highamp="0"><h3>NGC4051 <span class="rel">1.71%</span></h3><object data="NGC4051.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5985" data-rel="0.01715" data-vmax="305" data-mass="1.093e+12" data-highamp="1"><h3>NGC5985<span class="flag high">amp&gt;500</span> <span class="rel">1.72%</span></h3><object data="NGC5985.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC09037" data-rel="0.01736" data-vmax="160" data-mass="1.919e+11" data-highamp="0"><h3>UGC09037 <span class="rel">1.74%</span></h3><object data="UGC09037.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F563-V1" data-rel="0.01773" data-vmax="30" data-mass="1.663e+09" data-highamp="0"><h3>F563-V1 <span class="rel">1.77%</span></h3><object data="F563-V1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F567-2" data-rel="0.01786" data-vmax="52" data-mass="6.659e+09" data-highamp="0"><h3>F567-2 <span class="rel">1.79%</span></h3><object data="F567-2.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05414" data-rel="0.01824" data-vmax="61" data-mass="3.111e+09" data-highamp="0"><h3>UGC05414 <span class="rel">1.82%</span></h3><object data="UGC05414.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="IC4202" data-rel="0.01853" data-vmax="250" data-mass="4.708e+11" data-highamp="0"><h3>IC4202 <span class="rel">1.85%</span></h3><object data="IC4202.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4214" data-rel="0.01854" data-vmax="81" data-mass="1.140e+10" data-highamp="0"><h3>NGC4214 <span class="rel">1.85%</span></h3><object data="NGC4214.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC2366" data-rel="0.01854" data-vmax="54" data-mass="4.105e+09" data-highamp="0"><h3>NGC2366 <span class="rel">1.85%</span></h3><object data="NGC2366.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07603" data-rel="0.01856" data-vmax="64" data-mass="4.240e+09" data-highamp="0"><h3>UGC07603 <span class="rel">1.86%</span></h3><object data="UGC07603.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F565-V2" data-rel="0.01899" data-vmax="83" data-mass="1.298e+10" data-highamp="0"><h3>F565-V2 <span class="rel">1.90%</span></h3><object data="F565-V2.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="ESO079-G014" data-rel="0.01932" data-vmax="178" data-mass="1.288e+11" data-highamp="0"><h3>ESO079-G014 <span class="rel">1.93%</span></h3><object data="ESO079-G014.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4085" data-rel="0.01940" data-vmax="136" data-mass="3.926e+10" data-highamp="0"><h3>NGC4085 <span class="rel">1.94%</span></h3><object data="NGC4085.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05764" data-rel="0.01944" data-vmax="56" data-mass="2.984e+09" data-highamp="0"><h3>UGC05764 <span class="rel">1.94%</span></h3><object data="UGC05764.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGCA281" data-rel="0.01956" data-vmax="30" data-mass="2.156e+08" data-highamp="0"><h3>UGCA281 <span class="rel">1.96%</span></h3><object data="UGCA281.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4157" data-rel="0.01966" data-vmax="201" data-mass="3.275e+11" data-highamp="0"><h3>NGC4157 <span class="rel">1.97%</span></h3><object data="NGC4157.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07608" data-rel="0.01973" data-vmax="69" data-mass="4.563e+09" data-highamp="0"><h3>UGC07608 <span class="rel">1.97%</span></h3><object data="UGC07608.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC09992" data-rel="0.01984" data-vmax="34" data-mass="1.292e+09" data-highamp="0"><h3>UGC09992 <span class="rel">1.98%</span></h3><object data="UGC09992.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="D564-8" data-rel="0.01990" data-vmax="25" data-mass="0.000e+00" data-highamp="0"><h3>D564-8 <span class="rel">1.99%</span></h3><object data="D564-8.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC08550" data-rel="0.01992" data-vmax="58" data-mass="4.541e+09" data-highamp="0"><h3>UGC08550 <span class="rel">1.99%</span></h3><object data="UGC08550.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07559" data-rel="0.02035" data-vmax="32" data-mass="5.463e+08" data-highamp="0"><h3>UGC07559 <span class="rel">2.03%</span></h3><object data="UGC07559.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4013" data-rel="0.02040" data-vmax="198" data-mass="2.963e+11" data-highamp="0"><h3>NGC4013 <span class="rel">2.04%</span></h3><object data="NGC4013.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC6789" data-rel="0.02042" data-vmax="60" data-mass="3.759e+08" data-highamp="0"><h3>NGC6789 <span class="rel">2.04%</span></h3><object data="NGC6789.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC1705" data-rel="0.02053" data-vmax="73" data-mass="1.063e+10" data-highamp="0"><h3>NGC1705 <span class="rel">2.05%</span></h3><object data="NGC1705.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05721" data-rel="0.02058" data-vmax="83" data-mass="1.354e+10" data-highamp="0"><h3>UGC05721 <span class="rel">2.06%</span></h3><object data="UGC05721.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3893" data-rel="0.02073" data-vmax="194" data-mass="1.964e+11" data-highamp="0"><h3>NGC3893 <span class="rel">2.07%</span></h3><object data="NGC3893.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC04278" data-rel="0.02088" data-vmax="93" data-mass="9.820e+09" data-highamp="0"><h3>UGC04278 <span class="rel">2.09%</span></h3><object data="UGC04278.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC7331" data-rel="0.02091" data-vmax="257" data-mass="5.947e+11" data-highamp="0"><h3>NGC7331 <span class="rel">2.09%</span></h3><object data="NGC7331.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F583-4" data-rel="0.02112" data-vmax="70" data-mass="8.223e+09" data-highamp="0"><h3>F583-4 <span class="rel">2.11%</span></h3><object data="F583-4.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="KK98-251" data-rel="0.02143" data-vmax="35" data-mass="7.335e+08" data-highamp="0"><h3>KK98-251 <span class="rel">2.14%</span></h3><object data="KK98-251.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC00191" data-rel="0.02153" data-vmax="84" data-mass="1.663e+10" data-highamp="0"><h3>UGC00191 <span class="rel">2.15%</span></h3><object data="UGC00191.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="MilkyWay" data-rel="0.02158" data-vmax="232" data-mass="4.576e+11" data-highamp="0"><h3>MilkyWay <span class="rel">2.16%</span></h3><object data="MilkyWay.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3726" data-rel="0.02166" data-vmax="169" data-mass="2.838e+11" data-highamp="0"><h3>NGC3726 <span class="rel">2.17%</span></h3><object data="NGC3726.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3521" data-rel="0.02185" data-vmax="220" data-mass="3.516e+11" data-highamp="0"><h3>NGC3521 <span class="rel">2.19%</span></h3><object data="NGC3521.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0024" data-rel="0.02232" data-vmax="110" data-mass="3.751e+10" data-highamp="0"><h3>NGC0024 <span class="rel">2.23%</span></h3><object data="NGC0024.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC6503" data-rel="0.02303" data-vmax="121" data-mass="1.034e+11" data-highamp="0"><h3>NGC6503 <span class="rel">2.30%</span></h3><object data="NGC6503.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4389" data-rel="0.02319" data-vmax="110" data-mass="1.092e+10" data-highamp="0"><h3>NGC4389 <span class="rel">2.32%</span></h3><object data="NGC4389.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="DDO064" data-rel="0.02329" data-vmax="47" data-mass="1.461e+09" data-highamp="0"><h3>DDO064 <span class="rel">2.33%</span></h3><object data="DDO064.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC4068" data-rel="0.02412" data-vmax="42" data-mass="6.738e+08" data-highamp="0"><h3>NGC4068 <span class="rel">2.41%</span></h3><object data="NGC4068.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="ESO116-G012" data-rel="0.02431" data-vmax="112" data-mass="3.021e+10" data-highamp="0"><h3>ESO116-G012 <span class="rel">2.43%</span></h3><object data="ESO116-G012.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05918" data-rel="0.02441" data-vmax="44" data-mass="2.032e+09" data-highamp="0"><h3>UGC05918 <span class="rel">2.44%</span></h3><object data="UGC05918.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC02455" data-rel="0.02492" data-vmax="61" data-mass="2.369e+09" data-highamp="0"><h3>UGC02455 <span class="rel">2.49%</span></h3><object data="UGC02455.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5907" data-rel="0.02517" data-vmax="235" data-mass="3.868e+12" data-highamp="0"><h3>NGC5907 <span class="rel">2.52%</span></h3><object data="NGC5907.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0300" data-rel="0.02530" data-vmax="97" data-mass="2.806e+10" data-highamp="0"><h3>NGC0300 <span class="rel">2.53%</span></h3><object data="NGC0300.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC08837" data-rel="0.02576" data-vmax="48" data-mass="1.458e+09" data-highamp="0"><h3>UGC08837 <span class="rel">2.58%</span></h3><object data="UGC08837.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07866" data-rel="0.02589" data-vmax="33" data-mass="5.391e+08" data-highamp="0"><h3>UGC07866 <span class="rel">2.59%</span></h3><object data="UGC07866.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F563-1" data-rel="0.02612" data-vmax="112" data-mass="6.209e+10" data-highamp="0"><h3>F563-1 <span class="rel">2.61%</span></h3><object data="F563-1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC2915" data-rel="0.02618" data-vmax="86" data-mass="1.888e+10" data-highamp="0"><h3>NGC2915 <span class="rel">2.62%</span></h3><object data="NGC2915.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05829" data-rel="0.02627" data-vmax="69" data-mass="6.493e+09" data-highamp="0"><h3>UGC05829 <span class="rel">2.63%</span></h3><object data="UGC05829.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC2841" data-rel="0.02700" data-vmax="323" data-mass="2.081e+12" data-highamp="1"><h3>NGC2841<span class="flag high">amp&gt;500</span> <span class="rel">2.70%</span></h3><object data="NGC2841.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC1090" data-rel="0.02719" data-vmax="176" data-mass="2.071e+11" data-highamp="0"><h3>NGC1090 <span class="rel">2.72%</span></h3><object data="NGC1090.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3741" data-rel="0.02792" data-vmax="52" data-mass="4.217e+09" data-highamp="0"><h3>NGC3741 <span class="rel">2.79%</span></h3><object data="NGC3741.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC04483" data-rel="0.02823" data-vmax="24" data-mass="1.663e+08" data-highamp="0"><h3>UGC04483 <span class="rel">2.82%</span></h3><object data="UGC04483.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06818" data-rel="0.02853" data-vmax="74" data-mass="7.352e+09" data-highamp="0"><h3>UGC06818 <span class="rel">2.85%</span></h3><object data="UGC06818.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="DDO161" data-rel="0.02889" data-vmax="68" data-mass="1.566e+10" data-highamp="1"><h3>DDO161<span class="flag high">amp&gt;500</span> <span class="rel">2.89%</span></h3><object data="DDO161.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC06667" data-rel="0.02987" data-vmax="86" data-mass="2.280e+10" data-highamp="1"><h3>UGC06667<span class="flag high">amp&gt;500</span> <span class="rel">2.99%</span></h3><object data="UGC06667.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC6015" data-rel="0.03053" data-vmax="166" data-mass="3.392e+11" data-highamp="1"><h3>NGC6015<span class="flag high">amp&gt;500</span> <span class="rel">3.05%</span></h3><object data="NGC6015.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F579-V1" data-rel="0.03058" data-vmax="114" data-mass="1.979e+11" data-highamp="0"><h3>F579-V1 <span class="rel">3.06%</span></h3><object data="F579-V1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3992" data-rel="0.03121" data-vmax="272" data-mass="1.280e+12" data-highamp="1"><h3>NGC3992<span class="flag high">amp&gt;500</span> <span class="rel">3.12%</span></h3><object data="NGC3992.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC04305" data-rel="0.03185" data-vmax="37" data-mass="1.800e+09" data-highamp="0"><h3>UGC04305 <span class="rel">3.18%</span></h3><object data="UGC04305.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="ESO563-G021" data-rel="0.03201" data-vmax="321" data-mass="1.276e+12" data-highamp="0"><h3>ESO563-G021 <span class="rel">3.20%</span></h3><object data="ESO563-G021.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07089" data-rel="0.03205" data-vmax="79" data-mass="2.058e+10" data-highamp="1"><h3>UGC07089<span class="flag high">amp&gt;500</span> <span class="rel">3.21%</span></h3><object data="UGC07089.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC7814" data-rel="0.03206" data-vmax="265" data-mass="4.122e+11" data-highamp="1"><h3>NGC7814<span class="flag high">amp&gt;500</span> <span class="rel">3.21%</span></h3><object data="NGC7814.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC7793" data-rel="0.03260" data-vmax="116" data-mass="2.246e+10" data-highamp="0"><h3>NGC7793 <span class="rel">3.26%</span></h3><object data="NGC7793.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05005" data-rel="0.03277" data-vmax="100" data-mass="7.746e+10" data-highamp="0"><h3>UGC05005 <span class="rel">3.28%</span></h3><object data="UGC05005.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F571-8" data-rel="0.03403" data-vmax="144" data-mass="9.409e+10" data-highamp="0"><h3>F571-8 <span class="rel">3.40%</span></h3><object data="F571-8.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3769" data-rel="0.03473" data-vmax="126" data-mass="2.108e+11" data-highamp="0"><h3>NGC3769 <span class="rel">3.47%</span></h3><object data="NGC3769.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3917" data-rel="0.03557" data-vmax="138" data-mass="9.574e+10" data-highamp="0"><h3>NGC3917 <span class="rel">3.56%</span></h3><object data="NGC3917.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC05986" data-rel="0.03668" data-vmax="116" data-mass="3.765e+10" data-highamp="1"><h3>UGC05986<span class="flag high">amp&gt;500</span> <span class="rel">3.67%</span></h3><object data="UGC05986.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGCA444" data-rel="0.03727" data-vmax="38" data-mass="7.441e+08" data-highamp="0"><h3>UGCA444 <span class="rel">3.73%</span></h3><object data="UGCA444.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC6674" data-rel="0.03771" data-vmax="291" data-mass="1.348e+12" data-highamp="1"><h3>NGC6674<span class="flag high">amp&gt;500</span> <span class="rel">3.77%</span></h3><object data="NGC6674.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC2903" data-rel="0.03774" data-vmax="216" data-mass="3.654e+11" data-highamp="0"><h3>NGC2903 <span class="rel">3.77%</span></h3><object data="NGC2903.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC12506" data-rel="0.03782" data-vmax="255" data-mass="8.767e+11" data-highamp="0"><h3>UGC12506 <span class="rel">3.78%</span></h3><object data="UGC12506.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5585" data-rel="0.03814" data-vmax="92" data-mass="2.236e+10" data-highamp="0"><h3>NGC5585 <span class="rel">3.81%</span></h3><object data="NGC5585.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3877" data-rel="0.03893" data-vmax="171" data-mass="9.429e+10" data-highamp="1"><h3>NGC3877<span class="flag high">amp&gt;500</span> <span class="rel">3.89%</span></h3><object data="NGC3877.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5371" data-rel="0.03898" data-vmax="242" data-mass="9.407e+12" data-highamp="0"><h3>NGC5371 <span class="rel">3.90%</span></h3><object data="NGC5371.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="CamB" data-rel="0.03947" data-vmax="20" data-mass="6.510e+05" data-highamp="0"><h3>CamB <span class="rel">3.95%</span></h3><object data="CamB.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3198" data-rel="0.04056" data-vmax="157" data-mass="3.998e+11" data-highamp="0"><h3>NGC3198 <span class="rel">4.06%</span></h3><object data="NGC3198.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5055" data-rel="0.04080" data-vmax="206" data-mass="1.175e+12" data-highamp="1"><h3>NGC5055<span class="flag high">amp&gt;500</span> <span class="rel">4.08%</span></h3><object data="NGC5055.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC07577" data-rel="0.04126" data-vmax="18" data-mass="8.343e+07" data-highamp="0"><h3>UGC07577 <span class="rel">4.13%</span></h3><object data="UGC07577.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC2955" data-rel="0.04132" data-vmax="276" data-mass="1.285e+12" data-highamp="1"><h3>NGC2955<span class="flag high">amp&gt;500</span> <span class="rel">4.13%</span></h3><object data="NGC2955.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC0801" data-rel="0.04216" data-vmax="238" data-mass="3.525e+12" data-highamp="0"><h3>NGC0801 <span class="rel">4.22%</span></h3><object data="NGC0801.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="F568-1" data-rel="0.04287" data-vmax="142" data-mass="7.718e+10" data-highamp="0"><h3>F568-1 <span class="rel">4.29%</span></h3><object data="F568-1.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC11557" data-rel="0.04406" data-vmax="85" data-mass="1.739e+10" data-highamp="0"><h3>UGC11557 <span class="rel">4.41%</span></h3><object data="UGC11557.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC3109" data-rel="0.04516" data-vmax="67" data-mass="7.138e+09" data-highamp="1"><h3>NGC3109<span class="flag high">amp&gt;500</span> <span class="rel">4.52%</span></h3><object data="NGC3109.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="NGC5005" data-rel="0.04640" data-vmax="265" data-mass="4.081e+11" data-highamp="0"><h3>NGC5005 <span class="rel">4.64%</span></h3><object data="NGC5005.svg" type="image/svg+xml"></object></div>
+<div class="tile good" data-name="UGC11455" data-rel="0.04811" data-vmax="291" data-mass="1.055e+12" data-highamp="1"><h3>UGC11455<span class="flag high">amp&gt;500</span> <span class="rel">4.81%</span></h3><object data="UGC11455.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC02916" data-rel="0.05061" data-vmax="218" data-mass="1.016e+12" data-highamp="1"><h3>UGC02916<span class="flag high">amp&gt;500</span> <span class="rel">5.06%</span></h3><object data="UGC02916.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="F583-1" data-rel="0.05079" data-vmax="87" data-mass="4.386e+10" data-highamp="0"><h3>F583-1 <span class="rel">5.08%</span></h3><object data="F583-1.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC4010" data-rel="0.05222" data-vmax="129" data-mass="5.698e+10" data-highamp="1"><h3>NGC4010<span class="flag high">amp&gt;500</span> <span class="rel">5.22%</span></h3><object data="NGC4010.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC02885" data-rel="0.05244" data-vmax="305" data-mass="6.998e+12" data-highamp="1"><h3>UGC02885<span class="flag high">amp&gt;500</span> <span class="rel">5.24%</span></h3><object data="UGC02885.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC0289" data-rel="0.05253" data-vmax="194" data-mass="3.711e+12" data-highamp="0"><h3>NGC0289 <span class="rel">5.25%</span></h3><object data="NGC0289.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC2976" data-rel="0.05268" data-vmax="89" data-mass="4.403e+09" data-highamp="1"><h3>NGC2976<span class="flag high">amp&gt;500</span> <span class="rel">5.27%</span></h3><object data="NGC2976.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC11914" data-rel="0.05458" data-vmax="305" data-mass="3.519e+11" data-highamp="0"><h3>UGC11914 <span class="rel">5.46%</span></h3><object data="UGC11914.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC2403" data-rel="0.05465" data-vmax="136" data-mass="1.699e+11" data-highamp="1"><h3>NGC2403<span class="flag high">amp&gt;500</span> <span class="rel">5.47%</span></h3><object data="NGC2403.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC03546" data-rel="0.05510" data-vmax="262" data-mass="3.617e+11" data-highamp="1"><h3>UGC03546<span class="flag high">amp&gt;500</span> <span class="rel">5.51%</span></h3><object data="UGC03546.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC11820" data-rel="0.05520" data-vmax="84" data-mass="3.114e+10" data-highamp="0"><h3>UGC11820 <span class="rel">5.52%</span></h3><object data="UGC11820.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC6195" data-rel="0.05802" data-vmax="258" data-mass="1.419e+12" data-highamp="0"><h3>NGC6195 <span class="rel">5.80%</span></h3><object data="NGC6195.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC01281" data-rel="0.06234" data-vmax="57" data-mass="6.811e+09" data-highamp="0"><h3>UGC01281 <span class="rel">6.23%</span></h3><object data="UGC01281.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC6946" data-rel="0.06632" data-vmax="181" data-mass="3.364e+11" data-highamp="1"><h3>NGC6946<span class="flag high">amp&gt;500</span> <span class="rel">6.63%</span></h3><object data="NGC6946.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="IC2574" data-rel="0.06702" data-vmax="68" data-mass="1.229e+10" data-highamp="0"><h3>IC2574 <span class="rel">6.70%</span></h3><object data="IC2574.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="F568-3" data-rel="0.07432" data-vmax="120" data-mass="8.341e+10" data-highamp="1"><h3>F568-3<span class="flag high">amp&gt;500</span> <span class="rel">7.43%</span></h3><object data="F568-3.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC03205" data-rel="0.07530" data-vmax="237" data-mass="7.367e+11" data-highamp="1"><h3>UGC03205<span class="flag high">amp&gt;500</span> <span class="rel">7.53%</span></h3><object data="UGC03205.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC5033" data-rel="0.07603" data-vmax="225" data-mass="1.206e+12" data-highamp="0"><h3>NGC5033 <span class="rel">7.60%</span></h3><object data="NGC5033.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC06614" data-rel="0.08333" data-vmax="205" data-mass="1.199e+12" data-highamp="1"><h3>UGC06614<span class="flag high">amp&gt;500</span> <span class="rel">8.33%</span></h3><object data="UGC06614.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC08699" data-rel="0.08635" data-vmax="202" data-mass="5.074e+11" data-highamp="1"><h3>UGC08699<span class="flag high">amp&gt;500</span> <span class="rel">8.64%</span></h3><object data="UGC08699.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC2998" data-rel="0.08822" data-vmax="214" data-mass="2.260e+12" data-highamp="1"><h3>NGC2998<span class="flag high">amp&gt;500</span> <span class="rel">8.82%</span></h3><object data="NGC2998.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC03580" data-rel="0.09022" data-vmax="131" data-mass="1.511e+11" data-highamp="1"><h3>UGC03580<span class="flag high">amp&gt;500</span> <span class="rel">9.02%</span></h3><object data="UGC03580.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="NGC2683" data-rel="0.09773" data-vmax="212" data-mass="8.031e+11" data-highamp="1"><h3>NGC2683<span class="flag high">amp&gt;500</span> <span class="rel">9.77%</span></h3><object data="NGC2683.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="M31" data-rel="0.12674" data-vmax="233" data-mass="6.401e+12" data-highamp="1"><h3>M31<span class="flag high">amp&gt;500</span> <span class="rel">12.67%</span></h3><object data="M31.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC06786" data-rel="0.13317" data-vmax="229" data-mass="1.108e+12" data-highamp="1"><h3>UGC06786<span class="flag high">amp&gt;500</span> <span class="rel">13.32%</span></h3><object data="UGC06786.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC02953" data-rel="0.13629" data-vmax="319" data-mass="1.822e+13" data-highamp="0"><h3>UGC02953 <span class="rel">13.63%</span></h3><object data="UGC02953.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC06787" data-rel="0.16118" data-vmax="276" data-mass="4.757e+12" data-highamp="1"><h3>UGC06787<span class="flag high">amp&gt;500</span> <span class="rel">16.12%</span></h3><object data="UGC06787.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC09133" data-rel="0.16146" data-vmax="289" data-mass="1.937e+12" data-highamp="1"><h3>UGC09133<span class="flag high">amp&gt;500</span> <span class="rel">16.15%</span></h3><object data="UGC09133.svg" type="image/svg+xml"></object></div>
+<div class="tile fair" data-name="UGC05253" data-rel="0.17686" data-vmax="248" data-mass="2.426e+12" data-highamp="1"><h3>UGC05253<span class="flag high">amp&gt;500</span> <span class="rel">17.69%</span></h3><object data="UGC05253.svg" type="image/svg+xml"></object></div>
+</div>
+<script>
+const grid = document.getElementById("grid");
+const tiles = Array.from(grid.children);
+const count = document.getElementById("count");
+function update() {
+  const sortby = document.getElementById("sortby").value;
+  const filter = document.getElementById("filter").value;
+  let visible = tiles.slice();
+  if (filter === "excellent") visible = visible.filter(t => +t.dataset.rel < 0.05);
+  else if (filter === "good") visible = visible.filter(t => { const r = +t.dataset.rel; return r >= 0.05 && r < 0.10; });
+  else if (filter === "fair") visible = visible.filter(t => { const r = +t.dataset.rel; return r >= 0.10 && r < 0.20; });
+  else if (filter === "poor") visible = visible.filter(t => +t.dataset.rel >= 0.20);
+  else if (filter === "highamp") visible = visible.filter(t => +t.dataset.highamp === 1);
+  if (sortby === "rms") visible.sort((a,b) => +a.dataset.rel - +b.dataset.rel);
+  else if (sortby === "rms_rev") visible.sort((a,b) => +b.dataset.rel - +a.dataset.rel);
+  else if (sortby === "name") visible.sort((a,b) => a.dataset.name.localeCompare(b.dataset.name));
+  else if (sortby === "mass") visible.sort((a,b) => +b.dataset.mass - +a.dataset.mass);
+  else if (sortby === "vmax") visible.sort((a,b) => +b.dataset.vmax - +a.dataset.vmax);
+  tiles.forEach(t => t.classList.add("hidden"));
+  visible.forEach(t => { t.classList.remove("hidden"); grid.appendChild(t); });
+  count.textContent = `showing ${visible.length} of ${tiles.length}`;
+}
+document.getElementById("sortby").addEventListener("change", update);
+document.getElementById("filter").addEventListener("change", update);
+update();
+</script>
+</body></html>
