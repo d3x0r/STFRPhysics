@@ -10,6 +10,17 @@
 
 The displacement framework of the homogeneous propagation series is applied to galaxy rotation curves across the SPARC sample (175 galaxies) together with the Milky Way and M31, for a total of 177 systems. A constrained radial occupancy profile — central concentration, broad disk, outer transition, and faint tail — is parameterized by a single declining gradient sampled at four interior radii plus an outer cutoff, with strict ordering and monotonicity constraints. The framework's velocity response to that mass distribution reproduces observed rotation curves with median relative RMS 2.09% across the full sample, 84% of galaxies fit to better than 5% RMS, and every galaxy fit to better than 20% RMS. No dark-matter halo is invoked. The mass distribution required to produce each rotation curve remains within the visible galaxy: across the full sample, the median ratio of the model's outer cutoff radius to the outermost rotation-curve data point is 1.05, no galaxy exceeds 1.5, and at the median 97% of the fitted mass lies within the radius of the outermost velocity measurement. The framework reproduces galactic rotation observations from the galaxy's own mass distribution alone, without requiring matter at radii beyond the visible disk.
 
+
+---
+
+## External Links
+
+- [Galaxy Curve Summary](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/) - the summary of SPARC fits using a mass profile.
+
+- [Galaxy Curve Fitter](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit.html) - Simple application to fit or evaluate a single curve.
+
+- [Galaxy Curve Renderer](https://d3x0r.github.io/STFRPhysics/AI/galaxy_field_shader-rad.html) - This has a luminosity mode, which can be used to compare against photographic evidence.
+
 ---
 
 ## 1. Introduction
@@ -133,6 +144,11 @@ All fit-quality numbers reported in §5 are produced from the unmodified paramet
 ---
 
 ## 5. Results
+
+<p align="center">
+  <img src="../fig/galaxy-fits/fits/_aggregate_rms_distribution.svg" alt="Description">
+</p>
+
 
 ### 5.1 Fit quality across the sample
 
