@@ -894,6 +894,115 @@ The main text uses only the scalar magnitude baseline where that is sufficient t
 
 The framework treats aberration as an endpoint-local rotation of the propagation line. Scalar cosine relations give angle magnitude only. For generalized use, the propagation direction must be rotated with sign and axis preserved. In 2D, that is handled by the planar sign correction $A_{\mathrm{mod}}(a)$. In 3D, it is supplied naturally by the cross-product rotation construction.
 
+## Appendix C. Why a Null Interferometer Result Is Expected
+
+A common objection to any medium-based propagation picture is that a preferred propagation layer should have been directly visible in Michelson-Morley-type interferometer experiments. In the present framework, however, that expectation is misplaced. The null result is not contrary to the framework. It is what follows once the interferometer is treated as a moving material system built from the same single-speed medium whose propagation it is probing.
+
+The reason is that the interferometer is not composed of rigid objects and independently postulated clock behavior laid down in advance of the propagation analysis. Its arm geometry, internal signal directions, and realized timing all arise from the same propagation-based structure. Three elements belong together.
+
+First, the arm geometry of a moving apparatus is normalized longitudinally by the recovered contraction factor
+
+$$
+\lambda(\beta)=\sqrt{1-\beta^2},
+\qquad
+\beta=\frac{v}{c}.
+$$
+
+If $\vec r$ is a frame-fixed arm offset and $\hat v$ is the drift direction, then
+
+$$
+\vec r=\vec r_\perp+\vec r_\parallel,
+\qquad
+\mathcal C(\vec r)=\vec r_\perp+\lambda\,\vec r_\parallel.
+$$
+
+Thus the interferometer's optical elements are not placed at the same coordinate offsets they would have at rest. Their longitudinal separations are reduced by the same normalization already recovered from the two-way interaction-cost structure of moving material systems (§§4–5 of the main text).
+
+Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. In the planar form developed in Appendix B, the signed angular correction may be written
+
+$$
+\Delta\theta
+=
+-\operatorname{sgn}\!\bigl((\Delta\vec x\times \vec v)_z\bigr)
+\left[
+\arccos\!\left(\frac{\cos\theta+\beta}{1+\beta\cos\theta}\right)
+-
+\arccos(\cos\theta)
+\right],
+$$
+
+with
+
+$$
+\cos\theta=\frac{\Delta\vec x\cdot\vec v}{\|\Delta\vec x\|\,\|\vec v\|}.
+$$
+
+This correction is determined by the local arm direction relative to the drift velocity. Length contraction does not itself alter the aberration formula. Rather, contraction changes the apparatus geometry, while aberration changes the propagation direction needed to reach the moving optical element.
+
+Third, the ray-segment lengths are not imposed directly from the arm offsets. They are obtained from the solved propagation delay. Each leg is determined by the native one-way propagation condition
+
+$$
+\bigl\|\vec x_{\rm target}(t_{n+1})-\vec x_{\rm source}(t_n)\bigr\|
+=
+c\,(t_{n+1}-t_n).
+$$
+
+Operationally, each next event time is solved from the moving source and moving target geometry, and the realized segment length is then
+
+$$
+\ell_n=c\,(t_{n+1}-t_n).
+$$
+
+So the contracted arm offset specifies where the next optical element belongs in the moving device, but the actual leg length is fixed by the solved propagation delay.
+
+These ingredients are enough to construct the interferometer path. Let the frame-fixed arm offsets from the splitter be $(0,\pm L)$ and $(\pm L,0)$. For each leg, the next optical element is represented by the contracted offset $\mathcal C(\vec r_{\rm target})$. The ray is launched along the corresponding aberrated direction $\hat e_{\rm leg}$, and after solving the propagation delay, the photon keyframe advances according to
+
+$$
+\vec K_{n+1}
+=
+\vec K_n+c\,(t_{n+1}-t_n)\,\hat e_{\rm leg}.
+$$
+
+The same rule is used for every leg of both arms.
+
+What matters for interference is the full two-way cost from splitter to mirror and back, not the one-way segment in isolation. If
+
+$$
+T_{\rm vert}^{(2)}=(t_2-t_1)+(t_3-t_2),
+\qquad
+T_{\rm horiz}^{(2)}=(t_2^{L}-t_1)+(t_3^{L}-t_2^{L}),
+$$
+
+then within this construction the recombined paths satisfy
+
+$$
+T_{\rm vert}^{(2)}=T_{\rm horiz}^{(2)}.
+$$
+
+That equality is the null result. It is not obtained by declaring the medium observationally inaccessible as an axiom. It is obtained because the moving interferometer, the light propagating within it, and the clock structure used to interpret it are all governed by one common propagation-based organization.
+
+If the comparison is instead made in the apparatus's own realized time, the conclusion is unchanged. The local clock interval is
+
+$$
+\Delta\tau=\lambda(\beta)\,\Delta t,
+$$
+
+so the two-way local arm times are
+
+$$
+\tau_{\rm vert}^{(2)}=\lambda\,T_{\rm vert}^{(2)},
+\qquad
+\tau_{\rm horiz}^{(2)}=\lambda\,T_{\rm horiz}^{(2)}.
+$$
+
+Since the coordinate two-way costs are equal, the local two-way costs are equal as well:
+
+$$
+\tau_{\rm vert}^{(2)}=\tau_{\rm horiz}^{(2)}.
+$$
+
+The interpretive point is therefore simple. In this framework, Michelson-Morley does not fail to detect a preferred propagation layer because no such layer exists. It fails because the interferometer is itself constituted from the same single-speed medium. Its rods, clocks, and internal signal paths co-adjust to uniform motion through that layer. The null result is therefore not evidence against an underlying propagation medium; it is evidence that a medium-constituted optical device cannot use its own internal two-way optical structure to reveal its uniform motion through the medium. That is one concrete sense in which Lorentz-type observational structure is emergent here rather than primitive.
+
 ## References
 
 [1] OpenStax, *University Physics, Volume 3*, Section 5.3, “Time Dilation.”

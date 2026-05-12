@@ -8,7 +8,7 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. The framework is therefore not SR or GR restated in ontology or derivational order, but it still overlaps the tested kinematic and weak-field observational record within its present scope. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, intra-nuclear displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework’s present status—what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
+This paper is a clarification of what this framework presently is, and what it is not. The framework recovers a substantial portion of familiar relativistic structure, but it should not be identified either with orthodox special relativity, with orthodox general relativity, or with a finished replacement for them. In the homogeneous regime, contraction, timing structure, and the one-dimensional Lorentz map are recovered in form from a propagation-first construction rather than postulated as primitive spacetime symmetry. In the gravitational regime, weak-field timing, delay, lensing, perihelion precession, and related tests are developed from displacement of the transport-supporting structure rather than from curvature of spacetime itself. The framework is therefore not SR or GR restated in ontology or derivational order, but it still overlaps the tested kinematic and weak-field observational record within its present scope. Those overlaps are real and important, and within those recovered kinematic and weak-field domains the framework is already sufficiently closed to support its present derivations. The empirical divergences from general relativity follow a unifying pattern: the two theories agree wherever both produce finite, bounded results, and they diverge at the loci where GR's solutions produce unbounded quantities — at point sources, at the Schwarzschild radius, at the central singularity. The framework predicts bounded values at each of these loci, and §5.4 consolidates the specific predictions that follow, including a scalar breathing-mode gravitational wave channel derived from the displacement deformation tensor, the replacement of the Schwarzschild horizon with asymptotic time dilation and a finite source-sphere surface, the absence of a photon sphere as a closed-orbit feature, second post-Newtonian divergences from Schwarzschild with calculated magnitudes, and preferred-frame signatures accessible to open-path experiments. The remaining open work enters mainly when the program is pushed further, particularly toward deeper matter structure, intra-nuclear displacement sourcing from excitation-level theory, and any broader unification with nuclear-scale physics. The focus here is the framework's present status — what has been recovered, what is physically distinct, and where the remaining frontier lies. The central claim is that the framework should presently be read as an alternative derivational and ontological program with significant overlap with SR/GR in its recovered weak-field and kinematic domains, while remaining open in the deeper unificatory sense rather than in those recovered sectors themselves.
 
 **Keywords:** homogeneous propagation, emergent Lorentz structure, displacement framework, weak-field gravity, ontology, theory status, open dynamics
 
@@ -76,7 +76,7 @@ These are not minor overlaps. They cover much of the standard weak-field phenome
 
 This overlap should not be minimized. A framework that cannot recover the tested relativistic structures is not competitive. The framework does recover many of them, and that is one reason to take it seriously as a research program.
 
-But overlap in recovered formulas does not by itself settle the question of identity. Two theories may agree over a shared domain while differing in ontology, explanatory order, or extension outside that domain. The next sections therefore ask in what sense the present framework is not simply SR or GR under another name.
+But overlap in recovered formulas does not by itself settle the question of identity. Two theories may agree over a shared domain while differing in ontology, explanatory order, or extension outside that domain. The next sections therefore ask in what sense the present framework is not simply SR or GR under another name. The structural and ontological arguments are developed in §§4–5; the specific empirical predictions where the framework diverges from GR are consolidated in §5.4.
 
 ## 4. Why This Is Not Simply Special Relativity
 
@@ -97,6 +97,8 @@ That change in derivational order is significant. In one theory, Lorentz structu
 This difference is not merely mathematical. In the framework's own interpretation, rods and clocks are not primitive ideal objects laid down in an already-given Minkowski spacetime. They are material systems whose internal closure depends on repeated interactions carried by the medium. Contraction and time dilation therefore enter as the self-consistent response of those systems to motion through the transport structure.
 
 Put plainly, the order of explanation is reversed. The framework does not say that matter behaves Lorentz-covariantly because spacetime is Minkowskian in the first instance. It says that matter built from a single-speed propagation medium will realize a Lorentz-type operational structure.
+
+A concrete instance of this distinction appears in the continuous circular-orbit case. The framework's external-field steering integral $W_{\mathrm{ext}}$ is the appropriate infinitesimal object for continuous deflection by an external field, and integrating it around a full orbit recovers the standard Thomas precession $2\pi(\gamma-1)$ at all speeds. The finite Wigner-angle expression for discrete noncollinear boost composition is a different mathematical object, and treating it as if it were the infinitesimal steering integrand produces an orbit sum that misses Thomas precession by a large factor at relativistic speeds — about 3.5% of the correct value at muon $g-2$ speed. The full derivation of $W_{\mathrm{ext}}$, its external-field-versus-co-moving distinction, and the explicit step-by-step circular-orbit integration with the muon $g-2$ numerical comparison are developed in the Wigner rotation paper [3]. The narrow point is that the framework selects a different integrable object than the finite Wigner angle, and that selection is what recovers the correct continuous-orbit limit directly — a concrete example of divergence in mathematical route rather than only in verbal interpretation. The standard Thomas-precession result is itself part of the relativistic baseline; the framework does not contradict it. What the framework does is identify which mathematical object is appropriate to which physical situation, and the difference matters because the external-field case has the deflecting agent operating at the lab clock rate rather than at the moving object's internal clock rate.
 
 ### 4.4 Preferred structure versus undetectable symmetry
 
@@ -130,15 +132,75 @@ The framework does develop an effective coordinate geometry. But this effective 
 
 It should also be stated carefully that weak-field agreement with standard tests does not make the theory identical to GR. The same observational structure may arise from more than one underlying picture over a restricted domain. The framework's Mercury, Shapiro, and light-deflection results are important consistency checks, but they do not erase the distinction between curvature ontology and displacement ontology.
 
-### 5.4 The field-equation status is different
+### 5.4 Where the predictions actually diverge
 
-A second difference is that the framework has not yet reached the same formal status as GR in its field-equation sector. GR has a closed tensorial field law. This framework instead has an intra-nuclear displacement-sourcing postulate, a retarded displacement map, a wave-equation equivalent for the cumulative displacement, and a provisional rotating-source vector extension. That is a serious dynamical program, but it is not yet a finished analog of Einstein's field equations derived from a deeper action principle or substrate-complete microphysics.
+Ontological distinctness without empirical distinctness is a weak position. The structural and explanatory differences developed in §§5.1–5.3 would carry less force if the framework's predictions tracked GR's predictions identically at every accessible precision level. They do not. The framework's internal logic produces specific divergences from general relativity, and those divergences follow a unifying pattern that is worth stating before the specific items.
 
-### 5.5 The present conclusion about GR
+**The unifying pattern.** The framework and general relativity agree wherever both theories produce finite, bounded results. They diverge at the loci where GR's solutions produce unbounded quantities. At a point source, GR's force diverges; the framework treats every source as an extended displacement region with force going to zero at the center. At the Schwarzschild radius, GR's coordinate quantities diverge and an event horizon appears; the framework produces asymptotic time dilation and a finite source-sphere surface, with no horizon. At the central singularity, GR's curvature diverges; the framework has no singularity to diverge at. The empirical divergences from GR are therefore not a scattered list of corrections in different regimes. They are a single structural fact viewed at different scales: GR's solutions produce infinities at certain loci, and the framework's solutions do not.
+
+Two tables make this concrete. The first compares GR's point-mass idealization with the framework's reading of an ordinary extended object whose interior consists of summed displacements from its constituent matter — a planet, a star, a nucleus treated as composite. The second compares GR's point-mass idealization with the framework's reading of what GR would call a black hole — a solid displacement region treated as an irreducible source rather than as a collection of summed displacements.
+
+**Table 1: GR point mass versus framework summed-displacement object (ordinary matter — Sun, planet, ordinary nucleus)**
+
+| Quantity | GR — Point mass (\(r\to 0\)) | Framework — summed-displacement interior |
+|---|---|---|
+| Force \(\|\nabla\Sigma\|\) | \(\to\infty\) | \(\to 0\) (linear toward center) |
+| Cumulative displacement \(\Sigma\) | \(\to\infty\) | \(3GM/2c^2 R\approx 3.2\times 10^{-6}\) (Sun) |
+| Time dilation | \(\to\infty\) | \(\approx 1 - 3.2\times 10^{-6}\) (Sun) |
+| Proper velocity stretch | \(\to\infty\) | parts per million above \(c\) |
+| Light-crossing transit time | \(\to 0\) | slightly stretched |
+| Escape velocity \(V_{\mathrm{esc}}\) | \(\to\infty\) | \(\ll c\) |
+| Transport space | normal | normal, slightly dilated |
+
+**Table 2: GR point mass versus framework solid-displacement object (irreducible source — black-hole region, fundamental nuclear displacement)**
+
+| Quantity | GR — Point mass (\(r\to 0\)) | Framework — solid-displacement interior |
+|---|---|---|
+| Force \(\|\nabla\Sigma\|\) | \(\to\infty\) | peaks at \(R_s\), \(\to 0\) at center |
+| Cumulative displacement \(\Sigma\) | \(\to\infty\) | bounded \([1/2,\,3/4]\) |
+| Time dilation | \(\to\infty\) | \([2/3,\,4/7]\) — finite |
+| Proper velocity stretch | \(\to\infty\) | \([1.5c,\,1.75c]\) proper |
+| Light-crossing transit time | \(\to 0\) | scales linearly with \(R_s\) |
+| Escape velocity \(V_{\mathrm{esc}}\) | \(\to\infty\) | \([c,\,\sqrt{3/2}\,c]\) |
+| Transport space | normal | not well defined inside |
+
+The two tables share a structural observation: every quantity GR sends to infinity, the framework returns as a bounded value. The two differ in what they say about the interior, because they describe physically different objects. A summed-displacement interior is ordinary matter — its transport structure is well-defined, light propagates normally, and the surface densities and central displacements are extremely small in the relevant regimes. A solid-displacement interior is a single irreducible source — its bounded values are computed from the framework's geometric construction directly, and the transport structure is not well-defined within the source-sphere because the source-sphere is not made of summed transport elements.
+
+With that unifying picture in place, the specific predictions follow. They are listed below in two groups by accessibility.
+
+**Predictions accessible in current or near-term data.**
+
+*Breathing-mode scalar radiation in gravitational waves.* The framework's gravitational waves are longitudinal compression waves in the transport structure rather than transverse-traceless tensor modes. For eccentric binaries this produces an additional scalar radiation channel — a breathing mode — that is absent in general relativity. The eccentricity enhancement function \(f(e)\) differs from the GR expression by an amount derived from the displacement deformation tensor, with additional power at the radial oscillation frequency. Developed in §§9.5–9.6 of the weak-field observational tests paper.
+
+*Open-path clock-transport asymmetry.* Closed-path clock-transport experiments such as Hafele-Keating do not distinguish the framework from GR because the preferred-frame cross-term cancels exactly when the clock returns to its starting point. An open-path clock-transport experiment — one in which the clock does not return — would retain a cross-term between the preferred-frame velocity (the solar-system CMB-dipole velocity of approximately 370 km/s) and the local transport velocity. The required precision is extreme, but the prediction is structurally definite. Developed in §3.5 of the weak-field observational tests paper.
+
+*CMB-aligned well-depth asymmetry in orbital eccentricity.* Because the solar system moves through the transport structure at approximately 370 km/s, the retarded displacement field of the Sun is not perfectly symmetric. An orbiting body sees a slightly shallower effective well on the leading edge of its orbit and a slightly deeper well on the trailing edge. This produces a CMB-aligned modulation of orbital eccentricity, distinct from the solar tidal modulation aligned with Earth's perihelion direction. The two directions differ by approximately 67° in ecliptic longitude and are in principle resolvable in the lunar laser ranging dataset after subtraction of the solar tidal contribution. Developed in §8.4 of the weak-field observational tests paper.
+
+**Predictions below current thresholds but structurally definite.**
+
+*2PN divergence from Schwarzschild.* The effective coordinate geometry of the displacement framework matches Schwarzschild at first post-Newtonian order. At second order the two diverge. The framework's exact metric components — \(f=1/(1+\Sigma)^2\) from the clock-rate relation, \(g=D^2\) from the radial deformation, and \(h=1\) from coordinate anchoring of \(F\!\cdot\!H\) — produce specific corrections at \(\sigma^2\) order. For Mercury, the 2PN correction is approximately 0.002 milliarcsec per century. For the Hulse-Taylor binary it reaches roughly 0.03 arcsec per year. For light propagation, a \(\frac{7}{8}\sigma^2\) correction modifies the radial light speed at second order, with consequences for high-precision Shapiro delay and bending-angle measurements. None of these is currently testable, but all follow from the framework's internal logic without adjustable parameters. Developed in Appendix C of the displacement dynamics paper.
+
+*No Schwarzschild horizon.* The framework's strong-field structure replaces the Schwarzschild event horizon with asymptotic time dilation and a finite source-sphere surface, as shown in Table 2 above. The radial deformation \(D\) remains exactly linear in \(\sigma\), and the displacement equilibrium develops a finite source-sphere rather than a coordinate singularity. This is a strong-field prediction; its observational consequences for compact-object phenomenology — accretion signatures, merger waveform tails, the apparent shadow of compact objects — remain open. Developed in Appendix B of the displacement dynamics paper.
+
+*No photon sphere as a closed-orbit feature.* In GR the Schwarzschild geometry admits unstable circular photon orbits at \(r = 3GM/c^2 = 1.5\,r_s\), forming the photon sphere. The framework's transport structure does not support closed photon orbits at any radius: light propagates along straight-line geodesics through the displaced transport, and the geometry produces bending without admitting orbital closure. This is structurally distinct from the no-horizon prediction — the photon sphere sits well outside any horizon and is a feature of GR's geometric closure, not its singular structure — and represents a separate observational signature for high-resolution imaging of compact objects.
+
+*Modified mass composition and binding-energy structure.* Mass composition in the framework follows from displacement support rather than from energy bookkeeping alone. In the weak-overlap regime the composition law is additive in the displacement parameter \(d^2\), giving the standard result; in regimes where bound systems share displacement support, the binding energy is interpreted as shared support rather than as subtracted rest energy. This affects the framework's predictions for black hole mergers, where the merged source's displacement support is set by volume addition rather than by energy summation. Developed in Appendix D of the displacement dynamics paper.
+
+The point of cataloguing these together is to forestall the conclusion that the framework is empirically indistinguishable from GR. It is not. Within the present scope it agrees with the tested record, but it makes specific further predictions, some accessible in near-term data and others accessible in principle if not in current practice. The unifying observation is that GR's predictions and the framework's predictions are different precisely where GR's solutions produce infinities — and not by accident, but because the framework's construction does not allow such infinities to arise in the first place.
+
+### 5.5 The dynamical structure is organized differently
+
+A further difference concerns how the gravitational sector is closed. General relativity closes its gravitational sector through a single tensorial field equation whose strong-field solutions admit singularities and event horizons. The framework closes its gravitational sector through a two-layer coupled structure: the retarded displacement map for the cumulative displacement field, the effective coordinate-level geometry that follows from the displacement, and the orbit and propagation equations on that geometry. Weak-field tests, lensing, perihelion advance, Shapiro delay, frame drag, and gravitational radiation are developed within this structure without additional postulates beyond the displacement-sourcing relation.
+
+The comparison of formal completeness should therefore not be stated as "framework less complete than GR." The framework's gravitational sector is closed in its own terms over the same observational regimes GR is closed, and it remains finite in regimes where GR's solutions produce singular quantities. The structural difference is in the choice of formal vehicle. GR collapses the geometry and its dynamics into one equation, which produces tensorial elegance but also produces the singularities that come with that closure. The framework separates the displacement field and the effective geometry into coupled layers, which produces no such elegance but also produces no such singularities. Neither closure is incomplete; they are differently organized.
+
+What does remain genuinely open in the framework is the deeper microphysical account of why intra-nuclear action has the sourcing role assigned to it. That open question lies outside the gravitational sector proper. General relativity does not answer it either; GR takes the stress-energy tensor as input and does not derive its source. The framework's source-side problem is therefore a different problem than the one GR has solved, and the framework's lack of a finished answer to it does not constitute incompleteness *in the gravitational sector* in the sense in which GR is complete in that sector.
+
+### 5.6 The present conclusion about GR
 
 The point can therefore be stated as follows:
 
-> The framework reproduces substantial weak-field gravitational structure associated with GR, but it does not identify gravity with curved spacetime in the orthodox sense and it does not yet possess a fully closed gravitational field theory of comparable formal completeness.
+> The framework reproduces substantial weak-field gravitational structure associated with GR, but it does not identify gravity with curved spacetime in the orthodox sense, it organizes its dynamical structure into two coupled layers rather than into a single tensorial field equation, and it produces bounded values at the loci where GR's solutions produce infinities. It is therefore not a less complete version of GR but a differently organized account of the same observational regimes, with specific further predictions where GR's solutions become singular.
 
 The framework therefore is not simply GR restated, but a distinct account that overlaps the tested weak-field observational record from a different physical basis.
 
@@ -181,9 +243,9 @@ That distinction matters. This paper should not imply that the recovered SR/GR-l
 
 Most of the present success lies in homogeneous and weak-field sectors. Strong-field behavior, genuinely nonlinear multi-body coupling, compact-object dynamics, and full self-consistent source-field backreaction remain frontier tasks rather than settled accomplishments.
 
-### 7.4 Rotating-source and vector-sector development remains provisional
+### 7.4 Rapid-rotation regime and closed field-law remain frontier
 
-The rotating-source branch is promising, and its weak-field signals are suggestive, but it is not yet at the same level of closure as the scalar weak-field sector. The framework should therefore avoid treating this branch as fully settled until the derivation and normalization chain are made comparably explicit.
+The rotating-source vector sector is developed for the weak-field slow-rotation regime. The vector response has a derivation from the spin-odd azimuthal motion of displacement elements, the slow-rotation effective metric is constructed in Appendix E of the displacement dynamics paper, and the resulting frame-drag estimate lies near the observed Gravity Probe B signal; the geodetic branch follows directly from the effective coordinate geometry and is treated as mature. What remains frontier work is the rapid-rotation regime, where the slow-rotation expansion no longer suffices, and the formal closure of the field law that would determine the vector response from a deeper action principle.
 
 ### 7.5 Why naming the open problems helps rather than hurts
 
@@ -191,7 +253,7 @@ A theory gains credibility by marking its unresolved sectors accurately. Here, n
 
 ## 8. What the Framework Should Claim at the Present Stage
 
-The framework should presently make five claims, and no stronger claim than these is needed.
+The framework should presently make six claims, and no stronger claim than these is needed.
 
 ### 8.1 First claim: recovered kinematic structure
 
@@ -205,11 +267,15 @@ It can claim that the displacement program recovers the standard weak-field obse
 
 It can claim that these results arise within a framework whose ontology differs from orthodox relativity: a structured vacuum / transport medium, emergent rather than primitive Lorentz structure, and gravity as displacement rather than as fundamental spacetime curvature. The point is not merely that the framework is not SR/GR, but that this ontological difference still leaves real overlap with the observed kinematic and weak-field benchmarks in the domains already treated.
 
-### 8.4 Fourth claim: incompleteness is acknowledged
+### 8.4 Fourth claim: specific predictions that diverge from GR
+
+It can claim that beyond the recovered weak-field overlap, the framework makes specific empirical predictions that diverge from general relativity, following a unifying pattern: the two theories agree where both produce finite, bounded results, and they diverge at the loci where GR's solutions produce unbounded quantities. The specific predictions include the breathing-mode scalar radiation channel in eccentric binary inspirals, the replacement of the Schwarzschild horizon by asymptotic time dilation and a finite source-sphere, the absence of a photon sphere as a closed-orbit feature, second post-Newtonian divergences from Schwarzschild with calculated magnitudes, preferred-frame signatures retained by open-path or directional experiments, and the CMB-aligned modulation of orbital eccentricity. These follow from the framework's internal construction without adjustable parameters and are catalogued in §5.4 with pointers into the technical papers.
+
+### 8.5 Fifth claim: incompleteness is acknowledged
 
 It can claim that the framework is not yet a closed final theory in the broader unificatory sense. The recovered SR/GR-level kinematic and weak-field sectors are already sufficiently closed to support the present derivations. What remains postulated, provisional, or under development are the deeper intra-nuclear sourcing and excitation-level sectors needed if the framework is to absorb nuclear theory and related structure into the same program.
 
-### 8.5 Fifth claim: the value of the program lies in explanatory reorganization
+### 8.6 Sixth claim: the value of the program lies in explanatory reorganization
 
 It can claim that the framework's value is not only in reproducing familiar formulas, but in reorganizing them into a different explanatory hierarchy that may connect kinematics, matter structure, and gravity more tightly than the standard compartmentalized picture.
 
@@ -235,6 +301,23 @@ Agreement in the weak-field regime does not establish identity with GR, particul
 
 Incomplete closure does not nullify already-derived overlap. It only limits how far the present claims may be extended.
 
+### 9.5 Not 'just another singularity-resolution program'
+
+The framework is not alone in being dissatisfied with general relativity's singularities. Edge and boundary theories — including the holographic-principle lineage from 't Hooft and Susskind, AdS/CFT, and more recent work on edge modes and asymptotic boundaries in gravitational physics — also seek to resolve GR's singular structure. A reader familiar with that landscape will reasonably ask whether the framework is another entry in the same class. It is not, and the distinction is worth stating.
+
+Edge and boundary approaches typically resolve singularities by relocating the relevant degrees of freedom to a codimension-one boundary. The mathematical singularity remains, but it is reinterpreted as the limit of a different structure — information is held on a holographic boundary, or singular interior degrees of freedom are absorbed into edge modes. The framework's resolution is structurally different: there is no point-mass idealization to begin with. Every source is an extended displacement region whose interior is finite and well-defined, and the force gradient goes to zero at the center rather than diverging there. The resolution is constitutive, not interpretive.
+
+| Feature | Edge / boundary singularity-resolution | The present framework |
+|---|---|---|
+| Singularities | Resolved via edge modes or holographic bounds; the mathematical singularity is reinterpreted | Resolved by replacing point-mass idealization with extended displacement; force \(\to 0\) at the center constitutively |
+| The "edge" | A mathematical boundary where information is held | A physical transition in the displacement of the transport medium |
+| Galactic scale | Boundary conditions typically ignore the medium | Outer edge of the displacement profile recovers flat rotation curves without invoking dark matter |
+| Force | Defined by curvature near the boundary | Defined by the gradient \(\|\nabla\Sigma\|\) of cumulative displacement |
+
+The galactic-scale entry deserves its own remark. Flat rotation curves are recovered from the framework's occupancy and displacement structure without invoking dark matter. The recovery uses a constrained radial occupancy profile that is effectively a single declining gradient control: central concentration, broad disk, outer transition, and faint tail are not independent fit parameters but ordered, monotonic samples of one underlying gradient function. The velocity response of that profile produces the observed long-flat shape and returns surface densities in solar masses per square parsec that are within the physically reasonable range for the relevant galaxy types. An interactive simulator implements the full chain from photometric profile through displacement field to velocity curve. The systematic multi-galaxy validation, including comparison against the standard dark-matter-halo fits used in the SPARC literature, is in progress; the validation pipeline must work against radial photometry rather than against Sérsic-fit intermediate brightness columns, since the rim-transition features the model treats as physically important are smoothed away by Sérsic preprocessing. A companion paper developing the methodology and the multi-galaxy fits is in preparation.
+
+The point is therefore not that the framework competes with edge or boundary programs on those programs' own terms. The point is that the framework dissolves the problem at a different level. Edge programs ask how to interpret an idealization that produces unbounded quantities. The framework does not adopt the idealization in the first place, and therefore does not need to interpret what to do about the infinities it would otherwise produce.
+
 ## 10. A Useful Comparison Table
 
 For clarity, the framework may be summarized in the following comparative form.
@@ -246,8 +329,14 @@ For clarity, the framework may be summarized in the following comparative form.
 | Rods and clocks | Primitive measuring systems in relativistic spacetime | Material closures sustained by the same medium structure |
 | Gravity | Curvature of spacetime | Displacement of the transport-supporting structure |
 | Weak-field observables | Consequences of metric curvature | Consequences of cumulative displacement and effective geometry |
+| Behavior at singular loci | Produces infinities at point sources, the Schwarzschild radius, and the central singularity | Produces bounded values at every locus where GR diverges |
+| Gravitational wave structure | Transverse-traceless tensor modes only | Longitudinal compression waves with a scalar breathing mode for eccentric sources |
+| Strong-field interior structure | Schwarzschild event horizon and singularity | Asymptotic time dilation with a finite source-sphere surface |
+| Photon sphere | Closed photon orbits at \(1.5\,r_s\) | No closed photon orbits at any radius |
+| 2PN comparison | Schwarzschild result | Specific divergence (e.g. 0.03 arcsec/yr for Hulse-Taylor) |
 | Ontology | No preferred medium required | Preferred transport-supporting structure permitted |
-| Formal closure | Established closed theories within their own stated domains | Closed across the recovered SR/GR kinematic and weak-field domains; open mainly where the framework is extended into deeper matter structure, intra-nuclear displacement sourcing, and nuclear / excitation-level theory |
+| Preferred-frame signatures | None at any order | Cancel in closed-path experiments; present in open-path or directional experiments |
+| Formal closure | Closed via single tensorial field equation; singularities accepted as a consequence | Closed via two coupled layers (displacement field plus effective geometry); finite throughout |
 
 The table is not meant as a proof. It is a compact statement of the present difference in explanatory order and status.
 
@@ -259,7 +348,7 @@ First, it tells readers what sort of work they are reading. They are not being a
 
 Second, it protects the stronger technical papers from being judged by a distorted standard. A paper that recovers kinematic form from a new starting point should not be criticized for not also being a full gravitational microphysical theory. A weak-field gravity paper should not be criticized for not yet closing the excitation ontology. Distinct tasks belong to distinct papers.
 
-Third, it gives the program a cleaner research trajectory. The next work is not 'prove everything all at once.' It is to close the specific remaining gaps: derive intra-nuclear displacement sourcing more deeply, strengthen the rotating-source sector, and extend the coupled dynamics beyond the current weak-field domain.
+Third, it gives the program a cleaner research trajectory. The next work is not 'prove everything all at once.' It is to close the specific remaining gap: derive intra-nuclear displacement sourcing more deeply. The rotating-source vector sector still has a rapid-rotation regime and a formally closed field law to develop, but its weak-field slow-rotation behavior is in hand. The genuinely open path is the source-side microphysics.
 
 ## 12. Conclusion
 
@@ -283,115 +372,13 @@ The Michelson-Morley issue can be stated at a high level as follows. In a simple
 
 This matters even in the near-frame or small-separation case. If absolute motion is present, then a purely reception-only aberration picture still leaves an asymmetry in how the launched beam samples the longitudinal and transverse arms. By contrast, if transmission already carries the corresponding directional adjustment, then the outbound and return geometry are altered before the final reception event is considered. In that case the Michelson-Morley null result is no longer being explained by the same mechanism usually associated with simple Lorentzian aether.
 
-The purpose of the present appendix is not to claim that the full Michelson-Morley derivation has been completed here in historical detail. Rather, it is to mark the exact conceptual difference that Section 3.1 depends on. The present framework is not merely saying that matter contracts in a preferred frame and therefore hides the aether. It is saying that the propagation map itself is different because both emission and reception are medium-conditioned processes. That is a materially different claim.
+The full derivation is developed in Appendix C of the light propagation paper [1]. There, the moving interferometer is constructed from three ingredients that all follow from the propagation-first analysis: longitudinal arm contraction by $\lambda(\beta)$, signed planar aberration applied at each launch event (from Appendix B of the same paper), and leg lengths fixed by the solved native propagation delay rather than imposed from the contracted arm offsets. Under those three ingredients, the two-way coordinate transit times along the vertical and horizontal arms are equal, and the local two-way clock times are equal as a direct consequence. The null result is therefore produced by the framework's own construction without being declared as an axiom. The interferometer cannot use its own internal two-way optical structure to reveal its uniform motion through the medium because rods, clocks, and signal paths are all built from the same single-speed medium and co-adjust together.
+
+The role of the present appendix is therefore not to redo that derivation but to mark the exact conceptual difference that §3.1 depends on. The present framework is not merely saying that matter contracts in a preferred frame and therefore hides the aether. It is saying that the propagation map itself is different because both emission and reception are medium-conditioned processes. That is a materially different claim, and the math behind it is the appendix in [1].
 
 Accordingly, the correct comparison is not between the present framework and a textbook caricature of aether theory, but between two different propagation models: one in which the optical effect is effectively one-sided, and one in which directional structure is built into both ends of the exchange. If the latter is the correct description, then Michelson-Morley no longer functions as a simple argument that any preferred underlying structure must reduce to the historically rejected form.
 
 For present purposes, that point is sufficient. The role of the appendix is to keep the reader from collapsing the framework into the phrase "Lorentzian aether" without noticing that the optical mechanism being proposed is different at the level of propagation itself.
-
-## Appendix B. Circular-Orbit Integration as a Case Study
-
-One useful way to show that the framework is not merely a verbal restatement of standard relativistic mathematics is to examine a case in which the choice of mathematical object matters. Continuous circular deflection provides such a case.
-
-The issue is not whether the Thomas-precession baseline for uniform circular motion is known. It is. The issue is what quantity should be integrated when a frame is continuously steered by an external field around a circular orbit. In the accompanying note, two candidates are compared step by step around a full orbit.
-
-The first is the external-field steering integral, denoted here by $W_{\mathrm{ext}}$. The second is the finite special-relativistic Wigner-angle expression treated as though it were the infinitesimal object to be summed continuously around the orbit. The note shows that these are not interchangeable.
-
-For a circular orbit divided into $N$ equal steps, let the speed be constant with
-
-$$
-\beta = \frac{v}{c}, \qquad \gamma = \frac{1}{\sqrt{1-\beta^2}}.
-$$
-
-Let the direction increment per step be
-
-$$
-\Delta\phi = \frac{2\pi}{N}.
-$$
-
-The full-orbit Thomas-precession baseline is then
-
-$$
-\Omega_T = 2\pi(\gamma - 1).
-$$
-
-The external-field steering construction uses the step contribution
-
-$$
-w_{\mathrm{ext}}(\Delta\phi) = 2\arctan\!\left[(\gamma - 1)\tan\!\left(\frac{\Delta\phi}{2}\right)\right],
-$$
-
-and sums this over the orbit:
-
-$$
-W_{\mathrm{ext}}(N) = N\,w_{\mathrm{ext}}\!\left(\frac{2\pi}{N}\right).
-$$
-
-In the small-step limit,
-
-$$
-\tan\!\left(\frac{\Delta\phi}{2}\right) \approx \frac{\Delta\phi}{2},
-$$
-
-so
-
-$$
-w_{\mathrm{ext}}(\Delta\phi) \approx (\gamma - 1)\Delta\phi,
-$$
-
-and therefore
-
-$$
-\lim_{N\to\infty} W_{\mathrm{ext}}(N)
-= \int_0^{2\pi} (\gamma - 1)\,d\phi
-= 2\pi(\gamma - 1).
-$$
-
-So the external-field steering integral converges directly to the standard Thomas-precession value for continuous circular motion.
-
-The same note then tests what happens if one instead takes the familiar finite Wigner-angle expression for two successive noncollinear boosts and treats that finite angle as the quantity to be summed step by step around the orbit. Written as a function of the step angle $\Delta\phi$, that finite expression is
-
-$$
-w_W(\Delta\phi) = 2\arctan\!\left(\frac{\sin(\Delta\phi)}{K + \cos(\Delta\phi)}\right),
-$$
-
-with
-
-$$
-K = \frac{\gamma^{-1} + \gamma}{\gamma^{-1} - \gamma}.
-$$
-
-The corresponding orbit sum is
-
-$$
-W_W(N) = N\,w_W\!\left(\frac{2\pi}{N}\right).
-$$
-
-When expanded for small $\Delta\phi$, this finite Wigner-angle form scales linearly with a coefficient that does not reproduce $\gamma - 1$ in the continuous-steering limit used above. As a result, its full-orbit sum converges to the wrong value for the continuously forced circular case.
-
-The uploaded note makes this numerical mismatch explicit at muon $g-2$ speed. For
-
-$$
-\beta = 0.9994, \qquad \gamma \approx 28.87,
-$$
-
-so the Thomas baseline is
-
-$$
-\Omega_T = 2\pi(\gamma - 1) \approx 175.12\text{ radians per orbit}.
-$$
-
-The stepwise external-field integral converges to that same value. By contrast, the finite-Wigner sum converges to only about
-
-$$
-W_W \approx 6.07\text{ radians per orbit},
-$$
-
-which is roughly $3.5\%$ of the Thomas baseline.
-
-This example should be read narrowly. Its claim is not that special relativity fails to describe circular motion. The standard Thomas-precession result is itself part of the relativistic baseline. The narrower point is that the finite Wigner angle for discrete noncollinear boost composition is not the same mathematical object as the infinitesimal steering integrand appropriate to continuous external-field circular motion. Treating the first as though it were the second produces a clear mismatch.
-
-That distinction matters here because it gives a concrete example of divergence in mathematical route rather than only in verbal interpretation. The framework does not merely rename standard expressions. In this case it selects a different integrable object, and that choice is what recovers the correct continuous-orbit limit directly.
 
 ## References
 

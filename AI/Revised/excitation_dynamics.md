@@ -266,6 +266,8 @@ A generic localization functional was used temporarily in earlier note work, but
 
 This deserves to be stated plainly: background geometry alone does not fix support. The displacement field can modify propagation cost, timing, and anisotropy, but a sustained localized mode must still satisfy an independent closure condition. The support problem is therefore not just a geometric one. It is the problem of balancing transport-side phase closure against storage-side cycle burden for a self-maintaining excitation.
 
+The vocabulary in the following sections — closure, support, occupancy, cycle burden — is provisional working terminology for the excitation-side problem, retained because each term is doing specific work in the support-selection structure as it is currently posed. As that structure stabilizes, the terms are expected to be reformulated into more standard usage; the present choices are intended to keep the technical distinctions visible during development rather than to fix permanent vocabulary.
+
 ### 4.1 Framework-native closure functional
 
 The working closure/support energy is
@@ -275,6 +277,8 @@ E_{\mathrm{cl}}(a) = \frac{m c^2}{2} \left[ \alpha_{\mathrm{tr}}\left(\frac{\ell
 \]
 
 where \(\ell_C = h/(m c)\) is the characteristic closure scale, \(\alpha_{\mathrm{tr}}\) weights the transport/phase cost, and \(\alpha_{\mathrm{cyc}}\) weights the cycle/storage burden.
+
+The structure of this functional — a transport-side cost decreasing in \(a\) balanced against a cycle-side cost increasing in \(a\) — is intended to track the resonant-tank intuition in which a sustained mode pays a per-cycle cost to charge and discharge the storage capacities of the medium. The "burden" terminology echoes the loaded-Q picture of resonant-circuit analysis, in which the energy stored per cycle relative to the energy required to maintain the cycle is the controlling quantity. The connection to the Heaviside–Steinmetz reactive-storage tradition, and to Dollard's later articulation of it, is the source intuition behind the functional's form.
 
 The interpretation is direct:
 

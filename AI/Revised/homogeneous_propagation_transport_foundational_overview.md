@@ -68,6 +68,8 @@ $$
 
 The storage field remains the supporting structure whether a region is quiet or already carrying ambient disturbance. Propagation takes finite time because transport engages this nonzero storage structure.
 
+This usage continues an older operational-engineering tradition in which $\varepsilon_0$ and $\mu_0$ are read not as bookkeeping constants of free space but as primitive storage capacities of the medium itself. Heaviside's reformulation of electromagnetic theory in terms of energy flux and impedance, Steinmetz's treatment of reactive storage and dissipation as distinct dimensional categories, and Dollard's later synthesis of these into a per-cycle dimensional accounting all belong to that lineage. The vacuum storage field is the same idea carried into the propagation framework: substrate support is primitive, and the familiar vacuum constants are how that support enters dimensional bookkeeping.
+
 ### 3.4 Storage chart
 
 The **storage chart** is the chart associated with the vacuum storage field. In the homogeneous baseline,
@@ -89,6 +91,8 @@ The **transport chart** is the chart associated with transport. It expresses how
 $$
 X_{\mathrm{transport}}\neq X_{\mathrm{storage}}.
 $$
+
+The transport structure plays a role broadly analogous to a connection in differential geometry, in that it specifies what counts as admissible continuation across the domain. The deliberate departure from the Levi-Civita case is that the transport chart is treated as an independent primitive rather than as a derived consequence of the storage chart. In the homogeneous limit the two charts coincide and the situation reduces to the familiar coincidence case; in displaced cases they come apart, and that coming-apart is what the framework identifies as the gravitational content.
 
 ### 3.7 Local geometry
 
@@ -121,11 +125,15 @@ $$
 
 Both durations are understood relative to a chosen reference event. Realized duration is the duration over which local physical processes unfold within the realized local description. Accordingly, the factor $\lambda$ scales the duration assigned to those processes relative to the coordinate description.
 
+The choice of "realized" rather than "proper" is deliberate. Proper time in general relativity is what a clock reads along a worldline in a pre-given spacetime. Realized duration in the present framework is the duration that comes into being through the transport process itself: the word carries its full sense of what has been *made real*, rather than functioning as a neutral synonym for what a clock reads. The numerical content coincides with proper time in the homogeneous and weak-field sectors, but the ontological status differs, and the vocabulary is chosen to keep that distinction visible. The full philosophical development of this point, including the framework's commitment to time as parameter rather than dimension, is given in the companion paper on philosophical foundations.
+
 ### 3.10 Displacement sourcing
 
 The **displacement-sourcing relation** names the source-side connection between matter structure and transport displacement. In the broad macroscopic shorthand, mass-energy sources displacement. In the more precise microscopic vocabulary used by the later excitation and constants papers, displacement is sourced by **intra-nuclear action**: the internal dynamics of nuclear-scale excitation structure.
 
 This distinction is terminological but important. “Mass” is the bulk scalar bookkeeping of a source's displacement-sourcing capacity. It is not, by itself, the deeper mechanism. The open microphysical problem is therefore not simply why mass causes gravity, but why nuclear-scale excitation dynamics have the role of sourcing displacement in the transport-supporting structure.
+
+The picture is closer to a topological defect in a continuous medium than to a refractive-index modification of a passive background. A dislocation in a crystal lattice does not merely alter how signals propagate through the affected region; it is the structural fact of which the altered propagation is a downstream consequence. In the same sense, displacement of the transport-supporting structure is the primary fact, and the timing, delay, and lensing consequences treated in the weak-field papers are what that fact looks like to propagation. This places the framework in the same broad family as continuum-defect approaches to gravitation, including the Kröner tradition in continuum mechanics and the Katanaev–Volovich gauge-theoretic treatment of dislocations and disclinations as torsion and curvature, while differing from those programs in its starting point and intended scope.
 
 ## 4. Chart Relations on a Common Point Set
 

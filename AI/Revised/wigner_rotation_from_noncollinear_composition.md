@@ -149,9 +149,71 @@ and this matches $W_{\mathrm{ext}}$ at leading order, as it should. The external
 
 The co-moving remainder $W_{\mathrm{co}}$ applies to a different physical scenario: self-propelled noncollinear acceleration in which the impulse is generated within the moving system. That situation does not arise in the standard Thomas/Wigner context, which implicitly treats the transverse acquisition as externally imposed. The factor-of-two difference between $W_{\mathrm{co}}$ and $\theta_T$ is therefore not a conflict but a distinction between two physical situations that the standard formalism does not separate.
 
-## 6. Physical Interpretation
+## 6. Full-Orbit Numerical Verification
 
-### 6.1 Why the two cases differ
+The analytical match of $W_{\mathrm{ext}}$ to the standard Thomas coefficient at leading order is established in §3. A separate question is whether the full external-field integrand, summed step by step around a complete circular orbit, converges to the exact Thomas-precession value $2\pi(\gamma-1)$ at relativistic speeds. The answer matters because the leading-order match is necessary but not sufficient: a wrong choice of integrand could agree at leading order while failing at high $\gamma$, and the storage-ring and g−2 regimes operate precisely at high $\gamma$. This section reports the numerical result.
+
+### 6.1 Method
+
+A particle moves at constant speed $v$ in a circle. At each of $N$ equal steps, the velocity vector rotates by $\Delta\phi = 2\pi/N$, producing a transverse kick per step of $\Delta v_\perp = v\sin(\Delta\phi)$. The steering function is evaluated at $(v_\parallel = v,\,v_\perp = \Delta v_\perp)$ for each step and summed over one full orbit. Two candidate integrands are compared: the external-field steering function $W_{\mathrm{ext}}$ developed in §3, and the finite special-relativistic Wigner angle treated as if it were the infinitesimal object to be summed continuously.
+
+### 6.2 Per-step rate at $y\to 0$
+
+The per-radian steering rate $dW/dy$ evaluated at $y = v_\perp/c \to 0$ gives the instantaneous steering response to an infinitesimal transverse kick. Both candidates agree at low $\beta$ but diverge as $\gamma$ grows:
+
+| $\beta$ | $\gamma$ | $dW_{\mathrm{ext}}/dy$ | $dW_{\mathrm{SR}}/dy$ | $\gamma-1$ | ext/$(\gamma-1)$ | SR/$(\gamma-1)$ |
+|---|---|---|---|---|---|---|
+| 0.1000 | 1.005 | 0.0504 | 0.0501 | 0.005 | 10.00 | 9.95 |
+| 0.3000 | 1.048 | 0.161 | 0.154 | 0.048 | 3.33 | 3.18 |
+| 0.5000 | 1.155 | 0.309 | 0.268 | 0.155 | 2.00 | 1.73 |
+| 0.9000 | 2.294 | 1.438 | 0.627 | 1.294 | 1.11 | 0.48 |
+| 0.9900 | 7.089 | 6.150 | 0.868 | 6.089 | 1.01 | 0.14 |
+| 0.9994 | 28.87 | 27.89 | 0.966 | 27.87 | 1.0006 | 0.035 |
+
+The ratio $dW_{\mathrm{ext}}/dy \div (\gamma-1)$ approaches 1 only at relativistic speeds because the per-radian rate is not the same object as the integrated-per-orbit rate divided by $2\pi$. The per-radian derivative at $y=0$ measures the instantaneous response to an infinitesimal kick, which includes higher-order structure that the integral averages out. The integrated orbit result, which sums many infinitesimal steps with the velocity direction continuously rotating, converges to $2\pi(\gamma-1)$ at all speeds — as shown next.
+
+### 6.3 Full-orbit integration at $N = 10^7$ steps
+
+| $\beta$ | $\gamma$ | $W_{\mathrm{ext}}$/orbit | $W_{\mathrm{SR}}$/orbit | $2\pi(\gamma-1)$ | ext ratio | SR ratio |
+|---|---|---|---|---|---|---|
+| 0.1000 | 1.005 | 0.0317 | 0.0315 | 0.0317 | 1.000000 | 0.994987 |
+| 0.5000 | 1.155 | 0.972 | 0.842 | 0.972 | 1.000000 | 0.866025 |
+| 0.9000 | 2.294 | 8.131 | 3.544 | 8.131 | 1.000000 | 0.435890 |
+| 0.9900 | 7.089 | 38.26 | 5.40 | 38.26 | 1.000000 | 0.141067 |
+| 0.9990 | 22.37 | 134.2 | 6.00 | 134.2 | 1.000000 | 0.044710 |
+| 0.9994 | 28.87 | 175.1 | 6.07 | 175.1 | 1.000000 | 0.034636 |
+
+$W_{\mathrm{ext}}$ converges to the exact Thomas baseline at every tested $\gamma$. The finite-Wigner sum converges to approximately $2\pi$ (one rotation), independent of $\gamma$, confirming that it is not the correct integrand for continuous circular motion.
+
+### 6.4 Convergence at muon $g-2$ speed
+
+For $\beta = 0.9994$, $\gamma = 28.8718$, the Thomas target is $2\pi(\gamma-1) = 175.123964$. As $N$ increases:
+
+| Steps $N$ | $W_{\mathrm{ext}}$ | $W_{\mathrm{SR}}$ | ext/target | SR/target |
+|---|---|---|---|---|
+| $10^3$ | 176.129 | 6.0656 | 1.00574 | 0.03464 |
+| $10^4$ | 175.134 | 6.0656 | 1.00006 | 0.03464 |
+| $10^5$ | 175.124 | 6.0656 | 1.000001 | 0.03464 |
+| $10^6$ | 175.124 | 6.0656 | 1.00000001 | 0.03464 |
+| $10^7$ | 175.124 | 6.0656 | 1.00000000 | 0.03464 |
+
+$W_{\mathrm{ext}}$ converges to the exact Thomas precession value to all computed decimal places. The finite-Wigner sum saturates near $6.0656 \approx 2\pi$, missing the correct result by a factor of about 29.
+
+### 6.5 Why the two integrands behave differently
+
+The finite Wigner angle $\arctan(xy/(\sqrt{1-x^2}+\sqrt{1-y^2}))$ is a property of composed Lorentz boosts — it answers the question of what residual rotation remains when two finite boosts are combined. That is a different question from what precession accumulates during continuous circular deflection. The standard SR Thomas precession rate $\gamma-1$ per radian is not derived by integrating the finite Wigner angle; it comes from a separate infinitesimal analysis or from the BMT equation.
+
+The external-field integral $W_{\mathrm{ext}}$ is the integrable form that directly computes the continuous-deflection precession. Its $1/(\gamma_{\mathrm{tot}}+1)$ correction factor — which reduces the co-moving steering to account for the external field delivering impulse at the lab clock rate — produces exactly the right accumulated precession at all speeds when integrated around a circular orbit. The same function that recovers $v\,v_\perp/(2c^2)$ at low speed and that was derived from the co-moving versus external-field clock-rate distinction also integrates to the exact relativistic Thomas precession for continuous circular motion. The framework does not need a separate derivation for the circular case; the same external-field integrand handles continuous deflection at all speeds.
+
+### 6.6 Consistency with $g-2$
+
+At the muon $g-2$ experimental speed $\beta = 0.9994$, the $W_{\mathrm{ext}}$ orbit integral gives $175.12$ radians per orbit, matching $2\pi(\gamma-1) = 175.12$ radians. This is the geometric baseline on which the anomalous magnetic moment measurement sits. The anomalous precession frequency $\omega_a \propto (g-2)/2 \approx 0.00116$ is measured as a beat frequency on top of this baseline at roughly $0.1\%$ relative magnitude. The agreement of $W_{\mathrm{ext}}$ with the standard baseline to all computed decimal places means the framework is consistent with $g-2$ measurements at their current $0.5$ ppm precision.
+
+The co-moving integral $W_{\mathrm{co}}$ would, by contrast, give $2\pi\gamma^2\beta^2 \approx 2\pi(\gamma^2-1)$ per orbit — a baseline dramatically different from the measured Thomas precession that would be immediately ruled out by experiment. This confirms that the external-field case, not the co-moving case, is the physically correct integral for magnetic-field deflection — exactly as the clock-rate analysis of §7.1 requires.
+
+## 7. Physical Interpretation
+
+### 7.1 Why the two cases differ
 
 The physical content of the distinction is the clock rate at which the transverse impulse is delivered.
 
@@ -161,13 +223,13 @@ In the external-field case, the deflecting agent (a magnetic field, a gravitatio
 
 The distinction is analogous to the difference between proper time and coordinate time in other contexts within the framework. The co-moving integral accumulates the full $(\gamma-1)(\gamma+1)$ per unit angle; the external-field observable sees only $(\gamma-1)$. At low speed, $\gamma+1\approx 2$, so the co-moving result is twice the external-field result. At high speed, the separation grows as $\gamma+1$.
 
-### 6.2 Heading and spin
+### 7.2 Heading and spin
 
 In the co-moving case, the heading follows the changing velocity direction throughout the buildup. The accumulated remainder is attached to the steering of the velocity vector itself, and the internal frame (spin axis, gyroscope orientation) follows that steering. There is no gap between heading and spin.
 
 In the external-field case, the lab observes the spin axis precessing relative to the orbital motion. The deficit between the full orbital rotation and the observed spin rotation is the Thomas precession — the spin undershoots the orbit. This deficit arises because the external field delivers the deflecting impulse at the lab clock rate while the spin axis responds at the co-moving clock rate, and the two do not match.
 
-### 6.3 Observational implications
+### 7.3 Observational implications
 
 The external-field regime is the one relevant to precision measurements:
 
@@ -179,7 +241,7 @@ The external-field regime is the one relevant to precision measurements:
 
 The co-moving regime would be relevant to a different class of experiments: precision gyroscope measurements on a self-propelled spacecraft performing deliberate noncollinear thrust maneuvers in flat space, far from gravitational sources. In that case, the framework predicts a steering remainder at twice the Thomas coefficient. This is a concrete distinguishing prediction, although the required measurement precision at accessible speeds is beyond current technology.
 
-## 7. Observational Context
+## 8. Observational Context
 
 The noncollinear remainder developed here belongs to a framework whose weak-field consequences are quantitatively developed in the companion papers. The effective coordinate-level line element derived from the displacement postulate produces the weak-field orbit equation with a $3GM\,u^2/c^2$ correction, giving a total coefficient $\alpha = 3$. That total is the primary result, confirmed by numerical integration (9-body RK4 simulation, $43.3 \pm 0.3$ arcsec/century for Mercury [6]).
 
@@ -187,7 +249,7 @@ The interpretive decomposition of $\alpha = 3$ is: $\alpha_1 = 1$ (retardation m
 
 The frame-drag branch of Gravity Probe B is assigned to the rotating-source displacement field [6]. Lunar laser ranging consistency checks extend the same displacement structure to the Earth-Moon-Sun system. These comparisons are developed in full in the companion observational paper.
 
-## 8. Conclusion
+## 9. Conclusion
 
 Noncollinear composition in the homogeneous propagation framework carries an accumulated remainder beyond the endpoint translational state. The endpoint remains recoverable and order-independent, but the ordered acquisition of a perpendicular velocity component proceeds through intermediate total speeds, and the transport contribution accumulates across that buildup.
 
