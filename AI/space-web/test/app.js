@@ -39,7 +39,7 @@ renderer.domElement.addEventListener('mouseup',   () => orbiting = false);
 renderer.domElement.addEventListener('mousemove', e => {
   if (!orbiting) return;
   theta -= (e.clientX - lastMX) * 0.005;
-  phi    = Math.max(.05, Math.min(Math.PI - .05, phi + (e.clientY - lastMY) * 0.005));
+  phi    = Math.max(.05, Math.min(Math.PI - .05, phi - (e.clientY - lastMY) * 0.005));
   lastMX = e.clientX; lastMY = e.clientY;
   updateCamera();
 });
