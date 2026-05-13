@@ -10,17 +10,6 @@
 
 The displacement framework of the homogeneous propagation series is applied to galaxy rotation curves across the SPARC sample (175 galaxies) together with the Milky Way and M31, for a total of 177 systems. A constrained radial occupancy profile — central concentration, broad disk, outer transition, and faint tail — is parameterized by a single declining gradient sampled at four interior radii plus an outer cutoff, with strict ordering and monotonicity constraints. The framework's velocity response to that mass distribution reproduces observed rotation curves with median relative RMS 2.09% across the full sample, 84% of galaxies fit to better than 5% RMS, and every galaxy fit to better than 20% RMS. No dark-matter halo is invoked. The mass distribution required to produce each rotation curve remains within the visible galaxy: across the full sample, the median ratio of the model's outer cutoff radius to the outermost rotation-curve data point is 1.05, no galaxy exceeds 1.5, and at the median 97% of the fitted mass lies within the radius of the outermost velocity measurement. The framework reproduces galactic rotation observations from the galaxy's own mass distribution alone, without requiring matter at radii beyond the visible disk.
 
-
----
-
-## External Links
-
-- [Galaxy Curve Summary](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/) - the summary of SPARC fits using a mass profile.
-
-- [Galaxy Curve Fitter](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit.html) - Simple application to fit or evaluate a single curve.
-
-- [Galaxy Curve Renderer](https://d3x0r.github.io/STFRPhysics/AI/galaxy_field_shader-rad.html) - This has a luminosity mode, which can be used to compare against photographic evidence.
-
 ---
 
 ## 1. Introduction
@@ -31,7 +20,7 @@ The displacement framework offers a different account. In this framework, gravit
 
 This paper tests whether that account works in practice. The hypothesis is straightforward: given a constrained mass-occupancy profile for each galaxy, the displacement framework's velocity response should reproduce the observed rotation curve without invoking mass beyond the visible extent of the system. The test is empirical, applied across the full SPARC sample plus the Milky Way and M31, with the same model and the same constraint structure applied uniformly to every galaxy.
 
-The paper is structured around the experimental form. Section 2 states the hypothesis precisely. Section 3 describes the apparatus: the occupancy profile, the velocity response computation, and the SPARC data. Section 4 describes how the apparatus is applied to the data. Section 5 reports the results across the 177-galaxy sample. Section 6 discusses what the result establishes and what it does not. Section 7 concludes.
+The paper is structured around the experimental form. Section 2 develops the hypothesis, beginning with the physical reasoning that motivated the displacement-response approach to galactic dynamics and concluding with the specific testable claims. Section 3 describes the apparatus: the occupancy profile, the velocity response computation, and the SPARC data. Section 4 describes how the apparatus is applied to the data. Section 5 reports the results across the 177-galaxy sample. Section 6 discusses what the result establishes and what it does not. Section 7 concludes.
 
 The reader who wants to see the fits directly may skip to the figure gallery referenced throughout the paper, in `fig/galaxy-fits/fits/`. Each galaxy has a corresponding plot showing the observed velocity points with error bars, the framework's fitted curve, and the underlying mass profile. The aggregate distribution of fit qualities across the sample is shown in `fig/galaxy-fits/fits/_aggregate_rms_distribution.svg`.
 
@@ -39,17 +28,58 @@ The reader who wants to see the fits directly may skip to the figure gallery ref
 
 ## 2. Hypothesis
 
+The hypothesis tested in this paper did not arise as an abstract proposal. It arose from a chain of small displacement-field simulations whose results suggested that a constrained radial mass-occupancy profile, fed through the framework's displacement-response machinery, should be sufficient to reproduce galactic rotation curves without invoking a separate halo component. This section traces that chain before stating the hypothesis precisely.
+
+### 2.1 What the displacement field does in idealized cases
+
+Early N-body displacement tests examined how the framework's cumulative displacement field $\Sigma$ behaves for a few simple mass arrangements. These tests were initially run to verify that the framework reproduces Newton's shell theorem at the level of *force*, but they revealed structurally different behavior at the level of *integrated displacement*.
+
+A spherical shell of displacement elements produces zero force gradient anywhere inside the shell, consistent with Newton's result. But the cumulative displacement field inside the shell is not zero — it is approximately equal to the displacement at the shell's surface. The framework therefore reproduces Newton's shell theorem for forces while predicting that gravitational time dilation inside the shell is roughly the same as at the surface, rather than reverting to the unperturbed external value. The forces cancel; the integrated displacement does not.
+
+A *ring* of discrete displacement elements at radius $R$ produces an even more interesting behavior. The displacement field at the ring's center is not zero. Instead, the cumulative displacement integral over the ring builds a roughly linear gradient that ramps from the ring inward to the center. This is structurally different from the Newtonian case: in Newtonian gravity, the gravitational potential of a ring at its center contributes a constant offset and no gradient. In the displacement framework, the ring contributes a gradient that the inner regions experience as a real displacement-driven response.
+
+The key implication is that **the outer parts of a galaxy affect the inner parts of the same galaxy as much as the inner parts affect the outer parts.** This is the framework's analog of the shell theorem failing for the displacement integral: every shell contributes to the displacement field at every interior radius, and the cumulative effect determines what happens dynamically inside the galaxy. A galaxy is not a system in which the inner mass orbits within a static external potential set by the outer mass; it is a system in which the displacement field at every point depends on the mass at every other point in a non-trivial way.
+
+A *solid disk* of displacement elements progressively stacks displacement toward the center: each outer region adds its contribution to the inner displacement, so the center sits at the integrated displacement of everything around it. This concentrates the displacement-field response at the center to a level beyond what a Newtonian sum of enclosed masses would produce. In the framework's reading, a solid disk has a center that is "deeper" in displacement than its mass alone would indicate, and the gradient structure inside the disk reflects this.
+
+A further observation from this exploration, made by adding successive rings to a packed disk, was that the *outermost* ring contributes a steeper interior gradient than each ring preceding it. The displacement contribution of each newly-added outer ring is not just an additive offset to the interior — it is a steeper local gradient just inside the new edge than the previous edge produced. This implies that the rotation-curve plateau of a real galaxy is supported in part by the *steepness of the visible edge*, not just by the integrated mass within. A sharp drop-off at the visible edge — physically, the transition from "stars are here" to "stars are not here" — would contribute a substantial gradient to the inner flat-velocity region.
+
+### 2.2 The framework's constant-G observation
+
+A related structural observation worth recording: within the framework, the gravitational constant $G$ emerges as a fixed ratio between displacement amplitude and characteristic frequency of matter. A larger-displacement object has more mass and produces more gravitational influence, but is also lower-frequency and more susceptible to perturbation by external displacement gradients. A smaller, more compact object has lower mass and produces less influence, but is higher-frequency and more inertially resistant to external displacement. The two effects balance in such a way that $G$ comes out constant across regimes. This is consistent with the framework's broader project of recovering observed physical constants from the displacement structure rather than treating them as primitive. The observation is not directly tested by the present paper but is recorded here as part of the conceptual context from which the galactic hypothesis emerged.
+
+### 2.3 From the idealized cases to the galactic hypothesis
+
+The N-body displacement explorations suggested that, for galactic dynamics, the relevant question is not "what is the gravitational force at each radius?" but rather "what cumulative displacement field is built by the galaxy's mass distribution, and what velocity response does that field's gradient produce?" The displacement field at any radius depends on the mass at every other radius — including mass at radii larger than the test point — and the velocity response is set by the field's gradient, not by the enclosed mass alone.
+
+This suggested an approach that avoids the N-body computation entirely. Rather than simulating billions of individual displacement elements for each galaxy, one can:
+
+1. Posit a radial mass-occupancy profile $\rho(r)$ for the galaxy.
+2. Compute the framework's cumulative displacement field $\Sigma(r)$ by integrating $\rho$ against the framework's displacement kernel, including contributions from all radii.
+3. Compute the framework's velocity response as $v_{\rm fw}(r) \propto \sqrt{r \cdot |\nabla\Sigma(r)|}$.
+4. Compare against observed rotation curves and adjust $\rho(r)$ to fit.
+
+The mass profile $\rho(r)$ recovered from this fit is the test of the framework: if the framework's velocity response is correct, the fitted $\rho(r)$ should match the *visible* mass distribution of each galaxy — and should not require additional mass at radii beyond the visible extent.
+
+An initial attempt was made to fit the model against photometric light profiles directly, working from brightness to occupancy. This approach was abandoned because galaxy brightness profiles in the SPARC sample carry insufficient inflection structure to constrain the occupancy gradient — they reduce mostly to a single Sérsic-style declining exponential that does not distinguish between the various profile features the framework's velocity response can resolve. In particular, the packed-disk observation above suggests that a *sharp* drop-off at the edge of the visible disk should be a major contributor to the velocity response, and a smoothed Sérsic profile cannot represent such a feature at all. The rotation-curve data, by contrast, contains substantially more inflection: the rise from the center, the plateau across the disk, and the behavior at the outer extent are all separately constraining.
+
+The fitting was therefore performed against the kinematic data, with the recovered occupancy profile then reverse-mapped to a brightness-like surface density that could be visually compared against galaxy images. This visual comparison is informal — finding a published image of the correct galaxy at an appropriate scale and orientation is sometimes difficult, and the available reference images are not always the exact galaxy or filter for which the SPARC data was taken — so the spot-check served as a sanity exercise rather than as a quantitative validation. The formal test is whether the rotation curve is reproduced and whether the recovered mass distribution remains within the visible extent. The visual check confirmed that the recovered $\rho(r)$ profiles produced surface-density distributions broadly consistent with galaxy structure rather than pathological non-galactic shapes, which was sufficient to proceed with full-sample fitting.
+
+### 2.4 The hypothesis
+
+With that motivation in place, the hypothesis is stated as follows.
+
 The displacement framework's velocity response to a mass distribution shaped as a constrained radial occupancy profile — a single declining gradient sampled at central concentration, broad disk, outer transition, and faint tail — reproduces observed galactic rotation curves across the SPARC sample plus the Milky Way and M31, with no mass required at radii beyond the visible galaxy and no dark-matter halo component invoked.
 
-The hypothesis has three parts that can be tested independently:
+The hypothesis has three independently testable parts:
 
 (i) **Curve recovery.** The framework's velocity response reproduces the shape of observed rotation curves within the precision of the observational data.
 
 (ii) **No extended mass.** The mass distribution required to produce the rotation curves does not extend beyond the visible galaxy. The model's outermost radius — where the occupancy profile reaches zero — sits at or near the radius of the outermost velocity measurement, not at the much larger virial radius typical of dark-matter halos.
 
-(iii) **Uniform applicability.** The same model with the same constraint structure works across the full sample without per-galaxy adjustment of the structural form. Only the seven amplitude and radius parameters of the occupancy profile vary between galaxies.
+(iii) **Uniform applicability.** The same model with the same constraint structure works across the full sample without per-galaxy adjustment of the structural form.
 
-Each is testable from the SPARC kinematic data directly. The remainder of this paper presents the test.
+Each can be tested directly from the SPARC kinematic data. The remainder of this paper presents the test and its results.
 
 ---
 
@@ -145,14 +175,13 @@ All fit-quality numbers reported in §5 are produced from the unmodified paramet
 
 ## 5. Results
 
-<p align="center">
-  <img src="../fig/galaxy-fits/fits/_aggregate_rms_distribution.svg" alt="Description">
-</p>
-
-
 ### 5.1 Fit quality across the sample
 
 The framework reproduces the observed rotation curves across the 177-galaxy sample with the distribution of relative RMS shown in Figure 1.
+
+<p align="center">
+  <img src="../fig/galaxy-fits/fits/_aggregate_rms_distribution.svg" alt="Distribution of framework fit quality across the 177-galaxy sample">
+</p>
 
 **Figure 1.** *Distribution of relative RMS (RMS / $\langle V_{\rm obs}\rangle$) across the 177-galaxy sample. The median is 2.09%; the high-amp cohort (amp > 500, where the evolutionary fit is more likely to settle in local optima) is stacked separately. File: `fig/galaxy-fits/fits/_aggregate_rms_distribution.svg`.*
 
@@ -220,7 +249,9 @@ The rotation curves span $V_{\rm obs,max}$ from 18 km/s (smallest dwarfs) to 383
 
 ### 5.4 Hypothesis (iii): uniform applicability
 
-The same occupancy profile structure, the same velocity-response computation, the same constraint set, and the same `eps` and `support` framework parameters are used for every galaxy in the sample. No per-galaxy structural modification is performed. The only quantities that vary between galaxies are the seven amplitude and radius parameters of the occupancy profile, $\rho_0 \ldots \rho_4$ and $r_1 \ldots r_5$ (with the structural constraints applied identically), together with the per-galaxy fit amplitudes $A_{\rm fw}$ and $A_N$.
+The same occupancy profile structure, the same velocity-response computation, and the same constraint set (radius ordering and clamping) are used for every galaxy in the sample. The `support` parameter is uniform at 0.027 across all 177 galaxies. The `eps` softening parameter is 0.021 (the framework default) for 147 galaxies, with 30 galaxies using smaller values (0.001, 0.002, 0.007, or 0.011) when finer inner-detail resolution was needed to capture the rotation-curve structure near the galactic core. Smaller `eps` allows the cumulative displacement field to follow the piecewise-linear occupancy profile more closely without the smoothing kernel washing out sharp interior features.
+
+No per-galaxy structural modification of the model is performed; the variation in `eps` is a single-parameter adjustment of numerical-method resolution rather than a structural change. The only quantities that vary substantively between galaxies are the seven amplitude and radius parameters of the occupancy profile, $\rho_0 \ldots \rho_4$ and $r_1 \ldots r_5$ (with the structural constraints applied identically), together with the per-galaxy fit amplitudes $A_{\rm fw}$ and $A_N$.
 
 That the same constrained model produces fits with median 2.09% RMS across galaxies spanning four orders of magnitude in total mass and two orders of magnitude in outermost radius is the test of hypothesis (iii). The framework is uniformly applicable across the sample.
 
@@ -278,6 +309,8 @@ The displacement framework reproduces the rotation curves of 177 galaxies (SPARC
 
 The framework's velocity response to a single declining gradient of mass occupancy, bounded within the visible galaxy, is sufficient to account for the standard galactic rotation observations.
 
+One observational finding from the sample deserves explicit note as a prediction: the recovered outer-edge gradient is in many cases steeper than was initially anticipated from the idealized N-body explorations described in §2.1. The packed-disk analysis suggested that successive outer rings contribute progressively steeper interior gradients, but the magnitude of the effect in the actual SPARC fits is substantial. In a significant fraction of fitted galaxies the gradient at the outer transition is sharp enough to constitute, in dynamical terms, a soft wall: a stellar orbit at that radius would require an angular velocity well in excess of the local rotation-curve value to remain in stable orbit beyond the edge, and stars approaching the edge from outside would be returned inward by the gradient rather than passing through it. The framework therefore predicts that the visible edges of galaxies are not just photometric features but dynamical ones — that the same mechanism producing the flat rotation curve also produces a stronger-than-newtonian containment boundary at the visible disk's outer edge. Whether this is observable as a kinematic signature in stellar populations near galactic outskirts is a question for follow-up work.
+
 ---
 
 ## References
@@ -326,3 +359,13 @@ The fitted occupancy parameters for the 177 galaxies are tabulated in the supple
 where the densities are in occupancy units, the radii are in units of the per-galaxy $r_{\rm Max}$ (which is supplied in the rotmod file), `eps` and `support` are the framework's softening and coupling parameters, `amp` is the framework velocity-response amplitude $A_{\rm fw}$, and `newtonAmp` is the Newtonian-baseline amplitude $A_N$ used for the comparison curve and for the mass conversion described in §3.2.
 
 The full table is too long to reproduce inline; the data file in the supplementary material is the authoritative version.
+
+---
+
+## External Links
+
+- [Galaxy Curve Summary](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/) — the summary of SPARC fits using a mass profile (rendered gallery of all 177 fits with sort and filter controls).
+
+- [Galaxy Curve Fitter](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit.html) — interactive single-galaxy fitter; the slider-based simulator used to develop the constraint structure and to fit individual galaxies by hand when needed.
+
+- [Galaxy Curve Renderer](https://d3x0r.github.io/STFRPhysics/AI/galaxy_field_shader-rad.html) — has a luminosity mode that can be used to compare the recovered mass distribution against photographic evidence.
