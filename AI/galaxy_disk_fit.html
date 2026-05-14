@@ -149,7 +149,14 @@ function expandPreset(base){
     support:+$('support').value
   };
 }
-function setFromPreset(g){G=g; P=expandPreset(g.preset); enforceStructure(); invalidateField(); if(USER_PRESETS[G.name]){fwAmp=USER_PRESETS[G.name].amp; newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8));} else fitVelocity(); syncControls(); drawAll();}
+function setFromPreset(g){G=g; P=expandPreset(g.preset); enforceStructure(); invalidateField(); if(USER_PRESETS[G.name]){
+	fwAmp=USER_PRESETS[G.name].amp; 
+	newtonAmp=fitScale(shapeN); 
+	//if( newtonAmp != P.newtonAmp ) console.log( "Fix", g.name, newtonAmp, P.newtonAmp );
+	USER_PRESETS[G.name].newtonAmp = newtonAmp;
+	P.newtonAmp = newtonAmp;
+	
+	$('amp').max=Math.max(500,Math.ceil(fwAmp*1.8));} else fitVelocity(); syncControls(); drawAll();}
 function syncControls(){enforceStructure(); for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support']){if(P[k]!=null)$(k).value=P[k];} $('amp').value=fwAmp; updateLabels();}
 // G_astro: kpc (km/s)^2 / Msun
 const G_ASTRO = 4.301e-6;
