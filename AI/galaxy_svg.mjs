@@ -282,7 +282,7 @@ export function generateGalaxySvg(name, data, opts = {}) {
   // Axis labels
   lines.push(`<text x="${margin.l + pw/2}" y="${height-12}" text-anchor="middle" class="lbl">radius (kpc)</text>`);
   lines.push(`<text x="16" y="${margin.t + ph/2}" text-anchor="middle" class="lbl-l" transform="rotate(-90, 16, ${margin.t + ph/2})">velocity (km/s)</text>`);
-  lines.push(`<text x="${width-16}" y="${margin.t + ph/2}" text-anchor="middle" class="lbl-r" transform="rotate(-90, ${width-16}, ${margin.t + ph/2})">mass profile (normalized to peak)</text>`);
+  lines.push(`<text x="${width-(220+16)}" y="${margin.t + ph/2}" text-anchor="middle" class="lbl-r" transform="rotate(-90, ${width-(220+16)}, ${margin.t + ph/2})">mass profile (normalized to peak)</text>`);
 
   // Plot area outline
   lines.push(`<rect x="${margin.l}" y="${margin.t}" width="${pw}" height="${ph}" class="ax"/>`);
