@@ -37,3 +37,9 @@
 - [HPF_recovery_of_physical_constants.md](HPF_recovery_of_physical_constants.md)
   - Physical constants like G and h in framework terms.
 
+- [WIP/galactic_dynamics_no_dark_matter.md](galactic_dynamics_no_dark_matter.md)
+  - Galaxy Rotation Curves Without Dark Matter: The Displacement Framework Applied to 177 Galaxies
+  - https://doi.org/10.5281/zenodo.20131281 (https://zenodo.org/records/20131281) 
+
+- [../cluster_lensing_forward_model_draft.md](cluster_lensing_forward_model_draft.md)
+  - Cluster Lensing After Halo-Free Rotation Curves
