@@ -98,6 +98,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <button onclick="preset('single')">Single</button>
         <button onclick="preset('binary')">Binary</button>
         <button onclick="preset('bullet')">Bullet cluster</button>
+        <button onclick="preset('bulletBary')">Bullet baryon-only</button>
         <button onclick="preset('cross')">Einstein ×</button>
         <button onclick="preset('abell2029')">Abell 2029</button>
       </div>
@@ -165,6 +166,19 @@ canvas { display: block; width: 100%; height: 100%; }
         <input type="checkbox" id="chkM" checked onchange="go()"></div>
       <div class="row"><label>caustic overlay</label>
         <input type="checkbox" id="chkCaus" onchange="go()"></div>
+      <div class="row"><label>caustic mode</label>
+        <select id="causMode" style="width:auto;flex:1;" onchange="go()">
+          <option value="det">critical det(A)=0</option>
+          <option value="near">near-critical gain</option>
+          <option value="shear">shear magnitude</option>
+          <option value="kappa">convergence proxy</option>
+        </select></div>
+      <div class="row"><label>caustic gain</label>
+        <input type="range" id="causGain" min="0.5" max="60" step="0.5" value="8" oninput="sv(this,'causGainv');go()">
+        <span class="val" id="causGainv">8.0</span></div>
+      <div class="row"><label>caustic res</label>
+        <input type="range" id="causRes" min="80" max="320" step="20" value="160" oninput="sv(this,'causResv');go()">
+        <span class="val" id="causResv">160</span></div>
       <div class="row"><label>radial displacement</label>
         <input type="checkbox" id="chkIso" onchange="go()" checked></div>
       <div class="row"><label>iso-displacement κ</label>
@@ -796,15 +810,52 @@ function draw() {
     for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
   }
 
-  /* Caustic overlay: critical curves via marching squares on convergence field
-     κ = (1/2) div(α) — computed from deflection gradient directly */
+  /* Caustic / weak-lensing diagnostic overlay.
+     Modes:
+       det   = strict critical curve, det(A)=0
+       near  = amplified near-critical scalar, -log10(|det(A)|+eps)
+       shear = weak-lensing shear magnitude from the Jacobian
+       kappa = convergence proxy from div(alpha)/2
+     This is a diagnostic layer only; it is intentionally separate from the
+     visual displacement exaggeration used for the grid. */
   if (showCaus && masses.length > 0) {
-    const CS = 120;
-    const csW = CS, csH = Math.round(CS * ph / pw);
+    const mode = document.getElementById('causMode').value;
+    const gain = parseFloat(document.getElementById('causGain').value);
+    const CS = parseInt(document.getElementById('causRes').value);
+    const csW = CS, csH = Math.max(20, Math.round(CS * ph / pw));
     const detField = new Float32Array(csW * csH);
-    const dLon = fovDeg * 2 / (csW-1);
-    const dLat = fovDeg * 2 / (csH-1);
-    const eps = dLon * 2.0;  /* larger eps for stable numerical gradient */
+    const shearField = new Float32Array(csW * csH);
+    const kappaField = new Float32Array(csW * csH);
+    const nearField = new Float32Array(csW * csH);
+    /* Match the actual gnomonic view footprint, so diagnostics stay attached
+       to sky coordinates while panning instead of behaving like a screen-space texture. */
+    const viewDegX = fovDeg * (pw / Math.min(pw, ph));
+    const viewDegY = fovDeg * (ph / Math.min(pw, ph));
+    const dLon = viewDegX / (csW-1);
+    const dLat = viewDegY / (csH-1);
+    const eps = Math.max(Math.min(dLon, dLat) * 1.5, 1e-5);  /* degrees; stable numerical gradient */
+    const sampleLon = ix => panLon + (ix/(csW-1) - 0.5) * viewDegX;
+    const sampleLat = iy => panLat + (iy/(csH-1) - 0.5) * viewDegY;
+    const sampleToScreen = (ixf, iyf) => gnom(sampleLon(ixf), sampleLat(iyf));
+    const moveLine = (p0, p1) => {
+      if (!p0 || !p1) return;
+      cx.moveTo(p0[0], p0[1]);
+      cx.lineTo(p1[0], p1[1]);
+    };
+    const fillSampleCell = (ix, iy) => {
+      const p00 = sampleToScreen(ix, iy);
+      const p10 = sampleToScreen(ix+1, iy);
+      const p11 = sampleToScreen(ix+1, iy+1);
+      const p01 = sampleToScreen(ix, iy+1);
+      if (!p00 || !p10 || !p11 || !p01) return;
+      cx.beginPath();
+      cx.moveTo(p00[0], p00[1]);
+      cx.lineTo(p10[0], p10[1]);
+      cx.lineTo(p11[0], p11[1]);
+      cx.lineTo(p01[0], p01[1]);
+      cx.closePath();
+      cx.fill();
+    };
 
     const getDefl = (lon, lat) => {
       let ddx = 0, ddy = 0;
@@ -835,38 +886,119 @@ function draw() {
       return [ddx, ddy];
     };
 
+    let detMin = Infinity, detMax = -Infinity, nNeg = 0, nPos = 0;
+    let maxShear = 0, maxKappa = 0, maxNear = 0;
+
     for (let iy = 0; iy < csH; iy++) {
       for (let ix = 0; ix < csW; ix++) {
-        const lon = panLon + (ix/(csW-1) - 0.5) * 2 * fovDeg;
-        const lat = panLat + (iy/(csH-1) - 0.5) * 2 * fovDeg;
-        /* Numerical Jacobian of lens mapping: identity minus deflection gradient */
+        const lon = sampleLon(ix);
+        const lat = sampleLat(iy);
         const [d00x,d00y] = getDefl(lon, lat);
         const [d10x,d10y] = getDefl(lon+eps, lat);
         const [d01x,d01y] = getDefl(lon, lat+eps);
-        /* A = I - dα/dθ */
-        const A11 = 1 - (d10x-d00x)/eps;
-        const A12 =   - (d01x-d00x)/eps;
-        const A21 =   - (d10y-d00y)/eps;
-        const A22 = 1 - (d01y-d00y)/eps;
-        detField[iy*csW+ix] = A11*A22 - A12*A21;
+
+        /* Gradient of deflection alpha(theta), in degree/degree. */
+        const ax_x = (d10x-d00x)/eps;
+        const ay_x = (d10y-d00y)/eps;
+        const ax_y = (d01x-d00x)/eps;
+        const ay_y = (d01y-d00y)/eps;
+
+        /* A = I - d(alpha)/d(theta). */
+        const A11 = 1 - ax_x;
+        const A12 =   - ax_y;
+        const A21 =   - ay_x;
+        const A22 = 1 - ay_y;
+        const detA = A11*A22 - A12*A21;
+
+        const kappa = 0.5 * (ax_x + ay_y);
+        const gamma1 = 0.5 * (ax_x - ay_y);
+        const gamma2 = 0.5 * (ax_y + ay_x);
+        const shear = Math.sqrt(gamma1*gamma1 + gamma2*gamma2);
+        const near = -Math.log10(Math.abs(detA) + 1e-5);
+        const idx = iy*csW+ix;
+        detField[idx] = detA;
+        shearField[idx] = shear;
+        kappaField[idx] = kappa;
+        nearField[idx] = near;
+
+        if (detA < detMin) detMin = detA;
+        if (detA > detMax) detMax = detA;
+        if (detA < 0) nNeg++; else nPos++;
+        if (shear > maxShear) maxShear = shear;
+        if (Math.abs(kappa) > maxKappa) maxKappa = Math.abs(kappa);
+        if (near > maxNear) maxNear = near;
       }
     }
 
-    /* Debug: show det field min/max */
-    let detMin = Infinity, detMax = -Infinity, nNeg = 0, nPos = 0;
-    for (let i = 0; i < detField.length; i++) {
-      if (detField[i] < detMin) detMin = detField[i];
-      if (detField[i] > detMax) detMax = detField[i];
-      if (detField[i] < 0) nNeg++; else nPos++;
-    }
-    cx.fillStyle = 'rgba(200,100,255,0.9)';
-    cx.font = `${Math.round(10*dpr)}px monospace`;
-    cx.fillText(`caustic det: min=${detMin.toFixed(4)} max=${detMax.toFixed(4)} neg=${nNeg} pos=${nPos}`, 6*dpr, ph - 32*dpr);
+    /* Screen positions are generated through gnomonic projection from sampled
+       sky coordinates.  Do not use fixed pixel cells here; that was what made
+       the diagnostic overlay fail to translate correctly during pan. */
 
-    const cellPxW2 = pw/(csW-1), cellPxH2 = ph/(csH-1);
+    /* Heat overlay for non-strict modes. */
+    if (mode !== 'det') {
+      let field = nearField, maxVal = maxNear, label = 'near';
+      if (mode === 'shear') { field = shearField; maxVal = maxShear; label = 'shear'; }
+      if (mode === 'kappa') { field = kappaField; maxVal = maxKappa; label = 'kappa'; }
+      if (maxVal > 0) {
+        for (let iy = 0; iy < csH-1; iy++) {
+          for (let ix = 0; ix < csW-1; ix++) {
+            const idx = iy*csW+ix;
+            const raw = mode === 'kappa' ? Math.abs(field[idx]) : field[idx];
+            const q = Math.max(0, Math.min(1, raw / (maxVal / Math.max(gain, 0.5))));
+            if (q < 0.015) continue;
+            const a = Math.min(0.62, 0.07 + q * 0.55);
+            let rr=160, gg=70, bb=255;
+            if (mode === 'shear') { rr=0; gg=220; bb=210; }
+            if (mode === 'kappa') { rr=255; gg=190; bb=40; }
+            cx.fillStyle = `rgba(${rr},${gg},${bb},${a.toFixed(3)})`;
+            fillSampleCell(ix, iy);
+          }
+        }
+      }
+
+      /* Contour high scalar values. */
+      const zcVal = (va,vb,a,b,level) => (va>=level)===(vb>=level) ? null : a+(b-a)*(level-va)/(vb-va);
+      const drawScalarContours = (levels) => {
+        levels.forEach((level, li) => {
+          const alpha = 0.85 - li * 0.12;
+          if (mode === 'shear') cx.strokeStyle = `rgba(0,255,230,${alpha})`;
+          else if (mode === 'kappa') cx.strokeStyle = `rgba(255,220,60,${alpha})`;
+          else cx.strokeStyle = `rgba(210,120,255,${alpha})`;
+          cx.lineWidth = (1.0 + li*0.15) * dpr;
+          cx.beginPath();
+          for (let iy = 0; iy < csH-1; iy++) {
+            for (let ix = 0; ix < csW-1; ix++) {
+              const f = (j,k) => {
+                const v = field[j*csW+k];
+                return mode === 'kappa' ? Math.abs(v) : v;
+              };
+              const v00=f(iy,ix), v10=f(iy,ix+1), v01=f(iy+1,ix), v11=f(iy+1,ix+1);
+              const T=zcVal(v00,v10,ix,ix+1,level); const R=zcVal(v10,v11,iy,iy+1,level);
+              const B=zcVal(v01,v11,ix,ix+1,level); const L=zcVal(v00,v01,iy,iy+1,level);
+              const pts=[];
+              if(T!==null) pts.push(sampleToScreen(T,iy));
+              if(R!==null) pts.push(sampleToScreen(ix+1,R));
+              if(B!==null) pts.push(sampleToScreen(B,iy+1));
+              if(L!==null) pts.push(sampleToScreen(ix,L));
+              const good=pts.filter(p=>p);
+              if(good.length>=2) moveLine(good[0], good[1]);
+            }
+          }
+          cx.stroke();
+        });
+      };
+      if (maxVal > 0) {
+        drawScalarContours([0.30,0.50,0.70,0.88].map(x => maxVal * x / Math.max(1, gain/8)));
+      }
+      cx.fillStyle = 'rgba(220,230,255,0.9)';
+      cx.font = `${Math.round(10*dpr)}px monospace`;
+      cx.fillText(`${label}: gain=${gain.toFixed(1)} max=${maxVal.toExponential(2)} det[${detMin.toFixed(3)},${detMax.toFixed(3)}]`, 6*dpr, ph - 32*dpr);
+    }
+
+    /* Strict critical curve: det(A)=0. Draw it for det mode, and faintly over all modes. */
     const zc = (va,vb,a,b) => (va>0)===(vb>0) ? null : a+(b-a)*va/(va-vb);
-    cx.strokeStyle = 'rgba(200,100,255,0.9)';
-    cx.lineWidth = 1.5 * dpr;
+    cx.strokeStyle = mode === 'det' ? 'rgba(235,120,255,0.95)' : 'rgba(235,120,255,0.35)';
+    cx.lineWidth = (mode === 'det' ? 1.6 : 0.8) * dpr;
     cx.beginPath();
     for (let iy = 0; iy < csH-1; iy++) {
       for (let ix = 0; ix < csW-1; ix++) {
@@ -876,22 +1008,24 @@ function draw() {
         const v11=detField[(iy+1)*csW+(ix+1)];
         const s00=v00>0, s10=v10>0, s01=v01>0, s11=v11>0;
         if (s00===s10 && s00===s01 && s00===s11) continue;
-        const x0=ix*cellPxW2, x1=(ix+1)*cellPxW2;
-        const y0=iy*cellPxH2, y1=(iy+1)*cellPxH2;
-        const tT=zc(v00,v10,x0,x1), tR=zc(v10,v11,y0,y1);
-        const tB=zc(v01,v11,x0,x1), tL=zc(v00,v01,y0,y1);
-        const T = tT!==null ? [tT,y0] : null;
-        const R = tR!==null ? [x1,tR] : null;
-        const B = tB!==null ? [tB,y1] : null;
-        const L = tL!==null ? [x0,tL] : null;
-        const pts = [T,R,B,L].filter(p=>p);
-        if (pts.length >= 2) {
-          cx.moveTo(pts[0][0],pts[0][1]);
-          cx.lineTo(pts[1][0],pts[1][1]);
-        }
+        const tT=zc(v00,v10,ix,ix+1), tR=zc(v10,v11,iy,iy+1);
+        const tB=zc(v01,v11,ix,ix+1), tL=zc(v00,v01,iy,iy+1);
+        const pts=[];
+        if(tT!==null) pts.push(sampleToScreen(tT,iy));
+        if(tR!==null) pts.push(sampleToScreen(ix+1,tR));
+        if(tB!==null) pts.push(sampleToScreen(tB,iy+1));
+        if(tL!==null) pts.push(sampleToScreen(ix,tL));
+        const good=pts.filter(p=>p);
+        if (good.length >= 2) moveLine(good[0], good[1]);
       }
     }
     cx.stroke();
+
+    if (mode === 'det') {
+      cx.fillStyle = 'rgba(235,120,255,0.9)';
+      cx.font = `${Math.round(10*dpr)}px monospace`;
+      cx.fillText(`critical det: min=${detMin.toFixed(4)} max=${detMax.toFixed(4)} neg=${nNeg} pos=${nPos}`, 6*dpr, ph - 32*dpr);
+    }
   }
 
   /* Iso-displacement: concentric circles in angle-space, displaced by lensing */
@@ -1103,7 +1237,7 @@ function draw() {
       const g = gnomExag(m.ax, m.ay, selfIdx);
       if (!g) return;
       const [mx, my] = g;
-      const r = (3 + Math.log10(Math.max(m.mass, 0.1) + 1) * 8) * dpr;
+      const r = 0.25 * (3 + Math.log10(Math.max(m.mass, 0.1) + 1) * 8) * dpr;
       const col = TYPE_COL[m.type];
 
       /* Einstein radius ring */
@@ -1339,7 +1473,31 @@ function preset(name) {
     document.getElementById('sv1').textContent = '25';
     document.getElementById('exag').value = 200;
     document.getElementById('exagv').textContent = '200';
+  } else if (name === 'bulletBary') {
+    /* Same rough Bullet geometry, but no explicit dark halos.
+       This is the HPF/STFR diagnostic control: visible gas/galaxy concentrations only. */
+    masses = [
+      { ax: -1.5,  ay:  0.2, mass: 260, type: 'bary' },
+      { ax:  1.8,  ay: -0.1, mass: 240, type: 'bary' },
+      { ax: -4.0,  ay:  0.4, mass: 90,  type: 'compact' },
+      { ax:  4.2,  ay: -0.3, mass: 70,  type: 'compact' },
+      { ax:  0.0,  ay:  0.0, mass: 80,  type: 'bary' },
+    ];
+    document.getElementById('str').value = 2.0;
+    document.getElementById('sv0').textContent = '2.0';
+    document.getElementById('fov').value = 25;
+    document.getElementById('sv1').textContent = '25';
+    document.getElementById('exag').value = 350;
+    document.getElementById('exagv').textContent = '350';
+    document.getElementById('chkCaus').checked = true;
+    document.getElementById('causMode').value = 'shear';
+    document.getElementById('causGain').value = 18;
+    document.getElementById('causGainv').textContent = '18.0';
   } else if (name === 'cross') {
+    document.getElementById('chkCaus').checked = true;
+    document.getElementById('causMode').value = 'det';
+    document.getElementById('causGain').value = 8;
+    document.getElementById('causGainv').textContent = '8.0';
     masses = [
       { ax:  0,   ay:  0,   mass: 60, type: 'compact' },
       { ax:  0.3, ay:  0.2, mass: 8,  type: 'dark' },
