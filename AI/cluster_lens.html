@@ -1193,9 +1193,19 @@ function draw() {
 
       for (let li = 0; li < nLev; li++) {
         const level = levels2[li];
-        const t = li/(nLev-1);
-        const br = Math.round(180 + 75*(1-t));
-        cx.strokeStyle = `rgba(${br},${br},0,${0.8-t*0.3})`;
+        const t = li/(nLev-1);  /* 0 = innermost (high disp), 1 = outermost (low disp) */
+        /* Inner: red-orange, middle: yellow, outer: cyan */
+        let r2, g2, b2;
+        if (t < 0.5) {
+          /* red → yellow */
+          const s = t * 2;
+          r2 = 255; g2 = Math.round(160 * s); b2 = 0;
+        } else {
+          /* yellow → cyan */
+          const s = (t - 0.5) * 2;
+          r2 = Math.round(255 * (1-s)); g2 = Math.round(160 + 95*s); b2 = Math.round(200*s);
+        }
+        cx.strokeStyle = `rgba(${r2},${g2},${b2},${0.85-t*0.3})`;
         cx.lineWidth = 1.0 * dpr;
         cx.beginPath();
 
