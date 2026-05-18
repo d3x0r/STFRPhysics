@@ -1,4 +1,5 @@
-import { generateGalaxySvg } from './galaxy_svg.mjs';
+import { generateGalaxySvg } from './galaxy_svg_with_photometric_profile.mjs';
+//import { generateGalaxySvg } from './galaxy_svg_with_mond_download.mjs';
 import { GALAXY_PRESETS } from './galaxy_presets.mjs';
 import { ROTMOD_GALAXIES } from './rotmod_ltg_data.mjs';
 

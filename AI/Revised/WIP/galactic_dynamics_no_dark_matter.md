@@ -364,6 +364,8 @@ The full table is too long to reproduce inline; the data file in the supplementa
 
 ## External Links
 
+- [N-Body Displacement Simulator](https://d3x0r.github.io/STFRPhysics/AI/nbody_displacement_shader.html) — The simulator that was being pondered during hypothesis formation.
+
 - [Galaxy Curve Summary](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/) — the summary of SPARC fits using a mass profile (rendered gallery of all 177 fits with sort and filter controls).
 
 - [Galaxy Curve Fitter](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit.html) — interactive single-galaxy fitter; the slider-based simulator used to develop the constraint structure and to fit individual galaxies by hand when needed.

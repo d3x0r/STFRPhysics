@@ -35,7 +35,7 @@
     <div class="row"><label>Inner disk rho2</label><input id="rho2" type="range" min="0" max="6" step="0.01"><span id="rho2v"></span></div>
     <div class="row"><label>Outer disk rho3</label><input id="rho3" type="range" min="0" max="6" step="0.01"><span id="rho3v"></span></div>
     <div class="row"><label>Edge shelf rho4</label><input id="rho4" type="range" min="0" max="6" step="0.01"><span id="rho4v"></span></div>
-    <div class="row"><label>Core end r1</label><input id="r1" type="range" min="0.020" max="0.180" step="0.002"><span id="r1v"></span></div>
+    <div class="row"><label>Core end r1</label><input id="r1" type="range" min="0.001" max="0.180" step="0.001"><span id="r1v"></span></div>
     <div class="row"><label>Transition end r2</label><input id="r2" type="range" min="0.050" max="0.320" step="0.002"><span id="r2v"></span></div>
     <div class="row"><label>Flat shelf starts r3</label><input id="r3" type="range" min="0.090" max="0.700" step="0.002"><span id="r3v"></span></div>
     <div class="row"><label>Edge shelf end r4</label><input id="r4" type="range" min="0.650" max="1.800" step="0.002"><span id="r4v"></span></div>
@@ -70,7 +70,7 @@ const MANUAL_PRESET_ORDER=['MilkyWay','NGC2403','ESO563-G021','CamB','D631-7','U
 
 function clamp01(v,a,b){return Math.min(b,Math.max(a,v));}
 function enforceStructure(){
-  P.r1=clamp01(P.r1,0.020,0.180);
+  P.r1=clamp01(P.r1,0.001,0.180);
   P.r2=clamp01(Math.max(P.r1+0.012,P.r2),0.050,0.320);
   P.r3=clamp01(Math.max(P.r2+0.018,P.r3),0.090,0.700);
   P.r4=clamp01(Math.max(P.r3+0.040,P.r4),0.650,1.800);
