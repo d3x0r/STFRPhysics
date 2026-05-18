@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cluster Lensing — Galaxy-mass sources</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: #06080f;
+  color: #8898b0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+#hdr {
+  padding: 7px 14px 5px;
+  border-bottom: 0.5px solid #1a2540;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+#hdr h1 { font-size: 12px; font-weight: 400; color: #c8d8f0; letter-spacing: 0.08em; text-transform: uppercase; }
+#hdr .sub { font-size: 10px; color: #3a5070; }
+#main { display: flex; flex: 1; min-height: 0; }
+
+#sidebar {
+  width: 340px;
+  min-width: 340px;
+  background: #080c18;
+  border-right: 0.5px solid #1a2540;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.panel { border-bottom: 0.5px solid #111828; padding: 9px 11px; }
+.pt { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6a88aa; margin-bottom: 7px; }
+.row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; font-size: 11px; }
+.row label { flex: 1; color: #99aac0; white-space: nowrap; }
+.row .val { color: #e0eeff; width: 34px; text-align: right; font-size: 11px; }
+input[type=range] {
+  -webkit-appearance: none; height: 2px;
+  background: #182840; border-radius: 1px; outline: none; cursor: pointer; flex: 1;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%;
+  background: #4a6a9a; cursor: pointer;
+}
+select {
+  background: #0d1628; color: #c0d0e8; border: 0.5px solid #253550;
+  border-radius: 3px; font-size: 11px; font-family: 'Courier New', monospace;
+  padding: 3px 4px; width: 100%; cursor: pointer; outline: none;
+}
+.brow { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+button {
+  background: #0d1628; color: #7888a0; border: 0.5px solid #253550;
+  border-radius: 3px; font-size: 10px; font-family: 'Courier New', monospace;
+  padding: 4px 7px; cursor: pointer;
+}
+button:hover { background: #14203c; color: #c0d0e8; }
+button.act { background: #162848; color: #6aaaee; border-color: #3a5888; }
+.mlist { max-height: 110px; overflow-y: auto; }
+.mi {
+  display: flex; align-items: center; gap: 5px; padding: 3px 0;
+  border-bottom: 0.5px solid #0e1820; font-size: 10px; color: #7888a0;
+}
+.mi .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.mi .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mi .x { color: #2a3a5a; cursor: pointer; }
+.mi .x:hover { color: #d05050; }
+#leg { margin-top: auto; padding: 9px 11px; font-size: 10px; color: #8aaccc; border-top: 0.5px solid #111828; }
+.lr { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+.sw { width: 18px; height: 2px; border-radius: 1px; }
+
+#cv-wrap { flex: 1; position: relative; overflow: hidden; }
+canvas { display: block; width: 100%; height: 100%; }
+#ib { position: absolute; bottom: 6px; left: 8px; font-size: 11px; color: #d0e4ff; pointer-events: none; text-shadow: 0 1px 4px #000; }
+#mb { position: absolute; top: 7px; right: 8px; font-size: 11px; color: #7acfff; letter-spacing: 0.1em; pointer-events: none; text-shadow: 0 1px 4px #000; }
+</style>
+</head>
+<body>
+<div id="hdr">
+  <h1>Cluster Lensing · Galaxy-mass sources · STFR framework</h1>
+  <span class="sub">each source = one galaxy (~4×10¹¹ M☉) · red = unlensed grid · cyan = lensed · scroll to zoom · drag to pan</span>
+</div>
+<div id="main">
+  <div id="sidebar">
+
+    <div class="panel">
+      <div class="pt">Preset</div>
+      <div class="brow">
+        <button onclick="preset('single')">Single</button>
+        <button onclick="preset('binary')">Binary</button>
+        <button onclick="preset('bullet')">Bullet cluster</button>
+        <button onclick="preset('bulletBary')">Bullet baryon-only</button>
+        <button onclick="preset('cross')">Einstein ×</button>
+        <button onclick="preset('abell2029')">Abell 2029</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Cluster generator</div>
+      <div class="row"><label>N galaxies</label>
+        <input type="range" id="cN" min="10" max="600" step="10" value="300" oninput="sv(this,'cNv')">
+        <span class="val" id="cNv">300</span></div>
+      <div class="row"><label>galaxy M (×10¹¹ M☉)</label>
+        <input type="range" id="cM" min="0.5" max="20" step="0.5" value="4" oninput="sv(this,'cMv')">
+        <span class="val" id="cMv">4.0</span></div>
+      <div class="row"><label>cluster r½ (°)</label>
+        <input type="range" id="cR" min="0.1" max="8" step="0.1" value="2.5" oninput="sv(this,'cRv')">
+        <span class="val" id="cRv">2.5</span></div>
+      <div class="row"><label>NFW concentration</label>
+        <input type="range" id="cC" min="1" max="15" step="0.5" value="5" oninput="sv(this,'cCv')">
+        <span class="val" id="cCv">5.0</span></div>
+      <div class="row"><label>seed</label>
+        <input type="range" id="cSeed" min="1" max="99" step="1" value="42" oninput="sv(this,'cSeedv')">
+        <span class="val" id="cSeedv">42</span></div>
+      <button onclick="generateCluster()">Generate cluster</button>
+      <div style="margin-top:5px;font-size:10px;color:#6a8aaa;" id="clusterInfo"></div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Convergence κ(ξ) profile</div>
+      <canvas id="kappaCV" width="196" height="130" style="width:100%;background:#04060e;border-radius:4px;border:0.5px solid #1a2540;"></canvas>
+      <div style="font-size:10px;color:#6a8aaa;margin-top:3px;" id="kappaInfo">projected Σ/Σ_cr vs angular radius</div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Deflection profile</div>
+      <select id="prof" onchange="go()">
+        <option value="GR">GR — 4GM/c²b</option>
+        <option value="Newton">Newtonian — 2GM/c²b</option>
+        <option value="HPF">HPF — n²eff · 4GM/c²b</option>
+      </select>
+      <div style="height:5px"></div>
+      <div class="row"><label>strength ×</label>
+        <input type="range" id="str" min="0.1" max="8" step="0.1" value="1" oninput="sv(this,'sv0');go()">
+        <span class="val" id="sv0">1.0</span></div>
+      <div class="row"><label>displ. exag ×</label>
+        <input type="range" id="exag" min="1" max="5000" step="1" value="500" oninput="sv(this,'exagv');go()">
+        <span class="val" id="exagv">1</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">View</div>
+      <div class="row"><label>FOV (°)</label>
+        <input type="range" id="fov" min="0.01" max="90" step="0.01" value="20" oninput="sv(this,'sv1');go()">
+        <span class="val" id="sv1">20</span></div>
+      <div class="row"><label>grid spacing</label>
+        <input type="range" id="gsp" min="2" max="1200" step="1" value="3600" oninput="syncGsp(this);go()">
+        <span class="val" id="gv">1°</span></div>
+      <div class="row"><label>line steps</label>
+        <input type="range" id="lsteps" min="40" max="300" step="20" value="120" oninput="sv(this,'lsv');go()">
+        <span class="val" id="lsv">120</span></div>
+      <div class="row"><label>show unlensed</label>
+        <input type="checkbox" id="chkRed" checked onchange="go()"></div>
+      <div class="row"><label>show lensed</label>
+        <input type="checkbox" id="chkCyan" checked onchange="go()"></div>
+      <div class="row"><label>show masses</label>
+        <input type="checkbox" id="chkM" checked onchange="go()"></div>
+      <div class="row"><label>caustic overlay</label>
+        <input type="checkbox" id="chkCaus" onchange="go()"></div>
+      <div class="row"><label>caustic mode</label>
+        <select id="causMode" style="width:auto;flex:1;" onchange="go()">
+          <option value="det">critical det(A)=0</option>
+          <option value="near">near-critical gain</option>
+          <option value="shear">shear magnitude</option>
+          <option value="kappa">convergence proxy</option>
+        </select></div>
+      <div class="row"><label>caustic gain</label>
+        <input type="range" id="causGain" min="0.5" max="60" step="0.5" value="8" oninput="sv(this,'causGainv');go()">
+        <span class="val" id="causGainv">8.0</span></div>
+      <div class="row"><label>caustic res</label>
+        <input type="range" id="causRes" min="80" max="320" step="20" value="160" oninput="sv(this,'causResv');go()">
+        <span class="val" id="causResv">160</span></div>
+      <div class="row"><label>radial displacement</label>
+        <input type="checkbox" id="chkIso" onchange="go()" checked></div>
+      <div class="row"><label>iso-displacement κ</label>
+        <input type="checkbox" id="chkKappaIso" onchange="go()" checked></div>
+      <div class="row"><label>iso resolution</label>
+        <input type="range" id="isoRes" min="50" max="600" step="50" value="500" oninput="sv(this,'isoResv');go()">
+        <span class="val" id="isoResv">500</span></div>
+      <div class="row"><label>iso scale</label>
+        <input type="range" id="isoScl" min="0.1" max="20" step="0.1" value="3" oninput="sv(this,'isoSclv');go()">
+        <span class="val" id="isoSclv">3.0</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Add mass · click canvas</div>
+      <div class="row"><label>mass (×10¹¹ M☉)</label>
+        <input type="range" id="am" min="0.1" max="50" step="0.1" value="4" oninput="sv(this,'amv')">
+        <span class="val" id="amv">4.0</span></div>
+      <div class="row"><label>type</label>
+        <select id="atype" style="width:auto;flex:1;">
+          <option value="dark">dark matter</option>
+          <option value="bary">baryonic</option>
+          <option value="compact">compact</option>
+        </select>
+      </div>
+      <button id="plbtn" onclick="togglePlace()">+ place</button>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Mass list</div>
+      <div class="mlist" id="mlist"></div>
+      <div style="height:4px"></div>
+      <button onclick="clearM()">clear all</button>
+    </div>
+
+    <div id="leg">
+      <div class="lr"><div class="sw" style="background:#ff4444"></div> unlensed sphere grid</div>
+      <div class="lr"><div class="sw" style="background:#00dddd"></div> lensed (GR)</div>
+      <div class="lr"><div class="sw" style="background:#ffaa22"></div> lensed (Newtonian)</div>
+      <div class="lr"><div class="sw" style="background:#9933ff"></div> lensed (HPF)</div>
+      <div style="margin-top:6px;font-size:9px;color:#6a8aaa;">
+        Rays cast in angle-space from<br>
+        observer through lens plane →<br>
+        deflected → sampled on sphere.
+      </div>
+    </div>
+  </div>
+
+  <div id="cv-wrap">
+    <canvas id="c"></canvas>
+    <div id="ib">hover for angular data</div>
+    <div id="mb">GR</div>
+    <div id="fovbadge" style="position:absolute;top:7px;left:8px;font-size:10px;color:#8ab8e0;pointer-events:none;text-shadow:0 1px 4px #000;line-height:1.6;"></div>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('c');
+const cx = cv.getContext('2d');
+
+/* ── Physics constants ── */
+const G = 6.674e-11, C = 2.998e8, Msun = 1.989e30;
+/* Scale: 1 unit = 1 Mpc for cluster-scale scenes */
+const MPC_M = 3.086e22;
+
+/* ── State ── */
+/* masses: {ax, ay, mass_1e11Msun, type}  ax,ay in angular degrees from centre
+   NOTE: units are now ×10¹¹ M☉ (individual galaxy scale), not ×10¹⁴ */
+let masses = [];
+let placing = false;
+let zoom = 1.0;
+let panLon = 0, panLat = 0;
+let dragging = false, dragStartX = 0, dragStartY = 0, dragPanLon0 = 0, dragPanLat0 = 0;
+
+const TYPE_COL = { dark: '#a78bfa', bary: '#fb923c', compact: '#f472b6' };
+
+/* ── Lensing geometry: Abell 2029 / typical rich cluster ──
+   D_L = 320 Mpc (z≈0.078), D_S = 1500 Mpc (background arcs z~0.5-1),
+   D_LS = D_S - D_L ≈ 1180 Mpc (approx, flat ΛCDM)
+   At D_L=320 Mpc: 1° = 5.6 Mpc physical
+*/
+const D_L = 320  * MPC_M;   /* 320 Mpc — Abell 2029 */
+const D_S = 1500 * MPC_M;   /* background source */
+const D_LS = 1180 * MPC_M;
+const LENSING_FACTOR = D_LS / D_S;
+
+/* Critical surface density Σ_cr = c²/(4πG) * D_S/(D_L*D_LS) in kg/m² */
+const SIGMA_CR = C * C * D_S / (4 * Math.PI * G * D_L * D_LS);  /* kg/m² */
+
+function deflectRad(theta_rad, mass_1e11, profile, strength) {
+  /* theta_rad = angular separation from mass centre (radians)
+     mass_1e11 = mass in units of 10¹¹ M☉ (one galaxy)
+     returns deflection magnitude in radians toward the mass */
+  if (theta_rad < 1e-9) return 0;
+  const M = mass_1e11 * 1e11 * Msun;
+  const b = theta_rad * D_L;          /* impact parameter in metres */
+  const alpha_hat = 4 * G * M / (C * C * b);
+  let alpha = alpha_hat * LENSING_FACTOR;
+
+  if (profile === 'Newton') {
+    alpha *= 0.5;
+  } else if (profile === 'HPF') {
+    /* STFR: n_eff² = (1+Σ)² gives factor (1+2Σ) over Newton;
+       full (1+Σ)² path integral gives same 4GM/c²b as GR in weak field,
+       but the displacement field falls off differently for extended sources.
+       Here we apply the geometric coupling boost:
+       effective mass = baryonic × (framework/Newton amp ratio ≈ 3-5×) */
+    const Sigma = G * M / (C * C * b);
+    alpha *= (1 + 2 * Sigma);
+  }
+  return alpha * strength;
+}
+
+/* ── Seeded PRNG (Mulberry32) for reproducible cluster generation ── */
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/* ── NFW profile CDF inverse sampling (numerical) ──
+   NFW: ρ(r) ∝ 1/(r/rs)(1+r/rs)²
+   Projected NFW surface density used to distribute galaxies in angle space.
+   We sample radii from NFW cumulative mass distribution. */
+function nfwSampleR(rHalf_deg, concentration, rng) {
+  /* rs = r_half / x_half where x_half solves M(<x_half)/M_tot = 0.5 for NFW */
+  /* For concentration c, x_half ≈ 0.53 * c (rough) - use numerical solve */
+  const c = concentration;
+  /* NFW enclosed mass fraction: m(x) = ln(1+x) - x/(1+x), normalised to m(c) */
+  function mfrac(x) { return (Math.log(1+x) - x/(1+x)) / (Math.log(1+c) - c/(1+c)); }
+  /* Find x_half by bisection */
+  let lo = 0.01, hi = c;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo+hi)/2;
+    if (mfrac(mid) < 0.5) lo = mid; else hi = mid;
+  }
+  const xHalf = (lo+hi)/2;
+  const rs = rHalf_deg / xHalf;
+  /* Sample: draw uniform u, invert m(x)=u by bisection */
+  const u = rng();
+  let rlo = 0.001*rs, rhi = c*rs;
+  for (let i = 0; i < 50; i++) {
+    const mid = (rlo+rhi)/2;
+    const x = mid/rs;
+    if (mfrac(x) < u) rlo = mid; else rhi = mid;
+  }
+  return (rlo+rhi)/2;
+}
+
+/* ── Cluster generator ── */
+function generateCluster() {
+  const N    = parseInt(document.getElementById('cN').value);
+  const mGal = parseFloat(document.getElementById('cM').value);  /* ×10¹¹ M☉ */
+  const rHalf = parseFloat(document.getElementById('cR').value); /* degrees */
+  const conc  = parseFloat(document.getElementById('cC').value);
+  const seed  = parseInt(document.getElementById('cSeed').value);
+  const rng   = mulberry32(seed * 1234567);
+
+  masses = [];
+  for (let i = 0; i < N; i++) {
+    const r   = nfwSampleR(rHalf, conc, rng);
+    const phi = rng() * 2 * Math.PI;
+    /* ellipticity: mild flattening */
+    const q   = 0.7 + rng() * 0.3;
+    const ax  = r * Math.cos(phi);
+    const ay  = r * Math.sin(phi) * q;
+    /* mass scatter: log-normal ×0.5 dex */
+    const mscatter = Math.exp((rng()-0.5) * 0.5 * Math.LN10 * 2);
+    const m   = Math.max(0.1, mGal * mscatter);
+    masses.push({ ax, ay, mass: m, type: 'bary' });
+  }
+
+  const totalM = masses.reduce((s,m) => s + m.mass, 0);
+  document.getElementById('clusterInfo').textContent =
+    `${N} galaxies · total ${(totalM/10).toFixed(1)}×10¹² M☉ · ` +
+    `≈ ${(totalM*1e11/1e14).toFixed(2)}×10¹⁴ M☉`;
+  refreshList();
+  updateKappa();
+  go();
+}
+
+/* ── Convergence κ(ξ) profile ── */
+function updateKappa() {
+  const cv2 = document.getElementById('kappaCV');
+  const cx2 = cv2.getContext('2d');
+  const W = cv2.width, H = cv2.height;
+  cx2.fillStyle = '#04060e';
+  cx2.fillRect(0,0,W,H);
+
+  if (masses.length === 0) return;
+
+  /* Compute κ(ξ) = Σ_proj(ξ) / Σ_cr
+     For each ring of projected radius ξ (in degrees),
+     sum contributions from all galaxies: each contributes
+     Σ_proj(b) = M / (π b²) × (GR thin-lens surface density for point mass)
+     = M·D_L² / (π · (ξ_deg·π/180·D_L)² ) ... but simpler:
+     point mass projected surface density along LOS at impact param b:
+     Σ(b) = M / (2π b²) × 2  [the 1/r profile integrated gives ln divergence]
+     Better: use the lensing convergence directly from deflection gradient.
+     κ(ξ) = (1/2) ∇·α in the lens plane = (1/2) d(ξ·α)/ξdξ
+     For point mass: α = θ_E²/ξ → κ = π θ_E² δ²(ξ) (singular)
+     For extended: we numerically estimate κ from the Jacobian */
+
+  /* Simpler approach: project mass in annuli */
+  const nBins = 60;
+  const maxR = 10; /* degrees */
+  const bins = new Float64Array(nBins);
+  const binArea = new Float64Array(nBins); /* sr equivalent */
+
+  for (const m of masses) {
+    const r = Math.sqrt(m.ax*m.ax + m.ay*m.ay);
+    /* Each galaxy contributes a projected 1/b² surface density profile */
+    /* For the framework, effective mass = m.mass * 1e11 * Msun */
+    const M_kg = m.mass * 1e11 * Msun;
+    /* Contribution to each bin: Σ(ξ) = M/(2π b²) smeared by galaxy extent.
+       Approximate galaxy as point: Σ_contribution to bin i at ξ_i:
+       use Σ = M*D_L² / (π * (ξ_phys)²) weighted by annulus solid angle */
+    for (let i = 0; i < nBins; i++) {
+      const xi = (i + 0.5) / nBins * maxR;  /* degrees */
+      const xi_rad = xi * Math.PI / 180;
+      const b_m = xi_rad * D_L;
+      /* Distance from this galaxy to ring at ξ: rough annular average */
+      const sep = Math.sqrt((xi - r)*(xi - r) + 0.01);
+      /* Weight by 1/sep² (point mass projected contribution) */
+      const dxi = maxR / nBins;
+      const ann_area = 2 * Math.PI * xi_rad * (dxi * Math.PI/180);  /* sr */
+      /* Mass projected into annulus: M * r_gal / (2π b²) * dΩ/dΩ_ann */
+      /* Simplified: just sum Σ = M/(2π b²) × correction */
+      const Sigma_here = M_kg / (2 * Math.PI * b_m * b_m + 1e10);
+      bins[i] += Sigma_here * ann_area;
+      binArea[i] += ann_area;
+    }
+  }
+
+  /* Normalise to κ = Σ/Σ_cr */
+  /* Find max κ for scaling */
+  let maxK = 0;
+  const kappa = new Float64Array(nBins);
+  for (let i = 0; i < nBins; i++) {
+    const Sigma_avg = binArea[i] > 0 ? bins[i] / binArea[i] : 0;
+    /* Total Σ summed from all galaxies */
+    kappa[i] = Sigma_avg / SIGMA_CR;
+    if (kappa[i] > maxK) maxK = kappa[i];
+  }
+
+  /* Recompute properly: for each annulus, sum all galaxy contributions */
+  const kappaFinal = new Float64Array(nBins);
+  for (let i = 0; i < nBins; i++) {
+    const xi = (i + 0.5) / nBins * maxR;
+    const xi_rad = xi * Math.PI / 180;
+    const b_m = xi_rad * D_L;
+    let sumSigma = 0;
+    for (const m of masses) {
+      const M_kg = m.mass * 1e11 * Msun;
+      const r_gal = Math.sqrt(m.ax*m.ax + m.ay*m.ay);
+      const r_gal_rad = r_gal * Math.PI / 180;
+      const b_gal = r_gal_rad * D_L;
+      /* Effective impact parameter: distance from galaxy to ring */
+      const beff = Math.max(b_m - b_gal, b_gal - b_m, 0.5 * (b_m + b_gal) * 0.01);
+      const buse = Math.sqrt(b_m*b_m + b_gal*b_gal - 2*b_m*b_gal*Math.cos(Math.PI/4) + 1e30);
+      /* Simple radial approximation: Σ(ξ) = M/(π b²) for point mass */
+      sumSigma += M_kg / (Math.PI * (b_m*b_m + b_gal*b_gal*0.1 + (50*MPC_M*0.001)**2));
+    }
+    kappaFinal[i] = sumSigma / SIGMA_CR;
+    if (kappaFinal[i] > maxK) maxK = kappaFinal[i];
+  }
+
+  if (maxK === 0) return;
+
+  /* Draw */
+  const pad = 18;
+  const pw = W - pad*2, ph2 = H - pad*2;
+
+  /* Axes */
+  cx2.strokeStyle = '#2a4060'; cx2.lineWidth = 0.5;
+  cx2.beginPath(); cx2.moveTo(pad,pad); cx2.lineTo(pad,H-pad); cx2.lineTo(W-pad,H-pad); cx2.stroke();
+  cx2.fillStyle = '#4a6a8a'; cx2.font = '9px monospace';
+  cx2.fillText('0', pad-8, H-pad+2);
+  cx2.fillText(maxR.toFixed(0)+'°', W-pad-8, H-pad+10);
+  cx2.fillText('κ', pad-14, pad+4);
+
+  /* Grid line at κ=1 */
+  const y1 = H - pad - (1/maxK)*ph2;
+  if (y1 > pad && y1 < H-pad) {
+    cx2.strokeStyle = '#ff444444'; cx2.lineWidth = 0.5; cx2.setLineDash([3,3]);
+    cx2.beginPath(); cx2.moveTo(pad, y1); cx2.lineTo(W-pad, y1); cx2.stroke();
+    cx2.setLineDash([]);
+    cx2.fillStyle = '#ff6666'; cx2.fillText('κ=1', W-pad-24, y1-2);
+  }
+
+  /* κ curve */
+  cx2.strokeStyle = '#00cccc'; cx2.lineWidth = 1.5;
+  cx2.beginPath();
+  for (let i = 0; i < nBins; i++) {
+    const x = pad + (i+0.5)/nBins * pw;
+    const y = H - pad - Math.min(kappaFinal[i]/maxK, 1) * ph2;
+    if (i===0) cx2.moveTo(x,y); else cx2.lineTo(x,y);
+  }
+  cx2.stroke();
+
+  /* Peak κ label */
+  cx2.fillStyle = '#00cccc'; cx2.font = '9px monospace';
+  cx2.fillText('peak κ='+maxK.toFixed(3), pad+2, pad+10);
+
+  document.getElementById('kappaInfo').textContent =
+    `Σ_cr = ${(SIGMA_CR/Msun*MPC_M*MPC_M).toExponential(2)} M☉/Mpc² · peak κ=${maxK.toFixed(3)}`;
+}
+
+/* Given apparent direction (thx,thy), find true source position.
+   Nearest-last composition: farthest sources act first on the ray,
+   nearest source acts last (on already-displaced medium).
+   Single pass: track closest mass, defer it, apply all others,
+   then apply the deferred nearest one at the end. */
+function applyDeflections(bx, by, profile, strength) {
+  if (masses.length === 0) return [0, 0];
+
+  /* Pass 1: find which mass is nearest to current ray position */
+  let nearestIdx = 0, nearestSep = Infinity;
+  for (let i = 0; i < masses.length; i++) {
+    const m = masses[i];
+    const dx = bx - m.ax, dy = by - m.ay;
+    const sep = Math.sqrt(dx*dx + dy*dy);
+    if (sep < nearestSep) { nearestSep = sep; nearestIdx = i; }
+  }
+
+  /* Pass 2: apply all except nearest first */
+  let ddx = 0, ddy = 0;
+  for (let i = 0; i < masses.length; i++) {
+    if (i === nearestIdx) continue;
+    const m = masses[i];
+    const dx = bx - m.ax, dy = by - m.ay;
+    const sep_deg = Math.sqrt(dx*dx + dy*dy);
+    if (sep_deg < 1e-8) continue;
+    const alpha_deg = deflectRad(sep_deg * Math.PI/180, m.mass, profile, strength) * 180/Math.PI;
+    ddx += alpha_deg * (dx/sep_deg);
+    ddy += alpha_deg * (dy/sep_deg);
+  }
+
+  /* Apply nearest last */
+  const mn = masses[nearestIdx];
+  const ndx = bx - mn.ax, ndy = by - mn.ay;
+  const nsep = Math.sqrt(ndx*ndx + ndy*ndy);
+  if (nsep > 1e-8) {
+    const alpha_deg = deflectRad(nsep * Math.PI/180, mn.mass, profile, strength) * 180/Math.PI;
+    ddx += alpha_deg * (ndx/nsep);
+    ddy += alpha_deg * (ndy/nsep);
+  }
+  return [ddx, ddy];
+}
+
+function trueFromApparent(thx, thy, profile, strength) {
+  let bx = thx, by = thy;
+  for (let iter = 0; iter < 4; iter++) {
+    const [ddx, ddy] = applyDeflections(bx, by, profile, strength);
+    bx = thx - ddx;
+    by = thy - ddy;
+  }
+  return [bx, by];
+}
+
+/* ── Gnomonic (tangent-plane) projection ──
+   Maps (lon, lat) in degrees to pixel (u, v) centred at (0,0), scale = pix/deg */
+function gnomonic(ax, ay, scale) {
+  /* For small angles this is nearly identity scaled.
+     For full gnomonic: x = cos(lat)*sin(lon-lon0) / [...], y = ... 
+     We use the small-angle limit since FOV ≤ 90°, but with cos correction. */
+  const lon = ax * Math.PI / 180;
+  const lat = ay * Math.PI / 180;
+  const cosLat = Math.cos(lat), sinLat = Math.sin(lat);
+  const cosLon = Math.cos(lon);
+  /* Gnomonic: project onto tangent plane at (0,0) */
+  const denom = cosLat * cosLon;
+  if (denom <= 0) return null;
+  const X = cosLat * Math.sin(lon) / denom;
+  const Y = sinLat / denom;
+  return [X * scale, -Y * scale];  /* -Y because canvas Y is down */
+}
+
+/* Inverse gnomonic: pixel offset → angular (degrees) */
+function invGnomonic(px, py, scale) {
+  const X = px / scale, Y = -py / scale;  /* tangent plane coords */
+  const rho = Math.sqrt(X * X + Y * Y);
+  const c = Math.atan(rho);
+  const lat = Math.asin(Math.cos(c));  /* since centre is at lat=0 */
+  const lon = Math.atan2(X, Math.cos(c));
+  return [lon * 180 / Math.PI, lat * 180 / Math.PI];
+}
+
+/* ── Rendering ── */
+let raf = null;
+function go() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
+
+function draw() {
+  const W = cv.offsetWidth, H = cv.offsetHeight;
+  const dpr = devicePixelRatio;
+  const pw = Math.ceil(W * dpr), ph = Math.ceil(H * dpr);
+  if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
+
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const gspAs = parseFloat(document.getElementById('gsp').value);  /* arcsec */
+  const gspDeg = gspAs / 3600;
+  const STEPS = parseInt(document.getElementById('lsteps').value);
+  const prof = document.getElementById('prof').value;
+  const str = parseFloat(document.getElementById('str').value);
+  const exag = parseFloat(document.getElementById('exag').value);
+  const showRed = document.getElementById('chkRed').checked;
+  const showCyan = document.getElementById('chkCyan').checked;
+  const showM = document.getElementById('chkM').checked;
+  const showCaus = document.getElementById('chkCaus').checked;
+
+  document.getElementById('mb').textContent = prof + (exag > 1 ? `  ×${exag.toFixed(0)} exag` : '');
+
+  /* pixels per radian at centre */
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const halfPx = Math.min(pw, ph) / 2;
+  const scale = halfPx / Math.tan(halfFovRad);   /* pix per radian */
+  const scaleDeg = scale * Math.PI / 180;         /* pix per degree */
+  const scaleAs = scaleDeg / 3600;               /* pix per arcsec */
+
+  /* FOV badge — show canvas angular size and pixel scale */
+  {
+    const fovAs = fovDeg * 3600;
+    const fovW = fovDeg * (pw / Math.min(pw, ph));   /* width FOV in deg */
+    const fovH = fovDeg * (ph / Math.min(pw, ph));
+    function fmtA(deg) {
+      const as = deg * 3600;
+      if (as < 60)   return as.toFixed(1) + '″';
+      if (as < 3600) return (as/60).toFixed(2) + '′';
+      return deg.toFixed(2) + '°';
+    }
+    const pxScale = 1 / scaleAs;  /* arcsec per pixel (CSS) */
+    document.getElementById('fovbadge').innerHTML =
+      `view&nbsp;${fmtA(fovW)} × ${fmtA(fovH)}<br>` +
+      `${pxScale < 1 ? (1/pxScale).toFixed(1)+'px/″' : pxScale.toFixed(2)+'″/px'}` +
+      (exag > 1 ? `&nbsp;&nbsp;<span style="color:#ffcc44">displ ×${exag.toFixed(0)}</span>` : '');
+  }
+
+  cx.fillStyle = '#06080f';
+  cx.fillRect(0, 0, pw, ph);
+
+  const OX = pw / 2, OY = ph / 2;
+
+  /* Grid range: centred on pan position */
+  const rangeX = fovDeg * 1.3, rangeY = fovDeg * 1.3;
+  const minLon = panLon - rangeX, maxLon = panLon + rangeX;
+  const minLat = panLat - rangeY, maxLat = panLat + rangeY;
+
+  const PROF_COLS = { GR: '#00cccc', Newton: '#ffaa22', HPF: '#9933ff' };
+  const lensCol = PROF_COLS[prof];
+
+  /* Snap grid lines to spacing */
+  function gridLines(dir) {
+    const lo = dir === 'lon' ? minLon : minLat;
+    const hi = dir === 'lon' ? maxLon : maxLat;
+    const lines = [];
+    const first = Math.ceil(lo / gspDeg) * gspDeg;
+    for (let v = first; v <= hi + 0.0001; v += gspDeg) lines.push(v);
+    return lines;
+  }
+
+  /* Gnomonic relative to pan centre */
+  function gnom(lon, lat) {
+    /* shift so pan centre maps to canvas centre */
+    const dlon = (lon - panLon) * Math.PI / 180;
+    const dlat = (lat - panLat) * Math.PI / 180;
+    /* small-angle gnomonic from pan centre */
+    const cosLat = Math.cos(dlat), sinLat = Math.sin(dlat);
+    const cosLon = Math.cos(dlon);
+    const denom = cosLat * cosLon;
+    if (denom <= 0.01) return null;
+    const X = cosLat * Math.sin(dlon) / denom;
+    const Y = sinLat / denom;
+    return [OX + X * scale, OY - Y * scale];
+  }
+
+  /* Gnomonic relative to pan centre — exaggerated version for mass display */
+  function gnomExag(lon, lat, selfIdx) {
+    /* Compute apparent position of (lon,lat) after deflection by all masses
+       except selfIdx (to avoid self-lensing). Same transform as grid points. */
+    let appLon = lon, appLat = lat;
+    if (masses.length > 0) {
+      /* Find nearest other mass */
+      let nearestIdx = -1, nearestSep = Infinity;
+      for (let mi = 0; mi < masses.length; mi++) {
+        if (mi === selfIdx) continue;
+        const dx = lon - masses[mi].ax, dy = lat - masses[mi].ay;
+        const sep = Math.sqrt(dx*dx + dy*dy);
+        if (sep < nearestSep) { nearestSep = sep; nearestIdx = mi; }
+      }
+      /* Apply all except nearest first */
+      for (let mi = 0; mi < masses.length; mi++) {
+        if (mi === selfIdx || mi === nearestIdx) continue;
+        const m = masses[mi];
+        const dx = lon - m.ax, dy = lat - m.ay;
+        const sep_deg = Math.sqrt(dx*dx + dy*dy);
+        if (sep_deg < 1e-8) continue;
+        const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str) * 180/Math.PI;
+        const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+        const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+        appLon += visual_deg*(dx/sep_deg);
+        appLat += visual_deg*(dy/sep_deg);
+      }
+      /* Apply nearest last */
+      if (nearestIdx >= 0) {
+        const m = masses[nearestIdx];
+        const dx = lon - m.ax, dy = lat - m.ay;
+        const sep_deg = Math.sqrt(dx*dx + dy*dy);
+        if (sep_deg > 1e-8) {
+          const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str) * 180/Math.PI;
+          const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+          const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+          appLon += visual_deg*(dx/sep_deg);
+          appLat += visual_deg*(dy/sep_deg);
+        }
+      }
+    }
+    return gnom(appLon, appLat);
+  }
+
+  function drawGridLine(fixedVal, axis, redOrCyan) {
+    const isLon = axis === 'lon';
+    const lo = isLon ? minLat : minLon;
+    const hi = isLon ? maxLat : maxLon;
+    const step = (hi - lo) / STEPS;
+
+    cx.beginPath();
+    let first = true;
+    for (let i = 0; i <= STEPS; i++) {
+      const t = lo + i * step;
+      const lon = isLon ? fixedVal : t;
+      const lat = isLon ? t : fixedVal;
+
+      let px, py;
+      if (redOrCyan === 'red') {
+        /* Unlensed: (lon,lat) is apparent = true, project directly */
+        const g = gnom(lon, lat);
+        if (!g) { first = true; continue; }
+        [px, py] = g;
+      } else {
+        /* Lensed grid — Eddington 1919 geometry:
+           θ_apparent = β_true + α(β) * (β−mass)/|β−mass|
+           
+           Clamp: α is unphysical inside the Einstein radius (strong lensing
+           regime, multiple images, caustics). We clamp the raw deflection to
+           sep so the apparent position never overshoots past the mass centre.
+           With exaggeration we additionally clamp the visual displacement to
+           sep so exaggerated lines don't blow through to the other side.
+           Points where the true unexaggerated α > sep*0.9 are inside or very
+           near the Einstein radius — break the path there (lift pen) so no
+           spurious lines cross through the mass.
+        */
+        let appLon = lon, appLat = lat;
+        let nearSingularity = false;
+
+        /* Two-pass nearest-last composition */
+        /* Pass 1: find nearest mass to this grid point */
+        let nearestIdx2 = -1, nearestSep2 = Infinity;
+        for (let mi = 0; mi < masses.length; mi++) {
+          const m = masses[mi];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep = Math.sqrt(dx*dx + dy*dy);
+          if (sep < nearestSep2) { nearestSep2 = sep; nearestIdx2 = mi; }
+        }
+
+        /* Pass 2: apply all except nearest first */
+        for (let mi = 0; mi < masses.length; mi++) {
+          if (mi === nearestIdx2) continue;
+          const m = masses[mi];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg < 1e-8) { nearSingularity = true; break; }
+          const alpha_raw = deflectRad(sep_deg * Math.PI/180, m.mass, prof, str) * 180/Math.PI;
+          if (alpha_raw >= sep_deg * 0.85) { nearSingularity = true; break; }
+          const alpha_deg = Math.min(alpha_raw, sep_deg * 0.99);
+          const visual_deg = Math.min(alpha_deg * exag, sep_deg * 0.99);
+          appLon += visual_deg * (dx/sep_deg);
+          appLat += visual_deg * (dy/sep_deg);
+        }
+
+        /* Apply nearest last */
+        if (!nearSingularity && nearestIdx2 >= 0) {
+          const mn = masses[nearestIdx2];
+          const dx = lon - mn.ax, dy = lat - mn.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg < 1e-8) { nearSingularity = true; }
+          else {
+            const alpha_raw = deflectRad(sep_deg * Math.PI/180, mn.mass, prof, str) * 180/Math.PI;
+            if (alpha_raw >= sep_deg * 0.85) { nearSingularity = true; }
+            else {
+              const alpha_deg = Math.min(alpha_raw, sep_deg * 0.99);
+              const visual_deg = Math.min(alpha_deg * exag, sep_deg * 0.99);
+              appLon += visual_deg * (dx/sep_deg);
+              appLat += visual_deg * (dy/sep_deg);
+            }
+          }
+        }
+        if (nearSingularity) { first = true; continue; }
+        const g = gnom(appLon, appLat);
+        if (!g) { first = true; continue; }
+        [px, py] = g;
+      }
+
+      if (first) { cx.moveTo(px, py); first = false; }
+      else cx.lineTo(px, py);
+    }
+    cx.stroke();
+  }
+
+  /* Red unlensed grid */
+  if (showRed) {
+    cx.strokeStyle = 'rgba(255,60,60,0.45)';
+    cx.lineWidth = 0.7 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'red');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
+  }
+
+  /* Lensed grid */
+  if (showCyan && masses.length > 0) {
+    cx.strokeStyle = lensCol + 'cc';
+    cx.lineWidth = 1.1 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'cyan');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'cyan');
+  } else if (showCyan) {
+    cx.strokeStyle = lensCol + '44';
+    cx.lineWidth = 0.8 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'red');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
+  }
+
+  /* Caustic / weak-lensing diagnostic overlay.
+     Modes:
+       det   = strict critical curve, det(A)=0
+       near  = amplified near-critical scalar, -log10(|det(A)|+eps)
+       shear = weak-lensing shear magnitude from the Jacobian
+       kappa = convergence proxy from div(alpha)/2
+     This is a diagnostic layer only; it is intentionally separate from the
+     visual displacement exaggeration used for the grid. */
+  if (showCaus && masses.length > 0) {
+    const mode = document.getElementById('causMode').value;
+    const gain = parseFloat(document.getElementById('causGain').value);
+    const CS = parseInt(document.getElementById('causRes').value);
+    const csW = CS, csH = Math.max(20, Math.round(CS * ph / pw));
+    const detField = new Float32Array(csW * csH);
+    const shearField = new Float32Array(csW * csH);
+    const kappaField = new Float32Array(csW * csH);
+    const nearField = new Float32Array(csW * csH);
+    /* Match the actual gnomonic view footprint, so diagnostics stay attached
+       to sky coordinates while panning instead of behaving like a screen-space texture. */
+    const viewDegX = fovDeg * (pw / Math.min(pw, ph));
+    const viewDegY = fovDeg * (ph / Math.min(pw, ph));
+    const dLon = viewDegX / (csW-1);
+    const dLat = viewDegY / (csH-1);
+    const eps = Math.max(Math.min(dLon, dLat) * 1.5, 1e-5);  /* degrees; stable numerical gradient */
+    const sampleLon = ix => panLon + (ix/(csW-1) - 0.5) * viewDegX;
+    const sampleLat = iy => panLat + (iy/(csH-1) - 0.5) * viewDegY;
+    const sampleToScreen = (ixf, iyf) => gnom(sampleLon(ixf), sampleLat(iyf));
+    const moveLine = (p0, p1) => {
+      if (!p0 || !p1) return;
+      cx.moveTo(p0[0], p0[1]);
+      cx.lineTo(p1[0], p1[1]);
+    };
+    const fillSampleCell = (ix, iy) => {
+      const p00 = sampleToScreen(ix, iy);
+      const p10 = sampleToScreen(ix+1, iy);
+      const p11 = sampleToScreen(ix+1, iy+1);
+      const p01 = sampleToScreen(ix, iy+1);
+      if (!p00 || !p10 || !p11 || !p01) return;
+      cx.beginPath();
+      cx.moveTo(p00[0], p00[1]);
+      cx.lineTo(p10[0], p10[1]);
+      cx.lineTo(p11[0], p11[1]);
+      cx.lineTo(p01[0], p01[1]);
+      cx.closePath();
+      cx.fill();
+    };
+
+    const getDefl = (lon, lat) => {
+      let ddx = 0, ddy = 0;
+      let ni = -1, ns = Infinity;
+      for (let mi = 0; mi < masses.length; mi++) {
+        const dx = lon-masses[mi].ax, dy = lat-masses[mi].ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s < ns) { ns = s; ni = mi; }
+      }
+      for (let mi = 0; mi < masses.length; mi++) {
+        if (mi === ni) continue;
+        const m = masses[mi];
+        const dx = lon-m.ax, dy = lat-m.ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s < 1e-8) return [ddx,ddy];
+        const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+        ddx += a*(dx/s); ddy += a*(dy/s);
+      }
+      if (ni >= 0) {
+        const m = masses[ni];
+        const dx = lon-m.ax, dy = lat-m.ay;
+        const s = Math.sqrt(dx*dx+dy*dy);
+        if (s > 1e-8) {
+          const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          ddx += a*(dx/s); ddy += a*(dy/s);
+        }
+      }
+      return [ddx, ddy];
+    };
+
+    let detMin = Infinity, detMax = -Infinity, nNeg = 0, nPos = 0;
+    let maxShear = 0, maxKappa = 0, maxNear = 0;
+
+    for (let iy = 0; iy < csH; iy++) {
+      for (let ix = 0; ix < csW; ix++) {
+        const lon = sampleLon(ix);
+        const lat = sampleLat(iy);
+        const [d00x,d00y] = getDefl(lon, lat);
+        const [d10x,d10y] = getDefl(lon+eps, lat);
+        const [d01x,d01y] = getDefl(lon, lat+eps);
+
+        /* Gradient of deflection alpha(theta), in degree/degree. */
+        const ax_x = (d10x-d00x)/eps;
+        const ay_x = (d10y-d00y)/eps;
+        const ax_y = (d01x-d00x)/eps;
+        const ay_y = (d01y-d00y)/eps;
+
+        /* A = I - d(alpha)/d(theta). */
+        const A11 = 1 - ax_x;
+        const A12 =   - ax_y;
+        const A21 =   - ay_x;
+        const A22 = 1 - ay_y;
+        const detA = A11*A22 - A12*A21;
+
+        const kappa = 0.5 * (ax_x + ay_y);
+        const gamma1 = 0.5 * (ax_x - ay_y);
+        const gamma2 = 0.5 * (ax_y + ay_x);
+        const shear = Math.sqrt(gamma1*gamma1 + gamma2*gamma2);
+        const near = -Math.log10(Math.abs(detA) + 1e-5);
+        const idx = iy*csW+ix;
+        detField[idx] = detA;
+        shearField[idx] = shear;
+        kappaField[idx] = kappa;
+        nearField[idx] = near;
+
+        if (detA < detMin) detMin = detA;
+        if (detA > detMax) detMax = detA;
+        if (detA < 0) nNeg++; else nPos++;
+        if (shear > maxShear) maxShear = shear;
+        if (Math.abs(kappa) > maxKappa) maxKappa = Math.abs(kappa);
+        if (near > maxNear) maxNear = near;
+      }
+    }
+
+    /* Screen positions are generated through gnomonic projection from sampled
+       sky coordinates.  Do not use fixed pixel cells here; that was what made
+       the diagnostic overlay fail to translate correctly during pan. */
+
+    /* Heat overlay for non-strict modes. */
+    if (mode !== 'det') {
+      let field = nearField, maxVal = maxNear, label = 'near';
+      if (mode === 'shear') { field = shearField; maxVal = maxShear; label = 'shear'; }
+      if (mode === 'kappa') { field = kappaField; maxVal = maxKappa; label = 'kappa'; }
+      if (maxVal > 0) {
+        for (let iy = 0; iy < csH-1; iy++) {
+          for (let ix = 0; ix < csW-1; ix++) {
+            const idx = iy*csW+ix;
+            const raw = mode === 'kappa' ? Math.abs(field[idx]) : field[idx];
+            const q = Math.max(0, Math.min(1, raw / (maxVal / Math.max(gain, 0.5))));
+            if (q < 0.015) continue;
+            const a = Math.min(0.62, 0.07 + q * 0.55);
+            let rr=160, gg=70, bb=255;
+            if (mode === 'shear') { rr=0; gg=220; bb=210; }
+            if (mode === 'kappa') { rr=255; gg=190; bb=40; }
+            cx.fillStyle = `rgba(${rr},${gg},${bb},${a.toFixed(3)})`;
+            fillSampleCell(ix, iy);
+          }
+        }
+      }
+
+      /* Contour high scalar values. */
+      const zcVal = (va,vb,a,b,level) => (va>=level)===(vb>=level) ? null : a+(b-a)*(level-va)/(vb-va);
+      const drawScalarContours = (levels) => {
+        levels.forEach((level, li) => {
+          const alpha = 0.85 - li * 0.12;
+          if (mode === 'shear') cx.strokeStyle = `rgba(0,255,230,${alpha})`;
+          else if (mode === 'kappa') cx.strokeStyle = `rgba(255,220,60,${alpha})`;
+          else cx.strokeStyle = `rgba(210,120,255,${alpha})`;
+          cx.lineWidth = (1.0 + li*0.15) * dpr;
+          cx.beginPath();
+          for (let iy = 0; iy < csH-1; iy++) {
+            for (let ix = 0; ix < csW-1; ix++) {
+              const f = (j,k) => {
+                const v = field[j*csW+k];
+                return mode === 'kappa' ? Math.abs(v) : v;
+              };
+              const v00=f(iy,ix), v10=f(iy,ix+1), v01=f(iy+1,ix), v11=f(iy+1,ix+1);
+              const T=zcVal(v00,v10,ix,ix+1,level); const R=zcVal(v10,v11,iy,iy+1,level);
+              const B=zcVal(v01,v11,ix,ix+1,level); const L=zcVal(v00,v01,iy,iy+1,level);
+              const pts=[];
+              if(T!==null) pts.push(sampleToScreen(T,iy));
+              if(R!==null) pts.push(sampleToScreen(ix+1,R));
+              if(B!==null) pts.push(sampleToScreen(B,iy+1));
+              if(L!==null) pts.push(sampleToScreen(ix,L));
+              const good=pts.filter(p=>p);
+              if(good.length>=2) moveLine(good[0], good[1]);
+            }
+          }
+          cx.stroke();
+        });
+      };
+      if (maxVal > 0) {
+        drawScalarContours([0.30,0.50,0.70,0.88].map(x => maxVal * x / Math.max(1, gain/8)));
+      }
+      cx.fillStyle = 'rgba(220,230,255,0.9)';
+      cx.font = `${Math.round(10*dpr)}px monospace`;
+      cx.fillText(`${label}: gain=${gain.toFixed(1)} max=${maxVal.toExponential(2)} det[${detMin.toFixed(3)},${detMax.toFixed(3)}]`, 6*dpr, ph - 32*dpr);
+    }
+
+    /* Strict critical curve: det(A)=0. Draw it for det mode, and faintly over all modes. */
+    const zc = (va,vb,a,b) => (va>0)===(vb>0) ? null : a+(b-a)*va/(va-vb);
+    cx.strokeStyle = mode === 'det' ? 'rgba(235,120,255,0.95)' : 'rgba(235,120,255,0.35)';
+    cx.lineWidth = (mode === 'det' ? 1.6 : 0.8) * dpr;
+    cx.beginPath();
+    for (let iy = 0; iy < csH-1; iy++) {
+      for (let ix = 0; ix < csW-1; ix++) {
+        const v00=detField[ iy   *csW+ ix  ];
+        const v10=detField[ iy   *csW+(ix+1)];
+        const v01=detField[(iy+1)*csW+ ix  ];
+        const v11=detField[(iy+1)*csW+(ix+1)];
+        const s00=v00>0, s10=v10>0, s01=v01>0, s11=v11>0;
+        if (s00===s10 && s00===s01 && s00===s11) continue;
+        const tT=zc(v00,v10,ix,ix+1), tR=zc(v10,v11,iy,iy+1);
+        const tB=zc(v01,v11,ix,ix+1), tL=zc(v00,v01,iy,iy+1);
+        const pts=[];
+        if(tT!==null) pts.push(sampleToScreen(tT,iy));
+        if(tR!==null) pts.push(sampleToScreen(ix+1,tR));
+        if(tB!==null) pts.push(sampleToScreen(tB,iy+1));
+        if(tL!==null) pts.push(sampleToScreen(ix,tL));
+        const good=pts.filter(p=>p);
+        if (good.length >= 2) moveLine(good[0], good[1]);
+      }
+    }
+    cx.stroke();
+
+    if (mode === 'det') {
+      cx.fillStyle = 'rgba(235,120,255,0.9)';
+      cx.font = `${Math.round(10*dpr)}px monospace`;
+      cx.fillText(`critical det: min=${detMin.toFixed(4)} max=${detMax.toFixed(4)} neg=${nNeg} pos=${nPos}`, 6*dpr, ph - 32*dpr);
+    }
+  }
+
+  /* Iso-displacement: concentric circles in angle-space, displaced by lensing */
+  const showIso = document.getElementById('chkIso').checked;
+  if (showIso && masses.length > 0) {
+    /* Circle radii: log-spaced from small to large in degrees */
+    const nCircles = 10;
+    const nPts = 180;  /* points per circle */
+    const minR = gspDeg * 0.5;
+    const maxR = fovDeg * 0.9;
+
+    cx.lineWidth = 1.0 * dpr;
+
+    for (let ci = 0; ci < nCircles; ci++) {
+      const t = ci / (nCircles - 1);
+      const r = minR * Math.pow(maxR / minR, t);  /* log spacing */
+
+      cx.beginPath();
+      let firstPt = true;
+
+      for (let pi = 0; pi <= nPts; pi++) {
+        const angle = (pi / nPts) * 2 * Math.PI;
+        /* Point on circle in angle-space, centred on pan centre */
+        const lon = panLon + r * Math.cos(angle);
+        const lat = panLat + r * Math.sin(angle);
+
+        /* Apply lensed displacement — nearest-last, physical (no exag) */
+        let appLon = lon, appLat = lat;
+        let nearestIdx4 = -1, nearestSep4 = Infinity;
+        for (let mi = 0; mi < masses.length; mi++) {
+          const dx = lon - masses[mi].ax, dy = lat - masses[mi].ay;
+          const sep = Math.sqrt(dx*dx + dy*dy);
+          if (sep < nearestSep4) { nearestSep4 = sep; nearestIdx4 = mi; }
+        }
+        for (let mi = 0; mi < masses.length; mi++) {
+          if (mi === nearestIdx4) continue;
+          const m = masses[mi];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg < 1e-8) continue;
+          const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+          const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+          appLon += visual_deg*(dx/sep_deg);
+          appLat += visual_deg*(dy/sep_deg);
+        }
+        if (nearestIdx4 >= 0) {
+          const m = masses[nearestIdx4];
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx*dx + dy*dy);
+          if (sep_deg > 1e-8) {
+            const alpha_raw = deflectRad(sep_deg*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+            const alpha_deg = Math.min(alpha_raw, sep_deg*0.99);
+            const visual_deg = Math.min(alpha_deg*exag, sep_deg*0.99);
+            appLon += visual_deg*(dx/sep_deg);
+            appLat += visual_deg*(dy/sep_deg);
+          }
+        }
+
+        const g = gnom(appLon, appLat);
+        if (!g) { firstPt = true; continue; }
+        const [px2, py2] = g;
+        if (firstPt) { cx.moveTo(px2, py2); firstPt = false; }
+        else cx.lineTo(px2, py2);
+      }
+
+      /* White, fading slightly for outer rings */
+      const alpha2 = 0.65 - t * 0.25;
+      cx.strokeStyle = `rgba(255,255,255,${alpha2.toFixed(2)})`;
+      cx.stroke();
+    }
+  }
+
+  /* Iso-displacement κ contours — marching squares in angle space */
+  const showKappaIso = document.getElementById('chkKappaIso').checked;
+  if (showKappaIso && masses.length > 0) {
+    /* Bbox from true mass positions */
+    let mMinLon=Infinity, mMaxLon=-Infinity, mMinLat=Infinity, mMaxLat=-Infinity;
+    let maxMass = 0;
+    for (const m of masses) {
+      if (m.ax<mMinLon) mMinLon=m.ax; if (m.ax>mMaxLon) mMaxLon=m.ax;
+      if (m.ay<mMinLat) mMinLat=m.ay; if (m.ay>mMaxLat) mMaxLat=m.ay;
+      if (m.mass > maxMass) maxMass = m.mass;
+    }
+    const M_kg_max = maxMass * 1e11 * Msun;
+    const tE_min = Math.sqrt(4*G*M_kg_max*D_LS/(C*C*D_L*D_S)) * 180/Math.PI;
+    const mSpan = Math.max(mMaxLon-mMinLon, mMaxLat-mMinLat, tE_min * 20, 0.05);
+    const bpad = mSpan * 2.5;
+    const sMinLon = Math.max(mMinLon-bpad, panLon-fovDeg);
+    const sMaxLon = Math.min(mMaxLon+bpad, panLon+fovDeg);
+    const sMinLat = Math.max(mMinLat-bpad, panLat-fovDeg);
+    const sMaxLat = Math.min(mMaxLat+bpad, panLat+fovDeg);
+    const sSpanX = sMaxLon-sMinLon, sSpanY = sMaxLat-sMinLat;
+    /* Mass barycentre — field sampled here, gnom projects relative to panLon/panLat */
+    const cLon = (sMinLon + sMaxLon) * 0.5;
+    const cLat = (sMinLat + sMaxLat) * 0.5;
+
+    const ISO_MAX = parseInt(document.getElementById('isoRes').value);
+    const isoW2 = ISO_MAX;
+    const isoH2 = Math.round(ISO_MAX * ph / pw);
+    const field2 = new Float32Array(isoW2 * isoH2);
+
+    for (let iy = 0; iy < isoH2; iy++) {
+      for (let ix = 0; ix < isoW2; ix++) {
+        /* True position in bbox */
+        const lon0 = cLon + (ix/(isoW2-1) - 0.5) * sSpanX;
+        const lat0 = cLat + (iy/(isoH2-1) - 0.5) * sSpanY;
+
+        /* Apply exag deflection — same as grid drawing — to get apparent position */
+        let appLon = lon0, appLat = lat0;
+        let ni = -1, ns = Infinity;
+        for (let mi = 0; mi < masses.length; mi++) {
+          const dx = lon0 - masses[mi].ax, dy = lat0 - masses[mi].ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s < ns) { ns = s; ni = mi; }
+        }
+        for (let mi = 0; mi < masses.length; mi++) {
+          if (mi === ni) continue;
+          const m = masses[mi];
+          const dx = lon0 - m.ax, dy = lat0 - m.ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s < 1e-8) continue;
+          const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+          appLon += a*(dx/s); appLat += a*(dy/s);
+        }
+        if (ni >= 0) {
+          const m = masses[ni];
+          const dx = lon0 - m.ax, dy = lat0 - m.ay;
+          const s = Math.sqrt(dx*dx+dy*dy);
+          if (s > 1e-8) {
+            const a = deflectRad(s*Math.PI/180, m.mass, prof, str)*180/Math.PI;
+            appLon += a*(dx/s); appLat += a*(dy/s);
+          }
+        }
+        field2[iy*isoW2+ix] = Math.sqrt((appLon-lon0)**2+(appLat-lat0)**2)*3600;
+      }
+    }
+
+    let maxF = 0;
+    for (let i = 0; i < field2.length; i++) if (field2[i] > maxF) maxF = field2[i];
+
+    if (maxF > 0) {
+      const minF = maxF * 0.005;
+      const nLev = 24;
+      const levels2 = [];
+      for (let i = 0; i < nLev; i++) {
+        const t = 1 - Math.pow(i/(nLev-1), 0.5);  /* high displacement first = inner */
+        levels2.push(minF * Math.pow(maxF/minF, t));
+      }
+
+      /* Marching squares — contour positions project directly via gnom */
+      const lp = (a,b,va,vb,lev) => Math.abs(vb-va)<1e-12 ? a : a+(b-a)*(lev-va)/(vb-va);
+      const isoScl = parseFloat(document.getElementById('isoScl').value);
+      const ep = (ax,ay,bx,by,va,vb,lev) => {
+        const t2 = Math.abs(vb-va)<1e-12 ? 0.5 : (lev-va)/(vb-va);
+        const fx = ax+(bx-ax)*t2, fy = ay+(by-ay)*t2;
+        const lon = cLon + (fx/(isoW2-1) - 0.5) * sSpanX;
+        const lat = cLat + (fy/(isoH2-1) - 0.5) * sSpanY;
+        const g = gnom(lon, lat);
+        if (!g) return null;
+        const gc = gnom(cLon, cLat);
+        const ox = gc ? gc[0] : OX, oy = gc ? gc[1] : OY;
+        return [ox + (g[0]-ox)*isoScl, oy + (g[1]-oy)*isoScl];
+      };
+
+      for (let li = 0; li < nLev; li++) {
+        const level = levels2[li];
+        const t = li/(nLev-1);
+        const br = Math.round(180 + 75*(1-t));
+        cx.strokeStyle = `rgba(${br},${br},0,${0.8-t*0.3})`;
+        cx.lineWidth = 1.0 * dpr;
+        cx.beginPath();
+
+        for (let iy = 0; iy < isoH2-1; iy++) {
+          for (let ix = 0; ix < isoW2-1; ix++) {
+            const v00=field2[ iy   *isoW2+ ix  ], v10=field2[ iy   *isoW2+(ix+1)];
+            const v01=field2[(iy+1)*isoW2+ ix  ], v11=field2[(iy+1)*isoW2+(ix+1)];
+            const c=((v00>=level)?8:0)|((v10>=level)?4:0)|((v11>=level)?2:0)|((v01>=level)?1:0);
+            if (c===0||c===15) continue;
+            const T=ep(ix,iy,ix+1,iy,v00,v10,level);
+            const R=ep(ix+1,iy,ix+1,iy+1,v10,v11,level);
+            const B=ep(ix,iy+1,ix+1,iy+1,v01,v11,level);
+            const L=ep(ix,iy,ix,iy+1,v00,v01,level);
+            const segs={1:[L,B],2:[B,R],3:[L,R],4:[T,R],6:[T,B],7:[T,L],
+                        8:[T,L],9:[T,B],11:[T,R],12:[L,R],13:[B,R],14:[L,B]};
+            let seg=segs[c];
+            if(c===5)  seg=(v00+v11>=v10+v01)?[T,R,null,L,B]:[T,L,null,R,B];
+            if(c===10) seg=(v00+v11>=v10+v01)?[T,L,null,R,B]:[T,R,null,L,B];
+            if(!seg) continue;
+            for(let si=0;si<seg.length;si+=2){
+              if(!seg[si]||!seg[si+1]) continue;
+              if(!seg[si][0]||!seg[si+1][0]) continue;
+              cx.moveTo(seg[si][0],seg[si][1]);
+              cx.lineTo(seg[si+1][0],seg[si+1][1]);
+            }
+          }
+        }
+        cx.stroke();
+      }
+      cx.fillStyle='rgba(255,255,0,0.7)';
+      cx.font=`${Math.round(9*dpr)}px monospace`;
+      cx.fillText(`iso-κ peak=${maxF.toFixed(2)}″`, 6*dpr, ph-6*dpr);
+    }
+  }
+
+  /* Mass discs */
+  if (showM) {
+    masses.forEach((m, selfIdx) => {
+      const g = gnomExag(m.ax, m.ay, selfIdx);
+      if (!g) return;
+      const [mx, my] = g;
+      const r = 0.25 * (3 + Math.log10(Math.max(m.mass, 0.1) + 1) * 8) * dpr;
+      const col = TYPE_COL[m.type];
+
+      /* Einstein radius ring */
+      const M_kg = m.mass * 1e11 * Msun;
+      const tE_rad = Math.sqrt(4 * G * M_kg * D_LS / (C * C * D_L * D_S));
+      const tE_deg = tE_rad * 180 / Math.PI;
+      const rE_px = tE_deg * scaleDeg;
+      if (rE_px > 2 && rE_px < pw) {
+        cx.beginPath(); cx.arc(mx, my, rE_px, 0, Math.PI * 2);
+        cx.strokeStyle = col + '50'; cx.lineWidth = 0.8 * dpr;
+        cx.setLineDash([4 * dpr, 3 * dpr]); cx.stroke(); cx.setLineDash([]);
+      }
+
+      /* glow */
+      const grad = cx.createRadialGradient(mx, my, r * 0.2, mx, my, r * 2.5);
+      grad.addColorStop(0, col + 'cc'); grad.addColorStop(1, col + '00');
+      cx.beginPath(); cx.arc(mx, my, r * 2.5, 0, Math.PI * 2);
+      cx.fillStyle = grad; cx.fill();
+      /* core */
+      cx.beginPath(); cx.arc(mx, my, r, 0, Math.PI * 2);
+      cx.fillStyle = col + 'ee'; cx.fill();
+      /* mass label — white, readable */
+      const fs = Math.round(12 * dpr);
+      cx.font = `${fs}px monospace`;
+      cx.fillStyle = '#ffffff';
+      cx.fillText(`${m.mass.toFixed(1)}e11 M☉`, mx + r + 4, my + 2);
+      /* type label — cyan/green */
+      const fs2 = Math.round(11 * dpr);
+      cx.font = `${fs2}px monospace`;
+      cx.fillStyle = m.type === 'dark' ? '#40e8c0' : m.type === 'bary' ? '#60ffaa' : '#88ffdd';
+      cx.fillText(m.type, mx + r + 4, my + fs2 + 4);
+    });
+  }
+
+  /* Centre crosshair */
+  cx.strokeStyle = '#2a4060'; cx.lineWidth = 0.8;
+  cx.beginPath(); cx.moveTo(OX - 12, OY); cx.lineTo(OX + 12, OY); cx.stroke();
+  cx.beginPath(); cx.moveTo(OX, OY - 12); cx.lineTo(OX, OY + 12); cx.stroke();
+}
+
+/* ── Helpers ── */
+function sv(el, id) {
+  const v = parseFloat(el.value);
+  document.getElementById(id).textContent = (el.step === '1' && v >= 10) ? v.toFixed(0) : v.toFixed(1);
+}
+
+function syncGsp(el) {
+  const as = parseFloat(el.value);  /* value in arcsec */
+  let txt;
+  if (as < 60)        txt = as.toFixed(0) + '″';
+  else if (as < 3600) txt = (as / 60).toFixed(as % 60 === 0 ? 0 : 1) + '′';
+  else                txt = (as / 3600).toFixed(0) + '°';
+  document.getElementById('gv').textContent = txt;
+}
+
+function refreshList() {
+  const el = document.getElementById('mlist'); el.innerHTML = '';
+  masses.forEach((m, i) => {
+    const d = document.createElement('div'); d.className = 'mi';
+    d.innerHTML = `<span class="dot" style="background:${TYPE_COL[m.type]}"></span>
+      <span class="lbl">${m.type} ${m.mass.toFixed(1)}e11 (${m.ax.toFixed(2)}°,${m.ay.toFixed(2)}°)</span>
+      <span class="x" onclick="rmM(${i})">✕</span>`;
+    el.appendChild(d);
+  });
+}
+function rmM(i) { masses.splice(i, 1); refreshList(); go(); }
+function clearM() { masses = []; refreshList(); go(); }
+
+/* ── Canvas interaction ── */
+
+/* Helper: pixel coords → angular (degrees) accounting for pan */
+function pixToAngle(clientX, clientY) {
+  const rect = cv.getBoundingClientRect();
+  const px = (clientX - rect.left) * cv.width / rect.width;
+  const py = (clientY - rect.top) * cv.height / rect.height;
+  const OX = cv.width / 2, OY = cv.height / 2;
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+  /* offset from canvas centre in tangent-plane coords */
+  const X = (px - OX) / scale, Y = -(py - OY) / scale;
+  const rho = Math.sqrt(X * X + Y * Y);
+  const c = Math.atan(rho);
+  /* gnomonic inverse from pan centre */
+  const dlat = Math.asin(Y * Math.sin(c) / (rho || 1));
+  const dlon = Math.atan2(X * Math.sin(c), rho * Math.cos(c));
+  return [panLon + dlon * 180 / Math.PI, panLat + dlat * 180 / Math.PI];
+}
+
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoom *= e.deltaY < 0 ? 1.18 : (1 / 1.18);
+  zoom = Math.max(0.05, Math.min(zoom, 200));
+  go();
+}, { passive: false });
+
+cv.addEventListener('mousedown', e => {
+  if (placing) return;
+  dragging = true;
+  dragStartX = e.clientX; dragStartY = e.clientY;
+  dragPanLon0 = panLon; dragPanLat0 = panLat;
+  cv.style.cursor = 'grabbing';
+});
+
+cv.addEventListener('mousemove', e => {
+  if (dragging) {
+    const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+    const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+    const rect = cv.getBoundingClientRect();
+    const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+    const dxPx = (e.clientX - dragStartX) * cv.width / rect.width;
+    const dyPx = (e.clientY - dragStartY) * cv.height / rect.height;
+    panLon = dragPanLon0 - (dxPx / scale) * 180 / Math.PI;
+    panLat = dragPanLat0 + (dyPx / scale) * 180 / Math.PI;
+    /* Skip iso redraw during pan drag for performance */
+    const isoOn = document.getElementById('chkKappaIso').checked;
+    if (isoOn) {
+      /* Temporarily hide iso, redraw fast, restore on mouseup */
+      document.getElementById('chkKappaIso').checked = false;
+      go();
+      document.getElementById('chkKappaIso').checked = true;
+    } else {
+      go();
+    }
+    return;
+  }
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  const prof = document.getElementById('prof').value;
+  const str = parseFloat(document.getElementById('str').value);
+  const [bx, by] = trueFromApparent(ax, ay, prof, str);
+  const defl_deg = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2);
+  const defl_as = defl_deg * 3600;
+  /* Format coords in arcsec if small */
+  function fmtAngle(deg) {
+    const as = Math.abs(deg) * 3600;
+    if (as < 60) return (deg * 3600).toFixed(2) + '″';
+    if (as < 3600) return (deg * 60).toFixed(2) + '′';
+    return deg.toFixed(3) + '°';
+  }
+  document.getElementById('ib').textContent =
+    `apparent (${fmtAngle(ax)}, ${fmtAngle(ay)})  →  true (${fmtAngle(bx)}, ${fmtAngle(by)})  Δ=${defl_as.toFixed(3)}″`;
+});
+
+cv.addEventListener('mouseup', e => {
+  if (!dragging) return;
+  dragging = false;
+  cv.style.cursor = placing ? 'cell' : 'crosshair';
+});
+
+cv.addEventListener('mouseleave', e => {
+  if (dragging) { dragging = false; cv.style.cursor = 'crosshair'; }
+});
+
+cv.addEventListener('click', e => {
+  if (!placing) return;
+  placing = false;
+  document.getElementById('plbtn').classList.remove('act');
+  cv.style.cursor = 'crosshair';
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  masses.push({ ax, ay, mass: parseFloat(document.getElementById('am').value), type: document.getElementById('atype').value });
+  refreshList(); updateKappa(); go();
+});
+
+cv.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+  const scaleDeg = scale * Math.PI / 180;
+  let best = -1, bestD = 20 / scaleDeg;
+  masses.forEach((m, i) => {
+    const d = Math.sqrt((m.ax - ax) ** 2 + (m.ay - ay) ** 2);
+    if (d < bestD) { bestD = d; best = i; }
+  });
+  if (best >= 0) { masses.splice(best, 1); refreshList(); go(); }
+});
+
+function togglePlace() {
+  placing = !placing;
+  document.getElementById('plbtn').classList.toggle('act', placing);
+  cv.style.cursor = placing ? 'cell' : 'crosshair';
+}
+
+window.addEventListener('resize', go);
+
+/* ── Presets ── */
+function preset(name) {
+  masses = [];
+  /* Reset iso scale to 1 for all presets */
+  document.getElementById('isoScl').value = 1;
+  document.getElementById('isoSclv').textContent = '1.0';
+  zoom = 1;
+  document.getElementById('exag').value = 1;
+  document.getElementById('exagv').textContent = '1';
+  document.getElementById('str').value = 1;
+  document.getElementById('sv0').textContent = '1.0';
+  document.getElementById('fov').value = 20;
+  document.getElementById('sv1').textContent = '20';
+  /* default grid: 600″ = 10′ */
+  document.getElementById('gsp').value = 600;
+  document.getElementById('gv').textContent = '10′';
+
+  if (name === 'single') {
+    masses = [{ ax: 0, ay: 0, mass: 40, type: 'compact' }];
+    document.getElementById('fov').value = 15;
+    document.getElementById('sv1').textContent = '15';
+    document.getElementById('str').value = 2;
+    document.getElementById('sv0').textContent = '2.0';
+    document.getElementById('gsp').value = 300;
+    document.getElementById('gv').textContent = '5′';
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
+  } else if (name === 'binary') {
+    masses = [
+      { ax: -3, ay: 0, mass: 40, type: 'bary' },
+      { ax:  3, ay: 0, mass: 40, type: 'bary' }
+    ];
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
+  } else if (name === 'bullet') {
+    /* Bullet cluster masses rescaled to ×10¹¹ M☉ units:
+       dark halos ~9e13 M☉ = 900, gas clumps ~2e13 = 200 */
+    masses = [
+      { ax: -4,    ay:  0.4, mass: 900, type: 'dark' },
+      { ax:  4.2,  ay: -0.3, mass: 700, type: 'dark' },
+      { ax: -1.5,  ay:  0.2, mass: 200, type: 'bary' },
+      { ax:  1.8,  ay: -0.1, mass: 180, type: 'bary' },
+    ];
+    document.getElementById('str').value = 1.5;
+    document.getElementById('sv0').textContent = '1.5';
+    document.getElementById('fov').value = 25;
+    document.getElementById('sv1').textContent = '25';
+    document.getElementById('exag').value = 200;
+    document.getElementById('exagv').textContent = '200';
+  } else if (name === 'bulletBary') {
+    /* Same rough Bullet geometry, but no explicit dark halos.
+       This is the HPF/STFR diagnostic control: visible gas/galaxy concentrations only. */
+    masses = [
+      { ax: -1.5,  ay:  0.2, mass: 260, type: 'bary' },
+      { ax:  1.8,  ay: -0.1, mass: 240, type: 'bary' },
+      { ax: -4.0,  ay:  0.4, mass: 90,  type: 'compact' },
+      { ax:  4.2,  ay: -0.3, mass: 70,  type: 'compact' },
+      { ax:  0.0,  ay:  0.0, mass: 80,  type: 'bary' },
+    ];
+    document.getElementById('str').value = 2.0;
+    document.getElementById('sv0').textContent = '2.0';
+    document.getElementById('fov').value = 25;
+    document.getElementById('sv1').textContent = '25';
+    document.getElementById('exag').value = 350;
+    document.getElementById('exagv').textContent = '350';
+    document.getElementById('chkCaus').checked = true;
+    document.getElementById('causMode').value = 'shear';
+    document.getElementById('causGain').value = 18;
+    document.getElementById('causGainv').textContent = '18.0';
+  } else if (name === 'cross') {
+    document.getElementById('chkCaus').checked = true;
+    document.getElementById('causMode').value = 'det';
+    document.getElementById('causGain').value = 8;
+    document.getElementById('causGainv').textContent = '8.0';
+    masses = [
+      { ax:  0,   ay:  0,   mass: 60, type: 'compact' },
+      { ax:  0.3, ay:  0.2, mass: 8,  type: 'dark' },
+    ];
+    document.getElementById('str').value = 3;
+    document.getElementById('sv0').textContent = '3.0';
+    document.getElementById('fov').value = 8;
+    document.getElementById('sv1').textContent = '8';
+    document.getElementById('gsp').value = 120;
+    document.getElementById('gv').textContent = '2′';
+    document.getElementById('exag').value = 500;
+    document.getElementById('exagv').textContent = '500';
+  } else if (name === 'abell2029') {
+    /* Abell 2029: rich regular cluster at z=0.078
+       ~350 member galaxies, cD galaxy IC 1101 at centre (~10¹³ M☉),
+       r½ ≈ 1 Mpc physical → at 320 Mpc: ~0.18° = 10.7 arcmin
+       1° at D_L = 5.6 Mpc, so r½ ≈ 0.18°
+       Total stellar+gas mass ~5×10¹³ M☉ baryonic
+       We model as ~350 galaxies + central cD */
+    document.getElementById('cN').value = 350;
+    document.getElementById('cNv').textContent = '350';
+    document.getElementById('cM').value = 4;
+    document.getElementById('cMv').textContent = '4.0';
+    document.getElementById('cR').value = 0.20;
+    document.getElementById('cRv').textContent = '0.2';
+    document.getElementById('cC').value = 6;
+    document.getElementById('cCv').textContent = '6.0';
+    document.getElementById('cSeed').value = 29;
+    document.getElementById('cSeedv').textContent = '29';
+    document.getElementById('fov').value = 2;
+    document.getElementById('sv1').textContent = '2';
+    document.getElementById('gsp').value = 120;
+    document.getElementById('gv').textContent = '2′';
+    document.getElementById('str').value = 1;
+    document.getElementById('sv0').textContent = '1.0';
+    document.getElementById('exag').value = 1;
+    document.getElementById('exagv').textContent = '1';
+    generateCluster();
+    /* Add central cD galaxy IC 1101: ~10¹³ M☉ = 100 × 10¹¹ */
+    masses.unshift({ ax: 0, ay: 0, mass: 100, type: 'compact' });
+    document.getElementById('isoScl').value = 1.00;
+    document.getElementById('isoSclv').textContent = '1.00';
+    refreshList(); updateKappa(); go();
+    return;
+  }
+
+  refreshList(); updateKappa(); go();
+}
+
+preset('abell2029');
+</script>
+</body>
+</html>
