@@ -1538,7 +1538,7 @@ function preset(name) {
     generateCluster();
     /* Add central cD galaxy IC 1101: ~10¹³ M☉ = 100 × 10¹¹ */
     masses.unshift({ ax: 0, ay: 0, mass: 100, type: 'compact' });
-    document.getElementById('isoScl').value = 1.65;
+    document.getElementById('isoScl').value = 1.0;
     document.getElementById('isoSclv').textContent = '1.65';
     refreshList(); updateKappa(); go();
     return;
