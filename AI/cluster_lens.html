@@ -107,7 +107,7 @@ canvas { display: block; width: 100%; height: 100%; }
     <div class="panel">
       <div class="pt">Cluster generator</div>
       <div class="row"><label>N galaxies</label>
-        <input type="range" id="cN" min="10" max="600" step="10" value="500" oninput="sv(this,'cNv')">
+        <input type="range" id="cN" min="10" max="600" step="10" value="300" oninput="sv(this,'cNv')">
         <span class="val" id="cNv">300</span></div>
       <div class="row"><label>galaxy M (×10¹¹ M☉)</label>
         <input type="range" id="cM" min="0.5" max="20" step="0.5" value="4" oninput="sv(this,'cMv')">
@@ -184,7 +184,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="row"><label>iso-displacement κ</label>
         <input type="checkbox" id="chkKappaIso" onchange="go()" checked></div>
       <div class="row"><label>iso resolution</label>
-        <input type="range" id="isoRes" min="50" max="600" step="50" value="300" oninput="sv(this,'isoResv');go()">
+        <input type="range" id="isoRes" min="50" max="600" step="50" value="500" oninput="sv(this,'isoResv');go()">
         <span class="val" id="isoResv">300</span></div>
       <div class="row"><label>iso scale</label>
         <input type="range" id="isoScl" min="0.1" max="20" step="0.1" value="3" oninput="sv(this,'isoSclv');go()">
