@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640" font-family="sans-serif" font-size="12">
+<style>.ax{stroke:#333;fill:none}.grid{stroke:#ddd;stroke-width:.5}.diag{stroke:#900;stroke-dasharray:5,4;fill:none}.pt{fill:#2a72c4;opacity:.72}.lbl{fill:#333}.title{font-size:17px;font-weight:600;fill:#111}.sub{font-size:12px;fill:#555}</style>
+<text x="320.0" y="28" text-anchor="middle" class="title">Framework vs MOND error-normalized RMS</text>
+<text x="320.0" y="48" text-anchor="middle" class="sub">below diagonal: framework closer within reported error bars</text>
+<line x1="70.0" y1="70" x2="70.0" y2="575" class="grid"/>
+<line x1="70" y1="575.0" x2="610" y2="575.0" class="grid"/>
+<text x="70.0" y="593" text-anchor="middle" class="lbl">0.0</text>
+<text x="62" y="579.0" text-anchor="end" class="lbl">0.0</text>
+<line x1="178.0" y1="70" x2="178.0" y2="575" class="grid"/>
+<line x1="70" y1="474.0" x2="610" y2="474.0" class="grid"/>
+<text x="178.0" y="593" text-anchor="middle" class="lbl">4.0</text>
+<text x="62" y="478.0" text-anchor="end" class="lbl">4.0</text>
+<line x1="286.0" y1="70" x2="286.0" y2="575" class="grid"/>
+<line x1="70" y1="373.0" x2="610" y2="373.0" class="grid"/>
+<text x="286.0" y="593" text-anchor="middle" class="lbl">8.0</text>
+<text x="62" y="377.0" text-anchor="end" class="lbl">8.0</text>
+<line x1="394.0" y1="70" x2="394.0" y2="575" class="grid"/>
+<line x1="70" y1="272.0" x2="610" y2="272.0" class="grid"/>
+<text x="394.0" y="593" text-anchor="middle" class="lbl">12.0</text>
+<text x="62" y="276.0" text-anchor="end" class="lbl">12.0</text>
+<line x1="502.0" y1="70" x2="502.0" y2="575" class="grid"/>
+<line x1="70" y1="171.0" x2="610" y2="171.0" class="grid"/>
+<text x="502.0" y="593" text-anchor="middle" class="lbl">16.0</text>
+<text x="62" y="175.0" text-anchor="end" class="lbl">16.0</text>
+<line x1="610.0" y1="70" x2="610.0" y2="575" class="grid"/>
+<line x1="70" y1="70.0" x2="610" y2="70.0" class="grid"/>
+<text x="610.0" y="593" text-anchor="middle" class="lbl">20.0</text>
+<text x="62" y="74.0" text-anchor="end" class="lbl">20.0</text>
+<line x1="70.0" y1="575.0" x2="610.0" y2="70.0" class="diag"/>
+<circle cx="350.8" cy="544.4" r="3" class="pt"><title>CamB: FW 1.21, MOND 10.40</title></circle>
+<circle cx="114.1" cy="569.3" r="3" class="pt"><title>D512-2: FW 0.22, MOND 1.63</title></circle>
+<circle cx="185.5" cy="574.1" r="3" class="pt"><title>D564-8: FW 0.04, MOND 4.28</title></circle>
+<circle cx="218.0" cy="570.2" r="3" class="pt"><title>D631-7: FW 0.19, MOND 5.48</title></circle>
+<circle cx="87.1" cy="571.5" r="3" class="pt"><title>DDO064: FW 0.14, MOND 0.63</title></circle>
+<circle cx="324.8" cy="539.7" r="3" class="pt"><title>DDO154: FW 1.40, MOND 9.44</title></circle>
+<circle cx="400.2" cy="532.8" r="3" class="pt"><title>DDO161: FW 1.67, MOND 12.23</title></circle>
+<circle cx="218.0" cy="563.8" r="3" class="pt"><title>DDO168: FW 0.44, MOND 5.48</title></circle>
+<circle cx="403.3" cy="550.2" r="3" class="pt"><title>DDO170: FW 0.98, MOND 12.35</title></circle>
+<circle cx="146.3" cy="566.1" r="3" class="pt"><title>ESO079-G014: FW 0.35, MOND 2.83</title></circle>
+<circle cx="166.9" cy="558.0" r="3" class="pt"><title>ESO116-G012: FW 0.67, MOND 3.59</title></circle>
+<circle cx="212.3" cy="570.7" r="3" class="pt"><title>ESO444-G084: FW 0.17, MOND 5.27</title></circle>
+<circle cx="267.6" cy="538.6" r="3" class="pt"><title>ESO563-G021: FW 1.44, MOND 7.32</title></circle>
+<circle cx="241.2" cy="570.5" r="3" class="pt"><title>F561-1: FW 0.18, MOND 6.34</title></circle>
+<circle cx="115.0" cy="569.1" r="3" class="pt"><title>F563-1: FW 0.23, MOND 1.67</title></circle>
+<circle cx="228.3" cy="572.8" r="3" class="pt"><title>F563-V1: FW 0.09, MOND 5.86</title></circle>
+<circle cx="126.2" cy="572.9" r="3" class="pt"><title>F563-V2: FW 0.08, MOND 2.08</title></circle>
+<circle cx="98.2" cy="570.2" r="3" class="pt"><title>F565-V2: FW 0.19, MOND 1.05</title></circle>
+<circle cx="134.1" cy="572.8" r="3" class="pt"><title>F567-2: FW 0.09, MOND 2.38</title></circle>
+<circle cx="140.9" cy="571.4" r="3" class="pt"><title>F568-1: FW 0.14, MOND 2.63</title></circle>
+<circle cx="115.0" cy="570.1" r="3" class="pt"><title>F568-3: FW 0.19, MOND 1.67</title></circle>
+<circle cx="152.8" cy="572.8" r="3" class="pt"><title>F568-V1: FW 0.09, MOND 3.07</title></circle>
+<circle cx="242.0" cy="561.9" r="3" class="pt"><title>F571-8: FW 0.52, MOND 6.37</title></circle>
+<circle cx="93.9" cy="570.3" r="3" class="pt"><title>F571-V1: FW 0.19, MOND 0.89</title></circle>
+<circle cx="120.6" cy="569.8" r="3" class="pt"><title>F574-1: FW 0.21, MOND 1.88</title></circle>
+<circle cx="196.9" cy="573.7" r="3" class="pt"><title>F574-2: FW 0.05, MOND 4.70</title></circle>
+<circle cx="120.4" cy="566.3" r="3" class="pt"><title>F579-V1: FW 0.34, MOND 1.87</title></circle>
+<circle cx="121.6" cy="566.6" r="3" class="pt"><title>F583-1: FW 0.33, MOND 1.91</title></circle>
+<circle cx="100.9" cy="569.2" r="3" class="pt"><title>F583-4: FW 0.23, MOND 1.14</title></circle>
+<circle cx="486.9" cy="501.6" r="3" class="pt"><title>IC2574: FW 2.91, MOND 15.44</title></circle>
+<circle cx="235.1" cy="559.5" r="3" class="pt"><title>IC4202: FW 0.61, MOND 6.12</title></circle>
+<circle cx="216.4" cy="569.7" r="3" class="pt"><title>KK98-251: FW 0.21, MOND 5.42</title></circle>
+<circle cx="157.3" cy="567.9" r="3" class="pt"><title>NGC0024: FW 0.28, MOND 3.23</title></circle>
+<circle cx="263.1" cy="567.3" r="3" class="pt"><title>NGC0055: FW 0.30, MOND 7.15</title></circle>
+<circle cx="106.9" cy="569.7" r="3" class="pt"><title>NGC0100: FW 0.21, MOND 1.37</title></circle>
+<circle cx="126.4" cy="563.5" r="3" class="pt"><title>NGC0247: FW 0.46, MOND 2.09</title></circle>
+<circle cx="162.0" cy="551.3" r="3" class="pt"><title>NGC0289: FW 0.94, MOND 3.41</title></circle>
+<circle cx="111.9" cy="547.3" r="3" class="pt"><title>NGC0300: FW 1.10, MOND 1.55</title></circle>
+<circle cx="321.7" cy="537.3" r="3" class="pt"><title>NGC0801: FW 1.49, MOND 9.32</title></circle>
+<circle cx="228.0" cy="549.2" r="3" class="pt"><title>NGC0891: FW 1.02, MOND 5.85</title></circle>
+<circle cx="167.6" cy="559.8" r="3" class="pt"><title>NGC1003: FW 0.60, MOND 3.62</title></circle>
+<circle cx="249.6" cy="551.9" r="3" class="pt"><title>NGC1090: FW 0.91, MOND 6.65</title></circle>
+<circle cx="173.0" cy="568.8" r="3" class="pt"><title>NGC1705: FW 0.24, MOND 3.81</title></circle>
+<circle cx="206.0" cy="566.7" r="3" class="pt"><title>NGC2366: FW 0.33, MOND 5.04</title></circle>
+<circle cx="304.8" cy="453.7" r="3" class="pt"><title>NGC2403: FW 4.81, MOND 8.70</title></circle>
+<circle cx="109.5" cy="531.7" r="3" class="pt"><title>NGC2683: FW 1.71, MOND 1.46</title></circle>
+<circle cx="320.8" cy="535.2" r="3" class="pt"><title>NGC2841: FW 1.58, MOND 9.29</title></circle>
+<circle cx="165.9" cy="526.1" r="3" class="pt"><title>NGC2903: FW 1.94, MOND 3.55</title></circle>
+<circle cx="144.5" cy="568.7" r="3" class="pt"><title>NGC2915: FW 0.25, MOND 2.76</title></circle>
+<circle cx="146.2" cy="526.6" r="3" class="pt"><title>NGC2955: FW 1.92, MOND 2.82</title></circle>
+<circle cx="117.1" cy="556.6" r="3" class="pt"><title>NGC2976: FW 0.73, MOND 1.74</title></circle>
+<circle cx="176.2" cy="539.7" r="3" class="pt"><title>NGC2998: FW 1.40, MOND 3.93</title></circle>
+<circle cx="132.6" cy="557.6" r="3" class="pt"><title>NGC3109: FW 0.69, MOND 2.32</title></circle>
+<circle cx="168.9" cy="542.1" r="3" class="pt"><title>NGC3198: FW 1.30, MOND 3.66</title></circle>
+<circle cx="93.6" cy="562.5" r="3" class="pt"><title>NGC3521: FW 0.49, MOND 0.87</title></circle>
+<circle cx="204.9" cy="560.1" r="3" class="pt"><title>NGC3726: FW 0.59, MOND 5.00</title></circle>
+<circle cx="101.4" cy="564.1" r="3" class="pt"><title>NGC3741: FW 0.43, MOND 1.16</title></circle>
+<circle cx="128.2" cy="562.1" r="3" class="pt"><title>NGC3769: FW 0.51, MOND 2.16</title></circle>
+<circle cx="167.8" cy="564.4" r="3" class="pt"><title>NGC3877: FW 0.42, MOND 3.62</title></circle>
+<circle cx="95.5" cy="561.5" r="3" class="pt"><title>NGC3893: FW 0.53, MOND 0.95</title></circle>
+<circle cx="115.6" cy="557.3" r="3" class="pt"><title>NGC3917: FW 0.70, MOND 1.69</title></circle>
+<circle cx="110.6" cy="572.6" r="3" class="pt"><title>NGC3949: FW 0.09, MOND 1.50</title></circle>
+<circle cx="112.5" cy="570.0" r="3" class="pt"><title>NGC3953: FW 0.20, MOND 1.57</title></circle>
+<circle cx="107.2" cy="566.8" r="3" class="pt"><title>NGC3972: FW 0.33, MOND 1.38</title></circle>
+<circle cx="152.1" cy="555.8" r="3" class="pt"><title>NGC3992: FW 0.76, MOND 3.04</title></circle>
+<circle cx="123.9" cy="567.2" r="3" class="pt"><title>NGC4010: FW 0.31, MOND 2.00</title></circle>
+<circle cx="143.9" cy="556.1" r="3" class="pt"><title>NGC4013: FW 0.75, MOND 2.74</title></circle>
+<circle cx="161.3" cy="566.4" r="3" class="pt"><title>NGC4051: FW 0.34, MOND 3.38</title></circle>
+<circle cx="203.6" cy="570.9" r="3" class="pt"><title>NGC4068: FW 0.16, MOND 4.95</title></circle>
+<circle cx="167.8" cy="568.8" r="3" class="pt"><title>NGC4085: FW 0.25, MOND 3.62</title></circle>
+<circle cx="231.7" cy="569.2" r="3" class="pt"><title>NGC4088: FW 0.23, MOND 5.99</title></circle>
+<circle cx="119.7" cy="565.1" r="3" class="pt"><title>NGC4100: FW 0.39, MOND 1.84</title></circle>
+<circle cx="99.7" cy="572.5" r="3" class="pt"><title>NGC4138: FW 0.10, MOND 1.10</title></circle>
+<circle cx="151.4" cy="566.3" r="3" class="pt"><title>NGC4157: FW 0.34, MOND 3.01</title></circle>
+<circle cx="121.9" cy="568.5" r="3" class="pt"><title>NGC4183: FW 0.26, MOND 1.92</title></circle>
+<circle cx="134.3" cy="568.6" r="3" class="pt"><title>NGC4214: FW 0.25, MOND 2.38</title></circle>
+<circle cx="271.5" cy="567.8" r="3" class="pt"><title>NGC4217: FW 0.28, MOND 7.46</title></circle>
+<circle cx="268.4" cy="569.1" r="3" class="pt"><title>NGC4389: FW 0.23, MOND 7.35</title></circle>
+<circle cx="170.6" cy="567.7" r="3" class="pt"><title>NGC4559: FW 0.29, MOND 3.72</title></circle>
+<circle cx="89.9" cy="570.0" r="3" class="pt"><title>NGC5005: FW 0.20, MOND 0.74</title></circle>
+<circle cx="170.5" cy="530.6" r="3" class="pt"><title>NGC5033: FW 1.76, MOND 3.72</title></circle>
+<circle cx="610.0" cy="443.2" r="3" class="pt"><title>NGC5055: FW 5.22, MOND 27.75</title></circle>
+<circle cx="422.7" cy="514.4" r="3" class="pt"><title>NGC5371: FW 2.40, MOND 13.06</title></circle>
+<circle cx="208.2" cy="526.9" r="3" class="pt"><title>NGC5585: FW 1.90, MOND 5.12</title></circle>
+<circle cx="226.4" cy="530.9" r="3" class="pt"><title>NGC5907: FW 1.75, MOND 5.79</title></circle>
+<circle cx="412.2" cy="550.0" r="3" class="pt"><title>NGC5985: FW 0.99, MOND 12.67</title></circle>
+<circle cx="226.8" cy="528.6" r="3" class="pt"><title>NGC6015: FW 1.84, MOND 5.81</title></circle>
+<circle cx="209.2" cy="542.6" r="3" class="pt"><title>NGC6195: FW 1.28, MOND 5.15</title></circle>
+<circle cx="115.2" cy="545.3" r="3" class="pt"><title>NGC6503: FW 1.18, MOND 1.68</title></circle>
+<circle cx="203.7" cy="520.6" r="3" class="pt"><title>NGC6674: FW 2.15, MOND 4.95</title></circle>
+<circle cx="136.8" cy="573.4" r="3" class="pt"><title>NGC6789: FW 0.06, MOND 2.47</title></circle>
+<circle cx="206.7" cy="534.0" r="3" class="pt"><title>NGC6946: FW 1.62, MOND 5.06</title></circle>
+<circle cx="231.6" cy="547.7" r="3" class="pt"><title>NGC7331: FW 1.08, MOND 5.99</title></circle>
+<circle cx="95.8" cy="566.7" r="3" class="pt"><title>NGC7793: FW 0.33, MOND 0.95</title></circle>
+<circle cx="211.0" cy="547.8" r="3" class="pt"><title>NGC7814: FW 1.08, MOND 5.22</title></circle>
+<circle cx="379.5" cy="573.2" r="3" class="pt"><title>PGC51017: FW 0.07, MOND 11.46</title></circle>
+<circle cx="335.9" cy="538.6" r="3" class="pt"><title>UGC00128: FW 1.44, MOND 9.85</title></circle>
+<circle cx="217.1" cy="555.7" r="3" class="pt"><title>UGC00191: FW 0.76, MOND 5.45</title></circle>
+<circle cx="102.1" cy="554.8" r="3" class="pt"><title>UGC00634: FW 0.80, MOND 1.19</title></circle>
+<circle cx="179.2" cy="562.5" r="3" class="pt"><title>UGC00731: FW 0.49, MOND 4.04</title></circle>
+<circle cx="256.0" cy="554.5" r="3" class="pt"><title>UGC00891: FW 0.81, MOND 6.89</title></circle>
+<circle cx="121.9" cy="572.5" r="3" class="pt"><title>UGC01230: FW 0.10, MOND 1.92</title></circle>
+<circle cx="85.8" cy="570.5" r="3" class="pt"><title>UGC01281: FW 0.18, MOND 0.59</title></circle>
+<circle cx="113.2" cy="573.4" r="3" class="pt"><title>UGC02023: FW 0.07, MOND 1.60</title></circle>
+<circle cx="252.4" cy="567.0" r="3" class="pt"><title>UGC02259: FW 0.31, MOND 6.75</title></circle>
+<circle cx="372.1" cy="571.5" r="3" class="pt"><title>UGC02455: FW 0.14, MOND 11.19</title></circle>
+<circle cx="506.7" cy="540.4" r="3" class="pt"><title>UGC02487: FW 1.37, MOND 16.17</title></circle>
+<circle cx="115.5" cy="538.5" r="3" class="pt"><title>UGC02885: FW 1.44, MOND 1.68</title></circle>
+<circle cx="304.7" cy="546.9" r="3" class="pt"><title>UGC02916: FW 1.11, MOND 8.69</title></circle>
+<circle cx="452.9" cy="452.3" r="3" class="pt"><title>UGC02953: FW 4.86, MOND 14.18</title></circle>
+<circle cx="164.7" cy="499.4" r="3" class="pt"><title>UGC03205: FW 3.00, MOND 3.51</title></circle>
+<circle cx="164.3" cy="501.8" r="3" class="pt"><title>UGC03546: FW 2.90, MOND 3.49</title></circle>
+<circle cx="322.6" cy="523.0" r="3" class="pt"><title>UGC03580: FW 2.06, MOND 9.36</title></circle>
+<circle cx="118.3" cy="565.9" r="3" class="pt"><title>UGC04278: FW 0.36, MOND 1.79</title></circle>
+<circle cx="293.5" cy="564.8" r="3" class="pt"><title>UGC04305: FW 0.41, MOND 8.28</title></circle>
+<circle cx="216.3" cy="570.3" r="3" class="pt"><title>UGC04325: FW 0.19, MOND 5.42</title></circle>
+<circle cx="160.6" cy="565.5" r="3" class="pt"><title>UGC04483: FW 0.37, MOND 3.35</title></circle>
+<circle cx="153.1" cy="567.2" r="3" class="pt"><title>UGC04499: FW 0.31, MOND 3.08</title></circle>
+<circle cx="112.3" cy="571.8" r="3" class="pt"><title>UGC05005: FW 0.12, MOND 1.57</title></circle>
+<circle cx="141.0" cy="445.0" r="3" class="pt"><title>UGC05253: FW 5.15, MOND 2.63</title></circle>
+<circle cx="160.1" cy="566.5" r="3" class="pt"><title>UGC05414: FW 0.34, MOND 3.34</title></circle>
+<circle cx="235.4" cy="560.0" r="3" class="pt"><title>UGC05716: FW 0.59, MOND 6.12</title></circle>
+<circle cx="164.8" cy="567.4" r="3" class="pt"><title>UGC05721: FW 0.30, MOND 3.51</title></circle>
+<circle cx="118.4" cy="574.2" r="3" class="pt"><title>UGC05750: FW 0.03, MOND 1.79</title></circle>
+<circle cx="470.2" cy="532.9" r="3" class="pt"><title>UGC05764: FW 1.67, MOND 14.82</title></circle>
+<circle cx="115.7" cy="569.5" r="3" class="pt"><title>UGC05829: FW 0.22, MOND 1.69</title></circle>
+<circle cx="99.8" cy="569.5" r="3" class="pt"><title>UGC05918: FW 0.22, MOND 1.10</title></circle>
+<circle cx="218.1" cy="540.6" r="3" class="pt"><title>UGC05986: FW 1.36, MOND 5.48</title></circle>
+<circle cx="135.0" cy="569.1" r="3" class="pt"><title>UGC05999: FW 0.23, MOND 2.41</title></circle>
+<circle cx="93.7" cy="570.1" r="3" class="pt"><title>UGC06399: FW 0.19, MOND 0.88</title></circle>
+<circle cx="129.6" cy="569.6" r="3" class="pt"><title>UGC06446: FW 0.21, MOND 2.21</title></circle>
+<circle cx="151.8" cy="567.3" r="3" class="pt"><title>UGC06614: FW 0.30, MOND 3.03</title></circle>
+<circle cx="179.1" cy="573.2" r="3" class="pt"><title>UGC06628: FW 0.07, MOND 4.04</title></circle>
+<circle cx="209.4" cy="563.4" r="3" class="pt"><title>UGC06667: FW 0.46, MOND 5.16</title></circle>
+<circle cx="421.9" cy="401.2" r="3" class="pt"><title>UGC06786: FW 6.88, MOND 13.03</title></circle>
+<circle cx="451.9" cy="494.2" r="3" class="pt"><title>UGC06787: FW 3.20, MOND 14.15</title></circle>
+<circle cx="148.1" cy="568.4" r="3" class="pt"><title>UGC06818: FW 0.26, MOND 2.89</title></circle>
+<circle cx="102.4" cy="570.2" r="3" class="pt"><title>UGC06917: FW 0.19, MOND 1.20</title></circle>
+<circle cx="110.1" cy="572.3" r="3" class="pt"><title>UGC06923: FW 0.11, MOND 1.48</title></circle>
+<circle cx="113.0" cy="571.6" r="3" class="pt"><title>UGC06930: FW 0.13, MOND 1.59</title></circle>
+<circle cx="327.5" cy="569.2" r="3" class="pt"><title>UGC06973: FW 0.23, MOND 9.54</title></circle>
+<circle cx="121.4" cy="568.6" r="3" class="pt"><title>UGC06983: FW 0.26, MOND 1.90</title></circle>
+<circle cx="155.4" cy="568.3" r="3" class="pt"><title>UGC07089: FW 0.26, MOND 3.16</title></circle>
+<circle cx="392.3" cy="565.8" r="3" class="pt"><title>UGC07125: FW 0.36, MOND 11.94</title></circle>
+<circle cx="123.0" cy="566.1" r="3" class="pt"><title>UGC07151: FW 0.35, MOND 1.96</title></circle>
+<circle cx="104.3" cy="571.7" r="3" class="pt"><title>UGC07232: FW 0.13, MOND 1.27</title></circle>
+<circle cx="92.0" cy="571.3" r="3" class="pt"><title>UGC07261: FW 0.15, MOND 0.81</title></circle>
+<circle cx="134.5" cy="568.0" r="3" class="pt"><title>UGC07323: FW 0.28, MOND 2.39</title></circle>
+<circle cx="306.0" cy="568.0" r="3" class="pt"><title>UGC07399: FW 0.28, MOND 8.74</title></circle>
+<circle cx="132.1" cy="567.1" r="3" class="pt"><title>UGC07524: FW 0.31, MOND 2.30</title></circle>
+<circle cx="157.4" cy="571.2" r="3" class="pt"><title>UGC07559: FW 0.15, MOND 3.24</title></circle>
+<circle cx="181.7" cy="571.5" r="3" class="pt"><title>UGC07577: FW 0.14, MOND 4.14</title></circle>
+<circle cx="134.1" cy="566.5" r="3" class="pt"><title>UGC07603: FW 0.34, MOND 2.37</title></circle>
+<circle cx="101.0" cy="571.3" r="3" class="pt"><title>UGC07608: FW 0.15, MOND 1.15</title></circle>
+<circle cx="108.7" cy="571.6" r="3" class="pt"><title>UGC07690: FW 0.14, MOND 1.43</title></circle>
+<circle cx="123.6" cy="572.2" r="3" class="pt"><title>UGC07866: FW 0.11, MOND 1.99</title></circle>
+<circle cx="210.7" cy="561.6" r="3" class="pt"><title>UGC08286: FW 0.53, MOND 5.21</title></circle>
+<circle cx="135.0" cy="566.8" r="3" class="pt"><title>UGC08490: FW 0.32, MOND 2.41</title></circle>
+<circle cx="113.3" cy="563.3" r="3" class="pt"><title>UGC08550: FW 0.46, MOND 1.60</title></circle>
+<circle cx="138.5" cy="554.2" r="3" class="pt"><title>UGC08699: FW 0.82, MOND 2.54</title></circle>
+<circle cx="233.8" cy="567.3" r="3" class="pt"><title>UGC08837: FW 0.30, MOND 6.07</title></circle>
+<circle cx="252.4" cy="566.3" r="3" class="pt"><title>UGC09037: FW 0.34, MOND 6.76</title></circle>
+<circle cx="293.1" cy="481.4" r="3" class="pt"><title>UGC09133: FW 3.71, MOND 8.26</title></circle>
+<circle cx="143.0" cy="571.9" r="3" class="pt"><title>UGC09992: FW 0.12, MOND 2.70</title></circle>
+<circle cx="112.5" cy="571.0" r="3" class="pt"><title>UGC10310: FW 0.16, MOND 1.58</title></circle>
+<circle cx="140.4" cy="547.7" r="3" class="pt"><title>UGC11455: FW 1.08, MOND 2.61</title></circle>
+<circle cx="192.2" cy="566.6" r="3" class="pt"><title>UGC11557: FW 0.33, MOND 4.52</title></circle>
+<circle cx="381.3" cy="543.8" r="3" class="pt"><title>UGC11820: FW 1.24, MOND 11.53</title></circle>
+<circle cx="295.6" cy="550.5" r="3" class="pt"><title>UGC11914: FW 0.97, MOND 8.36</title></circle>
+<circle cx="145.9" cy="563.7" r="3" class="pt"><title>UGC12506: FW 0.45, MOND 2.81</title></circle>
+<circle cx="141.9" cy="564.0" r="3" class="pt"><title>UGC12632: FW 0.44, MOND 2.66</title></circle>
+<circle cx="123.1" cy="568.6" r="3" class="pt"><title>UGC12732: FW 0.25, MOND 1.97</title></circle>
+<circle cx="119.4" cy="568.9" r="3" class="pt"><title>UGCA281: FW 0.24, MOND 1.83</title></circle>
+<circle cx="126.9" cy="555.2" r="3" class="pt"><title>UGCA442: FW 0.79, MOND 2.11</title></circle>
+<circle cx="108.3" cy="568.1" r="3" class="pt"><title>UGCA444: FW 0.27, MOND 1.42</title></circle>
+<text x="340.0" y="624" text-anchor="middle" class="lbl">MOND/RAR RMS in sigma units</text>
+<text x="18" y="322.5" text-anchor="middle" class="lbl" transform="rotate(-90,18,322.5)">framework RMS in sigma units</text>
+<rect x="70" y="70" width="540" height="505" class="ax"/>
+</svg>
