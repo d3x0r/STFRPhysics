@@ -903,45 +903,77 @@ The reason is that the interferometer is not composed of rigid objects and indep
 First, the arm geometry of a moving apparatus is normalized longitudinally by the recovered contraction factor
 
 $$
-\lambda(\beta)=\sqrt{1-\beta^2},
-\qquad
-\beta=\frac{v}{c}.
+\lambda(\beta)=\sqrt{1-\beta^2},\qquad \beta=\frac{v}{c}.
 $$
 
 If $\vec r$ is a frame-fixed arm offset and $\hat v$ is the drift direction, then
 
 $$
-\vec r=\vec r_\perp+\vec r_\parallel,
-\qquad
-\mathcal C(\vec r)=\vec r_\perp+\lambda\,\vec r_\parallel.
+\vec r=\vec r_\perp+\vec r_\parallel,\qquad \mathcal C(\vec r)=\vec r_\perp+\lambda\,\vec r_\parallel.
 $$
 
 Thus the interferometer's optical elements are not placed at the same coordinate offsets they would have at rest. Their longitudinal separations are reduced by the same normalization already recovered from the two-way interaction-cost structure of moving material systems (§§4–5 of the main text).
 
-Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. In the planar form developed in Appendix B, the signed angular correction may be written
+Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. The aberration update is most generally an oriented rotation. The scalar aberration relation supplies the principal angular magnitude, while the cross product supplies the orientation of the rotation.
+
+Let the contracted target offset for a given leg be
 
 $$
-\Delta\theta = -\operatorname{sgn}\!\bigl((\Delta\vec x\times \vec v)_z\bigr)
-\left[
-\arccos\!\left(\frac{\cos\theta+\beta}{ +\beta\cos\theta}\right) -
-\arccos(\cos\theta)
-\right],
+\Delta\vec x=\mathcal C(\vec r_{\rm target}),\qquad \hat n=\frac{\Delta\vec x}{\|\Delta\vec x\|},\qquad \hat v=\frac{\vec v}{\|\vec v\|}.
+$$
+
+The convention used here is that the target direction precedes the drift direction in both products. The dot product
+
+$$
+\cos\theta=\hat n\cdot\hat v
+$$
+
+is read as the projection of the target direction onto the drift axis. The associated orientation is carried by
+
+$$
+\hat a=\frac{\hat n\times\hat v}{\|\hat n\times\hat v\|}.
+$$
+
+For $\|\hat n\times\hat v\|\neq 0$, define the principal angles
+
+$$
+\theta=\arccos(\hat n\cdot\hat v),\qquad \theta'=\arccos\!\left(\frac{\hat n\cdot\hat v+\beta}{1+\beta\,\hat n\cdot\hat v}\right).
+$$
+
+The angular update is then
+
+$$
+\Delta\theta=\theta-\theta',\qquad \hat e_{\rm leg}=\mathcal R(\hat a,\Delta\theta)\,\hat n.
+$$
+
+This is the three-dimensional form of the side comparison. The inverse-cosine expression supplies only a principal magnitude; it does not by itself say which way the ray turns. The cross-product axis supplies that missing orientation. If the target direction crosses to the opposite side of the drift direction, the axis reverses rather than requiring a separate extended-$\arccos$ branch.
+
+The collinear cases are degenerate but harmless. If $\hat n\parallel\hat v$ or $\hat n\parallel-\hat v$, then $\hat n\times\hat v=0$. There is no transverse side on which to rotate, and the aberration update is purely scalar along the same line.
+
+The planar simulator uses the two-dimensional reduction of the same rule. Choosing the plane normal $\hat z$, the axis information reduces to the scalar sign
+
+$$
+s=\operatorname{sgn}\!\left[\hat z\cdot(\hat n\times\hat v)\right].
+$$
+
+The signed planar correction is therefore
+
+$$
+\Delta\theta_{\rm 2D}=s\left[\arccos(\hat n\cdot\hat v)-\arccos\!\left(\frac{\hat n\cdot\hat v+\beta}{1+\beta\,\hat n\cdot\hat v}\right)\right],
 $$
 
 with
 
 $$
-\cos\theta=\frac{\Delta\vec x\cdot\vec v}{\|\Delta\vec x\|\,\|\vec v\|}.
+\hat e_{\rm leg}=\mathcal R(\hat z,\Delta\theta_{\rm 2D})\,\hat n.
 $$
 
-This correction is determined by the local arm direction relative to the drift velocity. Length contraction does not itself alter the aberration formula. Rather, contraction changes the apparatus geometry, while aberration changes the propagation direction needed to reach the moving optical element.
+Thus the planar side-comparison formula is not a separate aberration law. It is the two-dimensional projection of the three-dimensional rotation rule. Length contraction does not itself alter the aberration formula. Rather, contraction changes the apparatus geometry, while aberration changes the propagation direction needed to reach the moving optical element.
 
 Third, the ray-segment lengths are not imposed directly from the arm offsets. They are obtained from the solved propagation delay. Each leg is determined by the native one-way propagation condition
 
 $$
-\bigl\|\vec x_{\rm target}(t_{n+1})-\vec x_{\rm source}(t_n)\bigr\|
-=
-c\,(t_{n+1}-t_n).
+\bigl\|\vec x_{\rm target}(t_{n+1})-\vec x_{\rm source}(t_n)\bigr\|=c\,(t_{n+1}-t_n).
 $$
 
 Operationally, each next event time is solved from the moving source and moving target geometry, and the realized segment length is then
@@ -955,9 +987,7 @@ So the contracted arm offset specifies where the next optical element belongs in
 These ingredients are enough to construct the interferometer path. Let the frame-fixed arm offsets from the splitter be $(0,\pm L)$ and $(\pm L,0)$. For each leg, the next optical element is represented by the contracted offset $\mathcal C(\vec r_{\rm target})$. The ray is launched along the corresponding aberrated direction $\hat e_{\rm leg}$, and after solving the propagation delay, the photon keyframe advances according to
 
 $$
-\vec K_{n+1}
-=
-\vec K_n+c\,(t_{n+1}-t_n)\,\hat e_{\rm leg}.
+\vec K_{n+1}=\vec K_n+c\,(t_{n+1}-t_n)\,\hat e_{\rm leg}.
 $$
 
 The same rule is used for every leg of both arms.
@@ -965,9 +995,7 @@ The same rule is used for every leg of both arms.
 What matters for interference is the full two-way cost from splitter to mirror and back, not the one-way segment in isolation. If
 
 $$
-T_{\rm vert}^{(2)}=(t_2-t_1)+(t_3-t_2),
-\qquad
-T_{\rm horiz}^{(2)}=(t_2^{L}-t_1)+(t_3^{L}-t_2^{L}),
+T_{\rm vert}^{(2)}=(t_2-t_1)+(t_3-t_2),\qquad T_{\rm horiz}^{(2)}=(t_2^{L}-t_1)+(t_3^{L}-t_2^{L}),
 $$
 
 then within this construction the recombined paths satisfy
@@ -987,9 +1015,7 @@ $$
 so the two-way local arm times are
 
 $$
-\tau_{\rm vert}^{(2)}=\lambda\,T_{\rm vert}^{(2)},
-\qquad
-\tau_{\rm horiz}^{(2)}=\lambda\,T_{\rm horiz}^{(2)}.
+\tau_{\rm vert}^{(2)}=\lambda\,T_{\rm vert}^{(2)},\qquad \tau_{\rm horiz}^{(2)}=\lambda\,T_{\rm horiz}^{(2)}.
 $$
 
 Since the coordinate two-way costs are equal, the local two-way costs are equal as well:
