@@ -72,7 +72,7 @@ Newton rho RMS
 
 export const GALAXY_PRESETS = {
 	"MilkyWay": {
-		"rho0": 7.38,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.38,
 		"rho1": 2.68,
 		"rho2": 0.740,
 		"rho3": 0.520,
@@ -89,24 +89,25 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 268.2
 	},
 	"M31": {
-		"rho0": 10.14,
-		"rho1": 1.47,
-		"rho2": 0.96,
+		remapOn: true, remapDelta: 0.023, remapRc: 0.100, 
+      "rho0": 3.72,
+		"rho1": 1.40,
+		"rho2": 0.81,
 		"rho3": 0.63,
-		"rho4": 0.23,
-		"r1": 0.009,
-		"r2": 0.050,
-		"r3": 0.164,
-		"r4": 0.970,
+		"rho4": 0.20,
+		"r1": 0.0001,
+		"r2": 0.078,
+		"r3": 0.190,
+		"r4": 0.994,
 		"r5": 1.000,
 		"amp": 1116,
 		"eps": 0.002,
 		"support": 0.027,
-		"rMax": 83,
-		"newtonAmp": 358.0730421896929
+		"rMax": 120,
+		"newtonAmp": 400
 	},
 	"CamB": {
-		"rho0": 0.52,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.52,
 		"rho1": 0.51,
 		"rho2": 0.51,
 		"rho3": 0.45,
@@ -123,7 +124,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 13.588708565312807
 	},
 	"D512-2": {
-		"rho0": 0.720,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.720,
 		"rho1": 0.700,
 		"rho2": 0.660,
 		"rho3": 0.420,
@@ -139,7 +140,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 33.13184474615705
 	},
 	"D564-8": {
-		"rho0": 0.50,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.50,
 		"rho1": 0.43,
 		"rho2": 0.42,
 		"rho3": 0.39,
@@ -155,7 +156,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 23.4
 	},
 	"D631-7": {
-		"rho0": 1.462,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.462,
 		"rho1": 1.462,
 		"rho2": 1.376,
 		"rho3": 1.013,
@@ -171,7 +172,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 32.15390864286243
 	},
 	"DDO064": {
-		"rho0": 1.4301727814325007,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.4301727814325007,
 		"rho1": 1.1049749729165053,
 		"rho2": 1.1049749729165053,
 		"rho3": 1.1001140382178471,
@@ -187,7 +188,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 28.623031935333323
 	},
 	"DDO154": {
-		"rho0": 1.5895240687464824,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.5895240687464824,
 		"rho1": 1.3152605674900715,
 		"rho2": 1.3152605674900715,
 		"rho3": 1.0618487986344667,
@@ -203,7 +204,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 30.245205868755843
 	},
 	"DDO161": {
-		"rho0": 0.75,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.75,
 		"rho1": 0.51,
 		"rho2": 0.42,
 		"rho3": 0.37,
@@ -219,7 +220,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 68.46472050018653
 	},
 	"DDO168": {
-		"rho0": 2.4470708659958693,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.4470708659958693,
 		"rho1": 1.3969270075861708,
 		"rho2": 1.2641921153430282,
 		"rho3": 1.1216432612254825,
@@ -235,7 +236,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 31.75164717639108
 	},
 	"DDO170": {
-		"rho0": 2,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2,
 		"rho1": 1.636,
 		"rho2": 1.507,
 		"rho3": 1.356,
@@ -251,7 +252,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 35.69960164757533
 	},
 	"ESO079-G014": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 3.535,
 		"rho2": 3.535,
 		"rho3": 3.535,
@@ -267,7 +268,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 66.6303640335672
 	},
 	"ESO116-G012": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 3.1125366815308,
 		"rho2": 2.528746430418117,
 		"rho3": 1.7700674194618715,
@@ -283,7 +284,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 51.85903572252017
 	},
 	"ESO444-G084": {
-		"rho0": 2.9505535541055745,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.9505535541055745,
 		"rho1": 1.7821481110465582,
 		"rho2": 1.678693754812258,
 		"rho3": 1.4698619528641719,
@@ -299,7 +300,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 37.038943893180786
 	},
 	"ESO563-G021": {
-		"rho0": 2.13,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.13,
 		"rho1": 3.9,
 		"rho2": 3.66,
 		"rho3": 2.11,
@@ -315,7 +316,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 170.61745559326334
 	},
 	"F561-1": {
-		"rho0": 1.580,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.580,
 		"rho1": 1.500,
 		"rho2": 1.370,
 		"rho3": 1.250,
@@ -331,7 +332,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 31.116122406815535
 	},
 	"F563-1": {
-		"rho0": 3.4583901413604656,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.4583901413604656,
 		"rho1": 3.4583901413604656,
 		"rho2": 2.005406183976838,
 		"rho3": 1.9708962428690184,
@@ -347,7 +348,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 52.887291725452485
 	},
 	"F563-V1": {
-		"rho0": 1.499,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.499,
 		"rho1": 0.883,
 		"rho2": 0.883,
 		"rho3": 0.846,
@@ -363,7 +364,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 22.39341680266285
 	},
 	"F563-V2": {
-		"rho0": 3.373598390518804,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.373598390518804,
 		"rho1": 3.3381453634127576,
 		"rho2": 3.274764090334733,
 		"rho3": 2.072197376718424,
@@ -379,7 +380,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 52.88813923830465
 	},
 	"F565-V2": {
-		"rho0": 2.66357269321449,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.66357269321449,
 		"rho1": 1.7462587382534276,
 		"rho2": 1.7218371771872638,
 		"rho3": 1.7218371771872638,
@@ -395,7 +396,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 40.21829327380285
 	},
 	"F567-2": {
-		"rho0": 1.4783212903405532,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.4783212903405532,
 		"rho1": 1.4489613388737168,
 		"rho2": 1.3896907712411426,
 		"rho3": 0.9722999836086952,
@@ -411,7 +412,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 32.724102408660116
 	},
 	"F568-1": {
-		"rho0": 1.1223038978107598,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.1223038978107598,
 		"rho1": 1.089,
 		"rho2": 1.060,
 		"rho3": 0.880,
@@ -427,7 +428,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 98.11608994600084
 	},
 	"F568-3": {
-		"rho0": 0.690,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.690,
 		"rho1": 0.620,
 		"rho2": 0.640,
 		"rho3": 0.530,
@@ -443,7 +444,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 92.60355277111422
 	},
 	"F568-V1": {
-		"rho0": 4.565930413463611,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.565930413463611,
 		"rho1": 3.7968655076443887,
 		"rho2": 2.9425567473619867,
 		"rho3": 1.9709192065800727,
@@ -459,7 +460,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 62.10957228383074
 	},
 	"F571-8": {
-		"rho0": 3.2038297132015976,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.2038297132015976,
 		"rho1": 1.760,
 		"rho2": 1.570,
 		"rho3": 1.290,
@@ -475,7 +476,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 85.79410921266013
 	},
 	"F571-V1": {
-		"rho0": 3.740,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.740,
 		"rho1": 2.110,
 		"rho2": 2.080,
 		"rho3": 1.660,
@@ -491,7 +492,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.016010578723666
 	},
 	"F574-1": {
-		"rho0": 3.026,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.026,
 		"rho1": 2.801,
 		"rho2": 2.801,
 		"rho3": 1.900,
@@ -507,7 +508,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 48.36510353625024
 	},
 	"F574-2": {
-		"rho0": 1.179,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.179,
 		"rho1": 1.179,
 		"rho2": 0.913,
 		"rho3": 0.913,
@@ -523,7 +524,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 24.5155242147849
 	},
 	"F579-V1": {
-		"rho0": 2.32,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.32,
 		"rho1": 1.3,
 		"rho2": 1.26,
 		"rho3": 1.03,
@@ -539,7 +540,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 82.0302097000995
 	},
 	"F583-1": {
-		"rho0": 1.0280289831936622,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.0280289831936622,
 		"rho1": 0.9243131825023045,
 		"rho2": 0.900,
 		"rho3": 0.600,
@@ -555,7 +556,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 69.68830005080119
 	},
 	"F583-4": {
-		"rho0": 2.4464937587935838,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.4464937587935838,
 		"rho1": 1.8161614528195715,
 		"rho2": 1.7894016701677797,
 		"rho3": 1.5239217699028933,
@@ -571,7 +572,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 36.34804126024372
 	},
 	"IC2574": {
-		"rho0": 0.75,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.75,
 		"rho1": 0.6801188708901249,
 		"rho2": 0.640,
 		"rho3": 0.510,
@@ -587,7 +588,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.372074487041864
 	},
 	"IC4202": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 8,
 		"rho2": 6.011618437508557,
 		"rho3": 3.626737195206698,
@@ -603,7 +604,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 91.6199624237802
 	},
 	"KK98-251": {
-		"rho0": 0.895,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.895,
 		"rho1": 0.865,
 		"rho2": 0.865,
 		"rho3": 0.765,
@@ -619,7 +620,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 21.814529763574996
 	},
 	"NGC0024": {
-		"rho0": 6.265040971910801,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.265040971910801,
 		"rho1": 3.4758652711097957,
 		"rho2": 1.9108511946666702,
 		"rho3": 1.9108511946666702,
@@ -635,7 +636,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 54.965374680046445
 	},
 	"NGC0055": {
-		"rho0": 2.667460754002085,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.667460754002085,
 		"rho1": 2.5925004228270185,
 		"rho2": 2.1190480781342838,
 		"rho3": 2.1190480781342838,
@@ -651,7 +652,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 44.473354607969135
 	},
 	"NGC0100": {
-		"rho0": 2.4006719675789743,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.4006719675789743,
 		"rho1": 2.310,
 		"rho2": 2.180,
 		"rho3": 1.490,
@@ -667,7 +668,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.69352815788934
 	},
 	"NGC0247": {
-		"rho0": 3.0584969592950038,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.0584969592950038,
 		"rho1": 3.0584969592950038,
 		"rho2": 2.110,
 		"rho3": 1.640,
@@ -683,7 +684,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 48.32941115189655
 	},
 	"NGC0289": {
-		"rho0": 18,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 18,
 		"rho1": 5.24,
 		"rho2": 2.29,
 		"rho3": 2.28,
@@ -699,7 +700,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 91.8292803960861
 	},
 	"NGC0300": {
-		"rho0": 3.240,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.240,
 		"rho1": 2.350,
 		"rho2": 2.190,
 		"rho3": 1.880,
@@ -715,7 +716,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 47.75592595053009
 	},
 	"NGC0801": {
-		"rho0": 9.35,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 9.35,
 		"rho1": 3.23,
 		"rho2": 2.18,
 		"rho3": 1.61,
@@ -731,7 +732,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 125.80798242646254
 	},
 	"NGC0891": {
-		"rho0": 8.859,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8.859,
 		"rho1": 2.12,
 		"rho2": 2.42,
 		"rho3": 1.73,
@@ -747,7 +748,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 125.92506700458182
 	},
 	"NGC1003": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 3.655,
 		"rho2": 1.921,
 		"rho3": 1.921,
@@ -763,7 +764,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 54.13791734103584
 	},
 	"NGC1090": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 7.734,
 		"rho2": 5.416,
 		"rho3": 2.782,
@@ -779,7 +780,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 68.51679576279847
 	},
 	"NGC1705": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 7.8535644099196364,
 		"rho2": 2.47196333385752,
 		"rho3": 1.447155384650169,
@@ -795,7 +796,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 47.05644732344311
 	},
 	"NGC2366": {
-		"rho0": 1.6588886586876623,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.6588886586876623,
 		"rho1": 1.4976111540668122,
 		"rho2": 1.3796606300371357,
 		"rho3": 1.3796606300371357,
@@ -811,7 +812,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 33.084344616132185
 	},
 	"NGC2403": {
-		"rho0": 1.0982302004331588,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.0982302004331588,
 		"rho1": 0.6403854505297287,
 		"rho2": 0.63,
 		"rho3": 0.50,
@@ -827,7 +828,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 154.89630303688227
 	},
 	"NGC2683": {
-		"rho0": 3.04,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.04,
 		"rho1": 1.63,
 		"rho2": 0.93,
 		"rho3": 0.49,
@@ -843,7 +844,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 178.9791695235752
 	},
 	"NGC2841": {
-		"rho0": 1.7,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.7,
 		"rho1": 0.68,
 		"rho2": 0.48,
 		"rho3": 0.48,
@@ -859,7 +860,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 321.72104544008596
 	},
 	"NGC2903": {
-		"rho0": 4.84,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.84,
 		"rho1": 1.49,
 		"rho2": 1.55,
 		"rho3": 1.28,
@@ -875,7 +876,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 147.5867235163392
 	},
 	"NGC2915": {
-		"rho0": 3.1318808091610735,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.1318808091610735,
 		"rho1": 2.6756982834822205,
 		"rho2": 2.4114115609349493,
 		"rho3": 1.5973183309868042,
@@ -891,7 +892,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 45.38817218963315
 	},
 	"NGC2955": {
-		"rho0": 2.79,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.79,
 		"rho1": 1.03,
 		"rho2": 0.69,
 		"rho3": 0.58,
@@ -907,7 +908,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 362.7741033068843
 	},
 	"NGC2976": {
-		"rho0": 0.460,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.460,
 		"rho1": 0.440,
 		"rho2": 0.430,
 		"rho3": 0.370,
@@ -923,7 +924,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 67.4507889285468
 	},
 	"NGC2998": {
-		"rho0": 3.08,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.08,
 		"rho1": 1.04,
 		"rho2": 1.08,
 		"rho3": 0.79,
@@ -939,7 +940,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 166.99923522027186
 	},
 	"NGC3109": {
-		"rho0": 0.430,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.430,
 		"rho1": 0.420,
 		"rho2": 0.410,
 		"rho3": 0.300,
@@ -955,7 +956,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 58.31584736368241
 	},
 	"NGC3198": {
-		"rho0": 2.59,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.59,
 		"rho1": 1.49,
 		"rho2": 1.27,
 		"rho3": 0.99,
@@ -971,7 +972,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 131.4407100492779
 	},
 	"NGC3521": {
-		"rho0": 5.16,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.16,
 		"rho1": 2.18,
 		"rho2": 1.39,
 		"rho3": 1.08,
@@ -987,7 +988,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 189.14428931918988
 	},
 	"NGC3726": {
-		"rho0": 7.819736796914099,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.819736796914099,
 		"rho1": 4.377382737937345,
 		"rho2": 4.362445968834774,
 		"rho3": 2.640268943756893,
@@ -1003,7 +1004,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 74.75682410185125
 	},
 	"NGC3741": {
-		"rho0": 2.9506707143870785,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.9506707143870785,
 		"rho1": 1.6485699473039823,
 		"rho2": 1.1998080208249662,
 		"rho3": 1.1924087198992097,
@@ -1019,7 +1020,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 31.067975431178695
 	},
 	"NGC3769": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 8,
 		"rho2": 4.050901839283625,
 		"rho3": 2.2470911765393478,
@@ -1035,7 +1036,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 70.77062094945907
 	},
 	"NGC3877": {
-		"rho0": 0.410,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.410,
 		"rho1": 0.68,
 		"rho2": 0.65,
 		"rho3": 0.58,
@@ -1051,7 +1052,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 159.0665397868169
 	},
 	"NGC3893": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 7.996281724891596,
 		"rho2": 4.987908766694765,
 		"rho3": 2.949430696261118,
@@ -1067,7 +1068,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 82.75836876747019
 	},
 	"NGC3917": {
-		"rho0": 1.570,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.570,
 		"rho1": 1.610,
 		"rho2": 1.420,
 		"rho3": 1.260,
@@ -1083,7 +1084,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 86.3113443813333
 	},
 	"NGC3949": {
-		"rho0": 7.5742293428147764,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.5742293428147764,
 		"rho1": 5.181961158716793,
 		"rho2": 4.022628156829806,
 		"rho3": 2.6071301469552566,
@@ -1099,7 +1100,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 68.4233732030281
 	},
 	"NGC3953": {
-		"rho0": 7.797245367040183,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.797245367040183,
 		"rho1": 7.797245367040183,
 		"rho2": 5.080474125933147,
 		"rho3": 3.2684888760025643,
@@ -1115,7 +1116,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 82.68503464479969
 	},
 	"NGC3972": {
-		"rho0": 3.2087146505682966,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.2087146505682966,
 		"rho1": 3.175725053182184,
 		"rho2": 2.594109944674768,
 		"rho3": 2.4578362261582356,
@@ -1131,7 +1132,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 55.47721455439737
 	},
 	"NGC3992": {
-		"rho0": 1.0590445097427383,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.0590445097427383,
 		"rho1": 0.940,
 		"rho2": 0.710,
 		"rho3": 0.440,
@@ -1147,7 +1148,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 249.91857363104947
 	},
 	"NGC4010": {
-		"rho0": 0.750,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.750,
 		"rho1": 0.610,
 		"rho2": 0.560,
 		"rho3": 0.470,
@@ -1163,7 +1164,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 107.25762900563548
 	},
 	"NGC4013": {
-		"rho0": 7.948658050106419,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.948658050106419,
 		"rho1": 7.062860306876474,
 		"rho2": 4.164916451800411,
 		"rho3": 2.383352336422543,
@@ -1179,7 +1180,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 78.09513034300214
 	},
 	"NGC4051": {
-		"rho0": 6.727006373770094,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.727006373770094,
 		"rho1": 5.2018412421199764,
 		"rho2": 3.021216509085382,
 		"rho3": 3.00951703562452,
@@ -1195,7 +1196,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 66.34621960962251
 	},
 	"NGC4068": {
-		"rho0": 0.916623409466441,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.916623409466441,
 		"rho1": 0.8953736748918727,
 		"rho2": 0.8953736748918727,
 		"rho3": 0.8542599655403432,
@@ -1211,7 +1212,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 23.481906796147687
 	},
 	"NGC4085": {
-		"rho0": 1.100,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.100,
 		"rho1": 1.120,
 		"rho2": 1.070,
 		"rho3": 0.900,
@@ -1227,7 +1228,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 88.70783076709287
 	},
 	"NGC4088": {
-		"rho0": 7.409941009624749,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.409941009624749,
 		"rho1": 6.535905092213172,
 		"rho2": 4.265180321911333,
 		"rho3": 2.3872539601952845,
@@ -1243,7 +1244,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 72.6260468918697
 	},
 	"NGC4100": {
-		"rho0": 7.357536300085831,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.357536300085831,
 		"rho1": 5.820033008307507,
 		"rho2": 3.1587994961766266,
 		"rho3": 2.0993814457895104,
@@ -1259,7 +1260,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 78.82175975113061
 	},
 	"NGC4138": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 8,
 		"rho2": 3.1652259504463833,
 		"rho3": 1.641753438373579,
@@ -1275,7 +1276,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 81.06795896838749
 	},
 	"NGC4157": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 8,
 		"rho2": 5.787,
 		"rho3": 2.937,
@@ -1291,7 +1292,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 79.45327578298158
 	},
 	"NGC4183": {
-		"rho0": 7.8076433846948445,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.8076433846948445,
 		"rho1": 3.617632173444841,
 		"rho2": 2.7352750970579045,
 		"rho3": 1.7550120353398138,
@@ -1307,7 +1308,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 56.070554155025334
 	},
 	"NGC4214": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 8,
 		"rho2": 2.2470859126522096,
 		"rho3": 1.3541561836023925,
@@ -1323,7 +1324,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 48.36999445196323
 	},
 	"NGC4217": {
-		"rho0": 6.113053223213277,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.113053223213277,
 		"rho1": 6.079081342590329,
 		"rho2": 3.9402031745268356,
 		"rho3": 2.232328821663444,
@@ -1339,7 +1340,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 76.13616275432948
 	},
 	"NGC4389": {
-		"rho0": 2.0076379047263697,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.0076379047263697,
 		"rho1": 1.9859691103848964,
 		"rho2": 1.9859691103848964,
 		"rho3": 1.9859691103848964,
@@ -1355,7 +1356,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.37551415224509
 	},
 	"NGC4559": {
-		"rho0": 8,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8,
 		"rho1": 3.963446977199025,
 		"rho2": 2.6128734240773337,
 		"rho3": 2.440610833599973,
@@ -1371,7 +1372,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 59.17626088655005
 	},
 	"NGC5005": {
-		"rho0": 8.890,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8.890,
 		"rho1": 1.890,
 		"rho2": 1.990,
 		"rho3": 1.413667559021431,
@@ -1387,7 +1388,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 178.66881512339054
 	},
 	"NGC5033": {
-		"rho0": 6.17,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.17,
 		"rho1": 2.04,
 		"rho2": 1.24,
 		"rho3": 0.71,
@@ -1403,7 +1404,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 162.38095095410418
 	},
 	"NGC5055": {
-		"rho0": 3.390,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.390,
 		"rho1": 1.050,
 		"rho2": 0.690,
 		"rho3": 0.500,
@@ -1419,7 +1420,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 245.476869653958
 	},
 	"NGC5371": {
-		"rho0": 13.7,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 13.7,
 		"rho1": 5.27,
 		"rho2": 3.47,
 		"rho3": 1.84,
@@ -1435,7 +1436,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 123.51968472921138
 	},
 	"NGC5585": {
-		"rho0": 5.701260020731889,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.701260020731889,
 		"rho1": 2.2815573233501207,
 		"rho2": 2.2815573233501207,
 		"rho3": 1.9494609774447833,
@@ -1451,7 +1452,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 45.63258554662299
 	},
 	"NGC5907": {
-		"rho0": 18,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 18,
 		"rho1": 3.55,
 		"rho2": 1.99,
 		"rho3": 1.43,
@@ -1467,7 +1468,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 129.26074917389417
 	},
 	"NGC5985": {
-		"rho0": 3.41,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.41,
 		"rho1": 2.18,
 		"rho2": 1.55,
 		"rho3": 1.16,
@@ -1483,7 +1484,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 194.4481427671029
 	},
 	"NGC6015": {
-		"rho0": 0.53,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.53,
 		"rho1": 0.42,
 		"rho2": 0.33,
 		"rho3": 0.29,
@@ -1499,7 +1500,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 291.93161133281683
 	},
 	"NGC6195": {
-		"rho0": 6.590,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.590,
 		"rho1": 1.710,
 		"rho2": 1.830,
 		"rho3": 1.170,
@@ -1515,7 +1516,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 169.79714731264897
 	},
 	"NGC6503": {
-		"rho0": 2.01,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.01,
 		"rho1": 1.18,
 		"rho2": 0.86,
 		"rho3": 0.67,
@@ -1531,7 +1532,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 107.37396251617564
 	},
 	"NGC6674": {
-		"rho0": 3.23,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.23,
 		"rho1": 1.19,
 		"rho2": 0.71,
 		"rho3": 0.59,
@@ -1547,7 +1548,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 230.96627150362127
 	},
 	"NGC6789": {
-		"rho0": 1.807,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.807,
 		"rho1": 1.138,
 		"rho2": 1.136,
 		"rho3": 1.136,
@@ -1563,7 +1564,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 27.497552650767656
 	},
 	"NGC6946": {
-		"rho0": 4.44,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.44,
 		"rho1": 1.07,
 		"rho2": 0.93,
 		"rho3": 0.64,
@@ -1579,7 +1580,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 177.59713431414562
 	},
 	"NGC7331": {
-		"rho0": 5.212025990544413,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.212025990544413,
 		"rho1": 2.09,
 		"rho2": 1.69,
 		"rho3": 1.19,
@@ -1595,7 +1596,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 162.1279004595751
 	},
 	"NGC7793": {
-		"rho0": 5.188653099586366,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.188653099586366,
 		"rho1": 4.776955304661025,
 		"rho2": 2.710830426260153,
 		"rho3": 2.710830426260153,
@@ -1611,7 +1612,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 54.75435449694761
 	},
 	"NGC7814": {
-		"rho0": 8.3,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 8.3,
 		"rho1": 1.44,
 		"rho2": 0.95,
 		"rho3": 0.66,
@@ -1627,7 +1628,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 183.1704610122451
 	},
 	"PGC51017": {
-		"rho0": 1.647003929023706,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.647003929023706,
 		"rho1": 0.6123897277281509,
 		"rho2": 0.5979593515553048,
 		"rho3": 0.40961057400228873,
@@ -1643,7 +1644,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 18.835709046763906
 	},
 	"UGC00128": {
-		"rho0": 7.952249854507936,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.952249854507936,
 		"rho1": 4.7925668723591786,
 		"rho2": 3.154320812979994,
 		"rho3": 2.055056156399084,
@@ -1659,7 +1660,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 64.09823498311516
 	},
 	"UGC00191": {
-		"rho0": 5.062483042636673,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.062483042636673,
 		"rho1": 2.8509599154573335,
 		"rho2": 1.928294498254821,
 		"rho3": 1.3708421278203777,
@@ -1675,7 +1676,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.60340541677096
 	},
 	"UGC00634": {
-		"rho0": 1.31,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.31,
 		"rho1": 1.16,
 		"rho2": 0.92,
 		"rho3": 0.84,
@@ -1691,7 +1692,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 79.56138051494564
 	},
 	"UGC00731": {
-		"rho0": 2.7199306742503273,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.7199306742503273,
 		"rho1": 2.074640886893129,
 		"rho2": 1.993705840889219,
 		"rho3": 1.7567748101975116,
@@ -1707,7 +1708,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 40.348244727670746
 	},
 	"UGC00891": {
-		"rho0": 1.8367091351878846,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.8367091351878846,
 		"rho1": 1.7127754118381273,
 		"rho2": 1.3962257687023945,
 		"rho3": 1.3962257687023945,
@@ -1723,7 +1724,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 35.07204071301883
 	},
 	"UGC01230": {
-		"rho0": 4.715,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.715,
 		"rho1": 4.712,
 		"rho2": 2.672,
 		"rho3": 1.171,
@@ -1739,7 +1740,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 57.68286110165206
 	},
 	"UGC01281": {
-		"rho0": 1.33,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.33,
 		"rho1": 1.27,
 		"rho2": 1.26,
 		"rho3": 1.09,
@@ -1755,7 +1756,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 31.55882442310418
 	},
 	"UGC02023": {
-		"rho0": 1.78,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.78,
 		"rho1": 1.305,
 		"rho2": 1.137,
 		"rho3": 1.137,
@@ -1771,7 +1772,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 28.750829249674307
 	},
 	"UGC02259": {
-		"rho0": 5.786499113368636,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.786499113368636,
 		"rho1": 4.557867726572455,
 		"rho2": 2.570166014545415,
 		"rho3": 1.628887651194234,
@@ -1787,7 +1788,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 46.11855294334471
 	},
 	"UGC02455": {
-		"rho0": 1.8472655020307054,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.8472655020307054,
 		"rho1": 1.264720291332661,
 		"rho2": 1.1735849089245152,
 		"rho3": 1.1265091342684073,
@@ -1803,7 +1804,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 29.215084110678387
 	},
 	"UGC02487": {
-		"rho0": 3.81,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.81,
 		"rho1": 2.35,
 		"rho2": 1.31,
 		"rho3": 0.76,
@@ -1819,7 +1820,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 255.16834496436252
 	},
 	"UGC02885": {
-		"rho0": 4.40,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.40,
 		"rho1": 0.97,
 		"rho2": 0.64,
 		"rho3": 0.49,
@@ -1835,7 +1836,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 279.9249719243312
 	},
 	"UGC02916": {
-		"rho0": 4.99,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.99,
 		"rho1": 1.13,
 		"rho2": 0.79,
 		"rho3": 0.6,
@@ -1851,7 +1852,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 322.9868926450927
 	},
 	"UGC02953": {
-		"rho0": 14.45,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 14.45,
 		"rho1": 3.97,
 		"rho2": 1.88,
 		"rho3": 1.28,
@@ -1867,7 +1868,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 215.09051440759413
 	},
 	"UGC03205": {
-		"rho0": 1.34,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.34,
 		"rho1": 0.73,
 		"rho2": 0.63,
 		"rho3": 0.5,
@@ -1883,7 +1884,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 236.01373490823417
 	},
 	"UGC03546": {
-		"rho0": 10.94,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 10.94,
 		"rho1": 1.49,
 		"rho2": 1.12,
 		"rho3": 0.94,
@@ -1899,7 +1900,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 177.55750644055954
 	},
 	"UGC03580": {
-		"rho0": 2.52,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.52,
 		"rho1": 0.77,
 		"rho2": 0.56,
 		"rho3": 0.36,
@@ -1915,7 +1916,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 136.5268795691032
 	},
 	"UGC04278": {
-		"rho0": 2.325,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.325,
 		"rho1": 2.032,
 		"rho2": 1.574,
 		"rho3": 1.407,
@@ -1931,7 +1932,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 38.26852664375927
 	},
 	"UGC04305": {
-		"rho0": 1.1932192561626642,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.1932192561626642,
 		"rho1": 1.1932192561626642,
 		"rho2": 1.1932192561626642,
 		"rho3": 0.7741240112759331,
@@ -1947,7 +1948,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 26.05760761925568
 	},
 	"UGC04325": {
-		"rho0": 3.635,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.635,
 		"rho1": 2.5,
 		"rho2": 2.390,
 		"rho3": 1.67,
@@ -1963,7 +1964,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 47.40045805707883
 	},
 	"UGC04483": {
-		"rho0": 1.081401886869768,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.081401886869768,
 		"rho1": 0.7534530912533225,
 		"rho2": 0.73809596250241,
 		"rho3": 0.6657091321902152,
@@ -1979,7 +1980,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 19.498599312569908
 	},
 	"UGC04499": {
-		"rho0": 2.3013844061930766,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.3013844061930766,
 		"rho1": 1.8825431469147078,
 		"rho2": 1.8825431469147078,
 		"rho3": 1.5780495890115207,
@@ -1995,7 +1996,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 39.829013278374404
 	},
 	"UGC05005": {
-		"rho0": 3.920,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.920,
 		"rho1": 1.540,
 		"rho2": 1.490,
 		"rho3": 1.380,
@@ -2011,23 +2012,24 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 61.78698483277303
 	},
 	"UGC05253": {
-		"rho0": 18,
-		"rho1": 4.57,
-		"rho2": 2.68,
-		"rho3": 1.47,
-		"rho4": 0.89,
-		"r1": 0.044,
-		"r2": 0.186,
-		"r3": 0.544,
-		"r4": 0.988,
-		"r5": 1.000,
+		remapOn: true, remapDelta: 0.058, remapRc: 0.258, 
+		"rho0": 7.240,
+		"rho1": 2.86,
+		"rho2": 1.93,
+		"rho3": 1.140,
+		"rho4": 0.78,
+		"r1": 0.100,
+		"r2": 0.260,
+		"r3": 0.612,
+		"r4": 0.966,
+		"r5": 1.040,
 		"eps": 0.005,
 		"support": 0.027,
-		"amp": 204.5,
-		"newtonAmp": 156.5
+		"amp": 259.5,
+		"newtonAmp": 180.9
 	},
 	"UGC05414": {
-		"rho0": 3.3045078044625913,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.3045078044625913,
 		"rho1": 1.4283086386709822,
 		"rho2": 1.3053519347074163,
 		"rho3": 1.3053519347074163,
@@ -2043,7 +2045,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 32.937784050836605
 	},
 	"UGC05716": {
-		"rho0": 4.434,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.434,
 		"rho1": 2.411,
 		"rho2": 2.127,
 		"rho3": 1.719,
@@ -2059,7 +2061,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 41.442368420877834
 	},
 	"UGC05721": {
-		"rho0": 6.456313334111593,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6.456313334111593,
 		"rho1": 2.424453799725062,
 		"rho2": 2.424453799725062,
 		"rho3": 1.6306089159227561,
@@ -2075,7 +2077,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 48.09233284936179
 	},
 	"UGC05750": {
-		"rho0": 2.195094398508584,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.195094398508584,
 		"rho1": 2.195094398508584,
 		"rho2": 2.1847154593253304,
 		"rho3": 1.2205510564689053,
@@ -2091,7 +2093,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 41.99384472593893
 	},
 	"UGC05764": {
-		"rho0": 2.2347899144680152,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.2347899144680152,
 		"rho1": 2.0416004408631347,
 		"rho2": 1.4896095776377887,
 		"rho3": 1.4896095776377887,
@@ -2107,7 +2109,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 35.01687812509374
 	},
 	"UGC05829": {
-		"rho0": 1.570,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.570,
 		"rho1": 1.470,
 		"rho2": 1.300,
 		"rho3": 1.280,
@@ -2123,7 +2125,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 33.83695596322798
 	},
 	"UGC05918": {
-		"rho0": 1.941183944058552,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.941183944058552,
 		"rho1": 1.2987716661018762,
 		"rho2": 1.2551115172249319,
 		"rho3": 1.0158226887373993,
@@ -2139,7 +2141,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 28.290067562987097
 	},
 	"UGC05986": {
-		"rho0": 0.871587206955786,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.871587206955786,
 		"rho1": 0.871587206955786,
 		"rho2": 0.7366740676505473,
 		"rho3": 0.7366740676505473,
@@ -2155,7 +2157,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 99.39340309273452
 	},
 	"UGC05999": {
-		"rho0": 3.3977688745619923,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.3977688745619923,
 		"rho1": 2.241934073300989,
 		"rho2": 2.2407514816805154,
 		"rho3": 1.8561877655114152,
@@ -2171,7 +2173,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 46.62328032130537
 	},
 	"UGC06399": {
-		"rho0": 2.1059273410701635,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.1059273410701635,
 		"rho1": 2.1059273410701635,
 		"rho2": 2.1059273410701635,
 		"rho3": 2.1059273410701635,
@@ -2187,7 +2189,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 43.50080730123125
 	},
 	"UGC06446": {
-		"rho0": 3.165,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.165,
 		"rho1": 3.087,
 		"rho2": 2.225,
 		"rho3": 1.91,
@@ -2203,7 +2205,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 46.45057515300756
 	},
 	"UGC06614": {
-		"rho0": 4.200,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.200,
 		"rho1": 0.790,
 		"rho2": 0.800,
 		"rho3": 0.800,
@@ -2219,7 +2221,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 208.22363947010885
 	},
 	"UGC06628": {
-		"rho0": 3.662,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.662,
 		"rho1": 1.705,
 		"rho2": 1.535,
 		"rho3": 1.019,
@@ -2235,7 +2237,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 29.720599378969794
 	},
 	"UGC06667": {
-		"rho0": 0.460,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.460,
 		"rho1": 0.470,
 		"rho2": 0.410,
 		"rho3": 0.300,
@@ -2251,7 +2253,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 85.98225558040046
 	},
 	"UGC06786": {
-		"rho0": 3.500,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.500,
 		"rho1": 0.57,
 		"rho2": 0.41,
 		"rho3": 0.32,
@@ -2267,7 +2269,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 314.8934113286949
 	},
 	"UGC06787": {
-		"rho0": 6,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6,
 		"rho1": 1.55,
 		"rho2": 0.92,
 		"rho3": 0.86,
@@ -2283,7 +2285,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 213.3665238230032
 	},
 	"UGC06818": {
-		"rho0": 1.9651679309930905,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.9651679309930905,
 		"rho1": 1.8814880169031905,
 		"rho2": 1.4631937415310898,
 		"rho3": 1.3594204068570097,
@@ -2299,7 +2301,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 34.98009495957466
 	},
 	"UGC06917": {
-		"rho0": 5.143198828176888,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.143198828176888,
 		"rho1": 3.89632323009166,
 		"rho2": 2.666866378282617,
 		"rho3": 1.6535885920883566,
@@ -2315,7 +2317,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 50.967756227702786
 	},
 	"UGC06923": {
-		"rho0": 3.392,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.392,
 		"rho1": 1.667,
 		"rho2": 1.667,
 		"rho3": 1.667,
@@ -2331,7 +2333,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 41.6741939641177
 	},
 	"UGC06930": {
-		"rho0": 4.295809122091824,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.295809122091824,
 		"rho1": 3.7475284903331367,
 		"rho2": 2.3611254353343223,
 		"rho3": 2.220661352607949,
@@ -2347,7 +2349,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 52.78722214827881
 	},
 	"UGC06973": {
-		"rho0": 7.097728316530931,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.097728316530931,
 		"rho1": 6.138831307441005,
 		"rho2": 3.693110095191901,
 		"rho3": 2.730470499145125,
@@ -2363,7 +2365,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 73.72402440509008
 	},
 	"UGC06983": {
-		"rho0": 3.524129474382018,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.524129474382018,
 		"rho1": 3.524129474382018,
 		"rho2": 2.6599645949964827,
 		"rho3": 2.403008132574846,
@@ -2379,7 +2381,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 55.76855093574915
 	},
 	"UGC07089": {
-		"rho0": 0.490,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.490,
 		"rho1": 0.490,
 		"rho2": 0.430,
 		"rho3": 0.360,
@@ -2395,7 +2397,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 70.26206637984225
 	},
 	"UGC07125": {
-		"rho0": 2.94,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.94,
 		"rho1": 2.395,
 		"rho2": 1.549,
 		"rho3": 1.526,
@@ -2411,7 +2413,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 39.073697218196536
 	},
 	"UGC07151": {
-		"rho0": 2.322082221464089,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.322082221464089,
 		"rho1": 1.968482676089917,
 		"rho2": 1.9656465299078973,
 		"rho3": 1.5443618708659161,
@@ -2427,7 +2429,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 40.88224710008481
 	},
 	"UGC07232": {
-		"rho0": 2.042,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.042,
 		"rho1": 1.075,
 		"rho2": 0.954,
 		"rho3": 0.935,
@@ -2443,7 +2445,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 24.824293927206853
 	},
 	"UGC07261": {
-		"rho0": 3.4528683678765595,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.4528683678765595,
 		"rho1": 2.8109831579040447,
 		"rho2": 2.320783842052042,
 		"rho3": 1.5727569600500335,
@@ -2459,7 +2461,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 41.96196407324477
 	},
 	"UGC07323": {
-		"rho0": 2.7669318230044544,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.7669318230044544,
 		"rho1": 2.0667012478280684,
 		"rho2": 1.6999003606572096,
 		"rho3": 1.3847612532513622,
@@ -2475,7 +2477,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 39.533674893878256
 	},
 	"UGC07399": {
-		"rho0": 4.167557777338462,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.167557777338462,
 		"rho1": 3.6697539186129213,
 		"rho2": 2.9699555079586912,
 		"rho3": 1.9251290638667058,
@@ -2491,7 +2493,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 50.41881769348581
 	},
 	"UGC07524": {
-		"rho0": 3.1366291573810625,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.1366291573810625,
 		"rho1": 2.0066241050641045,
 		"rho2": 1.9797050622729646,
 		"rho3": 1.9748881939661342,
@@ -2507,7 +2509,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 41.5483587079204
 	},
 	"UGC07559": {
-		"rho0": 0.915562388756796,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.915562388756796,
 		"rho1": 0.8616659192452457,
 		"rho2": 0.8616659192452457,
 		"rho3": 0.6923801228824427,
@@ -2523,7 +2525,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 22.012159141390327
 	},
 	"UGC07577": {
-		"rho0": 0.8356235140514839,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.8356235140514839,
 		"rho1": 0.6946059198622654,
 		"rho2": 0.6647598129914686,
 		"rho3": 0.5762676305774588,
@@ -2539,7 +2541,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 11.285637370924428
 	},
 	"UGC07603": {
-		"rho0": 2.162,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.162,
 		"rho1": 1.773,
 		"rho2": 1.723,
 		"rho3": 1.094,
@@ -2555,7 +2557,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 36.84101194869243
 	},
 	"UGC07608": {
-		"rho0": 1.6,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.6,
 		"rho1": 1.508,
 		"rho2": 1.508,
 		"rho3": 1.508,
@@ -2571,7 +2573,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 34.98539564273105
 	},
 	"UGC07690": {
-		"rho0": 5.0491782689264895,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.0491782689264895,
 		"rho1": 2.877760356593058,
 		"rho2": 2.0803882162023557,
 		"rho3": 1.191838797111184,
@@ -2587,7 +2589,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 37.75775829271266
 	},
 	"UGC07866": {
-		"rho0": 1.1648149024646488,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.1648149024646488,
 		"rho1": 0.9617718645707629,
 		"rho2": 0.9425994058845726,
 		"rho3": 0.7942691742825796,
@@ -2603,7 +2605,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 22.45770132866954
 	},
 	"UGC08286": {
-		"rho0": 2.859,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.859,
 		"rho1": 2.651,
 		"rho2": 2.632,
 		"rho3": 1.77,
@@ -2619,7 +2621,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 45.107245924425584
 	},
 	"UGC08490": {
-		"rho0": 7.899736851143092,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.899736851143092,
 		"rho1": 3.0366551788050544,
 		"rho2": 2.3190993358177368,
 		"rho3": 1.6591889516471408,
@@ -2635,7 +2637,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 46.79843241674894
 	},
 	"UGC08550": {
-		"rho0": 1.992,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.992,
 		"rho1": 1.992,
 		"rho2": 1.698,
 		"rho3": 1.329,
@@ -2651,7 +2653,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 35.22879399510289
 	},
 	"UGC08699": {
-		"rho0": 2.7,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.7,
 		"rho1": 0.99,
 		"rho2": 0.71,
 		"rho3": 0.49,
@@ -2667,7 +2669,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 240.90239058496186
 	},
 	"UGC08837": {
-		"rho0": 1.057987140729455,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.057987140729455,
 		"rho1": 1.0131660318394413,
 		"rho2": 1.0131660318394413,
 		"rho3": 0.8915707294919129,
@@ -2683,7 +2685,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 24.285536330134335
 	},
 	"UGC09037": {
-		"rho0": 4.969,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.969,
 		"rho1": 4.65,
 		"rho2": 2.925,
 		"rho3": 2.925,
@@ -2699,7 +2701,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 67.57830899184466
 	},
 	"UGC09133": {
-		"rho0": 4.57,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.57,
 		"rho1": 1.13,
 		"rho2": 0.69,
 		"rho3": 0.56,
@@ -2715,7 +2717,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 257.9642579647686
 	},
 	"UGC09992": {
-		"rho0": 1.4726849773730104,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.4726849773730104,
 		"rho1": 1.3079325485781508,
 		"rho2": 0.8756097571932313,
 		"rho3": 0.852881153349456,
@@ -2731,7 +2733,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 26.035141294242433
 	},
 	"UGC10310": {
-		"rho0": 3.031,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.031,
 		"rho1": 2.079,
 		"rho2": 2.058,
 		"rho3": 1.362,
@@ -2747,7 +2749,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 40.13247229164519
 	},
 	"UGC11455": {
-		"rho0": 1.530,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.530,
 		"rho1": 1.640,
 		"rho2": 1.290,
 		"rho3": 0.710,
@@ -2763,7 +2765,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 225.76023968760543
 	},
 	"UGC11557": {
-		"rho0": 1.988419227105653,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.988419227105653,
 		"rho1": 1.988419227105653,
 		"rho2": 1.8478177395656872,
 		"rho3": 1.821690812916741,
@@ -2779,7 +2781,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 42.33196877393758
 	},
 	"UGC11820": {
-		"rho0": 1.740,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.740,
 		"rho1": 0.930,
 		"rho2": 0.770,
 		"rho3": 0.660,
@@ -2795,7 +2797,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 63.37025537644432
 	},
 	"UGC11914": {
-		"rho0": 18,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 18,
 		"rho1": 5.640,
 		"rho2": 2.990,
 		"rho3": 2.240,
@@ -2811,7 +2813,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 142.93191613705497
 	},
 	"UGC12506": {
-		"rho0": 5.01,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 5.01,
 		"rho1": 1.73,
 		"rho2": 1.44,
 		"rho3": 1.2,
@@ -2827,7 +2829,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 171.0619945488295
 	},
 	"UGC12632": {
-		"rho0": 3.3821334999776185,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.3821334999776185,
 		"rho1": 1.910433108501735,
 		"rho2": 1.910433108501735,
 		"rho3": 1.5598067509750881,
@@ -2843,7 +2845,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 40.03974270867105
 	},
 	"UGC12732": {
-		"rho0": 4.792332913896126,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.792332913896126,
 		"rho1": 2.7984822224766233,
 		"rho2": 2.111190846357559,
 		"rho3": 1.6780471373419228,
@@ -2859,7 +2861,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 45.80079831774193
 	},
 	"UGCA281": {
-		"rho0": 0.9821786365099812,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.9821786365099812,
 		"rho1": 0.9422720832588525,
 		"rho2": 0.9048650271821711,
 		"rho3": 0.7735913113287688,
@@ -2875,7 +2877,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 21.588791148408937
 	},
 	"UGCA442": {
-		"rho0": 2.9521587848068522,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.9521587848068522,
 		"rho1": 1.701617658591711,
 		"rho2": 1.473274797864485,
 		"rho3": 1.473274797864485,
@@ -2891,7 +2893,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 33.28964635138767
 	},
 	"UGCA444": {
-		"rho0": 1.2628585412519735,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.2628585412519735,
 		"rho1": 1.2423315315746357,
 		"rho2": 0.9571220149758328,
 		"rho3": 0.9571220149758328,
