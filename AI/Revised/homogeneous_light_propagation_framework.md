@@ -921,12 +921,9 @@ Thus the interferometer's optical elements are not placed at the same coordinate
 Second, the light ray is not launched along the naive arm direction. Since the splitter and mirrors move during the propagation interval, the transmitted or reflected ray must be aimed along an aberrated direction so that it reaches the moving target. In the planar form developed in Appendix B, the signed angular correction may be written
 
 $$
-\Delta\theta
-=
--\operatorname{sgn}\!\bigl((\Delta\vec x\times \vec v)_z\bigr)
+\Delta\theta = -\operatorname{sgn}\!\bigl((\Delta\vec x\times \vec v)_z\bigr)
 \left[
-\arccos\!\left(\frac{\cos\theta+\beta}{1+\beta\cos\theta}\right)
--
+\arccos\!\left(\frac{\cos\theta+\beta}{ +\beta\cos\theta}\right) -
 \arccos(\cos\theta)
 \right],
 $$
