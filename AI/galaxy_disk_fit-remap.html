@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STFR galaxy disk constrained profile fit</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:10px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:13px;background:#f6f7f9;color:#15171a}.wrap{display:grid;grid-template-columns:minmax(380px,1.25fr) minmax(320px,.75fr);gap:10px}.panel{background:#fff;border:1px solid #d9dde5;border-radius:9px;padding:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}h1{font-size:16px;margin:0 0 6px}h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a7280;margin:0 0 8px}.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.row{display:flex;align-items:center;gap:7px;margin:5px 0}.row label{width:118px;color:#525a66;font-size:12px}.row input[type=range]{flex:1;accent-color:#2b77d4}.row span{width:58px;text-align:right;font-variant-numeric:tabular-nums;font-size:12px}.small{font-size:11px;color:#6a7280;line-height:1.4}select,button{font:inherit;font-size:12px;padding:4px 7px;border:1px solid #cdd3dc;border-radius:6px;background:#fff}button{cursor:pointer}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}canvas{display:block;width:100%;background:#fff;border:1px solid #e0e4ea;border-radius:7px}.plot{height:295px}.prof{height:150px}.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.metric{background:#f6f7f9;border:1px solid #e0e4ea;border-radius:7px;padding:6px}.metric b{display:block;font-size:11px;color:#5b6370}.metric span{font-variant-numeric:tabular-nums}@media(max-width:780px){.wrap,.grid2{grid-template-columns:1fr}.row label{width:105px}}
+</style>
+</head>
+<body>
+<div class="top panel">
+  <h1>STFR disk profile fitter - constrained edge model</h1>
+  <label>Galaxy <select id="gal"></select></label>
+  <button id="reset">Load preset</button>
+  <button id="fitAmp">Fit velocity scale</button>
+  <span class="small" id="status"></span>
+</div>
+<div class="wrap">
+  <div>
+    <div class="panel">
+      <h2>Rotation curve</h2>
+      <canvas id="rot" class="plot"></canvas>
+      <div class="small">Observed velocity is plotted with error bars. The framework curve is generated from the ten-slider occupation profile and fitted by one amplitude scale. The framework curve is generated from the constrained occupation profile: r1/r2 fit the leading rise, r3 sets the start of the long near-flat support shelf, r4 sits near the visible edge, and r5 is the final cutoff at or just beyond the sampled galaxy edge. The pale dashed line is the independently scaled Newtonian rotation curve obtained if the occupation profile is treated as an ordinary enclosed-mass profile.</div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h2>Brightness and fitted occupation</h2><canvas id="prof" class="prof"></canvas></div>
+      <div class="panel"><h2>Data component curves</h2><canvas id="comp" class="prof"></canvas></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Piecewise linear occupation profile</h2>
+    <div class="row"><label>Core peak rho0</label><input id="rho0" type="range" min="0" max="6" step="0.01"><span id="rho0v"></span></div>
+    <div class="row"><label>Core rim rho1</label><input id="rho1" type="range" min="0" max="6" step="0.01"><span id="rho1v"></span></div>
+    <div class="row"><label>Inner disk rho2</label><input id="rho2" type="range" min="0" max="6" step="0.01"><span id="rho2v"></span></div>
+    <div class="row"><label>Outer disk rho3</label><input id="rho3" type="range" min="0" max="6" step="0.01"><span id="rho3v"></span></div>
+    <div class="row"><label>Edge shelf rho4</label><input id="rho4" type="range" min="0" max="6" step="0.01"><span id="rho4v"></span></div>
+    <div class="row"><label>Core end r1</label><input id="r1" type="range" min="0.020" max="0.180" step="0.002"><span id="r1v"></span></div>
+    <div class="row"><label>Transition end r2</label><input id="r2" type="range" min="0.050" max="0.320" step="0.002"><span id="r2v"></span></div>
+    <div class="row"><label>Flat shelf starts r3</label><input id="r3" type="range" min="0.090" max="0.700" step="0.002"><span id="r3v"></span></div>
+    <div class="row"><label>Edge shelf end r4</label><input id="r4" type="range" min="0.650" max="1.800" step="0.002"><span id="r4v"></span></div>
+    <div class="row"><label>Outer cutoff r5</label><input id="r5" type="range" min="0.700" max="2.200" step="0.002"><span id="r5v"></span></div>
+    <h2 style="margin-top:12px">Velocity controls</h2>
+    <div class="row"><label>Framework amp</label><input id="amp" type="range" min="0" max="500" step="0.5"><span id="ampv"></span></div>
+    <div class="row"><label>Smoothing eps</label><input id="eps" type="range" min="0.002" max="0.05" step="0.001" value="0.012"><span id="epsv"></span></div>
+    <div class="row"><label>Disk support</label><input id="support" type="range" min="0.002" max="0.08" step="0.001" value="0.015"><span id="supportv"></span></div>
+    <h2 style="margin-top:12px">Inner radius remap diagnostic</h2>
+    <div class="row"><label>Enable remap</label><input id="remapOn" type="checkbox" style="flex:0 0 auto"><span id="remapOnv">off</span></div>
+    <div class="row"><label>Inner offset Δr</label><input id="remapDelta" type="range" min="0" max="0.250" step="0.001" value="0"><span id="remapDeltav">0.000</span></div>
+    <div class="row"><label>Cutoff radius rc</label><input id="remapRc" type="range" min="0.020" max="0.800" step="0.002" value="0.250"><span id="remapRcv">0.250</span></div>
+    <div class="small">Diagnostic only: observed velocity samples with <code>r&lt;rc</code> are compared at <code>r_eff = r + Δr(1-r/rc)^2</code>. The source occupation profile itself is unchanged.</div>
+    <div class="readout">
+      <div class="metric"><b>R max</b><span id="mR"></span></div>
+      <div class="metric"><b>Framework RMS</b><span id="mVrms"></span></div>
+      <div class="metric"><b>Newton rho RMS</b><span id="mNrms"></span></div>
+      <div class="metric"><b>Newton rho amp</b><span id="mNamp"></span></div>
+      <div class="metric"><b>Brightness RMS</b><span id="mBrms"></span></div>
+    </div>
+    <p class="small" style="margin-top:10px">The pale dashed Newton curve treats the same occupation profile as an ordinary enclosed-mass proxy and fits only its amplitude; this is a comparison curve, not the framework-gradient result. The radii are structurally constrained: <code>r1/r2</code> control the leading rise, <code>r3</code> is kept near the center to define the start of the broad flat shelf, <code>r4</code> is kept near the visible-edge shelf, and <code>r5</code> is allowed to reach or slightly exceed the brightness edge while remaining beyond <code>r4</code>. Rho is an occupied-support envelope, not brightness itself.</p>
+  </div>
+</div>
+<script type="module">
+import { ROTMOD_GALAXIES } from './rotmod_ltg_data.mjs';
+const $=id=>document.getElementById(id);
+const ids=['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','amp','eps','support','remapDelta','remapRc'];
+let G=null, P={on:false, delta:0, rc:0.25}, fwAmp=1, newtonAmp=1;
+
+import { GALAXY_PRESETS, PRESET_ORDER } from './galaxy_presets.mjs';
+const USER_PRESETS = GALAXY_PRESETS;
+const MANUAL_PRESET_ORDER=["M31",'MilkyWay','NGC2403','ESO563-G021','CamB','D631-7','UGC02953','UGC04305','NGC2915', 'D512-2', 'D564-8'
+				, 'ESO079-G014', 'ESO116-G012', 'ESO444-G084'];
+
+function clamp01(v,a,b){return Math.min(b,Math.max(a,v));}
+function enforceStructure(){
+  P.r1=clamp01(P.r1,0.020,0.180);
+  P.r2=clamp01(Math.max(P.r1+0.012,P.r2),0.050,0.320);
+  P.r3=clamp01(Math.max(P.r2+0.018,P.r3),0.090,0.700);
+  P.r4=clamp01(Math.max(P.r3+0.040,P.r4),0.650,1.800);
+  P.r5=clamp01(Math.max(P.r4+0.010,P.r5),0.700,2.200);
+}
+function clampRadii(){enforceStructure();}
+function rho(x){clampRadii(); if(x<=P.r1)return P.rho0+(P.rho1-P.rho0)*(x/P.r1); if(x<=P.r2)return P.rho1+(P.rho2-P.rho1)*((x-P.r1)/(P.r2-P.r1)); if(x<=P.r3)return P.rho2+(P.rho3-P.rho2)*((x-P.r2)/(P.r3-P.r2)); if(x<=P.r4)return P.rho3+(P.rho4-P.rho3)*((x-P.r3)/(P.r4-P.r3)); if(x<=P.r5)return P.rho4*(1-(x-P.r4)/(P.r5-P.r4)); return 0;}
+let fieldCache=null;
+function invalidateField(){fieldCache=null;}
+function sigmaAtRaw(x){
+  const NR=168, NA=96, maxR=Math.max(P.r5,0.05), sup=P.support;
+  const soft=Math.max(0.012, P.eps*1.75, maxR/NR*1.6);
+  const soft2=soft*soft;
+  let sig=0;
+  for(let i=0;i<NR;i++){
+    const rr=(i+.5)/NR*maxR, dr=maxR/NR, den=rho(rr);
+    if(den<=0)continue;
+    const d2=sup*den*den;
+    let avg=0;
+    for(let a=0;a<NA;a++){
+      const th=(a+.5)/NA*Math.PI*2;
+      const dx=x-rr*Math.cos(th), dy=rr*Math.sin(th);
+      avg+=Math.sqrt(1+d2/(dx*dx+dy*dy+soft2))-1;
+    }
+    sig+=(avg/NA)*den*rr*dr*Math.PI*2;
+  }
+  return sig;
+}
+function buildFieldCache(){
+  if(fieldCache)return fieldCache;
+  const xmax=Math.max(2.35, P.r5*1.15), N=380, xs=[], sig=[];
+  for(let i=0;i<N;i++){const x=i/(N-1)*xmax; xs.push(x); sig.push(sigmaAtRaw(x));}
+  const sm=sig.slice(), kernel=[1,4,7,10,7,4,1];
+  const ksum=kernel.reduce((a,b)=>a+b,0);
+  for(let i=0;i<N;i++){let acc=0; for(let k=0;k<kernel.length;k++){const j=Math.min(N-1,Math.max(0,i+k-3)); acc+=sig[j]*kernel[k];} sm[i]=acc/ksum;}
+  const grad=[];
+  for(let i=0;i<N;i++){const i0=Math.max(0,i-2), i1=Math.min(N-1,i+2); grad[i]=(sm[i1]-sm[i0])/(xs[i1]-xs[i0]||1);}
+  fieldCache={xs,sig:sm,grad,xmax,N};
+  return fieldCache;
+}
+function interp(arr,x){
+  const c=buildFieldCache();
+  if(x<=0)return arr[0];
+  if(x>=c.xmax)return arr[c.N-1];
+  const f=x/c.xmax*(c.N-1), i=Math.floor(f), t=f-i;
+  return arr[i]*(1-t)+arr[i+1]*t;
+}
+function sigmaAt(x){const c=buildFieldCache(); return interp(c.sig,x);}
+function shapeFW(x){
+  const c=buildFieldCache();
+  const g=interp(c.grad,x);
+  return Math.sqrt(Math.max(x*Math.max(0,-g),0));
+}
+function mEnc(x){let m=0, N=120; for(let i=0;i<N;i++){const rr=(i+.5)/N*x; m+=rho(rr)*rr*(x/N);} return 2*Math.PI*m;}
+function shapeN(x){return Math.sqrt(Math.max(mEnc(x)/Math.max(x,1e-4),0));}
+function sampleX(row){return row.r/G.preset.rMax;}
+function effX(x){
+  if(!P.remapOn || P.remapDelta<=0 || P.remapRc<=0 || x>=P.remapRc) return x;
+  const t=1-x/P.remapRc;
+  return x + P.remapDelta*t*t;
+}
+function fitScale(shapeFn){let num=0, den=0; for(const r of G.rows){const x=effX(sampleX(r)); const s=shapeFn(x); const w=1/Math.max(1,r.errV*r.errV); num+=s*r.vObs*w; den+=s*s*w;} return den?num/den:1;}
+function rms(shapeFn,amp){let s=0,n=0; for(const r of G.rows){const x=effX(sampleX(r)); const e=amp*shapeFn(x)-r.vObs; s+=e*e; n++;} return Math.sqrt(s/Math.max(1,n));}
+function brightnessRms(){const bs=G.rows.map(r=>Math.max(0,r.sbDisk+r.sbBul)), bMax=Math.max(...bs,1); let s=0; for(let i=0;i<G.rows.length;i++){const x=G.rows[i].r/G.preset.rMax, b=bs[i]/bMax; const e=rho(x)-b; s+=e*e;} return Math.sqrt(s/G.rows.length);}
+function expandPreset(base){
+  const u=USER_PRESETS[G?.name||''];
+  if(u){ fwAmp=u.amp||fwAmp; return {...u}; }
+  const oldR3=base.r3;
+  const r3=Math.min(0.62, Math.max(base.r2+0.04, oldR3*0.45));
+  const r4=Math.min(1.20, Math.max(0.88, oldR3*1.03));
+  const r5=Math.min(1.45, Math.max(r4+0.05, oldR3*1.15));
+  return {
+    rho0:base.rho0,
+    rho1:base.rho1,
+    rho2:Math.max(base.rho2, base.rho1*0.58),
+    rho3:Math.max(base.rho2*0.92, 0.12),
+    rho4:Math.max(base.rho2*0.55, 0.04),
+    r1:base.r1,
+    r2:base.r2,
+    r3,r4,r5,
+    eps:+$('eps').value,
+    support:+$('support').value
+  };
+}
+function setFromPreset(g){G=g; P=expandPreset(g.preset); enforceStructure(); invalidateField(); if(USER_PRESETS[G.name]){fwAmp=USER_PRESETS[G.name].amp; newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8));} else fitVelocity(); syncControls(); drawAll();}
+function syncControls(){enforceStructure(); for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support','remapDelta','remapRc']){if(P[k]!=null)$(k).value=P[k];} $('remapOn').checked=P.remapOn; $('amp').value=fwAmp; updateLabels();}
+function updateLabels(){for(const k of ids){const el=$(k+'v'); if(!el) continue; const v=+$(k).value; el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));} $('remapOnv').textContent=P.on?'on':'off'; $('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-'; $('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-'; $('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-'; $('mNamp').textContent=G?newtonAmp.toFixed(1):'-'; $('mBrms').textContent=G?brightnessRms().toFixed(3):'-'; $('status').textContent=G?`${G.name}: ${G.rows.length} samples${P.on?' · inner remap on':''}`:'';}
+function fitVelocity(){invalidateField(); fwAmp=fitScale(shapeFW); newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8)); $('amp').value=fwAmp;}
+function onSlider(){for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support','remapDelta','remapRc'])P[k]=+$(k).value; P.remapOn=$('remapOn').checked; fwAmp=+$('amp').value; enforceStructure(); for(const k of ['r1','r2','r3','r4','r5'])$(k).value=P[k]; invalidateField(); updateLabels(); drawAll();}
+function points(n,fn,xmax=1.28){const a=[]; for(let i=0;i<n;i++){const x=(i/(n-1))*xmax; a.push([x,fn(x)]);} return a;}
+function drawAxes(ctx,W,H,pad,xmax,ymax,xlab,ylab){ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#d7dce5';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.lineTo(W-pad,pad);ctx.stroke();ctx.fillStyle='#687080';ctx.font='11px system-ui';ctx.fillText(xlab,W-pad-55,H-8);ctx.save();ctx.translate(12,pad+60);ctx.rotate(-Math.PI/2);ctx.fillText(ylab,0,0);ctx.restore();return [(x)=>pad+x/xmax*(W-2*pad),(y)=>H-pad-y/ymax*(H-2*pad)];}
+function poly(ctx,arr,sx,sy,color,width=2,dash=[]){ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();arr.forEach(([x,y],i)=>{if(i)ctx.lineTo(sx(x),sy(y));else ctx.moveTo(sx(x),sy(y));});ctx.stroke();ctx.restore();}
+function dots(ctx,arr,sx,sy,color,r=3){ctx.fillStyle=color;for(const [x,y] of arr){ctx.beginPath();ctx.arc(sx(x),sy(y),r,0,Math.PI*2);ctx.fill();}}
+function canvasSize(c){const dpr=Math.min(devicePixelRatio||1,2), rect=c.getBoundingClientRect(); c.width=Math.round(rect.width*dpr); c.height=Math.round(rect.height*dpr); const ctx=c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return [ctx,rect.width,rect.height];}
+function drawRot(){const [ctx,W,H]=canvasSize($('rot')); 
+	const xs=G.rows.map(r=>r.r/G.preset.rMax), yobs=G.rows.map(r=>r.vObs); 
+	const ymax=Math.max(...yobs, fwAmp*Math.max(...points(100,shapeFW,Math.max(1.55,P.r5*1.08)).map(p=>p[1])), newtonAmp*Math.max(...points(100,shapeN,Math.max(1.55,P.r5*1.08)).map(p=>p[1])), 1)*1.14; 
+	const [sx,sy]=drawAxes(ctx,W,H,34,Math.max(1.55,P.r5*1.08),ymax,'r/Rmax','km/s');
+  const fw=points(95,x=>fwAmp*shapeFW(x),Math.max(1.55,P.r5*1.08)); const nw=points(95,x=>newtonAmp*shapeN(x),Math.max(1.55,P.r5*1.08)); 
+		poly(ctx,nw,sx,sy,'#9aa6b2',1.5,[5,4]); poly(ctx,fw,sx,sy,'#2b77d4',2.4); 
+		ctx.strokeStyle='#8791a0'; ctx.lineWidth=1; 
+		for(const r of G.rows){
+				const x0=sampleX(r), x=effX(x0); 
+				if(P.remapOn && Math.abs(x-x0)>1e-6){ctx.save();ctx.strokeStyle='#c6ccd4';ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(sx(x0),sy(r.vObs));
+				ctx.lineTo(sx(x),sy(r.vObs));ctx.stroke();ctx.restore();} ctx.beginPath();ctx.moveTo(sx(x),sy(r.vObs-r.errV));ctx.lineTo(sx(x),sy(r.vObs+r.errV));ctx.stroke();} 
+		if(P.on){dots(ctx,G.rows.map(r=>[sampleX(r),r.vObs]),sx,sy,'#b8c0ca',1.8);} 
+		dots(ctx,G.rows.map(r=>[effX(sampleX(r)),r.vObs]),sx,sy,'#15171a',2.5); 
+		legend(ctx,W, P.on?['original r','remapped obs','framework','Newton rho mass']:['observed','framework','Newton rho mass'], P.on?['#b8c0ca','#15171a','#2b77d4','#9aa6b2']:['#15171a','#2b77d4','#9aa6b2']);}
+function drawProf(){const [ctx,W,H]=canvasSize($('prof')); const bs=G.rows.map(r=>Math.max(0,r.sbDisk+r.sbBul)), bMax=Math.max(...bs,1); const ymax=Math.max(1,Math.max(P.rho0,P.rho1,P.rho2,P.rho3,P.rho4)*1.1); const [sx,sy]=drawAxes(ctx,W,H,28,Math.max(1.55,P.r5*1.08),ymax,'r/Rmax','norm'); poly(ctx,points(180,rho,Math.max(1.55,P.r5*1.08)),sx,sy,'#d43f2b',2.2); dots(ctx,G.rows.map((r,i)=>[r.r/G.preset.rMax,bs[i]/bMax]),sx,sy,'#30343a',2.3); legend(ctx,W,['brightness','rho profile'],['#30343a','#d43f2b']);}
+function drawComp(){const [ctx,W,H]=canvasSize($('comp')); const ymax=Math.max(...G.rows.flatMap(r=>[r.vGas,r.vDisk,r.vBul]),1)*1.15; const [sx,sy]=drawAxes(ctx,W,H,28,1.05,ymax,'r/Rmax','km/s'); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vGas]),sx,sy,'#238636',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vDisk]),sx,sy,'#c05b00',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vBul]),sx,sy,'#6f42c1',1.8); legend(ctx,W,['gas','disk','bulge'],['#238636','#c05b00','#6f42c1']);}
+function legend(ctx,W,names,colors){ctx.font='11px system-ui'; let x=W-12; for(let i=names.length-1;i>=0;i--){const w=ctx.measureText(names[i]).width+22; x-=w; ctx.fillStyle=colors[i]; ctx.fillRect(x,10,14,3); ctx.fillStyle='#555d68'; ctx.fillText(names[i],x+18,14);}}
+function drawAll(){if(!G)return; 
+		drawRot(); 
+		drawProf(); 
+		drawComp(); 
+		updateLabels();}
+const byName=new Map(ROTMOD_GALAXIES.map(g=>[g.name,g]));
+function addOption(g,labelPrefix=''){const o=document.createElement('option'); o.value=g.name; o.textContent=labelPrefix+g.name; $('gal').appendChild(o);}
+for(const name of MANUAL_PRESET_ORDER){const g=byName.get(name); if(g)addOption(g,'★ ');}
+const manualSet=new Set(MANUAL_PRESET_ORDER);
+const rest=ROTMOD_GALAXIES.filter(g=>!manualSet.has(g.name)).sort((a,b)=>a.name.localeCompare(b.name));
+if(rest.length){const sep=document.createElement('option'); sep.disabled=true; sep.textContent='──────── other galaxies'; $('gal').appendChild(sep);}
+for(const g of rest)addOption(g);
+$('gal').value='M31'; $('gal').addEventListener('change',()=>setFromPreset(byName.get($('gal').value))); $('reset').onclick=()=>setFromPreset(byName.get($('gal').value)); $('fitAmp').onclick=()=>{fitVelocity();syncControls();drawAll();}; function onRemap(){P.on=$('remapOn').checked; P.remapDelta=+$('remapDelta').value; P.remapRc=+$('remapRc').value; fitVelocity(); updateLabels(); drawAll();} for(const k of ids){const el=$(k); if(el) el.addEventListener('input', k.startsWith('remap')?onRemap:onSlider);} $('remapOn').addEventListener('change',onRemap); addEventListener('resize',drawAll); setFromPreset(byName.get('M31')||ROTMOD_GALAXIES[0]);
+</script>
+</body>
+</html>
