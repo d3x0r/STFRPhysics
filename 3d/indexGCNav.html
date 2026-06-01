@@ -4,21 +4,6 @@
 		
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-
-		<script type="module" src="./src/customShaderLoader2.js"></script>
-		<script src="./src/three.js/three.min.js"></script>
-		<script src="./src/lnQuat.js"></script>
-		<script src="./src/Quat.js"></script>
-		<script src="./src/lnQuatTestGCNav.js"></script>
-		<!--script src="./src/TrackballControls.js"></script-->
-		<script src="./src/Detector.js"></script>
-		<script src="./src/Stats.js"></script>
-
-		<script src="./src/THREEx.screenshot.js"></script>
-		<script src="./src/THREEx.FullScreen.js"></script>
-		<script src="./src/THREEx.WindowResize.js"></script>
-		<script src="./src/threex.dragpancontrols.js"></script>
-
 	<!--Mesh algorithms-->
 
 		<link href="./src/main.css" rel="stylesheet">
@@ -110,9 +95,33 @@
 
 	  </div>
 	</div>
+</body>
+		<script>
+			let waitGo = null;
+			const wait = new Promise( (res)=>{ waitGo = res } );
+		</script>
+		<script defer type="module" src="./src/customShaderLoader2.js">
+			cosole.log( window.THREE.TrackballControls );
+					waitGo();
+		</script>
 
-	<script type="text/javascript">
+		<!--script defer src="./src/three.js/three.min.js"></script-->
+		<!--script src="./src/TrackballControls.js"></script-->
+		<script defer src="./src/Detector.js"></script>
+		<script defer src="./src/Stats.js"></script>
 
+		<script defer src="./src/THREEx.screenshot.js"></script>
+		<script defer src="./src/THREEx.FullScreen.js"></script>
+		<script defer src="./src/THREEx.WindowResize.js"></script>
+		<script defer src="./src/threex.dragpancontrols.js"></script>
+
+
+	<script defer type="module">
+
+		import {lnQuat} from "./src/lnQuatSq.js"
+		import {DrawQuatPaths} from "./src/lnQuatTestGCNav.js"
+
+		await waitGo();
 		var stats, scene, renderer, composer;
 		var camera, cameraControl;
 		var geometry, geometryNormals, surfacemesh, wiremesh, lineSegments
@@ -137,22 +146,7 @@
 		  scene.remove( wiremesh );
 		  scene.remove( lineSegments );
 
-		if( document.getElementById( "add2Norm" )?.checked ) {
-			addN2 = true;
-		}else 			
-			addN2 = false;
-
-
-		if( document.getElementById( "useSLERP" )?.checked ) {
-			SLERP = true;
-		}else 			
-			SLERP = false;
-
-		if( document.getElementById( "useSLERPBasis" )?.checked ) {
-			SLERPbasis = true;
-		}else 			
-			SLERPbasis = false;
-
+		
 
 		  //var mesher = meshers[ document.getElementById("mesher").value ]
 		  /*
@@ -306,8 +300,8 @@
 			scene.add(camera);
 
 			// create a camera contol
-			cameraControls	= new THREE.TrackballControls( camera, document.getElementById('container') )
-
+			const cameraControls	= new THREE.TrackballControls( camera, document.getElementById('container') )
+			window.cameraControls = cameraControls;
 			// transparently support window resize
 			THREEx.WindowResize.bind(renderer, camera);
 			// allow 'p' to make screenshot
@@ -547,4 +541,5 @@
 		}
 	</script>
 
-</body></html>
+
+</html>
