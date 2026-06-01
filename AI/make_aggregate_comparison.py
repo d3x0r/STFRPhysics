@@ -47,7 +47,17 @@ def signed_square(v):
     return v * abs(v)
 
 
-def vbar_squared(row, disk_ml=DISK_ML, bulge_ml=BULGE_ML):
+def mond_settings_for(name, preset, rotmod_entry):
+    src = {}
+    src.update(rotmod_entry.get('preset', {}))
+    src.update(preset)
+    return {
+        'disk_ml': float(src.get('disk_ml', src.get('diskML', DISK_ML))),
+        'bulge_ml': float(src.get('bulge_ml', src.get('bulgeML', BULGE_ML))),
+        'g_dagger_m_s2': float(src.get('g_dagger_m_s2', src.get('gDagger', G_DAGGER_M_S2))),
+    }
+
+def vbar_squared(row, disk_ml, bulge_ml):
     v2 = (
         signed_square(row.get('vGas', 0.0))
         + disk_ml * signed_square(row.get('vDisk', 0.0))
@@ -55,13 +65,12 @@ def vbar_squared(row, disk_ml=DISK_ML, bulge_ml=BULGE_ML):
     )
     return max(0.0, v2)
 
-
-def mond_velocity(row, g_dagger_m_s2=G_DAGGER_M_S2):
+def mond_velocity(row, disk_ml, bulge_ml, g_dagger_m_s2):
     r = max(float(row.get('r', 0.0)), 1e-12)
-    vb2 = vbar_squared(row)
+    vb2 = vbar_squared(row, disk_ml, bulge_ml)
     if vb2 <= 0:
         return None
-    g_dagger = g_dagger_m_s2 / ACC_UNIT_M_S2  # convert to (km/s)^2/kpc
+    g_dagger = g_dagger_m_s2 / ACC_UNIT_M_S2
     g_bar = vb2 / r
     denom = 1.0 - math.exp(-math.sqrt(max(g_bar / g_dagger, 0.0)))
     if denom > 1e-12:
@@ -69,6 +78,28 @@ def mond_velocity(row, g_dagger_m_s2=G_DAGGER_M_S2):
     else:
         g_mond = math.sqrt(max(g_bar * g_dagger, 0.0))
     return math.sqrt(max(g_mond * r, 0.0))
+
+#def vbar_squared(row, disk_ml=DISK_ML, bulge_ml=BULGE_ML):
+#    v2 = (
+#        signed_square(row.get('vGas', 0.0))
+#        + disk_ml * signed_square(row.get('vDisk', 0.0))
+#        + bulge_ml * signed_square(row.get('vBul', 0.0))
+#    )
+#    return max(0.0, v2)
+
+#def mond_velocity(row, g_dagger_m_s2=G_DAGGER_M_S2):
+#    r = max(float(row.get('r', 0.0)), 1e-12)
+#    vb2 = vbar_squared(row)
+#    if vb2 <= 0:
+#        return None
+#    g_dagger = g_dagger_m_s2 / ACC_UNIT_M_S2  # convert to (km/s)^2/kpc
+#    g_bar = vb2 / r
+#    denom = 1.0 - math.exp(-math.sqrt(max(g_bar / g_dagger, 0.0)))
+#    if denom > 1e-12:
+#        g_mond = g_bar / denom
+#    else:
+#        g_mond = math.sqrt(max(g_bar * g_dagger, 0.0))
+#    return math.sqrt(max(g_mond * r, 0.0))
 
 
 def has_mond_components(rotmod_entry):
@@ -330,8 +361,10 @@ def main():
                     'vfw=', results[0].get('v_fw')
                 )
             mond_ok = has_mond_components(rot)
+            mond_cfg = mond_settings_for(name, preset, rot)
+
             for res, row in zip(results, rot['rows']):
-                res['v_mond'] = mond_velocity(row) if mond_ok else None
+                res['v_mond'] = mond_velocity(row, **mond_cfg) if mond_ok else None
             fw = model_metrics(results, 'v_fw', k=0)
             mond = model_metrics(results, 'v_mond', k=0) if mond_ok else model_metrics([], 'v_mond')
             newt = model_metrics(results, 'v_n', k=1)
@@ -371,7 +404,11 @@ def main():
             remap_on = bool(preset.get('remapOn') and preset.get('remapDelta', 0) > 0 and preset.get('remapRc', 0) > 0)
             n_remapped = sum(1 for r in results if r.get('remapped'))
             max_remap_kpc = max([abs(r.get('r_eff', r.get('r', 0)) - r.get('r', 0)) for r in results] or [0.0])
-
+            row_out.update({
+                'mond_disk_ml': mond_cfg['disk_ml'],
+                'mond_bulge_ml': mond_cfg['bulge_ml'],
+                'mond_g_dagger_m_s2': mond_cfg['g_dagger_m_s2'],
+            })
             row_out.update({
                 'remap_on': remap_on,
                 'remap_delta': preset.get('remapDelta'),
@@ -397,6 +434,7 @@ def main():
         'r4','r5','edge_width_pct','outer_extension_pct','edge_bounded_1pct','edge_bounded_5pct','edge_bounded_10pct',
         'has_mond_components','has_bulge_component',
         'remap_on','remap_delta','remap_rc','n_remapped','max_remap_kpc',
+        'mond_disk_ml','mond_bulge_ml','mond_g_dagger_m_s2',
     ]
     csv_path = os.path.join(OUT_DIR, '_aggregate_model_comparison.csv')
     with open(csv_path, 'w', newline='') as f:
@@ -407,8 +445,10 @@ def main():
 
     payload = {
         'settings': {
+            'mond_mode': 'fixed_global_reference',
             'disk_ml': DISK_ML,
             'bulge_ml': BULGE_ML,
+            'default_g_dagger_m_s2': G_DAGGER_M_S2,
             'g_dagger_m_s2': G_DAGGER_M_S2,
             'data_dir': DATA_DIR,
         },
