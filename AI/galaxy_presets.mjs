@@ -924,7 +924,7 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 67.4507889285468
 	},
 	"NGC2998": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.08,
+		remapOn: true, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.08,
 		"rho1": 1.04,
 		"rho2": 1.08,
 		"rho3": 0.79,
@@ -1852,20 +1852,20 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 322.9868926450927
 	},
 	"UGC02953": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 14.45,
-		"rho1": 3.97,
-		"rho2": 1.88,
-		"rho3": 1.28,
+		remapOn: true, remapDelta: 0.032, remapRc: 0.100, "rho0": 12.11,
+		"rho1": 3.71,
+		"rho2": 1.76,
+		"rho3": 1.26,
 		"rho4": 0.62,
-		"r1": 0.02,
-		"r2": 0.146,
-		"r3": 0.352,
-		"r4": 0.990,
+		"r1": 0.022,
+		"r2": 0.174,
+		"r3": 0.370,
+		"r4": 0.995,
 		"r5": 1.000,
 		"eps": 0.002,
 		"support": 0.027,
 		"amp": 417.5,
-		"newtonAmp": 215.09051440759413
+		"newtonAmp": 214.7
 	},
 	"UGC03205": {
 		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.34,
@@ -2253,28 +2253,28 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 85.98225558040046
 	},
 	"UGC06786": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.500,
+		remapOn: true, remapDelta: 0.021, remapRc: 0.100, "rho0": 2.050,
 		"rho1": 0.57,
 		"rho2": 0.41,
 		"rho3": 0.32,
 		"rho4": 0.15,
-		"r1": 0.013,
-		"r2": 0.186,
-		"r3": 0.433,
+		"r1": 0.020,
+		"r2": 0.190,
+		"r3": 0.434,
 		"r4": 0.990,
 		"r5": 1.000,
 		"eps": 0.007,
 		"support": 0.027,
 		"amp": 2299.172791888025,
-		"newtonAmp": 314.8934113286949
+		"newtonAmp": 316.8
 	},
 	"UGC06787": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 6,
-		"rho1": 1.55,
-		"rho2": 0.92,
+		remapOn: true, remapDelta: 0.014, remapRc: 0.280, "rho0": 10.74,
+		"rho1": 1.61,
+		"rho2": 0.93,
 		"rho3": 0.86,
 		"rho4": 0.46,
-		"r1": 0.046,
+		"r1": 0.024,
 		"r2": 0.316,
 		"r3": 0.496,
 		"r4": 0.974,
@@ -2282,7 +2282,7 @@ export const GALAXY_PRESETS = {
 		"eps": 0.002,
 		"support": 0.027,
 		"amp": 603.229774342401,
-		"newtonAmp": 213.3665238230032
+		"newtonAmp": 215.1
 	},
 	"UGC06818": {
 		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 1.9651679309930905,
