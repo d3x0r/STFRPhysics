@@ -72,21 +72,21 @@ Newton rho RMS
 
 export const GALAXY_PRESETS = {
 	"MilkyWay": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 7.38,
-		"rho1": 2.68,
-		"rho2": 0.740,
-		"rho3": 0.520,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 3.470,
+		"rho1": 0.930,
+		"rho2": 0.620,
+		"rho3": 0.460,
 		"rho4": 0.180,
-		"r1": 0.007,
-		"r2": 0.050,
-		"r3": 0.290,
-		"r4": 0.982,
+		"r1": 0.030,
+		"r2": 0.186,
+		"r3": 0.420,
+		"r4": 0.992,
 		"r5": 1.000,
 		"amp": 1267,
 		"eps": 0.011,
 		"support": 0.027,
-		"rMax": 24,
-		"newtonAmp": 268.2
+		"rMax": 28,
+		"newtonAmp": 273.2
 	},
 	"M31": {
 		remapOn: true, remapDelta: 0.023, remapRc: 0.100, 
@@ -107,20 +107,20 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 400
 	},
 	"CamB": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.52,
-		"rho1": 0.51,
-		"rho2": 0.51,
-		"rho3": 0.45,
-		"rho4": 0.34,
-		"r1": 0.08,
-		"r2": 0.246,
-		"r3": 0.67,
-		"r4": 0.990,
+		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 0.49,
+		"rho1": 0.48,
+		"rho2": 0.47,
+		"rho3": 0.42,
+		"rho4": 0.32,
+		"r1": 0.154,
+		"r2": 0.288,
+		"r3": 0.615,
+		"r4": 0.948,
 		"r5": 1.000,
 		"amp": 100,
 		"eps": 0.001,
 		"support": 0.027,
-		"rMax": 83,
+		"rMax": 1.79,
 		"newtonAmp": 13.588708565312807
 	},
 	"D512-2": {
@@ -2701,8 +2701,8 @@ export const GALAXY_PRESETS = {
 		"newtonAmp": 67.57830899184466
 	},
 	"UGC09133": {
-		remapOn: false, remapDelta: 0.021, remapRc: 0.100, "rho0": 4.57,
-		"rho1": 1.13,
+		remapOn: true, remapDelta: 0.036, remapRc: 0.350, "rho0": 4.64,
+		"rho1": 1.14,
 		"rho2": 0.69,
 		"rho3": 0.56,
 		"rho4": 0.25,

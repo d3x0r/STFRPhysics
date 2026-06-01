@@ -133,7 +133,7 @@ def shape_n_np(x, P):
 def get_rmax(name, preset, rotmod_entry):
     # rMax always comes from the rotmod data; any rMax field on the preset is leftover
     # from before the data sources were split out.
-    return rotmod_entry['preset']['rMax']
+    return float(preset.get('rMax', rotmod_entry['preset']['rMax']))
 
 def compute_galaxy(name, preset, rotmod_entry):
     rMax = get_rmax(name, preset, rotmod_entry)
@@ -143,10 +143,15 @@ def compute_galaxy(name, preset, rotmod_entry):
     results = []
     for row in rotmod_entry['rows']:
         x = row['r'] / rMax
-        v_fw = amp * shape_fw_np(x, cache)
-        v_n = newton_amp * shape_n_np(x, preset) if newton_amp else None
+        x_obs = float(row['r']) / rMax
+        x_eff = remap_radius_norm(x_obs, preset)
+        r_eff = x_eff * rMax
+        v_fw = amp * shape_fw_np(x_eff, cache)
+        v_n = newton_amp * shape_n_np(x_eff, preset) if newton_amp else None
         results.append({
-            'r': row['r'], 'x': x, 'v_obs': row['vObs'], 'err_v': row['errV'],
+            'r': row['r'], 'r_eff': r_eff, 'x': x, 'x_obs':x_obs, 'x_eff': x_eff,
+            'remapped':bool(abs(r_eff - float(row['r'])) > 1e-9),
+            'v_obs': row['vObs'], 'err_v': row['errV'],
             'v_fw': v_fw, 'v_n': v_n, 'v_gas': row['vGas'], 'v_disk': row['vDisk'],
             'sb_disk': row['sbDisk'],
         })
@@ -162,3 +167,12 @@ def fit_quality(results):
         chi2 += e * e * w
         N += 1
     return {'chi2_per_n': chi2 / max(N, 1), 'rms': math.sqrt(rms_sum / max(N, 1)), 'N': N}
+
+def remap_radius_norm(x, P):
+    if not P.get('remapOn') or P.get('remapDelta', 0) <= 0 or P.get('remapRc', 0) <= 0:
+        return x
+    rc = float(P.get('remapRc', 0))
+    if x >= rc:
+        return x
+    t = 1.0 - x / rc
+    return x + float(P.get('remapDelta', 0)) * t * t

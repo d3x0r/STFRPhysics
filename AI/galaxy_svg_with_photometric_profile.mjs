@@ -268,6 +268,11 @@ function pathFromPoints(pts) {
   return 'M ' + pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L ');
 }
 
+    function remapRadiusNorm(x,P){
+      if(!P.remapOn || P.remapDelta<=0 || P.remapRc<=0 || x>=P.remapRc) return x;
+      const t=1-x/P.remapRc;
+      return x + P.remapDelta*t*t;
+    }
 
 export function generateGalaxySvg(name, data, opts = {}) {
   const { presets, rotmod } = data;
@@ -291,28 +296,23 @@ export function generateGalaxySvg(name, data, opts = {}) {
   const cache = buildFieldCache(P);
   const mondOpts = opts.mond || opts;
 
-const remapActive = !!(P.remapOn && P.remapDelta > 0 && P.remapRc > 0);
+  const remapActive = !!(P.remapOn && P.remapDelta > 0 && P.remapRc > 0);
 
   const results = rows.map(row => {
 
     const x = row.r / rMax;
-    function remapRadiusNorm(x,P){
-      if(!P.remapOn || P.remapDelta<=0 || P.remapRc<=0 || x>=P.remapRc) return x;
-      const t=1-x/P.remapRc;
-      return x + P.remapDelta*t*t;
-    }
 
     const x_eff = remapRadiusNorm(x, P);
     const r_eff = x_eff * rMax;
 
     const v_fw = P.amp * shapeFW(x_eff, cache);
-    const v_n = P.newtonAmp ? P.newtonAmp * shapeN(x, P) : null;
+    const v_n = P.newtonAmp ? P.newtonAmp * shapeN(x_eff, P) : null;
 
     const v_mond = mondVelocity(row, mondOpts);
     const m_bar = baryonicMassEnclosed(row, mondOpts);
     const m_eff = mondEffectiveMassEnclosed(row, mondOpts);
     const m_ph = Math.max(0, m_eff - m_bar);
-    return { r: row.r, r_eff, x, v_obs: row.vObs, err_v: row.errV, v_fw, v_n, v_mond, m_bar, m_eff, m_ph };
+    return { r: row.r, r_eff,  remapped: remapActive && Math.abs(r_eff - row.r) > 1e-9, x, v_obs: row.vObs, err_v: row.errV, v_fw, v_n, v_mond, m_bar, m_eff, m_ph };
   });
 
   const fwK = opts.frameworkK ?? opts.kFramework ?? 0;
@@ -379,6 +379,8 @@ const remapActive = !!(P.remapOn && P.remapDelta > 0 && P.remapRc > 0);
   lines.push('  .phot { stroke: #cc7000; stroke-width: 1.8; fill: none; }');
   lines.push('  .mbar { stroke: #8e44ad; stroke-width: 1.8; fill: none; opacity: 0.9; }');
   lines.push('  .mph { stroke: #c77dff; stroke-width: 1.6; fill: none; stroke-dasharray: 4,3; opacity: 0.95; }');
+  lines.push('  .remap-x { stroke: #cc2222; stroke-width: 1.5; fill: none; }');
+  lines.push('  .remap-link { stroke: #cc2222; stroke-width: 0.8; stroke-dasharray: 3,3; fill: none; opacity: 0.7; }');
   lines.push('  .title { fill: #111; font-size: 16px; font-weight: 600; }');
   lines.push('  .subtitle { fill: #555; font-size: 11px; }');
   lines.push('  .preview-bg { fill: #000; }');
@@ -388,7 +390,12 @@ const remapActive = !!(P.remapOn && P.remapDelta > 0 && P.remapRc > 0);
 
   const titleX = margin.l + pw / 2;
   lines.push(`<text x="${titleX}" y="22" text-anchor="middle" class="title">${esc(name)}</text>`);
-  const sub = `rMax=${rMax.toFixed(1)} kpc, N=${results.length}, FW=${fmtMetric(fwStats)}, MOND=${fmtMetric(mondStats)}, amp=${P.amp.toFixed(0)}`;
+
+const remapLabel = remapActive
+  ? `, remap Δr=${P.remapDelta.toFixed(3)} rc=${P.remapRc.toFixed(3)}`
+  : '';
+
+  const sub = `rMax=${rMax.toFixed(1)} kpc, N=${results.length}, FW=${fmtMetric(fwStats)}, MOND=${fmtMetric(mondStats)}, amp=${P.amp.toFixed(0)}${remapLabel}`;
   lines.push(`<text x="${titleX}" y="38" text-anchor="middle" class="subtitle">${esc(sub)}</text>`);
 
   for (let i = 0; i <= 5; i++) {
@@ -444,11 +451,7 @@ const remapActive = !!(P.remapOn && P.remapDelta > 0 && P.remapRc > 0);
   for (let i = 1; i <= 120; i++) {
     const r = rmaxPlot * i / 120;
     const x = r / rMax;
-    const x_eff = (P.remapOn && P.remapDelta > 0 && P.remapRc > 0 && x < P.remapRc)
-      ? x + P.remapDelta * (1 - x / P.remapRc) ** 2
-      : x;
-
-    const vfw = P.amp * shapeFW(x_eff, cache);
+    const vfw = P.amp * shapeFW(x, cache);
 
     fwPts.push([xPx(r), yV(vfw)]);
   }
@@ -461,15 +464,34 @@ for( let x = 0; x < 15; x++ ) {
 }
 */
 
+function xMark(cx, cy, r = 4.2) {
+  return [
+    `<line x1="${(cx - r).toFixed(2)}" y1="${(cy - r).toFixed(2)}" x2="${(cx + r).toFixed(2)}" y2="${(cy + r).toFixed(2)}" class="remap-x"/>`,
+    `<line x1="${(cx - r).toFixed(2)}" y1="${(cy + r).toFixed(2)}" x2="${(cx + r).toFixed(2)}" y2="${(cy - r).toFixed(2)}" class="remap-x"/>`
+  ].join('\n');
+}
+
   lines.push(`<path d="${pathFromPoints(fwPts)}" class="fw"/>`);
 
   for (const r of results) {
-    const cx = xPx(r.r_eff), cy = yV(r.v_obs);
+    const ox = xPx(r.r);
+	 const mx = xPx(r.r_eff ?? r.r);
+
+    const cx = xPx(r.r_eff);
+	 const cy = yV(r.v_obs);
     const yTop = yV(r.v_obs + r.err_v), yBot = yV(Math.max(0, r.v_obs - r.err_v));
-    lines.push(`<line x1="${cx.toFixed(2)}" y1="${yTop.toFixed(2)}" x2="${cx.toFixed(2)}" y2="${yBot.toFixed(2)}" class="err"/>`);
-    lines.push(`<line x1="${(cx - 3).toFixed(2)}" y1="${yTop.toFixed(2)}" x2="${(cx + 3).toFixed(2)}" y2="${yTop.toFixed(2)}" class="err"/>`);
-    lines.push(`<line x1="${(cx - 3).toFixed(2)}" y1="${yBot.toFixed(2)}" x2="${(cx + 3).toFixed(2)}" y2="${yBot.toFixed(2)}" class="err"/>`);
-    lines.push(`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="2.5" class="obs"/>`);
+
+    // Red X = remapped comparison radius used for framework/Newtonian stats.
+    if (r.remapped) {
+      //lines.push(`<line x1="${ox.toFixed(2)}" y1="${cy.toFixed(2)}" x2="${mx.toFixed(2)}" y2="${cy.toFixed(2)}" class="remap-link"/>`);
+      lines.push(xMark(mx, cy));
+    }
+
+    lines.push(`<line x1="${ox.toFixed(2)}" y1="${yTop.toFixed(2)}" x2="${ox.toFixed(2)}" y2="${yBot.toFixed(2)}" class="err"/>`);
+    lines.push(`<line x1="${(ox - 3).toFixed(2)}" y1="${yTop.toFixed(2)}" x2="${(ox + 3).toFixed(2)}" y2="${yTop.toFixed(2)}" class="err"/>`);
+    lines.push(`<line x1="${(ox - 3).toFixed(2)}" y1="${yBot.toFixed(2)}" x2="${(ox + 3).toFixed(2)}" y2="${yBot.toFixed(2)}" class="err"/>`);
+    lines.push(`<circle cx="${ox.toFixed(2)}" cy="${cy.toFixed(2)}" r="2.5" class="obs"/>`);
+
   }
 
   const lx = margin.l + 12, ly = margin.t + 14;
@@ -515,6 +537,12 @@ for( let x = 0; x < 15; x++ ) {
   if (mPhPeak > 1e-10) {
     lines.push(`<text x="${rlx}" y="${rly + 126}" class="lbl-m">Σphantom peak: ${(mPhPeak / 1e6).toFixed(2)} M☉/pc²</text>`);
   }
+
+if (remapActive) {
+  legY += 18;
+  lines.push(xMark(lx + 12, legY, 4.0));
+  lines.push(`<text x="${lx + 30}" y="${legY + 4}" class="lbl">red X = remapped comparison radius</text>`);
+}
   lines.push('</g>');
 
   const pxX = margin.l + pw + previewPad + 70;

@@ -18,7 +18,9 @@ for name in presets:
     if name not in rotmod_by_name: continue
     try:
         results, rMax = compute_galaxy(name, presets[name], rotmod_by_name[name])
+        #print( name, results, rMax );
         q = fit_quality(results)
+        if q['rms'] > 30 : print( name );
         v_obs_mean = sum(r['v_obs'] for r in results) / max(len(results), 1)
         stats.append({
             'name': name, 'amp': presets[name]['amp'],
@@ -28,6 +30,7 @@ for name in presets:
             'high_amp': presets[name]['amp'] > 500,
         })
     except Exception as e:
+        print( e )
         pass
 
 # Make histogram SVG of rms_rel
@@ -44,6 +47,7 @@ def make_histogram_svg():
     for s in stats:
         pct = s['rms_rel'] * 100
         b = min(int(pct), 29)
+        if( b > 20 ) : print( s['name'], pct )
         bins[b] += 1
         if s['high_amp']:
             bins_high[b] += 1

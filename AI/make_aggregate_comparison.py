@@ -318,6 +318,17 @@ def main():
         try:
             results, rmax = compute_galaxy(name, preset, rot)
             # Add MOND velocity to the same result rows.
+            #print( rmax, preset );
+            if preset.get('remapOn'):
+                print(
+                    name,
+                    'rMax=', rmax,
+                    'remap=', preset.get('remapDelta'), preset.get('remapRc'),
+                    'n_remapped=', sum(1 for r in results if r.get('remapped')),
+                    'max_kpc=', max([abs(r.get('r_eff', r['r']) - r['r']) for r in results] or [0.0]),
+                    'first=', results[0].get('r'), results[0].get('r_eff'),
+                    'vfw=', results[0].get('v_fw')
+                )
             mond_ok = has_mond_components(rot)
             for res, row in zip(results, rot['rows']):
                 res['v_mond'] = mond_velocity(row) if mond_ok else None
@@ -356,10 +367,24 @@ def main():
                 'has_bulge_component': has_bulge_component(rot),
                 **edge,
             }
+
+            remap_on = bool(preset.get('remapOn') and preset.get('remapDelta', 0) > 0 and preset.get('remapRc', 0) > 0)
+            n_remapped = sum(1 for r in results if r.get('remapped'))
+            max_remap_kpc = max([abs(r.get('r_eff', r.get('r', 0)) - r.get('r', 0)) for r in results] or [0.0])
+
+            row_out.update({
+                'remap_on': remap_on,
+                'remap_delta': preset.get('remapDelta'),
+                'remap_rc': preset.get('remapRc'),
+                'n_remapped': n_remapped,
+                'max_remap_kpc': max_remap_kpc,
+            })
+
             row_out['delta_sigma_mond_minus_fw'] = (row_out['sigma_rms_mond'] - row_out['sigma_rms_fw']) if row_out['sigma_rms_mond'] is not None else None
             row_out['winner_by_sigma'] = winner_by_sigma(row_out)
             rows_out.append(row_out)
         except Exception as e:
+            print( e )
             skipped.append((name, str(e)))
 
 
@@ -371,6 +396,7 @@ def main():
         'delta_sigma_mond_minus_fw','winner_by_sigma',
         'r4','r5','edge_width_pct','outer_extension_pct','edge_bounded_1pct','edge_bounded_5pct','edge_bounded_10pct',
         'has_mond_components','has_bulge_component',
+        'remap_on','remap_delta','remap_rc','n_remapped','max_remap_kpc',
     ]
     csv_path = os.path.join(OUT_DIR, '_aggregate_model_comparison.csv')
     with open(csv_path, 'w', newline='') as f:
