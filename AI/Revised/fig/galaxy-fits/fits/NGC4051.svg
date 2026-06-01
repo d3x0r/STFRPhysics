@@ -16,6 +16,8 @@
   .phot { stroke: #cc7000; stroke-width: 1.8; fill: none; }
   .mbar { stroke: #8e44ad; stroke-width: 1.8; fill: none; opacity: 0.9; }
   .mph { stroke: #c77dff; stroke-width: 1.6; fill: none; stroke-dasharray: 4,3; opacity: 0.95; }
+  .remap-x { stroke: #cc2222; stroke-width: 1.5; fill: none; }
+  .remap-link { stroke: #cc2222; stroke-width: 0.8; stroke-dasharray: 3,3; fill: none; opacity: 0.7; }
   .title { fill: #111; font-size: 16px; font-weight: 600; }
   .subtitle { fill: #555; font-size: 11px; }
   .preview-bg { fill: #000; }
