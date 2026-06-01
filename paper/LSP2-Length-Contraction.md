@@ -86,3 +86,7 @@ vector that has been contracted out.
 $$\begin{array}{r}
 \vec{X^{'}} = \vec{X} - \vec{A}\left( 1 - \frac{\sqrt{CC - VV}}{C} \right)\\ (2.10)
 \end{array}$$
+
+$$\begin{array}{r}
+L_C(\vec{X},\vec{V}) = \vec{X} - \frac{\vec{V}\left( \vec{X} \cdot \vec{V} \right)}{{\vec{V}}^{2}} \left( 1 - \frac{\sqrt{CC - \vec{V}\vec{V}}}{C} \right)\\ (2.11)
+\end{array}$$

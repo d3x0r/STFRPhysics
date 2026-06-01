@@ -51,28 +51,28 @@ $$\begin{array}{r}
 \vec{X^{''}} = \vec{X_{E}} + \vec{V_{E}}T\\ (5.5)
 \end{array}$$
 
-$$\begin{array}{r}
-\vec{\Delta X_{d}}\\ = \vec{X^{'}} + \vec{V_{E}}T - \vec{{X_{O}}^{'}}\\ (5.6)
+$$\begin{array}{rr}
+\vec{\Delta X_{d}} = \vec{X^{'}} + \vec{V_{E}}T - \vec{{X_{O}}^{'}}& (5.6)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}\\ (5.7)
+\vec{V_{d}} = \vec{\Delta X_{d}} \cdot \vec{V_{O}}& (5.7)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}\\ (5.8)
+\vec{V_{dn}} = \frac{\vec{V_{d}}}{\left\| \vec{V_{d}} \right\|}& (5.8)
 \end{array}$$
 
 $$\begin{array}{r}
-\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\ (5.9)
+\theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}& (5.9)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}\\ (5.10)
+\vec{V_{c}} = \vec{\Delta X_{d}} \times \vec{V_{O}}&(5.10)
 \end{array}$$
 
 $$\begin{array}{r}
-\vec{V_{cn}} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}\\ (5.11)
+\vec{V_{cn}} = \frac{\vec{V_{c}}}{\left\| \vec{V_{c}} \right\|}& (5.11)
 \end{array}$$
 
 $$\begin{array}{r}

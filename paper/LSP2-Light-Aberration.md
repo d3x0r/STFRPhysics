@@ -134,7 +134,7 @@ $$\begin{array}{r}
 \theta = cos^{- 1}\frac{V_{dn} + \frac{\left\| V_{O} \right\|}{C}}{1 + \frac{\left\| V_{O} \right\| V_{dn}}{C}}\\ (3.15)
 \end{array}$$
 
-Rotation of observed point *X*<sub>*d*</sub> plus position of observer:
+Rotation of observed point $\Delta X_d$ plus position of observer:
 
 $$\begin{array}{r}
 X_{r} = \vec{X_{O}} + \cos(\theta)\vec{\Delta X_{d}} + \sin(\theta)\left( \vec{V_{C}} \times \vec{\Delta X_{d}} \right) + \left( \left( 1 - \cos\theta \right)\vec{V_{c}} \cdot \vec{\Delta X_{d}} \right)\vec{\Delta V_{cn}}\\ (3.16)

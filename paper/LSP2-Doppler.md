@@ -107,3 +107,53 @@ $$\begin{array}{r}
 \boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \cos(D - A) \right)}}\\\\ &(6.13)
 \end{array}$$
 
+
+
+
+
+
+---
+Equation \[6.3\] is the distance the signal travels in 1 tick:
+
+$$\begin{array}{lr}\vec{A} = \left[C\cos\left( \theta \right), C\sin\left( \theta \right)\right] &(6.6)\end{array}$$
+
+Equation \[6.4\] is the distance the body travels in 1 tick:
+
+$$\begin{array}{lr}
+\vec{B} = \left[ V\cos(D),V\sin(D) \right] & (6.7)
+\end{array}$$
+
+This is the difference between the distance traveled by 1 wave in 1 tick minus the distance traveled by the body:
+
+$$\begin{array}{r}
+\vec{A - B} = \left\| C\cos(A) - V\cos(D),C\sin(A) - V\sin(D) \right\| & (6.8)
+\end{array}$$
+
+Square both sides, to work to getting length of the vector:
+
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}\left( C^{2}\cos^{2}(A) - 2CV\cos(A)\cos(D) + V^{2}\cos^{2}(D) \right) \\\\ + \left( C^{2}\sin^{2}(A) - 2CV\sin(A)\sin(D) + V^{2}\sin^{2}(D) \right)\end{array} \right) &(6.9)
+\end{array}$$
+
+Combine common terms:
+
+$$\begin{array}{r}({\vec{A - B}})^{2} = \left( \begin{array}{r}C^{2}\left( \cos^{2}(A) + \sin^{2}(A) \right) \\\\ - 2CV\left( \cos(A)\cos{(D) + \sin(A)\sin(D)} \right) \\\\ + V^{2}\left( \cos^{2}{(D) + \sin^{2}(D)} \right)\end{array} \right)&(6.10)
+\end{array}$$
+
+Remove terms that combine to be 1, and simplify $\cos(A)\cos(D)+\sin(A)\sin(D)=\cos(A-D)$ trig identity:
+
+$$\begin{array}{r}
+({\vec{A - B}})^{2} = C^{2} - 2CV\left( \cos(D - A) \right) + V^{2} &(6.11)
+\end{array}$$
+
+Take square root of both sides to result in length, and divide both sides by C to convert the distance to a time which gives frequency:
+
+$$\begin{array}{r}
+\frac{\left\| \vec{A - B} \right\|}{C} = \frac{\sqrt{C^{2} - 2CV\left( \cos(D - A) \right) + V^{2}}}{C} &(6.12)
+\end{array}$$
+
+Resulting equation:
+
+$$\begin{array}{r}
+\boxed{\frac{\left\| \vec{A - B} \right\|}{C} = \sqrt{1 + \frac{V^{2}}{C^{2}} - \frac{2V}{C}\left( \cos(D - A) \right)}}\\\\ &(6.13)
+\end{array}$$
+

@@ -182,6 +182,8 @@ $$\begin{array}{r}
 \vec{P_{\mathrm{\Delta}}} = \vec{X_{E}} + \vec{V_{E}}T_{E} - \left( \vec{X_{O}} + T_{E}\vec{V_{O}} \right)\\ (1.19)
 \end{array}$$
 
+$$T_{\Delta O} = \frac{\sqrt{\left(\vec{P_{\mathrm{\Delta}}} \vec{V_{O}}\right)^2+\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}(C^2-\vec{V_O}\cdot\vec{V_O}) } + \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{(C^2-\vec{V_O}\cdot\vec{V_O})}$$
+
 $$\begin{array}{r}
 T_{\Delta O} = \frac{\sqrt{\left(\vec{P_{\mathrm{\Delta}}} \vec{V_{O}}\right)^2+\vec{P_{\mathrm{\Delta}}}\vec{P_{\mathrm{\Delta}}}D_{E} } + \vec{P_{\mathrm{\Delta}}}\vec{V_{O}}}{D_{E}}\\ (1.20)
 \end{array}$$
@@ -216,8 +218,7 @@ $$\begin{array}{r}
 
 ## Solution for $T_{\Delta E}$ from time of observation
 
-Calculation for the delta time before an event is observed that an event
-was emitted.
+Calculation for the delta time before an event is observed that an event was emitted.
 
 $$\begin{array}{r}
 T_{\Delta E} = \frac{\left\| \left( \vec{X_{E}} + \left( T_{O} - T_{\Delta E} \right)\vec{V_{E}} \right) - \left( \vec{X_{O}} + T_{O}\vec{V_{O}} \right) \right\|}{C}\\ (1.7)
@@ -228,7 +229,8 @@ $$\begin{array}{r}
 \end{array}$$
 
 $$\begin{array}{r}
-\boxed{T_{\Delta E} = \frac{\sqrt{D_{\Delta O}\vec{P_{\Delta O}}\vec{P_{\Delta O}} + \left({\vec{P_{\Delta O}}}{\vec{V_{O}}}\right)^{2}} + \vec{P_{\Delta O}}\vec{V_{O}}}{D_{\Delta O}}}\\ (1.29)
+\vec{P_{\Delta O}} = \vec{X_{E}} + T_{O}\vec{V_{E}} - \vec{X_{O}} - T_{O}\vec{V_{O}}\\ 
+\boxed{T_{\Delta E} = \frac{\sqrt{(C^{2} - {\vec{V_{O}}}^{2})\vec{P_{\Delta O}}\vec{P_{\Delta O}} + \left({\vec{P_{\Delta O}}}{\vec{V_{O}}}\right)^{2}} + \vec{P_{\Delta O}}\vec{V_{O}}}{C^{2} - {\vec{V_{O}}}^{2}}}\\ (1.29)
 \end{array}$$
 
 Broken into partial expressions:
@@ -301,3 +303,12 @@ $$\begin{array}{r}
 T_{E} = \frac{A_{E}}{2B_{E}}\\ (1.38)
 \end{array}$$
 
+
+
+$$\vec{P_{\Delta E}}=\vec{X_E}+\vec{V_E}T_E-(\vec{X_O}+T_E\vec{V_O})$$
+
+$$T_{\Delta E}=\frac{-\sqrt{(x*v)^2+(CC-vv)(xx)}+x*v}{CC-vv}$$
+
+$$T_L=\frac{x\cdot v} {CC-VV}$$
+
+$$T_L=\frac{x\cdot v}{CC-vv}\frac{\sqrt{cc-vv}} {C} = \frac{x\cdot v}{\sqrt{CC-vv}C}  = {\gamma} \frac{x*v}{CC}$$
