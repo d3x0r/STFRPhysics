@@ -324,6 +324,20 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 				normalColors.push( new THREE.Color( 0,0,1.0*s,255 ))
 			}
 
+
+{
+	let lnQ0 = new lnQuat( {lat:80/360*Math.PI*2, lng:0/360*Math.PI*2 }, false );
+	for( let n = 0; n < 420; n++ ) {
+		const lnQG = new lnQuat( Math.sin(n/360*Math.PI*2)*Math.PI/8 * (Math.PI*2/360)
+						, Math.PI*1/8 * (Math.PI*2/360)
+						, Math.cos(n/360*Math.PI*2) *Math.PI/8 * (Math.PI*2/360)  );
+	lnQ0 = lnQ0.spin( Math.PI*2/360, lnQG );
+	doDrawBasis( lnQ0, lnQ0, 1, 1 );
+	const v = lnQ0.up(); v.x*=15;v.y*=15;v.z*=15;
+	doDrawBasis( lnQ0, v, 1, 1 );
+	}
+}
+
         
 	//normalizeTangents = document.getElementById( "normalizeTangents" )?.checked;
 	applyAccel = document.getElementById( "applyAccel" )?.checked;
@@ -416,7 +430,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	const l1 = curSliders.lnQX[0]*4;
 	lnQ1.x = l1 * k/100;
 	lnQ1.y = 0;//t;
-	lnQ1.z = 0;//r0z * l1 * k/100;
+	lnQ1.z = Math.PI/2-10/360*Math.PI*2;//r0z * l1 * k/100;
 	lnQuat.apply( lnQ0.θ, lnQ0, lnQ1, 1, lnQ1 );
 	lnQ1.dirty = true;
 	lnQ1.update();
@@ -424,7 +438,7 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 
 		doDrawBasis( lnQ1,lnQ1, 0, 1 );
 	
-	const v = {x:0,y:30,z:0};
+	const v = {x:30,y:0,z:0};
 
 	for( let l = 0; l < 100; l++ ) {
 
@@ -475,24 +489,25 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 	const v = {x:0,y:29,z:0};
 	{
 		const l5 = curSliders.lnQZ[4];
-		lnQ0.set( 0,0,0,0).update();
+		lnQ0.set( t,0,0).update();
 		
 		
 		for( let seg =0; seg < 400; seg++ ) {
 
 			//lnQ0.yaw( Math.PI*(1+Math.cos(k))/100 );
+			lnQ0.pitch( l5/100);
 			lnQ0.yaw( l5/100 );
 			//console.log( "lnQ0:", lnQ0.x, lnQ0.y, lnQ0.z );
 			doDrawBasis( lnQ0, lnQ0, 0, 1 );
 
-			lnQ2.x = k /100  ;
-			lnQ2.y = 0;
+			lnQ2.x = 0 ;
+			lnQ2.y = k /100 ;
 			lnQ2.z = 0;
 			lnQuat.apply( lnQ0.θ, lnQ0, lnQ2, 1, lnQ2 );
 			lnQ2.dirty = true;
 			lnQ2.update();	
 
-		        for( let l = 0; l < 1; l++ ) {
+		   for( let l = 0; l < 1; l++ ) {
 
 				lnQ0.freeSpin( lnQ2.θ, lnQ2 );
 				lnQ0_.freeSpin( lnQ2.θ, lnQ2 );
@@ -504,9 +519,9 @@ function DrawQuatPaths(normalVertices_,normalColors_, shapes) {
 				//doDrawBasis( lnQ0_, lnQ0_, 0, 1 );
 			}
 
-			lnQ2.x *= 100;
-			lnQ2.y *= 100;
-			lnQ2.z *= 100;
+		//	lnQ2.x *= 100;
+		//	lnQ2.y *= 100;
+		//	lnQ2.z *= 100;
 			//doDrawBasis( lnQ2, lnQ2, 0, 1 );
 
 	// so building from the other side; 

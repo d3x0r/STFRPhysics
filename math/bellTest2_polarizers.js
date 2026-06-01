@@ -5,7 +5,7 @@ const testSize= 20000;
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
-const threshold = 1;
+const threshold = 1.2;
 let decay = 0.607;
 let settle = 0.03;
 
@@ -287,7 +287,7 @@ function test2() {
 	for( i = 0; i < 8; i++ ) { choices2[i] = 0;  }
 
 	for( i = 0; i < testSize; i++ ) {
-		const s = getStateTotals( pick() );
+		const s = getState( pick() );
 		choices2[s]++;
 	}
 

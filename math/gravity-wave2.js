@@ -660,7 +660,7 @@ if(1) { // tangent
 		ctx.stroke();
 	}
 
-if(0)
+if(1)
 	for( let y = 0; y < displacements.length; y++ ) {
 		const row = displacements[y];
 		const row1 = displacements[y+1];
@@ -730,7 +730,7 @@ if(0)
 			const d1 = row1[x];
 			const d2 = row[x+1];
 			if( !d2 ) continue;
-
+if(0)
 			if( x & 1 && y & 1 ) {
 			ctx.beginPath();
 			ctx.strokeStyle = "red";
@@ -739,7 +739,7 @@ if(0)
 			ctx.lineTo( d.sx, d.sy );
 			ctx.stroke();
 			}
-if(0) {
+if(1) {
 			if( y < displacements.length-1 ) {
 				ctx.beginPath();
 				ctx.strokeStyle = "green";

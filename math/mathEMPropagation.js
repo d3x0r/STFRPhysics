@@ -223,12 +223,26 @@ function drawsomething() {
 	ctx.arc( (from+f1) , 500, ss * 50, 0, Math.PI*2 );
 	ctx.stroke();
 	ctx.beginPath();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "red"; // starts min, at +50
+	ctx.arc( (from+f1+50) , 500, (1-ss) * 50, 0, Math.PI*2 );
+	ctx.stroke();
+	ctx.beginPath();
+
+	ctx.beginPath();
+	ctx.strokeStyle = "red"; // starts min, at +50
+	ctx.arc( (from+f1-50) , 500, (1-ss) * 50, 0, Math.PI*2 );
+	ctx.stroke();
+	ctx.beginPath();
+
+
 	ctx.strokeStyle = "blue";  // starts max, at origin, and +100
 	ctx.arc( (to+t1) , 500, cc * 50, 0, Math.PI*2 );
 	ctx.ellipse( (to+t1) , 500, cc*10, cc * 50, 0, 0, Math.PI*2 );
 	ctx.stroke();
 
-
+if(0) {
 	ctx.beginPath();
 	ctx.strokeStyle = "#088"; // starts min, at +50
 	ctx.arc( (from2+f2) , 500, dd * 50, 0, Math.PI*2 );
@@ -237,7 +251,7 @@ function drawsomething() {
 	ctx.strokeStyle = "#880";  // starts max, at origin, and +100
 	ctx.arc( (to2+t2) , 500, ee * 50, 0, Math.PI*2 );
 	ctx.stroke();
-
+}
 
 	ctx.fillStyle="black";
 	ctx.fillText( ""+n + " " + n05, 400, 400 );

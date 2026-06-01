@@ -182,7 +182,7 @@ function makeQuat(p,y,r) {
 				const cxpy = Math.cos(xpy);
 				const cosCo2 = ( ( 1-AdotB )*cxmy + (1+AdotB)*cxpy )/2;
 			
-				let ang = Math.acos( cosCo2 )*2 + ((currentOctave )* Math.PI*2 + oct*Math.PI*4);
+				let ang = Math.acos( cosCo2 )*2;
 				// only good for rotations between 0 and pi.
 			
 				if( ang && ang != Math.PI*2 ) {
@@ -232,6 +232,22 @@ function makeQuat(p,y,r) {
 						q.yaw( r );
 
 		}
+		q.θ += (currentOctave )* Math.PI*2;// + oct*Math.PI*4)
+					q.x  = q.nx*r.θ;
+					q.y  = q.ny*r.θ;
+					q.z  = q.nz*r.θ;
+		//console.log( "Roll starts   :", q.getRoll() );
+
+if(0) {
+		let rl;
+		while( Math.abs(rl=q.getRoll()) > 0.001 ) 
+		{
+			q.freeSpin( q.getRoll(), {x:0,y:0,z:1} );
+				break;
+			//console.log( "Roll after fix:", q.getRoll() );
+		}
+}
+//		q.roll( -q.getRoll() );
 
 		return q;
 	}
@@ -373,6 +389,7 @@ function makeQuat(p,y,r) {
 				tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 				tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 				tmpPoint.z = basis.up.z * spaceScale*1.43 ;
+
 				doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, g2, t2 );
 				const wraps = Math.floor( (range) / Math.PI ) * Math.PI;
 				if( showGrid && draw  ) {
@@ -465,6 +482,13 @@ function makeQuat(p,y,r) {
 					tmpPoint.x = basis.up.x * spaceScale*1.43 ;
 					tmpPoint.y = basis.up.y * spaceScale*1.43 ;
 					tmpPoint.z = basis.up.z * spaceScale*1.43 ;
+
+//	tmpPoint.x = lnQ.getPitch() * 2 * spaceScale;
+//	tmpPoint.y = lnQ.getYaw() * 2 * spaceScale;
+//	tmpPoint.z = lnQ.getRoll() * 2 * spaceScale;
+
+	//	tmpPoint.z = lnQ.getRoll()*2*spaceScale;
+
 					doDrawBasis( lnQ, tmpPoint, 0.25, 1, null, 1, g2, t2, gamma, r );
 					const wraps = Math.floor( range / Math.PI ) * Math.PI;
 					if( showGrid && draw ) {

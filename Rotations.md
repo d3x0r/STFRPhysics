@@ -101,42 +101,39 @@ and result with axis and angle.
 https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions#Rodrigues_vector
 https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#The_composition_of_spatial_rotations
 
-```
-	given input axii A and B and angles a and b respectively...
-	the following rotates A around B.
+
+Given input axes A and B and angles a and b respectively...	the following rotates A around B.
 
 
-  result Angle = cos^-1 ( cos(b/2)cos(a/2)-sin(b/2)sin(a/2) ( A ∙ B ) ) * 2
+  $\theta = 2 \cos^-1 \left( \cos(b/2)\cos(a/2)-\sin(b/2)\sin(a/2) ( A \cdot B ) \right)$
   
-  tmp_axis = sin(b/2)cos(b/2)B 
-           + sin(a/2)cos(b/2)A 
-           + sin(a/2)sin(b/2)( A × B )
-  result_axis = tmp_axis / ||tmp_axis||
+  $$\begin{array}{ll} tmp_{axis}& = \sin(b/2)\cos(b/2)B \\
+          & + \sin(a/2)\cos(b/2)A \\
+          & + \sin(a/2)\sin(b/2)( A \times B ) \\
+  result_{axis} = \frac {tmp_{axis} }{ |tmp_{axis}| } \end{array}\\
+  $$
   
   
   - or -
 
 
-  result Angle = cos^-1 ( 1/2 ((1 - A ∙ B) cos((a - b)/2) + (1 + A ∙ B) cos((a + b)/2)) ) * 2
+  $result Angle = cos^-1 ( 1/2 ((1 - A ∙ B) cos((a - b)/2) + (1 + A ∙ B) cos((a + b)/2)) ) * 2$
   
     - this version of the axis computation has a (* 1/2), but since it's being 
       normalized anyway, can skip the multiplication by a constant
       
-  tmp_axis = (-sin((a - b)/2) + sin((a + b)/2)) B 
+  $$\begin{array}{ll}tmp_axis = (-sin((a - b)/2) + sin((a + b)/2)) B 
            + ( sin((a - b)/2) + sin((a + b)/2)) A 
            + ( cos((a - b)/2) - cos((a + b)/2))( A × B ) )
   
   result_axis = tmp_axis / ||tmp_axis||
-  
-```
+  \end{array}$$
 
 cos(x/2),sin(x/2) = cos(y/2),sin(y/2)
 
 Rotates a rotation $\vec{b}$ and rotates around $\vec{a}$ 
 
 $$x=|\vec{a}|; y=|\vec{b}|$$
-
-$${l} x=|\vec{a}|; y=|\vec{b}|$$
 
 $$A=\frac{\vec{a}}{|\vec{a}|} $$
 
@@ -150,9 +147,24 @@ $${cxpy}=\cos( \frac{x+y}{2} )$$
 
 $${cxmy}=\cos(\frac{x-y}{2})$$
 
-$$ang = 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} ); $$
 
-$$ang = 2\arccos( \frac{( ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2})) + \cos(\frac{x-y}{2}) + \cos( \frac{x+y}{2} ) )}{2} );$$
+$\vec{A}$ is a unit vector and $x$ is the angle around that vector; $\vec{B}$ is a unit vector and $y$ is the angle around that axis.
+
+$$\begin{array}{ll} R(A,x,B,y) &= \left[\begin{matrix}{}  \begin{array}{} 2\arccos( \frac{( ( A\cdot B )*(cxpy - cxmy) + cxmy + cxpy )}{2} )
+\\
+ 2\arccos\left( \frac{\begin{array}{r} ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2}))\\ + \cos(\frac{x-y}{2}) \\+ \cos( \frac{x+y}{2} ) \end{array}}{2} \right) & 
+ \end{array} 
+& \begin{array}{llr}
+ \vec{C}
+  &=(\vec{B} \times \vec{A})(\cos( \frac{x-y}{2} ) - \cos( \frac{x+y}{2} )) \\
+ &+\vec{A}(\sin( \frac{x-y}{2} ) + \sin( \frac{x+y}{2} ))\\
+ &+\vec{B}(\sin( \frac{x+y}{2} ) - \sin( \frac{x-y}{2} ))\\ \\
+ &\boxed{=\frac{2\vec{C}}{\left|\vec{C}\right|}  \arccos\left( \frac{\begin{array}{r} ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2}))\\ + \cos(\frac{x-y}{2}) \\+ \cos( \frac{x+y}{2} ) \end{array}}{2} \right)}  \end{array}
+ 
+  \end{matrix}\right]
+ \\
+ 
+ \end{array}$$
 This is the working part; it results in a vector($\vec{C}$) which is either scaled by $\left|\vec{C}\right|$  or $sin(\frac{\theta}{2})$, which if $\theta = 0$ or $\theta=n2\pi$, that's $\frac {\infty}{0}$.  A and B are unit vectors so $A \times B$ is a vector from 0 to 1; any of the $\sin {or} \cos (x \pm y)$ terms are -1 to 1.  The result vector will never be greater than 1.  And actually, 
 
 $$(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  $$
@@ -160,11 +172,49 @@ $$(A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy)  $$
 
 Expanded Equation....
 
-$$(A \times B)(\cos( \frac{x+y}{2} ) - \cos( \frac{x-y}{2} )) + A(\sin( \frac{x+y}{2} ) + \sin( \frac{x+y}{2} ))+B(\sin( \frac{x+y}{2} ) - \sin( \frac{x-y}{2} ))$$
+$$\begin{array}{llr}f\left(\vec{a},\vec{b}\right)=&&r\left(\frac{\vec{a}}{\left|\vec{a}\right|},|\vec{a}|,\frac{\vec{b}}   
+{\left|\vec{b}\right|},|\vec{b}|\right)\\
+r(\vec{A},x,\vec{B},y)=\\
+&\vec{C}=
+  &(\vec{B} \times \vec{A})(\cos( \frac{x-y}{2} ) - \cos( \frac{x+y}{2} )) \\
+ &&+\vec{A}(\sin( \frac{x-y}{2} ) + \sin( \frac{x+y}{2} ))\\
+ &&+\vec{B}(\sin( \frac{x+y}{2} ) - \sin( \frac{x-y}{2} ))\\ \\
+& \boxed{=\frac{2\vec{C}}{\left|\vec{C}\right|}  \arccos\left( \frac{\begin{array}{r} ( A\cdot B )*(\cos( \frac{x+y}{2} ) - \cos(\frac{x-y}{2}))\\ + \cos(\frac{x-y}{2}) \\+ \cos( \frac{x+y}{2} ) \end{array}}{2} \right)}  \end{array}$$
 
-$$\vec{C}=\frac { (A \times B)(cxmy - cxpy) + A(sxmy + sxpy)+B(sxpy - sxmy) } {sin(\frac{ang}{2})} $$
+$$\begin{array}{lr}\vec{C}=\frac { \begin{array}{r} (A \times B)(cxmy - cxpy)\\ + A(sxmy + sxpy)\\+B(sxpy - sxmy)\end{array} } {sin(\frac{ang}{2})} \end{array}$$
 
 $$\vec{c} = \vec{C}*ang$$
+
+$$\begin{array}{ll} 
+\vec{A}=\frac {Q}{|Q|} & \theta = |Q| \\
+
+U_{p}\left(Q\right)=&\left(\begin{array}{ll}-\sin\left(\theta\right)\ \vec{A}.z\ &+\ \left(1-\cos\left(\theta\right)\right)\vec{A}.y\vec{A}.x\ ,\\
+\cos\left(\theta\right)&+\left(1-\cos\left(\theta\right)\right)\vec{A}.y^{2},\\
+\sin\left(\theta\right)\vec{A}.x&+\left(1-\cos\left(\theta\right)\right)\vec{A}.y\vec{A}.z\end{array}\right)\\
+
+R_{ight}\left(Q\right)=&\left(\begin{array}{ll}\cos\left(\theta\right)&+\left(1-\cos\left(\theta\right)\right)\vec{A}.x^{2},\\
+\sin\left(\theta\right)\vec{A}.z&+\left(1-\cos\left(\theta\right)\right)\vec{A}.x\vec{A}.y,\\
+-\sin\left(\theta\right)\ \vec{A}.y& + \left(1-\cos\left(\theta\right)\right)\vec{A}.x\vec{A}.z \end{array}\right)\\
+
+F_{orward}\left(Q\right)=&\left(\begin{array}{ll}\sin\left(\theta\right)\vec{A}.y&+\left(1-\cos\left(\theta\right)\right)\vec{A}.z\vec{A}.x,\\
+-\sin\left(\theta\right)\vec{A}.x&+\left(1-\cos\left(\theta\right)\right)\vec{A}.z\vec{A}.y,\\
+\cos\left(\theta\right)&+\left(1-\cos\left(\theta\right)\right)\vec{A}.z^{2}\end{array}\right)\\
+\\
+\\
+Y_{aw}\left(Q,\theta\right)=r\left(\frac{Q}{\left|Q\right|},\left|Q\right|,U_{p}\left(Q\right),\theta\right)\\
+R_{oll}\left(Q,\theta\right)=r\left(\frac{Q}{\left|Q\right|},\left|Q\right|,F_{orward}\left(Q\right),\theta\right)\\
+P_{itch}\left(Q,\theta\right)=r\left(\frac{Q}{\left|Q\right|},\left|Q\right|,R_{ight}\left(Q\right),\theta\right)\\
+
+\end{array}$$
+
+
+
+
+
+
+$Y_{aw}\left(Q,\theta\right)=R\left(\frac{Q}{\left|Q\right|},\left|Q\right|,U_{p}\left(Q\right),\theta\right)$
+$R_{oll}\left(Q,\theta\right)=R\left(\frac{Q}{\left|Q\right|},\left|Q\right|,F_{orward}\left(Q\right),\theta\right)$
+$P_{itch}\left(Q,\theta\right)=R\left(\frac{Q}{\left|Q\right|},\left|Q\right|,R_{ight}\left(Q\right),\theta\right)$
 
 
 ```js
@@ -216,7 +266,8 @@ The Rodrigues Rotation formula may also be used to apply a point, and result wit
   $${V'} = V\cos{a}  +  \sin{a} ( A × V ) +  A(1-cos(a))(A ∙ V ) $$
 
 $${V'} = V + \cos{a} ( 2 \sin{a} ( A × V )) +  A(\sin{a})(A ∙ V ) $$
-  
+$$R_{V}(A,a,V) = \left [ \begin{matrix} V\cos{a}  \\+  \sin{a} ( A × V ) \\+  A(1-cos(a))(A ∙ V )\end{matrix} \right ]$$
+
 ## Integrating a Rotation
 
 Given an orientation Q, which is the initial position, and a known axis-angle (P) to update the position.
@@ -251,6 +302,49 @@ axis-angle to the starting frame.
    R   = Q RRF (P'' * T) ; result Q rotated by P'' scaled from 0 to 1.
 
 
+$\theta$
+
+$$\begin{array}{lll} \vec{A}&= R(&\vec{p}&,|p|&,\vec{q}&&&&,-|q| &) \\
+\vec{r} &=R(&\vec{q}&,|q|&,R_{V}(&\vec{q}&,|q|&,\vec{A})&,\vec{A}&) \end{array}$$
+
+``` js
+const axisTemp = {x:0,y:0,z:0};
+// slerp q to p with T, target is output, external toggles cross product intrinsic/extrinsic rotation
+function slerp2( q, p, t, target, external ) {
+	external = external || 0;
+	// A dot B   = cos( angle A->B )
+	// cross product of the rotations is a rotation perpendicular to the two
+	// with an arc length of arccos( q x p ), scaled by 0-1 passed in as T.
+	if( !q.θ ) {
+		target.nx = p.nx;
+		target.ny = p.ny;
+		target.nz = p.nz;
+		target.θ = t * p.θ;
+		target.x = target.nx * target.θ;
+		target.y = target.ny * target.θ;
+		target.z = target.nz * target.θ;
+		return target;
+	}
+
+	target.set( p );
+	// remove the rotation of q from p...
+	finishRodrigues( target, Math.floor( q.θ,(Math.PI*2)), q.nx, q.ny, q.nz, -q.θ );
+	// which sets target as the initial P rotation.
+	
+	axisTemp.x = target.nx;
+	axisTemp.y = target.ny;
+	axisTemp.z = target.nz;
+	let tmpA;
+	if( !external ) // delta angle is from an internal source
+		tmpA = q.applyDel( axisTemp, 1 );
+	else
+		tmpA = axisTemp;
+	const angle = target.θ;
+	target.set(q);
+	return finishRodrigues( target, Math.floor( q.θ,(Math.PI*2)), tmpA.x, tmpA.y, tmpA.z, angle*t );
+}
+
+```
 
 ## Caveats
 

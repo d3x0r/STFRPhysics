@@ -326,9 +326,10 @@ if( D (is near) 0 ) $T = \frac A {2B}$ else $T = \frac {\sqrt{ B^2-DA } +B} {D}$
 
 
 
-export function aberration( angle ) {
-	const speed = values.Velocity;
-	const a = Math.acos( (Math.cos(angle)+speed/values.C)/(1+speed/values.C*Math.cos(angle)) );
+export function aberration( angle, speed, C ) {
+//	if( !speed && values ) speed = values.Velocity;
+//	const speed = values.Velocity;
+	const a = Math.acos( (Math.cos(angle)+speed/C)/(1+speed/C*Math.cos(angle)) );
 	return a;
 }
 

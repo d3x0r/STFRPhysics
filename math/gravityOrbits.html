@@ -16,6 +16,74 @@
 </body>
 <script type="module"> 
 
+class Vec extends Array {
+	constructor ( a, b, c ) {
+		super();
+		this.push( 0 );
+		this.push( 0 );
+		this.push( 0 );
+		a && (this[0] = a);
+		b && (this[1] = b);
+		c && (this[2] = c);
+	}
+	cross(a) {
+		{
+			const alen2 = Math.sqrt(a.dot(a));
+			const tlen2 = Math.sqrt(this.dot(this));
+			const q = new Vec();
+
+			const qx = (this[1]/tlen2)*(a[2]/alen2)-(this[2]/tlen2)*(a[1]/alen2);
+			const qy = (this[2]/tlen2)*(a[0]/alen2)-(this[0]/tlen2)*(a[2]/alen2);
+			const qz = (this[0]/tlen2)*(a[1]/alen2)-(this[1]/tlen2)*(a[0]/alen2);
+			const qr = new Vec( qx, qy, qz );
+			const s = qr.len;
+			qr.normalize().scale( Math.asin( s ) );
+			
+			return qr;
+		}
+		return new Vec( this[1]*a[2]-this[2]*a[1], this[2]*a[0]-this[0]*a[2], this[0]*a[1]-this[1]*a[0] );
+	}
+	set(a){
+		this[0] = a[0];
+		this[1] = a[1];
+		this[2] = a[2];
+		return this;
+	}
+	normalize() {
+		const l = this.len;
+		if( l ) { return this.scale( 1/l ) }
+		else { this[0] = 1; this[1] = 0; this[2] = 0; }
+		return this;
+	}
+	scale(a) {
+		this[0] *= a;
+		this[1] *= a;
+		this[2] *= a;
+		return this;
+	}
+	addScaled(a,s) {
+		this[0] = this[0] + a[0]*s;
+		this[1] = this[1] + a[1]*s;
+		this[2] = this[2] + a[2]*s;
+		return this;
+	}
+	add(a) {
+		this[0] = this[0] + a[0];
+		this[1] = this[1] + a[1];
+		this[2] = this[2] + a[2];
+		return this;
+	}
+	get len() {
+		return Math.sqrt( this.dot( this ) );
+	}
+	dot(a) {
+		return this[0]*a[0]+this[1]*a[1] + this[2]*a[2];
+	}
+}
+
+
+
+
 const canvas = document.getElementById( "testSurface" );
 const ctx = canvas.getContext( '2d' );
 
@@ -32,52 +100,89 @@ const BASE_COLOR_GREEN = [0,255,0,255];
 
 const C = 300000000;
 const G = 6.667e-11;
-const M = 6.649e26;
+
+let mScale = 0.3;
+
+const M = 6.649e26*mScale;
 const A = (M,r) => G*M/(r*r);
 const Rs = (M) => 2*G*M/(C*C);
-const Vo = (M,r) => Math.sqrt( G*M/r );
+const Ve = (M,r) => Math.sqrt( 2*G*M/r );
+const Vo = (M,r) => Math.sqrt(   G*M/r );
+/*
+
+p=mv
+
+L=mq
 
 
-	const t = 0.0000000001;
-	const p = [Rs(M),0];
-	const v = [0,1*Vo(M,Rs(M)*1)];
-	const a = [-A(M,Math.sqrt(p[0]*p[0]+p[1]*p[1])),0];
+		const ac = A(M,d);
+
+		// normalized direction times acceleration at this radius for mass
+
+
+
+*/
+let rScale = 1.5;
+
+const scale = 100;
+
+/* Energy */
+const E = (M) => M*C*C;
+/* linear momenum */
+/* angular momentum */
+const L = (M,q) => 0 /*r x (M*v) //P */
+// cos( r,v )
+const Veff = (r) => -M/r + L*L/(2*r*r) -M*L*L/(r*r*r)
+
+	//console.log( "Escape velocity at Rs:", Ve(M,Rs(M)), Vo(M,3*Rs(M)/2)/C );
+
+	//const t = 0.000_000_003_5;   // this is borderline break orbit.
+	const t = 0.000_000_000_100;
+	const p = new Vec(Rs(M)*rScale,0);
+	const v = new Vec(0,1*Vo(M,Rs(M)*rScale));
+	const a = new Vec(-A(M,Math.sqrt(p[0]*p[0]+p[1]*p[1])),0);
 
 	ctx.clearRect( 0, 0, canvas.width, canvas.height );
-ctx.strokeStyle = "black";
-ctx.arc( midx, midy, Rs(M)*250, 0, Math.PI*2 );
-ctx.stroke();
+	ctx.strokeStyle = "black";
+	ctx.arc( midx, midy, Rs(M)*scale, 0, Math.PI*2 );
+	ctx.stroke();
 
-let h = 0;
+	let h = 0;
 
 function draw() {
 
     h += 10;
 	ctx.beginPath ();
 	ctx.strokeStyle= "hsl("+h+",100%,50%)";
-	ctx.moveTo( p[0] * 250 + midx, p[1] * 250 + midy );
-	for( let n = 0; n < 200; n++ ) {
+	ctx.moveTo( p[0] * scale + midx, p[1] * scale + midy );
+	for( let n = 0; n < 2000; n++ ) {
 		const d = Math.sqrt( p[0]*p[0] + p[1]*p[1] );
 		const ac = A(M,d);
 
 		// normalized direction times acceleration at this radius for mass
-		a[0] = -(p[0]/d)*ac;
-		a[1] = -(p[1]/d)*ac;
+		a.set( p.slice().scale( -ac/d ) ).scale(t);
+		const wv = v.slice();
+		v.add( a );
 
-		v[0] = v[0] + 1*a[0]*t;
-		v[1] = v[1] + 1*a[1]*t;
+		const ang = Math.asin( a.len/v.len )/t/C;
 
-		p[0] = p[0] + v[0]*t;
-		p[1] = p[1] + v[1]*t;
-		ctx.lineTo( p[0] * 250 + midy, p[1] * 250 + midy );
+		const was = p.slice();
+//		const was = p.slice();
+		const next = p.addScaled( v, t );
+
+		was.addScaled( next, -1 );
+		const L = wv.cross( v ).scale(1/(C*t));		
+		if( n === 1000 ) console.log( "L:", L, ang );
+		ctx.lineTo( p[0] * scale + midy, p[1] * scale + midy );
 
 		
 	}
 	ctx.stroke();
-	setTimeout( draw, 1000 );
+	setTimeout( draw, 100 );
 }
 
 draw();
+
 
 </script>
 </html>
