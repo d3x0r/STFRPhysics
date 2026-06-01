@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravitational Lensing — Celestial Sphere</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: #06080f;
+  color: #8898b0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+#hdr {
+  padding: 7px 14px 5px;
+  border-bottom: 0.5px solid #1a2540;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+#hdr h1 { font-size: 12px; font-weight: 400; color: #c8d8f0; letter-spacing: 0.08em; text-transform: uppercase; }
+#hdr .sub { font-size: 10px; color: #3a5070; }
+#main { display: flex; flex: 1; min-height: 0; }
+
+#sidebar {
+  width: 220px;
+  min-width: 180px;
+  background: #080c18;
+  border-right: 0.5px solid #1a2540;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.panel { border-bottom: 0.5px solid #111828; padding: 9px 11px; }
+.pt { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6a88aa; margin-bottom: 7px; }
+.row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; font-size: 11px; }
+.row label { flex: 1; color: #99aac0; white-space: nowrap; }
+.row .val { color: #e0eeff; width: 34px; text-align: right; font-size: 11px; }
+input[type=range] {
+  -webkit-appearance: none; height: 2px;
+  background: #182840; border-radius: 1px; outline: none; cursor: pointer; flex: 1;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%;
+  background: #4a6a9a; cursor: pointer;
+}
+select {
+  background: #0d1628; color: #c0d0e8; border: 0.5px solid #253550;
+  border-radius: 3px; font-size: 11px; font-family: 'Courier New', monospace;
+  padding: 3px 4px; width: 100%; cursor: pointer; outline: none;
+}
+.brow { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+button {
+  background: #0d1628; color: #7888a0; border: 0.5px solid #253550;
+  border-radius: 3px; font-size: 10px; font-family: 'Courier New', monospace;
+  padding: 4px 7px; cursor: pointer;
+}
+button:hover { background: #14203c; color: #c0d0e8; }
+button.act { background: #162848; color: #6aaaee; border-color: #3a5888; }
+.mlist { max-height: 110px; overflow-y: auto; }
+.mi {
+  display: flex; align-items: center; gap: 5px; padding: 3px 0;
+  border-bottom: 0.5px solid #0e1820; font-size: 10px; color: #7888a0;
+}
+.mi .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.mi .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mi .x { color: #2a3a5a; cursor: pointer; }
+.mi .x:hover { color: #d05050; }
+#leg { margin-top: auto; padding: 9px 11px; font-size: 10px; color: #8aaccc; border-top: 0.5px solid #111828; }
+.lr { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+.sw { width: 18px; height: 2px; border-radius: 1px; }
+
+#cv-wrap { flex: 1; position: relative; overflow: hidden; }
+canvas { display: block; width: 100%; height: 100%; }
+#ib { position: absolute; bottom: 6px; left: 8px; font-size: 11px; color: #d0e4ff; pointer-events: none; text-shadow: 0 1px 4px #000; }
+#mb { position: absolute; top: 7px; right: 8px; font-size: 11px; color: #7acfff; letter-spacing: 0.1em; pointer-events: none; text-shadow: 0 1px 4px #000; }
+</style>
+</head>
+<body>
+<div id="hdr">
+  <h1>Gravitational Lensing · Celestial Sphere</h1>
+  <span class="sub">rays cast in angle-space · red = unlensed sphere grid · scroll to zoom · drag to pan</span>
+</div>
+<div id="main">
+  <div id="sidebar">
+
+    <div class="panel">
+      <div class="pt">Preset</div>
+      <div class="brow">
+        <button onclick="preset('single')">Single</button>
+        <button onclick="preset('binary')">Binary</button>
+        <button onclick="preset('bullet')">Bullet cluster</button>
+        <button onclick="preset('cross')">Einstein ×</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Deflection profile</div>
+      <select id="prof" onchange="go()">
+        <option value="GR">GR — 4GM/c²b</option>
+        <option value="Newton">Newtonian — 2GM/c²b</option>
+        <option value="HPF">HPF — n²eff · 4GM/c²b</option>
+      </select>
+      <div style="height:5px"></div>
+      <div class="row"><label>strength ×</label>
+        <input type="range" id="str" min="0.1" max="8" step="0.1" value="1" oninput="sv(this,'sv0');go()">
+        <span class="val" id="sv0">1.0</span></div>
+      <div class="row"><label>displ. exag ×</label>
+        <input type="range" id="exag" min="1" max="5000" step="1" value="1" oninput="sv(this,'exagv');go()">
+        <span class="val" id="exagv">1</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">View</div>
+      <div class="row"><label>FOV (°)</label>
+        <input type="range" id="fov" min="0.01" max="90" step="0.01" value="20" oninput="sv(this,'sv1');go()">
+        <span class="val" id="sv1">20</span></div>
+      <div class="row"><label>grid spacing</label>
+        <input type="range" id="gsp" min="2" max="1200" step="1" value="3600" oninput="syncGsp(this);go()">
+        <span class="val" id="gv">1°</span></div>
+      <div class="row"><label>line steps</label>
+        <input type="range" id="lsteps" min="40" max="300" step="20" value="120" oninput="sv(this,'lsv');go()">
+        <span class="val" id="lsv">120</span></div>
+      <div class="row"><label>show unlensed</label>
+        <input type="checkbox" id="chkRed" checked onchange="go()"></div>
+      <div class="row"><label>show lensed</label>
+        <input type="checkbox" id="chkCyan" checked onchange="go()"></div>
+      <div class="row"><label>show masses</label>
+        <input type="checkbox" id="chkM" checked onchange="go()"></div>
+      <div class="row"><label>caustic overlay</label>
+        <input type="checkbox" id="chkCaus" onchange="go()"></div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Add mass · click canvas</div>
+      <div class="row"><label>mass (×10¹⁴ M☉)</label>
+        <input type="range" id="am" min="0.5" max="15" step="0.5" value="4" oninput="sv(this,'amv')">
+        <span class="val" id="amv">4.0</span></div>
+      <div class="row"><label>type</label>
+        <select id="atype" style="width:auto;flex:1;">
+          <option value="dark">dark matter</option>
+          <option value="bary">baryonic</option>
+          <option value="compact">compact</option>
+        </select>
+      </div>
+      <button id="plbtn" onclick="togglePlace()">+ place</button>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Mass list</div>
+      <div class="mlist" id="mlist"></div>
+      <div style="height:4px"></div>
+      <button onclick="clearM()">clear all</button>
+    </div>
+
+    <div id="leg">
+      <div class="lr"><div class="sw" style="background:#ff4444"></div> unlensed sphere grid</div>
+      <div class="lr"><div class="sw" style="background:#00dddd"></div> lensed (GR)</div>
+      <div class="lr"><div class="sw" style="background:#ffaa22"></div> lensed (Newtonian)</div>
+      <div class="lr"><div class="sw" style="background:#9933ff"></div> lensed (HPF)</div>
+      <div style="margin-top:6px;font-size:9px;color:#6a8aaa;">
+        Rays cast in angle-space from<br>
+        observer through lens plane →<br>
+        deflected → sampled on sphere.
+      </div>
+    </div>
+  </div>
+
+  <div id="cv-wrap">
+    <canvas id="c"></canvas>
+    <div id="ib">hover for angular data</div>
+    <div id="mb">GR</div>
+    <div id="fovbadge" style="position:absolute;top:7px;left:8px;font-size:10px;color:#8ab8e0;pointer-events:none;text-shadow:0 1px 4px #000;line-height:1.6;"></div>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('c');
+const cx = cv.getContext('2d');
+
+/* ── Physics constants ── */
+const G = 6.674e-11, C = 2.998e8, Msun = 1.989e30;
+/* Scale: 1 unit = 1 Mpc for cluster-scale scenes */
+const MPC_M = 3.086e22;
+
+/* ── State ── */
+let masses = [];  // {ax, ay, mass_1e14Msun, type}  ax,ay in angular degrees from centre
+let placing = false;
+let zoom = 1.0;   // multiplicative zoom applied to FOV
+/* Pan state: view centre offset in degrees */
+let panLon = 0, panLat = 0;
+let dragging = false, dragStartX = 0, dragStartY = 0, dragPanLon0 = 0, dragPanLat0 = 0;
+
+const TYPE_COL = { dark: '#a78bfa', bary: '#fb923c', compact: '#f472b6' };
+
+/* ── Deflection (angular, in radians) ── */
+/* 
+  For a mass at angular position (mx,my) degrees from centre,
+  and a ray arriving at apparent angle (rx,ry) degrees,
+  the GR deflection is α = 4GM/(c²b) where b is the physical impact parameter.
+  
+  We work purely in angle space. The lens is at some distance D_L from observer.
+  For cluster lensing we use D_L = 1 Gpc, D_S = 2 Gpc (typical Bullet Cluster geometry).
+  The impact parameter b = θ * D_L where θ is the angular separation in radians.
+  The deflection angle (observed) = α * D_LS/D_S  (thin lens equation).
+  For D_L=1, D_S=2, D_LS=1 → factor = 0.5.
+*/
+const D_L = 1e3 * MPC_M;   /* 1 Gpc in metres */
+const D_S = 2e3 * MPC_M;   /* 2 Gpc */
+const D_LS = D_S - D_L;    /* 1 Gpc */
+const LENSING_FACTOR = D_LS / D_S;  /* 0.5 */
+
+function deflectRad(theta_rad, mass_1e14, profile, strength) {
+  /* theta_rad = angular separation from mass centre (radians)
+     returns deflection magnitude in radians toward the mass */
+  if (theta_rad < 1e-9) return 0;
+  const M = mass_1e14 * 1e14 * Msun;
+  const b = theta_rad * D_L;          /* impact parameter in metres */
+  const alpha_hat = 4 * G * M / (C * C * b);  /* source-plane deflection */
+  let alpha = alpha_hat * LENSING_FACTOR;      /* reduced deflection */
+
+  if (profile === 'Newton') {
+    alpha *= 0.5;
+  } else if (profile === 'HPF') {
+    /* n²_eff = (1 + 2·GM/(c²b))² ≈ 1 + 4GM/(c²b) for weak field
+       Extra factor relative to GR: (1 + 2·Sigma) where Sigma = GM/(c²b) */
+    const Sigma = G * M / (C * C * b);
+    alpha *= (1 + 2 * Sigma);
+  }
+  return alpha * strength;
+}
+
+/* Given apparent direction (thx,thy), find true source position.
+   Lens equation: θ = β + α*(β−mass)/|β−mass|
+   Inverted iteratively: β ≈ θ − α*(θ−mass)/|θ−mass| */
+function trueFromApparent(thx, thy, profile, strength) {
+  let bx = thx, by = thy;
+  for (let iter = 0; iter < 4; iter++) {
+    let ddx = 0, ddy = 0;
+    for (const m of masses) {
+      const dx = bx - m.ax, dy = by - m.ay;
+      const sep_deg = Math.sqrt(dx * dx + dy * dy);
+      if (sep_deg < 1e-8) continue;
+      const sep_rad = sep_deg * Math.PI / 180;
+      const alpha = deflectRad(sep_rad, m.mass, profile, strength);
+      const alpha_deg = alpha * 180 / Math.PI;
+      /* true is closer to mass than apparent: β = θ − α*(θ−mass)/|θ−mass| */
+      ddx += alpha_deg * (dx / sep_deg);
+      ddy += alpha_deg * (dy / sep_deg);
+    }
+    bx = thx - ddx;
+    by = thy - ddy;
+  }
+  return [bx, by];
+}
+
+/* ── Gnomonic (tangent-plane) projection ──
+   Maps (lon, lat) in degrees to pixel (u, v) centred at (0,0), scale = pix/deg */
+function gnomonic(ax, ay, scale) {
+  /* For small angles this is nearly identity scaled.
+     For full gnomonic: x = cos(lat)*sin(lon-lon0) / [...], y = ... 
+     We use the small-angle limit since FOV ≤ 90°, but with cos correction. */
+  const lon = ax * Math.PI / 180;
+  const lat = ay * Math.PI / 180;
+  const cosLat = Math.cos(lat), sinLat = Math.sin(lat);
+  const cosLon = Math.cos(lon);
+  /* Gnomonic: project onto tangent plane at (0,0) */
+  const denom = cosLat * cosLon;
+  if (denom <= 0) return null;
+  const X = cosLat * Math.sin(lon) / denom;
+  const Y = sinLat / denom;
+  return [X * scale, -Y * scale];  /* -Y because canvas Y is down */
+}
+
+/* Inverse gnomonic: pixel offset → angular (degrees) */
+function invGnomonic(px, py, scale) {
+  const X = px / scale, Y = -py / scale;  /* tangent plane coords */
+  const rho = Math.sqrt(X * X + Y * Y);
+  const c = Math.atan(rho);
+  const lat = Math.asin(Math.cos(c));  /* since centre is at lat=0 */
+  const lon = Math.atan2(X, Math.cos(c));
+  return [lon * 180 / Math.PI, lat * 180 / Math.PI];
+}
+
+/* ── Rendering ── */
+let raf = null;
+function go() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
+
+function draw() {
+  const W = cv.offsetWidth, H = cv.offsetHeight;
+  const dpr = devicePixelRatio;
+  const pw = Math.ceil(W * dpr), ph = Math.ceil(H * dpr);
+  if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
+
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const gspAs = parseFloat(document.getElementById('gsp').value);  /* arcsec */
+  const gspDeg = gspAs / 3600;
+  const STEPS = parseInt(document.getElementById('lsteps').value);
+  const prof = document.getElementById('prof').value;
+  const str = parseFloat(document.getElementById('str').value);
+  const exag = parseFloat(document.getElementById('exag').value);
+  const showRed = document.getElementById('chkRed').checked;
+  const showCyan = document.getElementById('chkCyan').checked;
+  const showM = document.getElementById('chkM').checked;
+  const showCaus = document.getElementById('chkCaus').checked;
+
+  document.getElementById('mb').textContent = prof + (exag > 1 ? `  ×${exag.toFixed(0)} exag` : '');
+
+  /* pixels per radian at centre */
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const halfPx = Math.min(pw, ph) / 2;
+  const scale = halfPx / Math.tan(halfFovRad);   /* pix per radian */
+  const scaleDeg = scale * Math.PI / 180;         /* pix per degree */
+  const scaleAs = scaleDeg / 3600;               /* pix per arcsec */
+
+  /* FOV badge — show canvas angular size and pixel scale */
+  {
+    const fovAs = fovDeg * 3600;
+    const fovW = fovDeg * (pw / Math.min(pw, ph));   /* width FOV in deg */
+    const fovH = fovDeg * (ph / Math.min(pw, ph));
+    function fmtA(deg) {
+      const as = deg * 3600;
+      if (as < 60)   return as.toFixed(1) + '″';
+      if (as < 3600) return (as/60).toFixed(2) + '′';
+      return deg.toFixed(2) + '°';
+    }
+    const pxScale = 1 / scaleAs;  /* arcsec per pixel (CSS) */
+    document.getElementById('fovbadge').innerHTML =
+      `view&nbsp;${fmtA(fovW)} × ${fmtA(fovH)}<br>` +
+      `${pxScale < 1 ? (1/pxScale).toFixed(1)+'px/″' : pxScale.toFixed(2)+'″/px'}` +
+      (exag > 1 ? `&nbsp;&nbsp;<span style="color:#ffcc44">displ ×${exag.toFixed(0)}</span>` : '');
+  }
+
+  cx.fillStyle = '#06080f';
+  cx.fillRect(0, 0, pw, ph);
+
+  const OX = pw / 2, OY = ph / 2;
+
+  /* Grid range: centred on pan position */
+  const rangeX = fovDeg * 1.3, rangeY = fovDeg * 1.3;
+  const minLon = panLon - rangeX, maxLon = panLon + rangeX;
+  const minLat = panLat - rangeY, maxLat = panLat + rangeY;
+
+  const PROF_COLS = { GR: '#00cccc', Newton: '#ffaa22', HPF: '#9933ff' };
+  const lensCol = PROF_COLS[prof];
+
+  /* Snap grid lines to spacing */
+  function gridLines(dir) {
+    const lo = dir === 'lon' ? minLon : minLat;
+    const hi = dir === 'lon' ? maxLon : maxLat;
+    const lines = [];
+    const first = Math.ceil(lo / gspDeg) * gspDeg;
+    for (let v = first; v <= hi + 0.0001; v += gspDeg) lines.push(v);
+    return lines;
+  }
+
+  /* Gnomonic relative to pan centre */
+  function gnom(lon, lat) {
+    /* shift so pan centre maps to canvas centre */
+    const dlon = (lon - panLon) * Math.PI / 180;
+    const dlat = (lat - panLat) * Math.PI / 180;
+    /* small-angle gnomonic from pan centre */
+    const cosLat = Math.cos(dlat), sinLat = Math.sin(dlat);
+    const cosLon = Math.cos(dlon);
+    const denom = cosLat * cosLon;
+    if (denom <= 0.01) return null;
+    const X = cosLat * Math.sin(dlon) / denom;
+    const Y = sinLat / denom;
+    return [OX + X * scale, OY - Y * scale];
+  }
+
+  function drawGridLine(fixedVal, axis, redOrCyan) {
+    const isLon = axis === 'lon';
+    const lo = isLon ? minLat : minLon;
+    const hi = isLon ? maxLat : maxLon;
+    const step = (hi - lo) / STEPS;
+
+    cx.beginPath();
+    let first = true;
+    for (let i = 0; i <= STEPS; i++) {
+      const t = lo + i * step;
+      const lon = isLon ? fixedVal : t;
+      const lat = isLon ? t : fixedVal;
+
+      let px, py;
+      if (redOrCyan === 'red') {
+        /* Unlensed: (lon,lat) is apparent = true, project directly */
+        const g = gnom(lon, lat);
+        if (!g) { first = true; continue; }
+        [px, py] = g;
+      } else {
+        /* Lensed grid — Eddington 1919 geometry:
+           θ_apparent = β_true + α(β) * (β−mass)/|β−mass|
+           
+           Clamp: α is unphysical inside the Einstein radius (strong lensing
+           regime, multiple images, caustics). We clamp the raw deflection to
+           sep so the apparent position never overshoots past the mass centre.
+           With exaggeration we additionally clamp the visual displacement to
+           sep so exaggerated lines don't blow through to the other side.
+           Points where the true unexaggerated α > sep*0.9 are inside or very
+           near the Einstein radius — break the path there (lift pen) so no
+           spurious lines cross through the mass.
+        */
+        let appLon = lon, appLat = lat;
+        let nearSingularity = false;
+        for (const m of masses) {
+          const dx = lon - m.ax, dy = lat - m.ay;
+          const sep_deg = Math.sqrt(dx * dx + dy * dy);
+          if (sep_deg < 1e-8) { nearSingularity = true; break; }
+          const sep_rad = sep_deg * Math.PI / 180;
+          const alpha_raw = deflectRad(sep_rad, m.mass, prof, str);
+          const alpha_deg_raw = alpha_raw * 180 / Math.PI;
+          /* Flag points inside Einstein radius — weak-field formula invalid */
+          if (alpha_deg_raw >= sep_deg * 0.85) { nearSingularity = true; break; }
+          /* Physical displacement (clamped to sep so never overshoots mass) */
+          const alpha_deg = Math.min(alpha_deg_raw, sep_deg * 0.99);
+          /* Visual displacement: exaggerate but clamp to sep */
+          const visual_deg = Math.min(alpha_deg * exag, sep_deg * 0.99);
+          appLon += visual_deg * (dx / sep_deg);
+          appLat += visual_deg * (dy / sep_deg);
+        }
+        if (nearSingularity) { first = true; continue; }  /* lift pen */
+        const g = gnom(appLon, appLat);
+        if (!g) { first = true; continue; }
+        [px, py] = g;
+      }
+
+      if (first) { cx.moveTo(px, py); first = false; }
+      else cx.lineTo(px, py);
+    }
+    cx.stroke();
+  }
+
+  /* Red unlensed grid */
+  if (showRed) {
+    cx.strokeStyle = 'rgba(255,60,60,0.45)';
+    cx.lineWidth = 0.7 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'red');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
+  }
+
+  /* Lensed grid */
+  if (showCyan && masses.length > 0) {
+    cx.strokeStyle = lensCol + 'cc';
+    cx.lineWidth = 1.1 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'cyan');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'cyan');
+  } else if (showCyan) {
+    cx.strokeStyle = lensCol + '44';
+    cx.lineWidth = 0.8 * dpr;
+    for (const v of gridLines('lon')) drawGridLine(v, 'lon', 'red');
+    for (const v of gridLines('lat')) drawGridLine(v, 'lat', 'red');
+  }
+
+  /* Caustic overlay: pixel-level magnification map */
+  if (showCaus && masses.length > 0) {
+    const cstep = 10;
+    for (let py = 0; py < ph; py += cstep) {
+      for (let px = 0; px < pw; px += cstep) {
+        const [ax0, ay0] = invGnomonic(px - OX, py - OY, scale);
+        const [ax1, ay1] = invGnomonic(px - OX + cstep, py - OY, scale);
+        const [ax2, ay2] = invGnomonic(px - OX, py - OY + cstep, scale);
+        const [bx0, by0] = trueFromApparent(ax0, ay0, prof, str);
+        const [bx1, by1] = trueFromApparent(ax1, ay1, prof, str);
+        const [bx2, by2] = trueFromApparent(ax2, ay2, prof, str);
+        /* Jacobian det */
+        const J11 = (bx1 - bx0) / cstep, J12 = (by1 - by0) / cstep;
+        const J21 = (bx2 - bx0) / cstep, J22 = (by2 - by0) / cstep;
+        const det = J11 * J22 - J12 * J21;
+        if (det < 0.3 && det > -3) {
+          const t = Math.min(1, 0.8 / (Math.abs(det) + 0.05));
+          cx.fillStyle = `rgba(100,40,220,${t * 0.28})`;
+          cx.fillRect(px, py, cstep, cstep);
+        }
+      }
+    }
+  }
+
+  /* Mass discs */
+  if (showM) {
+    for (const m of masses) {
+      const g = gnom(m.ax, m.ay);
+      if (!g) continue;
+      const [mx, my] = g;
+      const r = (3 + Math.sqrt(m.mass) * 2.5) * dpr;
+      const col = TYPE_COL[m.type];
+
+      /* Einstein radius ring */
+      const M_kg = m.mass * 1e14 * Msun;
+      const tE_rad = Math.sqrt(4 * G * M_kg * D_LS / (C * C * D_L * D_S));
+      const tE_deg = tE_rad * 180 / Math.PI;
+      const rE_px = tE_deg * scaleDeg;
+      if (rE_px > 2 && rE_px < pw) {
+        cx.beginPath(); cx.arc(mx, my, rE_px, 0, Math.PI * 2);
+        cx.strokeStyle = col + '50'; cx.lineWidth = 0.8 * dpr;
+        cx.setLineDash([4 * dpr, 3 * dpr]); cx.stroke(); cx.setLineDash([]);
+      }
+
+      /* glow */
+      const grad = cx.createRadialGradient(mx, my, r * 0.2, mx, my, r * 2.5);
+      grad.addColorStop(0, col + 'cc'); grad.addColorStop(1, col + '00');
+      cx.beginPath(); cx.arc(mx, my, r * 2.5, 0, Math.PI * 2);
+      cx.fillStyle = grad; cx.fill();
+      /* core */
+      cx.beginPath(); cx.arc(mx, my, r, 0, Math.PI * 2);
+      cx.fillStyle = col + 'ee'; cx.fill();
+      /* mass label — white, readable */
+      const fs = Math.round(12 * dpr);
+      cx.font = `${fs}px monospace`;
+      cx.fillStyle = '#ffffff';
+      cx.fillText(`${m.mass.toFixed(1)}e14 M☉`, mx + r + 4, my + 2);
+      /* type label — cyan/green */
+      const fs2 = Math.round(11 * dpr);
+      cx.font = `${fs2}px monospace`;
+      cx.fillStyle = m.type === 'dark' ? '#40e8c0' : m.type === 'bary' ? '#60ffaa' : '#88ffdd';
+      cx.fillText(m.type, mx + r + 4, my + fs2 + 4);
+    }
+  }
+
+  /* Centre crosshair */
+  cx.strokeStyle = '#2a4060'; cx.lineWidth = 0.8;
+  cx.beginPath(); cx.moveTo(OX - 12, OY); cx.lineTo(OX + 12, OY); cx.stroke();
+  cx.beginPath(); cx.moveTo(OX, OY - 12); cx.lineTo(OX, OY + 12); cx.stroke();
+}
+
+/* ── Helpers ── */
+function sv(el, id) {
+  const v = parseFloat(el.value);
+  document.getElementById(id).textContent = (el.step === '1' && v >= 10) ? v.toFixed(0) : v.toFixed(1);
+}
+
+function syncGsp(el) {
+  const as = parseFloat(el.value);  /* value in arcsec */
+  let txt;
+  if (as < 60)        txt = as.toFixed(0) + '″';
+  else if (as < 3600) txt = (as / 60).toFixed(as % 60 === 0 ? 0 : 1) + '′';
+  else                txt = (as / 3600).toFixed(0) + '°';
+  document.getElementById('gv').textContent = txt;
+}
+
+function refreshList() {
+  const el = document.getElementById('mlist'); el.innerHTML = '';
+  masses.forEach((m, i) => {
+    const d = document.createElement('div'); d.className = 'mi';
+    d.innerHTML = `<span class="dot" style="background:${TYPE_COL[m.type]}"></span>
+      <span class="lbl">${m.type} ${m.mass.toFixed(1)}e14 (${m.ax.toFixed(1)}°,${m.ay.toFixed(1)}°)</span>
+      <span class="x" onclick="rmM(${i})">✕</span>`;
+    el.appendChild(d);
+  });
+}
+function rmM(i) { masses.splice(i, 1); refreshList(); go(); }
+function clearM() { masses = []; refreshList(); go(); }
+
+/* ── Canvas interaction ── */
+
+/* Helper: pixel coords → angular (degrees) accounting for pan */
+function pixToAngle(clientX, clientY) {
+  const rect = cv.getBoundingClientRect();
+  const px = (clientX - rect.left) * cv.width / rect.width;
+  const py = (clientY - rect.top) * cv.height / rect.height;
+  const OX = cv.width / 2, OY = cv.height / 2;
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+  /* offset from canvas centre in tangent-plane coords */
+  const X = (px - OX) / scale, Y = -(py - OY) / scale;
+  const rho = Math.sqrt(X * X + Y * Y);
+  const c = Math.atan(rho);
+  /* gnomonic inverse from pan centre */
+  const dlat = Math.asin(Y * Math.sin(c) / (rho || 1));
+  const dlon = Math.atan2(X * Math.sin(c), rho * Math.cos(c));
+  return [panLon + dlon * 180 / Math.PI, panLat + dlat * 180 / Math.PI];
+}
+
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoom *= e.deltaY < 0 ? 1.18 : (1 / 1.18);
+  zoom = Math.max(0.05, Math.min(zoom, 200));
+  go();
+}, { passive: false });
+
+cv.addEventListener('mousedown', e => {
+  if (placing) return;
+  dragging = true;
+  dragStartX = e.clientX; dragStartY = e.clientY;
+  dragPanLon0 = panLon; dragPanLat0 = panLat;
+  cv.style.cursor = 'grabbing';
+});
+
+cv.addEventListener('mousemove', e => {
+  if (dragging) {
+    /* Convert pixel delta to angular delta at current scale */
+    const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+    const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+    const rect = cv.getBoundingClientRect();
+    const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+    const dxPx = (e.clientX - dragStartX) * cv.width / rect.width;
+    const dyPx = (e.clientY - dragStartY) * cv.height / rect.height;
+    panLon = dragPanLon0 - (dxPx / scale) * 180 / Math.PI;
+    panLat = dragPanLat0 + (dyPx / scale) * 180 / Math.PI;
+    go();
+    return;
+  }
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  const prof = document.getElementById('prof').value;
+  const str = parseFloat(document.getElementById('str').value);
+  const [bx, by] = trueFromApparent(ax, ay, prof, str);
+  const defl_deg = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2);
+  const defl_as = defl_deg * 3600;
+  /* Format coords in arcsec if small */
+  function fmtAngle(deg) {
+    const as = Math.abs(deg) * 3600;
+    if (as < 60) return (deg * 3600).toFixed(2) + '″';
+    if (as < 3600) return (deg * 60).toFixed(2) + '′';
+    return deg.toFixed(3) + '°';
+  }
+  document.getElementById('ib').textContent =
+    `apparent (${fmtAngle(ax)}, ${fmtAngle(ay)})  →  true (${fmtAngle(bx)}, ${fmtAngle(by)})  Δ=${defl_as.toFixed(3)}″`;
+});
+
+cv.addEventListener('mouseup', e => {
+  if (!dragging) return;
+  dragging = false;
+  cv.style.cursor = placing ? 'cell' : 'crosshair';
+});
+
+cv.addEventListener('mouseleave', e => {
+  if (dragging) { dragging = false; cv.style.cursor = 'crosshair'; }
+});
+
+cv.addEventListener('click', e => {
+  if (!placing) return;
+  placing = false;
+  document.getElementById('plbtn').classList.remove('act');
+  cv.style.cursor = 'crosshair';
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  masses.push({ ax, ay, mass: parseFloat(document.getElementById('am').value), type: document.getElementById('atype').value });
+  refreshList(); go();
+});
+
+cv.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const [ax, ay] = pixToAngle(e.clientX, e.clientY);
+  const fovDeg = parseFloat(document.getElementById('fov').value) / zoom;
+  const halfFovRad = (fovDeg / 2) * Math.PI / 180;
+  const scale = (Math.min(cv.width, cv.height) / 2) / Math.tan(halfFovRad);
+  const scaleDeg = scale * Math.PI / 180;
+  let best = -1, bestD = 20 / scaleDeg;
+  masses.forEach((m, i) => {
+    const d = Math.sqrt((m.ax - ax) ** 2 + (m.ay - ay) ** 2);
+    if (d < bestD) { bestD = d; best = i; }
+  });
+  if (best >= 0) { masses.splice(best, 1); refreshList(); go(); }
+});
+
+function togglePlace() {
+  placing = !placing;
+  document.getElementById('plbtn').classList.toggle('act', placing);
+  cv.style.cursor = placing ? 'cell' : 'crosshair';
+}
+
+window.addEventListener('resize', go);
+
+/* ── Presets ── */
+function preset(name) {
+  masses = [];
+  panLon = 0; panLat = 0;
+  zoom = 1;
+  document.getElementById('exag').value = 1;
+  document.getElementById('exagv').textContent = '1';
+  document.getElementById('str').value = 1;
+  document.getElementById('sv0').textContent = '1.0';
+  document.getElementById('fov').value = 20;
+  document.getElementById('sv1').textContent = '20';
+  /* default grid: 600″ = 10′ */
+  document.getElementById('gsp').value = 600;
+  document.getElementById('gv').textContent = '10′';
+
+  if (name === 'single') {
+    masses = [{ ax: 0, ay: 0, mass: 6, type: 'compact' }];
+    document.getElementById('fov').value = 15;
+    document.getElementById('sv1').textContent = '15';
+    document.getElementById('str').value = 2;
+    document.getElementById('sv0').textContent = '2.0';
+    document.getElementById('gsp').value = 300;
+    document.getElementById('gv').textContent = '5′';
+  } else if (name === 'binary') {
+    masses = [
+      { ax: -3, ay: 0, mass: 5, type: 'bary' },
+      { ax:  3, ay: 0, mass: 5, type: 'bary' }
+    ];
+  } else if (name === 'bullet') {
+    masses = [
+      { ax: -4,    ay:  0.4, mass: 9.5, type: 'dark' },
+      { ax:  4.2,  ay: -0.3, mass: 7.0, type: 'dark' },
+      { ax: -1.5,  ay:  0.2, mass: 2.8, type: 'bary' },
+      { ax:  1.8,  ay: -0.1, mass: 2.0, type: 'bary' },
+    ];
+    document.getElementById('str').value = 1.5;
+    document.getElementById('sv0').textContent = '1.5';
+    document.getElementById('fov').value = 25;
+    document.getElementById('sv1').textContent = '25';
+    document.getElementById('exag').value = 200;
+    document.getElementById('exagv').textContent = '200';
+  } else if (name === 'cross') {
+    masses = [
+      { ax:  0,   ay:  0,   mass: 7, type: 'compact' },
+      { ax:  0.3, ay:  0.2, mass: 1, type: 'dark' },
+    ];
+    document.getElementById('str').value = 3;
+    document.getElementById('sv0').textContent = '3.0';
+    document.getElementById('fov').value = 8;
+    document.getElementById('sv1').textContent = '8';
+    document.getElementById('gsp').value = 120;
+    document.getElementById('gv').textContent = '2′';
+  }
+  refreshList(); go();
+}
+
+preset('bullet');
+</script>
+</body>
+</html>
