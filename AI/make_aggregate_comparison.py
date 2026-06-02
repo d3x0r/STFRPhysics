@@ -166,8 +166,16 @@ def edge_geometry(preset):
     r4 = float(preset.get('r4', float('nan')))
     r5 = float(preset.get('r5', float('nan')))
     return {
+        'r1': float(preset.get('r1', float('nan'))),
+        'r2': float(preset.get('r2', float('nan'))),
+        'r3': float(preset.get('r3', float('nan'))),
         'r4': r4,
         'r5': r5,
+        'rho0': float(preset.get('rho0', float('nan'))),
+        'rho1': float(preset.get('rho1', float('nan'))),
+        'rho2': float(preset.get('rho2', float('nan'))),
+        'rho3': float(preset.get('rho3', float('nan'))),
+        'rho4': float(preset.get('rho4', float('nan'))),
         'edge_width_pct': 100.0 * max(0.0, r5 - r4),
         'outer_extension_pct': 100.0 * max(0.0, r5 - 1.0),
         'edge_bounded_1pct': bool(r5 <= 1.01),
@@ -431,7 +439,7 @@ def main():
         'rms_mond','rel_rms_mond','sigma_rms_mond','chi2nu_mond','max_sigma_mond','frac_mond_within_1sigma','frac_mond_within_2sigma','frac_mond_within_3sigma',
         'rms_newton','rel_rms_newton','sigma_rms_newton','chi2nu_newton','max_sigma_newton',
         'delta_sigma_mond_minus_fw','winner_by_sigma',
-        'r4','r5','edge_width_pct','outer_extension_pct','edge_bounded_1pct','edge_bounded_5pct','edge_bounded_10pct',
+        'rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','edge_width_pct','outer_extension_pct','edge_bounded_1pct','edge_bounded_5pct','edge_bounded_10pct',
         'has_mond_components','has_bulge_component',
         'remap_on','remap_delta','remap_rc','n_remapped','max_remap_kpc',
         'mond_disk_ml','mond_bulge_ml','mond_g_dagger_m_s2',
