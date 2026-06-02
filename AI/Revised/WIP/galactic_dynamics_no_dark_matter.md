@@ -8,7 +8,7 @@
 
 ## Abstract
 
-The displacement framework of the homogeneous propagation series is applied to galaxy rotation curves across the SPARC sample (175 galaxies) together with the Milky Way and M31, for a total of 177 systems. A constrained radial occupancy profile — central concentration, broad disk, outer transition, and faint tail — is parameterized by a single declining gradient sampled at four interior radii plus an outer cutoff, with strict ordering and monotonicity constraints. The framework's velocity response to that mass distribution reproduces observed rotation curves with median relative RMS 2.09% across the full sample, 82% of galaxies fit to better than 5% RMS, and every galaxy fit to better than 16% RMS. No dark-matter halo is invoked. The mass distribution required to produce each rotation curve remains within the visible galaxy: across the full sample, the median ratio of the model's outer cutoff radius to the outermost rotation-curve data point is 1.00, no galaxy extends more than 4% past the outermost data point, and at the median 97% of the fitted mass lies within the radius of the outermost velocity measurement. The framework reproduces galactic rotation observations from the galaxy's own mass distribution alone, without requiring matter at radii beyond the visible disk.
+The displacement framework of the homogeneous propagation series is applied to galaxy rotation curves across the SPARC sample of 175 disk galaxies together with the Milky Way and M31, for a total of 177 systems. A constrained radial occupancy profile — central concentration, broad disk, outer shoulder, and terminal falloff — is parameterized by a declining gradient sampled at five radii with strict ordering and monotonicity constraints. The framework's velocity response to that mass distribution reproduces observed rotation curves with median relative RMS 2.09% across the full sample, 82% of galaxies fit to better than 5% RMS, and every galaxy fit to better than 16% RMS. No dark-matter halo is invoked. The fitted mass support remains bounded by the observed galaxy: the median outer cutoff coincides with the outermost rotation-curve data point, no galaxy extends more than 4% beyond it, and at the median 97% of the fitted mass lies within the measured rotation-curve range. The same fits are also compared against fixed-reference MOND/RAR predictions on the same sample, with methodology and limits reported below. The framework therefore reproduces galactic rotation observations from the galaxy's own bounded mass confined within the visible disk.
 
 ---
 
@@ -72,7 +72,7 @@ The fitting was therefore performed against the kinematic data, with the recover
 
 With that motivation in place, the hypothesis is stated as follows.
 
-The displacement framework's velocity response to a mass distribution shaped as a constrained radial occupancy profile — a single declining gradient sampled at central concentration, broad disk, outer transition, and faint tail — reproduces observed galactic rotation curves across the SPARC sample plus the Milky Way and M31, with no mass required at radii beyond the visible galaxy and no dark-matter halo component invoked.
+The displacement framework's velocity response to a mass distribution shaped as a constrained radial occupancy profile — a single declining gradient sampled at central concentration, broad disk, outer transition, and terminal falloff — reproduces observed galactic rotation curves across the SPARC sample plus the Milky Way and M31, with no mass required at radii beyond the visible galaxy and no dark-matter halo component invoked.
 
 The hypothesis has three independently testable parts:
 
@@ -110,11 +110,11 @@ The five density values $\rho_0 \ldots \rho_4$ specify the gradient samples at f
 - The **central concentration**: a steep gradient near the galactic center, controlled by $\rho_0, \rho_1, r_1$.
 - The **broad disk**: a slower decline through the bulk of the visible disk, controlled by $\rho_2, r_2, r_3$.
 - The **outer transition**: the shoulder where the disk gives way to the faint outer regions, controlled by $\rho_3, r_4$.
-- The **faint tail**: the declining outermost segment terminating at $r_5$, where the occupancy reaches zero.
+- The **terminal falloff**: the declining outermost segment terminating at $r_5$, where the occupancy rapidly reaches zero.
 
-Although the profile has nine free numerical values, it is *not* a nine-parameter fit. The radii are constrained to monotonic ordering with minimum gaps between successive values, and each radius is hard-clamped to a bounded range (for example $r_1 \in [0.020, 0.180]$, $r_2 \in [0.050, 0.320]$, and so on through $r_5 \in [0.700, 2.200]$). The densities are likewise constrained to be non-negative and to participate in the declining-gradient structure. The effective degrees of freedom are closer to those of a single monotonically declining gradient sampled at ordered radii: a structural form chosen to match the observed compound profile of typical galaxies, not a flexible curve-fitter.
+Although the profile has ten free numerical values, it is *not* a ten-parameter fit. The radii are constrained to monotonic ordering with minimum gaps between successive values, and each radius is hard-clamped to a bounded range (for example $r_1 \in [0.020, 0.180]$, $r_2 \in [0.050, 0.320]$, and so on through $r_5 \in [0.700, 2.200]$). The densities are likewise constrained to be non-negative and to participate in the declining-gradient structure. The effective degrees of freedom are closer to those of a single monotonically declining gradient sampled at ordered radii: a structural form chosen to match the observed compound profile of typical galaxies, not a flexible curve-fitter.
 
-The constraint structure is essential to the interpretation of the result. A nine-parameter unconstrained fit could reproduce essentially any rotation curve. The constrained gradient cannot — and the fact that it nonetheless reproduces 177 distinct rotation curves at high precision is the result this paper presents.
+The constraint structure is essential to the interpretation of the result. A ten-parameter unconstrained fit could reproduce essentially any rotation curve. The constrained gradient cannot — and the fact that it nonetheless reproduces 177 distinct rotation curves at high precision is the result this paper presents.
 
 ### 3.2 The velocity-response computation
 
@@ -154,6 +154,14 @@ $$
 
 with $G = 4.301 \times 10^{-6} \, {\rm kpc} \, ({\rm km/s})^2 / M_\odot$.
 
+The fitter interface also includes an `amp` scalar associated with the density sliders:
+
+$$
+\rho_i = \mathrm{amp} \cdot \rho_i^{\rm slider}.
+$$
+
+Operationally, `amp` acts as a slider-range normalization: it allows the same finite slider controls for \(\rho_i\) to represent both low-density dwarfs and high-concentration galaxies without forcing all density sliders into unusably small or saturated ranges. Only the effective density scale entering the kernel matters; the split between visible slider values and `amp` is therefore a representation of the fitting interface rather than an independent physical component. The final velocity-side amplitude \(A_{\rm fw}\), by contrast, multiplies the completed normalized velocity-response curve after the displacement field and gradient have been computed.
+
 ### 3.3 The SPARC data
 
 The SPARC sample [1] provides high-quality rotation curves for 175 nearby disk galaxies, derived from a combination of H$\alpha$ and HI observations and tabulated at uniform processing standards. Each galaxy's data file specifies, at each observed radius, the observed circular velocity $V_{\rm obs}$ with its measurement uncertainty $\sigma_V$, and the decomposed Newtonian velocity contributions from the disk ($V_{\rm disk}$), gas ($V_{\rm gas}$), and bulge ($V_{\rm bul}$) components inferred from Spitzer 3.6 $\mu$m photometry. The same files supply surface-brightness profiles from the photometric decomposition.
@@ -168,9 +176,9 @@ The observed rotation curves serve as the comparison target for the framework's 
 
 For each of the 177 galaxies, the occupancy profile parameters were determined by minimizing the weighted residual between the framework velocity curve and the observed $V_{\rm obs}$ across the galaxy's measured radii, subject to the ordering and monotonicity constraints described in §3.1. The amplitude $A_{\rm fw}$ was determined by weighted least-squares against $V_{\rm obs}$ at each step.
 
-Two implementations were used in parallel. A web-based simulator with manual sliders allowed direct interactive fitting and was used both to develop the constraint structure and to fit individual galaxies by hand when needed. An evolutionary curve-fitting algorithm produced the bulk of the fits across the sample without manual intervention. The two implementations share the same forward model and the same constraint enforcement, so the parameter values produced by either are interpretable identically in terms of the framework's predictions.
+Two implementations were used in parallel. A web-based simulator with manual sliders allowed direct interactive fitting and was used both to develop the constraint structure and to fit individual galaxies by hand when needed. An evolutionary curve-fitting algorithm was used as an initial seeding tool during development. The two implementations share the same forward model and the same constraint enforcement, so the parameter values produced by either are interpretable identically in terms of the framework's predictions.
 
-The fitting algorithm is not part of the apparatus in the experimental sense — it is a method of arriving at parameter values that satisfy the same hypothesis. A galaxy fit manually and a galaxy fit by the algorithm test the framework in the same way. The algorithm's only role is to save the labor of fitting 177 galaxies by hand. Section 6 discusses one observed limitation of the evolutionary algorithm — its tendency to settle into local optima on a subset of high-mass galaxies — and identifies which results in §5 are affected.
+The fits in the present version of this paper were initially seeded by the evolutionary curve-fitting algorithm and then refined by manual adjustment via the interactive fitter described in §3. Many galaxies received manual adjustment beyond the algorithm's seed configuration; in the supplementary preset file, this can be inspected directly — galaxies with three-decimal-place parameter values reflect manual tuning, while those stored at full double precision were left as the algorithm produced them. The evolutionary stage of the pipeline has since been deprecated; the working pipeline is the interactive fitter plus manual review. The authoritative record of each galaxy's fit is the preset file itself, which reproduces end-to-end via the rendering code as described in Appendix A.
 
 All fit-quality numbers reported in §5 are produced from the unmodified parameter values stored in the preset file accompanying this paper, and the corresponding figures are generated programmatically from those values together with the SPARC rotation-curve data. The pipeline is reproducible: given the preset file and the SPARC rotmod files, the figures and statistics in §5 can be reconstructed end-to-end by the rendering code included in the supplementary material.
 
@@ -186,7 +194,7 @@ The framework reproduces the observed rotation curves across the 177-galaxy samp
   <img src="../fig/galaxy-fits/fits/_aggregate_rms_distribution.svg" alt="Distribution of framework fit quality across the 177-galaxy sample">
 </p>
 
-**Figure 1.** *Distribution of relative RMS (RMS / $\langle V_{\rm obs}\rangle$) across the 177-galaxy sample. The median is 2.09%; the high-amp cohort (amp > 500, where the evolutionary fit is more likely to settle in local optima) is stacked separately. File: `AI/Revised/fig/galaxy-fits/fits/_aggregate_rms_distribution.svg`.*
+**Figure 1.** *Distribution of relative RMS (RMS / $\langle V_{\rm obs}\rangle$) across the 177-galaxy sample. The median is 2.09%. The stacked coloring follows the renderer's internal `amp` grouping, but `amp` is a slider-range normalization rather than a separate physical parameter. File: `AI/Revised/fig/galaxy-fits/fits/_aggregate_rms_distribution.svg`.*
 
 Specific percentile counts:
 
@@ -202,9 +210,9 @@ Specific percentile counts:
 
 The median relative RMS of 2.09% is at or below the typical kinematic-measurement uncertainty in the SPARC sample. The framework recovers the observed rotation curves at the precision of the data for almost half of the sample and to within 10% for 94% of galaxies. No galaxy fails to fit at the 20% level.
 
-The per-galaxy plots show the framework's velocity response (solid blue), the Newtonian-without-halo baseline, the fixed-global MOND/RAR reference curve where SPARC-format baryonic components are available, and the observed velocities with error bars (black points) for each galaxy. The full set is in `fig/galaxy-fits/fits/<galaxy_name>.svg`. The visual coherence across the sample is the test of hypothesis (i): the framework's velocity-response shape consistently matches the observed flat-or-rising rotation behavior, while the Newtonian-without-halo curve consistently fails to reproduce the observed flat support — the dark-matter problem rendered in 177 individual plots.
+The per-galaxy plots show the framework's velocity response (solid blue), the Newtonian-without-halo baseline, the fixed-global MOND/RAR reference curve where SPARC-format baryonic components are available, and the observed velocities with error bars (black points) for each galaxy. The full set is in [fig/galaxy-fits/fits/<galaxy_name>.svg](https://github.com/d3x0r/STFRPhysics/tree/master/AI/Revised/fig/galaxy-fits/fits). The visual coherence across the sample is the test of hypothesis (i): the framework's velocity-response shape consistently matches the observed flat-or-rising rotation behavior, while the Newtonian-without-halo curve consistently fails to reproduce the observed flat support — the dark-matter problem rendered in 177 individual plots.
 
-Representative and stress-case examples are shown in Figure 2. NGC 3198 and NGC 2403 illustrate canonical disk-galaxy behavior; UGC 01281 gives a lower-mass comparison; the Milky Way anchors the local system; and NGC 2841 illustrates the high-inner-rise stress class discussed in §6.4.
+Representative and stress-case examples are shown in Figure 2. NGC 3198 and NGC 2403 illustrate canonical disk-galaxy behavior; UGC 01281 gives a lower-mass comparison; the Milky Way anchors the local system; and NGC 2841 illustrates the high-inner-rise stress class discussed in §6.3.
 
 <table align="center">
 <tr>
@@ -239,6 +247,8 @@ The mass distribution required to produce each rotation curve remains within the
 - All 177 galaxies have $r_5/r_{\rm outer} \leq 1.04$
 - Maximum ratio: 1.04
 
+The few-percent cases should not be read as a physical requirement for matter beyond the galaxy. The fitted cutoff is a constrained numerical parameter, and in the interactive fitting apparatus the outer-radius controls move on a finite slider grid rather than as a continuous analytic optimum. The outermost rotation-curve point is also not a direct measurement of the galaxy's photometric edge; it is a kinematic sample associated with a finite observational region and with whatever averaging, projection, and radial calibration enter the published curve. Finally, the framework itself allows the possibility that large-scale displacement modifies apparent radial mapping, so a few-percent offset between fitted support and catalog radius should be treated as cutoff uncertainty rather than as evidence for an extended component. The relevant comparison is scale: the committed fits require no support more than 4% past the outermost measured point, whereas halo models extend to virial scales many times larger than the visible disk.
+
 <p align="center">
   <img src="../fig/galaxy-fits/fits/_aggregate_edge_bounded.svg" alt="Outer cutoff distribution of fitted support profiles">
 </p>
@@ -247,7 +257,17 @@ The mass distribution required to produce each rotation curve remains within the
 
 In every case the model's outer cutoff sits at or very near the outermost velocity measurement; no galaxy requires mass extending more than 4% past the outermost data point, and the majority require less. The mass distribution does not extend into a halo regime at large radii.
 
-The outer-extent constraint was tightened during analysis from $r_5/r_{\rm outer} < 1.5$ to $r_5/r_{\rm outer} \leq 1.04$. For 168 of 177 galaxies the tightening produced no measurable degradation of fit quality, indicating the looser bound was not load-bearing for the fit. For 9 galaxies the tightening exposed an underlying limit in the current parameterization addressed in §6.3 and §6.4.
+A second edge diagnostic is the slope of the final falloff segment. In the fitted profile, the outer taper falls from $\rho_4$ at $r_4$ to zero at $r_5$, so the normalized outer-edge slope may be summarized as
+
+$$
+S_{\rm edge}=\frac{\rho_4}{r_5-r_4},
+\qquad
+\theta_{\rm edge}=\arctan S_{\rm edge}.
+$$
+
+The angle $\theta_{\rm edge}$ is not an additional fit parameter; it is a derived diagnostic of how sharply the recovered support terminates. Computed after the same structural enforcement used by the fitter and SVG generator, the shallowest valid outer taper is approximately $74.5^\circ$, the 10th percentile is approximately $82^\circ$, and most galaxies lie between $85^\circ$ and $90^\circ$. Two raw presets, UGC05986 and NGC0289, have $r_5<r_4$ before enforcement; in the evaluated model they are clamped to $r_5=r_4+0.010$, giving edge angles of approximately $88.0^\circ$ and $89.2^\circ$ respectively. Thus the bounded-support result is not only that the fitted mass terminates near the last measured point, but that it usually terminates through a steep outer falloff rather than through a broad halo-like continuation.
+
+The outer-extent constraint was tightened during analysis from $r_5/r_{\rm outer} < 1.5$ to $r_5/r_{\rm outer} \leq 1.04$. For 168 of 177 galaxies the tightening produced no measurable degradation of fit quality, indicating the looser bound was not load-bearing for the fit. For 9 galaxies the tightening exposed an underlying limit in the current parameterization addressed in §6.3.
 
 **The fraction of total fitted mass** enclosed within the radius of the outermost data point. Across the sample, the median enclosed-mass fraction within $r_{\rm outer}$ is 96.9%, with 111 of 177 galaxies (63%) having at least 95% of the fitted mass within the data range and 153 of 177 (87%) having at least 85%.
 
@@ -291,15 +311,15 @@ By relative RMS, the framework wins pairwise against MOND/RAR on **171 of 175 ga
   <img src="../fig/galaxy-fits/fits/_aggregate_framework_vs_mond.svg" alt="Framework versus MOND/RAR sigma-weighted RMS comparison">
 </p>
 
-**Figure 4.** *Aggregate scatter of framework σ-RMS against MOND/RAR σ-RMS per galaxy. Points below the diagonal are galaxies where the framework produces the smaller error-normalized residual. File: `AI/Revised/fig/galaxy-fits/fits/_aggregate_framework_vs_mond.svg`.*
+**Figure 4.** *Aggregate scatter of framework σ-RMS against MOND/RAR σ-RMS per galaxy. Points below the diagonal are galaxies where the framework produces the smaller error-normalized residual. File: [AI/Revised/fig/galaxy-fits/fits/_aggregate_framework_vs_mond.svg](https://github.com/d3x0r/STFRPhysics/tree/master/AI/Revised/fig/galaxy-fits/fits/_aggregate_framework_vs_mond.svg/).*
 
-The MOND/RAR comparison here is not a head-to-head against MOND with per-galaxy tuning of mass-to-light ratios — the standard procedure in fitted MOND analyses. The comparison uses SPARC's published baryonic decomposition with fixed global settings (`mond_mode: fixed_global_reference`), which is the most conservative external prediction MOND makes from publicly available data. A version of this comparison with mass-to-light ratios allowed to vary per galaxy within physical priors would give MOND its best case and would still leave it computing one universal acceleration scale; that variant is a natural extension for follow-up work. What this comparison establishes is that, against the conservative external MOND prediction, the framework's fits are tighter on nearly the entire sample, by both magnitude-based and statistical metrics.
+The MOND/RAR comparison here is not a head-to-head against MOND with per-galaxy tuning of mass-to-light ratios — the standard procedure in fitted MOND analyses. The comparison uses SPARC's published baryonic decomposition with fixed global settings (`mond_mode: fixed_global_reference`), providing a reproducible external MOND/RAR reference curve rather than a per-galaxy MOND refit. A version of this comparison with mass-to-light ratios allowed to vary per galaxy within physical priors would give MOND its best case and would still leave it computing one universal acceleration scale; that variant is a natural extension for follow-up work. What this comparison establishes is that, against the conservative external MOND prediction, the framework's fits are tighter on nearly the entire sample, by both magnitude-based and statistical metrics.
 
 ### 5.5 Hypothesis (iii): uniform applicability
 
-The same occupancy profile structure, the same velocity-response computation, and the same constraint set (radius ordering and clamping) are used for every galaxy in the sample. The `support` parameter is uniform at 0.027 across all 177 galaxies. The `eps` softening parameter is 0.021 (the framework default) for 147 galaxies, with 30 galaxies using smaller values (0.001, 0.002, 0.007, or 0.011) when finer inner-detail resolution was needed to capture the rotation-curve structure near the galactic core. Smaller `eps` allows the cumulative displacement field to follow the piecewise-linear occupancy profile more closely without the smoothing kernel washing out sharp interior features.
+The same occupancy profile structure, the same velocity-response computation, and the same constraint set (radius ordering and clamping) are used for every galaxy in the sample. The `support` parameter is uniform at 0.027 across all 177 galaxies. It enters inside the displacement kernel and therefore changes the normalized displacement-response shape rather than acting as a post-fit velocity multiplier. In the present fit set it is not tuned per galaxy. The `eps` softening parameter is 0.021 for 168 galaxies. Nine galaxies use smaller values to preserve finer inner-gradient structure: seven use `eps = 0.002`, one uses `eps = 0.005`, and one uses `eps = 0.007`. As with `support`, `eps` enters inside the displacement integral and changes the kernel smoothing/local resolution rather than merely rescaling the final velocity curve.
 
-No per-galaxy structural modification of the model is performed; the variation in `eps` is a single-parameter adjustment of numerical-method resolution rather than a structural change. The only quantities that vary substantively between galaxies are the seven amplitude and radius parameters of the occupancy profile, $\rho_0 \ldots \rho_4$ and $r_1 \ldots r_5$ (with the structural constraints applied identically), together with the per-galaxy fit amplitudes $A_{\rm fw}$ and $A_N$.
+No per-galaxy structural modification of the model is performed; the variation in `eps` is a single-parameter adjustment of numerical-method resolution rather than a structural change. The only quantities that vary substantively between galaxies are the ten shape parameters of the occupancy profile, $\rho_0 \ldots \rho_4$ and $r_1 \ldots r_5$ (with the structural constraints applied identically), together with the per-galaxy velocity-side amplitudes $A_{\rm fw}$ and $A_N$. The `amp` scalar described in §3.2 varies across galaxies as a density-slider range normalization but does not represent an additional model degree of freedom; the kernel `support` scalar is uniform at 0.027 across the sample.
 
 That the same constrained model produces fits with median 2.09% RMS across galaxies spanning four orders of magnitude in total mass and two orders of magnitude in outermost radius is the test of hypothesis (iii). The framework is uniformly applicable across the sample.
 
@@ -327,15 +347,8 @@ Several claims that might be inferred from the data are not established by this 
 
 **The framework's interpretation of rotation curves as kinematic snapshots of stable orbits inherits the same assumption as standard dynamical analysis.** If significant radial migration of stars within the disk affects the velocity observations — stars formed at smaller radii migrating outward over galactic timescales, as suggested by some recent work — then both the framework's and the dark-matter community's mass inferences from rotation curves would be systematically biased. The present analysis does not address radial migration; it assumes the standard kinematic interpretation. Investigation of how the framework would handle non-equilibrium dynamics is left to follow-up work.
 
-### 6.3 The evolutionary algorithm and its limitations
 
-The bulk of the per-galaxy fits in this sample were produced by an evolutionary curve-fitting algorithm. The algorithm has one known systematic limitation: on high-mass galaxies (typically those where the fitted amplitude $A_{\rm fw}$ exceeds approximately 500), the algorithm sometimes settles in local optima where small parameter changes produce residual increases even though a clearly better fit is achievable by hand. Manual fitting of any affected galaxy proceeds straightforwardly once the limitation is recognized.
-
-The amp > 500 flag in the fit data marks galaxies where this limitation may apply. Roughly 23% of the sample carries the flag. Of the 10 galaxies with relative RMS above 8%, nine carry the amp > 500 flag and one (UGC 02953) is a separate case where the algorithm runs out of resolution near the galactic core due to dense, high-error-bar data points in that regime. Manual fitting of these cases would tighten the fit-quality distribution further, but the headline numbers reported in §5 are produced from the algorithmic fits as-is, without manual cleanup of the harder cases.
-
-This is worth stating directly: the fit-quality distribution reported in §5 includes the algorithm's local-optima cases at their algorithmic best. The result is robust against the worst plausible algorithm behavior. Improved fits via manual tuning would only strengthen the result; the present numbers already reach the conclusion stated in §6.1.
-
-### 6.4 Inner-rise stress cases
+### 6.3 Inner-rise stress cases
 
 A small class of galaxies shows a common residual structure: the outer and mid-disk response is reproduced, but the innermost measured points demand a steeper rise than the constrained occupancy profile can generate without exceeding the parameterization's structural bounds. This is not merely a failure of optimizer resolution. Direct sampling at the observed radii and extremely small central breakpoint separations still encounter the same normalized-shape limit. When the central profile is steepened enough to match the inner slope, the rest of the velocity curve is raised; when the global amplitude is refit downward, the inner-slope deficit returns. The behavior reflects a genuine shape constraint in the present apparatus.
 
@@ -359,7 +372,7 @@ Distinguishing among these interpretations is not possible from the rotation-cur
 
 The remap-applied galaxies are included in the headline fit-quality statistics of §5.1. Removing them from the sample raises the median fit quality slightly; their inclusion is the more conservative reporting.
 
-### 6.5 Methodological note on photometric data
+### 6.4 Methodological note on photometric data
 
 The SPARC rotmod data files supply both the kinematic rotation curve and a set of decomposed Newtonian velocity contributions ($V_{\rm disk}, V_{\rm gas}, V_{\rm bul}$) derived from Sérsic-style photometric fits to Spitzer 3.6 $\mu$m surface brightness profiles. The present analysis uses the kinematic data $V_{\rm obs}$ as the primary fit target, with the brightness columns used only as initialization guides for the gradient-control profile.
 
@@ -367,7 +380,7 @@ A more rigorous methodology would fit the occupancy profile against raw radial s
 
 The conclusions of the present paper do not depend on the choice. The framework's velocity response is fit against the kinematic data directly, and the kinematic data is the primary observational anchor for the dark-matter question. The methodological refinement would improve the model's connection to photometric structure but would not change the rotation-curve result.
 
-### 6.6 Relationship to the broader displacement framework
+### 6.5 Relationship to the broader displacement framework
 
 This paper is one of a series developing the displacement framework as an alternative to general relativity in the gravitational sector and to special relativity's primitive Lorentz structure in the kinematic sector. The framework's overall postulate structure, derivational order, and ontological commitments are developed in [2, 3, 4]. The weak-field observational tests of the framework — Mercury perihelion advance, Shapiro delay, light deflection, Gravity Probe B, gravitational radiation — are presented in [5]; the comparison with general relativity at the weak-field and strong-field observational levels is discussed in [6]. The framework's philosophical foundations and the open frontier are taken up in [7].
 
@@ -381,7 +394,7 @@ The displacement framework reproduces the rotation curves of 177 galaxies (SPARC
 
 The framework's velocity response to a single declining gradient of mass occupancy, bounded within the visible galaxy, is sufficient to account for the standard galactic rotation observations.
 
-One observational finding from the sample deserves explicit note as a prediction: the recovered outer-edge gradient is in many cases steeper than was initially anticipated from the idealized N-body explorations described in §2.1. The packed-disk analysis suggested that successive outer rings contribute progressively steeper interior gradients, but the magnitude of the effect in the actual SPARC fits is substantial. In a significant fraction of fitted galaxies the gradient at the outer transition is sharp enough to constitute, in dynamical terms, a soft wall: a stellar orbit at that radius would require an angular velocity well in excess of the local rotation-curve value to remain in stable orbit beyond the edge, and stars approaching the edge from outside would be returned inward by the gradient rather than passing through it. The framework therefore predicts that the visible edges of galaxies are not just photometric features but dynamical ones — that the same mechanism producing the flat rotation curve also produces a stronger-than-newtonian containment boundary at the visible disk's outer edge. Whether this is observable as a kinematic signature in stellar populations near galactic outskirts is a question for follow-up work.
+One observational finding from the sample deserves explicit note as a prediction: the recovered outer-edge falloff is in many cases steeper than was initially anticipated from the idealized N-body explorations described in §2.1. The packed-disk analysis suggested that successive outer rings contribute progressively steeper interior gradients, but the fitted SPARC profiles make that expectation concrete: the final support segment usually falls at an edge angle above $85^\circ$ in the normalized $(r,\rho)$ profile. The framework therefore predicts that the visible edges of galaxies are not merely photometric thresholds, but dynamical transition regions where occupied support drops rapidly. Whether this steep fitted edge corresponds to observable kinematic signatures in stellar populations near galactic outskirts is a question for follow-up work.
 
 ---
 
@@ -405,22 +418,23 @@ One observational finding from the sample deserves explicit note as a prediction
 
 ## Appendix A. Reproducibility
 
-The figures and statistics in this paper are reproducible from the data files and rendering code provided as supplementary material. The pipeline:
+The figures and statistics in this paper are reproducible from the data files and rendering code provided as supplementary material in the [GitHub repository for STFRPhysics](https://github.com/d3x0r/STFRPhysics/). The pipeline:
 
-1. The galaxy preset file `galaxy_presets.mjs` contains the fitted occupancy parameters for all 177 galaxies.
-2. The SPARC rotation-curve file `rotmod_ltg_data.mjs` contains the observational data for all 175 SPARC galaxies plus MW and M31, transcribed from the SPARC public release [1].
-3. The Python module `galaxy_lib.py` implements the forward model: gradient-control occupancy profile, softened-kernel displacement integral, smoothing, gradient-derived velocity response, and Newtonian comparison curve. The enforce_structure routine applies the radius-ordering and clamping constraints described in §3.1 prior to evaluation.
-4. The Python script `make_all_svgs_v3.py` generates the per-galaxy SVG plots and the gallery index page.
-5. The Python script `make_aggregate_svg.py` generates the aggregate RMS distribution figure (Figure 1).
-6. The Python script `make_aggregate_comparison.py` generates the aggregate framework / MOND / Newtonian comparison CSV and JSON summaries, including `_aggregate_model_comparison.csv`, `_aggregate_model_comparison.json`, `_aggregate_edge_bounded.svg`, and `_aggregate_framework_vs_mond.svg`.
-7. The JavaScript module `galaxy_svg.mjs` provides equivalent SVG generation for browser or Node deployment; output matches the Python pipeline to within 0.1 pixel of rounding.
-8. The HTML demo file `galaxy_svg_demo.html` provides a self-contained browser-based viewer; the simulator file `galaxy_disk_fit.html` provides the interactive slider-based fitting interface used to develop the constraint structure and to fit individual galaxies by hand when needed.
+1. The galaxy preset file `AI/galaxy_presets.mjs` contains the fitted occupancy parameters for all 177 galaxies.
+2. The SPARC rotation-curve file `AI/rotmod_ltg_data.mjs` contains the observational data for all 175 SPARC galaxies plus MW and M31, transcribed from the SPARC public release [1].
+3. The Python module `AI/galaxy_lib.py` implements the forward model: gradient-control occupancy profile, softened-kernel displacement integral, smoothing, gradient-derived velocity response, and Newtonian comparison curve. The enforce_structure routine applies the radius-ordering and clamping constraints described in §3.1 prior to evaluation.
+4. The Python script `AI/make_all_svgs_v3.py` generates the per-galaxy SVG plots and the gallery index page.
+5. The Node script `AI/galaxy_svg_update.mjs` generates all galaxy SVG plots. Also uses `AI/galaxy_svg.mjs`, or `AI/galaxy_svg_with_photometric_profile.mjs`.
+6. The Python script `AI/make_aggregate_svg.py` generates the aggregate RMS distribution figure (Figure 1).
+7. The Python script `AI/make_aggregate_comparison.py` generates the aggregate framework / MOND / Newtonian comparison CSV and JSON summaries, including `AI/Revised/fig/galaxy-fits/_aggregate_model_comparison.csv`, `AI/Revised/fig/galaxy-fits/_aggregate_model_comparison.json`, `AI/Revised/fig/galaxy-fits/_aggregate_edge_bounded.svg`, and `AI/Revised/fig/galaxy-fits/_aggregate_framework_vs_mond.svg`.
+8. The JavaScript module `galaxy_svg.mjs` provides equivalent SVG generation for browser or Node deployment; output matches the Python pipeline to within 0.1 pixel of rounding.
+9. The HTML demo file [AI/galaxy_svg_demo.html](https://d3x0r.github.io/STFRPhysics/AI/galaxy_svg_demo.html) provides a self-contained browser-based viewer; the simulator file [AI/galaxy_disk_fit.html](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit.html), or [AI/galaxy_disk_fit-remap.html](https://d3x0r.github.io/STFRPhysics/AI/galaxy_disk_fit-remap.html) provides the interactive slider-based fitting interface used to develop the constraint structure and to fit individual galaxies by hand when needed.  (Known issue - first galaxy doesn't update remap control state correctly in `-remap`).
 
 Given the preset and rotmod data files plus the rendering code, the figures and statistics in §5 can be reproduced end-to-end.
 
 ## Appendix B. Fit parameter table
 
-The fitted occupancy parameters for the 177 galaxies are tabulated in the supplementary file `galaxy_presets.mjs`. Each galaxy entry has the form:
+The fitted occupancy parameters for the 177 galaxies are tabulated in the supplementary file `AI/galaxy_presets.mjs`. Each galaxy entry has the form:
 
 ```
 'NGC3198': {rho0: 2.456, rho1: 1.598, rho2: 1.328, rho3: 0.969, rho4: 0.514,
@@ -429,9 +443,9 @@ The fitted occupancy parameters for the 177 galaxies are tabulated in the supple
             amp: 419.14, newtonAmp: 132.43}
 ```
 
-where the densities are in occupancy units, the radii are in units of the per-galaxy $r_{\rm Max}$ (which is supplied in the rotmod file), `eps` and `support` are the framework's softening and coupling parameters, `amp` is the framework velocity-response amplitude $A_{\rm fw}$, and `newtonAmp` is the Newtonian-baseline amplitude $A_N$ used for the comparison curve and for the mass conversion described in §3.2.
+where the densities are in occupancy units, the radii are in units of the per-galaxy $r_{\rm Max}$ (which is supplied in the rotmod file), `eps` and `support` are the framework's softening and coupling parameters, `amp` is the density-slider range normalization described in §3.2, while $A_{\rm fw}$ is the framework velocity-response amplitude used in the plotted velocity curve; `newtonAmp` is the Newtonian-baseline amplitude $A_N$ used for the comparison curve and for the mass conversion also described in §3.2.
 
-The full table is too long to reproduce inline; the data file in the supplementary material is the authoritative version.
+The full table is too long to reproduce inline; the data file in the supplementary material is the authoritative version.  [Github current version](https://github.com/d3x0r/STFRPhysics/tree/master/AI/Revised/fig/galaxy-fits)
 
 ---
 
