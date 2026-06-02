@@ -2,6 +2,8 @@
 import math
 import numpy as np
 
+G_KPC_KMS2_PER_MSUN = 4.301e-6
+
 
 def enforce_structure(P):
     """Match the simulator's enforceStructure(): clamp + monotonic ordering.
@@ -176,3 +178,47 @@ def remap_radius_norm(x, P):
         return x
     t = 1.0 - x / rc
     return x + float(P.get('remapDelta', 0)) * t * t
+
+
+
+def rho_at_x(x, p):
+    r1, r2, r3, r4, r5 = [float(p[k]) for k in ("r1", "r2", "r3", "r4", "r5")]
+    rho0, rho1, rho2, rho3, rho4 = [float(p[k]) for k in ("rho0", "rho1", "rho2", "rho3", "rho4")]
+    if x <= 0:
+        return rho0
+    if x <= r1:
+        return rho0 + (rho1 - rho0) * (x / max(r1, 1e-12))
+    if x <= r2:
+        return rho1 + (rho2 - rho1) * ((x - r1) / max(r2 - r1, 1e-12))
+    if x <= r3:
+        return rho2 + (rho3 - rho2) * ((x - r2) / max(r3 - r2, 1e-12))
+    if x <= r4:
+        return rho3 + (rho4 - rho3) * ((x - r3) / max(r4 - r3, 1e-12))
+    if x <= r5:
+        return rho4 * (1.0 - (x - r4) / max(r5 - r4, 1e-12))
+    return 0.0
+
+def menc_norm_numeric(p, x_max=None, n=2000):
+    r5 = float(p["r5"])
+    upper = r5 if x_max is None else min(float(x_max), r5)
+    if upper <= 0:
+        return 0.0
+    # Enclosed normalized disk mass: 2π ∫ rho(x) x dx
+    if n % 2:
+        n += 1
+    h = upper / n
+    total = 0.0
+    for i in range(n + 1):
+        x = i * h
+        w = 4 if i % 2 else 2
+        if i == 0 or i == n:
+            w = 1
+        total += w * rho_at_x(x, p) * x
+    return 2.0 * math.pi * total * h / 3.0
+
+def total_mass_msun(p, r_max):
+    newton_amp = float(p.get("newtonAmp", 0.0) or 0.0)
+    if newton_amp <= 0 or r_max <= 0:
+        return None
+    m_norm = menc_norm_numeric(p, x_max=float(p["r5"]))
+    return (newton_amp * newton_amp * m_norm * float(r_max)) / G_KPC_KMS2_PER_MSUN

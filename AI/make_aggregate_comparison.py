@@ -30,7 +30,7 @@ from statistics import median
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from parse_presets import load_presets, load_rotmod
-from galaxy_lib import compute_galaxy, fit_quality, shape_n_np, get_rmax
+from galaxy_lib import compute_galaxy, fit_quality, shape_n_np, get_rmax, total_mass_msun, menc_norm_numeric, G_KPC_KMS2_PER_MSUN
 
 M_PER_KPC = 3.0856775814913673e19
 ACC_UNIT_M_S2 = 1e6 / M_PER_KPC  # 1 (km/s)^2/kpc in m/s^2
@@ -111,6 +111,13 @@ def has_mond_components(rotmod_entry):
             return True
     return False
 
+def enclosed_mass_msun(p, r_max, r_phys):
+    newton_amp = float(p.get("newtonAmp", 0.0) or 0.0)
+    if newton_amp <= 0 or r_max <= 0:
+        return None
+    x = float(r_phys) / float(r_max)
+    m_norm = menc_norm_numeric(p, x_max=x)
+    return (newton_amp * newton_amp * m_norm * float(r_max)) / G_KPC_KMS2_PER_MSUN
 
 def has_bulge_component(rotmod_entry):
     return any(abs(row.get('vBul', 0.0)) > 0 or abs(row.get('sbBul', 0.0)) > 0 for row in rotmod_entry.get('rows', []))
@@ -377,6 +384,7 @@ def main():
             mond = model_metrics(results, 'v_mond', k=0) if mond_ok else model_metrics([], 'v_mond')
             newt = model_metrics(results, 'v_n', k=1)
             edge = edge_geometry(preset)
+
             row_out = {
                 'name': name,
                 'N': fw['n'],
@@ -408,6 +416,20 @@ def main():
                 'has_bulge_component': has_bulge_component(rot),
                 **edge,
             }
+
+            mass_total_msun = total_mass_msun(preset, rmax)
+            row_out.update({
+                "m_total_msun": mass_total_msun,
+                "log10_m_total_msun": math.log10(mass_total_msun) if mass_total_msun and mass_total_msun > 0 else None,
+            })
+
+            r_outer = max(float(r["r"]) for r in rot["rows"])
+            m_outer = enclosed_mass_msun(preset, rmax, r_outer)
+
+            row_out.update({
+                "m_outer_msun": m_outer,
+                "m_outer_frac": (m_outer / mass_total_msun) if mass_total_msun and m_outer else None,
+            })
 
             remap_on = bool(preset.get('remapOn') and preset.get('remapDelta', 0) > 0 and preset.get('remapRc', 0) > 0)
             n_remapped = sum(1 for r in results if r.get('remapped'))
@@ -441,6 +463,7 @@ def main():
         'delta_sigma_mond_minus_fw','winner_by_sigma',
         'rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','edge_width_pct','outer_extension_pct','edge_bounded_1pct','edge_bounded_5pct','edge_bounded_10pct',
         'has_mond_components','has_bulge_component',
+        "m_total_msun", "log10_m_total_msun",
         'remap_on','remap_delta','remap_rc','n_remapped','max_remap_kpc',
         'mond_disk_ml','mond_bulge_ml','mond_g_dagger_m_s2',
     ]
