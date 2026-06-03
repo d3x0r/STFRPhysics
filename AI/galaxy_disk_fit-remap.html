@@ -164,7 +164,15 @@ function syncControls(){
 		if(P[k]!=null)$(k).value=P[k];} 
 	$('remapOn').checked=P.remapOn; 
 	$('amp').value=fwAmp=P.amp; updateLabels();}
-function updateLabels(){for(const k of ids){const el=$(k+'v'); if(!el) continue; const v=+$(k).value; el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));} $('remapOnv').textContent=P.on?'on':'off'; $('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-'; $('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-'; $('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-'; $('mNamp').textContent=G?newtonAmp.toFixed(1):'-'; $('mBrms').textContent=G?brightnessRms().toFixed(3):'-'; $('status').textContent=G?`${G.name}: ${G.rows.length} samples${P.on?' · inner remap on':''}`:'';}
+function updateLabels(){for(const k of ids){const el=$(k+'v'); 
+	if(!el) continue; const v=+$(k).value; 
+	el.textContent=(k==='amp'?v.toFixed(1):v.toFixed(3));} 
+	$('remapOnv').textContent=P.remapOn?'on':'off'; 
+	$('mR').textContent=G?G.preset.rMax.toFixed(2)+' kpc':'-'; 
+	$('mVrms').textContent=G?rms(shapeFW,fwAmp).toFixed(1)+' km/s':'-'; 
+	$('mNrms').textContent=G?rms(shapeN,newtonAmp).toFixed(1)+' km/s':'-'; 
+	$('mNamp').textContent=G?newtonAmp.toFixed(1):'-'; $('mBrms').textContent=G?brightnessRms().toFixed(3):'-'; 
+	$('status').textContent=G?`${G.name}: ${G.rows.length} samples${P.remapOn?' · inner remap on':''}`:'';}
 function fitVelocity(){invalidateField(); fwAmp=P.amp;/*fwAmp=fitScale(shapeFW);*/  newtonAmp=fitScale(shapeN); $('amp').max=Math.max(500,Math.ceil(fwAmp*1.8)); $('amp').value=fwAmp;}
 function onSlider(){for(const k of ['rho0','rho1','rho2','rho3','rho4','r1','r2','r3','r4','r5','eps','support','remapDelta','remapRc'])P[k]=+$(k).value; P.remapOn=$('remapOn').checked; fwAmp=+$('amp').value; enforceStructure(); for(const k of ['r1','r2','r3','r4','r5'])$(k).value=P[k]; invalidateField(); updateLabels(); drawAll();}
 function points(n,fn,xmax=1.28){const a=[]; for(let i=0;i<n;i++){const x=(i/(n-1))*xmax; a.push([x,fn(x)]);} return a;}
@@ -183,9 +191,9 @@ function drawRot(){const [ctx,W,H]=canvasSize($('rot'));
 				const x0=sampleX(r), x=effX(x0); 
 				if(P.remapOn && Math.abs(x-x0)>1e-6){ctx.save();ctx.strokeStyle='#c6ccd4';ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(sx(x0),sy(r.vObs));
 				ctx.lineTo(sx(x),sy(r.vObs));ctx.stroke();ctx.restore();} ctx.beginPath();ctx.moveTo(sx(x),sy(r.vObs-r.errV));ctx.lineTo(sx(x),sy(r.vObs+r.errV));ctx.stroke();} 
-		if(P.on){dots(ctx,G.rows.map(r=>[sampleX(r),r.vObs]),sx,sy,'#b8c0ca',1.8);} 
+		if(P.remapOn){dots(ctx,G.rows.map(r=>[sampleX(r),r.vObs]),sx,sy,'#b8c0ca',1.8);} 
 		dots(ctx,G.rows.map(r=>[effX(sampleX(r)),r.vObs]),sx,sy,'#15171a',2.5); 
-		legend(ctx,W, P.on?['original r','remapped obs','framework','Newton rho mass']:['observed','framework','Newton rho mass'], P.on?['#b8c0ca','#15171a','#2b77d4','#9aa6b2']:['#15171a','#2b77d4','#9aa6b2']);}
+		legend(ctx,W, P.remapOn?['original r','remapped obs','framework','Newton rho mass']:['observed','framework','Newton rho mass'], P.remapOn?['#b8c0ca','#15171a','#2b77d4','#9aa6b2']:['#15171a','#2b77d4','#9aa6b2']);}
 function drawProf(){const [ctx,W,H]=canvasSize($('prof')); const bs=G.rows.map(r=>Math.max(0,r.sbDisk+r.sbBul)), bMax=Math.max(...bs,1); const ymax=Math.max(1,Math.max(P.rho0,P.rho1,P.rho2,P.rho3,P.rho4)*1.1); const [sx,sy]=drawAxes(ctx,W,H,28,Math.max(1.55,P.r5*1.08),ymax,'r/Rmax','norm'); poly(ctx,points(180,rho,Math.max(1.55,P.r5*1.08)),sx,sy,'#d43f2b',2.2); dots(ctx,G.rows.map((r,i)=>[r.r/G.preset.rMax,bs[i]/bMax]),sx,sy,'#30343a',2.3); legend(ctx,W,['brightness','rho profile'],['#30343a','#d43f2b']);}
 function drawComp(){const [ctx,W,H]=canvasSize($('comp')); const ymax=Math.max(...G.rows.flatMap(r=>[r.vGas,r.vDisk,r.vBul]),1)*1.15; const [sx,sy]=drawAxes(ctx,W,H,28,1.05,ymax,'r/Rmax','km/s'); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vGas]),sx,sy,'#238636',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vDisk]),sx,sy,'#c05b00',1.8); poly(ctx,G.rows.map(r=>[r.r/G.preset.rMax,r.vBul]),sx,sy,'#6f42c1',1.8); legend(ctx,W,['gas','disk','bulge'],['#238636','#c05b00','#6f42c1']);}
 function legend(ctx,W,names,colors){ctx.font='11px system-ui'; let x=W-12; for(let i=names.length-1;i>=0;i--){const w=ctx.measureText(names[i]).width+22; x-=w; ctx.fillStyle=colors[i]; ctx.fillRect(x,10,14,3); ctx.fillStyle='#555d68'; ctx.fillText(names[i],x+18,14);}}
@@ -201,7 +209,8 @@ const manualSet=new Set(MANUAL_PRESET_ORDER);
 const rest=ROTMOD_GALAXIES.filter(g=>!manualSet.has(g.name)).sort((a,b)=>a.name.localeCompare(b.name));
 if(rest.length){const sep=document.createElement('option'); sep.disabled=true; sep.textContent='──────── other galaxies'; $('gal').appendChild(sep);}
 for(const g of rest)addOption(g);
-$('gal').value='M31'; $('gal').addEventListener('change',()=>setFromPreset(byName.get($('gal').value))); 
+$('gal').value='MilkyWay'; 
+$('gal').addEventListener('change',()=>setFromPreset(byName.get($('gal').value))); 
 $('reset').onclick=()=>setFromPreset(byName.get($('gal').value)); 
 $('fitAmp').onclick=()=>{fitVelocity();syncControls();drawAll();}; 
 	function onRemap(){
@@ -211,7 +220,8 @@ for(const k of ids){
 	if(el) el.addEventListener('input', k.startsWith('remap')?onRemap:onSlider);
 } 
 $('remapOn').addEventListener('change',onRemap); 
-addEventListener('resize',drawAll); setFromPreset(byName.get('M31')||ROTMOD_GALAXIES[0]);
+addEventListener('resize',drawAll); 
+requestAnimationFrame( ()=>setFromPreset(byName.get('MilkyWay')||ROTMOD_GALAXIES[0]) );
 </script>
 </body>
 </html>
