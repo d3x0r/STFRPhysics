@@ -13,7 +13,7 @@
 //
 // Manual order for featured presets shown first in the UI:
 export const PRESET_ORDER = [
-  'MilkyWay','M31','NGC2403','ESO563-G021','CamB','D631-7',
+  'MilkyWay','NGC2403','M31','ESO563-G021','CamB','D631-7',
   'UGC02953','UGC04305','NGC2915','DDO154','IC2574',
   'DDO168','DDO161','ESO116-G012',
 ];
@@ -95,7 +95,7 @@ export const GALAXY_PRESETS = {
 		"rho2": 0.81,
 		"rho3": 0.63,
 		"rho4": 0.20,
-		"r1": 0.0001,
+		"r1": 0.0200,
 		"r2": 0.078,
 		"r3": 0.190,
 		"r4": 0.994,
@@ -692,7 +692,7 @@ export const GALAXY_PRESETS = {
 		"r1": 0.044,
 		"r2": 0.216,
 		"r3": 0.362,
-		"r4": 1.024,
+		"r4": 0.990,
 		"r5": 1.000,
 		"eps": 0.001,
 		"support": 0.027,
@@ -2149,7 +2149,7 @@ export const GALAXY_PRESETS = {
 		"r1": 0.10439370254613459,
 		"r2": 0.2224221798444373,
 		"r3": 0.2796741788106086,
-		"r4": 1.0449497517314739,
+		"r4": 0.990,
 		"r5": 1.0,
 		"eps": 0.021,
 		"support": 0.027,
