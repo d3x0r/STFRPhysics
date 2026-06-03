@@ -12,6 +12,15 @@ presets = load_presets(os.path.join(DATA_DIR, 'galaxy_presets.mjs'))
 rotmod = load_rotmod(os.path.join(DATA_DIR, 'rotmod_ltg_data.mjs'))
 rotmod_by_name = {g['name']: g for g in rotmod}
 
+import csv
+
+# Load canonical rel_rms values from CSV
+csv_path = os.path.join(os.environ.get('GALAXY_OUT_DIR', './galaxy_svgs'), '_aggregate_model_comparison.csv')
+csv_rel_rms = {}
+with open(csv_path) as f:
+    for row in csv.DictReader(f):
+        csv_rel_rms[row['name']] = float(row['rel_rms_fw'])
+
 # Compute stats
 stats = []
 for name in presets:
@@ -24,7 +33,7 @@ for name in presets:
         if q['rms']/ max(1, v_obs_mean) > 8 : print( name );
         stats.append({
             'name': name, 'amp': presets[name]['amp'],
-            'rms_rel': q['rms'] / max(1, v_obs_mean),
+            'rms_rel': csv_rel_rms[name],
             'rms_abs': q['rms'],
             'v_obs_max': max(r['v_obs'] for r in results),
             'high_amp': presets[name]['amp'] > 500,
@@ -46,8 +55,8 @@ def make_histogram_svg():
     
     # Bin into 0-30% in 1% bins
 
-    max_pct = 10.0
-    bin_w = 0.25
+    max_pct = 16.0
+    bin_w = 0.50
     nbins = int(max_pct / bin_w)
     bins = [0] * nbins
     bins_low = [0] * nbins
@@ -100,7 +109,7 @@ def make_histogram_svg():
 
     
     svg.append(f'<text x="{width/2}" y="26" text-anchor="middle" class="title">Framework fit quality across {len(stats)} galaxies (SPARC + Milky Way + M31)</text>')
-    svg.append(f'<text x="{width/2}" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS, zoomed 0–10% with 0.25% bins</text>')
+    svg.append(f'<text x="{width/2}" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS, zoomed 0–{max_pct}% with {bin_w}% bins</text>')
 #    svg.append(f'<text x="{width/2}" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS (RMS / mean V_obs) per galaxy, no dark-matter halo</text>')
     
     # Axes
@@ -120,7 +129,7 @@ def make_histogram_svg():
 #        svg.append(f'<line x1="{x}" y1="{margin["t"]}" x2="{x}" y2="{height-margin["b"]}" class="grid"/>')
 #        svg.append(f'<text x="{x}" y="{height-margin["b"]+16}" text-anchor="middle" class="lbl">{b}%</text>')
     
-    svg.append(f'<text x="{margin["l"]+pw/2}" y="{height-12}" text-anchor="middle" class="lbl">relative RMS (RMS / &lt;V_obs&gt;), zoomed 0–10%</text>')
+    svg.append(f'<text x="{margin["l"]+pw/2}" y="{height-12}" text-anchor="middle" class="lbl">relative RMS (RMS / &lt;V_obs&gt;), zoomed 0–{max_pct}%</text>')
     svg.append(f'<text x="18" y="{margin["t"]+ph/2}" text-anchor="middle" class="lbl" transform="rotate(-90, 18, {margin["t"]+ph/2})">number of galaxies</text>')
     
     # Stacked bars
@@ -165,15 +174,17 @@ def make_histogram_svg():
     rng1 = 0.01
     rng2 = 0.02
     rng3 = 0.05
+    rng4 = max_pct
 
     p5  = sum(1 for s in stats if s['rms_rel'] < rng1)
     p10 = sum(1 for s in stats if s['rms_rel'] < rng2)
     p20 = sum(1 for s in stats if s['rms_rel'] < rng3)
+    p_rest = sum(1 for s in stats if s['rms_rel'] > rng4)
 
     svg.append(f'<text x="{nx}" y="{ny+28}" class="lbl">&lt;{rng1*100:.0f}%:  {p5}/{len(stats)} ({100*p5/len(stats):.0f}%)</text>')
     svg.append(f'<text x="{nx}" y="{ny+44}" class="lbl">&lt;{rng2*100:.0f}%: {p10}/{len(stats)} ({100*p10/len(stats):.0f}%)</text>')
     svg.append(f'<text x="{nx}" y="{ny+60}" class="lbl">&lt;{rng3*100:.0f}%: {p20}/{len(stats)} ({100*p20/len(stats):.0f}%)</text>')
-    svg.append(f'<text x="{nx}" y="{ny+76}" class="lbl">&gt;10%: {overflow}/{len(stats)}</text>')
+    svg.append(f'<text x="{nx}" y="{ny+76}" class="lbl">&gt;{max_pct}%: {overflow}/{len(stats)}</text>')
     
     svg.append('</svg>')
     #print( '\n'.join(svg) )

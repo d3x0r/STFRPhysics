@@ -11,95 +11,106 @@
   .reflbl { fill: #b00; font-size: 11px; font-weight: 600; }
 </style>
 <text x="360.0" y="26" text-anchor="middle" class="title">Framework fit quality across 177 galaxies (SPARC + Milky Way + M31)</text>
-<text x="360.0" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS, zoomed 0–10% with 0.25% bins</text>
+<text x="360.0" y="44" text-anchor="middle" class="subtitle">Distribution of relative RMS, zoomed 0–16.0% with 0.5% bins</text>
 <line x1="70" y1="400.0" x2="690" y2="400.0" class="grid"/>
 <text x="64" y="404.0" text-anchor="end" class="lbl">0</text>
-<line x1="70" y1="348.4848484848485" x2="690" y2="348.4848484848485" class="grid"/>
-<text x="64" y="352.4848484848485" text-anchor="end" class="lbl">4</text>
-<line x1="70" y1="284.0909090909091" x2="690" y2="284.0909090909091" class="grid"/>
-<text x="64" y="288.0909090909091" text-anchor="end" class="lbl">9</text>
-<line x1="70" y1="219.69696969696972" x2="690" y2="219.69696969696972" class="grid"/>
-<text x="64" y="223.69696969696972" text-anchor="end" class="lbl">14</text>
-<line x1="70" y1="155.3030303030303" x2="690" y2="155.3030303030303" class="grid"/>
-<text x="64" y="159.3030303030303" text-anchor="end" class="lbl">19</text>
-<line x1="70" y1="90.90909090909092" x2="690" y2="90.90909090909092" class="grid"/>
-<text x="64" y="94.90909090909092" text-anchor="end" class="lbl">24</text>
+<line x1="70" y1="345.45454545454544" x2="690" y2="345.45454545454544" class="grid"/>
+<text x="64" y="349.45454545454544" text-anchor="end" class="lbl">6</text>
+<line x1="70" y1="281.81818181818187" x2="690" y2="281.81818181818187" class="grid"/>
+<text x="64" y="285.81818181818187" text-anchor="end" class="lbl">13</text>
+<line x1="70" y1="218.18181818181822" x2="690" y2="218.18181818181822" class="grid"/>
+<text x="64" y="222.18181818181822" text-anchor="end" class="lbl">20</text>
+<line x1="70" y1="154.5454545454546" x2="690" y2="154.5454545454546" class="grid"/>
+<text x="64" y="158.5454545454546" text-anchor="end" class="lbl">27</text>
+<line x1="70" y1="90.90909090909096" x2="690" y2="90.90909090909096" class="grid"/>
+<text x="64" y="94.90909090909096" text-anchor="end" class="lbl">34</text>
 <line x1="70.0" y1="60" x2="70.0" y2="400" class="grid"/>
 <text x="70.0" y="416" text-anchor="middle" class="lbl">0%</text>
-<line x1="132.0" y1="60" x2="132.0" y2="400" class="grid"/>
-<text x="132.0" y="416" text-anchor="middle" class="lbl">1%</text>
-<line x1="194.0" y1="60" x2="194.0" y2="400" class="grid"/>
-<text x="194.0" y="416" text-anchor="middle" class="lbl">2%</text>
-<line x1="256.0" y1="60" x2="256.0" y2="400" class="grid"/>
-<text x="256.0" y="416" text-anchor="middle" class="lbl">3%</text>
-<line x1="318.0" y1="60" x2="318.0" y2="400" class="grid"/>
-<text x="318.0" y="416" text-anchor="middle" class="lbl">4%</text>
+<line x1="108.75" y1="60" x2="108.75" y2="400" class="grid"/>
+<text x="108.75" y="416" text-anchor="middle" class="lbl">1%</text>
+<line x1="147.5" y1="60" x2="147.5" y2="400" class="grid"/>
+<text x="147.5" y="416" text-anchor="middle" class="lbl">2%</text>
+<line x1="186.25" y1="60" x2="186.25" y2="400" class="grid"/>
+<text x="186.25" y="416" text-anchor="middle" class="lbl">3%</text>
+<line x1="225.0" y1="60" x2="225.0" y2="400" class="grid"/>
+<text x="225.0" y="416" text-anchor="middle" class="lbl">4%</text>
+<line x1="263.75" y1="60" x2="263.75" y2="400" class="grid"/>
+<text x="263.75" y="416" text-anchor="middle" class="lbl">5%</text>
+<line x1="302.5" y1="60" x2="302.5" y2="400" class="grid"/>
+<text x="302.5" y="416" text-anchor="middle" class="lbl">6%</text>
+<line x1="341.25" y1="60" x2="341.25" y2="400" class="grid"/>
+<text x="341.25" y="416" text-anchor="middle" class="lbl">7%</text>
 <line x1="380.0" y1="60" x2="380.0" y2="400" class="grid"/>
-<text x="380.0" y="416" text-anchor="middle" class="lbl">5%</text>
-<line x1="442.0" y1="60" x2="442.0" y2="400" class="grid"/>
-<text x="442.0" y="416" text-anchor="middle" class="lbl">6%</text>
-<line x1="504.0" y1="60" x2="504.0" y2="400" class="grid"/>
-<text x="504.0" y="416" text-anchor="middle" class="lbl">7%</text>
-<line x1="566.0" y1="60" x2="566.0" y2="400" class="grid"/>
-<text x="566.0" y="416" text-anchor="middle" class="lbl">8%</text>
-<line x1="628.0" y1="60" x2="628.0" y2="400" class="grid"/>
-<text x="628.0" y="416" text-anchor="middle" class="lbl">9%</text>
+<text x="380.0" y="416" text-anchor="middle" class="lbl">8%</text>
+<line x1="418.75" y1="60" x2="418.75" y2="400" class="grid"/>
+<text x="418.75" y="416" text-anchor="middle" class="lbl">9%</text>
+<line x1="457.5" y1="60" x2="457.5" y2="400" class="grid"/>
+<text x="457.5" y="416" text-anchor="middle" class="lbl">10%</text>
+<line x1="496.25" y1="60" x2="496.25" y2="400" class="grid"/>
+<text x="496.25" y="416" text-anchor="middle" class="lbl">11%</text>
+<line x1="535.0" y1="60" x2="535.0" y2="400" class="grid"/>
+<text x="535.0" y="416" text-anchor="middle" class="lbl">12%</text>
+<line x1="573.75" y1="60" x2="573.75" y2="400" class="grid"/>
+<text x="573.75" y="416" text-anchor="middle" class="lbl">13%</text>
+<line x1="612.5" y1="60" x2="612.5" y2="400" class="grid"/>
+<text x="612.5" y="416" text-anchor="middle" class="lbl">14%</text>
+<line x1="651.25" y1="60" x2="651.25" y2="400" class="grid"/>
+<text x="651.25" y="416" text-anchor="middle" class="lbl">15%</text>
 <line x1="690.0" y1="60" x2="690.0" y2="400" class="grid"/>
-<text x="690.0" y="416" text-anchor="middle" class="lbl">10%</text>
-<text x="380.0" y="448" text-anchor="middle" class="lbl">relative RMS (RMS / &lt;V_obs&gt;), zoomed 0–10%</text>
+<text x="690.0" y="416" text-anchor="middle" class="lbl">16%</text>
+<text x="380.0" y="448" text-anchor="middle" class="lbl">relative RMS (RMS / &lt;V_obs&gt;), zoomed 0–16.0%</text>
 <text x="18" y="230.0" text-anchor="middle" class="lbl" transform="rotate(-90, 18, 230.0)">number of galaxies</text>
-<rect x="86.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="101.5" y="348.4848484848485" width="14.5" height="51.51515151515151" class="bar-low"/>
-<rect x="101.5" y="335.6060606060606" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="117.0" y="284.0909090909091" width="14.5" height="115.9090909090909" class="bar-low"/>
-<rect x="132.5" y="245.45454545454547" width="14.5" height="154.54545454545453" class="bar-low"/>
-<rect x="148.0" y="193.93939393939397" width="14.5" height="206.06060606060603" class="bar-low"/>
-<rect x="148.0" y="181.0606060606061" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="163.5" y="155.30303030303034" width="14.5" height="244.69696969696966" class="bar-low"/>
-<rect x="163.5" y="90.90909090909095" width="14.5" height="64.39393939393939" class="bar-high"/>
-<rect x="179.0" y="116.66666666666669" width="14.5" height="283.3333333333333" class="bar-low"/>
-<rect x="179.0" y="103.78787878787881" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="194.5" y="193.93939393939397" width="14.5" height="206.06060606060603" class="bar-low"/>
-<rect x="194.5" y="155.30303030303034" width="14.5" height="38.63636363636363" class="bar-high"/>
-<rect x="210.0" y="284.0909090909091" width="14.5" height="115.9090909090909" class="bar-low"/>
-<rect x="210.0" y="271.21212121212125" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="225.5" y="335.6060606060606" width="14.5" height="64.39393939393939" class="bar-low"/>
-<rect x="241.0" y="335.6060606060606" width="14.5" height="64.39393939393939" class="bar-low"/>
-<rect x="241.0" y="322.72727272727275" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="256.5" y="361.3636363636364" width="14.5" height="38.63636363636363" class="bar-low"/>
-<rect x="256.5" y="322.72727272727275" width="14.5" height="38.63636363636363" class="bar-high"/>
-<rect x="272.0" y="374.24242424242425" width="14.5" height="25.757575757575754" class="bar-low"/>
-<rect x="272.0" y="348.4848484848485" width="14.5" height="25.757575757575754" class="bar-high"/>
-<rect x="287.5" y="374.24242424242425" width="14.5" height="25.757575757575754" class="bar-low"/>
-<rect x="287.5" y="361.3636363636364" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="303.0" y="361.3636363636364" width="14.5" height="38.63636363636363" class="bar-low"/>
-<rect x="303.0" y="348.4848484848485" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="318.5" y="348.4848484848485" width="14.5" height="51.51515151515151" class="bar-low"/>
-<rect x="318.5" y="322.72727272727275" width="14.5" height="25.757575757575754" class="bar-high"/>
-<rect x="334.0" y="374.24242424242425" width="14.5" height="25.757575757575754" class="bar-low"/>
-<rect x="334.0" y="361.3636363636364" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="349.5" y="361.3636363636364" width="14.5" height="38.63636363636363" class="bar-low"/>
-<rect x="365.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="380.5" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="380.5" y="348.4848484848485" width="14.5" height="38.63636363636363" class="bar-high"/>
-<rect x="396.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="411.5" y="348.4848484848485" width="14.5" height="51.51515151515151" class="bar-high"/>
-<rect x="473.5" y="374.24242424242425" width="14.5" height="25.757575757575754" class="bar-high"/>
-<rect x="520.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="535.5" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-low"/>
-<rect x="551.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="566.5" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-high"/>
-<rect x="613.0" y="387.1212121212121" width="14.5" height="12.878787878787877" class="bar-high"/>
-<line x1="191.87921582253512" y1="60" x2="191.87921582253512" y2="400" class="ref"/>
-<text x="196.87921582253512" y="72" class="reflbl">median = 2.0%</text>
+<rect x="70.5" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="89.875" y="300.0" width="18.375" height="99.99999999999999" class="bar-low"/>
+<rect x="89.875" y="290.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="109.25" y="90.90909090909093" width="18.375" height="309.09090909090907" class="bar-low"/>
+<rect x="128.625" y="181.81818181818184" width="18.375" height="218.18181818181816" class="bar-low"/>
+<rect x="128.625" y="118.18181818181822" width="18.375" height="63.636363636363626" class="bar-high"/>
+<rect x="148.0" y="181.81818181818184" width="18.375" height="218.18181818181816" class="bar-low"/>
+<rect x="148.0" y="163.63636363636365" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="167.375" y="263.6363636363636" width="18.375" height="136.36363636363635" class="bar-low"/>
+<rect x="167.375" y="254.54545454545453" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="186.75" y="372.72727272727275" width="18.375" height="27.27272727272727" class="bar-low"/>
+<rect x="186.75" y="354.54545454545456" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="206.125" y="363.6363636363636" width="18.375" height="36.36363636363636" class="bar-low"/>
+<rect x="206.125" y="327.27272727272725" width="18.375" height="36.36363636363636" class="bar-high"/>
+<rect x="225.5" y="345.45454545454544" width="18.375" height="54.54545454545454" class="bar-low"/>
+<rect x="225.5" y="327.27272727272725" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="244.875" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="244.875" y="363.6363636363637" width="18.375" height="27.27272727272727" class="bar-high"/>
+<rect x="264.25" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="264.25" y="372.72727272727275" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="283.625" y="381.8181818181818" width="18.375" height="18.18181818181818" class="bar-low"/>
+<rect x="283.625" y="363.6363636363636" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="303.0" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="322.375" y="372.72727272727275" width="18.375" height="27.27272727272727" class="bar-low"/>
+<rect x="322.375" y="363.6363636363637" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="341.75" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="361.125" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="361.125" y="381.81818181818187" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="380.5" y="372.72727272727275" width="18.375" height="27.27272727272727" class="bar-low"/>
+<rect x="399.875" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="419.25" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="419.25" y="372.72727272727275" width="18.375" height="18.18181818181818" class="bar-high"/>
+<rect x="458.0" y="381.8181818181818" width="18.375" height="18.18181818181818" class="bar-low"/>
+<rect x="496.75" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="516.125" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="535.5" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="535.5" y="381.81818181818187" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="554.875" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="574.25" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
+<rect x="593.625" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<rect x="671.125" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
+<line x1="151.10375" y1="60" x2="151.10375" y2="400" class="ref"/>
+<text x="156.10375" y="72" class="reflbl">median = 2.1%</text>
 <rect x="70" y="60" width="620" height="340" class="ax"/>
 <rect x="490" y="72" width="12" height="12" class="bar-low"/>
 <text x="508" y="82" class="lbl">amp &lt; 500 (n=142)</text>
 <rect x="490" y="90" width="12" height="12" class="bar-high"/>
 <text x="508" y="100" class="lbl">amp &gt; 500 (n=35)</text>
 <text x="82" y="82" class="lbl">N = 177 galaxies</text>
-<text x="82" y="100" class="lbl">&lt;1%:  15/177 (8%)</text>
-<text x="82" y="116" class="lbl">&lt;2%: 91/177 (51%)</text>
-<text x="82" y="132" class="lbl">&lt;5%: 161/177 (91%)</text>
-<text x="82" y="148" class="lbl">&gt;10%: 0/177</text>
+<text x="82" y="100" class="lbl">&lt;1%:  13/177 (7%)</text>
+<text x="82" y="116" class="lbl">&lt;2%: 78/177 (44%)</text>
+<text x="82" y="132" class="lbl">&lt;5%: 145/177 (82%)</text>
+<text x="82" y="148" class="lbl">&gt;16.0%: 0/177</text>
 </svg>
