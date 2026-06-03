@@ -77,12 +77,11 @@
 <rect x="225.5" y="345.45454545454544" width="18.375" height="54.54545454545454" class="bar-low"/>
 <rect x="225.5" y="327.27272727272725" width="18.375" height="18.18181818181818" class="bar-high"/>
 <rect x="244.875" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
-<rect x="244.875" y="363.6363636363637" width="18.375" height="27.27272727272727" class="bar-high"/>
+<rect x="244.875" y="354.54545454545456" width="18.375" height="36.36363636363636" class="bar-high"/>
 <rect x="264.25" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-low"/>
 <rect x="264.25" y="372.72727272727275" width="18.375" height="18.18181818181818" class="bar-high"/>
 <rect x="283.625" y="381.8181818181818" width="18.375" height="18.18181818181818" class="bar-low"/>
 <rect x="283.625" y="363.6363636363636" width="18.375" height="18.18181818181818" class="bar-high"/>
-<rect x="303.0" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
 <rect x="322.375" y="372.72727272727275" width="18.375" height="27.27272727272727" class="bar-low"/>
 <rect x="322.375" y="363.6363636363637" width="18.375" height="9.09090909090909" class="bar-high"/>
 <rect x="341.75" y="390.90909090909093" width="18.375" height="9.09090909090909" class="bar-high"/>
@@ -111,6 +110,6 @@
 <text x="82" y="82" class="lbl">N = 177 galaxies</text>
 <text x="82" y="100" class="lbl">&lt;1%:  13/177 (7%)</text>
 <text x="82" y="116" class="lbl">&lt;2%: 78/177 (44%)</text>
-<text x="82" y="132" class="lbl">&lt;5%: 145/177 (82%)</text>
+<text x="82" y="132" class="lbl">&lt;5%: 146/177 (82%)</text>
 <text x="82" y="148" class="lbl">&gt;16.0%: 0/177</text>
 </svg>
