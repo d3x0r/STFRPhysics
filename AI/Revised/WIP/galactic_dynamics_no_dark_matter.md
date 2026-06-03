@@ -384,7 +384,7 @@ The conclusions of the present paper do not depend on the choice. The framework'
 
 ### 6.5 Relationship to the broader displacement framework
 
-This paper is one of a series developing the displacement framework as an alternative to general relativity in the gravitational sector and to special relativity's primitive Lorentz structure in the kinematic sector. The framework's overall postulate structure, derivational order, and ontological commitments are developed in [2, 3, 4]. The weak-field observational tests of the framework — Mercury perihelion advance, Shapiro delay, light deflection, Gravity Probe B, gravitational radiation — are presented in [5]; the comparison with general relativity at the weak-field and strong-field observational levels is discussed in [6]. The framework's philosophical foundations and the open frontier are taken up in [7].
+This paper is one of a series developing the displacement framework as an alternative to general relativity in the gravitational sector and to special relativity's primitive Lorentz structure in the kinematic sector. The framework's overall postulate structure, derivational order, and ontological commitments are developed in [2, 3, 6]. The weak-field observational tests of the framework — Mercury perihelion advance, Shapiro delay, light deflection, Gravity Probe B, gravitational radiation — are presented in [4]; the comparison with general relativity at the weak-field and strong-field observational levels is discussed in [5]. The framework's philosophical foundations and the open frontier are taken up in [6].
 
 The galactic-dynamics result presented here adds a third observational pillar to the framework's empirical contact, complementing the weak-field tests at solar-system scale and supporting the framework's claim to recover the major observational regimes of standard gravitational physics through a single underlying displacement structure. The interpretive question of why the framework can do this — what about the displacement response makes flat rotation curves emerge from a bounded mass distribution — is a question about the framework's gravitational response at galactic scale, and its quantitative development is the natural next layer of work on the framework's gravitational sector.
 
@@ -404,17 +404,15 @@ One observational finding from the sample deserves explicit note as a prediction
 
 [1] Lelli, F., McGaugh, S. S., & Schombert, J. M. (2016). *SPARC: Mass models for 175 disk galaxies with Spitzer photometry and accurate rotation curves.* The Astronomical Journal, 152(6), 157.
 
-[2] Buckeyne, J. *The Homogeneous Light Propagation Framework.* Zenodo. 2026.
+[2] Buckeyne, J. *The Homogeneous Light Propagation Framework.* [Zenodo. 2026.](https://doi.org/10.5281/zenodo.20472270)
 
-[3] Buckeyne, J. *The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects.* Zenodo. 2026.
+[3] Buckeyne, J. *The Homogeneous Propagation Framework: Retardation, Cumulative Field Structure, and Rotating-Source Response.* [Zenodo. 2026.](https://doi.org/10.5281/zenodo.20075441)
 
-[4] Buckeyne, J. *The Homogeneous Propagation Framework: Retardation, Cumulative Field Structure, and Rotating-Source Response.* Zenodo. 2026.
+[4] Buckeyne, J. *The Homogeneous Propagation Framework: Weak-Field Observational Tests.* [Zenodo. 2026.](https://doi.org/10.5281/zenodo.20075467)
 
-[5] Buckeyne, J. *The Homogeneous Propagation Framework: Weak-Field Observational Tests.* Zenodo. 2026.
+[5] Buckeyne, J. *The Homogeneous Propagation Framework: A Comparative Overview.* [Zenodo. 2026.](https://doi.org/10.5281/zenodo.20159472)
 
-[6] Buckeyne, J. *The Homogeneous Propagation Framework: A Comparative Overview.* Zenodo. 2026.
-
-[7] Buckeyne, J. *The Homogeneous Propagation Framework: Philosophical Foundations and Postulate Structure.* Unpublished companion manuscript. 2026.
+[6] Buckeyne, J. *The Homogeneous Propagation Framework: Foundational Overview.* [Zenodo. 2026.](https://doi.org/10.5281/zenodo.19702909)
 
 ---
 
