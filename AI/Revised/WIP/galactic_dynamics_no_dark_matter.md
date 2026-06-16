@@ -1,8 +1,11 @@
 # Galaxy Rotation Curves Without Dark Matter: The Displacement Framework Applied to 177 Galaxies
 
-**J. Buckeyne**
+**James Buckeyne**  
+Independent Researcher  
+Fernandina Beach, FL; United States  
+Email: james.buckeyne@gmail.com  
+[ORCID iD: 0009-0004-2865-6447](https://orcid.org/0009-0004-2865-6447)
 
-*Zenodo, 2026 — DOI: 10.5281/zenodo.20499393*
 
 ---
 
