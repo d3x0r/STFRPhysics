@@ -27,7 +27,7 @@ This paper tests whether that account works in practice. The hypothesis is strai
 
 The paper is structured around the experimental form. Section 2 develops the hypothesis, beginning with the physical reasoning that motivated the displacement-response approach to galactic dynamics and concluding with the specific testable claims. Section 3 describes the apparatus: the occupancy profile, the velocity response computation, and the SPARC data. Section 4 describes how the apparatus is applied to the data. Section 5 reports the results across the 177-galaxy sample. Section 6 discusses what the result establishes and what it does not. Section 7 concludes.
 
-The reader who wants to see the fits directly may skip to the figure gallery referenced throughout the paper, in [fig/galaxy-fits/fits/](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/). Each galaxy has a corresponding plot showing the observed velocity points with error bars, the framework's fitted curve, and the underlying mass profile. The aggregate distribution of fit qualities across the sample is shown in [fig/galaxy-fits/fits/_aggregate_rms_distribution.svg](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/_aggregate_rms_distribution.svg).
+The reader who wants to see the fits directly may skip to the figure gallery referenced throughout the paper, in [fig/galaxy-fits/fits/](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/fits/). Each galaxy has a corresponding plot showing the observed velocity points with error bars, the framework's fitted curve, and the underlying mass profile. The aggregate distribution of fit qualities across the sample is shown in [../fig/galaxy-fits/fits/_aggregate_rms_distribution.svg](https://d3x0r.github.io/STFRPhysics/AI/Revised/fig/galaxy-fits/_aggregate_rms_distribution.svg).
 
 
 ---
@@ -400,6 +400,12 @@ The displacement framework reproduces the rotation curves of 177 galaxies (SPARC
 The framework's velocity response to a single declining gradient of mass occupancy, bounded within the visible galaxy, is sufficient to account for the standard galactic rotation observations.
 
 One observational finding from the sample deserves explicit note as a prediction: the recovered outer-edge falloff is in many cases steeper than was initially anticipated from the idealized N-body explorations described in §2.1. The packed-disk analysis suggested that successive outer rings contribute progressively steeper interior gradients, but the fitted SPARC profiles make that expectation concrete: the final support segment usually falls at an edge angle above $85^\circ$ in the normalized $(r,\rho)$ profile. The framework therefore predicts that the visible edges of galaxies are not merely photometric thresholds, but dynamical transition regions where occupied support drops rapidly. Whether this steep fitted edge corresponds to observable kinematic signatures in stellar populations near galactic outskirts is a question for follow-up work.
+
+---
+
+## Funding
+
+The author received no financial support for the research, authorship, or publication of this article.
 
 ---
 
