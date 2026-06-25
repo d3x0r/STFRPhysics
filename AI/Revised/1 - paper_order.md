@@ -20,8 +20,8 @@
 - [weak_field_observational_tests.md](weak_field_observational_tests.md)
   - The Homogeneous Propagation Framework: Weak-Field Observational Tests
 
-  - https://zenodo.org/uploads/20075467
-  - (previous)https://zenodo.org/uploads/19194493
+  - https://zenodo.org/records/20075467
+  - (previous)https://zenodo.org/records/19194493
 
 - [hommogenous_propagation_framework_a_comparative_overview.md](hommogenous_propagation_framework_a_comparative_overview.md)
   - How this isn't Sr or GR
@@ -29,7 +29,7 @@
 
 - [philisophical_companion.md](philisophical_companion.md)
   - The Homogeneous Propagation Framework: Philosophical Foundations and Postulate Structure
-  - https://zenodo.org/uploads/19325549
+  - https://zenodo.org/records/19325549
 
 - [excitation_dynamics.md](excitation_dynamics.md)
   - The Homogeneous Propagation Framework: Excitation, Closure, and Material Response
