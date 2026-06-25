@@ -812,8 +812,7 @@ In two dimensions, the scalar cosine law determines only the magnitude of the ab
 
 $$
 A_{\mathrm{mod}}(a)=
-\begin{cases}
--1,& \left\lfloor \operatorname{mod}\!\left(\dfrac{a}{\pi},2\right)\right\rfloor > 0.5,\\[6pt]
+\begin{cases} -1,& \left\lfloor \operatorname{mod}\!\left(\dfrac{a}{\pi},2\right)\right\rfloor > 0.5,\\[6pt]
 1,& \text{otherwise}.
 \end{cases}
 $$
@@ -953,7 +952,7 @@ The collinear cases are degenerate but harmless. If $\hat n\parallel\hat v$ or $
 The planar simulator uses the two-dimensional reduction of the same rule. Choosing the plane normal $\hat z$, the axis information reduces to the scalar sign
 
 $$
-s=\operatorname{sgn}\!\left[\hat z\cdot(\hat n\times\hat v)\right].
+s=\mathrm{sgn}\left[\hat z\cdot(\hat n\times\hat v)\right].
 $$
 
 The signed planar correction is therefore
