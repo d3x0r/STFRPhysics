@@ -28,6 +28,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <canvas id="cv" style="border-radius:var(--border-radius-md);border:0.5px solid #444;background:#1e1e1e;"></canvas>
   <div style="padding:4px 0;margin-top:6px;">
     <div class="ctrl"><label>Displacement d (mass)</label><input type="range" id="sl-d" min="0" max="3" step="0.02" value="0.6"><span id="lbl-d">0.60</span></div>
+    <div class="ctrl"><label>Wick rotation θ</label><input type="range" id="sl-wick" min="0" max="6.2832" step="0.01" value="0"><span id="lbl-wick">0.00π</span></div>
     <div class="ctrl"><label>Clock position r</label><input type="range" id="sl-r" min="1" max="5" step="0.05" value="1.5"><span id="lbl-r">1.50</span></div>
     <div class="ctrl"><label>Rotation Y</label><input type="range" id="sl-rot" min="0" max="360" value="75" step="1"><span id="lbl-rot">75°</span></div>
     <div class="ctrl"><label>Tilt X</label><input type="range" id="sl-tilt" min="-30" max="75" value="-5" step="1"><span id="lbl-tilt">-5°</span></div>
@@ -61,6 +62,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
       <div id="txt-sigma" style="margin-top:3px;"></div>
       <div id="txt-Dv" style="margin-top:3px;"></div>
       <div id="txt-cr" style="margin-top:3px;"></div>
+      <div id="txt-wick" style="margin-top:3px;color:#777;"></div>
     </div>
   </div>
 </div>
@@ -75,18 +77,25 @@ function resizeCanvas(){
   ctx.setTransform(dpr,0,0,dpr,0,0);W=cssW;H=cssH;
 }
 resizeCanvas();
-const ro=new ResizeObserver(()=>{resizeCanvas();segs=buildAll(dVal);});
+const ro=new ResizeObserver(()=>{resizeCanvas();segs=buildAll(d2eff());});
 ro.observe(cv.parentElement);
 
 const OBOX=0.25,GRID_N=5,SUB=10,HB=0.18;
 let dVal=0.6,rSlider=1.5,baseRotY=75,baseTiltX=-5;
+let wick=0; // Wick rotation angle θ in radians, 0..2π
 let orbitOn=true,orbitRadius=5,orbitSpeed=1.0,orbitAngle=0;
 
-function D_factor(r,d){if(r<1e-9)return 1;return Math.sqrt(r*r+d*d)/r;}
-function Sigma(r,d){if(r<1e-9)return 0;return(d*d)/(2*r);}
-function clockRate(r,d){return 1/(1+Sigma(r,d));}
-function dp(x,y,z,d){const r=Math.sqrt(x*x+y*y+z*z);if(r<1e-9)return[0,0,0];const f=D_factor(r,d);return[x*f,y*f,z*f];}
-function tColor(r_mid,d){return Math.min(Math.max((D_factor(r_mid,d)-1)*1.2,0),1);}
+// d2 is the SIGNED displacement-squared term: d²·cos(θ_wick).
+// Wick rotation analytically continues d² from + (outward push, θ=0)
+// through 0 (flat, θ=π/2) to − (inward pull, θ=π) and back.
+// When the radicand r²+d2 < 0 the displaced radius would be imaginary,
+// so the point is forced to 0 — it collapses to the origin.
+function d2eff(){return dVal*dVal*Math.cos(wick);}
+function D_factor(r,d2){if(r<1e-9)return 1;const rad=r*r+d2;if(rad<=0)return 0;return Math.sqrt(rad)/r;}
+function Sigma(r,d2){if(r<1e-9)return 0;return d2/(2*r);}
+function clockRate(r,d2){const denom=1+Sigma(r,d2);return denom>1e-6?1/denom:1e6;}
+function dp(x,y,z,d2){const r=Math.sqrt(x*x+y*y+z*z);if(r<1e-9)return[0,0,0];const f=D_factor(r,d2);return[x*f,y*f,z*f];}
+function tColor(r_mid,d2){return Math.min(Math.max((D_factor(r_mid,d2)-1)*1.2,-1),1);}
 
 function rawSeg(segs,ax,ay,az,bx,by,bz,d){
   const r_mid=Math.sqrt(((ax+bx)/2)**2+((ay+by)/2)**2+((az+bz)/2)**2);
@@ -100,15 +109,21 @@ function curveSeg(segs,x0,y0,z0,x1,y1,z1,N,d){
   }
 }
 
-// Blue→red with 50% alpha on the red end
+// Blue→red for outward displacement (t>0); blue→violet for inward (t<0).
 function lerpColor(t){
-  const r=Math.round(55+t*165),g=Math.round(138-t*98),b=Math.round(221-t*181);
-  // alpha: 1.0 at t=0 (blue/undisplaced), 0.5 at t=1 (red/max displaced)
-  const a=(1.0 - t*0.5).toFixed(2);
+  if(t>=0){
+    const r=Math.round(55+t*165),g=Math.round(138-t*98),b=Math.round(221-t*181);
+    const a=(1.0 - t*0.5).toFixed(2);
+    return`rgba(${r},${g},${b},${a})`;
+  }
+  const u=Math.min(-t,1); // inward magnitude 0..1
+  const r=Math.round(55+u*95),g=Math.round(138-u*68),b=Math.round(221-u*21);
+  const a=(1.0 - u*0.3).toFixed(2);
   return`rgba(${r},${g},${b},${a})`;
 }
 
 function buildAll(d){
+  // d here is the SIGNED d²·cosθ term, threaded down to dp()/tColor().
   const segs=[];
   const s=OBOX;
   function be(x0,y0,z0,x1,y1,z1){curveSeg(segs,x0,y0,z0,x1,y1,z1,SUB,d);}
@@ -180,11 +195,15 @@ function drawPhoton(proj,wx,wy,wz,col){
 }
 
 function updateReadouts(){
-  const r=rSlider,sig=Sigma(r,dVal),Dv=D_factor(r,dVal),cr=clockRate(r,dVal);
-  document.getElementById('txt-sigma').textContent=`Σ = d²/2r = ${sig.toFixed(3)}`;
-  document.getElementById('txt-Dv').textContent=`D(r,d) = ${Dv.toFixed(3)}`;
-  document.getElementById('txt-cr').textContent=`clock rate = ${cr.toFixed(4)}`;
-  document.getElementById('txt-rate2').textContent=`Photon travels further per tick — rate = ${cr.toFixed(4)}, dilated ${((1-cr)*100).toFixed(2)}%`;
+  const r=rSlider,d2=d2eff(),sig=Sigma(r,d2),Dv=D_factor(r,d2),cr=clockRate(r,d2);
+  document.getElementById('txt-sigma').textContent=`Σ = d²cosθ/2r = ${sig.toFixed(3)}`;
+  document.getElementById('txt-Dv').textContent=`D(r,d) = ${Dv.toFixed(3)}`+(Dv===0?'  (collapsed: r²+d²cosθ < 0)':'');
+  document.getElementById('txt-cr').textContent=`clock rate = ${cr>1e3?'∞':cr.toFixed(4)}`;
+  const c=Math.cos(wick);
+  document.getElementById('txt-wick').textContent=`θ = ${(wick/Math.PI).toFixed(2)}π · cosθ = ${c.toFixed(3)} · d²cosθ = ${(dVal*dVal*c).toFixed(3)} (${c>=0?'outward':'inward'})`;
+  const rate2=document.getElementById('txt-rate2');
+  if(sig>=0) rate2.textContent=`Photon travels further per tick — rate = ${cr.toFixed(4)}, dilated ${((1-cr)*100).toFixed(2)}%`;
+  else rate2.textContent=`Σ<0 (continued past π/2): clock runs fast — rate = ${(cr>1e3?'∞':cr.toFixed(4))}`;
 }
 function getCurrentAngles(dt){
   if(!orbitOn)return{ry:baseRotY*Math.PI/180,rx:baseTiltX*Math.PI/180};
@@ -195,7 +214,7 @@ function getCurrentAngles(dt){
 
 const C_SPEED=0.5;
 let photonPos=0,lastTime=null;
-let segs=buildAll(dVal);
+let segs=buildAll(d2eff());
 
 function draw(ts){
   requestAnimationFrame(draw);
@@ -224,7 +243,7 @@ function draw(ts){
     // alpha is baked into lerpColor rgba, but we still modulate line weight
     ctx.strokeStyle=lerpColor(s.t);
     ctx.globalAlpha=0.6;
-    ctx.lineWidth=0.7+s.t*1.7;
+    ctx.lineWidth=0.7+Math.abs(s.t)*1.7;
     ctx.stroke();
   }
 
@@ -234,8 +253,9 @@ function draw(ts){
   ctx.fillStyle='#cc3333';ctx.globalAlpha=0.95;ctx.fill();ctx.globalAlpha=1;
 
   // Clocks — simple wireframe + photon, no faces
-  const Dv=D_factor(rSlider,dVal),cx_world=rSlider*Dv;
-  const cr=clockRate(rSlider,dVal),stretchDisp=Math.min(1/cr,8.0);
+  const d2=d2eff();
+  const Dv=D_factor(rSlider,d2),cx_world=rSlider*Dv;
+  const cr=clockRate(rSlider,d2),stretchDisp=Math.min(Math.max(1/cr,0.05),8.0);
   const halfH_blue=HB,halfH_green=HB*3,halfH_disp=HB*stretchDisp;
   function bounceY(h){const f=(photonPos/h)%2;return f<1?-h+f*2*h:h-(f-1)*2*h;}
   function barFrac(h){const f=(photonPos/h)%2;return f<1?f:2-f;}
@@ -261,7 +281,8 @@ function draw(ts){
   ctx.globalAlpha=1;
 }
 
-document.getElementById('sl-d').addEventListener('input',function(){dVal=+this.value;document.getElementById('lbl-d').textContent=dVal.toFixed(2);segs=buildAll(dVal);updateReadouts();});
+document.getElementById('sl-d').addEventListener('input',function(){dVal=+this.value;document.getElementById('lbl-d').textContent=dVal.toFixed(2);segs=buildAll(d2eff());updateReadouts();});
+document.getElementById('sl-wick').addEventListener('input',function(){wick=+this.value;document.getElementById('lbl-wick').textContent=(wick/Math.PI).toFixed(2)+'π';segs=buildAll(d2eff());updateReadouts();});
 document.getElementById('sl-r').addEventListener('input',function(){rSlider=+this.value;document.getElementById('lbl-r').textContent=rSlider.toFixed(2);updateReadouts();});
 document.getElementById('sl-rot').addEventListener('input',function(){baseRotY=+this.value;document.getElementById('lbl-rot').textContent=baseRotY+'°';});
 document.getElementById('sl-tilt').addEventListener('input',function(){baseTiltX=+this.value;document.getElementById('lbl-tilt').textContent=baseTiltX+'°';});
