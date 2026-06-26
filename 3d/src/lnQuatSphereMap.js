@@ -233,9 +233,9 @@ function makeQuat(p,y,r) {
 
 		}
 		q.θ += (currentOctave )* Math.PI*2;// + oct*Math.PI*4)
-					q.x  = q.nx*r.θ;
-					q.y  = q.ny*r.θ;
-					q.z  = q.nz*r.θ;
+					q.x  = q.nx*q.θ;
+					q.y  = q.ny*q.θ;
+					q.z  = q.nz*q.θ;
 		//console.log( "Roll starts   :", q.getRoll() );
 
 if(0) {
