@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 680" width="720" height="680" font-family="sans-serif" font-size="12">
+<style>.ax{stroke:#333;fill:none}.grid{stroke:#ddd;stroke-width:.5}.diag{stroke:#8b0000;stroke-dasharray:5,4;fill:none}.pt{opacity:.75;stroke:#222;stroke-width:.35}.lbl{fill:#333}.title{font-size:17px;font-weight:600;fill:#111}.sub{font-size:12px;fill:#555}</style>
+<text x="360.0" y="28" text-anchor="middle" class="title">Fitted support mass vs SPARC baryonic mass</text>
+<text x="360.0" y="49" text-anchor="middle" class="sub">outer measured radius; x from gas+disk+bulge rotation components, y from fitted rho preset support</text>
+<text x="360.0" y="66" text-anchor="middle" class="sub">color: gas fraction, red=compact dominated and blue=gas dominated</text>
+<line x1="82.0" y1="78" x2="82.0" y2="604" class="grid"/>
+<line x1="82" y1="604.0" x2="686" y2="604.0" class="grid"/>
+<text x="82.0" y="622" text-anchor="middle" class="lbl">1e7</text>
+<text x="74" y="608.0" text-anchor="end" class="lbl">1e7</text>
+<line x1="182.7" y1="78" x2="182.7" y2="604" class="grid"/>
+<line x1="82" y1="516.3" x2="686" y2="516.3" class="grid"/>
+<text x="182.7" y="622" text-anchor="middle" class="lbl">1e8</text>
+<text x="74" y="520.3" text-anchor="end" class="lbl">1e8</text>
+<line x1="283.3" y1="78" x2="283.3" y2="604" class="grid"/>
+<line x1="82" y1="428.7" x2="686" y2="428.7" class="grid"/>
+<text x="283.3" y="622" text-anchor="middle" class="lbl">1e9</text>
+<text x="74" y="432.7" text-anchor="end" class="lbl">1e9</text>
+<line x1="384.0" y1="78" x2="384.0" y2="604" class="grid"/>
+<line x1="82" y1="341.0" x2="686" y2="341.0" class="grid"/>
+<text x="384.0" y="622" text-anchor="middle" class="lbl">1e10</text>
+<text x="74" y="345.0" text-anchor="end" class="lbl">1e10</text>
+<line x1="484.7" y1="78" x2="484.7" y2="604" class="grid"/>
+<line x1="82" y1="253.3" x2="686" y2="253.3" class="grid"/>
+<text x="484.7" y="622" text-anchor="middle" class="lbl">1e11</text>
+<text x="74" y="257.3" text-anchor="end" class="lbl">1e11</text>
+<line x1="585.3" y1="78" x2="585.3" y2="604" class="grid"/>
+<line x1="82" y1="165.7" x2="686" y2="165.7" class="grid"/>
+<text x="585.3" y="622" text-anchor="middle" class="lbl">1e12</text>
+<text x="74" y="169.7" text-anchor="end" class="lbl">1e12</text>
+<line x1="686.0" y1="78" x2="686.0" y2="604" class="grid"/>
+<line x1="82" y1="78.0" x2="686" y2="78.0" class="grid"/>
+<text x="686.0" y="622" text-anchor="middle" class="lbl">1e13</text>
+<text x="74" y="82.0" text-anchor="end" class="lbl">1e13</text>
+<line x1="82" y1="604" x2="686" y2="78" class="diag"/>
+<circle cx="164.6" cy="519.9" r="3.5" fill="#a4666b" class="pt"><title>CamB: fit=9.099e+07, bary=6.613e+07, fit/bary=1.376</title></circle>
+<circle cx="220.5" cy="419.4" r="3.5" fill="#ad6162" class="pt"><title>D512-2: fit=1.276e+09, bary=2.378e+08, fit/bary=5.364</title></circle>
+<circle cx="157.5" cy="467.4" r="3.5" fill="#73809c" class="pt"><title>D564-8: fit=3.614e+08, bary=5.626e+07, fit/bary=6.424</title></circle>
+<circle cx="257.7" cy="366.0" r="3.5" fill="#578fb8" class="pt"><title>D631-7: fit=5.184e+09, bary=5.561e+08, fit/bary=9.322</title></circle>
+<circle cx="247.8" cy="414.3" r="3.5" fill="#5e8bb1" class="pt"><title>DDO064: fit=1.458e+09, bary=4.432e+08, fit/bary=3.289</title></circle>
+<circle cx="239.1" cy="384.2" r="3.5" fill="#4798c8" class="pt"><title>DDO154: fit=3.217e+09, bary=3.637e+08, fit/bary=8.845</title></circle>
+<circle cx="326.6" cy="326.8" r="3.5" fill="#4b95c4" class="pt"><title>DDO161: fit=1.452e+10, bary=2.691e+09, fit/bary=5.396</title></circle>
+<circle cx="262.7" cy="391.5" r="3.5" fill="#5a8db5" class="pt"><title>DDO168: fit=2.656e+09, bary=6.237e+08, fit/bary=4.259</title></circle>
+<circle cx="315.8" cy="334.9" r="3.5" fill="#5391bc" class="pt"><title>DDO170: fit=1.175e+10, bary=2.100e+09, fit/bary=5.592</title></circle>
+<circle cx="440.3" cy="246.2" r="3.5" fill="#b75c58" class="pt"><title>ESO079-G014: fit=1.206e+11, bary=3.626e+10, fit/bary=3.326</title></circle>
+<circle cx="354.3" cy="298.9" r="3.5" fill="#84778b" class="pt"><title>ESO116-G012: fit=3.021e+10, bary=5.071e+09, fit/bary=5.957</title></circle>
+<circle cx="223.3" cy="372.2" r="3.5" fill="#5292bd" class="pt"><title>ESO444-G084: fit=4.405e+09, bary=2.531e+08, fit/bary=17.405</title></circle>
+<circle cx="517.2" cy="154.1" r="3.5" fill="#b65c59" class="pt"><title>ESO563-G021: fit=1.353e+12, bary=2.104e+11, fit/bary=6.433</title></circle>
+<circle cx="350.7" cy="360.6" r="3.5" fill="#946e7b" class="pt"><title>F561-1: fit=5.982e+09, bary=4.668e+09, fit/bary=1.282</title></circle>
+<circle cx="368.2" cy="271.7" r="3.5" fill="#5490bb" class="pt"><title>F563-1: fit=6.168e+10, bary=6.975e+09, fit/bary=8.843</title></circle>
+<circle cx="292.8" cy="409.9" r="3.5" fill="#787d97" class="pt"><title>F563-V1: fit=1.637e+09, bary=1.242e+09, fit/bary=1.317</title></circle>
+<circle cx="358.3" cy="293.4" r="3.5" fill="#6a84a5" class="pt"><title>F563-V2: fit=3.493e+10, bary=5.549e+09, fit/bary=6.295</title></circle>
+<circle cx="310.5" cy="331.1" r="3.5" fill="#588eb7" class="pt"><title>F565-V2: fit=1.296e+10, bary=1.861e+09, fit/bary=6.964</title></circle>
+<circle cx="323.8" cy="356.6" r="3.5" fill="#84778b" class="pt"><title>F567-2: fit=6.631e+09, bary=2.526e+09, fit/bary=2.625</title></circle>
+<circle cx="387.2" cy="272.9" r="3.5" fill="#71819e" class="pt"><title>F568-1: fit=5.987e+10, bary=1.075e+10, fit/bary=5.567</title></circle>
+<circle cx="389.6" cy="284.3" r="3.5" fill="#7e7a91" class="pt"><title>F568-3: fit=4.437e+10, bary=1.137e+10, fit/bary=3.902</title></circle>
+<circle cx="371.8" cy="262.2" r="3.5" fill="#6886a7" class="pt"><title>F568-V1: fit=7.925e+10, bary=7.569e+09, fit/bary=10.470</title></circle>
+<circle cx="361.8" cy="262.8" r="3.5" fill="#c65449" class="pt"><title>F571-8: fit=7.800e+10, bary=6.014e+09, fit/bary=12.969</title></circle>
+<circle cx="341.0" cy="309.4" r="3.5" fill="#6886a7" class="pt"><title>F571-V1: fit=2.295e+10, bary=3.737e+09, fit/bary=6.142</title></circle>
+<circle cx="364.0" cy="299.2" r="3.5" fill="#936f7c" class="pt"><title>F574-1: fit=2.995e+10, bary=6.330e+09, fit/bary=4.731</title></circle>
+<circle cx="340.0" cy="382.5" r="3.5" fill="#80798f" class="pt"><title>F574-2: fit=3.366e+09, bary=3.659e+09, fit/bary=0.920</title></circle>
+<circle cx="388.0" cy="273.5" r="3.5" fill="#9d6a72" class="pt"><title>F579-V1: fit=5.891e+10, bary=1.097e+10, fit/bary=5.370</title></circle>
+<circle cx="364.9" cy="299.0" r="3.5" fill="#4897c7" class="pt"><title>F583-1: fit=3.013e+10, bary=6.466e+09, fit/bary=4.659</title></circle>
+<circle cx="302.7" cy="352.7" r="3.5" fill="#ab6264" class="pt"><title>F583-4: fit=7.350e+09, bary=1.556e+09, fit/bary=4.724</title></circle>
+<circle cx="322.3" cy="356.2" r="3.5" fill="#6687a9" class="pt"><title>IC2574: fit=6.713e+09, bary=2.439e+09, fit/bary=2.752</title></circle>
+<circle cx="496.8" cy="195.2" r="3.5" fill="#b95b56" class="pt"><title>IC4202: fit=4.603e+11, bary=1.320e+11, fit/bary=3.488</title></circle>
+<circle cx="227.2" cy="442.4" r="3.5" fill="#5a8db5" class="pt"><title>KK98-251: fit=6.963e+08, bary=2.770e+08, fit/bary=2.514</title></circle>
+<circle cx="334.3" cy="290.7" r="3.5" fill="#9e6971" class="pt"><title>NGC0024: fit=3.750e+10, bary=3.205e+09, fit/bary=11.701</title></circle>
+<circle cx="369.4" cy="305.9" r="3.5" fill="#877588" class="pt"><title>NGC0055: fit=2.512e+10, bary=7.162e+09, fit/bary=3.507</title></circle>
+<circle cx="329.1" cy="319.5" r="3.5" fill="#9a6b75" class="pt"><title>NGC0100: fit=1.761e+10, bary=2.847e+09, fit/bary=6.187</title></circle>
+<circle cx="373.5" cy="291.2" r="3.5" fill="#8d7282" class="pt"><title>NGC0247: fit=3.701e+10, bary=7.860e+09, fit/bary=4.709</title></circle>
+<circle cx="476.7" cy="180.6" r="3.5" fill="#7d7b92" class="pt"><title>NGC0289: fit=6.760e+11, bary=8.326e+10, fit/bary=8.120</title></circle>
+<circle cx="331.3" cy="309.1" r="3.5" fill="#91707e" class="pt"><title>NGC0300: fit=2.314e+10, bary=2.995e+09, fit/bary=7.725</title></circle>
+<circle cx="522.3" cy="170.0" r="3.5" fill="#aa6365" class="pt"><title>NGC0801: fit=8.929e+11, bary=2.363e+11, fit/bary=3.779</title></circle>
+<circle cx="478.9" cy="221.7" r="3.5" fill="#c4554b" class="pt"><title>NGC0891: fit=2.297e+11, bary=8.761e+10, fit/bary=2.622</title></circle>
+<circle cx="396.5" cy="252.7" r="3.5" fill="#6289ad" class="pt"><title>NGC1003: fit=1.016e+11, bary=1.331e+10, fit/bary=7.635</title></circle>
+<circle cx="461.4" cy="225.6" r="3.5" fill="#a0686f" class="pt"><title>NGC1090: fit=2.071e+11, bary=5.868e+10, fit/bary=3.529</title></circle>
+<circle cx="257.1" cy="338.9" r="3.5" fill="#83778c" class="pt"><title>NGC1705: fit=1.057e+10, bary=5.493e+08, fit/bary=19.247</title></circle>
+<circle cx="287.2" cy="374.9" r="3.5" fill="#4d94c2" class="pt"><title>NGC2366: fit=4.102e+09, bary=1.092e+09, fit/bary=3.757</title></circle>
+<circle cx="394.9" cy="242.8" r="3.5" fill="#777e98" class="pt"><title>NGC2403: fit=1.320e+11, bary=1.284e+10, fit/bary=10.282</title></circle>
+<circle cx="448.8" cy="198.7" r="3.5" fill="#cb5144" class="pt"><title>NGC2683: fit=4.198e+11, bary=4.401e+10, fit/bary=9.540</title></circle>
+<circle cx="509.0" cy="144.4" r="3.5" fill="#956e7a" class="pt"><title>NGC2841: fit=1.749e+12, bary=1.744e+11, fit/bary=10.031</title></circle>
+<circle cx="451.7" cy="206.1" r="3.5" fill="#c0574f" class="pt"><title>NGC2903: fit=3.458e+11, bary=4.701e+10, fit/bary=7.356</title></circle>
+<circle cx="293.1" cy="317.0" r="3.5" fill="#6389ac" class="pt"><title>NGC2915: fit=1.877e+10, bary=1.250e+09, fit/bary=15.025</title></circle>
+<circle cx="520.7" cy="155.5" r="3.5" fill="#b15f5e" class="pt"><title>NGC2955: fit=1.308e+12, bary=2.280e+11, fit/bary=5.736</title></circle>
+<circle cx="311.4" cy="393.9" r="3.5" fill="#ac6163" class="pt"><title>NGC2976: fit=2.494e+09, bary=1.902e+09, fit/bary=1.311</title></circle>
+<circle cx="494.1" cy="190.9" r="3.5" fill="#a0686f" class="pt"><title>NGC2998: fit=5.157e+11, bary=1.240e+11, fit/bary=4.159</title></circle>
+<circle cx="266.8" cy="369.5" r="3.5" fill="#5690b9" class="pt"><title>NGC3109: fit=4.736e+09, bary=6.844e+08, fit/bary=6.920</title></circle>
+<circle cx="447.7" cy="202.5" r="3.5" fill="#80798f" class="pt"><title>NGC3198: fit=3.804e+11, bary=4.292e+10, fit/bary=8.863</title></circle>
+<circle cx="456.2" cy="204.2" r="3.5" fill="#bc5953" class="pt"><title>NGC3521: fit=3.632e+11, bary=5.215e+10, fit/bary=6.964</title></circle>
+<circle cx="453.4" cy="215.5" r="3.5" fill="#ae6061" class="pt"><title>NGC3726: fit=2.701e+11, bary=4.896e+10, fit/bary=5.517</title></circle>
+<circle cx="231.2" cy="374.2" r="3.5" fill="#429acd" class="pt"><title>NGC3741: fit=4.181e+09, bary=3.036e+08, fit/bary=13.773</title></circle>
+<circle cx="409.8" cy="226.3" r="3.5" fill="#8a7485" class="pt"><title>NGC3769: fit=2.036e+11, bary=1.805e+10, fit/bary=11.280</title></circle>
+<circle cx="454.3" cy="260.0" r="3.5" fill="#ca5145" class="pt"><title>NGC3877: fit=8.392e+10, bary=4.993e+10, fit/bary=1.681</title></circle>
+<circle cx="444.9" cy="227.6" r="3.5" fill="#b15f5e" class="pt"><title>NGC3893: fit=1.964e+11, bary=4.029e+10, fit/bary=4.875</title></circle>
+<circle cx="407.2" cy="264.7" r="3.5" fill="#b35e5c" class="pt"><title>NGC3917: fit=7.424e+10, bary=1.699e+10, fit/bary=4.371</title></circle>
+<circle cx="421.1" cy="278.4" r="3.5" fill="#bb5a54" class="pt"><title>NGC3949: fit=5.181e+10, bary=2.337e+10, fit/bary=2.217</title></circle>
+<circle cx="481.2" cy="225.9" r="3.5" fill="#c95246" class="pt"><title>NGC3953: fit=2.057e+11, bary=9.236e+10, fit/bary=2.228</title></circle>
+<circle cx="386.1" cy="292.8" r="3.5" fill="#b75b58" class="pt"><title>NGC3972: fit=3.543e+10, bary=1.049e+10, fit/bary=3.377</title></circle>
+<circle cx="500.6" cy="172.3" r="3.5" fill="#bb5954" class="pt"><title>NGC3992: fit=8.395e+11, bary=1.438e+11, fit/bary=5.837</title></circle>
+<circle cx="394.4" cy="293.0" r="3.5" fill="#b15f5e" class="pt"><title>NGC4010: fit=3.525e+10, bary=1.268e+10, fit/bary=2.781</title></circle>
+<circle cx="452.9" cy="214.2" r="3.5" fill="#c2564d" class="pt"><title>NGC4013: fit=2.794e+11, bary=4.839e+10, fit/bary=5.773</title></circle>
+<circle cx="449.6" cy="263.4" r="3.5" fill="#c3554c" class="pt"><title>NGC4051: fit=7.686e+10, bary=4.482e+10, fit/bary=1.715</title></circle>
+<circle cx="237.7" cy="443.7" r="3.5" fill="#767e99" class="pt"><title>NGC4068: fit=6.736e+08, bary=3.521e+08, fit/bary=1.913</title></circle>
+<circle cx="401.3" cy="304.8" r="3.5" fill="#c85247" class="pt"><title>NGC4085: fit=2.587e+10, bary=1.486e+10, fit/bary=1.741</title></circle>
+<circle cx="469.5" cy="230.7" r="3.5" fill="#b75c58" class="pt"><title>NGC4088: fit=1.814e+11, bary=7.062e+10, fit/bary=2.569</title></circle>
+<circle cx="441.6" cy="225.2" r="3.5" fill="#bb5a54" class="pt"><title>NGC4100: fit=2.095e+11, bary=3.734e+10, fit/bary=5.611</title></circle>
+<circle cx="427.0" cy="234.7" r="3.5" fill="#c4554b" class="pt"><title>NGC4138: fit=1.632e+11, bary=2.672e+10, fit/bary=6.110</title></circle>
+<circle cx="467.6" cy="209.5" r="3.5" fill="#b55d5a" class="pt"><title>NGC4157: fit=3.166e+11, bary=6.773e+10, fit/bary=4.675</title></circle>
+<circle cx="392.6" cy="264.1" r="3.5" fill="#867689" class="pt"><title>NGC4183: fit=7.536e+10, bary=1.218e+10, fit/bary=6.185</title></circle>
+<circle cx="276.3" cy="336.0" r="3.5" fill="#a5656a" class="pt"><title>NGC4214: fit=1.140e+10, bary=8.518e+08, fit/bary=13.383</title></circle>
+<circle cx="463.6" cy="235.4" r="3.5" fill="#c75348" class="pt"><title>NGC4217: fit=1.604e+11, bary=6.176e+10, fit/bary=2.597</title></circle>
+<circle cx="394.7" cy="337.8" r="3.5" fill="#ca5145" class="pt"><title>NGC4389: fit=1.087e+10, bary=1.276e+10, fit/bary=0.852</title></circle>
+<circle cx="421.2" cy="259.1" r="3.5" fill="#7e7a91" class="pt"><title>NGC4559: fit=8.594e+10, bary=2.340e+10, fit/bary=3.673</title></circle>
+<circle cx="488.1" cy="213.7" r="3.5" fill="#c85347" class="pt"><title>NGC5005: fit=2.829e+11, bary=1.083e+11, fit/bary=2.613</title></circle>
+<circle cx="475.6" cy="183.6" r="3.5" fill="#ae6061" class="pt"><title>NGC5033: fit=6.246e+11, bary=8.129e+10, fit/bary=7.684</title></circle>
+<circle cx="483.8" cy="166.5" r="3.5" fill="#b0605f" class="pt"><title>NGC5055: fit=9.789e+11, bary=9.796e+10, fit/bary=9.993</title></circle>
+<circle cx="515.0" cy="177.8" r="3.5" fill="#c4554b" class="pt"><title>NGC5371: fit=7.276e+11, bary=2.004e+11, fit/bary=3.631</title></circle>
+<circle cx="346.5" cy="310.6" r="3.5" fill="#72809d" class="pt"><title>NGC5585: fit=2.219e+10, bary=4.238e+09, fit/bary=5.237</title></circle>
+<circle cx="499.1" cy="180.1" r="3.5" fill="#a0686f" class="pt"><title>NGC5907: fit=6.837e+11, bary=1.391e+11, fit/bary=4.915</title></circle>
+<circle cx="504.3" cy="172.5" r="3.5" fill="#c0574f" class="pt"><title>NGC5985: fit=8.349e+11, bary=1.567e+11, fit/bary=5.329</title></circle>
+<circle cx="426.7" cy="206.5" r="3.5" fill="#996b76" class="pt"><title>NGC6015: fit=3.425e+11, bary=2.654e+10, fit/bary=12.904</title></circle>
+<circle cx="525.8" cy="174.3" r="3.5" fill="#bc5953" class="pt"><title>NGC6195: fit=7.974e+11, bary=2.560e+11, fit/bary=3.115</title></circle>
+<circle cx="384.2" cy="253.5" r="3.5" fill="#9d6a72" class="pt"><title>NGC6503: fit=9.966e+10, bary=1.004e+10, fit/bary=9.921</title></circle>
+<circle cx="501.8" cy="156.5" r="3.5" fill="#af6060" class="pt"><title>NGC6674: fit=1.274e+12, bary=1.481e+11, fit/bary=8.600</title></circle>
+<circle cx="161.0" cy="467.8" r="3.5" fill="#986c77" class="pt"><title>NGC6789: fit=3.578e+08, bary=6.095e+07, fit/bary=5.870</title></circle>
+<circle cx="446.9" cy="223.2" r="3.5" fill="#be5851" class="pt"><title>NGC6946: fit=2.209e+11, bary=4.218e+10, fit/bary=5.238</title></circle>
+<circle cx="503.8" cy="183.5" r="3.5" fill="#bf5850" class="pt"><title>NGC7331: fit=6.259e+11, bary=1.550e+11, fit/bary=4.037</title></circle>
+<circle cx="360.6" cy="310.3" r="3.5" fill="#a5656a" class="pt"><title>NGC7793: fit=2.238e+10, bary=5.852e+09, fit/bary=3.825</title></circle>
+<circle cx="455.5" cy="216.3" r="3.5" fill="#cb5144" class="pt"><title>NGC7814: fit=2.642e+11, bary=5.128e+10, fit/bary=5.152</title></circle>
+<circle cx="224.3" cy="464.9" r="3.5" fill="#6f82a0" class="pt"><title>PGC51017: fit=3.859e+08, bary=2.589e+08, fit/bary=1.490</title></circle>
+<circle cx="417.5" cy="215.8" r="3.5" fill="#6886a7" class="pt"><title>UGC00128: fit=2.681e+11, bary=2.150e+10, fit/bary=12.467</title></circle>
+<circle cx="342.0" cy="321.6" r="3.5" fill="#6a85a5" class="pt"><title>UGC00191: fit=1.663e+10, bary=3.822e+09, fit/bary=4.351</title></circle>
+<circle cx="369.5" cy="278.3" r="3.5" fill="#5e8bb1" class="pt"><title>UGC00634: fit=5.188e+10, bary=7.183e+09, fit/bary=7.223</title></circle>
+<circle cx="337.5" cy="326.7" r="3.5" fill="#4599ca" class="pt"><title>UGC00731: fit=1.454e+10, bary=3.451e+09, fit/bary=4.214</title></circle>
+<circle cx="283.1" cy="356.5" r="3.5" fill="#5f8bb0" class="pt"><title>UGC00891: fit=6.658e+09, bary=9.939e+08, fit/bary=6.699</title></circle>
+<circle cx="408.4" cy="244.0" r="3.5" fill="#5f8bb0" class="pt"><title>UGC01230: fit=1.276e+11, bary=1.746e+10, fit/bary=7.309</title></circle>
+<circle cx="266.4" cy="384.2" r="3.5" fill="#6687a9" class="pt"><title>UGC01281: fit=3.220e+09, bary=6.785e+08, fit/bary=4.745</title></circle>
+<circle cx="279.7" cy="401.0" r="3.5" fill="#9b6a74" class="pt"><title>UGC02023: fit=2.070e+09, bary=9.205e+08, fit/bary=2.249</title></circle>
+<circle cx="320.0" cy="320.8" r="3.5" fill="#80798f" class="pt"><title>UGC02259: fit=1.702e+10, bary=2.316e+09, fit/bary=7.349</title></circle>
+<circle cx="328.7" cy="397.2" r="3.5" fill="#a5656a" class="pt"><title>UGC02455: fit=2.284e+09, bary=2.825e+09, fit/bary=0.809</title></circle>
+<circle cx="534.3" cy="129.5" r="3.5" fill="#c1564e" class="pt"><title>UGC02487: fit=2.587e+12, bary=3.113e+11, fit/bary=8.308</title></circle>
+<circle cx="541.1" cy="139.2" r="3.5" fill="#9d6a72" class="pt"><title>UGC02885: fit=2.002e+12, bary=3.638e+11, fit/bary=5.502</title></circle>
+<circle cx="494.9" cy="162.0" r="3.5" fill="#9d6972" class="pt"><title>UGC02916: fit=1.101e+12, bary=1.263e+11, fit/bary=8.715</title></circle>
+<circle cx="502.8" cy="137.5" r="3.5" fill="#c4554b" class="pt"><title>UGC02953: fit=2.097e+12, bary=1.514e+11, fit/bary=13.851</title></circle>
+<circle cx="474.5" cy="183.8" r="3.5" fill="#b15f5e" class="pt"><title>UGC03205: fit=6.213e+11, bary=7.921e+10, fit/bary=7.844</title></circle>
+<circle cx="464.2" cy="203.4" r="3.5" fill="#c65449" class="pt"><title>UGC03546: fit=3.712e+11, bary=6.267e+10, fit/bary=5.923</title></circle>
+<circle cx="402.0" cy="242.6" r="3.5" fill="#85768a" class="pt"><title>UGC03580: fit=1.327e+11, bary=1.511e+10, fit/bary=8.784</title></circle>
+<circle cx="334.5" cy="343.3" r="3.5" fill="#6587aa" class="pt"><title>UGC04278: fit=9.402e+09, bary=3.222e+09, fit/bary=2.918</title></circle>
+<circle cx="298.6" cy="409.2" r="3.5" fill="#6c83a3" class="pt"><title>UGC04305: fit=1.669e+09, bary=1.417e+09, fit/bary=1.177</title></circle>
+<circle cx="322.6" cy="333.4" r="3.5" fill="#8e7281" class="pt"><title>UGC04325: fit=1.219e+10, bary=2.456e+09, fit/bary=4.966</title></circle>
+<circle cx="152.6" cy="497.0" r="3.5" fill="#5192be" class="pt"><title>UGC04483: fit=1.663e+08, bary=5.031e+07, fit/bary=3.305</title></circle>
+<circle cx="331.7" cy="337.9" r="3.5" fill="#6f82a0" class="pt"><title>UGC04499: fit=1.086e+10, bary=3.024e+09, fit/bary=3.590</title></circle>
+<circle cx="393.2" cy="267.6" r="3.5" fill="#568fb9" class="pt"><title>UGC05005: fit=6.869e+10, bary=1.235e+10, fit/bary=5.564</title></circle>
+<circle cx="496.7" cy="149.5" r="3.5" fill="#b15f5e" class="pt"><title>UGC05253: fit=1.530e+12, bary=1.317e+11, fit/bary=11.615</title></circle>
+<circle cx="286.9" cy="385.5" r="3.5" fill="#897486" class="pt"><title>UGC05414: fit=3.111e+09, bary=1.084e+09, fit/bary=2.870</title></circle>
+<circle cx="324.0" cy="318.7" r="3.5" fill="#4e94c1" class="pt"><title>UGC05716: fit=1.798e+10, bary=2.534e+09, fit/bary=7.095</title></circle>
+<circle cx="291.9" cy="329.8" r="3.5" fill="#5d8cb2" class="pt"><title>UGC05721: fit=1.344e+10, bary=1.217e+09, fit/bary=11.039</title></circle>
+<circle cx="380.0" cy="293.8" r="3.5" fill="#5a8db5" class="pt"><title>UGC05750: fit=3.454e+10, bary=9.131e+09, fit/bary=3.783</title></circle>
+<circle cx="240.7" cy="390.2" r="3.5" fill="#5092bf" class="pt"><title>UGC05764: fit=2.749e+09, bary=3.768e+08, fit/bary=7.296</title></circle>
+<circle cx="318.8" cy="361.0" r="3.5" fill="#5192be" class="pt"><title>UGC05829: fit=5.910e+09, bary=2.251e+09, fit/bary=2.625</title></circle>
+<circle cx="243.6" cy="401.7" r="3.5" fill="#73809c" class="pt"><title>UGC05918: fit=2.031e+09, bary=4.031e+08, fit/bary=5.040</title></circle>
+<circle cx="346.8" cy="295.2" r="3.5" fill="#966d79" class="pt"><title>UGC05986: fit=3.328e+10, bary=4.268e+09, fit/bary=7.797</title></circle>
+<circle cx="385.8" cy="291.5" r="3.5" fill="#5a8db5" class="pt"><title>UGC05999: fit=3.669e+10, bary=1.043e+10, fit/bary=3.518</title></circle>
+<circle cx="327.2" cy="328.0" r="3.5" fill="#8e7181" class="pt"><title>UGC06399: fit=1.408e+10, bary=2.726e+09, fit/bary=5.165</title></circle>
+<circle cx="333.6" cy="315.0" r="3.5" fill="#568fb9" class="pt"><title>UGC06446: fit=1.981e+10, bary=3.156e+09, fit/bary=6.278</title></circle>
+<circle cx="497.2" cy="163.2" r="3.5" fill="#926f7d" class="pt"><title>UGC06614: fit=1.068e+12, bary=1.331e+11, fit/bary=8.021</title></circle>
+<circle cx="340.7" cy="377.3" r="3.5" fill="#8a7385" class="pt"><title>UGC06628: fit=3.854e+09, bary=3.715e+09, fit/bary=1.037</title></circle>
+<circle cx="304.4" cy="331.8" r="3.5" fill="#6c84a3" class="pt"><title>UGC06667: fit=1.272e+10, bary=1.618e+09, fit/bary=7.862</title></circle>
+<circle cx="453.3" cy="183.5" r="3.5" fill="#bd5852" class="pt"><title>UGC06786: fit=6.256e+11, bary=4.879e+10, fit/bary=12.822</title></circle>
+<circle cx="469.4" cy="170.0" r="3.5" fill="#bd5852" class="pt"><title>UGC06787: fit=8.921e+11, bary=7.060e+10, fit/bary=12.636</title></circle>
+<circle cx="306.3" cy="353.9" r="3.5" fill="#926f7d" class="pt"><title>UGC06818: fit=7.127e+09, bary=1.689e+09, fit/bary=4.219</title></circle>
+<circle cx="372.7" cy="298.5" r="3.5" fill="#91707e" class="pt"><title>UGC06917: fit=3.057e+10, bary=7.717e+09, fit/bary=3.962</title></circle>
+<circle cx="327.6" cy="349.9" r="3.5" fill="#936f7c" class="pt"><title>UGC06923: fit=7.906e+09, bary=2.754e+09, fit/bary=2.870</title></circle>
+<circle cx="389.5" cy="278.6" r="3.5" fill="#80798f" class="pt"><title>UGC06930: fit=5.145e+10, bary=1.133e+10, fit/bary=4.540</title></circle>
+<circle cx="434.2" cy="266.5" r="3.5" fill="#c95246" class="pt"><title>UGC06973: fit=7.068e+10, bary=3.151e+10, fit/bary=2.243</title></circle>
+<circle cx="378.3" cy="276.7" r="3.5" fill="#6d83a2" class="pt"><title>UGC06983: fit=5.419e+10, bary=8.774e+09, fit/bary=6.176</title></circle>
+<circle cx="340.4" cy="339.3" r="3.5" fill="#956e7a" class="pt"><title>UGC07089: fit=1.047e+10, bary=3.689e+09, fit/bary=2.838</title></circle>
+<circle cx="366.1" cy="311.3" r="3.5" fill="#5d8cb2" class="pt"><title>UGC07125: fit=2.182e+10, bary=6.642e+09, fit/bary=3.284</title></circle>
+<circle cx="323.2" cy="350.8" r="3.5" fill="#946e7b" class="pt"><title>UGC07151: fit=7.727e+09, bary=2.487e+09, fit/bary=3.106</title></circle>
+<circle cx="176.8" cy="477.8" r="3.5" fill="#9c6a73" class="pt"><title>UGC07232: fit=2.751e+08, bary=8.738e+07, fit/bary=3.148</title></circle>
+<circle cx="320.1" cy="341.3" r="3.5" fill="#7a7c95" class="pt"><title>UGC07261: fit=9.916e+09, bary=2.319e+09, fit/bary=4.276</title></circle>
+<circle cx="339.6" cy="347.6" r="3.5" fill="#a3666c" class="pt"><title>UGC07323: fit=8.409e+09, bary=3.623e+09, fit/bary=2.321</title></circle>
+<circle cx="304.4" cy="320.3" r="3.5" fill="#7b7c94" class="pt"><title>UGC07399: fit=1.724e+10, bary=1.617e+09, fit/bary=10.660</title></circle>
+<circle cx="351.9" cy="322.9" r="3.5" fill="#757f9a" class="pt"><title>UGC07524: fit=1.608e+10, bary=4.793e+09, fit/bary=3.354</title></circle>
+<circle cx="219.0" cy="451.8" r="3.5" fill="#6985a6" class="pt"><title>UGC07559: fit=5.445e+08, bary=2.296e+08, fit/bary=2.372</title></circle>
+<circle cx="160.6" cy="523.2" r="3.5" fill="#80798f" class="pt"><title>UGC07577: fit=8.343e+07, bary=6.036e+07, fit/bary=1.382</title></circle>
+<circle cx="252.2" cy="374.0" r="3.5" fill="#7b7c94" class="pt"><title>UGC07603: fit=4.203e+09, bary=4.905e+08, fit/bary=8.568</title></circle>
+<circle cx="273.2" cy="371.1" r="3.5" fill="#578fb8" class="pt"><title>UGC07608: fit=4.536e+09, bary=7.935e+08, fit/bary=5.716</title></circle>
+<circle cx="281.0" cy="375.3" r="3.5" fill="#85768a" class="pt"><title>UGC07690: fit=4.061e+09, bary=9.476e+08, fit/bary=4.285</title></circle>
+<circle cx="209.1" cy="453.4" r="3.5" fill="#777e98" class="pt"><title>UGC07866: fit=5.219e+08, bary=1.830e+08, fit/bary=2.852</title></circle>
+<circle cx="313.6" cy="325.3" r="3.5" fill="#70819f" class="pt"><title>UGC08286: fit=1.510e+10, bary=1.997e+09, fit/bary=7.564</title></circle>
+<circle cx="306.9" cy="317.2" r="3.5" fill="#6985a6" class="pt"><title>UGC08490: fit=1.869e+10, bary=1.715e+09, fit/bary=10.897</title></circle>
+<circle cx="271.1" cy="371.1" r="3.5" fill="#598eb6" class="pt"><title>UGC08550: fit=4.541e+09, bary=7.564e+08, fit/bary=6.003</title></circle>
+<circle cx="440.8" cy="198.3" r="3.5" fill="#b55d5a" class="pt"><title>UGC08699: fit=4.240e+11, bary=3.663e+10, fit/bary=11.575</title></circle>
+<circle cx="275.7" cy="414.4" r="3.5" fill="#767f99" class="pt"><title>UGC08837: fit=1.454e+09, bary=8.396e+08, fit/bary=1.732</title></circle>
+<circle cx="464.6" cy="231.7" r="3.5" fill="#8d7282" class="pt"><title>UGC09037: fit=1.767e+11, bary=6.316e+10, fit/bary=2.798</title></circle>
+<circle cx="520.3" cy="138.3" r="3.5" fill="#a5656a" class="pt"><title>UGC09133: fit=2.050e+12, bary=2.258e+11, fit/bary=9.080</title></circle>
+<circle cx="252.9" cy="420.1" r="3.5" fill="#7e7a91" class="pt"><title>UGC09992: fit=1.252e+09, bary=4.984e+08, fit/bary=2.513</title></circle>
+<circle cx="329.1" cy="339.3" r="3.5" fill="#777e98" class="pt"><title>UGC10310: fit=1.045e+10, bary=2.849e+09, fit/bary=3.666</title></circle>
+<circle cx="520.9" cy="166.3" r="3.5" fill="#c2564d" class="pt"><title>UGC11455: fit=9.828e+11, bary=2.293e+11, fit/bary=4.286</title></circle>
+<circle cx="385.8" cy="320.1" r="3.5" fill="#aa6265" class="pt"><title>UGC11557: fit=1.733e+10, bary=1.041e+10, fit/bary=1.664</title></circle>
+<circle cx="354.9" cy="304.8" r="3.5" fill="#4b95c4" class="pt"><title>UGC11820: fit=2.585e+10, bary=5.134e+09, fit/bary=5.035</title></circle>
+<circle cx="477.2" cy="215.2" r="3.5" fill="#ce4f41" class="pt"><title>UGC11914: fit=2.720e+11, bary=8.437e+10, fit/bary=3.224</title></circle>
+<circle cx="504.7" cy="170.6" r="3.5" fill="#867689" class="pt"><title>UGC12506: fit=8.773e+11, bary=1.580e+11, fit/bary=5.551</title></circle>
+<circle cx="335.9" cy="328.0" r="3.5" fill="#6388ac" class="pt"><title>UGC12632: fit=1.407e+10, bary=3.331e+09, fit/bary=4.225</title></circle>
+<circle cx="372.4" cy="295.7" r="3.5" fill="#4e94c1" class="pt"><title>UGC12732: fit=3.284e+10, bary=7.672e+09, fit/bary=4.280</title></circle>
+<circle cx="160.3" cy="487.1" r="3.5" fill="#936f7c" class="pt"><title>UGCA281: fit=2.156e+08, bary=6.001e+07, fit/bary=3.593</title></circle>
+<circle cx="252.7" cy="368.8" r="3.5" fill="#5590ba" class="pt"><title>UGCA442: fit=4.822e+09, bary=4.959e+08, fit/bary=9.724</title></circle>
+<circle cx="192.3" cy="442.4" r="3.5" fill="#4698c9" class="pt"><title>UGCA444: fit=6.966e+08, bary=1.246e+08, fit/bary=5.592</title></circle>
+<text x="384.0" y="662" text-anchor="middle" class="lbl">SPARC baryonic mass inside outer point (M_sun)</text>
+<text x="20" y="341.0" text-anchor="middle" class="lbl" transform="rotate(-90,20,341.0)">fitted support mass inside outer point (M_sun)</text>
+<rect x="82" y="78" width="604" height="526" class="ax"/>
+</svg>
