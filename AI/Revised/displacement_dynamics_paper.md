@@ -44,6 +44,8 @@ What remains to be developed is the dynamical law. At present, this framework do
 
 The paper therefore does not claim to reduce gravity all the way to a deeper microscopic explanation of why intra-nuclear dynamics displace the transport structure. Its more limited aim is to formulate the displacement problem at the correct layer and to develop the consequences of that postulate in a causal setting. Once displacement is taken to be physical, and once changes in it are limited by the same propagation speed \(c\) that governs the underlying medium, retardation is no longer an added correction. It is part of the basic structure from the outset. The causal evolution of displacement is therefore the natural setting for Mercury-scale retardation effects, rotating-source response, and frame dragging.
 
+The first transition from abstract displacement geometry to measured weak-field gravity occurs when the cumulative displacement is normalized against the observed gravitational clock burden.
+
 Five appendices develop material that supports the main argument or extends it into regimes the body does not treat in full. Appendix A records the vacuum storage / propagation-units result that the local speed of light remains \(c\) in the locally realized geometry even in displaced regions, which underlies the clock-rate reading of Shapiro delay used in the companion observational tests paper. Appendix B develops the nonlinear displacement equation and the strong-field regime, where the framework predicts that the Schwarzschild horizon is replaced by asymptotic time dilation and the displacement equilibrium develops a finite source-sphere surface rather than a coordinate singularity. Appendix C compares the framework's effective metric to Schwarzschild at second post-Newtonian order, finding a definite divergence at \(\sigma^2\) with specific physical magnitudes for Mercury (≈0.002 milliarcsec/century), the Hulse-Taylor binary (≈0.03 arcsec/year), and second-order light propagation. Appendix D develops the mass composition rule, interpreting binding energy as shared displacement support and giving consequences for black hole mergers. Appendix E develops the rotating-source effective metric used in the body's frame-drag estimate. The framework's specific predictions that distinguish it from general relativity are concentrated in Appendices B, C, and D; the companion observational tests paper consolidates these together with the predictions developed in its own body.
 
 ## 2. Static Equilibrium Geometry and the Cumulative Field
@@ -124,7 +126,9 @@ This hierarchy connects the static geometry to Newtonian gravity. Matching the n
 \ell_M\equiv\frac{2GM}{c^2},
 \]
 
-so that
+The appearance of \(G\) at this step should be read as the empirical calibration point where the abstract displacement hierarchy is anchored to measured weak-field reality. The construction has so far defined a static displacement geometry, its local excess \(D-1\), and the cumulative displacement \(\Sigma\). Matching \(\Sigma\) to the observed gravitational clock burden fixes the normalization in conventional units. Written in those units, the result is naturally expressed through \(G\), \(M\), and \(c\), or equivalently through the familiar length \(\ell_M=2GM/c^2\). This does not make the Schwarzschild radius the primitive object of the framework. Rather, \(\ell_M\) is the conventional macroscopic packaging of the clock-burden calibration. Applying the displacement model to bulk matter thereby gives \(G\) an appreciated interpretation: it is the coupling between ordinary mass bookkeeping and accumulated transport displacement.
+
+It follows that
 
 \[
 d^2=\ell_M\ell_0.
@@ -133,10 +137,13 @@ d^2=\ell_M\ell_0.
 With this identification, the acceleration associated with the cumulative displacement becomes
 
 \[
-g=-c^2\frac{d\Sigma}{dR}=c^2\frac{d^2}{2\ell_0 R^2}=\frac{GM}{R^2}.
+g=-c^2\frac{d\Sigma}{dR}
+=c^2\frac{d^2}{2\ell_0 R^2}
+=\frac{GM}{R^2}.
 \]
 
-Thus Newtonian gravity appears as the acceleration associated with the gradient of accumulated displacement once the geometric displacement radius \(d\) is tied to the source gravitational length through \(d^2=\ell_M\ell_0\). The earlier shorthand equated \(d^2\) directly with \(\ell_M\); the explicit relation retains the normalization length.
+Thus Newtonian gravity appears as the acceleration associated with the gradient of accumulated displacement once the geometric displacement radius \(d\) is tied to the empirically calibrated weak-field length through \(d^2=\ell_M\ell_0\). The earlier shorthand equated \(d^2\) directly with \(\ell_M\); the explicit relation retains the normalization length.
+
 
 ## 3. Causal Displacement Dynamics
 

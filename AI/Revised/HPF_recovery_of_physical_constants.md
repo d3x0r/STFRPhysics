@@ -18,7 +18,7 @@ ORCID iD: 0009-0004-2865-6447
 
 ## Abstract
 
-The prior papers in this series establish the propagation framework, the displacement geometry of gravitation, and the weak-field observational tests. The present paper works in the opposite direction: starting from the classical constants G, h, e, and the SI unit system, it asks what upstream structure those constants already bundle. The answer in each case involves the same two quantities — the vacuum storage pair ε₀, μ₀ and the nuclear support radius r₀ — appearing in different combinations depending on which aspect of the medium is being measured. The factorizations are structural audits, not new derivations of the constants from first principles. The resulting picture is that ε₀, μ₀, and r₀ form the primitive layer from which the classical constants, the SI units, and the framework's weak-field geometric scales can be read.
+The prior papers in this series establish the propagation framework, the displacement geometry of gravitation, and the weak-field observational tests. The present paper works in the opposite direction: starting from the classical constants G, h, e, and the SI unit system, it asks what upstream structure those constants already bundle. The answer in each case involves the same two quantities — the vacuum storage pair ε₀, μ₀ and the nuclear support radius r₀ — appearing in different combinations depending on which aspect of the medium is being measured. The factorizations are structural audits, not new derivations of the constants from first principles. The obvious objection — that factorization over a basis containing a free length scale is dimensionally guaranteed and therefore empty — is confronted directly: the audit's claims are graded by evidential weight, the degree-of-freedom ledger is stated explicitly, and the numerical residuals are tabulated in SI-checkable form rather than absorbed into coefficients. The resulting picture is that ε₀, μ₀, and r₀ form the primitive layer from which the classical constants, the SI units, and the framework's weak-field geometric scales can be read.
 
 **Keywords:** physical constants, vacuum primitives, upstream factorization, nuclear support scale, gravitational constant, Planck's constant, electron charge, natural units
 
@@ -30,7 +30,7 @@ The homogeneous propagation framework begins from the vacuum as a physical mediu
 
 The present paper asks a different question. The classical physical constants — the gravitational constant G, Planck's constant h, and the electron charge e — are usually presented as independent empirical inputs. Here they are treated instead as downstream packaging of the same upstream ingredients. G tracks the macroscopic strength with which one unit of mass-energy packages displacement sourcing in the transport structure, h tracks the minimum phase-space area of stable LC closure, and e tracks the electric-side loading of one proton-scale support volume. In each case the packaging leads back to ε₀, μ₀, and the nuclear support radius r₀ ≈ 1.22 fm.
 
-**The convergence claim.** The point is not merely that G, h, and e can be rewritten in terms of other measured quantities. The point is that they all reduce onto the *same small basis* — ε₀, μ₀, r₀, and a chosen length unit — in combinations that suggest a common geometric origin in the vacuum medium. If the constants were genuinely independent, their decompositions would be expected to point to different scales and different substructure. Instead they repeatedly return to the same support scale and the same vacuum pair.
+**The convergence claim.** The point is not merely that G, h, and e can be rewritten in terms of other measured quantities. The point is that they all reduce onto the *same small basis* — ε₀, μ₀, r₀, and a chosen length unit — in combinations that suggest a common geometric origin in the vacuum medium. If the constants were genuinely independent, their decompositions would be expected to point to different scales and different substructure. Instead they return to the same support scale and the same vacuum pair — tightly in one case, loosely in another, and definitionally in a third. The claim is therefore graded rather than uniform, and the grading is stated explicitly in Section 5.2, where the dimensional-analysis objection — that such factorizations are guaranteed by unit bookkeeping alone — is confronted directly.
 
 The meter is treated here as a chosen convention rather than a primitive ingredient. Once a length scale is fixed, the remaining free inputs are ε₀, μ₀, and r₀. The one open question that cannot yet be closed is why r₀ has the value it does. That unresolved step is shared with the deeper nuclear and excitation-side program, where intra-nuclear action is the proposed source-side mechanism, and is not introduced by this paper.
 
@@ -52,19 +52,17 @@ Throughout, the distinction between structural audit and completed derivation is
 
 ### 1.1 Foundational unit identity
 
-The vacuum storage pair $\varepsilon_0$ (F/m) and $\mu_0$ (H/m) are the primitives of the framework. F and H are not converted to anything else — they are the primitive storage units of the medium. The foundational identity is simply:
+The vacuum storage pair $\varepsilon_0$ (F/m) and $\mu_0$ (H/m) are the primitives of the framework. F and H are not converted to anything else — they are the primitive storage units of the medium. What matters is the **direction of definition**:
 
 $$
-\boxed{\text{F}\cdot\text{H} = \text{F}\cdot\text{H}}
+\boxed{\text{F and H are primitive; the second is later \emph{identified} as } 1\,\mathrm{s} = \sqrt{\text{F}\cdot\text{H}} \text{ — derived, not defining.}}
 $$
 
-This is the only statement needed. The vacuum factors $z_u \sim \sqrt{\text{H}}$ and $z_e \sim \sqrt{\text{F}}$ have the product
+Time is read off the medium's storage exchange; it is not used to define the medium. In particular, $\sqrt{\text{F}\cdot\text{H}}$ is never reduced to an independently primitive second within this note.
 
-$$
-z_u z_e \sim \sqrt{\text{F}\cdot\text{H}},
-$$
+The radical itself is an artifact of which layer is quoted as primitive. F and H are coefficients of quadratic forms ($\tfrac12 CV^2$, $\tfrac12 LI^2$) — one level above the amplitudes actually driven and measured in a circuit ($V$, $I$, $Q$, $\Phi$). In the amplitude basis, with vacuum factors $z_e \sim \sqrt{\text{F}}$ (electric side) and $z_u \sim \sqrt{\text{H}}$ (magnetic side) taken as the primitive pair (cf. Section 4.1), the second is the degree-one product $z_u z_e$ — no fractional powers appear. The square root in F·H terms records only that the quadratic (energy) layer is being quoted instead of the amplitude layer. This amplitude-layer reading is provisional in the present note, but it is the natural resolution of the radical, and it does useful double duty later: signed quantities (charge) live at the amplitude layer, while gravitational coupling reads the quadratic layer, where everything is non-negative.
 
-which is a quantity of vacuum storage — not converted to seconds or any other derived unit. All subsequent factorizations in this note work in these terms. SI derived units (seconds, kilograms) are downstream consequences, not primitives.
+All subsequent factorizations in this note work in these terms. SI derived units (seconds, kilograms) are downstream consequences, not primitives.
 
 ---
 
@@ -312,6 +310,16 @@ G = 500\,r_{0,\mathrm{eff}}^2 c^2 = \frac{500\,r_{0,\mathrm{eff}}^2}{\mu_0\varep
 $$
 
 The factor 500 = 1000/2: the 1000 is the kg→g conversion (the framework is gram-native; see section 0.6), the 2 is the kinematic $\frac{1}{2}at^2$ factor.
+
+**Status of this identity.** Because $r_{0,\mathrm{eff}}$ is *defined* by reverse-calculation from the measured $G$, the identity $G = 500\,r_{0,\mathrm{eff}}^2 c^2$ is exact by construction and carries no evidential weight on its own. It is a definition, not a result. The evidential content lies one step away: the length so defined, $r_{0,\mathrm{eff}} = 1.2187$ fm, lands inside the independently measured nuclear radius band — the empirical coefficient in the $R \approx r_0 A^{1/3}$ systematics is approximately $1.2$ fm, with a spread at the several-percent-to-ten-percent level depending on which observable (charge radius, matter radius) is used — and within 8% of the proton Compton wavelength $\lambda_C = 1.3214$ fm. The a priori range available to this extraction spans some twenty orders of magnitude in either direction, so landing in the nuclear band is the paper's sharpest single coincidence. Section 5.2 grades this against the other factorizations.
+
+A unit-free reading makes the structure of the coincidence explicit. The defining relation can be written
+
+$$
+r_{0,\mathrm{eff}} = \sqrt{r_s(1\,\mathrm g)\cdot(1\,\mathrm m)},
+$$
+
+the geometric mean of the Schwarzschild-type radius of one gram, $r_s(1\,\mathrm g) = 2G(1\,\mathrm g)/c^2 = 1.485\times10^{-30}$ m, and one meter. Written this way, two conventions are visible rather than hidden: the gram (which is nucleon-anchored through the mole and Avogadro's number, and so less arbitrary than it appears — one gram is, to within a fraction of a percent, $N_A$ nucleons) and an explicit one-meter length anchor. That anchor is the same object that appears as $A_v = 1\,\mathrm{m}^{-1}$ in the charge factorization of Section 4.3. The present paper treats the anchor as a confessed input of the audit, not as a derived quantity; deriving or eliminating it is listed among the open items in Section 5.3.
 
 This is the place where the visible SI wrapper should be read carefully. The substantive bridge is the gram-native one-gram support proxy $d_{\mathrm{mole}} \equiv r_{0,\mathrm{eff}}$, already motivated on the excitation side as the bulk-support normalization. The factor 500 is not the primary claim; it is the downstream SI packaging of the chain
 
@@ -617,11 +625,23 @@ $$
 \boxed{h \approx \frac{\pi}{2}\, r_0\, m_p\, c^3 \approx \frac{\pi}{2}\, \frac{r_0^4}{(\varepsilon_0\mu_0)^{3/2}}}
 $$
 
-Using $r_0 \approx 1.2\times10^{-15}$ m reproduces $h \approx 6.626\times10^{-34}$ J·s.
+**Numerical status of this expression — read before citing it.** The boxed forms do not survive a naive SI plug-in, and the paper does not claim they should. The first form, $\frac{\pi}{2}r_0 m_p c^3$, is not an SI equation at all: it closes only under the unit identifications of Section 1 ($1\,\mathrm s = \sqrt{\mathrm F\cdot\mathrm H}$, $1\,\mathrm{kg} \sim \mathrm{F}\cdot\mathrm{H}/\mathrm m$), under which the gram-native proton mass and the support volume are commensurable. The second form can be audited numerically in SI magnitudes: with $r_0 = 1.2187\times10^{-15}$ m,
 
-The point of the expression is not merely that it gives the right order of magnitude. It is that the same support scale that already entered the gravity-side analysis reappears here in the closure-side analysis, now with the vacuum pair supplying the cycling factor. That is the convergence the paper wants the reader to notice: gravity and action are not being derived from unrelated hidden scales, but from different readings of the same support geometry in the same medium.
+$$
+\frac{\pi}{2}\,r_0^4\,c^3 = 9.34\times10^{-35},
+$$
 
-Both $h$ and $G$ now emerge from the same nuclear support scale $r_0$ together with $\varepsilon_0$, $\mu_0$. No external quantum constant is inserted. What remains open is not whether the factorization can be written, but why the support scale and closure amplitude take the values they do.
+a factor of $7.10$ below the measured $h = 6.626\times10^{-34}$ J·s. Equivalently, inverting the relation to extract a length from $h$ alone,
+
+$$
+r_{0,h} = \left(\frac{2h}{\pi c^3}\right)^{1/4} = 1.989\times10^{-15}\ \mathrm m,
+$$
+
+a factor of $1.63$ above the gravity-side $r_{0,\mathrm{eff}} = 1.2187$ fm. The honest statement of the closure-side result is therefore: **the length extracted from $h$ lands at the nuclear scale, within a factor of two of the gravity-side support scale, against an a priori range spanning tens of orders of magnitude.** The residual factor of $7.10$ in $h$ (equivalently $1.63$ in length) is reported as an undetermined closure-geometry factor — the effective cross-section, field profile, and orbit shape of the closure are idealized above as a hard-edged $\pi r_0^2$ disk and a rectangular phase-space orbit, and the residual is exactly where those idealizations live. It is left as a number to be derived or falsified by the excitation-side treatment, not assigned a geometric identity after the fact.
+
+The point of the expression is therefore scale-level, not digit-level: the same support scale that entered the gravity-side analysis reappears in the closure-side analysis to within a geometric factor of order unity, with the vacuum pair supplying the cycling factor. Gravity and action are not being derived from unrelated hidden scales; they are different readings of the same support geometry in the same medium, agreeing tightly on the gravity side (where $r_0$ is defined) and loosely on the closure side (where it is independently extracted).
+
+Both $h$ and $G$ thus point to the same nuclear support scale together with $\varepsilon_0$, $\mu_0$ — exactly on the gravity side by construction, and within a factor of two on the closure side. No external quantum constant is inserted. What remains open is not whether the factorization can be written, but why the support scale and closure amplitude take the values they do, and what closure geometry accounts for the residual.
 
 ---
 
@@ -739,7 +759,30 @@ The two appearances should not be conflated. This is a small point algebraically
 ---
 
 
-### 5.2 Summary and safe claims
+### 5.2 The dimensional-analysis objection
+
+The strongest objection to this paper should be stated in the paper, at full strength, before any reply is offered. It runs as follows. Given $\varepsilon_0$, $\mu_0$, and one free length scale, together with the unit identifications of Section 1 (the second as $\sqrt{\mathrm F\cdot\mathrm H}$, the kilogram as $\mathrm F\cdot\mathrm H/\mathrm m$), the dimensional basis is closed: *any* physical constant can then be written over that basis, multiplied by some dimensionless number. The existence of the factorizations in Sections 2–4 is therefore guaranteed by unit bookkeeping alone and demonstrates nothing. Worse, the dimensionless coefficients can absorb any mismatch, so even numerical agreement is manufactured. And deeper still: the central coincidence of Section 2.4 involves an explicit one-meter anchor, so it is an artifact of the SI unit system rather than a fact about nature.
+
+The objection has three layers, and they require three different answers.
+
+**Layer 1: rewritability versus compression.** Dimensional analysis guarantees that *a* factorization exists. It says nothing about *which length* each constant independently extracts. The relevant contrast is concrete: the standard dimensional-analysis combination of $\{G, h, c\}$ yields the Planck length, $\ell_P = 1.62\times10^{-35}$ m — twenty orders of magnitude below the nuclear scale. The audit's claim is precisely that the gram-mole normalization extracts a *nuclear*-scale length from $G$, and that the closure relation independently extracts a nuclear-scale length from $h$. Those two extractions could have disagreed by any amount; dimensional analysis placed no constraint on their ratio. The falsifiable content of the audit is the convergence of independent extraction routes, not the existence of the factorizations.
+
+**Layer 2: coefficient discipline.** The absorption objection is answered by a rule, stated here and applied throughout: dimensionless dressing is restricted to factors with declared origin — $\pi$ factors from stated geometry (sphere volume, flux spreading, closure area, each distinguished in Section 5.1), small integers, the kinematic $\frac12$, and explicit unit conversions such as the kg→g factor of 1000. Any factor outside that list is a **residual**: it is reported numerically, attributed to a named idealization, and left underived. It is never assigned a geometric identity after the fact to make an expression close. The closure-side residual of $7.10$ in Section 3.2 is handled under exactly this rule.
+
+**Layer 3: the length anchor.** The deepest version of the objection is correct as far as it goes, and the paper concedes it rather than evading it. The Tier-1 coincidence below, written unit-free as $r_{0,\mathrm{eff}} = \sqrt{r_s(1\,\mathrm g)\cdot(1\,\mathrm m)}$, contains an explicit one-meter anchor; the charge factorization contains the same anchor as $A_v = 1\,\mathrm m^{-1}$. The gram half of the construction is defensible on physical grounds — the gram is nucleon-anchored through the mole, so "one gram" is shorthand for "$N_A$ nucleons" — but the meter half is, at present, a confessed input. Two consequences follow. First, the individual extracted *values* are anchor-dependent and should not be presented as anchor-free facts. Second, the *convergence between extraction routes* is anchor-independent only if every route carries the anchor dependence identically; demonstrating that, or deriving the anchor outright, is item 7 of Section 5.3 and is not claimed here. Until then, the anchor stands in the ledger as an input alongside $\varepsilon_0$, $\mu_0$, and $r_0$.
+
+**The graded claims.** With those answers in place, the audit's results separate cleanly by evidential weight:
+
+- **Tier 0 — definitional.** $G = 500\,r_{0,\mathrm{eff}}^2 c^2$ is exact by construction, because $r_{0,\mathrm{eff}}$ is reverse-calculated from $G$. It is the definition of the support proxy, not evidence for anything.
+- **Tier 1 — tight.** The defined length lands inside the independently measured nuclear band: $1.2187$ fm against the empirical radius coefficient $\approx 1.2$ fm (spread at the several-percent-to-ten-percent level depending on observable) and the proton Compton wavelength $1.3214$ fm (within 8%). The a priori range was unconstrained over tens of orders of magnitude. This is the audit's sharpest result and the one on which the convergence claim principally rests.
+- **Tier 2 — loose.** The closure relation extracts $r_{0,h} = 1.989$ fm from $h$ alone — the same scale, within a factor of $1.63$, residual reported and attributed in Section 3.2. This is scale-level agreement only and is presented as such.
+- **Pending.** The charge factorization is sharply posed but not closed: the internal voltage $V_{\rm int}$ remains underived, so the charge route does not yet contribute an independent length extraction.
+
+**The degree-of-freedom ledger.** The audit claims compression, so the count is made in the open. Before: $G$, $h$, $e$, and $m_p$ enter as four independent empirical constants. After: the inputs are $\varepsilon_0$ and $\mu_0$ (medium primitives), one empirical scale $r_0$ (defined from $G$, validated against nuclear data), two declared conventions (the length anchor and the gram-mole nucleon normalization), and two open amplitudes ($V_{\rm int}$ and the closure-geometry residual). The output is one definitional identity, one tight cross-validation, one loose same-scale extraction, and a sharply posed open problem. That is a modest compression, honestly stated — not a derivation of the constants, and not nothing.
+
+---
+
+### 5.3 Summary and safe claims
 
 What, then, is the most that can safely be said at the end of the audit? The answer is not that the classical constants have been reduced all the way to first principles. The answer is that several constants usually treated as independent can be unfolded onto the same medium pair and the same support scale, with the remaining gaps now localized rather than hidden.
 
@@ -780,6 +823,7 @@ Taken together, these expressions are the paper's central output. They do not sa
 4. A derivation connecting the symmetric two-source amplitudes to the standard sourced-field form.
 5. A clearer substrate-level interpretation of $z_e$, $z_u$, and $A_v$.
 6. Derivation of the internal voltage $V_{\rm int}$ from the proton closure geometry — this would close the charge derivation.
+7. Derivation of the length anchor — the one-meter projection scale appearing as $A_v$ in the charge factorization and as the geometric-mean anchor in $r_{0,\mathrm{eff}} = \sqrt{r_s(1\,\mathrm g)\cdot(1\,\mathrm m)}$ — or, failing that, a demonstration that every extraction route carries the anchor dependence identically, which would make the convergence of Section 5.2 unit-invariant even while the individual extracted values are not.
 
 Those are not minor bookkeeping tasks. They are the actual frontier left by the present paper. But stating them explicitly is part of the point: once the constants have been unpacked this way, the remaining unknowns are narrower, more specific, and more physically interpretable than the original presentation in which $G$, $h$, and $e$ simply appear as separate primitives. Read technically, the present paper is a structural audit rather than a final derivation; read philosophically, it sharpens the question of what assumptions remain irreducible once the propagation, displacement, and excitation branches are taken together. That broader postulate-level reading is developed in the philosophical companion.
 
@@ -850,7 +894,20 @@ $$
 C_{\text{nat}} = \varepsilon_0\,A_v\,r_0^3 \approx 8.854\times10^{-12} \times (1.2187\times10^{-15})^2 \approx 1.315\times10^{-41}\,\text{F}
 $$
 
-The internal voltage implied by the proton rest energy: $V_{\rm int} = m_p c^2 / e \approx 938\,\text{MV}$.
+### Extraction audit (SI-checkable)
+
+Every number below can be reproduced with a hand calculator from CODATA values. The formulas are read as numerical relations among SI magnitudes; their dimensional closure relies on the unit identifications of Section 1, but the arithmetic does not.
+
+| Route | Formula (SI magnitudes) | Extracted length | vs. $r_{0,\mathrm{eff}}$ | Status |
+|---|---|---|---|---|
+| Gravity (defines $r_0$) | $\sqrt{2G\cdot(10^{-3})/c^2}$ | $1.2187\times10^{-15}$ m | $1$ (by construction) | Tier 0: definitional |
+| Nuclear systematics | measured coefficient in $R\approx r_0A^{1/3}$ | $\approx1.2\times10^{-15}$ m, spread several % to ~10% | $\approx1.0$ | Tier 1: independent measurement |
+| Proton Compton | $h/(m_p c)$ | $1.3214\times10^{-15}$ m | $1.084$ | Tier 1: independent measurement |
+| Closure ($h$) | $\left(2h/(\pi c^3)\right)^{1/4}$ | $1.9892\times10^{-15}$ m | $1.632$ | Tier 2: residual reported §3.2 |
+| Charge ($e$) | pending $V_{\rm int}$ | — | — | open (item 6, §5.3) |
+| Planck combination (contrast) | $\sqrt{\hbar G/c^3}$ | $1.616\times10^{-35}$ m | $1.3\times10^{-20}$ | what standard dimensional analysis yields from $\{G,h,c\}$ |
+
+Forward check of the closure relation at the defined scale: $\frac{\pi}{2}\,r_{0,\mathrm{eff}}^4\,c^3 = 9.34\times10^{-35}$, versus $h = 6.626\times10^{-34}$ J·s — the factor-$7.10$ residual of Section 3.2, equivalent to the $1.632$ length ratio above ($1.632^4 = 7.10$).
 
 ---
 
