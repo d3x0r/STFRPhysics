@@ -1,6 +1,4 @@
 ﻿
-HPF papers (reading order and DOIs): [`AI/Revised`](AI/Revised/README.md)
-
 
 # Homogeneous Propagation Framework (HPF)
 
@@ -14,6 +12,8 @@ Cite a **paper DOI** for a result. Cite the **series hub** (when published) for 
 Source of this folder: [`STFRPhysics/AI/Revised`](https://github.com/d3x0r/STFRPhysics/tree/master/AI/Revised).
 
 ## Reading order
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.HUBID.svg)](https://doi.org/10.5281/zenodo.HUBID)
 
 | # | Paper | File | Zenodo |
 |---|--------|------|--------|
