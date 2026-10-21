@@ -102,6 +102,8 @@ That distinction matters later for refractive media and for wave/particle struct
 
 ### 3.3 Slow-envelope / Schrödinger-like limit
 
+**Response compatibility checkpoint (7 October 2026).** The [constitutive-response audit](WIP/proper_velocity_gravity/constitutive-response-checkpoint.md) derives the distinct support-size and closure-energy combinations from the functional below. If the written potential split is used literally in a common energy/time convention, its leading acceleration is \(c^2\nabla[\Sigma+(\chi_e+\chi_m)/2-\delta E_{\mathrm{cl}}/(mc^2)]\). Any closure shift already included in the calibrated displacement potential must not be added again. The audit states the compatibility condition with the revised static response and distinguishes equilibrium support from a dynamical breathing response; it does not assign the currently unspecified dressing coefficients.
+
 To reach a wave/particle equation for a localized mode, separate the fast closure oscillation from the slow envelope by writing
 
 \[

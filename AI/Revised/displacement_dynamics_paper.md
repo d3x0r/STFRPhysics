@@ -1,721 +1,489 @@
 # The Homogeneous Propagation Framework: Retardation, Cumulative Field Structure, and Rotating-Source Response
 
+*Working paper — consolidated 19 October 2026. Static displacement and its response are primary; retardation extends that construction to moving sources.*
+
 ## Abstract
 
-*Companion papers:* *The Homogeneous Propagation Framework: Transport, Local Geometry, and Displacement Defects* (DOI: 10.5281/zenodo.19079929); *The Homogeneous Propagation Framework: Weak-Field Observational Tests* (companion paper)
-
-This paper develops the next dynamical step of the displacement framework. The starting point is the displacement-sourcing postulate in its macroscopic form: mass-energy tracks a displacement of the transport-supporting structure, while the deeper source-side claim is that intra-nuclear action — the internal dynamics of nuclear-scale excitation structure — sources that displacement. Changes in the displacement propagate causally at the medium speed \(c\). In the stationary spherically symmetric limit, that postulate yields the equilibrium displacement geometry \(D(r,d)=\sqrt{r^2+d^2}/r\), the cumulative displacement field \(\Sigma(r)\), and the correct weak-field Newtonian limit. What has been lacking is the dynamical law that propagates this displacement away from equilibrium. This paper develops that law at the correct level: the equation belongs to the displacement layer of the framework, not to the full microphysics of matter.
-
-The main dynamical claim is that the retarded displacement map is the primary expression of the causal structure. The field at a point depends on retarded source configuration rather than instantaneous source position, and the retarded integral for the cumulative displacement \(\Sigma(\mathbf{x},t)\) has a local wave-equation equivalent propagating at the medium speed \(c\). The displacement defines an effective coordinate-level geometry whose structure is fixed by the framework's own internal logic: the vacuum storage capacity is anchored to the coordinate grid, while transport is displaced relative to that grid. The resulting line element modifies the time and radial components while leaving the angular sector Euclidean, and its weak-field orbit equation recovers the standard perihelion precession. That scalar sector is sufficient for the stationary weak-field timing structure, but rotating sources require an additional vector response. The first non-spherical application is then the rotating-source frame-drag response, whose current Earth-corrected Gravity Probe B estimate lies near the observed weak-field signal. The result does not yet derive the deeper sourcing relation from excitation-side substrate dynamics, but it does define a coherent dynamical program: a two-layer coupled structure, a causal retarded displacement map with its wave-equation equivalent, an effective coordinate geometry recovering the correct orbit structure, and a rotating-source vector extension. Appendices develop the nonlinear strong-field regime, the second post-Newtonian divergence from Schwarzschild, the mass composition rule and its consequences for black hole mergers, and the rotating-source effective metric — material that contains the framework's specific predictions distinguishing it from general relativity.
+This paper distinguishes the exact square-root displacement map from the adopted exterior transport and motion rules. The map gives radial compression, tangential expansion and a bounded accumulated depth. The exterior closure uses an exponential lapse and an isotropic spatial coefficient, recovering the Newtonian limit and giving the full leading Mercury perihelion advance, optical bending and delay, and geodetic spin precession. These predictions are verified by orbit, ray and spin integration. Escape and tidal response are expressed in the same closure variables. Weak retarded scalar and rotating-source descriptions identify the additional dynamics needed for radiation, comparable-source motion and frame dragging. The exact strong-field continuation of the exterior closure is kept distinct from the bounded-depth near-source construction.
 
 ## 1. Foundational Postulate and Scope
 
-This framework begins from a single physical postulate, stated at two levels. In macroscopic weak-field bookkeeping, **mass-energy tracks a displacement of the transport-supporting structure, and changes in that displacement propagate causally at the medium speed \(c\).** In the sharper source-side language used by the companion excitation branch, **intra-nuclear action — the internal dynamics of nuclear-scale excitation structure — sources that displacement.** In the layered picture already developed in the companion transport/local-geometry paper, this is a statement about the geometry of the propagation-supporting stage itself, not about an additional force law acting within ordinary matter dynamics. The transport structure is the layer that carries the propagation condition, and when nuclear-scale excitation dynamics impose displacement in that layer, the resulting change in geometry appears macroscopically as gravity, lensing, time dilation, and related weak-field effects.
+The framework treats intra-nuclear excitation dynamics as sources of displacement of the transport-supporting structure; mass-energy is the macroscopic bookkeeping of that sourcing. Matter evolves within that structure, and changes of the displacement are assumed to propagate causally through the medium. This separates excitation dynamics from displacement dynamics without declaring them independent physical substances.
 
-A useful structural comparison may be made with Wheeler’s familiar summary of general relativity: *matter tells spacetime how to curve, and spacetime tells matter how to move.* The present framework adopts an intentionally similar division of roles, but with a different ontology. Here the macroscopic relation is instead: **matter tells space how to displace, and displaced space tells matter how to move.** More precisely, the source-side claim is that intra-nuclear action supplies the displacement, while mass is the bulk bookkeeping variable by which that sourcing is measured. The similarity is only at the level of coupling structure. In both cases, one sector describes how sources modify the stage, while another describes motion within the modified stage. In this framework, however, gravity is not identified with curvature of spacetime itself. It is identified with displacement of the transport-supporting spatial network.
+The static exterior map is the geometric starting point. The response convention specified below is an additional working law, not a consequence of a spatial Jacobian alone. Its mathematical consistency is checked; its complete microscopic derivation and empirical validation remain separate questions.
 
-This viewpoint leads naturally to two coupled dynamical layers. The first contains the ordinary dynamics of excitations, matter, and interactions evolving within the transport structure. The second contains the displacement of the transport structure itself. These layers are coupled, but not collapsed into a single equation. Nuclear-scale excitation dynamics source displacement, and the resulting displacement modifies the effective geometry through which motion proceeds. In exterior weak-field calculations this sourcing is represented by the aggregate mass-energy of the body. Gravity is therefore not treated here as a conventional force internal to transport-structure dynamics, but as a modification of the stage on which those dynamics unfold. The two-layer architecture also clarifies the role of the present paper: the equation to be developed belongs to the displacement layer, not to the full microphysics of matter.
-
-For a stationary isolated source, the equilibrium form of that displacement is described by
-
-\[
-D(r,d)=\frac{\sqrt{r^2+d^2}}{r},
-\]
-
-with \(d\) the displacement scale associated with the source. This form follows from the geometric requirement that when a volume \(\frac{4}{3}\pi d^3\) is inserted into the spherically symmetric transport structure, each shell originally at radius \(r\) is displaced outward to \(r'=\sqrt{r^2+d^2}\), so that the static displacement factor is simply the ratio \(r'/r\). The postulate is therefore physical, while the static form is geometric.
-
-Stated another way, the primitive statement is the fixed central defect, not the final algebraic shape of \(D\). The surrounding exterior medium is the original transport-supporting structure pushed outward shell by shell. The Pythagorean form enters because each original shell is relocated relative to the same central defect scale \(d\), and \(D(r,d)\) is the resulting shell-relocation ratio in the displaced chart. Read in that order, the function is not a guessed potential or a convenient fitting profile, but the compact expression of the static relocation geometry.
-
-The weak-field structure is then governed not merely by the local deviation \(D-1\), but by the cumulative displacement
-
-\[
-\Sigma(r)=\int_r^\infty (D(r')-1)\,dr',
-\]
-
-whose weak-field limit gives
-
-\[
-\Sigma(r)\approx \frac{d^2}{2r}.
-\]
-
-This quantity carries the required \(1/r\) behavior, governs clock-rate and propagation effects, and yields Newtonian acceleration through its gradient. In that sense, the existing static development already supplies a definite hierarchy: local displacement, cumulative displacement, and the associated acceleration structure.
-
-What remains to be developed is the dynamical law. At present, this framework does not yet derive from deeper excitation-side substrate dynamics why intra-nuclear action has the role of sourcing displacement. That sourcing relation therefore remains a foundational postulate, with mass-energy serving as the macroscopic source variable used in weak-field calculations. The task of the present paper is to formulate the field equation from which the static equilibrium form \(D(r,d)\) emerges as the stationary solution, and to develop the consequences of causal displacement for moving and rotating sources.
-
-The paper therefore does not claim to reduce gravity all the way to a deeper microscopic explanation of why intra-nuclear dynamics displace the transport structure. Its more limited aim is to formulate the displacement problem at the correct layer and to develop the consequences of that postulate in a causal setting. Once displacement is taken to be physical, and once changes in it are limited by the same propagation speed \(c\) that governs the underlying medium, retardation is no longer an added correction. It is part of the basic structure from the outset. The causal evolution of displacement is therefore the natural setting for Mercury-scale retardation effects, rotating-source response, and frame dragging.
-
-The first transition from abstract displacement geometry to measured weak-field gravity occurs when the cumulative displacement is normalized against the observed gravitational clock burden.
-
-Five appendices develop material that supports the main argument or extends it into regimes the body does not treat in full. Appendix A records the vacuum storage / propagation-units result that the local speed of light remains \(c\) in the locally realized geometry even in displaced regions, which underlies the clock-rate reading of Shapiro delay used in the companion observational tests paper. Appendix B develops the nonlinear displacement equation and the strong-field regime, where the framework predicts that the Schwarzschild horizon is replaced by asymptotic time dilation and the displacement equilibrium develops a finite source-sphere surface rather than a coordinate singularity. Appendix C compares the framework's effective metric to Schwarzschild at second post-Newtonian order, finding a definite divergence at \(\sigma^2\) with specific physical magnitudes for Mercury (≈0.002 milliarcsec/century), the Hulse-Taylor binary (≈0.03 arcsec/year), and second-order light propagation. Appendix D develops the mass composition rule, interpreting binding energy as shared displacement support and giving consequences for black hole mergers. Appendix E develops the rotating-source effective metric used in the body's frame-drag estimate. The framework's specific predictions that distinguish it from general relativity are concentrated in Appendices B, C, and D; the companion observational tests paper consolidates these together with the predictions developed in its own body.
+**Scope of results.** The map identities and the consequences of the exterior constitutive postulates are explicit mathematical results. The exterior closure predicts approximately 42.99 arcseconds per century for Mercury, optical-cost coefficient two, and the leading geodetic precession. A microscopic explanation of these adopted response rules is not a prerequisite for computing their predictions. The remaining strong-field specification concerns how the bounded map depth and its material rulers are related to the exterior transport variables. Comparable-source backreaction, radiation energy and detector response, and the rotating-source coupling are separate dynamical questions.
 
 ## 2. Static Equilibrium Geometry and the Cumulative Field
 
-For a stationary isolated source, the displacement problem reduces to an equilibrium geometry. The foundational postulate is that nuclear-scale excitation dynamics impose displacement in the transport structure; in the static exterior calculation this is represented as a source with displacement scale \(d\) inserting an effective volume. In the spherically symmetric case, this means that a source with displacement scale \(d\) inserts a volume
+### 2.1 Coordinates and normalization
+
+The notation separates source size, local deformation and accumulated depth:
+
+| Symbol | Definition and role | Units |
+| --- | --- | --- |
+| \(d\), \(d_b=d_{\rm eff}(m_b,r_b)\) | Source displacement parameter; body-specific effective value | Length |
+| \(D(r;d)=\sqrt{1+d^2/r^2}\) | Local tangential stretch factor; reciprocal radial factor | Dimensionless |
+| \(E\) | Single-source local deformation Jacobian, \(\operatorname{diag}(D^{-1},D,D)\) | Dimensionless matrix |
+| \(J_F\) | Ordered composite Jacobian \(E_tE_s\) | Dimensionless matrix |
+| \(\Sigma(r;d,\ell_0)\) | Map depth \((\sqrt{r^2+d^2}-r)/\ell_0\) | Dimensionless |
+| \(\Sigma_b(r)\) | The same map depth evaluated at \(d=d_b,\ell_0=r_b\) | Dimensionless |
+| \(S(R)\) | Adopted static exterior depth \(GM/(c^2R)\) | Dimensionless |
+| \(S_{\rm ret}(\mathbf x,t)\) | Weak retarded source field of §4.4 | Dimensionless |
+
+Uppercase \(D\) is never the body-displacement function here. It is a scalar
+factor, not the Jacobian matrix, although \(\det E=D\) for this map.
+The body depth is a specialization,
+\(\Sigma_b(r)=\Sigma(r;d_{\rm eff}(m_b,r_b),r_b)\), not an additional field.
+The map depth and exterior depth have the same leading weak limit; they
+are not identified as exact functions.
+
+Let \(d>0\) be a fixed source displacement, \(r>0\) the reference radius, and
 
 \[
-\frac{4}{3}\pi d^3
+\rho=\sqrt{r^2+d^2},\qquad D=\rho/r,\qquad
+d\ell=d\rho=dr/D.
 \]
 
-at the origin of the surrounding transport-supporting medium. The resulting static geometry follows from the requirement that each spherical shell originally at radius \(r\) be displaced outward so as to accommodate the inserted volume while preserving spherical ordering. In the construction adopted here, that displaced shell radius is
+The forward local deformation is
 
 \[
-r'=\sqrt{r^2+d^2},
+E=\operatorname{diag}(D^{-1},D,D),\qquad \det E=D.
 \]
 
-so the equilibrium displacement factor is the ratio
+The square-root map is the adopted shell-relocation geometry. A source volume label \(4\pi d^3/3\) does not derive it by constant-volume shell conservation. No cube-root radial map is used.
+
+With a fixed normalization length \(\ell_0>0\), define
 
 \[
-D(r,d)=\frac{r'}{r}=\frac{\sqrt{r^2+d^2}}{r}.
+\delta=\rho-r=\frac{d^2}{\rho+r},\qquad
+\Sigma=\delta/\ell_0,\qquad K=c^2/\ell_0,\qquad \Phi=K\delta.
 \]
 
-Thus the physical postulate is volumetric insertion, while the form of \(D(r,d)\) is a geometric consequence with the source scale \(d\) as its only free parameter.
+Here \(\delta\) has length units, \(\Sigma\) is dimensionless, \(K\) has acceleration units, and \(\Phi\) has squared-velocity units. Local deformation \(D-1\) and accumulated depth \(\Sigma\) are different quantities.
 
-This construction makes the local deformation of the transport structure explicit. A unit cell centered at radius \(r\) is compressed in the radial direction by a factor \(1/D\), stretched in each tangential direction by a factor \(D\), and therefore occupies a net coordinate volume larger by the factor
+For a spherical body's effective bulk displacement, introduce the shorthand
 
 \[
-\left(\frac{1}{D}\right)DD=D.
+\boxed{d_b=d_{\rm eff}(m_b,r_b)
+=\sqrt{\frac{2Gm_{b_{kg}} r_b}{c^2}}=r_0 \sqrt{m_b r_b},
+\qquad r_0= 1.2187\ \mathrm{fm}}
 \]
 
-The static displacement geometry is therefore anisotropic in its local deformation but scalar in its bookkeeping: the same single function \(D(r,d)\) determines radial compression, tangential stretching, and net volume expansion of the displaced medium.
-
-Several immediate features of \(D(R,d)\) are worth recording. As \(R\to\infty\), one has \(D\to 1\), so the geometry tends smoothly to the undeformed background. Near the source, \(D\) grows without bound in the unregularized form, reflecting the concentration of the inserted displacement into the innermost region. For the purposes of the present paper, however, the main role of \(D\) is the weak-field structure at radii large compared with \(d\). In that regime,
+Here \(r_b>0\) is the body's specified extent in the reference-radius
+convention, not the observation radius \(r\). \(m_b\) is the mass in grams, \(r_b\) is the body extent radius in meters. For a fixed static body,
+\(d_b\) is constant, and its map and normalized depth are
 
 \[
-D(R,d)=\sqrt{1+\frac{d^2}{R^2}}\approx 1+\frac{d^2}{2R^2},
+\rho_b(r)=\sqrt{r^2+d_b^2},\qquad
+\delta_b(r)=\frac{d_b^2}{\sqrt{r^2+d_b^2}+r},\qquad
+\Sigma_b(r)=\frac{\delta_b(r)}{r_b}.
 \]
 
-so the local displacement above background falls with the inverse square of radius.
+This body-specific normalization sets \(\ell_0=r_b\). It gives
+\(\Sigma_b\sim Gm_b/(c^2r)\) far from the source without a universal
+Earth-radius calibration. The definition in terms of \(G\) is dimensional;
+when expressing it through the constants-recovery \(r_0\) convention,
+the mass-unit conversion coefficient remains outside \(r_0^2\).
+This is an effective aggregate prescription, not a derivation of a
+constituent's intrinsic displacement from its own mass; although it does have a relation of nucleon density within the body comparing the radius of the body with its mass. A resolved shell
+or other extended distribution still requires its constituent arrangement;
+the bulk shorthand does not prescribe its interior field.
 
-That inverse-square falloff is the local field-strength behavior. The accumulated transport burden is obtained by integrating the local excess along the radial path. Written first as a path-length excess,
+### 2.2 Compressed-ruler and reference-coordinate integrals
+
+The selected depth is
 
 \[
-\Delta\ell(R)=\int_R^\infty \bigl(D(R',d)-1\bigr)\,dR'.
+\ell_0\Sigma=\int_{\rho}^{\infty}(D-1)\,d\rho'
+=\int_r^\infty(1-D^{-1})\,dr'=\rho-r.
 \]
 
-In the weak-field limit \(d\ll R\), substituting \(D(R,d)-1\approx d^2/(2R^2)\) gives
+Integrating over the reference-coordinate interval instead defines a distinct function:
 
 \[
-\Delta\ell(R)\approx \int_R^\infty \frac{d^2}{2R'^2}\,dR'=\frac{d^2}{2R}.
+\Delta_{\rm coord}=\int_r^\infty(D-1)\,dr'
+=d\operatorname{asinh}(d/r)-(\rho-r).
 \]
 
-The dimensionless cumulative displacement used in the effective geometry is the normalized quantity
+Both integrals approach \(d^2/(2r)\) far from the source. The historical position-only response work integral uses the compressed-ruler depth \(\delta\). The reference-coordinate integral diverges logarithmically inward, while \(\delta\to d\) is finite. Also, \(D^2-1=d^2/r^2\) and \(2\Sigma\sim d^2/(\ell_0r)\) have different exterior radial dependence.
+
+### 2.3 Adopted exterior response and escape
+
+For the exterior closure, use a distinct isotropic radius \(R\), proper
+radial interval \(d\ell_{\rm ext}\), and depth \(S\):
 
 \[
-\Sigma(R)=\frac{\Delta\ell(R)}{\ell_0}\approx\frac{d^2}{2\ell_0 R},
+S=\frac{GM}{c^2R},\quad B=1+2S,\quad N=e^{-S},\qquad
+ ds^2=-N^2c^2dt^2+B(dR^2+R^2d\Omega^2),\quad
+ d\ell_{\rm ext}=\sqrt B\,dR.
 \]
 
-where \(\ell_0\) is the support-normalization length implicit in the earlier shorthand. The framework therefore has a definite hierarchy:
+The symbols \(r,\rho,\ell,\Sigma\) in §§2.1–2.2 describe the displacement
+map; they are not silently identified with \(R,\ell_{\rm ext},S\).
+The exterior rule is adopted as a constitutive postulate. With outward-positive
+radial proper velocity \(U=d\ell_{\rm ext}/d\tau\),
 
 \[
-D(R,d)-1 \sim \frac{d^2}{2R^2},
+\gamma=\sqrt{1+U^2/c^2},\qquad e=N\gamma=\mathrm{constant},\qquad
+\boxed{\frac{dU}{d\tau}=c^2\gamma^2 S_{,\ell_{\rm ext}}
+=-\frac{GM}{R^2\sqrt B}\gamma^2.}
+\]
+
+Marginal escape has \(e=1\), hence
+
+\[
+U_{\rm esc}=c\sqrt{e^{2S}-1},\qquad
+\gamma_{\rm esc}=e^S,\qquad v_{\rm esc}=c\sqrt{1-e^{-2S}}.
+\]
+
+The framework's bounded velocity \(v=U/\gamma\) uses static local distance
+and time. The global metric-coordinate rate is \(dR/dt=Nv/\sqrt B\).
+The earlier position-only rule \(dU/d\tau=-K(D-1)\), its invariant
+\(U^2/2-\Phi\), and its square-root escape gamma are historical response
+calculations, retained in the static-displacement note. They are not added
+to the adopted geodesic response.
+
+### 2.4 Weak limit and exact-continuation scope
+
+The map depth has \(\Sigma\sim d^2/(2\ell_0r)\). Its weak exterior matching
+uses \(d^2/\ell_0=2GM/c^2\), with the radial labels agreeing at leading
+order. For the body shorthand in §2.1, this relation holds with
+\(d=d_b\) and \(\ell_0=r_b\). This bulk calibration does not redefine
+the primitive nucleon displacement.
+
+The closure gives \(A\sim GM/R^2\), \(U_{\rm esc}^2\sim2GM/R\), and
+\(N=1-GM/(c^2R)+\cdots\). Its exact continuation with \(S=GM/(c^2R)\)
+has \(N>0\) for every finite depth but unbounded dilation as \(R\to0\).
+In contrast, the map depth in §2.2 is bounded by \(d/\ell_0\).
+A bounded-depth continuation must specify its relation to the exterior
+ruler before its acceleration or orbit can be evaluated. This is a question
+about the exact functions and their coordinate conversion, not a requirement
+to derive a microscopic ontology before using the postulates.
+
+For the stated exterior continuation, the local static circular speed is
+
+\[
+\frac{v_{\rm orb}^2}{c^2}=\frac{S(1+2S)}{1+S}.
+\]
+
+The circular null orbit lies at \(S=1/\sqrt2\). Existence of a timelike
+circular orbit at smaller depth does not establish its stability. Replacing
+\(B=1+2S\) by \(e^{2S}\) leaves the first-order spatial coefficient intact
+but changes the exact strong-field results.
+
+### 2.5 Body depth, local deformation and conditional near-source response
+
+Define the surface compactness \(s_b=Gm_b/(c^2r_b)\). The body map gives
+
+\[
+\Sigma_b(r_b)=\sqrt{1+2s_b}-1,\qquad
+\lim_{r\to0}\Sigma_b(r)=\frac{d_b}{r_b}=\sqrt{2s_b}.
+\]
+
+Thus the surface depth equals \(s_b\) only to leading weak-field order.
+The ratio \(d_b/r\) measures local deformation, whereas \(d_b/r_b\)
+bounds accumulated depth. Strong local compression can coexist with shallow
+depth. The formal inward limit is a property of the single-map continuation;
+it is not an interior solution for a resolved material body.
+
+If the exponential lapse and radial energy rule are continued using this
+depth and the compressed map ruler, then
+
+\[
+N_b=e^{-\Sigma_b},\quad e=N_b\gamma,\quad d\ell=dr/D,
 \qquad
-\Delta\ell(R)\sim \frac{d^2}{2R},
-\qquad
-\Sigma(R)\sim \frac{d^2}{2\ell_0R},
-\qquad
-\frac{d\Sigma}{dR}\sim -\frac{d^2}{2\ell_0R^2}.
+\boxed{\frac{dU}{d\tau}
+=c^2\gamma^2\Sigma_{b,\ell}
+=-\frac{c^2\gamma^2}{r_b}(D-1)},\qquad
+D=\sqrt{1+d_b^2/r^2}.
 \]
 
-The local displacement gives the field-strength scaling, the cumulative path-length excess gives the accumulated transport burden, the normalized cumulative displacement gives the clock and propagation scaling, and the gradient of the normalized cumulative displacement returns the inverse-square acceleration structure.
-
-This hierarchy connects the static geometry to Newtonian gravity. Matching the normalized cumulative displacement to the standard weak-field time-dilation form gives
+The weak radial limit is \(-\gamma^2Gm_b/r^2\), reducing to Newtonian
+acceleration for slow motion. Marginal escape obeys
 
 \[
-\frac{d^2}{2\ell_0 R}=\frac{GM}{c^2R}=\frac{\ell_M}{2R},
-\qquad
-\ell_M\equiv\frac{2GM}{c^2},
+U_{\rm esc}=c\sqrt{e^{2\Sigma_b}-1},\qquad
+v_{\rm esc}=c\sqrt{1-e^{-2\Sigma_b}}.
 \]
 
-The appearance of \(G\) at this step should be read as the empirical calibration point where the abstract displacement hierarchy is anchored to measured weak-field reality. The construction has so far defined a static displacement geometry, its local excess \(D-1\), and the cumulative displacement \(\Sigma\). Matching \(\Sigma\) to the observed gravitational clock burden fixes the normalization in conventional units. Written in those units, the result is naturally expressed through \(G\), \(M\), and \(c\), or equivalently through the familiar length \(\ell_M=2GM/c^2\). This does not make the Schwarzschild radius the primitive object of the framework. Rather, \(\ell_M\) is the conventional macroscopic packaging of the clock-burden calibration. Applying the displacement model to bulk matter thereby gives \(G\) an appreciated interpretation: it is the coupling between ordinary mass bookkeeping and accumulated transport displacement.
+At fixed positive \(m_b,r_b\), the limiting depth, dilation and escape
+speeds are finite, but the inward acceleration scales as
+\(-c^2\gamma^2d_b/(r_b r)\). Finite accumulated depth does not bound
+its derivative with respect to a compressed radial ruler.
 
-It follows that
+This is a conditional radial continuation, not a matched replacement for
+§2.3. For example, identifying \(R=r\) and instead retaining the exterior
+ruler prescription \(d\ell=\sqrt{1+2\Sigma_b}\,dr\) gives
 
 \[
-d^2=\ell_M\ell_0.
+\frac{dU}{d\tau}
+=-\frac{c^2\gamma^2}{r_b}
+\frac{1-r/\rho_b}{\sqrt{1+2\Sigma_b}},
 \]
 
-With this identification, the acceleration associated with the cumulative displacement becomes
+whose radial magnitude has a finite inward limit. The relation between the
+two rulers must therefore be established before selecting a strong-field
+response. Neither radial calculation supplies a full nonradial transport
+law or establishes a horizon. The circular null orbit stated in §2.4
+belongs specifically to that exterior metric continuation; visibility of
+the far side of a luminous disk requires connecting bent transport paths,
+not necessarily a circular null orbit.
+
+For fixed \(r_b\), the maximum depth vanishes as \(m_b\to0\). If mass
+and extent both vary, their ratio \(m_b/r_b\) controls that limit. In
+particular, \(r_s\ll r_b\) implies \(d_b\ll r_b\): the effective bulk
+prescription does not identify an isolated proton's nuclear radius with
+its gravitationally calibrated displacement.
+
+## 3. Separated Sources and Mutual Response
+
+### 3.1 Interaction without isolated translational self-force
+
+In the weak field a two-source interaction representation is
 
 \[
-g=-c^2\frac{d\Sigma}{dR}
-=c^2\frac{d^2}{2\ell_0 R^2}
-=\frac{GM}{R^2}.
+h_i(R)=\sqrt{Gm_i/(c^2R)},\qquad
+V_{12}=-c^2\sqrt{m_1m_2}\,h_1h_2=-Gm_1m_2/R.
 \]
 
-Thus Newtonian gravity appears as the acceleration associated with the gradient of accumulated displacement once the geometric displacement radius \(d\) is tied to the empirically calibrated weak-field length through \(d^2=\ell_M\ell_0\). The earlier shorthand equated \(d^2\) directly with \(\ell_M\); the explicit relation retains the normalization length.
+Differentiating this interaction energy gives the mutual force. An isolated self-energy invariant under rigid translation gives no centre force. This does not remove internal self-support or environment-dependent changes of that support.
 
-
-## 3. Causal Displacement Dynamics
-
-### 3.1 Scope of the displacement equation
-
-The static displacement geometry developed in the previous section is already constrained enough to recover the weak-field hierarchy, the cumulative displacement \(\Sigma(R)\), and the Newtonian limit. The next step is the dynamical law associated with that geometry. The function \(D(R,d)\) describes the equilibrium displacement around a stationary source; the dynamical problem asks how that displacement is communicated when sources move, accelerate, or change configuration.
-
-The displacement equation belongs to the displacement layer specifically. One layer contains the ordinary dynamics of matter and interactions within the transport structure. The other contains the displacement of the transport structure itself. These layers are coupled, but they are governed by different equations. The displacement equation needs the source distribution and its motion; it does not need to encode the internal structure of each source body.
-
-Gravity is the displacement of the transport structure itself. The target of the field equation is therefore narrow: it describes how source-side displacement, represented macroscopically by mass-energy, is communicated through the transport structure at the medium speed \(c\). Section 3.3 states the retarded map, and Section 4.2 gives its local wave-equation equivalent.
-
-### 3.2 Bulk sources and multi-source composition
-
-For macroscopic bodies, the relevant multi-source problem is usually already coarse-grained. Many nuclei packed into one region compose as bulk source content: their support volumes define the effective displacement of the body, and the exterior field is governed by the aggregate mass-energy rather than by a separately ordered list of microscopic centers. This is the regime used in the weak-field calculations below.
-
-The reason this coarse-graining is physically safe is that ordinary matter keeps probes far outside the nuclear displacement cores. Electron structure, interatomic spacing, and material exclusion prevent a test body from approaching the actual support-scale centers of the nuclei. Thus, even at the surface of a planet, the observer is still enormously far from the microscopic displacement radii. The measured field is a bulk exterior displacement field, not a near-core sample of individual nuclear geometry.
-
-The nonlinear composition issue becomes important when one tries to model overlapping support regions, interior source structure, or competing local minima. In those cases, the local contribution should be applied after the surrounding background has been established. In practical terms, the nearest contribution is deferred and applied last, while the remaining contributions only need to advance inward toward the local minimum rather than follow a globally sorted list. The weak-field retarded map below is the coarse-grained reduction of that more detailed composition problem.
-
-### 3.3 Retarded displacement map
-
-Once displacement is treated as a physical modification of the transport-supporting network, and once changes in that displacement are taken to propagate at speed \(c\), the natural dynamical construction is retarded rather than instantaneous. The field at a point is determined by the source configuration whose influence has had time to propagate through the medium. The displacement problem is causal from the outset: the geometry at a field point is determined by the past state of the source, evaluated on the relevant propagation cone.
-
-This suggests that the most fundamental statement of the dynamics is integral rather than differential. Given a collection of masses with known trajectories, the displacement at each field point is constructed by summing source contributions evaluated at retarded time. In plain terms: given where masses are and how they are moving, evaluate the displacement at each field point by summing retarded contributions from all sources, each propagating at \(c\), using the source position at the retarded time. The field is whatever results from propagation-limited sourcing through the medium; a PDE, if introduced later, is the local representation of that causal rule.
-
-For a single source, this means the displacement field at spacetime point \((\mathbf{x},t)\) is determined by the source position \(\mathbf{x}_s(t_r)\) at retarded time \(t_r\), where \(t_r\) satisfies
+For the historical position-only response in a prescribed source field, the test-body functional was
 
 \[
-t-t_r=\frac{R(t_r)}{c},
-\qquad
-R(t_r)=\|\mathbf{x}-\mathbf{x}_s(t_r)\|.
+V_{s,t}(\mathbf B)=-\int\Phi_s(\mathbf B+\boldsymbol\eta)\,dm,
+\qquad \mathbf F_{s,t}=\int\nabla\Phi_s(\mathbf B+\boldsymbol\eta)\,dm.
 \]
 
-The field therefore depends on the delayed source-to-field separation rather than on the instantaneous separation. In the static limit, where \(\mathbf{x}_s\) is constant, the retarded construction collapses to the stationary geometry of Section 2. The static displacement function \(D(R,d)\) is the equilibrium rest solution of the retarded map.
+The derivative holds the instantaneous internal configuration fixed. It describes that historical response in a common local rate convention. Its leading weak interaction remains useful, but it is not the velocity-dependent exterior geodesic action or a fully relativistic comparable-source energy law. No isolated test self-gradient is evaluated at its centre.
 
-For many sources, the full field is obtained by combining retarded contributions according to the multi-source ordering rule stated in Section 3.2. In the weak and well-separated regime this reduces to a direct sum over retarded source terms; beyond that limit, the composition acts on an already displaced medium.
+### 3.2 Finite extent and tides
 
-This causal picture explains why several previously separate weak-field effects can be treated within a common dynamical language. In the static case, the cumulative displacement \(\Sigma(R)\) governs clock-rate and propagation effects, while the local geometry \(D(R,d)\) governs spatial deformation. Once the source is time-dependent, those same quantities become retarded fields. Mercury precession can then be read as a consequence of finite-speed response on an accelerated orbit; Shapiro delay remains the integrated clock-rate effect of the cumulative displacement along the signal path; and the rotating-source problem becomes a retarded field problem rather than a purely static geometric one.
-
-The retarded map is therefore the conceptual heart of the dynamics paper. It states gravity at the displacement layer as a propagation-limited modification of the transport stage sourced by the past state of matter.
-
-## 4. Two-Layer Coupled Structure and the Coordinate-Level Effective Geometry
-
-The retarded displacement map gives the physical rule: source-side displacement propagates through the transport-supporting medium at speed \(c\), and the field at any point is determined by the retarded source configuration rather than by instantaneous source position. The present section develops two further steps. First, the retarded map is given an explicit integral form whose static limit recovers the established cumulative displacement. Second, the displacement is shown to define an effective coordinate-level geometry whose weak-field orbit structure reproduces the standard perihelion precession.
-
-### 4.1 Two coupled layers
-
-The dynamics of this framework are organized as two coupled layers rather than a single master equation.
-
-The first layer contains the ordinary dynamics of excitations — matter as sustained LC oscillations, electromagnetic fields, and their interactions — evolving within the transport-supporting structure. These excitations propagate through the transport structure at the speed set by the vacuum storage medium: \(c=1/\sqrt{\varepsilon_0\mu_0}\). Their energy-momentum distribution is the source of displacement.
-
-The second layer contains the displacement of the transport structure itself. The cumulative displacement field \(\Sigma(\mathbf{x},t)\) responds to the energy distribution of the first-layer excitations, with changes propagating causally at \(c\). The resulting displacement modifies the effective geometry through which first-layer excitations propagate. Gravity is therefore not a force internal to the excitation layer. It is a modification of the stage on which those excitations evolve, fed back from the displacement layer.
-
-The coupling is bidirectional. Intra-nuclear excitation dynamics source displacement; displacement reshapes the transport geometry that governs excitation dynamics. In the general case, the two layers must be solved together: moving sources change the displacement, and the changing displacement modifies the source trajectories.
-
-In the static and weak-field regimes, however, this coupling decouples into a one-way hierarchy. When the source is stationary, the displacement layer reduces to a Poisson equation that is solved once for the given energy distribution. The resulting \(\Sigma(r)\) sets a fixed background geometry, and the excitation layer then evolves on that background without modifying it. The two layers do not iterate. This static decoupling is what makes the equilibrium geometry tractable: the source sits at rest, its energy distribution sources \(\Sigma(R)=GM/(c^2R)=\ell_M/(2R)=d^2/(2\ell_0R)\), and the resulting displacement geometry is the equilibrium form \(D(R,d)\) already established.
-
-The same decoupling extends to test excitations on a static background. A planet orbiting the Sun moves within the Sun's fixed displacement geometry. The planet's own displacement is negligible compared to the Sun's, so it does not modify the background. The displacement layer is solved once for the dominant source; the excitation layer provides the orbit equation on that fixed background. All of the weak-field results developed in this paper — Mercury precession, Shapiro delay, light deflection, and the GPB geodetic and frame-drag measurements — belong to this decoupled regime.
-
-The layers re-couple when comparable-mass sources move and accelerate in each other's displacement fields. A compact binary system, where each body's displacement significantly affects the other's trajectory and the trajectories in turn modify the displacement, requires the full retarded integral with both layers evolving together. That strong-coupling regime is the frontier beyond the present paper.
-
-### 4.2 The displacement layer: retarded integral form
-
-The natural variable for the displacement layer is the cumulative displacement \(\Sigma(\mathbf{x},t)\) rather than the local displacement factor \(D\). The reason is the same one already seen in the static theory: \(D-1\) carries the local \(1/r^2\) field-strength structure, while \(\Sigma\) carries the accumulated \(1/r\) structure that governs clock-rate, propagation, and weak-field dynamics.
-
-The retarded map of Section 3.3, written as an explicit integral, gives
+For neighboring freely falling particles initially at rest relative to the
+static frame of §2.3, the instantaneous orthonormal tidal response is
+\(\ddot\xi_i=\mathcal T_i\xi_i\). With \(R_A=R\sqrt B\),
 
 \[
-\Sigma(\mathbf{x},t)=\frac{G}{c^2}\int\frac{\rho_{\mathrm{LC}}(\mathbf{x}',t_r)}{|\mathbf{x}-\mathbf{x}'|}\,d^3x',
+\mathcal T_R=c^2(S_{,\ell_{\rm ext}\ell_{\rm ext}}-S_{,\ell_{\rm ext}}^2)
+=\frac{2c^2S(1+S-S^2)}{R^2B^2},\qquad
+\mathcal T_t=c^2S_{,\ell_{\rm ext}}\frac{R_{A,\ell_{\rm ext}}}{R_A}
+=-\frac{c^2S(1+S)}{R^2B^2}.
 \]
 
-where \(\rho_{\mathrm{LC}}\) is the energy density of the LC excitations that constitute the source, and the retarded time satisfies \(t_r=t-|\mathbf{x}-\mathbf{x}'|/c\). This is the displacement analog of the retarded potential in electromagnetism: the cumulative displacement at a field point is sourced by the retarded energy distribution, propagated through the vacuum medium at speed \(c\).
+The weak limits are \(+2GM/R^3\) radially and \(-GM/R^3\) in each tangent
+direction. The exact exterior continuation changes radial stretching to
+compression above \(S=(1+\sqrt5)/2\). A moving observer requires the
+corresponding transformed tidal tensor; internal stress also depends on the
+body's material response and support.
 
-The integral form is the more fundamental statement. Its equivalent local differential representation is
+A centred finite body's mean response begins at second order in its extent,
+while the endpoint difference begins at first order. The earlier exact
+mapped-span examples remain in the static-displacement note under the
+historical response, not as extra terms in the metric tidal tensor.
+For a consistent coordinate change, \(\boldsymbol\ell=E\boldsymbol\xi\)
+implies
 
 \[
-\frac{1}{c^2}\partial_t^2\Sigma-\nabla^2\Sigma=\frac{4\pi G}{c^2}\,\rho_{\mathrm{LC}},
+\ddot{\boldsymbol\ell}=E\ddot{\boldsymbol\xi}
++2\dot E\dot{\boldsymbol\xi}+\ddot E\boldsymbol\xi.
 \]
 
-which is a wave equation with source, propagating at the medium speed \(c\). The propagation speed is not a free parameter: it is the only speed the vacuum storage medium supports. In the static limit, this reduces to
+All derivatives must use the same time parameter. These terms convert a
+trajectory; they are not a second deformation force.
+
+### 3.3 Ordered exterior composition
+
+For source-first/test-last composition, transport the test centre \(\mathbf b\) to \(\mathbf B=F_s(\mathbf b)\) and apply its radial map about \(\mathbf B\). The exterior Jacobian is \(J_F=E_tE_s\), with determinant \(D_tD_s\). Oblique factors need not commute. The test centre is excluded from its own exterior map, so this Jacobian is not evaluated there as a centre-force multiplier.
+
+For the same scalar rewritten after insertion, gradients transform with \(E_t^{-\mathsf T}\); trajectories transform with \(E_t\) plus map-derivative terms. Transforming the kinetic metric reconciles them. Declaring a new Euclidean kinetic rule after insertion would add dynamics beyond that conversion. The exterior centre trajectory now follows §2.3 and §4; a derived comparable-source backreaction remains separate from this map-composition identity.
+
+## 4. Transport, Nonradial Motion and Causal Extension
+
+### 4.1 Clock, ruler and motion compatibility
+
+For a static metric using the same proper radial ruler and body time,
+\(dU/d\tau=-c^2\gamma^2\,d\ln N/d\ell_{\rm ext}\).
+Thus a position-only lapse cannot reproduce the historical position-only
+acceleration for every launch speed. The adopted law includes the required
+\(\gamma^2\) dependence and conserves \(e=N\gamma\).
+
+The square-map identity
+\(d\rho^2+\rho^2d\Omega^2=D^{-2}dr^2+D^2r^2d\Omega^2\)
+converts spatial intervals in that map. It alone is not the exterior
+spacetime postulate. Reference distance, displaced distance, material rod
+length and clock period must be distinguished when interpreting their relation.
+
+### 4.2 Planar orbit equation
+
+Set \(f=e^{-2S}\), \(g=h=B\), \(u=1/R\), and use conserved
+\(E=fc^2\dot t\), \(L=hR^2\dot\phi\). The exact planar equation is
 
 \[
-\nabla^2\Sigma=-\frac{4\pi G}{c^2}\,\rho_{\mathrm{LC}},
+ u'^2=Q(u)=\frac{h^2}{gL^2}\left(\frac{E^2}{fc^2}-c^2\right)
+ -\frac hg u^2,\qquad u''=\tfrac12Q'(u).
 \]
 
-whose point-source solution is \(\Sigma(R)=GM/(c^2R)=\ell_M/(2R)=d^2/(2\ell_0R)\), recovering the established cumulative displacement. Once \(\Sigma(\mathbf{x},t)\) is known, the weak-field shell parameter associated with the static geometry may be represented by \(d^2\approx2\ell_0R\Sigma\). In that approximation the local geometric displacement factor is written
+Dots use body proper time; primes use orbital angle. In coordinate time,
+the first-post-Newtonian vector acceleration is
 
 \[
-D(R,t)=\frac{\sqrt{R^2+d^2(t)}}{R}.
+\ddot{\mathbf R}=-\frac{GM}{R^3}\mathbf R+
+\frac{GM}{c^2R^3}\left[
+\left(\frac{4GM}{R}-V^2\right)\mathbf R+
+4(\mathbf R\cdot\mathbf V)\mathbf V\right],\quad
+\mathbf V=\frac{d\mathbf R}{dt}.
 \]
 
-For the static point-source solution, this reduces to the equilibrium form of Section 2.
+This follows from the metric action. The checkpoint-6 impulse-plus-steering
+law and its generalized angular invariant are superseded for exterior
+orbits; their derivations remain available in checkpoints 6–7. They are
+not added as separate precession contributions to this equation.
 
-The displacement field does not have independent oscillatory dynamics in the way that a free wave does. It tracks the retarded source distribution. Outgoing displacement disturbances — the framework's gravitational waves — are the retarded response to accelerating matter, not free oscillations of the displacement field itself. The wave-equation form encodes the same causal retardation as the integral; the two descriptions are complementary.
+### 4.3 Verified orbit and optical results
 
-### 4.3 The excitation layer: effective coordinate geometry
+The leading perihelion advance is \(6\pi GM/[c^2a(1-e^2)]\).
+For \(G=6.674\times10^{-11}\), \(M=1.989\times10^{30}\) kg,
+\(c=2.998\times10^8\) m/s, \(a=0.38710\times1.496\times10^{11}\) m,
+and \(e=0.20563\), exact Binet integration gives 42.9886 arcseconds per
+century using 87.969 days per orbit. The corrected simulation shadow gives
+42.9927 using its measured period, consistent with the leading Kepler-period
+value 42.992706. Timestep halving changes the shadow result by less than
+0.00005 arcseconds/century. Its Newtonian control is effectively zero.
 
-The second step is to determine what geometry the first-layer excitations see when propagating through a displacement background. The key constraint comes from the vacuum storage structure. The storage capacity \(F\!\cdot\!H=\varepsilon_0\mu_0\) is attached to the coordinate grid (Appendix A). Displacement moves the transport structure relative to that grid, but it does not move the grid itself.
+The printed deposited metric \(f=(1+S)^{-2},g=1+2S,h=1\) instead gives
+21.49. The formerly inserted Schwarzschild correction did not validate that
+metric. The updated simulation uses the acceleration in §4.2; planetary
+interactions remain Newtonian, and its two-body shadow contains no planetary
+perturbations.
 
-In the displaced transport structure, a unit cell at radius \(r\) is compressed radially by \(1/D\) and stretched tangentially by \(D\). A physical meter — realized within transport as a sustained LC excitation — co-deforms with the transport. The physical meter is not identical to the transport structure; it is an observable realized within it. When transport is displaced, the rod's realized properties change accordingly: radially, the physical meter spans fewer coordinate meters; tangentially, it spans more.
-
-The question is how this deformation appears in the coordinate-level description that governs the effective dynamics. The answer is set by which quantities belong to coordinates and which belong to transport.
-
-**Temporal component.** The 3D oscillation that constitutes a clock cycle traverses a net volume of \(F\!\cdot\!H\) that scales as \(D\) relative to the undisplaced case (the product of radial compression \(1/D\) and tangential stretch \(D\) in two directions). A complete cycle therefore encounters more total storage, and the clock runs slower. The realized clock rate relative to coordinate time is \(1/(1+\Sigma)\), giving an effective time-time component
+The same closure supplies optical index
 
 \[
-f(r)=\frac{1}{(1+\Sigma(r))^2}.
+ n=\frac{\sqrt B}{N}=e^S\sqrt{1+2S}=1+2S+O(S^2).
 \]
 
-**Radial component.** A physical meter in the radial direction spans \(1/D\) coordinate meters. Equivalently, one coordinate meter radially spans \(D\) physical meters of transport. In the effective coordinate-level line element, this means the radial coefficient is
+Direct ray integration recovers leading bending \(4GM/(c^2b)\) and
+round-trip Shapiro logarithmic coefficient \(4GM/c^3\). No independent
+optical coefficient is fitted. The [calculation record](WIP/proper_velocity_gravity/closure-observable-results.md)
+provides the integration equations, refinement checks and machine-readable results.
+
+### 4.4 Weak retarded field
+
+For mass-equivalent density \(\varrho_m\), the weak scalar extension is
 
 \[
-g(r)=D(r)^2=1+2\Sigma(r),
+S_{\rm ret}(\mathbf x,t)=\frac G{c^2}\int\frac{\varrho_m(\mathbf x',t-R/c)}R\,d^3x',\quad
+R=|\mathbf x-\mathbf x'|,
+\]
+\[
+c^{-2}\partial_t^2S_{\rm ret}-\nabla^2S_{\rm ret}=4\pi G\varrho_m/c^2.
 \]
 
-where the second equality uses the weak-field relation \(D^2\approx 1+2\Sigma\).
+For energy density the source coefficient instead contains \(c^{-4}\). A stationary spherical source gives \(S_{\rm ret}=S\) in its exterior. This weak retarded field is distinct from the exact map depth \(\Sigma\). A stationary density makes this field static; delaying the moving probe is not source retardation and does not supply the missing fixed-source perihelion term.
 
-**Angular component.** The tangential stretching of transport cells means each cell covers more coordinate arc. But the coordinate arc \(r\,d\theta\) is a property of the coordinate grid, and the coordinate grid is not displaced. The angular bookkeeping in coordinates remains Euclidean. This is the critical point: the storage capacity \(F\!\cdot\!H\) per coordinate meter is unchanged by displacement, and the coordinate angles are defined on the coordinate grid, not on the transport chart. The angular coefficient is therefore
+The exact static depth has nonzero exterior reference Laplacian:
 
 \[
-h(r)=1.
+\nabla^2\Sigma=\ell_0^{-1}\left[d^2/(r^2+d^2)^{3/2}+2/\sqrt{r^2+d^2}-2/r\right].
 \]
 
-The effective coordinate-level line element for excitations propagating through the static displacement background is then
-
-\[
-ds^2=-\frac{c^2}{(1+\Sigma)^2}\,dt^2+D^2\,dr^2+r^2\,d\Omega^2.
-\]
-
-In the weak field, with \(\sigma=r_s/r=2GM/(c^2r)=2\Sigma\), this becomes
-
-\[
-ds^2\approx -(1-\sigma)\,c^2\,dt^2+(1+\sigma)\,dr^2+r^2\,d\Omega^2,
-\]
-
-which is the standard weak-field form to leading order in \(\sigma\).
-
-The agreement with Schwarzschild is therefore a first-post-Newtonian agreement, not an exact identity. Appendix C gives the explicit second-order comparison. With \(\sigma=r_s/r=2\Sigma\), the framework gives
-
-\[
-f=1-\sigma+\frac{3}{4}\sigma^2+\cdots,\qquad
-g=1+\sigma,
-\]
-
-while Schwarzschild gives
-
-\[
-f_S=1-\sigma,\qquad
-g_S=1+\sigma+\sigma^2+\cdots.
-\]
-
-The two geometries agree at \(O(\sigma)\) and diverge at \(O(\sigma^2)\). The weak-field tests treated in the main text lie in the first-post-Newtonian regime; the second-order divergence is recorded as a distinct prediction in Appendix C.
-
-### 4.4 Recovery of the weak-field orbit structure
-
-The effective geometry of the preceding subsection is not merely a rewriting of known results. It is derived from the displacement framework's own internal logic: the storage capacity is on the coordinate grid, the displacement deforms transport relative to that grid, and the physical meter co-deforms with transport. The fact that the resulting line element agrees with the standard weak-field Schwarzschild form at leading order is a consistency check, not a circular input.
-
-The orbit equation for a test excitation on this background may be derived by standard methods. In the weak-field expansion, the orbit equation takes the form
-
-\[
-\frac{d^2u}{d\phi^2}+u=\frac{GM}{L^2}+\frac{3GM}{c^2}\,u^2+O(\sigma^2),
-\]
-
-where \(u=1/r\) and \(L\) is the conserved angular momentum per unit mass. The \(3GM\,u^2/c^2\) correction is the term responsible for perihelion precession. For Mercury, it gives
-
-\[
-\delta\omega=\frac{6\pi GM}{a(1-e^2)\,c^2}=42.98\ \text{arcsec/century}.
-\]
-
-The three contributions previously identified for Mercury precession — retardation mismatch, external-field kinematic steering, and cumulative displacement gradient — are therefore not three separate physical mechanisms to be added independently. They are three aspects of a single geometric fact: the displacement of transport on the coordinate grid modifies the time component and the radial component of the effective coordinate geometry, while the angular component remains Euclidean. The orbit equation on that effective geometry produces the correct precession as one integrated result rather than as a sum of separately motivated corrections. The interpretive decomposition is \(\alpha_1=1\) (retardation), \(\alpha_2=1/2\) (external-field kinematic steering at the standard Thomas coefficient), \(\alpha_3=3/2\) (displacement geometry), totaling \(\alpha=3\).
-
-The same effective geometry also supports the Shapiro delay as a pure clock-rate effect and the geodetic precession applied to the GPB orbit [7]. In each case, the coordinate-level description carries the full physics. Local clock rates, rod lengths, and other realized-geometry observables may be recovered from the coordinate description whenever needed, but the dynamics are most cleanly posed in coordinate terms.
+The retarded linear equation is therefore a weak closure, not the exact strong-field continuation. Appendix B gives the constraint on a proposed nonlinear continuation.
 
 ## 5. Rotating Sources and the Vector Response
 
-The preceding sections establish the scalar displacement sector: source-side displacement is causal, propagation-limited, and in the stationary spherically symmetric limit is captured by the equilibrium geometry \(D(r,d)\) or, more naturally for dynamics, by the cumulative field \(\Sigma(\mathbf{x},t)\). That scalar sector is sufficient for a stationary bulk body when only its exterior weak-field timing and propagation effects are required. It treats the body through its aggregate mass-energy, just as Section 3.2 described: many microscopic displacement elements compose into one coarse-grained source for exterior scalar calculations.
-
-Rotation is the first place where that coarse-graining must retain more structure. A rotating planet is still a bulk source, but it is no longer fully described by total mass and radius alone. Its constituent displacement elements move around the spin axis with definite handedness, and the retarded field at a probe point must retain information about that internal motion as well as the aggregate scalar burden. The rotating-source problem therefore calls back to the element-level considerations of Section 3.2: the individual displacement elements do not need to be resolved as separate point sources for the scalar exterior field, but their organized motion cannot be discarded when the spin response is being computed.
-
-In that sense, the vector sector is the rotational residue of the same bulk composition rule. The scalar cumulative field records how much displacement the body contributes after its elements have been coarse-grained. The rotating-source response records the spin-odd azimuthal part of that element motion. A purely scalar field can encode the strength of cumulative displacement, but it cannot encode the handed azimuthal asymmetry associated with rotation. The causal displacement layer therefore admits a vector channel in addition to the scalar cumulative field.
-
-The relevant object is the retarded **vector** field built from the spin-odd azimuthal component of the moving displacement elements. This is the key conceptual step: the rotating-source problem belongs to the vector response of the displacement field, rather than to the symmetric scalar geometry alone.
-
-The geometry can be stated directly. Let a displacement element of the rotating body have retarded position
-\[
-\mathbf{x}_i(t_{r,i}),
-\qquad
- t-t_{r,i}=\frac{|\mathbf{x}-\mathbf{x}_i(t_{r,i})|}{c}.
-\]
-For slow rotation, the retarded position is the present position shifted slightly backward along the element's motion,
-\[
-\mathbf{x}_i(t_{r,i})\approx \mathbf{x}_i(t)-\mathbf{v}_i\frac{R_i}{c},
-\qquad
-R_i=|\mathbf{x}-\mathbf{x}_i|.
-\]
-For rigid rotation,
-\[
-\mathbf{v}_i=\boldsymbol{\Omega}\times\mathbf{x}_i.
-\]
-Thus the retarded displacement of the element distribution has an organized circulating part. When the elements are coarse-grained into a continuum, the scalar source density \(\rho\) is accompanied by the mass-current density
-\[
-\mathbf{j}(\mathbf{x})=\rho(\mathbf{x})\mathbf{v}(\mathbf{x})
-=\rho(\mathbf{x})(\boldsymbol{\Omega}\times\mathbf{x}).
-\]
-The weak-field rotating-source response is therefore the current-carrying part of the same retarded displacement map. Schematically, the vector displacement response has the form
-\[
-\mathbf{A}_D(\mathbf{x})\sim \frac{G}{c^2}\int\frac{\rho(\mathbf{x}')\mathbf{v}(\mathbf{x}')}{|\mathbf{x}-\mathbf{x}'|}\,d^3x'.
-\]
-Outside the body, the leading contribution is governed by the angular momentum of the moving displacement elements,
-\[
-\mathbf{J}=\int \rho(\mathbf{x}')\,\mathbf{x}'\times\mathbf{v}(\mathbf{x}')\,d^3x'.
-\]
-The exterior vector response is therefore the far-field circulation of the retarded mass-current distribution, with the local rotational observable carried by its curl or circulation.
-
-For the present weak-field application, the stable far-field content is the spin-odd azimuthal sector. Its leading angular form is written
-\[
-V_{\phi,\mathrm{odd}}(\rho,\theta)\propto \omega\,\frac{\cos\theta}{\rho^2},
-\]
-where \(\omega\) is the source spin, \(\rho\) is the probe radius, and \(\theta\) is latitude relative to the spin axis. This form is linear in source spin, odd under reversal of \(\omega\), azimuthal rather than radial, and modulated by latitude through \(\cos\theta\).
-
-The present treatment should therefore be read as the weak-field, slow-rotation current reduction of the displacement-element picture. The scalar cumulative field remains the correct object for the stationary weak-field timing structure, while the rotating-source response is the vector extension required when the displacement elements have organized motion. Later excitation-side work may explain why intra-nuclear action sources displacement at the substrate level, but it does not change the displacement-layer geometry used here.
-
-## 6. Gravity Probe B and the Frame-Drag Estimate
-
-The rotating-source vector response becomes physically meaningful only when it is tied to an observable. In this framework, the natural first test case is Gravity Probe B. The role of the present section is therefore not to introduce a new phenomenological domain, but to extract the first concrete weak-field observable from the rotating-source displacement field developed in the previous section.
-
-The observable to be extracted is the frame-drag component of the GPB gyroscope drift. The geodetic branch follows from the effective coordinate geometry as a single integrated result and need not be rederived in the body. The present section is concerned only with the rotating-source contribution.
-
-Within the rotating-source construction, the relevant field is the retarded spin-odd azimuthal component
+A scalar source density does not retain the handed mass-current information of a rotating body. A candidate weak current response is
 
 \[
-V_{\phi,\mathrm{odd}}(\rho,\theta)\propto \omega\,\frac{\cos\theta}{\rho^2}.
+\mathbf A_D=\frac G{c^2}\int\frac{\varrho_m(\mathbf x',t-R/c)\mathbf v(\mathbf x',t-R/c)}R\,d^3x'.
 \]
 
-This object is the stable carrier of the frame-drag signal in the present treatment. Its symmetry already fixes much of the observable structure. The response is linear in the source spin \(\omega\), reverses sign under spin reversal, and varies over latitude through the factor \(\cos\theta\). The azimuthal character of the field is what makes it the natural home of frame dragging in this framework: it is a genuine rotating-source response, not a correction to the scalar equilibrium geometry.
+This normalization gives velocity units; dividing \(\mathbf A_D\) by \(c\) gives a dimensionless field. A rotational observable must specify how this field or its curl transports the gyroscope and orbital frame. Spin reversal and angular structure alone do not fix that coupling or its normalization.
 
-The practical extraction proceeds in four steps. First, determine the equatorial fixed-probe value at the GPB orbital radius. Second, extend that value over latitude using the established \(\cos\theta\) dependence. Third, perform the polar-orbit projection analytically rather than by stepping a moving probe around the full orbit. Fourth, convert the thin-shell source model to the Earth’s actual moment of inertia.
+## 6. Gyroscope Observables and Gravity Probe B
 
-On that route, the thin-shell estimate for the GPB frame-drag signal is about \(82.5\) milliarcsec/yr. Applying the Earth moment-of-inertia correction
+Parallel transport of the spin four-vector along a circular geodesic of
+§2.3 gives \(\Delta\psi=3\pi GM/(c^2R)\) per orbit at leading order.
+Direct integration yields 6.620970 arcseconds/year for
+\(GM_\oplus=3.986004418\times10^{14}\) m³/s²,
+\(c=299792458\) m/s and \(R=7020137\) m (a nominal 642 km orbit).
+This spherical benchmark is distinct from the mission-specific 6.6061
+prediction [4]. Spin normalization and orthogonality to the four-velocity
+are preserved to better than \(10^{-12}\).
+
+Earth's frame-dragging contribution requires the rotating-source sector.
+The current field in §5 supplies source information but not its normalization
+as a spin-transport coupling. Multiplying it by a moment-of-inertia ratio
+does not determine that coupling. Appendix E states those requirements.
+
+## 7. Radiation and Material Response
+
+Let \(Q_{ij}=\int \varrho_m(\mathbf x,t)x_i x_j\,d^3x\) be the source mass quadrupole, \(R\) the radiation-zone distance and \(\mathbf n\) the observation direction. Consider the conditional scalar amplitude and flux
 
 \[
-\frac{I_\oplus/(MR^2)}{2/3}=\frac{0.3307}{2/3}\approx 0.496,
+\delta S_{\rm ret}=\frac{G}{2c^4R}n_i n_j\ddot Q_{ij},\qquad
+F=\frac{c^3}{4\pi G}(\partial_t\delta S_{\rm ret})^2,
 \]
 
-yields an Earth-corrected prediction of about \(40.9\) milliarcsec/yr. This is close to the GPB measured frame-drag value of \(39.2\) milliarcsec/yr. In the logic of the present paper, that agreement is evidence that the rotating-source displacement field is carrying the right weak-field structure. The remaining open question lies upstream, in why intra-nuclear action sources displacement at all, rather than in the weak-field geometry of the rotating-source response.
-
-## 7. Status, Scope, and Remaining Derivational Frontier
-
-The preceding sections establish a definite intermediate result. This framework already supplies a static equilibrium geometry for source-side displacement represented by mass-energy, a cumulative field \(\Sigma\) with the required \(1/r\) weak-field structure, and a causal retarded interpretation in which displacement changes propagate at the medium speed \(c\). The two-layer coupled structure then provides the dynamical organization: the displacement layer tracks the retarded source distribution through a wave equation at speed \(c\), while the excitation layer evolves within the effective coordinate geometry set by that displacement. The coordinate-level line element — with its time dilation from \(\Sigma\), radial modification from \(D^2\), and unmodified angular sector — recovers the correct weak-field orbit structure, including the standard perihelion precession. The rotating-source analysis identifies a spin-odd azimuthal vector response as the natural home of frame dragging.
-
-At the same time, the limits of the present result should be stated plainly. The foundational postulate remains exactly that: intra-nuclear action sources displacement of the transport structure, and changes in that displacement propagate causally. In weak-field exterior calculations, mass-energy is the aggregate bookkeeping variable for that source. What has not yet been derived is the deeper microphysical reason that nuclear-scale excitation dynamics have this sourcing role. The framework therefore remains explicit about where it is postulating and where it is deriving. The geometry of \(D(r,d)\), the cumulative displacement \(\Sigma(r)\), and the weak-field hierarchy are derived once the postulate is granted; the postulate itself is not yet reduced to a deeper mechanism.
-
-The two-layer structure and the retarded integral for \(\Sigma(\mathbf{x},t)\) represent a step beyond the purely static geometric development. The retarded map is the more fundamental statement: source information propagates outward at \(c\), and the field at a point depends on the retarded source configuration. The wave equation is its local differential equivalent. Together they fix the propagation speed to \(c\) (the only speed the medium supports) and tie the source term directly to the LC energy density of matter. The effective coordinate geometry derived from the displacement then recovers the weak-field tests without requiring separately motivated correction terms.
-
-The rotating-source case sharpens this point. The scalar cumulative field is sufficient for the stationary weak-field timing sector, but it is not sufficient for rotating bodies. There the vector sector provides the rotating-source response within the displacement-layer dynamics, with form following from the kinematics of retarded potentials. In the present treatment, the stable observable channel is the spin-odd azimuthal component of the retarded field. That is enough to support a coherent GPB calculation. The deeper open derivation remains the excitation-level origin of displacement itself, not the weak-field rotating-source geometry developed here.
-
-The remaining derivational frontier can now be stated more precisely than before. The principal next step is to derive the intra-nuclear displacement-sourcing relation from deeper substrate structure rather than leave it primitive. A further extension would be to derive the nonlinear medium-response coefficients and to place the scalar and rotating-source responses within one fully explicit field-law formulation. These are continuations beyond the present displacement-layer development, whose static geometry, retarded map, weak-field orbit structure, and rotating-source response have already been developed at the level used in this paper.
-
-Beyond the weak-field orbital tests, the two-layer structure also implies gravitational radiation from accelerating sources. The displacement deformation is not merely a scalar but carries a tensor structure reflecting the anisotropy of the transport deformation (radial compression, tangential stretch). For a compact binary, the time-varying tensorial pattern radiates at the quadrupole level. The scalar wave equation for the cumulative displacement \(\Sigma\) gives one sixth of the general-relativity power; the full symmetric deformation tensor has six independent components, each radiating with equal power due to the isotropy of the vacuum impedance; and the total power therefore matches the GR quadrupole formula exactly [7]. For circular orbits this reproduces the Hulse-Taylor inspiral rate. For eccentric orbits, the oscillating trace provides an additional breathing-mode channel absent in general relativity, potentially modifying the eccentricity enhancement function \(f(e)\).
-
-### 7.1 Self-consistency of the two-layer loop
-
-The two-layer structure raises a natural self-consistency question. The displacement layer sources \(\Sigma\) from the energy density of LC excitations. The excitation layer evolves within the effective geometry set by that displacement. For the loop to close, the energy distribution of a source at rest in its own displacement field must be consistent with the \(\Sigma\) it generates.
-
-In the static case, this loop closes straightforwardly. A point mass with energy \(mc^2\) sources a cumulative displacement \(\Sigma(r)=GM/(c^2r)\) through the Poisson equation. The resulting effective geometry is the coordinate-level line element of Section 4.3. A stationary source sitting at the origin of that geometry is at rest in the displacement it creates — there is no further feedback at this order. The static displacement is the equilibrium configuration, and the effective geometry is self-consistent.
-
-The remainder of this subsection and the next sketch how the self-consistency loop might close at a deeper level. These remarks identify where the connections must eventually be made, but the derivations themselves are not completed in this paper.
-
-The deeper question is what determines the source energy \(mc^2\) itself. In this framework, matter is a sustained LC excitation of the vacuum medium. Such an excitation cycles between the capacitive (\(\varepsilon_0\)) and inductive (\(\mu_0\)) storage modes at a definite frequency. The resonant frequency of a vacuum region of spatial extent \(\ell\) is \(f\sim c/\ell\), set entirely by the medium properties. A sustained excitation — one that persists rather than dispersing — must satisfy a closure condition: after one complete LC cycle, the excitation must return to its starting configuration. This topological closure quantizes the action per cycle, and that quantum is Planck's constant \(h\). The energy of the excitation is then \(E=hf\), and its spatial extent is the Compton wavelength \(\ell_C=h/(mc)\).
-
-The same LC substrate also determines the de Broglie wavelength of a moving excitation. A particle at rest has a spatially uniform internal phase. When the excitation moves at velocity \(v\) through the transport medium, the simultaneity slope \(v/c^2\) per unit length — already derived in the homogeneous propagation framework — converts that uniform phase into a spatial phase gradient. The wavelength of that gradient is
+angular integration gives, for \(T_{ij}=\dddot Q_{ij}\),
 
 \[
-\lambda_{\mathrm{dB}}=\frac{c^2}{v\,f_0}=\frac{h}{mv}=\frac{h}{p},
+P_{\rm scalar}=\frac G{60c^5}\left\langle(\operatorname{tr}T)^2+2T_{ij}T_{ij}\right\rangle
+=\frac G{30c^5}\langle T^{\rm STF}_{ij}T^{\rm STF}_{ij}\rangle
++\frac G{36c^5}\langle(\operatorname{tr}T)^2\rangle.
 \]
 
-where \(f_0=mc^2/h\) is the rest-frame cycling frequency. The de Broglie relation is therefore not an independent postulate. It is the spatial phase structure of an LC resonance viewed through the simultaneity tilt of the propagation framework.
+The trace term contributes whenever the quadrupole trace has a nonzero third time derivative. The tensor entries do not count independent radiating modes: their constraints, propagation laws and energy normalization must determine the total power. The flux normalization above is conditional on the dynamical closure, so this scalar integral alone does not establish a binary inspiral rate.
 
-### 7.2 Hierarchy of constants
+For the static map, local deformation amplitude is \(D-1=\ell_0\Sigma/r\), not \(\Sigma\). This identity does not by itself convert the retarded perturbation \(\delta S_{\rm ret}\) into material strain. A source trace, a scalar disturbance, transverse breathing of a detector, and optical phase response are distinct quantities. A plane scalar-gradient response gives longitudinal relative acceleration at first order for initially resting probes. Imposing the static deformation shape as material strain additionally assumes how matter follows that geometry. Those descriptions must not be added as independent forces without a common evolution law.
 
-The framework's constant structure then has a natural hierarchy. The medium properties \(\varepsilon_0\) and \(\mu_0\) give the propagation speed \(c\) and the vacuum impedance \(Z_0\). The closure condition on sustained LC resonances gives the quantum of action \(h\). The gravitational constant \(G\) is the bridge between the excitation layer and the displacement layer: it determines how much source gravitational length \(\ell_M=2Gm/c^2\) one unit of LC energy produces. The geometric shell parameter is then related by \(d^2=\ell_M\ell_0\). In per-nucleon form, this means that any future recovery of \(G\) must account for both the nucleon's displacement scale and the normalization/support length \(\ell_0\), rather than equating a squared radius directly with a gravitational length.
-
-The self-consistency of the full loop — medium properties determine resonance structure, resonance structure determines source energy, source energy determines displacement, displacement modifies the medium geometry, and the modified geometry supports the resonance — is not yet derived in this paper. But the two-layer structure developed here defines each link and identifies where the remaining derivations must connect.
+The excitation branch supplies support and cycle-energy relations, and the constants branch supplies the F–H propagation/closure interpretation. A microscopic definition of the ultimate substance of F and H is not required for using those relations. What remains is the response of constituent support and optical paths to a changing field, without counting a geometric or closure contribution twice. Nuclear overlap is not a prerequisite for separated-body motion. A breathing amplitude or binary decay rate requires those additional response equations.
 
 ## 8. Conclusion
 
-This framework treats gravity as a causal displacement of the transport-supporting spatial network rather than as a force internal to ordinary matter dynamics. Starting from the postulate that intra-nuclear action sources that displacement, with mass-energy as its macroscopic bookkeeping variable and changes in displacement propagating at speed \(c\), the static equilibrium geometry \(D(r,d)\) and the cumulative field \(\Sigma(r)\) recover the required weak-field hierarchy and Newtonian limit.
+The square-root map supplies exact displacement geometry. The adopted exterior clock, ruler and motion postulates give a consistent set of weak-field orbit, light and geodetic-spin predictions, now checked numerically. Their strong-field expressions follow for the specified exterior continuation. Relating that continuation to bounded near-source depth requires explicit distance and material-response conversions. Comparable-source dynamics, radiation and rotating-source coupling remain separate work. These distinctions concern the scope of the equations, not a demand for a unique microscopic explanation before the postulates can be used.
 
-The dynamical problem is organized as two coupled layers. The displacement layer tracks the retarded energy distribution of matter through the medium at speed \(c\), with the retarded integral as the fundamental statement and the wave equation as its local differential equivalent. The excitation layer contains the ordinary dynamics of matter and fields evolving within the effective coordinate geometry set by the displacement. That geometry is determined by the framework's own internal logic: the vacuum storage capacity \(F\!\cdot\!H\) is anchored to the coordinate grid, the displacement deforms transport relative to that grid, and the physical meter co-deforms with transport. The resulting coordinate-level line element modifies the time component and the radial component while leaving the angular sector Euclidean, and its weak-field orbit equation recovers the standard perihelion precession as a single integrated geometric result.
+## Appendix A. Storage, Local Units and Clock Transport
 
-This same causal architecture extends beyond the stationary scalar sector. For rotating sources, the relevant response is not exhausted by the symmetric cumulative field alone, but requires a spin-odd azimuthal vector channel. In the present treatment, that channel yields a Gravity Probe B frame-drag estimate of about \(40.9\) mas/yr after polar-orbit projection and Earth moment-of-inertia correction, close to the observed \(39.2\) mas/yr.
+The storage pair satisfies \(c=1/\sqrt{\varepsilon_0\mu_0}\) and \(Z_0=\sqrt{\mu_0/\varepsilon_0}\). Within the framework, a clock is a sustained closure process through the storage/transport structure. Local co-deformation of matter and its measuring standard can preserve local measurement while reference-coordinate spans change. It does not prove absence of finite-body differential response.
 
-The result is not yet a final substrate derivation. What it does provide is a coherent dynamical program: a two-layer coupled structure, a causal retarded displacement map with its local wave-equation equivalent, an effective coordinate geometry whose weak-field orbit equation gives the correct precession, and a rotating-source vector sector that reaches the observed weak-field frame-drag scale. The present paper closes the displacement-side weak-field structure but does not complete the excitation-side closure problem; that companion branch is taken up explicitly in *The Homogeneous Propagation Framework: Excitation, Closure, and Material Response*, where the support, occupancy, and material-response terms are developed on the displaced background fixed here. The remaining derivational frontier is now sharply defined: derive the intra-nuclear displacement-sourcing relation from the deeper substrate and place the scalar and rotating-source responses within one fully explicit field-law formulation.
-
-## Appendix A. Vacuum Storage, Propagation Units, and Meters per Storage Capacity
-
-This framework treats the vacuum storage field as a distributed substrate support characterized by the familiar constants \(\varepsilon_0\) and \(\mu_0\), with units \(F/m\) and \(H/m\). Their product sets the propagation scale,
-
-\[
-c=\frac{1}{\sqrt{\varepsilon_0\mu_0}},
-\]
-
-so that \(\varepsilon_0\mu_0\) carries dimensions of time-squared per length-squared. In this sense, the propagation speed is not an additional postulate but the wave speed supported by the storage structure itself.
-
-The important geometric point for the displacement framework is that the storage capacity represented by \(F\!\cdot\!H\) is attached to the coordinate description. When matter displaces the transport structure, a unit cell of the transport-supporting medium spans more or less coordinate extent depending on direction, but the local physical meter realized by rods and clocks co-expands or co-compresses with that same displacement. The result is that the amount of storage structure encountered per physical meter remains matched to the realized meter itself. Light therefore continues to propagate at \(C\) in the locally realized geometry even in a displaced region; what changes is not the local physical speed of light but the realized clock rate and the accumulated displacement along a path.
-
-This point is used repeatedly in the appendices that follow. It underlies the interpretation of Shapiro delay as a pure clock-rate effect, supports the cumulative-displacement reading of weak-field timing structure, and explains why geometric displacement and timing effects can be separated without introducing a local anisotropy in the speed of light.
+For a specified stationary propagation cycle, \(T=\oint ds/c_{\rm path}\). Converting its path and effective propagation coefficients must not count the same stretch twice. Stable repeated cycles, kinetic escape gamma, and total arrival-time differences are not interchangeable. The exterior lapse is explicitly postulated in §2.3, rather than inferred from a kinetic identity alone. Stable material support in a strong field remains a separate response calculation.
 
 ## Appendix B. Nonlinear Displacement and the Strong-Field Regime
 
-The wave equation for \(\Sigma\) developed in Section 4.2 is linear: the propagation speed is \(c\), the source term is the LC energy density, and the superposition of solutions from multiple sources is additive. This linearity is valid in the weak field, where \(\Sigma\ll 1\) and the displacement is a small perturbation of the transport structure. The present appendix identifies where that linearity breaks down and what replaces it.
-
-### B.1 Displacement-dependent stiffness
-
-The linear wave equation treats the transport medium as having fixed properties: the \(F\!\cdot\!H\) storage per coordinate meter is constant, and the propagation speed \(c\) is determined by that constant storage density. But when the transport structure is displaced, the medium is already deformed. A region with existing displacement \(\Sigma>0\) has its transport cells stretched tangentially and compressed radially. Further displacement into that already-deformed medium encounters less resistance than the same displacement would in the undisplaced background.
-
-The physical mechanism is the same one that produces the golden-ratio crossing noted earlier: the displacement function \(D(r)\) describes a medium whose local properties depend on the current deformation state. In the language of the wave equation, the coefficient multiplying \(\nabla^2\Sigma\) is not the bare \(c^2\) but an effective speed that depends on the local value of \(\Sigma\). The displacement equation is therefore inherently nonlinear: the medium through which displacement propagates is itself modified by the displacement.
-
-In the weak field this correction is negligible. At the surface of the Sun, \(\Sigma\sim 10^{-6}\), and the nonlinear correction to the propagation coefficient is of order \(\Sigma^2\sim 10^{-12}\). At any currently accessible precision level, the linear wave equation suffices. The nonlinearity becomes significant only when \(\Sigma\) approaches order unity — the strong-field regime.
-
-### B.2 Bulk composition and nonlinear ordering
-
-Section 3.2 introduced the coarse-grained source picture used by the weak-field displacement map. For ordinary macroscopic matter, microscopic sources first compose into an effective bulk source; exterior field calculations use that aggregate density or total mass. The exact ordering of individual nuclei is therefore irrelevant for the weak-field applications of the present paper.
-
-The nonlinear ordering rule matters when support regions overlap, when the interior source structure is being modeled, or when comparable sources create competing local minima. In that regime, each new contribution acts on a medium already conditioned by surrounding displacement. The useful operational rule is nearest-last composition: defer the closest or locally dominant contribution so it acts after the background contribution has been established. The remaining outer contributions do not require a globally sorted list; they only need to proceed inward toward the local minimum.
-
-The consequence is that nearby sources can alter each other's effective displacement. A source embedded in an already-stretched medium can produce a slightly different displacement than the same source in an undisplaced background. Such corrections are of order \(\Sigma^2\) in weak field and are negligible for the observational tests treated here, but they are part of the nonlinear strong-field and support-overlap problem.
-
-### B.3 Strong-field structure
-
-The following discussion describes the qualitative behavior implied by the displacement geometry when extrapolated beyond the weak-field regime. Because the nonlinear wave equation (Section B.4) has not yet been derived from the LC substrate, the strong-field picture described here is framework-motivated extrapolation rather than a derived result. Its purpose is to identify what the displacement picture implies at the structural level, not to claim quantitative predictions in the strong-field domain.
-
-At radii approaching the displacement scale \(d\) — equivalently, where \(\Sigma\) approaches order unity — the linear theory breaks down in a specific way. The cumulative displacement \(\Sigma(r)=d^2/(2r)\) grows without bound as \(r\to 0\), but the physical displacement factor \(D(r)\) is finite everywhere: it approaches \(d/r\) at small radii, becoming large but never infinite (or, with the regularization parameter \(\epsilon\), saturating at \(d/\epsilon\)).
-
-The strong-field picture in this framework is not a singularity but an extreme deformation. The transport structure is stretched to its limits: tangentially expanded by large \(D\), radially compressed by \(1/D\), with the net volume per cell growing as \(D\). The time dilation factor \(1/(1+\Sigma)\) approaches zero — physical processes become arbitrarily slow relative to coordinate time — but never reaches it. There is no point at which the transport structure is torn; the LC network remains continuous, though severely deformed.
-
-In this picture, a black hole is the regime where \(\Sigma\gg 1\) over a macroscopic region. The mass resides on or near the displacement surface — the locus where \(D\) is large enough to produce extreme time dilation — rather than at a central point. The interior of the displacement region is nearly frozen in coordinate time but physically connected. The storage structure remains continuous and finite throughout — there is no singularity of the kind that produces divergences when the gravitational field is quantized. Effective horizons may still exist for particular classes of events depending on timescale and context, but the underlying transport structure is not torn or terminated at any finite radius.
-
-### B.4 The nonlinear wave equation
-
-The preceding discussion suggests that the full displacement dynamics takes the form of a wave equation with displacement-dependent coefficients:
+For the proposed reference-coordinate exterior ansatz \(\nabla\cdot[\alpha\nabla\Sigma]=0\), the static family requires
 
 \[
-\frac{1}{c^2_{\mathrm{eff}}(\Sigma)}\,\partial_t^2\Sigma-\nabla\!\cdot\!\bigl[\alpha(\Sigma)\,\nabla\Sigma\bigr]=\frac{4\pi G}{c^2}\,\rho_{\mathrm{LC}},
+r^2\alpha\Sigma_r=-d^2/(2\ell_0),\qquad \alpha=D(D+1)/2.
 \]
 
-where \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) encode the displacement-dependent stiffness of the medium. In the weak field, \(c_{\mathrm{eff}}\to c\) and \(\alpha\to 1\), recovering the linear wave equation of Section 4.2. In the strong field, the coefficients deviate, and the equation admits solutions that differ qualitatively from the linear case.
+A universal function of depth alone cannot produce that family: at fixed \(\delta=\ell_0\Sigma\), \(D=(d^2+\delta^2)/(d^2-\delta^2)\) still depends on source scale. Additional local deformation information or a different operator/source description is needed. This constraint is not a derived dynamical stiffness law. In a frozen-coefficient equation \(c_{\rm eff}^{-2}\Sigma_{tt}-\nabla\cdot(\alpha\nabla\Sigma)=0\), the characteristic speed is \(c_{\rm eff}\sqrt\alpha\); neither the time coefficient nor wave energy is fixed by the static profile alone.
 
-The functional forms of \(c_{\mathrm{eff}}(\Sigma)\) and \(\alpha(\Sigma)\) are not yet derived from the LC substrate. Determining them is part of the remaining derivational frontier identified in Section 7: the full field law must emerge from the medium properties rather than be assumed. What can be said is that the nonlinear structure is required on physical grounds — a medium that has already been deformed responds differently to further deformation — and that its weak-field limit must reproduce the linear wave equation that successfully recovers all current observational tests.
+The strong-deformation condition \(r\sim d\) is not generally \(\Sigma\sim1\). The ratio \(d/\ell_0\) matters. A mapped material boundary must also be specified: reference \(r=d\) maps to \(\rho=\sqrt2d\), whereas \(\rho=d\) is the singular exterior limit \(r=0\). No continuation through an extended planet's interior or material equilibrium at that limit is supplied.
 
-### B.5 Source-sphere enlargement and binding energy
+## Appendix C. Conditions for a Metric and Higher-Order Expansion
 
-The preceding subsections describe how the displacement field responds nonlinearly to the medium state. A further effect acts on the displacement source itself. Each localized source is represented by a displacement sphere of volume \(\frac{4}{3}\pi d^3\) inserted into the transport structure. When that insertion occurs in a region already displaced by another source, the transport into which the sphere is inserted is already expanded. The source sphere — the physical volume of displaced transport structure — is therefore slightly larger in coordinate terms than it would be in the undisplaced background. The displacement source geometry itself responds to the environment.
+For the map, \(D^2=1+d^2/r^2\) and
+\(\Sigma=(\sqrt{r^2+d^2}-r)/\ell_0\) remain distinct. The adopted exterior
+metric uses \(S=GM/(c^2R)\) and proper ruler \(\sqrt{1+2S}\,dR\).
+Its isotropic expansion gives \(\beta_{\rm PPN}=\gamma_{\rm PPN}=1\).
+It differs from isotropic Schwarzschild beyond first post-Newtonian order:
+\(f\) has cubic coefficient \(-4/3\), rather than \(-3/2\), and the spatial
+coefficient omits the Schwarzschild \(3S^2/2\) term. These are properties of
+the specified exact continuation, not a choice already forced by the weak
+limit. Likewise, contracted-rod counting \(B=e^{2S}\) shares the first-order
+coefficient but is a different exact continuation.
 
-This effect is significant only when two displacement sources are close enough that the ambient \(D\) at the location of one source, due to the other, is appreciably above unity. At inter-atomic separations (angstroms), the displacement per nucleus is femtometer-scale and the effect is negligible (\(d^2/r^2\sim 10^{-10}\)). At sub-nuclear separations — where the internal constituents of a nucleus interact — the displacement scales and the separations are both femtometer-scale, and the source-sphere enlargement can be significant.
+## Appendix D. Source Structure and Mass Calibration
 
-A distinct but related effect occurs when two displacement spheres are close enough to merge. Two isolated sources each displace volume \(\frac{4}{3}\pi d^3\); the total is twice that. When the sources merge or overlap, the combined displacement volume is less than the sum of the two individual volumes — some displaced space is shared rather than independently sourced. Since the gravitational mass of a system is set by its total displacement through the normalized relation \(d^2=\ell_M\ell_0\), a reduction in total displacement volume corresponds to a reduction in mass. The mass deficit is the binding energy.
+For a common bulk normalization, \(d_{\rm eff}^2=2GM\ell_0/c^2\); additive weak source masses then give additive effective squared scales. This bookkeeping does not prove that independent primitive displacements physically merge by a surface rule. A merged-volume estimate \(d\propto N^{1/3}\), a primitive support \(r_0\), and a fitted bulk exterior scale describe different constructions.
 
-The source-sphere enlargement and the volume merging act in opposite directions. Enlargement increases each source's effective displacement in the other's environment; merging reduces the total displacement volume when the sources combine. Binding energy — the net mass deficit of a composite system — is the result of the volume reduction from merging exceeding the enlargement from mutual displacement. At the sub-nuclear scale, where nuclear binding energies are of order \(0.9\%\) of the rest mass, both effects are significant and their net balance determines the observed binding curve.
+The excitation paper's overlap law concerns near-contact/merger structure. With other support coefficients fixed, its equal-input minimized energy is proportional to \(2^{1/(3-u)}\) and is monotonic in \(u=s/(2R_b)\), where \(s\) is the separation of two equal support centres and \(R_b\) their support radius, with \(0\le u\le1\). It alone supplies no finite-separation stable bond, but that does not obstruct the external separated-body calculation. Binding energies, compact merger mass deficits and source-scale dressing require the remaining configuration-dependent interaction terms.
 
-## Appendix C. Schwarzschild Comparison at Second Post-Newtonian Order
+## Appendix E. Rotating-Source Metric and Surface Claims
 
-The effective coordinate geometry of Section 4.3 matches the Schwarzschild metric at first post-Newtonian (1PN) order. At second order the two diverge, producing specific predictions that differ from general relativity. This appendix records those differences and estimates their physical magnitude.
+The mass-current integral in §5 supplies a candidate weak rotating-source field. To obtain gyroscope drift, a metric representation or a rotating equilibrium surface, the model must specify how that field couples to orientation and translation, how time is transported, and how the source maintains its support under rotation. A stationary material boundary requires its own force and support balance. Neither that boundary nor a metric cross term follows from the angular form of the current field alone.
 
-### C.1 Metric expansions
-
-The framework's exact metric components are
-
-\[
-f=\frac{1}{(1+\Sigma)^2},\qquad g=D^2=1+2\Sigma,\qquad h=1,
-\]
-
-with \(\sigma=r_s/r=2\Sigma\) as the weak-field expansion parameter. The Schwarzschild components in the same coordinates are
-
-\[
-f_S=1-\sigma,\qquad g_S=\frac{1}{1-\sigma},\qquad h_S=1.
-\]
-
-Expanding to \(O(\sigma^2)\):
-
-\[
-\begin{aligned}
-f&=1-\sigma+\tfrac{3}{4}\sigma^2+\cdots,&\qquad f_S&=1-\sigma,\\[4pt]
-g&=1+\sigma,&\qquad g_S&=1+\sigma+\sigma^2+\cdots,\\[4pt]
-fg&=1-\tfrac{1}{4}\sigma^2+\cdots,&\qquad f_S g_S&=1.
-\end{aligned}
-\]
-
-The two metrics agree at \(O(\sigma)\) in every component. At \(O(\sigma^2)\) they differ in three ways.
-
-First, the time component \(f\) acquires a \(\frac{3}{4}\sigma^2\) correction in the framework because \(1/(1+\Sigma)^2\) is smooth through \(\Sigma=1\), whereas Schwarzschild is exactly linear in \(\sigma\) with a zero at \(\sigma=1\). The framework's time dilation approaches zero asymptotically rather than reaching it at a finite radius.
-
-Second, the radial component \(g\) is exactly linear in the framework (\(D^2=1+\sigma\)), while Schwarzschild's \(1/(1-\sigma)\) carries all powers of \(\sigma\). The framework's displacement geometry truncates at first order in the radial deformation.
-
-Third, the product \(fg\) departs from unity at \(O(\sigma^2)\) in the framework, while Schwarzschild maintains \(f_Sg_S=1\) exactly. This is a structural difference: in Schwarzschild, the radial light-speed coordinate factor \(\sqrt{f/g}\) is exactly \(1-\sigma\); in the framework it is \(1-\sigma+\frac{7}{8}\sigma^2+\cdots\).
-
-### C.2 Orbit equation at 2PN
-
-The orbit equation for a test mass on the framework's effective geometry, expanded to \(O(r_s^2)\), takes the form
-
-\[
-\frac{d^2u}{d\phi^2}+u=\frac{GM}{L^2}+\frac{3GM}{c^2}\,u^2+r_s^2\!\left(\frac{E^2}{4L^2c^2}\,u-2u^3-\frac{u}{L^2}\right)+O(r_s^3),
-\]
-
-where \(u=1/r\), \(L\) is the conserved angular momentum per unit mass, and \(E\) is the conserved energy per unit mass. The Schwarzschild orbit equation has no \(O(r_s^2)\) correction in this form (the 2PN Schwarzschild corrections enter through the energy-angular momentum relation rather than as additional terms in the orbit equation itself).
-
-The leading new term is \(-2r_s^2u^3\). For a nearly circular orbit at radius \(r_0\) with \(u_0=1/r_0\), this correction is of order \(r_s^2/r_0^3\) relative to the Newtonian term \(u_0\). Its ratio to the 1PN correction is \(\sigma_0=r_s/r_0\) — the same small parameter that controls the post-Newtonian expansion.
-
-### C.3 Physical magnitudes
-
-For Mercury (\(\sigma\approx 5\times 10^{-8}\)):
-
-\[
-\frac{\text{2PN correction}}{\text{1PN precession}}\sim\sigma\approx 5\times 10^{-8}.
-\]
-
-The 2PN contribution to Mercury's perihelion advance is approximately \(0.002\) milliarcsec per century — roughly ten orders of magnitude below current measurement precision.
-
-For the Hulse-Taylor binary (\(\sigma\approx 2\times 10^{-6}\)):
-
-\[
-\frac{\text{2PN correction}}{\text{1PN precession}}\sim 2\times 10^{-6}.
-\]
-
-With a 1PN precession of order \(4\) degrees per year, the 2PN correction is approximately \(0.03\) arcsec per year. Current timing precision for the Hulse-Taylor system constrains the periastron advance to within \(0.04\%\) of the GR prediction, which corresponds to roughly \(5\) arcsec per year — well above the predicted \(0.03\) arcsec/yr difference. The 2PN divergence is therefore marginally below current sensitivity for compact binaries but could become accessible with improved pulsar timing.
-
-### C.4 Light propagation at second order
-
-The coordinate radial speed of light is \(c\sqrt{f/g}\). In the framework this expands as
-
-\[
-c\sqrt{f/g}=c\!\left(1-\sigma+\tfrac{7}{8}\sigma^2+\cdots\right),
-\]
-
-while in Schwarzschild the exact result is \(c(1-\sigma)\). The second-order correction \(\frac{7}{8}\sigma^2\) modifies the integrated time delay and deflection angle at the same post-Newtonian order. For Shapiro delay, this would produce a correction to the logarithmic time-delay formula proportional to \(\sigma^2\ln(4L_1L_2/b^2)\). For light deflection, the correction modifies the bending angle at \(O(GM/(c^2b))^2\).
-
-The physical magnitude for solar-system measurements is again small: \(\sigma^2_\odot\sim 10^{-12}\) at the solar limb. Precision ranging experiments or high-accuracy astrometric missions operating at the micro-arcsecond level could in principle access this regime, but it remains beyond current observational reach.
-
-### C.5 Status
-
-The 2PN divergence between the displacement framework and general relativity is a genuine prediction, not a tunable parameter. It follows directly from the exact forms of the metric components, which are themselves determined by the framework's internal logic: \(f=1/(1+\Sigma)^2\) from the clock-rate relation, \(g=D^2\) from the radial deformation, and \(h=1\) from the coordinate anchoring of \(F\!\cdot\!H\). The prediction is that the Schwarzschild horizon is replaced by asymptotic time dilation, and the radial deformation is exactly linear in \(\sigma\). Both features produce specific second-order corrections that are currently below observational thresholds but are in principle testable.
-
-## Appendix D. Mass Composition and the Displacement Normalization Rule
-
-The geometric shell parameter \(d\) composes through \(d^2\), while the source gravitational length is \(\ell_M=2Gm/c^2\). With the normalization length \(\ell_0\) made explicit, the weak-field matching relation is
-
-\[
-d^2=\ell_M\ell_0=\frac{2Gm}{c^2}\,\ell_0.
-\]
-
-This relation gives the displacement composition rule used in the weak-overlap regime.
-
-### D.1 Weak-overlap additivity
-
-The exposed displacement support of a displacement sphere of radius \(d\) is
-
-\[
-S=4\pi d^2=4\pi\ell_M\ell_0=\frac{8\pi Gm\ell_0}{c^2}.
-\]
-
-Exposed displacement support is exactly linear in mass because \(d^2\propto m\) once \(\ell_0\) is fixed. The displacement sphere's exposed support is therefore proportional to the mass that sources it.
-
-An immediate consequence is that exposed displacement supports add linearly. For \(N\) displacement spheres with individual exposed displacement supports \(S_n=4\pi d_n^2\), the total exposed displacement support is \(N\,S_n\). The combined displacement parameter is \(d_{\mathrm{combined}}^2=N\,d_n^2\), and the combined mass is
-
-\[
-m_{\mathrm{combined}}=\frac{d_{\mathrm{combined}}^2\,c^2}{2G\ell_0}=N\,m_n.
-\]
-
-Masses add exactly when exposed displacement supports add. This is why Newtonian gravity is linear in mass in the weak-overlap regime: the exterior displacement coefficient tracks the sum of exposed support.
-
-### D.2 Binding energy as shared displacement support
-
-When two displacement spheres overlap, the contact region reduces the total exposed exposed displacement support. The total exposed displacement support of the combined system is less than the sum of the individual exposed displacement supports by the area of the shared patch. Since mass is proportional to exposed displacement support, the mass deficit is proportional to the shared area:
-
-\[
-\frac{\Delta m}{m}=\frac{\Delta S}{S}.
-\]
-
-The fractional mass deficit equals the fractional exposed displacement support deficit, one to one. No geometric correction factor is needed.
-
-For iron, the nuclear binding energy is approximately \(8.8\) MeV per nucleon out of \(939\) MeV rest mass, a fractional deficit of about \(0.94\%\). The implied exposed displacement support sharing is therefore also about \(0.94\%\) per nucleon. The corresponding contact patch radius is approximately \(20\%\) of the nucleon displacement radius — geometrically consistent with close-packed displacement spheres barely overlapping at their boundaries.
-
-### D.3 Volume addition and its consequences
-
-If displacement volumes were the additive quantity rather than exposed displacement supports, the composition rule would be \(d_{\mathrm{combined}}^3=N\,d_n^3\), giving \(d_{\mathrm{combined}}=N^{1/3}\,d_n\) and \(m_{\mathrm{combined}}=N^{2/3}\,m_n\). This produces massive overbinding — a \(74\%\) mass deficit for \(56\) nucleons, compared to the observed \(0.94\%\). Volume addition is therefore not the composition rule for displacement in the weak-overlap regime.
-
-However, volume becomes relevant in the strong-overlap regime. When two displacement spheres fully merge, the combined volume is the sum. The transition from surface-area-additive (weak overlap, small binding) to volume-additive (full merger, large binding) spans the range between nuclear physics and black hole coalescence.
-
-### D.4 Connection to black hole mergers
-
-The working notes record that LIGO merger remnant masses are best fit by \(M_A^n+M_B^n=M_C^n\) with \(n\approx 1.1\). In the displacement picture, the exponent \(n\) characterizes the composition rule:
-
-\[
-\begin{aligned}
-n=1&:\quad\text{exposed displacement supports add (exact mass additivity, no deficit)},\\
-n=\tfrac{2}{3}&:\quad\text{volumes add (maximum binding, }20.6\%\text{ deficit for equal masses)}.
-\end{aligned}
-\]
-
-The LIGO value \(n\approx 1.1\) is close to surface-area addition with a small correction. For equal-mass mergers, it gives a mass deficit of approximately \(6\%\) — the energy radiated as gravitational waves during the merger. The coalescence is mostly surface-area-additive, with a volume-interaction correction at the merger interface where the displacement spheres interpenetrate.
-
-The exponent \(n\) therefore encodes the degree of displacement-sphere interpenetration during the merger. A value near \(1\) means the spheres join with minimal volume sharing; a value near \(2/3\) would mean complete volumetric merger. The observed \(n\approx 1.1\) indicates that even in the extreme strong-field regime of black hole coalescence, the composition is predominantly surface-area-like.
-
-## Appendix E. Rotating-Source Effective Metric
-
-The static effective geometry of Section 4.3 describes a non-rotating source. This appendix extends that geometry to slowly rotating sources by developing the vector sector of the retarded displacement integral.
-
-### E.1 The retarded vector integral
-
-Just as the scalar cumulative displacement \(\Sigma\) is sourced by the retarded mass density, the vector displacement is sourced by the retarded mass current. By direct analogy with Section 4.2, the vector component of the displacement field is
-
-\[
-A_i(\mathbf{x},t)=\frac{G}{c^3}\int\frac{\rho_{\mathrm{LC}}(\mathbf{x}',t_r)\,v_i(\mathbf{x}',t_r)}{|\mathbf{x}-\mathbf{x}'|}\,d^3x',
-\]
-
-where \(v_i\) is the velocity of the source element. This integral has exactly the structure of the electromagnetic vector potential, with \(G/c^3\) replacing \(1/(4\pi\varepsilon_0 c)\) and mass current replacing charge current.
-
-For a slowly rotating source with angular momentum \(J=I\omega\), the leading multipole of this integral is the magnetic-dipole-type term:
-
-\[
-A_\phi\sim\frac{GJ\sin^2\!\theta}{c^3\,r}.
-\]
-
-This is the gravitomagnetic vector potential. Its curl gives the gravitomagnetic field, which is the transport twist developed in Sections 5 and 6.
-
-### E.2 The slow-rotation effective metric
-
-The vector displacement enters the effective coordinate metric as a cross term between the time coordinate and the azimuthal angle. Combined with the scalar sector from Section 4.3, the full slow-rotation effective metric is
-
-\[
-ds^2=-\frac{c^2}{(1+\Sigma)^2}\,dt^2+D^2\,dr^2+r^2\bigl(d\theta^2+\sin^2\!\theta\,d\phi^2\bigr)+\frac{4GJ\sin^2\!\theta}{c^2\,r}\,dt\,d\phi.
-\]
-
-The scalar sector (\(f\), \(g\), \(h=1\)) is unchanged by the rotation at leading order. The rotation enters only through the cross term \(g_{t\phi}\), which is linear in \(J\), odd under reversal of spin, and vanishes on the rotation axis (\(\theta=0,\pi\)).
-
-This is the same structure as the slow-rotation limit of the Kerr metric in Boyer-Lindquist coordinates. At leading order in both \(\Sigma\) and \(J\), the two metrics agree term by term. The scalar sector matches at 1PN (as established in Section 4.4 and Appendix C), and the vector sector matches at the leading gravitomagnetic order.
-
-### E.3 Frame-drag angular velocity and gyroscope precession
-
-The frame-dragging angular velocity — the rate at which the local transport structure is twisted by the source rotation — is
-
-\[
-\omega_{\mathrm{drag}}=\frac{g_{t\phi}}{g_{\phi\phi}}=\frac{4GJ}{c^2\,r^3}.
-\]
-
-This is independent of latitude at leading order and falls as \(1/r^3\), the characteristic dipole scaling of the gravitomagnetic field.
-
-For a gyroscope on a polar orbit, the gyroscope's spin axis is carried by this twisted transport [7]. The orbit-averaged precession rate depends on the angular projection of the twist onto the orbital geometry. For the Earth, using the thin-shell angular momentum \(J_{\mathrm{shell}}=\frac{2}{3}MR^2\omega\) and the GPB orbital radius, the thin-shell estimate is approximately \(82\) mas/yr. Applying the Earth moment-of-inertia correction \(I_\oplus/(MR^2)/(2/3)\approx 0.496\) yields approximately \(41\) mas/yr, close to the observed \(39.2\) mas/yr. The \(\sim 4\%\) residual may reflect either the specific polar-orbit angular projection or a genuine higher-order difference between the framework and general relativity in the vector sector.
-
-### E.4 Rapidly rotating sources and the equilibrium surface
-
-The metric of Section E.2 is the displacement framework's analog of the slow-rotation Kerr metric. The structural correspondence is exact at leading order in both the scalar and vector sectors. The scalar sector diverges from Schwarzschild at second post-Newtonian order (Appendix C); whether an analogous second-order divergence exists in the vector sector remains to be computed.
-
-Beyond the slow-rotation limit, the displacement framework admits a nonperturbative treatment of the rotating equilibrium. A self-gravitating spinning body in displacement equilibrium must satisfy equal realized time dilation at every latitude on its surface. Gravitational time dilation (from the cumulative displacement \(\Sigma\)) and velocity time dilation (from the surface rotation speed) both reduce the local clock rate, and the equilibrium shape is the surface on which their combined effect is uniform:
-
-\[
-\frac{c^2}{(1+\Sigma(r(\phi)))^2}-r(\phi)^2\omega^2\cos^2\!\phi=S_0^2,
-\]
-
-where \(S_0\) is the uniform residual spin capacity and \(\phi\) is latitude. At the pole (\(\phi=\pi/2\)), the rotation velocity vanishes and the condition reduces to \(S_0=c/(1+\Sigma(r_p))\), fixing \(S_0\) in terms of the polar radius \(r_p\). At the equator (\(\phi=0\)), the rotation velocity is maximal, and the equilibrium radius is correspondingly larger. The surface is oblate, with the oblateness determined by the spin.
-
-In nondimensionalized form, setting \(\rho=2r/d^2\) (radius in units of the displacement scale) and \(\alpha=d^2\omega/(2c)\) (dimensionless spin parameter), the equilibrium condition becomes
-
-\[
-\left(\frac{1}{\rho_p}-\frac{1}{\rho}\right)\!\left(2-\frac{1}{\rho}-\frac{1}{\rho_p}\right)=\alpha^2\rho^2\cos^2\!\phi.
-\]
-
-This is exact and implicit in \(\rho(\phi)\). For each latitude, it determines the equilibrium surface radius as a function of the two free parameters \(\rho_p\) (polar radius in displacement-scale units) and \(\alpha\) (dimensionless spin). In the slow-rotation limit \(\alpha\ll 1\), it linearizes to a small oblate perturbation of the spherical equilibrium, recovering the slow-rotation metric of Section E.2. For rapid rotation, the surface becomes highly oblate, with the equatorial radius potentially many times the polar radius.
-
-The maximum spin occurs when the equatorial surface velocity reaches \(c\), giving \(\rho_e=1/\alpha\). At this limit the equatorial matter has no residual spin capacity (\(S=0\)), and no internal LC oscillation is possible at the equator. The polar matter, by contrast, retains full isotropic spin capacity reduced only by the gravitational depth. This asymmetry between directional (velocity) and isotropic (gravitational) time dilation at different latitudes is a distinctive feature of the displacement picture that has no direct analog in the Kerr metric, where the equilibrium surface geometry is algebraically determined by the Kerr parameters rather than by a physical balance of time-dilation mechanisms.
-
-The astrophysical consequences of the rapidly rotating equilibrium — including polar mass accumulation, jet formation, and the spin-dependent equilibrium shape — are developed separately. For the present paper, the equilibrium surface equation serves as the natural strong-field, rapidly-rotating extension of the slow-rotation effective metric, completing the framework's analog of the Kerr solution.
 
 ## References
 
@@ -731,3 +499,241 @@ The astrophysical consequences of the rapidly rotating equilibrium — including
 
 [6] C. M. Will, “The Confrontation between General Relativity and Experiment,” *Living Reviews in Relativity* **17**, 4 (2014). https://doi.org/10.12942/lrr-2014-4
 [7] James Buckeyne, *The Homogeneous Propagation Framework: Weak-Field Observational Tests*. Zenodo. (Companion paper.)
+
+
+## Appendix F. Changelog
+
+This appendix records revisions from the start of the static-response update. It is not a reconstruction of earlier publication history. Completed edits and calculations are distinguished from results awaiting re-evaluation.
+Historical entries retain their original notation; the current notation is defined in §2.1.
+
+### F.1 — 7 October 2026: Static-response checkpoint
+
+**Changes to this paper.** Added the revision notice near the abstract and links to the [static-response checkpoint](WIP/proper_velocity_gravity/static-response-checkpoint.md) and [Static Displacement: Weak and Strong Fields](WIP/proper_velocity_gravity/static-displacement-weak-and-strong-fields.md). The notice establishes static displacement as the starting point, with retardation as its dynamical extension. It identifies the existing metric-dependent results as the pre-revision baseline rather than revised predictions. Added this changelog.
+
+**Completed in the accompanying derivation.** Specified the compressed radial ruler \(d\ell=dr/D\), accumulated depth \(\delta=\sqrt{r^2+d^2}-r\), and selected body-clock response \(A_b=(c^2/\ell_0)(D-1)\). Made the radial evolution equations and their invariant explicit:
+
+\[
+\frac{dr}{d\tau}=DU,\qquad
+\frac{dU}{d\tau}=-A_b,\qquad
+\frac{U^2}{2}-\frac{c^2\delta}{\ell_0}=\text{constant}.
+\]
+
+Distinguished proper escape velocity from bounded coordinate escape velocity, with the transport distance and time definitions stated explicitly. Distinguished a reference-coordinate surface from a mapped surface and a test-body stand-off distance. These results consolidate and extend the new README material; they are not all first introduced by this checkpoint.
+
+**Validation.** The accompanying [verification script](WIP/proper_velocity_gravity/verify_static_response.py) passed checks of map, depth and acceleration derivatives, the improper escape integral, marginal and non-marginal radial trajectories, and a turning trajectory. The largest dimensionless invariant residual in that run was approximately \(1.07\times10^{-14}\). These checks establish consistency of the stipulated equations, not empirical validation of the response law.
+
+**Pending.** Reconcile the effective metric's radial-ruler interpretation with the selected transport convention. The identification \(D^2=1+2\Sigma\) in §4.3 and Appendix C does not follow from the fixed-displacement map and accumulated depth. Re-derive dependent orbit, optical, higher-order and rotating-source results before replacing their numerical predictions. The leading Newtonian exterior limit is retained by the selected radial response; this alone does not establish the other observational claims. No such recalculations have been completed in this revision.
+
+### F.2 — 7 October 2026: Metric-compatibility checkpoint
+
+**Completed.** Added the [metric/transport comparison](WIP/proper_velocity_gravity/metric-response-checkpoint.md) and a corresponding notice near the abstract. Distinguished the forward spatial map from inverse-ruler counting and from an effective spacetime metric. Derived the radial geodesic response, under the same distance and proper-time identification,
+
+\[
+\frac{dU}{d\tau}=-c^2\gamma^2\frac{d\ln N}{d\ell}.
+\]
+
+A position-only lapse cannot make this equal the selected \(-A_b(\ell)\) for all launch velocities. The escape-matched candidate \(N=(1+2\Sigma)^{-1/2}\) gives \(-A_b\gamma^2/(1+2\Sigma)\), agreeing with the selected response on the marginal escape curve but not generally. This is a restriction on that metric-geodesic representation, not a replacement of the radial response or proof against other transport descriptions.
+
+**Validation.** Extended the checkpoint verification script to check lapse gradients, marginal-only matching and the change of the candidate metric energy along a non-marginal trajectory of the selected law. All checks, including those from F.1, passed.
+
+**Pending.** Specify the nonradial transport response and the adapters for comparing separated events before recalculating orbit and optical observables. No lapse was adopted as a material-clock law, and no revised perihelion, lensing, delay or rotating-source numerical prediction was made. The mismatch can affect post-Newtonian corrections; preservation of the leading Newtonian limit is not sufficient to retain the old higher-order results.
+
+### F.3 — 7 October 2026: Nonradial baseline and orbit test
+
+**Completed.** Derived an explicitly conditional central-vector extension in the forward mapped spatial coordinates, documented in [checkpoint 3](WIP/proper_velocity_gravity/nonradial-response-checkpoint.md). Obtained its planar evolution equations, conserved body-clock invariant and angular momentum, circular velocities, radial stability condition, and Binet equation. Its near-circular advance is \(2\pi([3-D(D+1)]^{-1/2}-1)\), with weak leading term \(3\pi d^2/(2\rho^2)\). This is not the previously asserted metric-derived coefficient.
+
+**Validation.** A [small-eccentricity orbit integration](WIP/proper_velocity_gravity/verify_nonradial_response.py) at reference radius \(r/d=10\) recovered the predicted apsidal angle, approximately 6.3308060853 radians per radial period. Maximum dimensionless energy and angular-momentum residuals were approximately \(8.81\times10^{-16}\) and \(3.95\times10^{-14}\), respectively.
+
+**Pending.** Derive the HPF direction-transport contribution and distinguish basis rotation from trajectory steering. The tested baseline assumes ordinary Cartesian vector identification in the mapped space; it is not asserted to include all noncollinear HPF physics. No revised Mercury or optical prediction is claimed, and the old orbit recovery has not been confirmed.
+
+### F.4 — 7 October 2026: External-field direction transport
+
+**Completed.** [Checkpoint 4](WIP/proper_velocity_gravity/direction-transport-checkpoint.md) extracts the infinitesimal external-field remainder from the noncollinear-composition companion paper:
+
+\[
+d\boldsymbol W=\frac{\mathbf U\times d\mathbf U}{c^2(\gamma+1)}.
+\]
+
+The circular limit gives \(2\pi(\gamma-1)\). Consistently transporting position and velocity components in a basis rotating with this remainder leaves the reconstructed baseline orbit unchanged. The companion paper's external-field spin/orientation discussion does not by itself specify an additional translational steering law; its orbital coefficient still relies on the metric result under revision.
+
+**Validation.** The [direction-transport checks](WIP/proper_velocity_gravity/verify_direction_transport.py) passed finite-integral convergence and fixed-versus-rotating-basis orbit tests. Maximum reconstructed state difference was approximately \(1.31\times10^{-12}\), with nonzero accumulated orientation of approximately 0.31109668 radians over the test interval.
+
+**Separate finding.** The main displacement branch and the shadow calculation in `AI/stfr_nbody_sigma.html` apply their angular-momentum correction with different radius factors. The dimensional discrepancy is documented in checkpoint 4; the simulation was not modified and its quoted orbit validation has not been re-established.
+
+**Pending.** Identify or derive the actual coupling from the transport remainder to trajectory steering, if such a coupling is intended, including sign and time convention. Do not add a spin/basis rotation to perihelion advance by default. Revised nonradial observables remain conditional; the radial escape results are unchanged.
+
+### F.5 — 7 October 2026: Steering-law and simulation-evidence audit
+
+**Completed.** [Checkpoint 5](WIP/proper_velocity_gravity/steering-law-audit.md) traces the inspected steering claims back to their equations and implementations. The weak-field paper's tangential retardation expression needs explicit acceleration-versus-force units and a lag-angle sign convention. The noncollinear orientation remainder does not uniquely specify a translational feedback operation. Diagnostic feedback examples show that different signs and impulse ordering preserve the radial law while producing different transverse responses; none was adopted as the framework law.
+
+**Validation.** A [test of the extracted shadow routine](WIP/proper_velocity_gravity/verify_shadow_comparison.cjs) confirms algebraically identical displacement and Schwarzschild accelerations on the tested states. The displayed precession statistic uses the shadow's angle history. Its agreement therefore does not independently establish the revised displacement orbit law or the full nine-body implementation. Simulation code was not modified.
+
+**Pending.** Specify or locate the actual translation-coupling update: which vector is rotated, in which frame, and at which point in impulse accumulation. The revised static radial response remains available independently of that nonradial decision.
+
+### F.6 — 7 October 2026: Author clarification and translational steering
+
+**Clarification.** The external-field remainder additionally rotates the resulting velocity direction after proper-velocity addition determines its magnitude. It acts on translation, not only on basis/spin orientation. This supplies the operation missing from F.5; the basis-only result in F.4 remains a distinct comparison.
+
+**Completed.** [Checkpoint 6](WIP/proper_velocity_gravity/trajectory-steering-checkpoint.md) implements acquired field impulse followed by direction rotation, with additional turning in the impulse's sense and the remainder evaluated from the pre-rotation increment. The continuous law is \(\dot{\mathbf U}=\mathbf a_{0\parallel}+\gamma\mathbf a_{0\perp}\). It preserves the radial response and body-clock energy invariant, while replacing conservation of \(\mathbf J\) by conservation of \(\mathbf J e^\gamma/(\gamma+1)\). The sign and update ordering are explicit implementation conventions.
+
+**Validation.** [Checks](WIP/proper_velocity_gravity/verify_trajectory_steering.py) passed magnitude preservation, convergence of the discrete update to the vector law, circular-speed consistency, and eccentric-trajectory invariant conservation. Maximum energy and generalized-angular invariant residuals were approximately \(1.41\times10^{-15}\) and \(1.62\times10^{-14}\).
+
+**Pending.** Recalculate eccentric-orbit precession and stability for the steered law. The unsteered checkpoint-3 formulas are not inherited, and no updated Mercury coefficient is claimed here.
+
+### F.7 — 7 October 2026: Steered eccentric orbits and stability
+
+**Completed.** [Checkpoint 7](WIP/proper_velocity_gravity/steered-orbit-results.md) derives the exact Binet equation using the generalized angular invariant, the circular stability condition, and the leading eccentric-orbit advance for checkpoint 6's explicit direction update. The advance is \(2\pi GM/(c^2p)+3\pi d^2/(2p^2)\), rather than the old \(6\pi GM/(c^2p)\).
+
+**Validation.** [Numerical checks](WIP/proper_velocity_gravity/verify_steered_orbits.py) passed eccentric-orbit convergence, the circular linearization and angular-step refinement. With the demo's constants and Earth-normalized response, the isolated Mercury-like orbit gives approximately 14.333372 arcseconds per century versus 42.992706 from the old coefficient. The comparison uses the leading Keplerian period; the per-orbit advance is approximately \(1.6734810\times10^{-7}\) radians. It is a conditional static-model calculation, not a full ephemeris prediction.
+
+**Pending.** Derive and evaluate any further source-motion/transport contribution rather than inserting a fitted precession correction. The stated magnitude-first steering operation leaves radial escape unchanged but does not yet reproduce the old orbital claim.
+
+### F.8 — 7 October 2026: Retardation and radiation dependencies
+
+**Completed.** [Checkpoint 8](WIP/proper_velocity_gravity/retardation-radiation-checkpoint.md) shows that the written retarded-source integral reduces to a static field for a stationary source; it does not add the missing fixed-source orbital advance merely because the test body moves. The exact finite-displacement depth has a nonzero exterior Laplacian in the old reference-coordinate operator, so the linear retarded integral is a weak-field closure rather than its exact strong-field continuation.
+
+**Radiation audit.** Under the weak-field paper's own scalar amplitude and flux assumptions, the general quadrupole power is \(G\langle(\operatorname{tr}\dddot Q)^2+2\dddot Q_{ij}\dddot Q_{ij}\rangle/(60c^5)\). The previous expression omits a contribution for varying trace. Local strain, accumulated scalar depth and detector polarization must be coupled explicitly; counting six tensor components does not derive a factor-six power enhancement. Added a re-evaluation notice at the start of the companion weak-field paper's radiation section, preserving its baseline derivation for comparison.
+
+**Validation.** [Checks](WIP/proper_velocity_gravity/verify_radiation_integral.py) passed spherical angular integration for trace-free, trace-only and mixed tensors, the STF power decomposition, and finite-difference verification of the static Poisson residual.
+
+**Pending.** Supply the dynamical transport/operator and wave-to-detector response before updating breathing amplitude, polarization or binary decay predictions. A source trace contribution is not by itself a measured breathing polarization. The radial escape result is unchanged; no missing precession term or radiative degree of freedom was fitted into the model.
+
+### F.9 — 7 October 2026: Transport constraint and detector response
+
+**Completed.** [Checkpoint 9](WIP/proper_velocity_gravity/transport-detector-checkpoint.md) derives the exact static radial-flux constraint for Appendix B.4: the required stiffness is alpha = D(D+1)/2 in its reference-coordinate source-free exterior. Equal accumulated depth at different source sizes requires different stiffness, excluding a universal depth-only coefficient for this entire static family under that ansatz. Added a local revision notice to B.4.
+
+**Detector implications.** A conditional scalar-gradient plane-wave coupling gives longitudinal relative acceleration. A conditional continuation of the static deformation tensor instead contains transverse breathing and longitudinal strain. Their amplitudes and material coupling cannot be identified without an evolution law. The checkpoint gives the arm projection and first-order optical travel-time bookkeeping, connecting the remaining work to the existing constitutive optical exploration.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_transport_constraint.py` passed exact-flux and finite-difference divergence checks across weak and strong deformation, equal-depth counterexamples, and detector arm projections.
+
+**Pending.** Derive the common time-dependent deformation/storage/matter coupling and its energy normalization. No unique revised breathing amplitude, inspiral rate or new clock factor is asserted. Static escape and the conditional steered-orbit results remain unchanged.
+
+### F.10 — 7 October 2026: Excitation and constitutive response connection
+
+**Completed.** [Checkpoint 10](WIP/proper_velocity_gravity/constitutive-response-checkpoint.md) connects the existing excitation support functional to the revised response audit. Sums of fractional transport/cycle/occupancy changes determine closure energy, while their difference determines support size. The slow-envelope potential supplies a compatibility condition with the calibrated weak acceleration; a closure-energy contribution already represented in that potential must not be counted twice. Added a localized compatibility notice to excitation dynamics section 3.3.
+
+**Wave readout.** Derived a conditional scalar-gradient pulse response and an explicit two-leg optical/oscillator readout for normal incidence on equal arms. Internal support size, free-body center motion and optical path response remain distinct. A common response can vanish in the differential readout without being absent in each arm. Static support stiffness is determined by the functional, but support inertia and damping are not.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_constitutive_response.py` passed support/energy expansions, an exact constant-energy varying-support example, finite-difference stiffness and two-leg optical integration.
+
+**Pending.** Specify displacement-induced transport/storage coefficients in a consistent energy/time convention and their dynamical material/optical response. The inspected equations leave these coefficients open; none was fitted or silently adopted. No revised breathing amplitude or binary decay rate is asserted.
+
+### F.11 — 7 October 2026: Constituent and ruler bridge audit
+
+**Completed.** [Checkpoint 11](WIP/proper_velocity_gravity/constituent-bridge-audit.md) locates the existing interval-transport bridge in README sections 7 and 15 and connects it to constituent motion. A response evolved in realized coordinates must not receive the same geometric transport terms a second time. Added interpretation clarifications to checkpoints 9 and 10: their diagnostic prescriptions are not established freely selectable mechanisms or independent deformation forces.
+
+**Remaining bridge narrowed.** The excitation support and overlap energies provide partial interaction information, but the inspected equations do not close configuration-dependent binding and evolution of constituent separations. With other coefficients fixed, the written equal-input overlap energy is monotonic and alone supplies no interior stable bond separation. This does not exclude stabilization by the remaining configuration-dependent terms. No arbitrary material coefficient was adopted.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_constituent_bridge.py` reproduces a diagnostic bound-pair trajectory in mapped and realized descriptions, with maximum state discrepancy 3.599e-10 and approximately 16-fold improvement on halving the step. A deliberately double-counted evolution differs by about 0.052 in the test's dimensionless units. The overlap-energy derivative check passed. These validate bookkeeping and algebra, not a microscopic binding model.
+
+**Pending.** Derive the total pair interaction/support response and its stable separation, if present, then evolve that response with the existing map and a consistent time convention. No new breathing amplitude or binary decay rate is asserted.
+
+### F.12 — 7 October 2026: Separated test displacement and finite external response
+
+**Completed.** [Checkpoint 12](WIP/proper_velocity_gravity/separated-test-displacement.md) calculates a distinct small body's centre acceleration and the external response across its radial span, without support overlap or an inter-body bond. It distinguishes source displacement, test displacement, realized test half-span, material boundary and surface-to-surface gap. Updated checkpoint 11's scope: its overlap-energy result concerns merger behavior, not a prerequisite for separated gravitational response.
+
+**Results.** The exact radial response gradient is K d^2/r^3, with radial/transverse magnitude ratio D(D+1) for the mapped central law at initial rest. Near the limiting mapped surface, acceleration scales as the inverse square root of centre height. For a declared half-span a, the exact near/far spread is about 0.99 percent of centre acceleration at surface gap 100a, and 59.77 percent at gap a. Gap-stable numerical examples retain the conditional Earth-normalized source response; they do not establish a proton's deformed size or support survival.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_separated_test_body.py` passed gradient and tensor-ratio identities, the exact uniform-line average against numerical integration, and small-span convergence. The calculation evaluates external body-clock response coefficients, not a complete synchronized strong-field material evolution.
+
+**Pending.** Internal deformation/stress needs the test body's support response, source feedback where relevant, and consistent time transport. Electrical interactions must be included separately when modeling charged bodies. None is needed merely to evaluate the specified external field profile, and no nuclear merger model was used.
+
+### F.13 — 7 October 2026: Ordered exterior composition and response conversion
+
+**Completed.** [Checkpoint 13](WIP/proper_velocity_gravity/two-displacement-composition.md) implements source-first/test-last composition with the test centre carried into the intermediate chart. The composite Jacobian is E_t E_s and its determinant is D_t D_s. Aligned, perpendicular and oblique patches have distinct stretch/orientation behavior. Recentring and a fixed intrinsic test displacement in the intermediate chart are stated implementation conventions, not a derived source-dressing law.
+
+**Response boundary.** The test centre is excluded from its own exterior map, preventing evaluation of a self-Jacobian there as a centre-acceleration correction. Scalar gradients transform as covectors; trajectory accelerations transform with the Jacobian plus derivative terms. Transforming the kinetic metric reconciles those operations. Treating the transformed scalar gradient as a new Euclidean acceleration instead would introduce dynamics beyond the chain rule. The composition alone therefore supplies no unique correction to checkpoint 12's source-only test response.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_two_displacement_composition.py` passed finite-difference composite Jacobians at oblique exterior points (maximum absolute residual 1.345e-9), determinant multiplication, scalar-gradient conversion and the kinetic-metric identity.
+
+**Pending.** Derive how insertion into the conditioned background changes or transports the test excitation's response energy and inertia, or supply the equivalent constituent/support evolution. No inter-body bond, nuclear overlap model, extra geometric force or fitted acceleration multiplier was introduced.
+
+### F.14 — 7 October 2026: Cross interaction and tidal response without isolated self-force
+
+**Completed.** [Checkpoint 14](WIP/proper_velocity_gravity/cross-interaction-response.md) connects README section 12.4's multiplicative interaction energy to the selected exact test-body response. The interaction functional is minus the integral of source response potential over the test mass. Its centre derivative gives averaged external response without evaluating an isolated self-gradient. Added a bookkeeping clarification to constants recovery section 2.1, where the displayed force-amplitude product must not also be differentiated as an energy potential.
+
+**Tidal connection.** Differential response begins at first order in body extent; the mean correction for a centred symmetric distribution begins at second order. In the near-surface uniform-line example, gap 100 half-spans gives a 0.0012254 percent mean correction despite a roughly 0.99 percent endpoint spread. Gap one half-span gives a 3.5276 percent mean correction despite a roughly 59.77 percent spread. These are sampling results, not a derived material shape.
+
+**Validation.** `WIP/proper_velocity_gravity/verify_cross_interaction.py` passed response-energy differentiation, averaged acceleration, second-moment scaling and the near-surface limiting ratios.
+
+**Scope.** The functional represents the adopted body-clock response in a prescribed static field; it is not asserted to be a full relativistic comparable-mass Hamiltonian. Reciprocal strong-field backreaction, time transport and changing internal support remain separate. No isolated translational self-force or extra point-test acceleration correction was added.
+
+
+### F.15 — 8 October 2026: Main-text consolidation
+
+**Completed.** Replaced the superseded main-text static depth, response and metric-recovery narrative with the checked compressed-ruler equations, separated-body interaction, finite differential response and explicit direction-steering result. Static geometry is primary and the retarded linear field is stated as a weak extension. Corrected source-density units, distinguished depth from deformation, and removed current-prediction status from the former metric, 2PN, radiation-multiplier and rotating-surface claims. Section 1 supplies one current status statement; Appendices C and E identify the historical dependencies.
+
+**Preservation.** The complete pre-consolidation draft is saved as [historical comparison](displacement_dynamics_preconsolidation_2026-10-08.md). Its former derivations are not erased or silently promoted to the revised model. The checkpoint notes remain derivational records, and F.1–F.14 remain chronological history rather than the current status of every result. Added a single relationship notice to the companion observational paper without rewriting its separate calculations.
+
+### F.16 — 8 October 2026: Final consistency review for this working revision
+
+**Validation.** All 12 Python verification scripts and the extracted JavaScript shadow-comparison check passed. Coverage includes map/gradient identities, escape integration and invariants, metric incompatibility, conditional unsteered and steered trajectories, rotation bookkeeping, radiation angular integrals, transport stiffness constraints, support identities, finite-body sampling, ordered composition and interaction-energy differentiation. The historical comparison tests are diagnostics, not validation of all prior physical claims.
+
+**Review.** Checked current main-text coordinate and sign conventions, dimensional normalization, proper versus coordinate velocity, surface versus centre gap, weak/strong limiting behavior, conditional numerical values and relative document links. Reference bibliography and earlier changelog entries are preserved. No PDF was regenerated, no code simulation was changed, and no commit or publication was made.
+
+**Stopping point.** This completes the consolidation and review of the revised working paper. Strong-field comparable-source backreaction, time-dependent material/optical readout and calibrated radiation/GPB predictions remain explicit research work; they are not additional prerequisites hidden behind this completed editorial checkpoint.
+
+### F.17 — 10 October 2026: Standalone presentation
+
+Recast the main text and Appendices A–E as a self-contained account of the current equations and their scope. Removed historical comparisons and dependencies on reading a prior draft; kept revision history here. Added numerical orbit inputs and local definitions for the radiation quadrupole and overlap variable. Replaced the historical GPB estimate with the actual requirements for that observable. No response equations or numerical predictions were changed. Checked document structure, links and remaining historical wording; numerical tests were not repeated for this editorial change.
+
+### F.18 — 10 October 2026: Standalone weak-field observational paper
+
+Replaced the companion observational paper's revision notices and contradictory recovery claims with self-contained calculations, assumptions and observable limits. Preserved its author metadata and references, and saved the full prior file as `weak_field_observational_tests_preconsolidation_2026-10-10.md`. The current paper states the weak clock calibration explicitly; distinguishes upward signed redshift from positive redshift magnitude; uses one optical-cost coefficient consistently for delay and bending; restricts closed-path cancellation to the constant common background term; presents the actual conditional orbit result; and supplies the corrected scalar trace power without an unsupported tensor-component multiplier. Ranging and gyroscope sections state their physical response requirements rather than asserting a completed prediction.
+
+Validation: `verify_observational_formulas.py` passed numerical optical path integrals, the delay-gradient/deflection relation, endpoint-rate signs and the numerical height example. The scalar radiation checks passed again. Reviewed document structure, math delimiters and absence of editorial dependency notices. This is not a new fit to experimental data. No PDF was regenerated or publication made.
+
+### F.19 — 16 October 2026: First-post-Newtonian audit of the effective metric
+
+**Finding.** Exact geodesic integration shows that the deposited metric \(f=1/(1+\Sigma)^2\), \(g=1+2\Sigma\), \(h=1\) gives 21.49 arcsec/century for Mercury, not the 42.98 stated in the deposited §4.4; the \(3GMu^2/c^2\) term there was taken from Schwarzschild, not derived from that metric. The \(\Sigma^2\) coefficient of the clock enters at first post-Newtonian order (\(\beta_{\rm PPN}\)). The October-revision clock \(C^2=1+2\Sigma\) gives 14.33, which is the checkpoint-7 result: that number is a 1PN clock-coefficient effect, not a consequence of the strong-field bound. The nine-body Σ branch inserts the Schwarzschild term and carries an extra \(1/r\); its 43.3 confirmed the insertion only.
+
+**Working closure.** Isotropic transport deformation \(g=h=1+2\Sigma\) (Type G scaling) with the exponential lapse \(N=e^{-\Sigma}\) (README §12.1) gives \(\gamma_{\rm PPN}=\beta_{\rm PPN}=1\): Mercury 42.99, deflection and Shapiro at the standard coefficients, \(\kappa_{\rm opt}=2\) fixed, no vanishing lapse at any finite \(\Sigma\). Details, table and the body-clock form of the geodesic in [checkpoint 19](WIP/proper_velocity_gravity/metric-closure-checkpoint.md).
+
+**Validation.** `WIP/proper_velocity_gravity/verify_perihelion_metric.py` (RK4 Binet, standard library) agrees with an independent 40-digit quadrature to \(4\times10^{-5}\) arcsec/century on all seven metric rows.
+
+**Pending.** Recast the static-displacement note's escape and tidal results in the closure variables; correct and re-run the nine-body simulation with the framework's own acceleration; derive deflection, delay and geodetic precession from the closure metric; erratum or new version for the deposited papers. The main text of this working copy still carries the checkpoint-7 steered-orbit numbers and is not yet updated to the closure.
+
+
+### F.20 — 19 October 2026: Exterior closure consolidation completed
+
+Updated the abstract, scope, radial escape, tides, orbital motion, optical
+results, geodetic spin and conclusion to the adopted closure. The main text
+now distinguishes map coordinates from exterior metric coordinates. Older
+position-only and steering calculations remain in their checkpoint notes;
+they are not presented as the current exterior dynamics. The numerical
+coincidence between the metric's one-third result and checkpoint 7 does not
+establish equality of their underlying motion laws, despite the wording in
+the historical F.19 entry.
+
+The five calculations listed as pending in F.19 are recorded in
+[the closure results](WIP/proper_velocity_gravity/closure-observable-results.md),
+including a draft deposited-paper erratum. Numerical verification uses the
+metric Binet test, the actual simulation's shadow/refinement test, and direct
+ray and spin transport with strong-field derivative checks. No new response
+postulate, fit parameter, commit, PDF release or publication is introduced
+by this consolidation. Submission of an erratum remains a publication action.
+
+### F.21 — 19 October 2026: Body-dependent displacement shorthand
+
+Added \(d_{\rm eff}(m_b,r_b)=\sqrt{2Gm_b r_b/c^2}\) and the associated
+body-normalized depth, with fixed source extent distinguished from field
+radius and primitive constituent displacement. Replaced the main-text
+Earth-radius normalization with this body-specific prescription. Added
+exact surface and limiting depths, separated strong local deformation from
+large accumulated depth, and derived the conditional exponential-lapse
+radial response using the compressed ruler. A contrasting exterior-ruler
+continuation makes the remaining matching requirement explicit. Qualified
+the circular-null-orbit interpretation without changing the adopted exterior
+metric or its verified observables. Checked depth derivatives, radial
+response conversion and weak-limit normalization numerically. No simulation
+or published PDF was changed.
+
+### F.22 — 20 October 2026: Symbol roles and retarded-field notation
+
+Added a notation table separating the displacement function \(d_{\rm eff}\),
+scalar deformation factor \(D\), Jacobian matrices \(E,J_F\), map depth
+\(\Sigma\), its body specialization \(\Sigma_b\), and exterior depth \(S\).
+Renamed the weak retarded field \(S_{\rm ret}\) and its radiation perturbation
+accordingly, removing its use of the exact map-depth symbol. Equations and
+response assumptions are unchanged. Historical entries retain their original
+symbols. Checked current definitions and radiation references for consistency.

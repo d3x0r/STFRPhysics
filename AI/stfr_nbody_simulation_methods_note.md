@@ -1,5 +1,18 @@
 # N-Body Orbital Simulation: From Instantaneous Forces to Retarded Displacement Fields
 
+**18 October 2026 implementation correction.** The derivation in §§3.3–3.5
+below describes the superseded implementation and does not follow from its
+printed metric. `stfr_nbody_sigma.html` now uses
+\(f=e^{-2\Sigma},g=h=1+2\Sigma\) through 1PN, with the vector acceleration
+and verified shadow results documented in the
+[closure results](Revised/WIP/proper_velocity_gravity/closure-observable-results.md).
+The old inserted radial term survives only as the labelled legacy comparison.
+The shadow now measures interpolated perihelion angles with its own clock.
+The nine-body model uses Newtonian mutual planetary gravity plus the solar
+test-mass relativistic correction, rather than full many-body EIH dynamics.
+The remainder of this methods note is retained as historical documentation.
+
+
 ## Technical Note on the STFR Simulation Suite
 
 ---

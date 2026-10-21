@@ -109,7 +109,7 @@
   <div class="sec">
     <h3>Mercury Precession</h3>
     <div class="row"><span class="lbl">Measured (2-body shadow)</span><span class="val hi" id="pMeas">—</span></div>
-    <div class="row"><span class="lbl">GR / STFR target</span><span class="val">42.980 ″/cy</span></div>
+    <div class="row"><span class="lbl">GR / STFR target</span><span class="val">42.99 ″/cy</span></div>
     <div class="row"><span class="lbl">Ratio</span><span class="val" id="pRatio">—</span></div>
     <div class="bar"><div class="bar-fill" id="pBar" style="width:0%"></div><div class="bar-tgt"></div></div>
     <div class="row"><span class="lbl">Perihelia sampled</span><span class="val" id="pN">0</span></div>
@@ -120,9 +120,9 @@
   <div class="sec">
     <h3>Displacement Physics</h3>
     <div class="row"><span class="lbl">Σ(Mercury) = GM/(c²r)</span><span class="val hi" id="sigHg">—</span></div>
-    <div class="row"><span class="lbl">D(Mercury) = √(1+2Σ)</span><span class="val" id="dHg">—</span></div>
-    <div class="row"><span class="lbl">v_esc/c at Mercury</span><span class="val" id="vescHg">—</span></div>
-    <div class="row"><span class="lbl">Path cost factor</span><span class="val" id="costHg">—</span></div>
+    <div class="row"><span class="lbl">Ruler count √(1+2Σ)</span><span class="val" id="dHg">—</span></div>
+    <div class="row"><span class="lbl">v_esc/c (local static clock)</span><span class="val" id="vescHg">—</span></div>
+    <div class="row"><span class="lbl">Clock period e^Σ</span><span class="val" id="costHg">—</span></div>
   </div>
 
   <!-- MODE -->
@@ -131,7 +131,7 @@
     <div class="modes">
       <button class="on" data-mode="sigma">Σ GEODESIC</button>
       <button class="dim" data-mode="newton">NEWTON</button>
-      <button class="dim" data-mode="schwarz">SCHWARZSCHILD</button>
+      <button class="dim" data-mode="schwarz">LEGACY RADIAL</button>
     </div>
     <div style="margin-top:7px;display:flex;gap:5px;align-items:center">
       <button class="dim" id="btnBaseline">STORE BASELINE</button>
@@ -146,7 +146,7 @@
     <table class="ctable">
       <tr><td class="lbl">NEWTON</td><td class="rval" id="cNewton">run to measure</td></tr>
       <tr><td class="lbl">Σ GEODESIC</td><td class="rval" id="cSigma">—</td></tr>
-      <tr><td class="lbl">SCHWARZSCHILD</td><td class="rval" id="cSchwarz">—</td></tr>
+      <tr><td class="lbl">LEGACY RADIAL</td><td class="rval" id="cSchwarz">—</td></tr>
     </table>
   </div>
 
@@ -156,12 +156,12 @@
     <div style="font-size:.52rem;color:var(--dim);line-height:1.5">
       <b style="color:var(--accent)">Σ GEODESIC</b> mode computes acceleration
       from the effective coordinate geometry of displaced transport space:<br><br>
-      ds² = −c²/(1+Σ)² dt² + (1+2Σ) dr² + r² dΩ²<br><br>
-      The path cost at each point is set by the local cumulative
-      displacement Σ(r) = GM/(c²r). Precession emerges as a
-      single geometric result — not from an added force term.<br><br>
-      <b style="color:var(--accent2)">SCHWARZSCHILD</b> mode uses the old
-      αGMh²/(r⁴c²) force correction for comparison.
+      ds² = −e<sup>−2Σ</sup>c²dt² + (1+2Σ)(dr²+r²dΩ²)<br><br>
+      Solar motion uses the coordinate-time geodesic through 1PN.
+      Planetary interactions remain Newtonian. The two-body shadow
+      measures solar precession without planetary perturbations.<br><br>
+      <b style="color:var(--accent2)">LEGACY RADIAL</b> retains the old
+      3GMh²/(r⁴c²) correction for comparison; it is not the closure equation.
     </div>
   </div>
 
@@ -176,9 +176,9 @@
     <h3>Integrator</h3>
     <div class="row"><span class="lbl">Method</span><span class="val">RK4</span></div>
     <div class="row"><span class="lbl">Main dt</span><span class="val" id="dtMain">—</span></div>
-    <div class="row"><span class="lbl">Shadow dt</span><span class="val">3 h (fixed)</span></div>
+    <div class="row"><span class="lbl">Shadow dt</span><span class="val">0.5 h (fixed)</span></div>
     <div class="row"><span class="lbl">Steps/frame</span><span class="val" id="dtSpf">—</span></div>
-    <div class="row"><span class="lbl">ΔE/E₀</span><span class="val" id="dE">—</span></div>
+    <div class="row"><span class="lbl">Newtonian ΔE/E₀</span><span class="val" id="dE">—</span></div>
   </div>
 
 </div>
@@ -227,6 +227,7 @@ let sh={sx:0,sy:0,svx:0,svy:0,mx:0,my:0,mvx:0,mvy:0,
 
 // LRL measurement
 let lrl={angs:[],times:[]};
+let shadowTime=0, shadowPrevious=null;
 
 // Stored comparison values
 let stored={newton:null,sigma:null,schwarz:null};
@@ -254,151 +255,23 @@ function initBodies(){
 
   simTime=0;steps=0;E0=null;trails={};
   lrl={angs:[],times:[]};
+  shadowTime=0; shadowPrevious=null;
 }
 
 // ═══════════════════════════════════════════════════════════════
-// DISPLACEMENT GEOMETRY
-// ═══════════════════════════════════════════════════════════════
-//
-// The framework's effective coordinate-level line element is:
-//
-//   ds² = −c²/(1+Σ)² dt² + D² dr² + r² dΩ²
-//
-// where:
-//   Σ(r) = GM/(c²r)           cumulative displacement
-//   D(r) = √(1 + 2Σ(r))      transport deformation factor
-//   f(r) = 1/(1+Σ)²           time-time coefficient
-//   g(r) = D² = 1 + 2Σ        radial-radial coefficient
-//
-// The geodesic equation on this geometry gives, for a particle
-// with conserved energy E_eff and angular momentum L:
-//
-//   r̈ = −dΦ_eff/dr
-//
-// where the effective potential gradient in the weak-field
-// expansion gives the coordinate acceleration. The key point
-// is that this acceleration emerges from the GEOMETRY of the
-// displaced transport space — the path cost at each point is
-// determined by Σ(r), not by an added force.
-//
-// In the weak-field (Σ ≪ 1) geodesic equation, the radial
-// acceleration for a test particle is:
-//
-//   a_r = −GM/r² · (1 + δ_geo)
-//
-// where δ_geo encodes the geometric correction from the
-// displaced transport space. For the full effective geometry,
-// this gives:
-//
-//   a_r = −GM/r² + (L²/r³)(1/g) − GM·L²/(c²·r⁴)·(f'/f + g'/g)·(r²/2)
-//
-// Working through the geodesic equation properly:
-//
-// The Lagrangian for the effective line element is:
-//   2L = −f(r)c²ṫ² + g(r)ṙ² + r²φ̇²
-//
-// Conserved quantities (from ∂L/∂ṫ = const, ∂L/∂φ̇ = const):
-//   E = f(r)c²ṫ     (energy per unit mass)
-//   L = r²φ̇          (angular momentum per unit mass)
-//
-// The constraint ds²/dτ² = −c² gives:
-//   −f c²ṫ² + g ṙ² + r²φ̇² = −c²
-//
-// Substituting conserved quantities:
-//   −E²/(f c²) + g ṙ² + L²/r² = −c²
-//
-// So: g ṙ² = E²/(f c²) − L²/r² − c²
-//     ṙ² = [E²/(f c²) − L²/r² − c²] / g
-//
-// Taking d/dt of the radial equation (or equivalently using
-// the Euler-Lagrange equation for r):
-//
-//   g r̈ + (g'/2) ṙ² = (f'/2f²) E²/c² − L²/r³  ... err wait
-//
-// Let me just use the standard result for a diagonal metric.
-// For ds² = −f c² dt² + g dr² + r² dΩ², the radial geodesic
-// equation (with proper time parametrization) is:
-//
-//   r̈_coord = −(GM/r²)(1 + 3L²/(r²c²))
-//
-// in the weak-field limit, where L = r²(dφ/dτ).
-//
-// But we want this in COORDINATE TIME, not proper time.
-// The relation is dτ/dt ≈ √f ≈ 1 − Σ for weak fields.
-//
-// The coordinate-time radial acceleration from the geodesic
-// on the displaced geometry, to first post-Newtonian order, is:
-//
-//   r̈ = −GM/r² + L²/r³ − 6GM·L²/(c²r⁴) + 4GM·(ṙ²)/(c²r²) − GM(v²)/(c²r²)
-//
-// ...which is the full 1PN expression. But for orbital dynamics
-// in 2D Cartesian, the cleanest formulation is the 1PN
-// acceleration vector derived from the effective geometry.
-//
-// ═══════════════════════════════════════════════════════════════
-// ACCELERATION FROM DISPLACED TRANSPORT GEOMETRY
-// ═══════════════════════════════════════════════════════════════
-//
-// For the STFR effective geometry, the 1PN geodesic acceleration
-// of body j due to source i (in coordinate time) is:
-//
-//   a⃗_geo = −(GM/r²) r̂ · [1 − 4GM/(c²r) + v²/c² ]
-//           + (GM/r²)(4 ṙ/c²) v⃗
-//           ... (full EIH terms)
-//
-// However, the simplest correct implementation that captures
-// the STFR geometry is to note that the orbit equation on the
-// effective line element gives EXACTLY:
-//
-//   d²u/dφ² + u = GM/L² + 3GM u²/c²
-//
-// This means the effective radial potential is:
-//
-//   V_eff(r) = −GM/r + L²/(2r²) − GM L²/(c² r³)
-//
-// The extra −GML²/(c²r³) term IS the displacement geometry.
-// It comes from the combination of f(r) and g(r) in the
-// geodesic — the modified time rate and radial stretching
-// of the displaced transport space.
-//
-// In Cartesian 2D, for body j at position (x,y) relative to
-// source i, with velocity (vx,vy):
-//
-//   L = x·vy − y·vx    (angular momentum per unit mass)
-//   r = |r⃗|
-//
-// The Newtonian acceleration is: a⃗_N = −GM r⃗/r³
-//
-// The geometry correction from the displaced transport space:
-//   The extra potential −GML²/(c²r³) has gradient:
-//   ∇[GML²/(c²r³)] = 3GML²/(c²r⁵) r⃗
-//
-// So the total acceleration is:
-//   a⃗ = −GM/r³ r⃗ − 3GML²/(c²r⁵) r⃗
-//
-// Wait — that's an inward correction, which gives retrograde
-// precession. The sign needs care.
-//
-// The effective potential (energy equation) is:
-//   E = ½ṙ² + V_eff(r)
-//   V_eff = −GM/r + L²/(2r²) − GML²/(c²r³)
-//
-// F_r = −dV_eff/dr = −GM/r² + L²/r³ − 3GML²/(c²r⁴)
-//
-// The −3GML²/(c²r⁴) term is INWARD (more negative), which
-// deepens the potential well near the source. This pulls the
-// orbit inward at closest approach, which advances the
-// perihelion (prograde precession). The sign is correct.
-//
-// In Cartesian form, the radial force −3GML²/(c²r⁴) maps to:
-//   a⃗_Σ = −3GM L² / (c² r⁵) · r⃗
-//
-// This is the acceleration from the displaced transport
-// geometry. It is not a "force correction" — it is the
-// geodesic acceleration on the effective line element
-// ds² = −c²/(1+Σ)² dt² + (1+2Σ) dr² + r² dΩ².
-//
-// ═══════════════════════════════════════════════════════════════
+// ADOPTED EXTERIOR CLOSURE (checkpoint 19)
+// ds² = -exp(-2Σ)c²dt² + (1+2Σ)(dx²+dy²+dz²), Σ=GM/(c²r).
+// Expanding its coordinate-time geodesic through 1PN gives
+// a = -GM x/r³ + GM/(c²r³)[(4GM/r-v²)x + 4(x·v)v].
+// This is the test-mass, static-source limit. The display combines
+// Newtonian mutual planetary gravity with this solar correction;
+// it does not implement the full many-body EIH equations.
+// No separately inserted 3GM L² term is used in the Σ branch.
+function closureCorrection(GM,x,y,vx,vy){
+  const r=Math.hypot(x,y), v2=vx*vx+vy*vy, rv=x*vx+y*vy;
+  const k=GM/(C2*r*r*r), radial=4*GM/r-v2;
+  return [k*(radial*x+4*rv*vx),k*(radial*y+4*rv*vy)];
+}
 
 // Compute Σ(r) = GM/(c²r) — the cumulative displacement
 function sigma(GM, r) {
@@ -412,7 +285,7 @@ function Dfactor(GM, r) {
 
 // Escape velocity fraction v_esc/c = √(2Σ) — the path cost
 function pathCost(GM, r) {
-  return Math.sqrt(2 * sigma(GM, r));
+  return Math.sqrt(-Math.expm1(-2 * sigma(GM, r)));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -436,54 +309,9 @@ function accel9(state){
       if(mode!=='newton' && (i===0||j===0)){
 
         if(mode==='sigma'){
-          // ═══════════════════════════════════════════
-          // Σ GEODESIC: acceleration from the effective
-          // coordinate geometry of displaced transport space.
-          //
-          // The orbit on the line element
-          //   ds² = −c²/(1+Σ)² dt² + (1+2Σ) dr² + r² dΩ²
-          // has effective potential
-          //   V_eff = −GM/r + L²/(2r²) − GML²/(c²r³)
-          //
-          // The geometric correction to radial force is:
-          //   F_Σ = −3GM L²/(c² r⁴)   (inward → prograde precession)
-          //
-          // In Cartesian: a⃗_Σ = −3GM L² / (c² r⁵) · r⃗
-          //
-          // Here L is the specific angular momentum of the
-          // planet relative to the source, and r⃗ points
-          // from source to planet.
-          // ═══════════════════════════════════════════
-
-          const dvx=state[j].vx-state[i].vx;
-          const dvy=state[j].vy-state[i].vy;
-
-          // Angular momentum per unit mass of the relative orbit
-          const L = dx*dvy - dy*dvx;
-          const L2 = L*L;
-
-          // The source mass for the geometry is the dominant one
-          // (Sun), determining the displacement field
-          const GMs = (i===0) ? GMi : GMj;
-          const r4 = r2*r2, r5 = r4*r;
-
-          // Geometric acceleration from displaced transport space
-          // a_Σ = −3 GM L² / (c² r⁵) applied to the planet
-          const aGeo = 3*GMs*L2/(C2*r5);
-
-          // Apply inward on planet (away from planet = toward source)
-          const pi = (i===0) ? j : i;
-          const si = (i===0) ? i : j;
-          // Direction: inward on planet means subtract r̂ direction
-          // r⃗ points from i to j; if planet is j, inward = −r̂
-          // if planet is i, inward = +r̂
-          if(pi===j){
-            ax[pi] -= aGeo*dx/r;
-            ay[pi] -= aGeo*dy/r;
-          } else {
-            ax[pi] += aGeo*dx/r;
-            ay[pi] += aGeo*dy/r;
-          }
+          const [cx,cy]=closureCorrection(GMi,dx,dy,
+            state[j].vx-state[i].vx,state[j].vy-state[i].vy);
+          ax[j]+=cx; ay[j]+=cy; // Sun is i=0 in this pair loop.
 
         } else if(mode==='schwarz'){
           // ═══════════════════════════════════════════
@@ -535,9 +363,9 @@ function rk4_9(dt){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// PHYSICS — SHADOW 2-BODY (fixed dt=3h)
+// PHYSICS — SHADOW 2-BODY (fixed dt=0.5h)
 // ═══════════════════════════════════════════════════════════════
-const SH_DT=DAY/8;
+const SH_DT=DAY/48;
 
 function shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy){
   const dx=mx-sx, dy=my-sy, dvx=mvx-svx, dvy=mvy-svy;
@@ -554,11 +382,8 @@ function shadowAccel(sx,sy,svx,svy,mx,my,mvx,mvy){
     const r4=r2*r2, r5=r4*r;
 
     if(mode==='sigma'){
-      // Geodesic acceleration from displaced transport geometry
-      // a_Σ = −3GM L²/(c² r⁵) · r⃗  (inward on Mercury)
-      const aGeo=3*GMs*L2/(C2*r5);
-      amx -= aGeo*dx;
-      amy -= aGeo*dy;
+      const [cx,cy]=closureCorrection(GMs,dx,dy,dvx,dvy);
+      amx+=cx; amy+=cy;
 
     } else if(mode==='schwarz'){
       // Old Schwarzschild force correction for comparison
@@ -583,6 +408,7 @@ function shadowStep(dt_s){
   const k3=d(...adv(s0,k2,.5*dt_s)), k4=d(...adv(s0,k3,dt_s));
   const r=s0.map((v,i)=>v+dt_s/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]));
   [sh.sx,sh.sy,sh.svx,sh.svy,sh.mx,sh.my,sh.mvx,sh.mvy]=r;
+  shadowTime+=dt_s;
 }
 
 function shadowLRL(){
@@ -599,15 +425,32 @@ function shadowLRL(){
 // PERIHELION DETECTION & LRL SAMPLING
 // ═══════════════════════════════════════════════════════════════
 function trackLRL(){
-  const rx=sh.mx-sh.sx, ry=sh.my-sh.sy;
-  const r=Math.sqrt(rx*rx+ry*ry);
-  const ang=shadowLRL();
-  if(r>sh.lastR && sh.lastR<sh.prevR && sh.prevAng!==null){
-    lrl.angs.push(sh.prevAng);
-    lrl.times.push(simTime-SH_DT);
+  const p={x:sh.mx-sh.sx,y:sh.my-sh.sy,vx:sh.mvx-sh.svx,
+    vy:sh.mvy-sh.svy,t:shadowTime};
+  const q=shadowPrevious;
+  if(q && q.x*q.vx+q.y*q.vy<0 && p.x*p.vx+p.y*p.vy>=0){
+    const dt=p.t-q.t;
+    // Cubic Hermite trajectory: locate x·v=0 at the perihelion.
+    function sample(u){
+      const h00=2*u**3-3*u*u+1,h10=u**3-2*u*u+u;
+      const h01=-2*u**3+3*u*u,h11=u**3-u*u;
+      const d00=6*u*u-6*u,d10=3*u*u-4*u+1;
+      const d01=-d00,d11=3*u*u-2*u;
+      return [h00*q.x+h10*dt*q.vx+h01*p.x+h11*dt*p.vx,
+        h00*q.y+h10*dt*q.vy+h01*p.y+h11*dt*p.vy,
+        (d00*q.x+d10*dt*q.vx+d01*p.x+d11*dt*p.vx)/dt,
+        (d00*q.y+d10*dt*q.vy+d01*p.y+d11*dt*p.vy)/dt];
+    }
+    let lo=0,hi=1;
+    for(let k=0;k<40;k++){
+      const u=(lo+hi)/2,[x,y,vx,vy]=sample(u);
+      if(x*vx+y*vy<0)lo=u;else hi=u;
+    }
+    const u=(lo+hi)/2,[x,y]=sample(u);
+    lrl.angs.push(Math.atan2(y,x));lrl.times.push(q.t+u*dt);
     if(lrl.angs.length>3000){lrl.angs.shift();lrl.times.shift();}
   }
-  sh.prevR=sh.lastR; sh.lastR=r; sh.prevAng=ang;
+  shadowPrevious=p;
 }
 
 function precession(){
@@ -730,7 +573,7 @@ function draw(){
   // HUD
   const prec=precession();
   if(prec!==null){
-    const ratio=prec/42.98;
+    const ratio=prec/42.99;
     const col=Math.abs(ratio-1)<.05?'#4af0a0':Math.abs(ratio-1)<.15?'#f0823a':'#f04a4a';
     ctx.fillStyle='rgba(10,15,30,.88)'; ctx.fillRect(8,8,280,48);
     ctx.strokeStyle=col; ctx.lineWidth=1; ctx.strokeRect(8,8,280,48);
@@ -772,18 +615,18 @@ function updatePanel(){
   document.getElementById('sigHg').textContent=sig.toExponential(4);
   document.getElementById('dHg').textContent=D.toFixed(8);
   document.getElementById('vescHg').textContent=vesc.toExponential(4);
-  document.getElementById('costHg').textContent=(1+sig).toFixed(8);
+  document.getElementById('costHg').textContent=Math.exp(sig).toFixed(8);
 
   const prec=precession();
   if(prec!==null){
-    const ratio=prec/42.98;
+    const ratio=prec/42.99;
     const cl=Math.abs(ratio-1)<.05?'ok':Math.abs(ratio-1)<.15?'warn':'bad';
     document.getElementById('pMeas').textContent=prec.toFixed(3)+' ″/cy';
     document.getElementById('pRatio').textContent=ratio.toFixed(4);
     document.getElementById('pRatio').className='val '+cl;
     document.getElementById('pBar').style.width=Math.min(100,ratio*100)+'%';
     document.getElementById('pN').textContent=lrl.angs.length;
-    document.getElementById('pYr').textContent=(simTime/YR).toFixed(1);
+    document.getElementById('pYr').textContent=(shadowTime/YR).toFixed(1);
 
     // Store comparison value for current mode
     if(lrl.angs.length>20) stored[mode]=prec;
@@ -794,7 +637,7 @@ function updatePanel(){
     // Baseline subtraction
     if(baseline!==null&&mode!=='newton'){
       const net=prec-baseline;
-      const nr=net/42.98;
+      const nr=net/42.99;
       const ne=document.getElementById('pNet');
       ne.textContent=net.toFixed(2)+' ″/cy ('+nr.toFixed(3)+')';
       ne.className='val '+(Math.abs(nr-1)<.05?'ok':Math.abs(nr-1)<.15?'warn':'bad');
@@ -894,7 +737,7 @@ document.querySelectorAll('[data-mode]').forEach(btn=>{
     const mt=MSUN+MERC_M, cmvy=MERC_M*vp/mt;
     sh={sx:0,sy:0,svx:0,svy:-cmvy,mx:rp,my:0,mvx:0,mvy:vp-cmvy,
         lastR:1e30,prevR:1e30,prevAng:null};
-    E0=null;
+    E0=null; shadowTime=0; shadowPrevious=null;
     document.querySelectorAll('[data-mode]').forEach(b=>{
       b.classList.toggle('on',b===btn);
       b.classList.toggle('dim',b!==btn);
@@ -905,7 +748,7 @@ document.querySelectorAll('[data-mode]').forEach(btn=>{
 const slider=document.getElementById('spdSlider');
 slider.oninput=()=>{
   speedMult=+slider.value;
-  dt=Math.min(DAY,DAY/4*Math.max(1,speedMult/20));
+  dt=SH_DT*Math.round(Math.min(DAY,DAY/4*Math.max(1,speedMult/20))/SH_DT);
   document.getElementById('spdLbl').textContent='×'+speedMult;
 };
 

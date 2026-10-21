@@ -213,6 +213,8 @@ This section develops the gravitational constant $G$ and the kilogram together, 
 
 ### 2.1 The symmetric two-source reading — $G = g^2$
 
+**Interaction bookkeeping clarification (7 October 2026).** [Checkpoint 14](WIP/proper_velocity_gravity/cross-interaction-response.md) preserves the multiplicative two-source interpretation while distinguishing force amplitude from cumulative depth. With SI \(g=\sqrt G\), the product \((gm_1/r)(gm_2/r)\) below already has force units and \(r^{-2}\) dependence; it must not also be differentiated as an interaction potential. README §12.4 instead gives the consistent energy product \(V_{12}=-c^2\sqrt{m_1m_2}\,h_1h_2=-Gm_1m_2/r\), whose derivative gives the force. For positive depth proportional to \(1/r\), attraction uses \(+c^2\nabla\Sigma\), as in the revised response convention. The historical dimensional and gradient wording below requires reconciliation with these distinctions.
+
 Newton's law of gravitation $F = Gm_1 m_2/r^2$ presents gravity as a force between two masses, with $G$ as a universal constant of proportionality. This framing hides a structural feature that was always present in the underlying physics: the force is not really a property of the pair — it is the product of two separate one-source effects.
 
 Consider what each mass actually does. Mass $m_1$ creates a cumulative displacement field in the transport structure — a scalar field:
