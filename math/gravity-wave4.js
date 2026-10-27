@@ -229,6 +229,20 @@ addSpan( "VPlanetX", 1000, 0.060, -10, 1/50, "VPX" );
 addSpan( "XPlanet", 1000, 0, -100, 1/5, "XP" );
 addSpan( "XPlanetX", 1000, 0, -100, 1/5, "XPX" );
 addSpan( "Ticks", 2000, 1, 0, 1/100, "Ticks" );
+addSpan( "Ruler γ (PPN)", 100, 1, 0, 1/100, "RulerGamma" );
+addSpan( "1PN strength GM/c²p", 1000, 0.01, 0, 0.05/1000, "PNStrength" );
+
+const isoOrbit = document.createElement( "input" );
+isoOrbit.setAttribute( "type", "checkbox" );
+isoOrbit.checked = true;
+isoOrbit.addEventListener( "input", update );
+controls.appendChild( isoOrbit );
+{
+	const span = document.createElement( "span" );
+	span.textContent = "Isotropic 1/r² orbit on the green ellipse (orange)";
+	controls.appendChild( span );
+	controls.appendChild( document.createElement( "br" ) );
+}
 
 //const sunSize = 0.5;
 const planetSize = 0.1;
@@ -318,6 +332,84 @@ function update() {
 
 	if( !animate )
 		draw();
+}
+
+// Plain central GM/r² launched at perihelion of the green ellipse, which is
+// r(t) = Orbit*(C+V cos t)/lengthContract with the sun at a focus (e = V/C).
+// Optional 1PN term: u'' + u = GM/h² + k GM u²/c², k = 2 + 2γ - β with β = 1,
+// so γ = 1 is GR (k=3) and γ = 0 is clock-only (k=1, a third of GR).
+function drawIsotropicOrbit( lengthContract ) {
+	const sunX = 500 + values.sun_position.x;
+	const sunY = 500 + values.sun_position.y;
+	const rp = values.Orbit * values.Scale * ( values.C - values.Velocity ) / lengthContract;
+	const ra = values.Orbit * values.Scale * ( values.C + values.Velocity ) / lengthContract;
+	const a = ( rp + ra ) / 2;
+	const e = ( ra - rp ) / ( ra + rp );
+	const p = a * ( 1 - e * e );
+	const stepsPerOrbit = 120; // same as one Tick of the purple loop
+	const GM = 4 * Math.PI * Math.PI * a * a * a / ( stepsPerOrbit * stepsPerOrbit );
+	const k = 1 + 2 * values.RulerGamma;
+	const cc = values.PNStrength > 0 ? GM / ( values.PNStrength * p ) : Infinity;
+
+	const peri = Math.PI - values.Direction;
+	const vp = Math.sqrt( GM * ( 1 + e ) / rp );
+	let x = Math.cos( peri ) * rp;
+	let y = Math.sin( peri ) * rp;
+	let vx = -Math.sin( peri ) * vp;
+	let vy = Math.cos( peri ) * vp;
+	const hh = rp * rp * vp * vp; // central force: h is exactly conserved by the leapfrog
+
+	const accel = ( x, y ) => {
+		const rr = x * x + y * y;
+		const g = -GM / ( rr * Math.sqrt( rr ) ) * ( 1 + k * hh / ( cc * rr ) );
+		return { x: g * x, y: g * y };
+	};
+
+	const sub = 40;
+	const dt = 1 / sub;
+	const steps = Math.ceil( values.Ticks * stepsPerOrbit );
+	const perihelia = [ peri ];
+	let acc = accel( x, y );
+	let rdot = 0;
+
+	ctx.beginPath();
+	ctx.strokeStyle = "orange";
+	ctx.lineWidth = 2;
+	ctx.moveTo( sunX + x, sunY + y );
+	for( let n = 0; n < steps; n++ ) {
+		for( let s = 0; s < sub; s++ ) {
+			vx += acc.x * dt / 2;
+			vy += acc.y * dt / 2;
+			x += vx * dt;
+			y += vy * dt;
+			acc = accel( x, y );
+			vx += acc.x * dt / 2;
+			vy += acc.y * dt / 2;
+			const newRdot = x * vx + y * vy;
+			if( rdot < 0 && newRdot >= 0 ) perihelia.push( Math.atan2( y, x ) );
+			rdot = newRdot;
+		}
+		ctx.lineTo( sunX + x, sunY + y );
+	}
+	ctx.stroke();
+	ctx.lineWidth = 1;
+
+	ctx.fillStyle = "orange";
+	for( let ang of perihelia )
+		ctx.fillRect( sunX + Math.cos( ang ) * rp - 3, sunY + Math.sin( ang ) * rp - 3, 7, 7 );
+
+	let advance = 0;
+	for( let i = 1; i < perihelia.length; i++ ) {
+		let d = perihelia[i] - perihelia[i-1];
+		d -= Math.PI * 2 * Math.round( d / ( Math.PI * 2 ) );
+		advance += d;
+	}
+	const toDeg = 180 / Math.PI;
+	const predicted = 2 * Math.PI * k * ( isFinite( cc ) ? values.PNStrength : 0 );
+	ctx.font = "16px monospace";
+	ctx.fillText( `e=${e.toFixed(3)}  k=2+2γ-β=${k.toFixed(2)}`, 10, 940 );
+	ctx.fillText( `perihelion advance/orbit: predicted ${( predicted * toDeg ).toFixed(3)}°`
+	            + ( perihelia.length > 1 ? `  measured ${( advance / ( perihelia.length - 1 ) * toDeg ).toFixed(3)}°` : "  (raise Ticks to measure)" ), 10, 960 );
 }
 
 function getAngle(x, y) {
@@ -678,6 +770,9 @@ if(1) {
 		prior.dx = heredx;
 		prior.dy = heredy;
 	}
+
+	if( isoOrbit.checked )
+		drawIsotropicOrbit( lengthContract );
 
 if(0){  // bad manual orbit.
 	ctx.beginPath();

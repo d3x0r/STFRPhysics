@@ -94,7 +94,7 @@ function getState( axis ) {
 	}else{
 		//choices_d[1] += Math.sin( Math.PI/4*(1+axis[0]) );
 	}
-	if( (tmp[0]*axis[0] + tmp[1]*axis[1]) > 0 ) {
+	if( (tmp[0]*axis[0] + tmp[1]*axis[1]) > (process.argv.length>2 ? Number(process.argv[2]):0.33)/*Math.sqrt(2)/2*/ ) {
 		return true;
 	}
         return false;
@@ -105,7 +105,7 @@ const pairs = [ [a0,b0],[a1,b0],[a0,b1],[a1,b1]]
 
 const CHSH_wins = [ [0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0] ];
 
-const ratio = (val,val2)=>((val2<val)?(1-(val2/val)):(1-(val/val2)));
+const ratio = (val,val2)=>val/(val+val2);//((val2<val)?(1-(val2/val)):(1-(val/val2)));
 
 function test1() {
 	let i;
@@ -117,7 +117,7 @@ function test1() {
 	for( i = 0; i < 200000; i++ ) {
 		pick();  // tmp has a vector.
 		for( let j = 0;j < 4; j++ ) {
-		        if( getState( pairs[j][0] ) ) {
+		   if( getState( pairs[j][0] ) ) {
 				if( getState( pairs[j][1] ) ) {
 				 	CHSH_wins[j][0]++;
 				}else
@@ -133,10 +133,11 @@ function test1() {
         }
 
 	
-	const totalWin = CHSH_wins.map( choices=> ratio( choices[0], choices[1] ) );
+	const totalWin = CHSH_wins.map( choices=> ratio( choices[0] + choices[2], 200000) );
 
 	console.log( "Array is : {A0, B0} got  [up-up,up-down,down-down,down-up], where up-up and down-down is expected to correlate" );
 	console.log( "then {A1, B0}, {A0,B1}, {A1,B1}; where A1 and B1 are expected to not correlate, and penalize points." );
+	console.log( "For angles: A0: 60   A1: 0  B0: 30   B1:90" );
 
         console.log( "choices:", CHSH_wins, totalWin,  totalWin.reduce( ((acc,val,i)=>acc+(i==3?1-val:val)),0 ));
 	console.log( "Ideal CHSH S for LHV : 3.40 which is > 2*sqrt(2) 2.82" );
